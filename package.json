@@ -1,0 +1,97 @@
+{
+  "name": "com.chartboost.helium",
+  "version": "3.0.0",
+  "displayName": "Helium SDK",
+  "description": "The Helium Unity SDK by Chartboost: Better monetization powered by bidding",
+  "unity": "2020.3",
+  "unityRelease": "27f1",
+  "documentationUrl": "https://answers.chartboost.com/child_article/unity",
+  "changelogUrl": "https://answers.chartboost.com/child_article/unity-2",
+  "licensesUrl": "https://answers.chartboost.com/child_article/legal",
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.0.2"
+  },
+  "samples": [
+    {
+      "displayName": "Helium",
+      "description": "Base dependencies for the Helium package. These are required.",
+      "path": "Samples~/Helium"
+    },
+    {
+      "displayName": "AdColony",
+      "description": "Support for the AdColony advertisement network.",
+      "path": "Samples~/AdColony"
+    },
+    {
+      "displayName": "AdMob",
+      "description": "Support for the Google AdMob advertisement network.",
+      "path": "Samples~/AdMob"
+    },
+    {
+      "displayName": "Amazon",
+      "description": "Support for the Google Amazon advertisement network.",
+      "path": "Samples~/Amazon"
+    },
+    {
+      "displayName": "AppLovin",
+      "description": "Support for the Google AppLovin advertisement network.",
+      "path": "Samples~/AppLovin"
+    },
+    {
+      "displayName": "Facebook",
+      "description": "Support for the Google Facebook advertisement network.",
+      "path": "Samples~/Facebook"
+    },
+    {
+      "displayName": "Fyber",
+      "description": "Support for the Google Fyber advertisement network.",
+      "path": "Samples~/Fyber"
+    },
+    {
+      "displayName": "InMobi",
+      "description": "Support for the Google InMobi advertisement network.",
+      "path": "Samples~/InMobi"
+    },
+    {
+      "displayName": "IronSource",
+      "description": "Support for the Google IronSource advertisement network.",
+      "path": "Samples~/IronSource"
+    },
+    {
+      "displayName": "Mintegral",
+      "description": "Support for the Google Mintegral advertisement network.",
+      "path": "Samples~/Mintegral"
+    },
+    {
+      "displayName": "Pangle",
+      "description": "Support for the Google Pangle advertisement network.",
+      "path": "Samples~/Pangle"
+    },
+    {
+      "displayName": "TapJoy",
+      "description": "Support for the Google TapJoy advertisement network.",
+      "path": "Samples~/TapJoy"
+    },
+    {
+      "displayName": "UnityAds",
+      "description": "Support for the Google UnityAds advertisement network.",
+      "path": "Samples~/UnityAds"
+    },
+    {
+      "displayName": "Vungle",
+      "description": "Support for the Google Vungle advertisement network.",
+      "path": "Samples~/Vungle"
+    },
+    {
+      "displayName": "Yahoo",
+      "description": "Support for the Google Yahoo/Verizon advertisement network.",
+      "path": "Samples~/Yahoo"
+    }
+  ],
+  "keywords": [],
+  "author": {
+    "name": "Chartboost",
+    "email": "sales@chartboost.com",
+    "url": "https://www.chartboost.com/helium"
+  }
+}
