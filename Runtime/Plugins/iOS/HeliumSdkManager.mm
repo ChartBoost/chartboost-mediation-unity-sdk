@@ -248,8 +248,8 @@ static void heliumSubscribeToILRDNotifications()
 - (void)heliumInterstitialAdWithPlacementName:(NSString*)placementName
                             didCloseWithError:(HeliumError *)error
 {
-    [self sendUnityEvent:@"didCloseInterstitialEvent" withParam:serializePlacementError(placementName, error)];
     UnityPause(false);
+    [self sendUnityEvent:@"didCloseInterstitialEvent" withParam:serializePlacementError(placementName, error)];
 }
 
 - (void)heliumInterstitialAdWithPlacementName:(NSString*)placementName
@@ -283,8 +283,8 @@ static void heliumSubscribeToILRDNotifications()
 - (void)heliumRewardedAdWithPlacementName:(NSString*)placementName
                         didCloseWithError:(HeliumError *)error
 {
-    [self sendUnityEvent:@"didCloseRewardedEvent" withParam:serializePlacementError(placementName, error)];
     UnityPause(false);
+    [self sendUnityEvent:@"didCloseRewardedEvent" withParam:serializePlacementError(placementName, error)];
 }
 
 - (void)heliumRewardedAdWithPlacementName:(NSString*)placementName
