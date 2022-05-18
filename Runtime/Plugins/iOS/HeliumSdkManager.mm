@@ -242,7 +242,9 @@ static void heliumSubscribeToILRDNotifications()
                              didShowWithError:(HeliumError *)error
 {
     [self sendUnityEvent:@"didShowInterstitialEvent" withParam:serializePlacementError(placementName, error)];
-    UnityPause(true);
+    if (!error) {
+        UnityPause(true);
+    }
 }
 
 - (void)heliumInterstitialAdWithPlacementName:(NSString*)placementName
@@ -277,7 +279,9 @@ static void heliumSubscribeToILRDNotifications()
                          didShowWithError:(HeliumError *)error
 {
     [self sendUnityEvent:@"didShowRewardedEvent" withParam:serializePlacementError(placementName, error)];
-    UnityPause(true);
+    if (!error) {
+        UnityPause(true);
+    }
 }
 
 - (void)heliumRewardedAdWithPlacementName:(NSString*)placementName
