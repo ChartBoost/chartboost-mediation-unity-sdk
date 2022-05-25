@@ -294,7 +294,6 @@ static void heliumSubscribeToILRDNotifications()
 - (void)heliumRewardedAdWithPlacementName:(NSString*)placementName
                              didGetReward:(NSInteger)reward
 {
-    [self sendUnityEvent:@"didReceiveRewardEvent" withParam:serializeReward(placementName, reward)];
     [self sendUnityEvent:@"didReceiveRewardEvent" withParam:serializeReward(placementName, reward) backgroundOK:YES];
 }
 

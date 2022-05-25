@@ -141,25 +141,11 @@ namespace Helium
 
         /// <summary>
         ///  Called after a rewarded has been received (after watching a rewarded video).
-        ///  Implement to be notified of when a user has earned a reward
-        ///  If processing on the main Unity Update() as a result of this call back,
-        ///  wait until the Impression as closed.
-        ///  Use "public static bool isImpressionVisible()"
-        ///  Using the Update() thread while an ad is showing can result in
-        ///  non-responsive UI.
-        /// </summary>
-        /// <param name="reward">The reward earned.</param>
-        [Obsolete("didReceiveReward is deprecated; use didReceiveRewardBackground instead.", false)]
-        public static event Action<string> didReceiveReward;
-
-        /// <summary>
-        ///  Called after a rewarded has been received (after watching a rewarded video).
         ///  Implement to be notified of when a user has earned a reward.
-        ///  Unlike the `didReceiveReward` version, this version could be called
-        ///  on a background thread, even if the Unity runtime is paused.
+        ///  This version could be called on a background thread, even if the Unity runtime is paused.
         /// </summary>
         /// <param name="reward">The reward earned.</param>
-        public static event Action<string> didReceiveRewardBackground;
+        public static event Action<string> didReceiveReward;
 
         /// <summary>
         ///   Called after an banner has been loaded from the Helium API
@@ -415,11 +401,6 @@ namespace Helium
             eventProcessor.ProcessEventWithPlacementAndError(dataString, didClickRewarded);
         }
 
-        private void didReceiveRewardEvent(string dataString)
-        {
-            eventProcessor.ProcessEventWithReward(dataString, didReceiveReward);
-        }
-
         private void didLoadBannerEvent(string dataString)
         {
             eventProcessor.ProcessEventWithPlacementAndError(dataString, didLoadBanner);
@@ -476,7 +457,7 @@ namespace Helium
                             eventProcessor.ProcessEventWithILRD(eventArgsJson, didReceiveImpressionLevelRevenueData);
                             break;
                         case "didReceiveRewardEvent":
-                            eventProcessor.ProcessEventWithReward(eventArgsJson, didReceiveRewardBackground);
+                            eventProcessor.ProcessEventWithReward(eventArgsJson, didReceiveReward);
                             break;
                         default:
                             throw new ArgumentException("Unrecognized event callback name.");
