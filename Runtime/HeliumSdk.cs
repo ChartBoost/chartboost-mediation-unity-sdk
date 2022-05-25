@@ -478,11 +478,5 @@ namespace Helium
                 return;
             privateUnexpectedSystemErrorDidOccur(message);
         }
-
-        [ObsoleteAttribute("isImpressionVisible() is obsolete and no longer provides value; usage must be deleted.", true)]
-        public static bool isImpressionVisible()
-        {
-            return false;
-        }
     }
 }
