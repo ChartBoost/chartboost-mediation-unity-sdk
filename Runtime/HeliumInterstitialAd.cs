@@ -25,16 +25,17 @@ namespace Helium
 		#endif
 
 		// Class variables
-		private IntPtr uniqueId;
+		private readonly IntPtr uniqueId;
 
 		#if UNITY_IPHONE
-		public HeliumInterstitialAd(IntPtr _uniqueId) {
-			// Set ID and get the appName and appIcon
-			uniqueId = _uniqueId;
+		public HeliumInterstitialAd(IntPtr uniqueId)
+		{
+			this.uniqueId = uniqueId;
 		}
 		#elif UNITY_ANDROID
 		private AndroidJavaObject androidAd;
-		public HeliumInterstitialAd(AndroidJavaObject ad) {
+		public HeliumInterstitialAd(AndroidJavaObject ad)
+		{
 			androidAd = ad;
 		}
 		#endif
@@ -49,7 +50,7 @@ namespace Helium
 		/// <param name="keyword">The keyword (maximum of 64 characters)</param>
 		/// <param name="value">The value (maximum of 256 characters)</param>
 		/// <returns>true if the keyword was successfully set, else false</returns>
-		public bool setKeyword(string keyword, string value)
+		public bool SetKeyword(string keyword, string value)
         {
 			#if UNITY_IPHONE
 			return _heliumSdkInterstitialSetKeyword(uniqueId, keyword, value);
@@ -65,7 +66,7 @@ namespace Helium
 		/// </summary>
 		/// <param name="keyword">The keyword to remove.</param>
 		/// <returns>The currently set value, else null</returns>
-		public string removeKeyword(string keyword)
+		public string RemoveKeyword(string keyword)
         {
 			#if UNITY_IPHONE
 			return _heliumSdkInterstitialRemoveKeyword(uniqueId, keyword);
@@ -79,7 +80,7 @@ namespace Helium
 		/// <summary>
 		/// Load the advertisement.
 		/// </summary>
-		public void load() {
+		public void Load() {
 			#if UNITY_IPHONE
 			System.GC.Collect(); // make sure previous i12 ads get destructed if necessary
 			_heliumSdkInterstitialAdLoad(uniqueId);
@@ -93,7 +94,7 @@ namespace Helium
 		/// load can be performed.
 		/// </summary>
 		/// <returns>true if successfully cleared</returns>
-		public bool clearLoaded() {
+		public bool ClearLoaded() {
 			#if UNITY_IPHONE
 			return _heliumSdkInterstitialClearLoaded(uniqueId);
 			#elif UNITY_ANDROID
@@ -106,7 +107,7 @@ namespace Helium
 		/// <summary>
 		/// Show a previously loaded advertisement.
 		/// </summary>
-		public void show() {
+		public void Show() {
 			#if UNITY_IPHONE
 			_heliumSdkInterstitialAdShow(uniqueId);
 			#elif UNITY_ANDROID
@@ -118,7 +119,7 @@ namespace Helium
 		/// Indicates if an advertisement is ready to show.
 		/// </summary>
 		/// <returns>True if ready to show.</returns>
-		public bool readyToShow() {
+		public bool ReadyToShow() {
 			#if UNITY_IPHONE
 			return _heliumSdkInterstitialAdReadyToShow(uniqueId);
 			#elif UNITY_ANDROID
@@ -131,7 +132,7 @@ namespace Helium
 		/// <summary>
 		/// Destroy the advertisement to free up memory resources.
 		/// </summary>
-		public void destroy()
+		public void Destroy()
 		{
 			#if UNITY_ANDROID
 			androidAd.Call("destroy");

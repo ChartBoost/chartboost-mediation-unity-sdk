@@ -59,7 +59,7 @@ namespace Helium
         ///   Called after an the SDK has been initialized
         /// </summary>
         /// <param name="error">The error encountered, if any.</param>
-        public static event Action<HeliumError> didStart;
+        public static event Action<HeliumError> DidStart;
 
         /// <summary>
         ///   Called after an interstitial has been loaded from the Helium API
@@ -67,7 +67,7 @@ namespace Helium
         /// </summary>
         /// <param name="placement">The placement for the Helium interstitial.</param>
         /// <param name="error">The error encountered, if any.</param>
-        public static event Action<string, HeliumError> didLoadInterstitial;
+        public static event Action<string, HeliumError> DidLoadInterstitial;
 
         /// <summary>
         ///   Called with bid information after an interstitial has been loaded from the Helium API
@@ -75,14 +75,14 @@ namespace Helium
         /// </summary>
         /// <param name="placement">The placement for the Helium interstitial.</param>
         /// <param name="info">A dictionary with information</param>
-        public static event Action<string, HeliumBidInfo> didWinBidInterstitial;
+        public static event Action<string, HeliumBidInfo> DidWinBidInterstitial;
 
         /// <summary>
         ///   Called after an interstitial has been displayed on screen.
         /// </summary>
         /// <param name="placement">The placement for the Helium interstitial.</param>
         /// <param name="error">The error encountered, if any.</param>
-        public static event Action<string, HeliumError> didShowInterstitial;
+        public static event Action<string, HeliumError> DidShowInterstitial;
 
         /// <summary>
         ///  Called after an interstitial has been closed.
@@ -90,7 +90,7 @@ namespace Helium
         /// </summary>
         /// <param name="placement">The placement for the Helium interstitial.</param>
         /// <param name="error">The error encountered, if any.</param>
-        public static event Action<string, HeliumError> didCloseInterstitial;
+        public static event Action<string, HeliumError> DidCloseInterstitial;
 
         /// <summary>
         ///  Called after an interstitial has been clicked.
@@ -98,7 +98,7 @@ namespace Helium
         /// </summary>
         /// <param name="placement">The placement for the Helium interstitial.</param>
         /// <param name="error">The error encountered, if any.</param>
-        public static event Action<string, HeliumError> didClickInterstitial;
+        public static event Action<string, HeliumError> DidClickInterstitial;
 
         /// <summary>
         ///   Called after a rewarded ad has been loaded from the Helium API
@@ -106,7 +106,7 @@ namespace Helium
         /// </summary>
         /// <param name="placement">The placement for the Helium rewarded ad.</param>
         /// <param name="error">The error encountered, if any.</param>
-        public static event Action<string, HeliumError> didLoadRewarded;
+        public static event Action<string, HeliumError> DidLoadRewarded;
 
         /// <summary>
         ///   Called with bid information after an rewarded has been loaded from the Helium API
@@ -114,14 +114,14 @@ namespace Helium
         /// </summary>
         /// <param name="placement">The placement for the Helium interstitial.</param>
         /// <param name="info">A dictionary with information</param>
-        public static event Action<string, HeliumBidInfo> didWinBidRewarded;
+        public static event Action<string, HeliumBidInfo> DidWinBidRewarded;
 
         /// <summary>
         ///   Called after a rewarded ad has been displayed on screen.
         /// </summary>
         /// <param name="placement">The placement for the Helium rewarded ad.</param>
         /// <param name="error">The error encountered, if any.</param>
-        public static event Action<string, HeliumError> didShowRewarded;
+        public static event Action<string, HeliumError> DidShowRewarded;
 
         /// <summary>
         ///  Called after a rewarded ad has been closed.
@@ -129,7 +129,7 @@ namespace Helium
         /// </summary>
         /// <param name="placement">The placement for the Helium rewarded ad.</param>
         /// <param name="error">The error encountered, if any.</param>
-        public static event Action<string, HeliumError> didCloseRewarded;
+        public static event Action<string, HeliumError> DidCloseRewarded;
 
         /// <summary>
         ///  Called after a rewarded ad has been clicked.
@@ -137,7 +137,7 @@ namespace Helium
         /// </summary>
         /// <param name="placement">The placement for the Helium rewarded ad.</param>
         /// <param name="error">The error encountered, if any.</param>
-        public static event Action<string, HeliumError> didClickRewarded;
+        public static event Action<string, HeliumError> DidClickRewarded;
 
         /// <summary>
         ///  Called after a rewarded has been received (after watching a rewarded video).
@@ -145,7 +145,7 @@ namespace Helium
         ///  This version could be called on a background thread, even if the Unity runtime is paused.
         /// </summary>
         /// <param name="reward">The reward earned.</param>
-        public static event Action<string> didReceiveReward;
+        public static event Action<string> DidReceiveReward;
 
         /// <summary>
         ///   Called after an banner has been loaded from the Helium API
@@ -153,7 +153,7 @@ namespace Helium
         /// </summary>
         /// <param name="placement">The placement for the Helium banner.</param>
         /// <param name="error">The error encountered, if any.</param>
-        public static event Action<string, HeliumError> didLoadBanner;
+        public static event Action<string, HeliumError> DidLoadBanner;
 
         /// <summary>
         ///   Called with bid information after an banner has been loaded from the Helium API
@@ -161,14 +161,14 @@ namespace Helium
         /// </summary>
         /// <param name="placement">The placement for the Helium banner.</param>
         /// <param name="info">A dictionary with information</param>
-        public static event Action<string, HeliumBidInfo> didWinBidBanner;
+        public static event Action<string, HeliumBidInfo> DidWinBidBanner;
 
         /// <summary>
         ///   Called after an banner has been displayed on screen.
         /// </summary>
         /// <param name="placement">The placement for the Helium banner.</param>
         /// <param name="error">The error encountered, if any.</param>
-        public static event Action<string, HeliumError> didShowBanner;
+        public static event Action<string, HeliumError> DidShowBanner;
 
         /// <summary>
         ///  Called after a banner ad has been clicked.
@@ -176,7 +176,7 @@ namespace Helium
         /// </summary>
         /// <param name="placement">The placement for the Helium banner ad.</param>
         /// <param name="error">The error encountered, if any.</param>
-        public static event Action<string, HeliumError> didClickBanner;
+        public static event Action<string, HeliumError> DidClickBanner;
 
         /// <summary>
         ///   Called immediately when impression level revenue data has been received after an
@@ -185,26 +185,26 @@ namespace Helium
         /// <param name="placement">The placement the Helium ad.</param>
         /// <param name="impressionData">The impression data delivered within a hashtable.</param>
         /// </summary>
-        public static event Action<string, Hashtable> didReceiveImpressionLevelRevenueData;
+        public static event Action<string, Hashtable> DidReceiveImpressionLevelRevenueData;
 
         /// <summary>
         /// Called when an unexpected system error occurred.
         /// <param name="message">A message that describes the unexpected system error.</param>
         /// </summary>
-        public static event Action<string> unexpectedSystemErrorDidOccur
+        public static event Action<string> UnexpectedSystemErrorDidOccur
         {
             add
             {
-                privateUnexpectedSystemErrorDidOccur += value;
-                HeliumEventProcessor.unexpectedSystemErrorDidOccur += value;
+                PrivateUnexpectedSystemErrorDidOccur += value;
+                HeliumEventProcessor.UnexpectedSystemErrorDidOccur += value;
             }
             remove
             {
-                privateUnexpectedSystemErrorDidOccur -= value;
-                HeliumEventProcessor.unexpectedSystemErrorDidOccur -= value;
+                PrivateUnexpectedSystemErrorDidOccur -= value;
+                HeliumEventProcessor.UnexpectedSystemErrorDidOccur -= value;
             }
         }
-        private static event Action<string> privateUnexpectedSystemErrorDidOccur;
+        private static event Action<string> PrivateUnexpectedSystemErrorDidOccur;
 
 
         //////////////////////////////////////////////////////
@@ -215,7 +215,7 @@ namespace Helium
         /// Returns a new ad unit that can be used to load and display interstitial ads.
         /// </summary>
         /// <param name="placementName">The placement ID for the HeliumSdk impression type.</param>
-        public static HeliumInterstitialAd getInterstitialAd(string placementName)
+        public static HeliumInterstitialAd GetInterstitialAd(string placementName)
         {
             return HeliumExternal.getInterstitialAd(placementName);
         }
@@ -224,7 +224,7 @@ namespace Helium
         /// Returns a new ad unit that can be used to load and display rewarded video ads.
         /// </summary>
         /// <param name="placementName">The placement ID for the HeliumSdk impression type.</param>
-        public static HeliumRewardedAd getRewardedAd(string placementName)
+        public static HeliumRewardedAd GetRewardedAd(string placementName)
         {
             return HeliumExternal.getRewardedAd(placementName);
         }
@@ -233,7 +233,7 @@ namespace Helium
         /// Returns a new ad unit that can be used to load and display banner ads.
         /// </summary>
         /// <param name="placementName">The placement ID for the HeliumSdk impression type.</param>
-        public static HeliumBannerAd getBannerAd(string placementName, HeliumBannerAdSize size)
+        public static HeliumBannerAd GetBannerAd(string placementName, HeliumBannerAdSize size)
         {
             return HeliumExternal.getBannerAd(placementName, size);
         }
@@ -250,7 +250,7 @@ namespace Helium
         /// </summary>
         static private HeliumSdk instance = null;
 
-        private HeliumEventProcessor eventProcessor = new HeliumEventProcessor();
+        private readonly HeliumEventProcessor eventProcessor = new HeliumEventProcessor();
 
         public static HeliumSdk Create()
         {
@@ -330,6 +330,7 @@ namespace Helium
             }
         }
 
+#pragma warning disable UNT0001
         void OnDisable()
         {
             // Shut down the HeliumSdk plugin
@@ -341,92 +342,90 @@ namespace Helium
 			}
             #endif
         }
+#pragma warning restore UNT0001
 
         //////////////////////////////////////////////////////
         /// Managing the events and firing them
         //////////////////////////////////////////////////////
 
-        private void didStartEvent(string dataString)
+#pragma warning disable IDE0051
+
+        private void DidStartEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithError(dataString, didStart);
+            eventProcessor.ProcessEventWithError(dataString, DidStart);
         }
 
-        private void didCloseInterstitialEvent(string dataString)
+        private void DidCloseInterstitialEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndError(dataString, didCloseInterstitial);
+            eventProcessor.ProcessEventWithPlacementAndError(dataString, DidCloseInterstitial);
         }
 
-        private void didLoadInterstitialEvent(string dataString)
+        private void DidLoadInterstitialEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndError(dataString, didLoadInterstitial);
+            eventProcessor.ProcessEventWithPlacementAndError(dataString, DidLoadInterstitial);
         }
 
-        private void didWinBidInterstitialEvent(string dataString)
+        private void DidWinBidInterstitialEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndBidInfo(dataString, didWinBidInterstitial);
+            eventProcessor.ProcessEventWithPlacementAndBidInfo(dataString, DidWinBidInterstitial);
         }
 
-        private void didShowInterstitialEvent(string dataString)
+        private void DidShowInterstitialEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndError(dataString, didShowInterstitial);
+            eventProcessor.ProcessEventWithPlacementAndError(dataString, DidShowInterstitial);
         }
 
-        private void didClickInterstitialEvent(string dataString)
+        private void DidClickInterstitialEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndError(dataString, didClickInterstitial);
+            eventProcessor.ProcessEventWithPlacementAndError(dataString, DidClickInterstitial);
         }
 
-        private void didCloseRewardedEvent(string dataString)
+        private void DidCloseRewardedEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndError(dataString, didCloseRewarded);
+            eventProcessor.ProcessEventWithPlacementAndError(dataString, DidCloseRewarded);
         }
 
-        private void didLoadRewardedEvent(string dataString)
+        private void DidLoadRewardedEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndError(dataString, didLoadRewarded);
+            eventProcessor.ProcessEventWithPlacementAndError(dataString, DidLoadRewarded);
         }
 
-        private void didWinBidRewardedEvent(string dataString)
+        private void DidWinBidRewardedEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndBidInfo(dataString, didWinBidRewarded);
+            eventProcessor.ProcessEventWithPlacementAndBidInfo(dataString, DidWinBidRewarded);
         }
 
-        private void didShowRewardedEvent(string dataString)
+        private void DidShowRewardedEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndError(dataString, didShowRewarded);
+            eventProcessor.ProcessEventWithPlacementAndError(dataString, DidShowRewarded);
         }
 
-        private void didClickRewardedEvent(string dataString)
+        private void DidClickRewardedEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndError(dataString, didClickRewarded);
+            eventProcessor.ProcessEventWithPlacementAndError(dataString, DidClickRewarded);
         }
 
-        private void didLoadBannerEvent(string dataString)
+        private void DidLoadBannerEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndError(dataString, didLoadBanner);
+            eventProcessor.ProcessEventWithPlacementAndError(dataString, DidLoadBanner);
         }
 
-        private void didWinBidBannerEvent(string dataString)
+        private void DidWinBidBannerEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndBidInfo(dataString, didWinBidBanner);
+            eventProcessor.ProcessEventWithPlacementAndBidInfo(dataString, DidWinBidBanner);
         }
 
-        private void didShowBannerEvent(string dataString)
+        private void DidShowBannerEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndError(dataString, didShowBanner);
+            eventProcessor.ProcessEventWithPlacementAndError(dataString, DidShowBanner);
         }
 
-        private void didClickBannerEvent(string dataString)
+        private void DidClickBannerEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndError(dataString, didClickBanner);
+            eventProcessor.ProcessEventWithPlacementAndError(dataString, DidClickBanner);
         }
-
-        // ILRD
-
-        private void didReceiveILRD(string dataString)
-        {
-            eventProcessor.ProcessEventWithILRD(dataString, didReceiveImpressionLevelRevenueData);
-        }
+        
+#pragma warning restore IDE0051
 
         internal class BackgroundEventListener : AndroidJavaProxy
         {
@@ -435,7 +434,7 @@ namespace Helium
             public static readonly BackgroundEventListener Instance = new BackgroundEventListener();
 
             // Called from Android Wrapper (Java).
-            public void onBackgroundEvent(string eventName, string eventArgsJson)
+            public void OnBackgroundEvent(string eventName, string eventArgsJson)
             {
                 SendEvent(eventName, eventArgsJson);
             }
@@ -453,11 +452,11 @@ namespace Helium
                     // Handle events that are supported in the background.
                     switch (eventName)
                     {
-                        case "didReceiveILRD":
-                            eventProcessor.ProcessEventWithILRD(eventArgsJson, didReceiveImpressionLevelRevenueData);
+                        case "DidReceiveILRD":
+                            eventProcessor.ProcessEventWithILRD(eventArgsJson, DidReceiveImpressionLevelRevenueData);
                             break;
-                        case "didReceiveRewardEvent":
-                            eventProcessor.ProcessEventWithReward(eventArgsJson, didReceiveReward);
+                        case "DidReceiveRewardEvent":
+                            eventProcessor.ProcessEventWithReward(eventArgsJson, DidReceiveReward);
                             break;
                         default:
                             throw new ArgumentException("Unrecognized event callback name.");
@@ -474,9 +473,9 @@ namespace Helium
 
         private static void ReportUnexpectedSystemError(string message)
         {
-            if (privateUnexpectedSystemErrorDidOccur == null)
+            if (PrivateUnexpectedSystemErrorDidOccur == null)
                 return;
-            privateUnexpectedSystemErrorDidOccur(message);
+            PrivateUnexpectedSystemErrorDidOccur(message);
         }
     }
 }

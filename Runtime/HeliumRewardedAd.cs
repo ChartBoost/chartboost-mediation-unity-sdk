@@ -27,13 +27,12 @@ namespace Helium
 		#endif
 
 		// Class variables
-		private IntPtr uniqueId;
+		private readonly IntPtr uniqueId;
 
 		#if UNITY_IPHONE
-		public HeliumRewardedAd(IntPtr _uniqueId)
+		public HeliumRewardedAd(IntPtr uniqueId)
 		{
-			// Set ID and get the appName and appIcon
-			uniqueId = _uniqueId;
+			this.uniqueId = uniqueId;
 		}
 		#elif UNITY_ANDROID
 		private AndroidJavaObject androidAd;
@@ -53,7 +52,7 @@ namespace Helium
 		/// <param name="keyword">The keyword (maximum of 64 characters)</param>
 		/// <param name="value">The value (maximum of 256 characters)</param>
 		/// <returns>true if the keyword was successfully set, else false</returns>
-		public bool setKeyword(string keyword, string value)
+		public bool SetKeyword(string keyword, string value)
 		{
 			#if UNITY_IPHONE
 			return _heliumSdkRewardedSetKeyword(uniqueId, keyword, value);
@@ -69,7 +68,7 @@ namespace Helium
 		/// </summary>
 		/// <param name="keyword">The keyword to remove.</param>
 		/// <returns>The currently set value, else null</returns>
-		public string removeKeyword(string keyword)
+		public string RemoveKeyword(string keyword)
 		{
 			#if UNITY_IPHONE
 			return _heliumSdkRewardedRemoveKeyword(uniqueId, keyword);
@@ -83,7 +82,7 @@ namespace Helium
 		/// <summary>
 		/// Load the advertisement.
 		/// </summary>
-		public void load()
+		public void Load()
 		{
 			#if UNITY_IPHONE
 			System.GC.Collect(); // make sure previous rewarded ads get destructed if necessary
@@ -98,7 +97,7 @@ namespace Helium
 		/// load can be performed.
 		/// </summary>
 		/// <returns>true if successfully cleared</returns>
-		public bool clearLoaded()
+		public bool ClearLoaded()
 		{
 			#if UNITY_IPHONE
 			return _heliumSdkRewardedClearLoaded(uniqueId);
@@ -112,7 +111,7 @@ namespace Helium
 		/// <summary>
 		/// Show a previously loaded advertisement.
 		/// </summary>
-		public void show()
+		public void Show()
 		{
 			#if UNITY_IPHONE
 			_heliumSdkRewardedAdShow(uniqueId);
@@ -125,7 +124,7 @@ namespace Helium
 		/// Indicates if an advertisement is ready to show.
 		/// </summary>
 		/// <returns>True if ready to show.</returns>
-		public bool readyToShow()
+		public bool ReadyToShow()
 		{
 			#if UNITY_IPHONE
 			return _heliumSdkRewardedAdReadyToShow(uniqueId);
@@ -140,7 +139,7 @@ namespace Helium
 		/// Specify custom data that can be passed along with the rewarded advertisment.
 		/// </summary>
 		/// <param name="customData">The custom data (for example: a BASE64 encoded JSON string).</param>
-		public void setCustomData(string customData)
+		public void SetCustomData(string customData)
         {
 			#if UNITY_IPHONE
 			_heliumSdkRewardedAdSetCustomData(uniqueId, customData);
@@ -152,7 +151,7 @@ namespace Helium
 		/// <summary>
 		/// Destroy the advertisement to free up memory resources.
 		/// </summary>
-		public void destroy()
+		public void Destroy()
 		{
 			#if UNITY_ANDROID
 			androidAd.Call("destroy");

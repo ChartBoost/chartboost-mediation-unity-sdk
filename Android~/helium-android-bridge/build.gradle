@@ -1,0 +1,152 @@
+plugins {
+    id 'com.android.library'
+    id 'maven-publish'
+    id 'signing'
+}
+
+String unityHeliumPluginVersion = rootProject.ext['unitySdkVersion']
+
+android {
+    compileSdkVersion = 32
+    buildToolsVersion = '32.0.0'
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 32
+    }
+
+    sourceSets {
+        main {
+            java {
+                srcDir 'src/main/java'
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+}
+
+signing {
+   required {
+       isPublicRelease && gradle.taskGraph.hasTask("publish")
+   }
+    useGpgCmd()
+    sign publishing.publications
+}
+
+tasks.withType(Sign) {
+   onlyIf {isPublicRelease}
+}
+
+task javaDoc(type: Jar) {
+    from android.sourceSets.release.java.srcDirs
+    classifier = 'javadoc'
+}
+
+task javaSources(type: Jar) {
+    from android.sourceSets.release.java.srcDirs
+    classifier = 'sources'
+}
+
+repositories {
+    google()
+    mavenCentral()
+    flatDir {
+        dirs 'helium-sdk-aar'
+    }
+}
+
+ext {
+    unityBridgeName = "Helium Unity Bridge"
+}
+
+dependencies {
+    //Make sure to bump the version on new releases.
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    implementation(name: 'Helium-2.10.0-release', ext: 'aar')
+}
+
+task assembleForPlugin(type: Jar, dependsOn: 'bundleLibRuntimeToJarRelease') {
+    // We are only interested in the HeliumUnityBridge classes only.
+    from zipTree("$projectDir/build/intermediates/runtime_library_classes_jar/release/classes.jar")
+    include '**/*.class'
+    exclude 'META-INF/'
+    exclude 'META-INF/MANIFEST.MF'
+}
+
+task copyReleaseAndroidBridgeForPackaging(type: Copy, dependsOn: 'assembleForPlugin') {
+    from ("$projectDir/build/intermediates/runtime_library_classes_jar/release/classes.jar")
+    into ("$rootDir/plugin/Assets/Plugins/Android")
+
+    rename("classes.jar", "helium-android-bridge-${unityHeliumPluginVersion}.jar")
+}
+
+////
+// -- Publishing
+////
+def groupProjectID = 'com.chartboost'
+def artifactProjectID = 'helium-unity-bridge'
+
+afterEvaluate {
+    publishing {
+        publications {
+            HeliumUnityBridgeRelease(MavenPublication) {
+                artifact assembleForPlugin
+
+                artifact javaDoc
+                artifact javaSources
+
+                groupId = groupProjectID
+                artifactId = artifactProjectID
+                version = project.hasProperty('snapshot') ? unityHeliumPluginVersion + rootProject.SNAPSHOT : unityHeliumPluginVersion
+                
+                pom {
+                    name = unityBridgeName
+                    description = rootProject.DESCRIPTION
+                    url = rootProject.HELIUM_URL
+
+                    licenses {
+                        license {
+                            name = rootProject.LICENSE
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = rootProject.DEVELOPER_ID
+                            name = rootProject.DEVELOPER_NAME
+                            email = rootProject.DEVELOPER_EMAIL
+                        }
+                    }
+
+                    scm {
+                        url = rootProject.GIT_URL
+                        connection = rootProject.GIT_URL
+                        developerConnection = rootProject.GIT_URL
+                    }
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                // Main Release Repository
+                def mavenCentralRepoURL = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                // Snapshot Repository
+                def mavenCentralSnapshotURL = "https://oss.sonatype.org/content/repositories/snapshots/"
+
+                //Use the url based on the type of the build being pushed.
+                url = project.hasProperty('snapshot') ? mavenCentralSnapshotURL : mavenCentralRepoURL
+
+                //Credentials
+                credentials {
+                    username = project.hasProperty('ossrhUser') ? project.property('ossrhUser') : System.getenv('OSSRH_USER')
+                    password = project.hasProperty('ossrhKey') ? project.property('ossrhKey') : System.getenv('OSSRH_KEY')
+                }
+            }
+        }
+    }
+}

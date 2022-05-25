@@ -50,16 +50,17 @@ namespace Helium
 		#endif
 
 		// Class variables
-		private IntPtr uniqueId;
+		private readonly IntPtr uniqueId;
 
 		#if UNITY_IPHONE
-		public HeliumBannerAd(IntPtr _uniqueId) {
-			// Set ID and get the appName and appIcon
-			uniqueId = _uniqueId;
+		public HeliumBannerAd(IntPtr uniqueId)
+		{
+			this.uniqueId = uniqueId;
 		}
 		#elif UNITY_ANDROID
 		private AndroidJavaObject androidAd;
-		public HeliumBannerAd(AndroidJavaObject ad) {
+		public HeliumBannerAd(AndroidJavaObject ad)
+		{
 			androidAd = ad;
 		}
 		#endif
@@ -74,7 +75,7 @@ namespace Helium
 		/// <param name="keyword">The keyword (maximum of 64 characters)</param>
 		/// <param name="value">The value (maximum of 256 characters)</param>
 		/// <returns>true if the keyword was successfully set, else false</returns>
-		public bool setKeyword(string keyword, string value)
+		public bool SetKeyword(string keyword, string value)
 		{
 			#if UNITY_IPHONE
 			return _heliumSdkBannerSetKeyword(uniqueId, keyword, value);
@@ -90,7 +91,7 @@ namespace Helium
 		/// </summary>
 		/// <param name="keyword">The keyword to remove.</param>
 		/// <returns>The currently set value, else null</returns>
-		public string removeKeyword(string keyword)
+		public string RemoveKeyword(string keyword)
 		{
 			#if UNITY_IPHONE
 			return _heliumSdkBannerRemoveKeyword(uniqueId, keyword);
@@ -104,7 +105,7 @@ namespace Helium
 		/// <summary>
 		/// Load the advertisement.
 		/// </summary>
-		public void load() {
+		public void Load() {
 			#if UNITY_IPHONE
 			_heliumSdkBannerAdLoad(uniqueId);
 			#elif UNITY_ANDROID
@@ -117,7 +118,7 @@ namespace Helium
 		/// load can be performed.
 		/// </summary>
 		/// <returns>true if successfully cleared</returns>
-		public bool clearLoaded() {
+		public bool ClearLoaded() {
 			#if UNITY_IPHONE
 			return _heliumSdkBannerClearLoaded(uniqueId);
 			#elif UNITY_ANDROID
@@ -131,7 +132,7 @@ namespace Helium
 		/// Show a previously loaded advertisement at a specific screen location.
 		/// </summary>
 		/// <param name="screenLocation">The screen location to show the banner at.</param>
-		public void show(HeliumBannerAdScreenLocation screenLocation)
+		public void Show(HeliumBannerAdScreenLocation screenLocation)
 		{
 			#if UNITY_IPHONE
 			System.GC.Collect(); // make sure previous banner ads get destructed if necessary
@@ -144,7 +145,7 @@ namespace Helium
 		/// <summary>
 		/// Remove the banner.
 		/// </summary>
-		public void remove()
+		public void Remove()
 		{
 			#if UNITY_IPHONE
 			_heliumSdkBannerRemove(uniqueId);
@@ -158,7 +159,7 @@ namespace Helium
 		/// Indicates if an advertisement is ready to show.
 		/// </summary>
 		/// <returns>True if ready to show.</returns>
-		public bool readyToShow()
+		public bool ReadyToShow()
 		{
 			#if UNITY_IPHONE
 			return _heliumSdkBannerAdReadyToShow(uniqueId);
@@ -171,7 +172,7 @@ namespace Helium
 
 		/// <summary>This method changes the visibility of the banner ad.</summary>
 		/// <param name="isVisible">Specify if the banner should be visible.</param>
-		public void setVisibility(bool isVisible)
+		public void SetVisibility(bool isVisible)
 		{
 			#if UNITY_IPHONE
 			_heliumSdkBannerSetVisibility(uniqueId, isVisible);
@@ -183,7 +184,7 @@ namespace Helium
 		/// <summary>
 		/// Destroy the advertisement to free up memory resources.
 		/// </summary>
-		public void destroy()
+		public void Destroy()
 		{
 			#if UNITY_ANDROID
 			androidAd.Call("destroy");

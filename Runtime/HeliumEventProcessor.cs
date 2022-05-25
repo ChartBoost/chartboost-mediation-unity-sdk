@@ -11,7 +11,7 @@ namespace Helium
         /// Called when an unexpected system error occurred.
         /// <param name="message">A message that describes the unexpected system error.</param>
         /// </summary>
-        public static event Action<string> unexpectedSystemErrorDidOccur;
+        public static event Action<string> UnexpectedSystemErrorDidOccur;
 
         public void ProcessEventWithError(string dataString, Action<HeliumError> ev)
         {
@@ -212,9 +212,9 @@ namespace Helium
 
         private static void ReportUnexpectedSystemError(string message)
         {
-            if (unexpectedSystemErrorDidOccur == null)
+            if (UnexpectedSystemErrorDidOccur == null)
                 return;
-            unexpectedSystemErrorDidOccur(message);
+            UnexpectedSystemErrorDidOccur(message);
         }
 
         private static HeliumError ImpressionErrorFromInt(object errorObj)

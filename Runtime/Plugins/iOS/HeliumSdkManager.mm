@@ -76,7 +76,7 @@ static void heliumSubscribeToILRDNotifications()
         HeliumImpressionData *ilrd = note.object;
         NSString *placement = ilrd.placement;
         NSDictionary *json = ilrd.jsonData;
-        [HeliumSdkManager sendUnityEvent:@"didReceiveILRD" withParam:serializePlacementIRLDDictionary(placement, json) backgroundOK:YES];
+        [HeliumSdkManager sendUnityEvent:@"DidReceiveILRD" withParam:serializePlacementIRLDDictionary(placement, json) backgroundOK:YES];
     }];
 }
 
@@ -226,7 +226,7 @@ static void heliumSubscribeToILRDNotifications()
 
 - (void)heliumDidStartWithError:(HeliumError *)error;
 {
-    [self sendUnityEvent:@"didStartEvent" withParam:serializeError(error)];
+    [self sendUnityEvent:@"DidStartEvent" withParam:serializeError(error)];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -235,13 +235,13 @@ static void heliumSubscribeToILRDNotifications()
 - (void)heliumInterstitialAdWithPlacementName:(NSString*)placementName
                              didLoadWithError:(HeliumError *)error
 {
-    [self sendUnityEvent:@"didLoadInterstitialEvent" withParam:serializePlacementError(placementName, error)];
+    [self sendUnityEvent:@"DidLoadInterstitialEvent" withParam:serializePlacementError(placementName, error)];
 }
 
 - (void)heliumInterstitialAdWithPlacementName:(NSString*)placementName
                              didShowWithError:(HeliumError *)error
 {
-    [self sendUnityEvent:@"didShowInterstitialEvent" withParam:serializePlacementError(placementName, error)];
+    [self sendUnityEvent:@"DidShowInterstitialEvent" withParam:serializePlacementError(placementName, error)];
     if (!error) {
         UnityPause(true);
     }
@@ -251,19 +251,19 @@ static void heliumSubscribeToILRDNotifications()
                             didCloseWithError:(HeliumError *)error
 {
     UnityPause(false);
-    [self sendUnityEvent:@"didCloseInterstitialEvent" withParam:serializePlacementError(placementName, error)];
+    [self sendUnityEvent:@"DidCloseInterstitialEvent" withParam:serializePlacementError(placementName, error)];
 }
 
 - (void)heliumInterstitialAdWithPlacementName:(NSString*)placementName
                     didLoadWinningBidWithInfo:(NSDictionary*)info
 {
-    [self sendUnityEvent:@"didWinBidInterstitialEvent" withParam:serializePlacementInfoDictionary(placementName, info)];
+    [self sendUnityEvent:@"DidWinBidInterstitialEvent" withParam:serializePlacementInfoDictionary(placementName, info)];
 }
 
 - (void)heliumInterstitialAdWithPlacementName:(NSString *)placementName
                             didClickWithError:(nullable HeliumError *)error
 {
-    [self sendUnityEvent:@"didClickInterstitialEvent" withParam:serializePlacementError(placementName, error)];
+    [self sendUnityEvent:@"DidClickInterstitialEvent" withParam:serializePlacementError(placementName, error)];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -272,13 +272,13 @@ static void heliumSubscribeToILRDNotifications()
 - (void)heliumRewardedAdWithPlacementName:(NSString*)placementName
                          didLoadWithError:(HeliumError *)error
 {
-    [self sendUnityEvent:@"didLoadRewardedEvent" withParam:serializePlacementError(placementName, error)];
+    [self sendUnityEvent:@"DidLoadRewardedEvent" withParam:serializePlacementError(placementName, error)];
 }
 
 - (void)heliumRewardedAdWithPlacementName:(NSString*)placementName
                          didShowWithError:(HeliumError *)error
 {
-    [self sendUnityEvent:@"didShowRewardedEvent" withParam:serializePlacementError(placementName, error)];
+    [self sendUnityEvent:@"DidShowRewardedEvent" withParam:serializePlacementError(placementName, error)];
     if (!error) {
         UnityPause(true);
     }
@@ -288,25 +288,25 @@ static void heliumSubscribeToILRDNotifications()
                         didCloseWithError:(HeliumError *)error
 {
     UnityPause(false);
-    [self sendUnityEvent:@"didCloseRewardedEvent" withParam:serializePlacementError(placementName, error)];
+    [self sendUnityEvent:@"DidCloseRewardedEvent" withParam:serializePlacementError(placementName, error)];
 }
 
 - (void)heliumRewardedAdWithPlacementName:(NSString*)placementName
                              didGetReward:(NSInteger)reward
 {
-    [self sendUnityEvent:@"didReceiveRewardEvent" withParam:serializeReward(placementName, reward) backgroundOK:YES];
+    [self sendUnityEvent:@"DidReceiveRewardEvent" withParam:serializeReward(placementName, reward) backgroundOK:YES];
 }
 
 - (void)heliumRewardedAdWithPlacementName:(NSString*)placementName
                 didLoadWinningBidWithInfo:(NSDictionary*)info
 {
-    [self sendUnityEvent:@"didWinBidRewardedEvent" withParam:serializePlacementInfoDictionary(placementName, info)];
+    [self sendUnityEvent:@"DidWinBidRewardedEvent" withParam:serializePlacementInfoDictionary(placementName, info)];
 }
 
 - (void)heliumRewardedAdWithPlacementName:(NSString *)placementName
                         didClickWithError:(nullable HeliumError *)error
 {
-    [self sendUnityEvent:@"didClickRewardedEvent" withParam:serializePlacementError(placementName, error)];
+    [self sendUnityEvent:@"DidClickRewardedEvent" withParam:serializePlacementError(placementName, error)];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -315,31 +315,31 @@ static void heliumSubscribeToILRDNotifications()
 - (void)heliumBannerAdWithPlacementName:(NSString *)placementName
                        didLoadWithError:(HeliumError *)error
 {
-    [self sendUnityEvent:@"didLoadBannerEvent" withParam:serializePlacementError(placementName, error)];
+    [self sendUnityEvent:@"DidLoadBannerEvent" withParam:serializePlacementError(placementName, error)];
 }
 
 - (void)heliumBannerAdWithPlacementName:(NSString *)placementName
                        didShowWithError:(HeliumError *)error
 {
-    [self sendUnityEvent:@"didShowBannerEvent" withParam:serializePlacementError(placementName, error)];
+    [self sendUnityEvent:@"DidShowBannerEvent" withParam:serializePlacementError(placementName, error)];
 }
 
 - (void)heliumBannerAdWithPlacementName:(NSString *)placementName
                       didCloseWithError:(HeliumError *)error
 {
-    [self sendUnityEvent:@"didCloseBannerEvent" withParam:serializePlacementError(placementName, error)];
+    [self sendUnityEvent:@"DidCloseBannerEvent" withParam:serializePlacementError(placementName, error)];
 }
 
 - (void)heliumBannerAdWithPlacementName:(NSString *)placementName
               didLoadWinningBidWithInfo:(NSDictionary*)info
 {
-    [self sendUnityEvent:@"didWinBidBannerEvent" withParam:serializePlacementInfoDictionary(placementName, info)];
+    [self sendUnityEvent:@"DidWinBidBannerEvent" withParam:serializePlacementInfoDictionary(placementName, info)];
 }
 
 - (void)heliumBannerAdWithPlacementName:(NSString *)placementName
                       didClickWithError:(nullable HeliumError *)error
 {
-    [self sendUnityEvent:@"didClickBannerEvent" withParam:serializePlacementError(placementName, error)];
+    [self sendUnityEvent:@"DidClickBannerEvent" withParam:serializePlacementError(placementName, error)];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
