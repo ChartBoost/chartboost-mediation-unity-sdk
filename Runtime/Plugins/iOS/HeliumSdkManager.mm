@@ -56,11 +56,11 @@ const char* serializePlacementInfoDictionary(NSString *placementName, NSDictiona
     return serializeDictionary(data);
 }
 
-const char* serializePlacementIRLDDictionary(NSString *placementName, NSDictionary *irld)
+const char* serializePlacementILRDDictionary(NSString *placementName, NSDictionary *ilrd)
 {
     NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                           placementName, @"placementName",
-                          irld ? irld : [NSNull null], @"irld",
+                          ilrd ? ilrd : [NSNull null], @"ilrd",
                           nil];
     return serializeDictionary(data);
 }
@@ -76,7 +76,7 @@ static void heliumSubscribeToILRDNotifications()
         HeliumImpressionData *ilrd = note.object;
         NSString *placement = ilrd.placement;
         NSDictionary *json = ilrd.jsonData;
-        [HeliumSdkManager sendUnityEvent:@"DidReceiveILRD" withParam:serializePlacementIRLDDictionary(placement, json) backgroundOK:YES];
+        [HeliumSdkManager sendUnityEvent:@"DidReceiveILRD" withParam:serializePlacementILRDDictionary(placement, json) backgroundOK:YES];
     }];
 }
 

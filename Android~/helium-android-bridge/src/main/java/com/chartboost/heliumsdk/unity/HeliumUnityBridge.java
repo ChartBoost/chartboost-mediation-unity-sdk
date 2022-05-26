@@ -57,7 +57,7 @@ public class HeliumUnityBridge {
         void onBackgroundEvent(String event, String json);
     }
     private static IBackgroundEventListener bgEventListener;
-    private HeliumIlrdObserver irldObserver;
+    private HeliumIlrdObserver ilrdObserver;
 
     // Stores a static instance of the HeliumPlugin class for easy access
     // from Unity
@@ -135,7 +135,7 @@ public class HeliumUnityBridge {
         JSONObject infoObj = new JSONObject();
         try {
             serializedString.put("placementName", placementName);
-            serializedString.put("irld", ilrdInfo);
+            serializedString.put("ilrd", ilrdInfo);
         } catch (JSONException e) {
             Log.d(TAG, "serializeError", e);
         }
@@ -189,7 +189,7 @@ public class HeliumUnityBridge {
     public void start(final String appId, final String appSignature, final String unityVersion, final IBackgroundEventListener backgroundEventListener) {
         _activity = UnityPlayer.currentActivity;
         HeliumUnityBridge.bgEventListener = backgroundEventListener;
-        irldObserver = new HeliumIlrdObserver() {
+        ilrdObserver = new HeliumIlrdObserver() {
             @Override
             public void onImpression(HeliumImpressionData impData) {
                 if (impData != null) {
@@ -209,7 +209,7 @@ public class HeliumUnityBridge {
                             Log.d("Unity", "HeliumUnityBridge: Plugin Initialized");
                             HeliumSdk.setGameEngine("unity", unityVersion);
                             HeliumUnityBridge.this.isHeliumInitialized = true;
-                            HeliumSdk.subscribeIlrd(irldObserver);
+                            HeliumSdk.subscribeIlrd(ilrdObserver);
                         } else {
                             Log.d("Unity", "HeliumUnityBridge: Plugin failed to initialize: " + error.toString());
                         }
@@ -241,9 +241,9 @@ public class HeliumUnityBridge {
     }
 
     public void destroy() {
-        if (irldObserver != null) {
-            HeliumSdk.unsubscribeIlrd(irldObserver);
-            irldObserver = null;
+        if (ilrdObserver != null) {
+            HeliumSdk.unsubscribeIlrd(ilrdObserver);
+            ilrdObserver = null;
         }
         runTaskOnUiThread(new Runnable() {
             @Override
