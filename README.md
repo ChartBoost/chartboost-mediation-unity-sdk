@@ -50,9 +50,10 @@ Make sure the following settings are setup as follows:
 - [x] Patch mainTemplate.gradle
 - [x] Use [Jetifier](https://developer.android.com/studio/command-line/jetifier)
 
-This will make sure resolution of dependencies does not happen automatically or when trying to make a build. This is ideal since you will only want to resolve dependencies when you know new libraries with Mobile Native dependencies are being added into the Unity project.
-Additionally, you can notice that if you leave auto resolution & resolution on build enable without following the recommended setup stated above. The libraries will get downloaded into your Unity project every time a new ..Dependency.xml file is added into the project or when a build is generated.
-By selecting to patch the mainTemplate.gradle, your dependencies should look something like this: 
+The settings above will make sure resolution of dependencies does not happen automatically when adding new ..Dependency.xml files or when trying to make a build. This is ideal since you will only want to resolve dependencies when you know new libraries with Mobile Native dependencies are being added into the Unity project.
+Additionally, you can notice that if you leave auto resolution & resolution on build enable without following the recommended setup stated above, the libraries will get automatically downloaded into your Unity project every time a new ..Dependency.xml file is added or when a build is generated.
+
+By selecting to patch the mainTemplate.gradle, your dependencies should look something like this:
 
 ```gradle
 dependencies {
