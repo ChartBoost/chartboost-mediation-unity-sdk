@@ -9,7 +9,6 @@
   "changelogUrl": "https://answers.chartboost.com/child_article/unity-2",
   "licensesUrl": "https://answers.chartboost.com/child_article/legal",
   "dependencies": {
-    "com.chartboost.unity.edm": "1.2.171",
     "com.unity.nuget.newtonsoft-json": "3.0.2"
   },
   "samples": [
