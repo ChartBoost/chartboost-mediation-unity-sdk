@@ -36,6 +36,10 @@
     public <fields>;
 }
 
+-keep public class com.chartboost.heliumsdk.domain.AdData {
+    public *;
+}
+
 -keep public class com.chartboost.heliumsdk.domain.Ad$AdType {}
 -keep public class com.chartboost.heliumsdk.domain.Ad$State {}
 
