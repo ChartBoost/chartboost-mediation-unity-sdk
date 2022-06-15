@@ -7,66 +7,61 @@ using UnityEditor;
 
 namespace Helium {
 
-#if UNITY_EDITOR
-	[InitializeOnLoad]
-#endif
 	public class HeliumSettings : ScriptableObject
 	{
-		const string package = "com.chartboost.helium";
-		const string cbSettingsAssetName = "HeliumSettings";
-	    const string cbSettingsPath = package + "/Resources";
-	    const string cbSettingsAssetExtension = ".asset";
+		private const string Package = "com.chartboost.helium";
+		private const string CbSettingsAssetName = "HeliumSettings";
+		private const string CbSettingsPath = Package + "/Resources";
+		private const string CbSettingsAssetExtension = ".asset";
 
-	    const string iOSExampleAppIDLabel = "HE_IOS_APP_ID";
-	    const string iOSExampleAppSignatureLabel = "HE_IOS_APP_SIGNATURE";
-        const string iOSExampleAppID = "59c04299d989d60fc5d2c782";
-        const string iOSExampleAppSignature = "";
+	    private const string IOSExampleAppIDLabel = "HE_IOS_APP_ID";
+	    private const string IOSExampleAppSignatureLabel = "HE_IOS_APP_SIGNATURE";
+	    private const string IOSExampleAppID = "59c04299d989d60fc5d2c782";
+	    private const string IOSExampleAppSignature = "";
 
-        const string androidExampleAppIDLabel = "HE_ANDROID_APP_ID";
-	    const string androidExampleAppSignatureLabel = "HE_ANDROID_APP_SIGNATURE";
-        const string androidExampleAppID = "4f7b433509b6025804000002";
-        const string androidExampleAppSignature = "";
+	    private const string AndroidExampleAppIDLabel = "HE_ANDROID_APP_ID";
+	    private const string AndroidExampleAppSignatureLabel = "HE_ANDROID_APP_SIGNATURE";
+	    private const string AndroidExampleAppID = "4f7b433509b6025804000002";
+	    private const string AndroidExampleAppSignature = "";
 
-        const string credentialsWarningDefaultFormat = "You are using the Helium SDK {0} example {1}! Go to the Helium SDK dashboard and replace these with an App ID & App Signature from your account! If you need help, check out answers.chartboost.com";
-	    const string credentialsWarningEmptyFormat = "You are using an empty string for the {0} {1}! Go to the Helium SDK dashboard and replace these with an App ID & App Signature from your account! If you need help, check out answers.chartboost.com";
-	    const string credentialsWarningIOS = "IOS";
-	    const string credentialsWarningAndroid = "Android";
-        const string credentialsWarningAppID = "App ID";
-        const string credentialsWarningAppSignature = "App Signature";
+	    private const string CredentialsWarningDefaultFormat = "You are using the Helium SDK {0} example {1}! Go to the Helium SDK dashboard and replace these with an App ID & App Signature from your account! If you need help, check out answers.chartboost.com";
+	    private const string CredentialsWarningEmptyFormat = "You are using an empty string for the {0} {1}! Go to the Helium SDK dashboard and replace these with an App ID & App Signature from your account! If you need help, check out answers.chartboost.com";
+	    private const string CredentialsWarningIOS = "IOS";
+	    private const string CredentialsWarningAndroid = "Android";
+	    private const string CredentialsWarningAppID = "App ID";
+	    private const string CredentialsWarningAppSignature = "App Signature";
 
-        private static bool credentialsWarning = false;
+        private static bool _credentialsWarning = false;
 
-	    private static HeliumSettings instance;
+	    private static HeliumSettings _instance;
 
-	    static HeliumSettings Instance
+	    private static HeliumSettings Instance
 	    {
 	        get
 	        {
-	            if (instance == null)
-	            {
-	                instance = Resources.Load(cbSettingsAssetName) as HeliumSettings;
-	                if (instance == null)
-	                {
-	                    // If not found, autocreate the asset object.
-	                    instance = CreateInstance<HeliumSettings>();
+		        if (_instance != null) 
+			        return _instance;
+		        _instance = Resources.Load(CbSettingsAssetName) as HeliumSettings;
+		        if (_instance != null)
+			        return _instance;
+		        // If not found, autocreate the asset object.
+	            _instance = CreateInstance<HeliumSettings>();
 #if UNITY_EDITOR
-						if (!Directory.Exists(Path.Combine(Application.dataPath, package)))
-                        {
-							AssetDatabase.CreateFolder("Assets", package);
-						}
-	                    if (!Directory.Exists(Path.Combine(Application.dataPath, cbSettingsPath)))
-	                    {
-	                        AssetDatabase.CreateFolder("Assets/" + package, "Resources");
-	                    }
-
-	                    string fullPath = Path.Combine(Path.Combine("Assets", cbSettingsPath),
-	                                                   cbSettingsAssetName + cbSettingsAssetExtension
-	                                                  );
-	                    AssetDatabase.CreateAsset(instance, fullPath);
-#endif
-	                }
+	            if (!Directory.Exists(Path.Combine(Application.dataPath, Package)))
+	            {
+		            AssetDatabase.CreateFolder("Assets", Package);
 	            }
-	            return instance;
+	            if (!Directory.Exists(Path.Combine(Application.dataPath, CbSettingsPath)))
+	            {
+		            AssetDatabase.CreateFolder("Assets/" + Package, "Resources");
+	            }
+
+	            var fullPath = Path.Combine(Path.Combine("Assets", CbSettingsPath),
+		            CbSettingsAssetName + CbSettingsAssetExtension
+	            );
+	            AssetDatabase.CreateAsset(_instance, fullPath);
+#endif
+		        return _instance;
 	        }
 	    }
 
@@ -80,159 +75,151 @@ namespace Helium {
 	    [MenuItem("Helium/Documentation")]
 	    public static void OpenDocumentation()
 	    {
-	        string url = "https://answers.chartboost.com/en-us/child_article/unity";
-	        Application.OpenURL(url);
+		    const string url = "https://answers.chartboost.com/en-us/child_article/unity";
+		    Application.OpenURL(url);
 	    }
 #endif
 
         #region App Settings
         [SerializeField]
-        public string iOSAppId = iOSExampleAppIDLabel;
+        public string iOSAppId = IOSExampleAppIDLabel;
         [SerializeField]
-        public string iOSAppSignature = iOSExampleAppSignatureLabel;
+        public string iOSAppSignature = IOSExampleAppSignatureLabel;
         [SerializeField]
-        public string androidAppId = androidExampleAppIDLabel;
+        public string androidAppId = AndroidExampleAppIDLabel;
         [SerializeField]
-        public string androidAppSignature = androidExampleAppSignatureLabel;
+        public string androidAppSignature = AndroidExampleAppSignatureLabel;
         [SerializeField]
 		public bool isLoggingEnabled = false;
 
         // allow mediation partners to set the appId and appSignature from code
         // if set, overrides the values set in the editor
-        public static void setAppId(string appId)
+        public static void SetAppId(string appId)
         {
 #if UNITY_IPHONE
             Debug.Log("Overriding IOS AppId: " + appId);
-            Instance.SetIOSAppId(appId);
+            SetIOSAppId(appId);
 #elif UNITY_ANDROID
             Debug.Log("Overriding Google AppId: " + appId);
-            Instance.SetAndroidAppId(appId);
+            SetAndroidAppId(appId);
 #endif
         }
 
-        public static void setAppSignature(string appSignature)
+        public static void SetAppSignature(string appSignature)
         {
 #if UNITY_IPHONE
             Debug.Log("Overriding IOS AppSignature: " + appSignature);
-            Instance.SetiOSAppSignature(appSignature);
+            SetiOSAppSignature(appSignature);
 #elif UNITY_ANDROID
             Debug.Log("Overriding Google AppSignature: " + appSignature);
-            Instance.SetAndroidAppSignature(appSignature);
+            SetAndroidAppSignature(appSignature);
 #endif
         }
 
         // iOS
-        public void SetIOSAppId(string id)
+        public static void SetIOSAppId(string id)
         {
-            if (!Instance.iOSAppId.Equals(id))
-            {
-                Instance.iOSAppId = id;
-                DirtyEditor();
-            }
+	        if (Instance.iOSAppId.Equals(id)) 
+		        return;
+	        Instance.iOSAppId = id;
+	        DirtyEditor();
         }
 
-        public static string getIOSAppId()
+        public static string GetIOSAppId()
         {
-            if (Instance.iOSAppId.Equals(iOSExampleAppID))
+            switch (Instance.iOSAppId)
             {
-                CredentialsWarning(credentialsWarningDefaultFormat, credentialsWarningIOS, credentialsWarningAppID);
-
-                return iOSExampleAppID;
-            }
-            if (Instance.iOSAppId.Equals(""))
-            {
-                CredentialsWarning(credentialsWarningEmptyFormat, credentialsWarningIOS, credentialsWarningAppID);
-                // use it anyway
+	            case IOSExampleAppID:
+		            CredentialsWarning(CredentialsWarningDefaultFormat, CredentialsWarningIOS, CredentialsWarningAppID);
+		            return IOSExampleAppID;
+	            default:
+		            CredentialsWarning(CredentialsWarningEmptyFormat, CredentialsWarningIOS, CredentialsWarningAppID);
+		            // use it anyway
+		            break;
             }
             return Instance.iOSAppId;
         }
 
 
-        public void SetiOSAppSignature(string signature)
+        public static void SetiOSAppSignature(string signature)
         {
-            if (!Instance.iOSAppSignature.Equals(signature))
-            {
-                Instance.iOSAppSignature = signature;
-                DirtyEditor();
-            }
+	        if (Instance.iOSAppSignature.Equals(signature))
+		        return;
+	        Instance.iOSAppSignature = signature;
+	        DirtyEditor();
         }
 
-        public static string getIOSAppSignature()
+        public static string GetIOSAppSignature()
         {
-            if (Instance.iOSAppSignature.Equals(iOSExampleAppSignature))
-            {
-                CredentialsWarning(credentialsWarningDefaultFormat, credentialsWarningIOS, credentialsWarningAppSignature);
+	        switch (Instance.iOSAppSignature)
+	        {
+		        case IOSExampleAppSignature:
+			        CredentialsWarning(CredentialsWarningDefaultFormat, CredentialsWarningIOS, CredentialsWarningAppSignature);
 
-                return iOSExampleAppSignature;
-            }
-            if (Instance.iOSAppSignature.Equals(""))
-            {
-                CredentialsWarning(credentialsWarningEmptyFormat, credentialsWarningIOS, credentialsWarningAppSignature);
-                // use it anyway
-            }
+			        return IOSExampleAppSignature;
+		        default:
+			        CredentialsWarning(CredentialsWarningEmptyFormat, CredentialsWarningIOS, CredentialsWarningAppSignature);
+			        // use it anyway
+			        break;
+	        }
             return Instance.iOSAppSignature;
         }
 
         // Android
-        public void SetAndroidAppId(string id)
+        public static void SetAndroidAppId(string id)
+        {
+	        if (Instance.androidAppId.Equals(id)) 
+		        return;
+	        Instance.androidAppId = id;
+	        DirtyEditor();
+        }
+
+		public static string GetAndroidAppId()
 		{
-			if (!Instance.androidAppId.Equals(id))
+			switch (Instance.androidAppId)
 			{
-				Instance.androidAppId = id;
-				DirtyEditor();
+				case AndroidExampleAppID:
+					CredentialsWarning(CredentialsWarningDefaultFormat, CredentialsWarningAndroid, CredentialsWarningAppID);
+					return AndroidExampleAppID;
+				case "":
+					CredentialsWarning(CredentialsWarningEmptyFormat, CredentialsWarningAndroid, CredentialsWarningAppID);
+					// use it anyway
+					break;
 			}
-		}
-
-		public static string getAndroidAppId()
-		{
-			if(Instance.androidAppId.Equals(androidExampleAppID))
-			{
-				CredentialsWarning(credentialsWarningDefaultFormat, credentialsWarningAndroid, credentialsWarningAppID);
-
-				return androidExampleAppID;
-			}
-			if(Instance.androidAppId.Equals(""))
-			{
-				CredentialsWarning(credentialsWarningEmptyFormat, credentialsWarningAndroid, credentialsWarningAppID);
-				// use it anyway
-			}
-
 			return Instance.androidAppId;
 		}
 
-        public void SetAndroidAppSignature(string signature)
+        public static void SetAndroidAppSignature(string signature)
         {
-            if (!Instance.androidAppSignature.Equals(signature))
-            {
-                Instance.androidAppSignature = signature;
-                DirtyEditor();
-            }
+	        if (Instance.androidAppSignature.Equals(signature))
+		        return;
+	        Instance.androidAppSignature = signature;
+	        DirtyEditor();
         }
 
-        public static string getAndroidAppSignature()
+        public static string GetAndroidAppSignature()
         {
-            if (Instance.androidAppSignature.Equals(androidExampleAppSignature))
-            {
-                CredentialsWarning(credentialsWarningDefaultFormat, credentialsWarningAndroid, credentialsWarningAppSignature);
+	        switch (Instance.androidAppSignature)
+	        {
+		        case AndroidExampleAppSignature:
+			        CredentialsWarning(CredentialsWarningDefaultFormat, CredentialsWarningAndroid, CredentialsWarningAppSignature);
 
-                return androidExampleAppSignature;
-            }
-            if (Instance.androidAppSignature.Equals(""))
-            {
-                CredentialsWarning(credentialsWarningEmptyFormat, credentialsWarningAndroid, credentialsWarningAppSignature);
-                // use it anyway
-            }
-            return Instance.androidAppSignature;
+			        return IOSExampleAppSignature;
+		        default:
+			        CredentialsWarning(CredentialsWarningEmptyFormat, CredentialsWarningAndroid, CredentialsWarningAppSignature);
+			        // use it anyway
+			        break;
+	        }
+	        return Instance.androidAppSignature;
         }
 
-        public static void enableLogging(bool enabled)
+        public static void EnableLogging(bool enabled)
 		{
 			Instance.isLoggingEnabled = enabled;
-
 			DirtyEditor();
 		}
 
-		public static bool isLogging()
+		public static bool IsLogging()
 		{
 			return Instance.isLoggingEnabled;
 		}
@@ -246,28 +233,22 @@ namespace Helium {
 
 	    private static void CredentialsWarning(string warning, string platform, string field)
 	    {
-	    	if(credentialsWarning == false)
-	    	{
-				credentialsWarning = true;
-
-				// Substitute the platform name in the warning
-				Debug.LogWarning( string.Format(warning, platform, field));
-			}
+		    if (_credentialsWarning) 
+			    return;
+		    _credentialsWarning = true;
+		    // Substitute the platform name in the warning
+		    Debug.LogWarning( string.Format(warning, platform, field));
 	    }
 
-		public static void resetSettings()
+		public static void ResetSettings()
 		{
 			// iOS
-			if(Instance.iOSAppId.Equals(iOSExampleAppID))
-			{
-				Instance.SetIOSAppId(iOSExampleAppIDLabel);
-			}
+			if(Instance.iOSAppId.Equals(IOSExampleAppID))
+				SetIOSAppId(IOSExampleAppIDLabel);
 
 			// Android
-			if(Instance.androidAppId.Equals(androidExampleAppID))
-			{
-				Instance.SetAndroidAppId(androidExampleAppIDLabel);
-			}
+			if(Instance.androidAppId.Equals(AndroidExampleAppID))
+				SetAndroidAppId(AndroidExampleAppIDLabel);
 		}
 
 	    #endregion

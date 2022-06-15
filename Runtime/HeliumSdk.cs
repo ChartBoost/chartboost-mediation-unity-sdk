@@ -4,16 +4,18 @@ using System.Collections;
 using AOT;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using UnityEngine.Scripting;
 #if UNITY_4_6 || UNITY_5 || UNITY_2017_1_OR_NEWER
 using UnityEngine.EventSystems;
 #endif
 
+// ReSharper disable InconsistentNaming
 namespace Helium
 {
     /// <summary>
     /// Returned to ChartboostDelegate methods to notify of HeliumSdk SDK errors.
     /// </summary>
-    public enum HeliumErrorCode : int
+    public enum HeliumErrorCode
     {
         /// No ad was available for the user from Helium
         NoAdFound = 0,
@@ -25,7 +27,7 @@ namespace Helium
         ServerError = 3,
         /// An unknown or unexpected error
         Unknown = 4
-    };
+    }
 
     public class HeliumError
     {
@@ -34,13 +36,13 @@ namespace Helium
 
         public HeliumError(HeliumErrorCode code, string description)
         {
-            this.errorCode = code;
-            this.errorDescription = description;
+            errorCode = code;
+            errorDescription = description;
         }
 
         public override string ToString()
         {
-            return string.Format("{0} {1}", this.errorCode, this.errorDescription);
+            return $"{errorCode} {errorDescription}";
         }
     }
 
@@ -49,7 +51,7 @@ namespace Helium
     ///  For more information on integrating and using the HeliumSdk SDK
     ///  please visit our help site documentation at https://help.chartboost.com
     /// </summary>
-    public class HeliumSdk : MonoBehaviour
+    public class HeliumSDK : MonoBehaviour
     {
         //////////////////////////////////////////////////////
         /// Events to subscribe to for callbacks
@@ -204,6 +206,7 @@ namespace Helium
                 HeliumEventProcessor.UnexpectedSystemErrorDidOccur -= value;
             }
         }
+        
         private static event Action<string> PrivateUnexpectedSystemErrorDidOccur;
 
 
@@ -217,7 +220,7 @@ namespace Helium
         /// <param name="placementName">The placement ID for the HeliumSdk impression type.</param>
         public static HeliumInterstitialAd GetInterstitialAd(string placementName)
         {
-            return HeliumExternal.getInterstitialAd(placementName);
+            return HeliumExternal.GetInterstitialAd(placementName);
         }
 
         /// <summary>
@@ -226,16 +229,17 @@ namespace Helium
         /// <param name="placementName">The placement ID for the HeliumSdk impression type.</param>
         public static HeliumRewardedAd GetRewardedAd(string placementName)
         {
-            return HeliumExternal.getRewardedAd(placementName);
+            return HeliumExternal.GetRewardedAd(placementName);
         }
 
         /// <summary>
         /// Returns a new ad unit that can be used to load and display banner ads.
         /// </summary>
         /// <param name="placementName">The placement ID for the HeliumSdk impression type.</param>
+        /// <param name="size">The banner size</param>
         public static HeliumBannerAd GetBannerAd(string placementName, HeliumBannerAdSize size)
         {
-            return HeliumExternal.getBannerAd(placementName, size);
+            return HeliumExternal.GetBannerAd(placementName, size);
         }
 
         //////////////////////////////////////////////////////
@@ -248,70 +252,67 @@ namespace Helium
         /// If you have a HeliumSdk gameobject in your scene, this is not required.
         /// Usage HeliumSdk.Instance
         /// </summary>
-        static private HeliumSdk instance = null;
+        private static HeliumSDK _instance = null;
 
-        private readonly HeliumEventProcessor eventProcessor = new HeliumEventProcessor();
-
-        public static HeliumSdk Create()
+        public static HeliumSDK Create()
         {
-            if (instance == null)
+            if (_instance == null)
             {
-                GameObject singleton = new GameObject("HeliumSdk");
-                instance = singleton.AddComponent<HeliumSdk>();
+                var singleton = new GameObject("HeliumSDK");
+                _instance = singleton.AddComponent<HeliumSDK>();
             }
             else
             {
-                Debug.LogWarning("HELIUM: HeliumSdk instance already exists. Create() ignored");
+                Debug.LogWarning("HELIUM: HeliumSDK instance already exists. Create() ignored");
             }
-            return instance;
+            return _instance;
         }
 
-        public static HeliumSdk StartWithAppIdAndAppSignature(string appId, string appSignature)
+        public static HeliumSDK StartWithAppIdAndAppSignature(string appId, string appSignature)
         {
-            HeliumSettings.setAppId(appId);
-            HeliumSettings.setAppSignature(appSignature);
+            HeliumSettings.SetAppId(appId);
+            HeliumSettings.SetAppSignature(appSignature);
             return Create();
         }
 
         public static void SetSubjectToCoppa(bool isSubject)
         {
-            HeliumExternal.setSubjectToCoppa(isSubject);
+            HeliumExternal.SetSubjectToCoppa(isSubject);
         }
 
         public static void SetSubjectToGDPR(bool isSubject)
         {
-            HeliumExternal.setSubjectToGDPR(isSubject);
+            HeliumExternal.SetSubjectToGDPR(isSubject);
         }
 
         public static void SetUserHasGivenConsent(bool hasGivenConsent)
         {
-            HeliumExternal.setUserHasGivenConsent(hasGivenConsent);
+            HeliumExternal.SetUserHasGivenConsent(hasGivenConsent);
         }
 
         public static void SetCCPAConsent(bool hasGivenConsent)
         {
-            HeliumExternal.setCCPAConsent(hasGivenConsent);
+            HeliumExternal.SetCCPAConsent(hasGivenConsent);
         }
 
         public static void SetUserIdentifier(string userIdentifier)
         {
-            HeliumExternal.setUserIdentifier(userIdentifier);
+            HeliumExternal.SetUserIdentifier(userIdentifier);
         }
 
         public static string GetUserIdentifier()
         {
-            return HeliumExternal.getUserIdentifer();
+            return HeliumExternal.GetUserIdentifier();
         }
 
-        void Awake()
+        private void Awake()
         {
             // Limit the number of instances to one
-            if (instance == null)
+            if (_instance == null)
             {
-                instance = this;
-                HeliumExternal.init();
-                HeliumExternal.setGameObjectName(gameObject.name);
-
+                _instance = this;
+                HeliumExternal.Init();
+                HeliumExternal.SetGameObjectName(gameObject.name);
                 DontDestroyOnLoad(gameObject);
             }
             else
@@ -321,28 +322,24 @@ namespace Helium
             }
         }
 
-        void OnDestroy()
+        private void OnDestroy()
         {
-            if (this == instance)
-            {
-                instance = null;
-                HeliumExternal.destroy();
-            }
+            if (this != _instance)
+                return;
+            _instance = null;
+            HeliumExternal.Destroy();
         }
 
-#pragma warning disable UNT0001
-        void OnDisable()
+        private void OnDisable()
         {
             // Shut down the HeliumSdk plugin
             #if UNITY_ANDROID
-			if (this == instance)
-			{
-				instance = null;
-				HeliumExternal.destroy();
-			}
+            if (this != _instance) 
+                return;
+            _instance = null;
+            HeliumExternal.Destroy();
             #endif
         }
-#pragma warning restore UNT0001
 
         //////////////////////////////////////////////////////
         /// Managing the events and firing them
@@ -350,79 +347,94 @@ namespace Helium
 
 #pragma warning disable IDE0051
 
-        private void DidStartEvent(string dataString)
+        [Preserve]
+        private void didStartEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithError(dataString, DidStart);
+            HeliumEventProcessor.ProcessEventWithError(dataString, DidStart);
         }
 
-        private void DidCloseInterstitialEvent(string dataString)
+        [Preserve]
+        private void didCloseInterstitialEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndError(dataString, DidCloseInterstitial);
+            HeliumEventProcessor.ProcessEventWithPlacementAndError(dataString, DidCloseInterstitial);
         }
 
-        private void DidLoadInterstitialEvent(string dataString)
+        [Preserve]
+        private void didLoadInterstitialEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndError(dataString, DidLoadInterstitial);
+            HeliumEventProcessor.ProcessEventWithPlacementAndError(dataString, DidLoadInterstitial);
         }
 
-        private void DidWinBidInterstitialEvent(string dataString)
+        [Preserve]
+        private void didWinBidInterstitialEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndBidInfo(dataString, DidWinBidInterstitial);
+            HeliumEventProcessor.ProcessEventWithPlacementAndBidInfo(dataString, DidWinBidInterstitial);
         }
 
-        private void DidShowInterstitialEvent(string dataString)
+        [Preserve]
+        private void didShowInterstitialEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndError(dataString, DidShowInterstitial);
+            HeliumEventProcessor.ProcessEventWithPlacementAndError(dataString, DidShowInterstitial);
         }
 
-        private void DidClickInterstitialEvent(string dataString)
+        [Preserve]
+        private void didClickInterstitialEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndError(dataString, DidClickInterstitial);
+            HeliumEventProcessor.ProcessEventWithPlacementAndError(dataString, DidClickInterstitial);
         }
 
-        private void DidCloseRewardedEvent(string dataString)
+        [Preserve]
+        private void didCloseRewardedEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndError(dataString, DidCloseRewarded);
+            HeliumEventProcessor.ProcessEventWithPlacementAndError(dataString, DidCloseRewarded);
         }
 
-        private void DidLoadRewardedEvent(string dataString)
+        [Preserve]
+        private void didLoadRewardedEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndError(dataString, DidLoadRewarded);
+            HeliumEventProcessor.ProcessEventWithPlacementAndError(dataString, DidLoadRewarded);
         }
 
-        private void DidWinBidRewardedEvent(string dataString)
+        [Preserve]
+        private void didWinBidRewardedEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndBidInfo(dataString, DidWinBidRewarded);
+            HeliumEventProcessor.ProcessEventWithPlacementAndBidInfo(dataString, DidWinBidRewarded);
+        }
+        
+        [Preserve]
+        private void didShowRewardedEvent(string dataString)
+        {
+            HeliumEventProcessor.ProcessEventWithPlacementAndError(dataString, DidShowRewarded);
         }
 
-        private void DidShowRewardedEvent(string dataString)
+        [Preserve]
+        private void didClickRewardedEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndError(dataString, DidShowRewarded);
+            HeliumEventProcessor.ProcessEventWithPlacementAndError(dataString, DidClickRewarded);
         }
 
-        private void DidClickRewardedEvent(string dataString)
+        [Preserve]
+        private void didLoadBannerEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndError(dataString, DidClickRewarded);
+            HeliumEventProcessor.ProcessEventWithPlacementAndError(dataString, DidLoadBanner);
         }
 
-        private void DidLoadBannerEvent(string dataString)
+        [Preserve]
+        private void didWinBidBannerEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndError(dataString, DidLoadBanner);
+            HeliumEventProcessor.ProcessEventWithPlacementAndBidInfo(dataString, DidWinBidBanner);
         }
 
-        private void DidWinBidBannerEvent(string dataString)
+        [Preserve]
+        private void didShowBannerEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndBidInfo(dataString, DidWinBidBanner);
+            HeliumEventProcessor.ProcessEventWithPlacementAndError(dataString, DidShowBanner);
         }
 
-        private void DidShowBannerEvent(string dataString)
+        [Preserve]
+        private void didClickBannerEvent(string dataString)
         {
-            eventProcessor.ProcessEventWithPlacementAndError(dataString, DidShowBanner);
-        }
-
-        private void DidClickBannerEvent(string dataString)
-        {
-            eventProcessor.ProcessEventWithPlacementAndError(dataString, DidClickBanner);
+            HeliumEventProcessor.ProcessEventWithPlacementAndError(dataString, DidClickBanner);
         }
         
 #pragma warning restore IDE0051
@@ -433,8 +445,9 @@ namespace Helium
 
             public static readonly BackgroundEventListener Instance = new BackgroundEventListener();
 
+            [Preserve]
             // Called from Android Wrapper (Java).
-            public void OnBackgroundEvent(string eventName, string eventArgsJson)
+            public void onBackgroundEvent(string eventName, string eventArgsJson)
             {
                 SendEvent(eventName, eventArgsJson);
             }
@@ -446,25 +459,24 @@ namespace Helium
             [MonoPInvokeCallback(typeof(Delegate))]
             public static void SendEvent(string eventName, string eventArgsJson)
             {
-                HeliumEventProcessor eventProcessor = new HeliumEventProcessor();
                 try
                 {
                     // Handle events that are supported in the background.
                     switch (eventName)
                     {
                         case "DidReceiveILRD":
-                            eventProcessor.ProcessEventWithILRD(eventArgsJson, DidReceiveImpressionLevelRevenueData);
+                            HeliumEventProcessor.ProcessEventWithILRD(eventArgsJson, DidReceiveImpressionLevelRevenueData);
                             break;
                         case "DidReceiveRewardEvent":
-                            eventProcessor.ProcessEventWithReward(eventArgsJson, DidReceiveReward);
+                            HeliumEventProcessor.ProcessEventWithReward(eventArgsJson, DidReceiveReward);
                             break;
                         default:
-                            throw new ArgumentException("Unrecognized event callback name.");
+                            throw new ArgumentException($"Unrecognized event callback name: {eventName}.");
                     }
                 }
                 catch (Exception e)
                 {
-                    ReportUnexpectedSystemError(String.Format("Exception while handling background event {0}: {1}", eventName, e.Message));
+                    ReportUnexpectedSystemError($"Exception while handling background event {eventName}: {e.Message}");
                 }
             }
         }
@@ -473,9 +485,7 @@ namespace Helium
 
         private static void ReportUnexpectedSystemError(string message)
         {
-            if (PrivateUnexpectedSystemErrorDidOccur == null)
-                return;
-            PrivateUnexpectedSystemErrorDidOccur(message);
+            PrivateUnexpectedSystemErrorDidOccur?.Invoke(message);
         }
     }
 }
