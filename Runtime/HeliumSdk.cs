@@ -348,91 +348,91 @@ namespace Helium
 #pragma warning disable IDE0051
 
         [Preserve]
-        private void didStartEvent(string dataString)
+        private void DidStartEvent(string dataString)
         {
             HeliumEventProcessor.ProcessEventWithError(dataString, DidStart);
         }
 
         [Preserve]
-        private void didCloseInterstitialEvent(string dataString)
+        private void DidCloseInterstitialEvent(string dataString)
         {
             HeliumEventProcessor.ProcessEventWithPlacementAndError(dataString, DidCloseInterstitial);
         }
 
         [Preserve]
-        private void didLoadInterstitialEvent(string dataString)
+        private void DidLoadInterstitialEvent(string dataString)
         {
             HeliumEventProcessor.ProcessEventWithPlacementAndError(dataString, DidLoadInterstitial);
         }
 
         [Preserve]
-        private void didWinBidInterstitialEvent(string dataString)
+        private void DidWinBidInterstitialEvent(string dataString)
         {
             HeliumEventProcessor.ProcessEventWithPlacementAndBidInfo(dataString, DidWinBidInterstitial);
         }
 
         [Preserve]
-        private void didShowInterstitialEvent(string dataString)
+        private void DidShowInterstitialEvent(string dataString)
         {
             HeliumEventProcessor.ProcessEventWithPlacementAndError(dataString, DidShowInterstitial);
         }
 
         [Preserve]
-        private void didClickInterstitialEvent(string dataString)
+        private void DidClickInterstitialEvent(string dataString)
         {
             HeliumEventProcessor.ProcessEventWithPlacementAndError(dataString, DidClickInterstitial);
         }
 
         [Preserve]
-        private void didCloseRewardedEvent(string dataString)
+        private void DidCloseRewardedEvent(string dataString)
         {
             HeliumEventProcessor.ProcessEventWithPlacementAndError(dataString, DidCloseRewarded);
         }
 
         [Preserve]
-        private void didLoadRewardedEvent(string dataString)
+        private void DidLoadRewardedEvent(string dataString)
         {
             HeliumEventProcessor.ProcessEventWithPlacementAndError(dataString, DidLoadRewarded);
         }
 
         [Preserve]
-        private void didWinBidRewardedEvent(string dataString)
+        private void DidWinBidRewardedEvent(string dataString)
         {
             HeliumEventProcessor.ProcessEventWithPlacementAndBidInfo(dataString, DidWinBidRewarded);
         }
         
         [Preserve]
-        private void didShowRewardedEvent(string dataString)
+        private void DidShowRewardedEvent(string dataString)
         {
             HeliumEventProcessor.ProcessEventWithPlacementAndError(dataString, DidShowRewarded);
         }
 
         [Preserve]
-        private void didClickRewardedEvent(string dataString)
+        private void DidClickRewardedEvent(string dataString)
         {
             HeliumEventProcessor.ProcessEventWithPlacementAndError(dataString, DidClickRewarded);
         }
 
         [Preserve]
-        private void didLoadBannerEvent(string dataString)
+        private void DidLoadBannerEvent(string dataString)
         {
             HeliumEventProcessor.ProcessEventWithPlacementAndError(dataString, DidLoadBanner);
         }
 
         [Preserve]
-        private void didWinBidBannerEvent(string dataString)
+        private void DidWinBidBannerEvent(string dataString)
         {
             HeliumEventProcessor.ProcessEventWithPlacementAndBidInfo(dataString, DidWinBidBanner);
         }
 
         [Preserve]
-        private void didShowBannerEvent(string dataString)
+        private void DidShowBannerEvent(string dataString)
         {
             HeliumEventProcessor.ProcessEventWithPlacementAndError(dataString, DidShowBanner);
         }
 
         [Preserve]
-        private void didClickBannerEvent(string dataString)
+        private void DidClickBannerEvent(string dataString)
         {
             HeliumEventProcessor.ProcessEventWithPlacementAndError(dataString, DidClickBanner);
         }

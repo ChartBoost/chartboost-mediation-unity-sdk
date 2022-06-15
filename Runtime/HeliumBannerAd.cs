@@ -59,7 +59,7 @@ namespace Helium
 		#if UNITY_IPHONE
 		public HeliumBannerAd(IntPtr uniqueId)
 		{
-			this._uniqueId = uniqueId;
+			_uniqueId = uniqueId;
 		}
 		#elif UNITY_ANDROID
 		private readonly AndroidJavaObject _androidAd;

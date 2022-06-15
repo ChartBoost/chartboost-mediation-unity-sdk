@@ -33,7 +33,7 @@ namespace Helium
 
 #if UNITY_IPHONE
 		[DllImport("__Internal")]
-		private static extern void _heliumSdkInit(string appId, string appSignature, string unityVersion, HeliumSdk.BackgroundEventListener.Delegate callback);
+		private static extern void _heliumSdkInit(string appId, string appSignature, string unityVersion, HeliumSDK.BackgroundEventListener.Delegate callback);
 		// [DllImport("__Internal")]
 		// private static extern bool _heliumSdkIsAnyViewVisible();
 		[DllImport("__Internal")]
@@ -73,7 +73,7 @@ namespace Helium
 		{
 			Log("Helium(iOS): initWithAppIdAndSignature " + appId + ", " + appSignature + " and version " + Application.unityVersion);
 			if (!Application.isEditor)
-				_heliumSdkInit(appId, appSignature, Application.unityVersion, HeliumSdk.BackgroundEventListener.SendEvent);
+				_heliumSdkInit(appId, appSignature, Application.unityVersion, HeliumSDK.BackgroundEventListener.SendEvent);
 			_initialized = true;
 		}
 
@@ -150,7 +150,7 @@ namespace Helium
 			return ad;
 		}
 
-		public static HeliumRewardedAd getRewardedAd(string placementName)
+		public static HeliumRewardedAd GetRewardedAd(string placementName)
 		{
 			if (!CheckInitialized())
 				return null;
@@ -174,7 +174,7 @@ namespace Helium
 		}
 
 
-		public static HeliumBannerAd getBannerAd(string placementName, HeliumBannerAdSize size)
+		public static HeliumBannerAd GetBannerAd(string placementName, HeliumBannerAdSize size)
 		{
 			if (!CheckInitialized())
 				return null;
