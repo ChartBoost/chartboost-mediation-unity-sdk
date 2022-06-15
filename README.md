@@ -2,7 +2,24 @@
 
 Helium Unity SDK that is a compliant Unity Package.
 
-## Samples & Google External Dependency Manager (EDM)
+## 1. Unit Tests
+The Helium Unity SDK package contains a series of Unit tests to ensure functionality and callbacks behave as expected.
+
+In order to enable test from the Helium SDK package, the following setup is needed in your Unity's project `manifest.json`, as follows:
+
+```json
+  "dependencies": {
+    "com.unity.ide.vscode": "1.2.5",
+    "com.unity.test-framework": "1.1.31",
+    "com.unity.textmeshpro": "3.0.6",
+    ...
+  },
+  "testables": ["com.chartboost.helium"]
+```
+
+Please refer to the following [Unity Documentation](https://docs.unity3d.com/Manual/cus-tests.html) for more information on Test in Packages and how to enabled them.
+
+## 2. Samples & Google External Dependency Manager (EDM)
 
 The Helium Unity SDK package contains samples with optional dependencies for ad adapters. Such samples can be found in the Package Manager / Sample sections.
 
