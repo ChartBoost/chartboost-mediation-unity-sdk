@@ -1,10 +1,12 @@
-using System;
 using UnityEngine;
+#if UNITY_IPHONE
+using System;
 using System.Runtime.InteropServices;
+#endif
 
 namespace Helium
 {
-	public enum HeliumBannerAdSize : int
+	public enum HeliumBannerAdSize
     {
         /// 320 x 50
         Standard = 0,
@@ -12,9 +14,9 @@ namespace Helium
         MediumRect = 1,
 		/// 720 x 90
         Leaderboard = 2
-    };
+    }
 
-	public enum HeliumBannerAdScreenLocation : int
+	public enum HeliumBannerAdScreenLocation
     {
         TopLeft = 0,
 		TopCenter = 1,
@@ -23,14 +25,14 @@ namespace Helium
 		BottomLeft = 4,
 		BottomCenter = 5,
 		BottomRight = 6
-    };
+    }
 
 	public class HeliumBannerAd {
 
 		#if UNITY_IPHONE
 		// Extern functions
 		[DllImport("__Internal")]
-		private static extern bool _heliumSdkBannerSetKeyword(IntPtr uniqueID, string keyword, string value);
+		private static extern bool _heliumSdkBannerSetKeyword(IntPtr uniqueId, string keyword, string value);
 		[DllImport("__Internal")]
 		private static extern string _heliumSdkBannerRemoveKeyword(IntPtr uniqueID, string keyword);
 		[DllImport("__Internal")]
@@ -50,18 +52,20 @@ namespace Helium
 		#endif
 
 		// Class variables
-		private readonly IntPtr uniqueId;
+		#if UNITY_IPHONE
+		private readonly IntPtr _uniqueId;
+		#endif
 
 		#if UNITY_IPHONE
 		public HeliumBannerAd(IntPtr uniqueId)
 		{
-			this.uniqueId = uniqueId;
+			_uniqueId = uniqueId;
 		}
 		#elif UNITY_ANDROID
-		private AndroidJavaObject androidAd;
+		private readonly AndroidJavaObject _androidAd;
 		public HeliumBannerAd(AndroidJavaObject ad)
 		{
-			androidAd = ad;
+			_androidAd = ad;
 		}
 		#endif
 
@@ -78,9 +82,9 @@ namespace Helium
 		public bool SetKeyword(string keyword, string value)
 		{
 			#if UNITY_IPHONE
-			return _heliumSdkBannerSetKeyword(uniqueId, keyword, value);
+			return _heliumSdkBannerSetKeyword(_uniqueId, keyword, value);
 			#elif UNITY_ANDROID
-			return androidAd.Call<bool>("setKeyword", keyword, value);
+			return _androidAd.Call<bool>("setKeyword", keyword, value);
 			#else
 			return false;
 			#endif
@@ -94,9 +98,9 @@ namespace Helium
 		public string RemoveKeyword(string keyword)
 		{
 			#if UNITY_IPHONE
-			return _heliumSdkBannerRemoveKeyword(uniqueId, keyword);
+			return _heliumSdkBannerRemoveKeyword(_uniqueId, keyword);
 			#elif UNITY_ANDROID
-			return androidAd.Call<string>("removeKeyword", keyword);
+			return _androidAd.Call<string>("removeKeyword", keyword);
 			#else
 			return null;
 			#endif
@@ -107,9 +111,9 @@ namespace Helium
 		/// </summary>
 		public void Load() {
 			#if UNITY_IPHONE
-			_heliumSdkBannerAdLoad(uniqueId);
+			_heliumSdkBannerAdLoad(_uniqueId);
 			#elif UNITY_ANDROID
-			androidAd.Call("load");
+			_androidAd.Call("load");
 			#endif
 		}
 
@@ -120,9 +124,9 @@ namespace Helium
 		/// <returns>true if successfully cleared</returns>
 		public bool ClearLoaded() {
 			#if UNITY_IPHONE
-			return _heliumSdkBannerClearLoaded(uniqueId);
+			return _heliumSdkBannerClearLoaded(_uniqueId);
 			#elif UNITY_ANDROID
-			return androidAd.Call<bool>("clearLoaded");
+			return _androidAd.Call<bool>("clearLoaded");
 			#else
 			return false;
 			#endif
@@ -136,9 +140,9 @@ namespace Helium
 		{
 			#if UNITY_IPHONE
 			System.GC.Collect(); // make sure previous banner ads get destructed if necessary
-			_heliumSdkBannerAdShow(uniqueId, (int) screenLocation);
+			_heliumSdkBannerAdShow(_uniqueId, (int) screenLocation);
 			#elif UNITY_ANDROID
-            androidAd.Call("show", (int) screenLocation);
+            _androidAd.Call("show", (int) screenLocation);
 			#endif
 		}
 
@@ -148,10 +152,10 @@ namespace Helium
 		public void Remove()
 		{
 			#if UNITY_IPHONE
-			_heliumSdkBannerRemove(uniqueId);
+			_heliumSdkBannerRemove(_uniqueId);
 			#elif UNITY_ANDROID
 			//android doesn't have a remove method. Instead, calling destroy
-			destroy();
+			Destroy();
 			#endif
 		}
 
@@ -162,9 +166,9 @@ namespace Helium
 		public bool ReadyToShow()
 		{
 			#if UNITY_IPHONE
-			return _heliumSdkBannerAdReadyToShow(uniqueId);
+			return _heliumSdkBannerAdReadyToShow(_uniqueId);
 			#elif UNITY_ANDROID
-			return androidAd.Call<bool>("readyToShow");
+			return _androidAd.Call<bool>("readyToShow");
 			#else
 			return false;
 			#endif
@@ -175,9 +179,9 @@ namespace Helium
 		public void SetVisibility(bool isVisible)
 		{
 			#if UNITY_IPHONE
-			_heliumSdkBannerSetVisibility(uniqueId, isVisible);
+			_heliumSdkBannerSetVisibility(_uniqueId, isVisible);
 			#elif UNITY_ANDROID
-			androidAd.Call("setBannerVisibility", isVisible);
+			_androidAd.Call("setBannerVisibility", isVisible);
 			#endif
 		}
 
@@ -187,14 +191,14 @@ namespace Helium
 		public void Destroy()
 		{
 			#if UNITY_ANDROID
-			androidAd.Call("destroy");
+			_androidAd.Call("destroy");
 			#endif
 		}
 
 		~HeliumBannerAd()
 		{
 			#if UNITY_IPHONE
-			_heliumSdkFreeBannerAdObject(uniqueId);
+			_heliumSdkFreeBannerAdObject(_uniqueId);
 			#endif
 		}
 	}

@@ -1,6 +1,8 @@
-using System;
 using UnityEngine;
+#if UNITY_IPHONE
+using System;
 using System.Runtime.InteropServices;
+#endif
 
 namespace Helium
 {
@@ -25,18 +27,20 @@ namespace Helium
 		#endif
 
 		// Class variables
-		private readonly IntPtr uniqueId;
+		#if UNITY_IPHONE
+		private readonly IntPtr _uniqueId;
+		#endif
 
 		#if UNITY_IPHONE
 		public HeliumInterstitialAd(IntPtr uniqueId)
 		{
-			this.uniqueId = uniqueId;
+			_uniqueId = uniqueId;
 		}
 		#elif UNITY_ANDROID
-		private AndroidJavaObject androidAd;
+		private readonly AndroidJavaObject _androidAd;
 		public HeliumInterstitialAd(AndroidJavaObject ad)
 		{
-			androidAd = ad;
+			_androidAd = ad;
 		}
 		#endif
 
@@ -53,9 +57,9 @@ namespace Helium
 		public bool SetKeyword(string keyword, string value)
         {
 			#if UNITY_IPHONE
-			return _heliumSdkInterstitialSetKeyword(uniqueId, keyword, value);
+			return _heliumSdkInterstitialSetKeyword(_uniqueId, keyword, value);
 			#elif UNITY_ANDROID
-			return androidAd.Call<bool>("setKeyword", keyword, value);
+			return _androidAd.Call<bool>("setKeyword", keyword, value);
 			#else
 			return false;
 			#endif
@@ -69,9 +73,9 @@ namespace Helium
 		public string RemoveKeyword(string keyword)
         {
 			#if UNITY_IPHONE
-			return _heliumSdkInterstitialRemoveKeyword(uniqueId, keyword);
+			return _heliumSdkInterstitialRemoveKeyword(_uniqueId, keyword);
 			#elif UNITY_ANDROID
-			return androidAd.Call<string>("removeKeyword", keyword);
+			return _androidAd.Call<string>("removeKeyword", keyword);
 			#else
 			return null;
 			#endif
@@ -83,9 +87,9 @@ namespace Helium
 		public void Load() {
 			#if UNITY_IPHONE
 			System.GC.Collect(); // make sure previous i12 ads get destructed if necessary
-			_heliumSdkInterstitialAdLoad(uniqueId);
+			_heliumSdkInterstitialAdLoad(_uniqueId);
 			#elif UNITY_ANDROID
-			androidAd.Call("load");
+			_androidAd.Call("load");
 			#endif
 		}
 
@@ -96,9 +100,9 @@ namespace Helium
 		/// <returns>true if successfully cleared</returns>
 		public bool ClearLoaded() {
 			#if UNITY_IPHONE
-			return _heliumSdkInterstitialClearLoaded(uniqueId);
+			return _heliumSdkInterstitialClearLoaded(_uniqueId);
 			#elif UNITY_ANDROID
-			return androidAd.Call<bool>("clearLoaded");
+			return _androidAd.Call<bool>("clearLoaded");
 			#else
 			return false;
 			#endif
@@ -109,9 +113,9 @@ namespace Helium
 		/// </summary>
 		public void Show() {
 			#if UNITY_IPHONE
-			_heliumSdkInterstitialAdShow(uniqueId);
+			_heliumSdkInterstitialAdShow(_uniqueId);
 			#elif UNITY_ANDROID
-			androidAd.Call("show");
+			_androidAd.Call("show");
 			#endif
 		}
 
@@ -121,9 +125,9 @@ namespace Helium
 		/// <returns>True if ready to show.</returns>
 		public bool ReadyToShow() {
 			#if UNITY_IPHONE
-			return _heliumSdkInterstitialAdReadyToShow(uniqueId);
+			return _heliumSdkInterstitialAdReadyToShow(_uniqueId);
 			#elif UNITY_ANDROID
-			return androidAd.Call<bool>("readyToShow");
+			return _androidAd.Call<bool>("readyToShow");
 			#else
 			return false;
 			#endif
@@ -135,13 +139,13 @@ namespace Helium
 		public void Destroy()
 		{
 			#if UNITY_ANDROID
-			androidAd.Call("destroy");
+			_androidAd.Call("destroy");
 			#endif
 		}
 
 		~HeliumInterstitialAd() {
 			#if UNITY_IPHONE
-			_heliumSdkFreeInterstitialAdObject(uniqueId);
+			_heliumSdkFreeInterstitialAdObject(_uniqueId);
 			#endif
 		}
 	}
