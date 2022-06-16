@@ -441,7 +441,7 @@ namespace Helium
 
         internal class BackgroundEventListener : AndroidJavaProxy
         {
-            private BackgroundEventListener() : base("com.chartboost.heliumsdk.unity.HeliumUnityBridge$IBackgroundEventListener") { }
+            private BackgroundEventListener() : base("com.chartboost.heliumsdk.unity.IBackgroundEventListener") { }
 
             public static readonly BackgroundEventListener Instance = new BackgroundEventListener();
 

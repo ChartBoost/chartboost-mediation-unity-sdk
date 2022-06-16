@@ -48,14 +48,6 @@ public class HeliumUnityBridge {
     // possible positions.  HeliumBannerAd is just a FrameLayout.
     private RelativeLayout mBannerLayout;
 
-    /**
-     * Interface for sending real-time background events while the Unity Player is paused (which will happen when
-     * a fullscreen ad is being displayed).
-     */
-    public interface IBackgroundEventListener
-    {
-        void onBackgroundEvent(String event, String json);
-    }
     private static IBackgroundEventListener bgEventListener;
     private HeliumIlrdObserver ilrdObserver;
 
