@@ -53,11 +53,11 @@ namespace Helium
 		[DllImport("__Internal")]
 		private static extern void _heliumSetCCPAConsent(bool hasGivenConsent);
 		
-		// todo this has a typo on it, needs to be corrected.
+		// todo - https://chartboost.atlassian.net/browse/HB-3869 this has a typo on it, needs to be corrected.
 		[DllImport("__Internal")]
 		private static extern void _heliumSetUserIdentifer(string userIdentifier);
 		
-		// todo this has a typo on it, needs to be corrected.
+		// todo - https://chartboost.atlassian.net/browse/HB-3869 this has a typo on it, needs to be corrected.
 		[DllImport("__Internal")]
 		private static extern string _heliumGetUserIdentifer();
 
@@ -372,7 +372,7 @@ namespace Helium
 			}
 		}
 
-		// todo - replace with https://docs.unity3d.com/ScriptReference/AndroidJavaProxy.html
+		// todo - https://chartboost.atlassian.net/browse/HB-3868 replace with https://docs.unity3d.com/ScriptReference/AndroidJavaProxy.html
 		/// Sets the name of the game object to be used by the Helium Android SDK
 		public static void SetGameObjectName(string name) {
 			if (!Application.isEditor)
@@ -400,7 +400,7 @@ namespace Helium
 			_initialized = false;
 		}
 
-		// todo - onBackPressed does not exist on Bridge at the moment.
+		// todo - https://chartboost.atlassian.net/browse/HB-3870 onBackPressed does not exist on Bridge at the moment.
 		/// Used to notify Helium that the Android back button has been pressed
 		/// Returns true to indicate that Helium has handled the event and it should not be further processed
 		public static bool OnBackPressed() {
