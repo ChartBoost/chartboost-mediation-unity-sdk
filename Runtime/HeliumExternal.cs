@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace Helium
 {
-	// todo - platforms should be their own classes, HeliumExternal should act only as a proxy to functionality. This will help with flexibility and expandability.
+	// todo - https://chartboost.atlassian.net/browse/HB-3867 platforms should be their own classes, HeliumExternal should act only as a proxy to functionality. This will help with flexibility and expandability.
     public static class HeliumExternal
     {
         private static bool _initialized = false;
@@ -204,7 +204,7 @@ namespace Helium
 
 		}
 		
-		// todo - remove this, change with MonoPInvokeCallback https://docs.unity3d.com/Manual/PluginsForIOS.html
+		// todo - https://chartboost.atlassian.net/browse/HB-3868  remove this, change with MonoPInvokeCallback https://docs.unity3d.com/Manual/PluginsForIOS.html
 		/// Sets the name of the game object to be used by the Helium iOS SDK
 		public static void SetGameObjectName(string name)
 		{
