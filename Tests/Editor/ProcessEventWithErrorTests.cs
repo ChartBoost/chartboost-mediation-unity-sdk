@@ -1,228 +1,223 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
-using UnityEngine;
-using UnityEngine.TestTools;
 
 namespace Helium
 {
     public class ProcessEventWithErrorTests
     {
-        HeliumEventProcessor eventProcessor;
-        Action<string> unexpectedSystemErrorDidOccurEvent;
-
-        [SetUp]
-        public void Setup()
-        {
-            eventProcessor = new HeliumEventProcessor();
-        }
+        private Action<string> _unexpectedSystemErrorDidOccurEvent;
 
         [TearDown]
         public void Teardown()
         {
-            if (unexpectedSystemErrorDidOccurEvent != null)
-                HeliumEventProcessor.UnexpectedSystemErrorDidOccur -= unexpectedSystemErrorDidOccurEvent;
+            if (_unexpectedSystemErrorDidOccurEvent != null)
+                HeliumEventProcessor.UnexpectedSystemErrorDidOccur -= _unexpectedSystemErrorDidOccurEvent;
         }
 
         [Test]
         public void NoAdFoundErrorCodeTest1()
         {
-            // Should NOT get an unexepected system error event
-            unexpectedSystemErrorDidOccurEvent = delegate { Assert.Fail(); };
-            HeliumEventProcessor.UnexpectedSystemErrorDidOccur += unexpectedSystemErrorDidOccurEvent;
+            // Should NOT get an unexpected system error event
+            _unexpectedSystemErrorDidOccurEvent = delegate { Assert.Fail(); };
+            HeliumEventProcessor.UnexpectedSystemErrorDidOccur += _unexpectedSystemErrorDidOccurEvent;
 
             // Should get an expected system event
-            Action<HeliumError> evt = (error) =>
+            void Event(HeliumError error)
             {
                 Assert.NotNull(error);
                 Assert.AreEqual(HeliumErrorCode.NoAdFound, error.errorCode);
                 Assert.AreEqual("An ad was not found.", error.errorDescription);
-            };
+            }
 
             // The JSON string
-            string json = "{\"errorCode\": 0, \"errorDescription\": \"An ad was not found.\"}";
+            const string json = "{\"errorCode\": 0, \"errorDescription\": \"An ad was not found.\"}";
 
             // Process the event
-            eventProcessor.ProcessEventWithError(json, evt);
+            HeliumEventProcessor.ProcessEventWithError(json, Event);
         }
 
         [Test]
         public void NoAdFoundErrorCodeTest2()
         {
-            // Should NOT get an unexepected system error event
-            unexpectedSystemErrorDidOccurEvent = delegate { Assert.Fail(); };
-            HeliumEventProcessor.UnexpectedSystemErrorDidOccur += unexpectedSystemErrorDidOccurEvent;
+            // Should NOT get an unexpected system error event
+            _unexpectedSystemErrorDidOccurEvent = delegate { Assert.Fail(); };
+            HeliumEventProcessor.UnexpectedSystemErrorDidOccur += _unexpectedSystemErrorDidOccurEvent;
 
             // Should get an expected system event
-            Action<HeliumError> evt = (error) =>
+            void Event(HeliumError error)
             {
                 Assert.NotNull(error);
                 Assert.AreEqual(HeliumErrorCode.NoAdFound, error.errorCode);
                 Assert.Null(error.errorDescription);
-            };
+            }
 
             // The JSON string
-            string json = "{\"errorCode\": 0}";
+            const string json = "{\"errorCode\": 0}";
 
             // Process the event
-            eventProcessor.ProcessEventWithError(json, evt);
+            HeliumEventProcessor.ProcessEventWithError(json, Event);
         }
 
         [Test]
         public void NoBidErrorCodeTest()
         {
-            // Should NOT get an unexepected system error event
-            unexpectedSystemErrorDidOccurEvent = delegate { Assert.Fail(); };
-            HeliumEventProcessor.UnexpectedSystemErrorDidOccur += unexpectedSystemErrorDidOccurEvent;
+            // Should NOT get an unexpected system error event
+            _unexpectedSystemErrorDidOccurEvent = delegate { Assert.Fail(); };
+            HeliumEventProcessor.UnexpectedSystemErrorDidOccur += _unexpectedSystemErrorDidOccurEvent;
 
             // Should get an expected system event
-            Action<HeliumError> evt = (error) =>
+            void Event(HeliumError error)
             {
                 Assert.NotNull(error);
                 Assert.AreEqual(HeliumErrorCode.NoBid, error.errorCode);
                 Assert.Null(error.errorDescription);
-            };
+            }
 
             // The JSON string
-            string json = "{\"errorCode\": 1}";
+            const string json = "{\"errorCode\": 1}";
 
             // Process the event
-            eventProcessor.ProcessEventWithError(json, evt);
+            HeliumEventProcessor.ProcessEventWithError(json, Event);
         }
 
         [Test]
         public void NoNetworkErrorCodeTest()
         {
-            // Should NOT get an unexepected system error event
-            unexpectedSystemErrorDidOccurEvent = delegate { Assert.Fail(); };
-            HeliumEventProcessor.UnexpectedSystemErrorDidOccur += unexpectedSystemErrorDidOccurEvent;
+            // Should NOT get an unexpected system error event
+            _unexpectedSystemErrorDidOccurEvent = delegate { Assert.Fail(); };
+            HeliumEventProcessor.UnexpectedSystemErrorDidOccur += _unexpectedSystemErrorDidOccurEvent;
 
             // Should get an expected system event
-            Action<HeliumError> evt = (error) =>
+            void Event(HeliumError error)
             {
                 Assert.NotNull(error);
                 Assert.AreEqual(HeliumErrorCode.NoNetwork, error.errorCode);
                 Assert.Null(error.errorDescription);
-            };
+            }
 
             // The JSON string
-            string json = "{\"errorCode\": 2}";
+            const string json = "{\"errorCode\": 2}";
 
             // Process the event
-            eventProcessor.ProcessEventWithError(json, evt);
+            HeliumEventProcessor.ProcessEventWithError(json, Event);
         }
 
         [Test]
         public void ServerErrorCodeTest()
         {
-            // Should NOT get an unexepected system error event
-            unexpectedSystemErrorDidOccurEvent = delegate { Assert.Fail(); };
-            HeliumEventProcessor.UnexpectedSystemErrorDidOccur += unexpectedSystemErrorDidOccurEvent;
+            // Should NOT get an unexpected system error event
+            _unexpectedSystemErrorDidOccurEvent = delegate { Assert.Fail(); };
+            HeliumEventProcessor.UnexpectedSystemErrorDidOccur += _unexpectedSystemErrorDidOccurEvent;
 
             // Should get an expected system event
-            Action<HeliumError> evt = (error) =>
+            void Event(HeliumError error)
             {
                 Assert.NotNull(error);
                 Assert.AreEqual(HeliumErrorCode.ServerError, error.errorCode);
                 Assert.Null(error.errorDescription);
-            };
+            }
 
             // The JSON string
-            string json = "{\"errorCode\": 3}";
+            const string json = "{\"errorCode\": 3}";
 
             // Process the event
-            eventProcessor.ProcessEventWithError(json, evt);
+            HeliumEventProcessor.ProcessEventWithError(json, Event);
         }
 
         [Test]
         public void MinusOneErrorCodeTest()
         {
-            // Should NOT get an unexepected system error event
-            unexpectedSystemErrorDidOccurEvent = delegate { Assert.Fail(); };
-            HeliumEventProcessor.UnexpectedSystemErrorDidOccur += unexpectedSystemErrorDidOccurEvent;
+            // Should NOT get an unexpected system error event
+            _unexpectedSystemErrorDidOccurEvent = delegate { Assert.Fail(); };
+            HeliumEventProcessor.UnexpectedSystemErrorDidOccur += _unexpectedSystemErrorDidOccurEvent;
 
             // Should get an expected system event
-            Action<HeliumError> evt = (error) => { Assert.Null(error); };
+            void Event(HeliumError error)
+            {
+                Assert.Null(error);
+            }
 
             // The JSON string
-            string json = "{\"errorCode\": -1}";
+            const string json = "{\"errorCode\": -1}";
 
             // Process the event
-            eventProcessor.ProcessEventWithError(json, evt);
+            HeliumEventProcessor.ProcessEventWithError(json, Event);
         }
 
         [Test]
         public void UnknownErrorCodeTest()
         {
-            // Should NOT get an unexepected system error event
-            unexpectedSystemErrorDidOccurEvent = delegate { Assert.Fail(); };
-            HeliumEventProcessor.UnexpectedSystemErrorDidOccur += unexpectedSystemErrorDidOccurEvent;
+            // Should NOT get an unexpected system error event
+            _unexpectedSystemErrorDidOccurEvent = delegate { Assert.Fail(); };
+            HeliumEventProcessor.UnexpectedSystemErrorDidOccur += _unexpectedSystemErrorDidOccurEvent;
 
             // Should get an expected system event
-            Action<HeliumError> evt = (error) =>
+            void Event(HeliumError error)
             {
                 Assert.NotNull(error);
                 Assert.AreEqual(HeliumErrorCode.Unknown, error.errorCode);
                 Assert.Null(error.errorDescription);
-            };
+            }
 
-            string[] jsonsWithError = new string[]
+            var jsonsWithError = new[]
             {
                 "{\"errorCode\": 4}",
                 "{\"errorCode\": -1234}",
                 "{\"errorCode\": 1234}",
             };
 
-            foreach (string json in jsonsWithError)
+            foreach (var json in jsonsWithError)
             {
                 // Process the event
-                eventProcessor.ProcessEventWithError(json, evt);
+                HeliumEventProcessor.ProcessEventWithError(json, Event);
             }
         }
 
         [Test]
         public void BlankStringTest()
         {
-            // Should get an unexepected system error event
-            unexpectedSystemErrorDidOccurEvent = (message) =>
+            // Should get an unexpected system error event
+            _unexpectedSystemErrorDidOccurEvent = (message) =>
             {
                 StringAssert.StartsWith("Non JSON data received when processing event with error", message);
             };
-            HeliumEventProcessor.UnexpectedSystemErrorDidOccur += unexpectedSystemErrorDidOccurEvent;
+            HeliumEventProcessor.UnexpectedSystemErrorDidOccur += _unexpectedSystemErrorDidOccurEvent;
 
             // Should NOT get an expected system event
-            Action<HeliumError> evt = (error) => { Assert.Fail(); };
+            void Event(HeliumError error)
+            {
+                Assert.Fail();
+            }
 
             // Process the event
-            eventProcessor.ProcessEventWithError("", evt);
+            HeliumEventProcessor.ProcessEventWithError("", Event);
         }
 
         [Test]
-        public void BlankJSONTest()
+        public void BlankJsonTest()
         {
-            // Should get an unexepected system error event
-            unexpectedSystemErrorDidOccurEvent = (message) => { Assert.Fail(); };
-            HeliumEventProcessor.UnexpectedSystemErrorDidOccur += unexpectedSystemErrorDidOccurEvent;
+            // Should get an unexpected system error event
+            _unexpectedSystemErrorDidOccurEvent = _ => { Assert.Fail(); };
+            HeliumEventProcessor.UnexpectedSystemErrorDidOccur += _unexpectedSystemErrorDidOccurEvent;
 
             // Should NOT get an expected system event
-            Action<HeliumError> evt = (error) =>
+            void Event(HeliumError error)
             {
                 Assert.NotNull(error);
                 Assert.AreEqual(HeliumErrorCode.NoAdFound, error.errorCode);
-            };
+            }
 
             // The JSON string
-            string json = "{}";
+            const string json = "{}";
 
             // Process the event
-            eventProcessor.ProcessEventWithError(json, evt);
+            HeliumEventProcessor.ProcessEventWithError(json, Event);
         }
 
         [Test]
-        public void NotJSONTest()
+        public void NotJsonTest()
         {
-            string[] notJSONStrings = new string[]
+            var notJsonStrings = new[]
             {
                 " ",
                 "x",
@@ -232,71 +227,80 @@ namespace Helium
                 "[\"errorCode\": \"3\"]",
             };
 
-            // Should get an unexepected system error event
-            unexpectedSystemErrorDidOccurEvent = (message) =>
+            // Should get an unexpected system error event
+            _unexpectedSystemErrorDidOccurEvent = (message) =>
             {
                 StringAssert.StartsWith("Non JSON data received when processing event with error", message);
             };
-            HeliumEventProcessor.UnexpectedSystemErrorDidOccur += unexpectedSystemErrorDidOccurEvent;
+            HeliumEventProcessor.UnexpectedSystemErrorDidOccur += _unexpectedSystemErrorDidOccurEvent;
 
             // Should NOT get an expected system event
-            Action<HeliumError> evt = (error) => { Assert.Fail(); };
+            void Event(HeliumError error)
+            {
+                Assert.Fail();
+            }
 
-            foreach (string notJSONString in notJSONStrings)
+            foreach (var notJsonString in notJsonStrings)
             {
                 // Process the event
-                eventProcessor.ProcessEventWithError(notJSONString, evt);
+                HeliumEventProcessor.ProcessEventWithError(notJsonString, Event);
             }
         }
 
         [Test]
-        public void UnacceptedJSONTest()
+        public void UnacceptedJsonTest()
         {
             // these are JSON but they aren't accepted due to the use case or implementation by design
-            string[] unacceptedJSONStrings = new string[]
+            var unacceptedJsonStrings = new[]
             {
                 "[{\"errorCode\": 1}]",
             };
 
-            // Should get an unexepected system error event
-            unexpectedSystemErrorDidOccurEvent = (message) =>
+            // Should get an unexpected system error event
+            _unexpectedSystemErrorDidOccurEvent = (message) =>
             {
                 StringAssert.StartsWith("Non JSON data received when processing event with error", message);
             };
-            HeliumEventProcessor.UnexpectedSystemErrorDidOccur += unexpectedSystemErrorDidOccurEvent;
+            HeliumEventProcessor.UnexpectedSystemErrorDidOccur += _unexpectedSystemErrorDidOccurEvent;
 
             // Should NOT get an expected system event
-            Action<HeliumError> evt = (error) => { Assert.Fail(); };
+            void Event(HeliumError error)
+            {
+                Assert.Fail();
+            }
 
-            foreach (string unacceptedJSONString in unacceptedJSONStrings)
+            foreach (var unacceptedJsonString in unacceptedJsonStrings)
             {
                 // Process the event
-                eventProcessor.ProcessEventWithError(unacceptedJSONString, evt);
+                HeliumEventProcessor.ProcessEventWithError(unacceptedJsonString, Event);
             }
         }
 
         [Test]
-        public void MalformedJSONTest()
+        public void MalformedJsonTest()
         {
-            string[] malformedJSONStrings = new string[]
+            var malformedJsonStrings = new[]
             {
                 "{[\"errorCode\": 2]}",
             };
 
-            // Should get an unexepected system error event
-            unexpectedSystemErrorDidOccurEvent = (message) =>
+            // Should get an unexpected system error event
+            _unexpectedSystemErrorDidOccurEvent = (message) =>
             {
                 StringAssert.StartsWith("Malformed data received when processing event with error", message);
             };
-            HeliumEventProcessor.UnexpectedSystemErrorDidOccur += unexpectedSystemErrorDidOccurEvent;
+            HeliumEventProcessor.UnexpectedSystemErrorDidOccur += _unexpectedSystemErrorDidOccurEvent;
 
             // Should NOT get an expected system event
-            Action<HeliumError> evt = (error) => { Assert.Fail(); };
+            void Event(HeliumError error)
+            {
+                Assert.Fail();
+            }
 
-            foreach (string malformedJSONString in malformedJSONStrings)
+            foreach (var malformedJsonString in malformedJsonStrings)
             {
                 // Process the event
-                eventProcessor.ProcessEventWithError(malformedJSONString, evt);
+                HeliumEventProcessor.ProcessEventWithError(malformedJsonString, Event);
             }
         }
     }
