@@ -75,7 +75,7 @@ namespace Helium
 		/// Either one of the init() methods must be called before using any other Helium feature
 		public static void InitWithAppIdAndSignature(string appId, string appSignature)
 		{
-			Log("Helium(iOS): InitWithAppIdAndSignature " + appId + ", " + appSignature + " and version " + Application.unityVersion);
+			Log($"Helium(iOS): InitWithAppIdAndSignature {appId}, {appSignature} and version {Application.unityVersion}");
 			if (!Application.isEditor)
 				_heliumSdkInit(appId, appSignature, Application.unityVersion, HeliumSDK.BackgroundEventListener.SendEvent);
 			_initialized = true;
@@ -83,35 +83,35 @@ namespace Helium
 
 		public static void SetSubjectToCoppa(bool isSubject)
 		{
-			Log("Helium(iOS): SetSubjectToCoppa " + isSubject);
+			Log($"Helium(iOS): SetSubjectToCoppa {isSubject}");
 			if (!Application.isEditor)
 				_heliumSdkSetSubjectToCoppa(isSubject);
 		}
 
 		public static void SetSubjectToGDPR(bool isSubject)
 		{
-			Log("Helium(iOS): SetSubjectToGDPR " + isSubject);
+			Log($"Helium(iOS): SetSubjectToGDPR {isSubject}");
 			if (!Application.isEditor)
 				_heliumSdkSetSubjectToGDPR(isSubject);
 		}
 
 		public static void SetUserHasGivenConsent(bool hasGivenConsent)
 		{
-			Log("Helium(iOS): SetUserHasGivenConsent " + hasGivenConsent);
+			Log($"Helium(iOS): SetUserHasGivenConsent {hasGivenConsent}");
 			if (!Application.isEditor)
 				_heliumSdkSetUserHasGivenConsent(hasGivenConsent);
 		}
 
 		public static void SetCCPAConsent(bool hasGivenConsent)
 		{
-			Log("Helium(iOS): SetCCPAConsent " + hasGivenConsent);
+			Log($"Helium(iOS): SetCCPAConsent {hasGivenConsent}");
 			if (!Application.isEditor)
 				_heliumSetCCPAConsent(hasGivenConsent);
 		}
 
 		public static void SetUserIdentifier(string userIdentifier)
 		{
-			Log("Helium(iOS): SetUserIdentifier " + userIdentifier);
+			Log($"Helium(iOS): SetUserIdentifier {userIdentifier}");
 			if (!Application.isEditor)
 				_heliumSetUserIdentifer(userIdentifier);
 		}
@@ -142,7 +142,7 @@ namespace Helium
 				return null;
 			}
 
-			Log("Helium(iOS): getInterstitialAd at placement = " + placementName);
+			Log($"Helium(iOS): getInterstitialAd at placement = {placementName}");
 			if (Application.isEditor) 
 				return null;
 			
@@ -165,7 +165,7 @@ namespace Helium
 				return null;
 			}
 
-			Log("Helium(iOS): getRewardedAd at placement = " + placementName);
+			Log($"Helium(iOS): getRewardedAd at placement = {placementName}");
 			if (Application.isEditor) 
 				return null;
 			
@@ -189,7 +189,7 @@ namespace Helium
 				return null;
 			}
 
-			Log("Helium(iOS): getBannerAd at placement = " + placementName);
+			Log($"Helium(iOS): getBannerAd at placement = {placementName}");
 			if (Application.isEditor) 
 				return null;
 			
@@ -240,8 +240,8 @@ namespace Helium
         /// Either one of the init() methods must be called before using any other Helium feature
         public static void InitWithAppIdAndSignature(string appId, string appSignature)
 		{ 
-            string unityVersion = Application.unityVersion;
-            Log("Helium(Android): InitWithAppIdAndSignature " + appId + ", " + appSignature + " and version " + unityVersion);
+            var unityVersion = Application.unityVersion;
+            Log($"Helium(Android): InitWithAppIdAndSignature {appId}, {appSignature}, and version {unityVersion}");
 			if (!Application.isEditor)
 				plugin().Call("start", appId, appSignature, unityVersion, HeliumSDK.BackgroundEventListener.Instance);
 			_initialized = true;
@@ -249,35 +249,35 @@ namespace Helium
 
 		public static void SetSubjectToCoppa(bool isSubject)
 		{
-			Log("Helium(Android): SetSubjectToCoppa " + isSubject);
+			Log($"Helium(Android): SetSubjectToCoppa {isSubject}");
 			if (!Application.isEditor)
 				plugin().Call("setSubjectToCoppa", isSubject);
 		}
 
 		public static void SetSubjectToGDPR(bool isSubject)
 		{
-			Log("Helium(Android): SetSubjectToGDPR " + isSubject);
+			Log($"Helium(Android): SetSubjectToGDPR {isSubject}");
 			if (!Application.isEditor)
 				plugin().Call("setSubjectToGDPR", isSubject);
 		}
 
 		public static void SetUserHasGivenConsent(bool hasGivenConsent)
 		{
-			Log("Helium(Android): SetUserHasGivenConsent " + hasGivenConsent);
+			Log($"Helium(Android): SetUserHasGivenConsent {hasGivenConsent}");
 			if (!Application.isEditor)
 				plugin().Call("setUserHasGivenConsent", hasGivenConsent);
 		}
 
 		public static void SetCCPAConsent(bool hasGivenConsent)
 		{
-			Log("Helium(Android): SetCCPAConsent " + hasGivenConsent);
+			Log($"Helium(Android): SetCCPAConsent {hasGivenConsent}");
 			if (!Application.isEditor)
 				plugin().Call("setCCPAConsent", hasGivenConsent);
 		}
 
 		public static void SetUserIdentifier(string userIdentifier)
         {
-			Log("Helium(Android): SetUserIdentifier " + userIdentifier);
+			Log($"Helium(Android): SetUserIdentifier {userIdentifier}");
 			if (!Application.isEditor)
 				plugin().Call("setUserIdentifier", userIdentifier);
 		}
@@ -288,7 +288,7 @@ namespace Helium
 				return null;
 			
 			var userIdentifier = _plugin.Call<string>("getUserIdentifier");
-			Log("Helium(Android): GetUserIdentifier = " + userIdentifier);
+			Log($"Helium(Android): GetUserIdentifier = {userIdentifier}");
 			return userIdentifier;
 		}
 
@@ -421,49 +421,49 @@ namespace Helium
         /// This must be called before using any other Helium SDK features.
         public static void Init()
         {
-            Log("Helium(Unsupported): Init with version " + Application.unityVersion);
+            Log($"Helium(Unsupported): Init with version {Application.unityVersion}");
         }
 
         /// Initialize the Helium SDK plugin with a specific appId
         /// Either one of the init() methods must be called before using any other Helium SDK feature
         public static void InitWithAppIdAndSignature(string appId, string appSignature)
         {
-            Log("Helium(Unsupported): InitWithAppIdAndSignature " + appId + ", " + appSignature + " and version " + Application.unityVersion);
+            Log("Helium(Unsupported): InitWithAppIdAndSignature {appId}, {appSignature} and version {Application.unityVersion}");
         }
 
         public static HeliumInterstitialAd GetInterstitialAd(string placementName)
         {
-            Log("Helium(Unsupported): GetInterstitialAd at placement = " + placementName);
+            Log($"Helium(Unsupported): GetInterstitialAd at placement = {placementName}");
             return null;
         }
 
         public static HeliumRewardedAd GetRewardedAd(string placementName)
         {
-            Log("Helium(Unsupported): GetRewardedAd at placement = " + placementName);
+            Log($"Helium(Unsupported): GetRewardedAd at placement = {placementName}");
             return null;
         }
 
         public static HeliumBannerAd GetBannerAd(string placementName, HeliumBannerAdSize size)
         {
-            Log("Helium(Unsupported): GetBannerAd at placement = " + placementName);
+            Log($"Helium(Unsupported): GetBannerAd at placement = {placementName}");
             return null;
         }
 
         /// Sets the name of the game object to be used by the Helium iOS SDK
         public static void SetGameObjectName(string name)
         {
-            Log("Helium(Unsupported): Set Game object name for callbacks to = " + name);
+            Log($"Helium(Unsupported): Set Game object name for callbacks to = {name}");
         }
 
         public static void Pause(bool paused)
         {
-            Log("Helium(Unsupported): pause");
+            Log("Helium(Unsupported): Pause");
         }
 
         /// Shuts down the Helium plugin
         public static void Destroy()
         {
-            Log("Helium(Unsupported): destroy");
+            Log("Helium(Unsupported): Destroy");
         }
 
         /// Used to notify Helium that the Android back button has been pressed
@@ -482,27 +482,27 @@ namespace Helium
 
         public static void SetSubjectToCoppa(bool isSubject)
         {
-            Log("Helium(Unsupported): SetSubjectToCoppa " + isSubject);
+            Log($"Helium(Unsupported): SetSubjectToCoppa {isSubject}");
         }
 
         public static void SetSubjectToGDPR(bool isSubject)
         {
-            Log("Helium(Unsupported): SetSubjectToGDPR " + isSubject);
+            Log($"Helium(Unsupported): SetSubjectToGDPR {isSubject}");
         }
 
         public static void SetUserHasGivenConsent(bool hasGivenConsent)
         {
-            Log("Helium(Unsupported): SetUserHasGivenConsent " + hasGivenConsent);
+            Log($"Helium(Unsupported): SetUserHasGivenConsent {hasGivenConsent}");
         }
 
 		public static void SetCCPAConsent(bool hasGivenConsent)
         {
-            Log("Helium(Unsupported): SetCCPAConsent " + hasGivenConsent);
+            Log($"Helium(Unsupported): SetCCPAConsent {hasGivenConsent}");
         }
 
 		public static void SetUserIdentifier(string userIdentifier)
         {
-			Log("Helium(Unsupported): SetUserIdentifier " + userIdentifier);
+			Log($"Helium(Unsupported): SetUserIdentifier {userIdentifier}" );
 			HeliumExternal._userIdentifier = userIdentifier;
 		}
 
