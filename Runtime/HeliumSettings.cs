@@ -75,7 +75,7 @@ namespace Helium {
 	    [MenuItem("Helium/Documentation")]
 	    public static void OpenDocumentation()
 	    {
-		    const string url = "https://answers.chartboost.com/en-us/child_article/unity";
+		    const string url = "https://developers.chartboost.com/docs/unity-add-the-helium-sdk";
 		    Application.OpenURL(url);
 	    }
 #endif
