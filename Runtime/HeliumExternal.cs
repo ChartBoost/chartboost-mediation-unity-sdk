@@ -400,7 +400,6 @@ namespace Helium
 			_initialized = false;
 		}
 
-		// todo - https://chartboost.atlassian.net/browse/HB-3870 onBackPressed does not exist on Bridge at the moment.
 		/// Used to notify Helium that the Android back button has been pressed
 		/// Returns true to indicate that Helium has handled the event and it should not be further processed
 		public static bool OnBackPressed() {
