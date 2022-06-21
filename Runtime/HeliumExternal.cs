@@ -55,11 +55,11 @@ namespace Helium
 		
 		// todo - https://chartboost.atlassian.net/browse/HB-3869 this has a typo on it, needs to be corrected.
 		[DllImport("__Internal")]
-		private static extern void _heliumSetUserIdentifer(string userIdentifier);
+		private static extern void _heliumSetUserIdentifier(string userIdentifier);
 		
 		// todo - https://chartboost.atlassian.net/browse/HB-3869 this has a typo on it, needs to be corrected.
 		[DllImport("__Internal")]
-		private static extern string _heliumGetUserIdentifer();
+		private static extern string _heliumGetUserIdentifier();
 
 		/// Initializes the Helium plugin.
 		/// This must be called before using any other Helium features.
@@ -113,14 +113,14 @@ namespace Helium
 		{
 			Log($"Helium(iOS): SetUserIdentifier {userIdentifier}");
 			if (!Application.isEditor)
-				_heliumSetUserIdentifer(userIdentifier);
+				_heliumSetUserIdentifier(userIdentifier);
 		}
 
 		public static string GetUserIdentifier()
 		{
 			Log("Helium(iOS): GetUserIdentifier");
 			if (!Application.isEditor)
-				return _heliumGetUserIdentifer();
+				return _heliumGetUserIdentifier();
 			else
 				return null;
 		}
