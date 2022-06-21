@@ -49,12 +49,12 @@ void _heliumSetCCPAConsent(BOOL hasGivenConsent)
     [[HeliumSdkManager sharedManager] setCCPAConsent:hasGivenConsent];
 }
 
-void _heliumSetUserIdentifer(const char * userIdentifier)
+void _heliumSetUserIdentifier(const char * userIdentifier)
 {
     [[HeliumSdkManager sharedManager] setUserIdentifier:GetStringParam(userIdentifier)];
 }
 
-char * _heliumGetUserIdentifer()
+char * _heliumGetUserIdentifier()
 {
     return ConvertNSStringToCString([[HeliumSdkManager sharedManager] getUserIdentifier]);
 }
