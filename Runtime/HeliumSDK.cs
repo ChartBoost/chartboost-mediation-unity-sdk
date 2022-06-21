@@ -4,6 +4,7 @@ using System.Collections;
 using AOT;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Helium.Platforms;
 using UnityEngine.Scripting;
 #if UNITY_4_6 || UNITY_5 || UNITY_2017_1_OR_NEWER
 using UnityEngine.EventSystems;
@@ -220,7 +221,7 @@ namespace Helium
         /// <param name="placementName">The placement ID for the HeliumSdk impression type.</param>
         public static HeliumInterstitialAd GetInterstitialAd(string placementName)
         {
-            return HeliumExternal.GetInterstitialAd(placementName);
+            return ActiveExternal.GetInterstitialAd(placementName);
         }
 
         /// <summary>
@@ -229,7 +230,7 @@ namespace Helium
         /// <param name="placementName">The placement ID for the HeliumSdk impression type.</param>
         public static HeliumRewardedAd GetRewardedAd(string placementName)
         {
-            return HeliumExternal.GetRewardedAd(placementName);
+            return ActiveExternal.GetRewardedAd(placementName);
         }
 
         /// <summary>
@@ -239,7 +240,7 @@ namespace Helium
         /// <param name="size">The banner size</param>
         public static HeliumBannerAd GetBannerAd(string placementName, HeliumBannerAdSize size)
         {
-            return HeliumExternal.GetBannerAd(placementName, size);
+            return ActiveExternal.GetBannerAd(placementName, size);
         }
 
         //////////////////////////////////////////////////////
@@ -253,6 +254,31 @@ namespace Helium
         /// Usage HeliumSdk.Instance
         /// </summary>
         private static HeliumSDK _instance = null;
+
+        // this will be different once callback improvements are done, Helium platform will be loaded on constructor
+        private static HeliumExternal _heliumExternal;
+        private static HeliumExternal ActiveExternal
+        {
+            get
+            {
+                if (_heliumExternal == null)
+                    LoadHeliumPlatform();
+                return _heliumExternal;
+            }
+        }
+
+        private static void LoadHeliumPlatform()
+        {
+            #if UNITY_EDITOR
+            _heliumExternal = new HeliumUnsupported();
+            #elif UNITY_ANDROID
+            _heliumExternal = new HeliumAndroid();
+            #elif UNITY_IPHONE
+            _heliumExternal = new HeliumIOS();
+            #else
+            _heliumExternal = new HeliumUnsupported();
+            #endif
+        }
 
         public static HeliumSDK Create()
         {
@@ -277,32 +303,32 @@ namespace Helium
 
         public static void SetSubjectToCoppa(bool isSubject)
         {
-            HeliumExternal.SetSubjectToCoppa(isSubject);
+            ActiveExternal.SetSubjectToCoppa(isSubject);
         }
 
         public static void SetSubjectToGDPR(bool isSubject)
         {
-            HeliumExternal.SetSubjectToGDPR(isSubject);
+            ActiveExternal.SetSubjectToGDPR(isSubject);
         }
 
         public static void SetUserHasGivenConsent(bool hasGivenConsent)
         {
-            HeliumExternal.SetUserHasGivenConsent(hasGivenConsent);
+            ActiveExternal.SetUserHasGivenConsent(hasGivenConsent);
         }
 
         public static void SetCCPAConsent(bool hasGivenConsent)
         {
-            HeliumExternal.SetCCPAConsent(hasGivenConsent);
+            ActiveExternal.SetCCPAConsent(hasGivenConsent);
         }
 
         public static void SetUserIdentifier(string userIdentifier)
         {
-            HeliumExternal.SetUserIdentifier(userIdentifier);
+            ActiveExternal.SetUserIdentifier(userIdentifier);
         }
 
         public static string GetUserIdentifier()
         {
-            return HeliumExternal.GetUserIdentifier();
+            return ActiveExternal.GetUserIdentifier();
         }
 
         private void Awake()
@@ -311,8 +337,9 @@ namespace Helium
             if (_instance == null)
             {
                 _instance = this;
-                HeliumExternal.Init();
-                HeliumExternal.SetGameObjectName(gameObject.name);
+                LoadHeliumPlatform();
+                ActiveExternal.Init();
+                ActiveExternal.SetGameObjectName(gameObject.name);
                 DontDestroyOnLoad(gameObject);
             }
             else
@@ -327,7 +354,7 @@ namespace Helium
             if (this != _instance)
                 return;
             _instance = null;
-            HeliumExternal.Destroy();
+            ActiveExternal.Destroy();
         }
 
         private void OnDisable()
@@ -337,7 +364,7 @@ namespace Helium
             if (this != _instance) 
                 return;
             _instance = null;
-            HeliumExternal.Destroy();
+            _heliumExternal.Destroy();
             #endif
         }
 
