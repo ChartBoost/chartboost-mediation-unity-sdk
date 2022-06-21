@@ -178,6 +178,10 @@ public class HeliumUnityBridge {
         return HeliumSdk.getUserIdentifier();
     }
 
+    public boolean onBackPressed() {
+       return HeliumSdk.onBackPressed();
+    }
+
     public void start(final String appId, final String appSignature, final String unityVersion, final IBackgroundEventListener backgroundEventListener) {
         _activity = UnityPlayer.currentActivity;
         HeliumUnityBridge.bgEventListener = backgroundEventListener;
