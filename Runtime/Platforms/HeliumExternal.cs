@@ -1,8 +1,10 @@
+using System;
+using Helium.Interfaces;
 using UnityEngine;
 
 namespace Helium.Platforms
 {
-    public abstract class HeliumExternal
+    public abstract class HeliumExternal : IHeliumLifeCycle, IInterstitialEvents, IRewardedEvents, IBannerEvents
     {
         protected static bool Initialized = false;
         protected static string LOGTag = "HeliumSDK";
@@ -43,7 +45,7 @@ namespace Helium.Platforms
         /// This must be called before using any other Helium features.
         public virtual void Init()
         {
-            Log("Init - Initializing Helium SDK from HeliumSettings.");
+            Log("Init - Attempting to Initialize Helium SDK from HeliumSettings.");
         }
 
         /// Initialize the Helium plugin with a specific appId
@@ -51,6 +53,8 @@ namespace Helium.Platforms
         public virtual void InitWithAppIdAndSignature(string appId, string appSignature)
         {
             Log($"InitWithAppIdAndSignature {appId}, {appSignature} and version {Application.unityVersion}");
+            HeliumSettings.SetAppId(appId);
+            HeliumSettings.SetAppSignature(appSignature);
         }
         
         public virtual void SetSubjectToCoppa(bool isSubject)
@@ -124,5 +128,25 @@ namespace Helium.Platforms
         {
             Log($"Setting GameObjectName: {name}");
         }
+
+        // provide the option to override callbacks
+        public virtual event HeliumEvent DidStart;
+        public virtual event HeliumILRD DidReceiveImpressionLevelRevenueData;
+        public virtual event HeliumEvent UnexpectedSystemErrorDidOccur;
+        public virtual event HeliumPlacementEvent DidLoadInterstitial;
+        public virtual event HeliumPlacementEvent DidShowInterstitial;
+        public virtual event HeliumPlacementEvent DidCloseInterstitial;
+        public virtual event HeliumPlacementEvent DidClickInterstitial;
+        public virtual event HeliumBidEvent DidWinBidInterstitial;
+        public virtual event HeliumPlacementEvent DidLoadRewarded;
+        public virtual event HeliumPlacementEvent DidShowRewarded;
+        public virtual event HeliumPlacementEvent DidCloseRewarded;
+        public virtual event HeliumPlacementEvent DidClickRewarded;
+        public virtual event HeliumBidEvent DidWinBidRewarded;
+        public virtual event HeliumRewardEvent DidReceiveReward;
+        public virtual event HeliumPlacementEvent DidLoadBanner;
+        public virtual event HeliumPlacementEvent DidShowBanner;
+        public virtual event HeliumPlacementEvent DidClickBanner;
+        public virtual event HeliumBidEvent DidWinBidBanner;
     }
 }
