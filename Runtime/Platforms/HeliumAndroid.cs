@@ -1,19 +1,23 @@
 #if UNITY_ANDROID
 using System;
-using Helium.Platforms;
+using Helium.Interfaces;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Helium.Platforms
 {
-    public class HeliumAndroid : HeliumExternal
+    public sealed class HeliumAndroid : HeliumExternal
     {
+        #region Helium
+        private static HeliumAndroid _instance;
         private static AndroidJavaObject _plugin;
-        
-        public HeliumAndroid()
+
+        private HeliumAndroid()
         {
+            _instance = this;
             LOGTag = "Helium(Android)";
         }
-        
+
         // Initialize the android bridge
         private static AndroidJavaObject plugin()
         {
@@ -36,7 +40,7 @@ namespace Helium.Platforms
         public override void InitWithAppIdAndSignature(string appId, string appSignature)
         {
             base.InitWithAppIdAndSignature(appId, appSignature);
-            plugin().Call("start", appId, appSignature, Application.unityVersion, HeliumSDK.BackgroundEventListener.Instance);
+            plugin().Call("start", appId, appSignature, Application.unityVersion);
             Initialized = true;
         }
 
@@ -161,12 +165,165 @@ namespace Helium.Platforms
                 return null;
             }
         }
+        #endregion
 
-        public override void SetGameObjectName(string name)
+        #region LifeCycle Callbacks
+        [Preserve]
+        internal class LifeCycleEventListener : AndroidJavaProxy
         {
-            base.SetGameObjectName(name);
-            _plugin.Call("setGameObjectName", name);
+            private LifeCycleEventListener() : base("com.chartboost.heliumsdk.unity.LifeCycleEventListener") { }
+
+            [Preserve]
+            private void DidStart(int errorCode, string errorDescription)
+            {
+                HeliumEventProcessor.ProcessHeliumEvent(errorCode, errorDescription, _instance.DidStart);
+            }
+            
+            [Preserve]
+            private void DidReceiveILRD(string impressionDataJson)
+            {
+                HeliumEventProcessor.ProcessEventWithILRD(impressionDataJson, _instance.DidReceiveImpressionLevelRevenueData);
+            }
         }
+
+        public override event HeliumEvent DidStart;
+        public override event HeliumILRD DidReceiveImpressionLevelRevenueData;
+        #endregion
+
+        #region Interstitial Callbacks
+        [Preserve]
+        internal class InterstitialEventListener : AndroidJavaProxy
+        {
+            private InterstitialEventListener() : base("com.chartboost.heliumsdk.unity.IInterstitialEventListener") { }
+
+            [Preserve]
+            private void DidLoadInterstitial(string placementName, int errorCode, string errorDescription)
+            {
+                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription, _instance.DidLoadInterstitial);
+            }
+
+            [Preserve]
+            private void DidClickInterstitial(string placementName, int errorCode, string errorDescription)
+            {
+                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription, _instance.DidClickInterstitial);
+            }
+            
+            [Preserve]
+            private void DidCloseInterstitial(string placementName, int errorCode, string errorDescription)
+            {
+                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription, _instance.DidCloseInterstitial);
+            }
+            
+            [Preserve]
+            private void DidShowInterstitial(string placementName, int errorCode, string errorDescription)
+            {
+                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription, _instance.DidShowInterstitial);
+            }
+            
+            [Preserve]
+            private void DidWinBidInterstitial(string placementName, string auctionId, double price, string seat)
+            {
+                HeliumEventProcessor.ProcessHeliumBidEvent(placementName, auctionId, price, seat, _instance.DidWinBidInterstitial);
+            }
+        }
+
+        /// <inheritdoc cref="IInterstitialEvents.DidLoadInterstitial"/>
+        public override event HeliumPlacementEvent DidLoadInterstitial;
+        /// <inheritdoc cref="IInterstitialEvents.DidClickInterstitial"/>
+        public override event HeliumPlacementEvent DidClickInterstitial;
+        /// <inheritdoc cref="IInterstitialEvents.DidCloseInterstitial"/>
+        public override event HeliumPlacementEvent DidCloseInterstitial;
+        /// <inheritdoc cref="IInterstitialEvents.DidShowInterstitial"/>
+        public override event HeliumPlacementEvent DidShowInterstitial;
+        /// <inheritdoc cref="IInterstitialEvents.DidWinBidInterstitial"/>
+        public override event HeliumBidEvent DidWinBidInterstitial;
+        #endregion
+
+        #region Rewarded Callbacks
+        internal class RewardedVideoEventListener : AndroidJavaProxy
+        {
+            private RewardedVideoEventListener() : base("com.chartboost.heliumsdk.unity.IRewardedEventListener") { }
+            
+            [Preserve]
+            private void DidLoadRewarded(string placementName, int errorCode, string errorDescription)
+            {
+                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription, _instance.DidLoadRewarded);
+            }
+            
+            [Preserve]
+            private void DidShowRewarded(string placementName, int errorCode, string errorDescription)
+            {
+                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription, _instance.DidShowRewarded);
+            }
+            
+            [Preserve]
+            private void DidCloseRewarded(string placementName, int errorCode, string errorDescription)
+            {
+                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription, _instance.DidCloseRewarded);
+            }
+            
+            [Preserve]
+            private void DidClickRewarded(string placementName, int errorCode, string errorDescription)
+            {
+                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription, _instance.DidClickRewarded);
+            }
+            
+            [Preserve]
+            private void DidWinBidRewarded(string placementName, string auctionId, double price, string seat)
+            {
+                HeliumEventProcessor.ProcessHeliumBidEvent(placementName, auctionId, price, seat, _instance.DidWinBidRewarded);
+            }
+            
+            [Preserve]
+            private void DidReceiveReward(string reward)
+            {
+                HeliumEventProcessor.ProcessHeliumRewardEvent(reward, _instance.DidReceiveReward);
+            }
+        }
+
+        public override event HeliumPlacementEvent DidLoadRewarded;
+        public override event HeliumPlacementEvent DidShowRewarded;
+        public override event HeliumPlacementEvent DidCloseRewarded;
+        public override event HeliumPlacementEvent DidClickRewarded;
+        public override event HeliumBidEvent DidWinBidRewarded;
+        public override event HeliumRewardEvent DidReceiveReward;
+        #endregion
+        
+        #region Banner Callbacks
+        internal class BannerEventListener : AndroidJavaProxy
+        {
+            private BannerEventListener() : base("com.chartboost.heliumsdk.unity.IBannerEventListener") { }
+            
+            [Preserve]
+            private void DidLoadBanner(string placementName, int errorCode, string errorDescription)
+            {
+                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription, _instance.DidLoadBanner);
+            }
+            
+            [Preserve]
+            private void DidShowBanner(string placementName, int errorCode, string errorDescription)
+            {
+                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription, _instance.DidShowBanner);
+            }
+            
+            [Preserve]
+            private void DidClickBanner(string placementName, int errorCode, string errorDescription)
+            {
+                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription, _instance.DidClickBanner);
+            }
+            
+            [Preserve]
+            private void DidWinBidBanner(string placementName, string auctionId, double price, string seat)
+            {
+                HeliumEventProcessor.ProcessHeliumBidEvent(placementName, auctionId, price, seat, _instance.DidWinBidBanner);
+            }
+        }
+
+        public override event HeliumPlacementEvent DidLoadBanner;
+        public override event HeliumPlacementEvent DidShowBanner;
+        public override event HeliumPlacementEvent DidClickBanner;
+        public override event HeliumBidEvent DidWinBidBanner;
+        #endregion
     }
 }
 #endif
