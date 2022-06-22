@@ -15,7 +15,9 @@ namespace Helium.Editor
 		private readonly GUIContent _iOSLabel = new("iOS");
 		private readonly GUIContent _androidLabel = new("Google Play");
 		private readonly GUIContent _enableLoggingLabel = new("Enable Logging for Debug Builds");
+		private readonly GUIContent _enableAutomaticInitLabel = new("Enable Automatic Initialization");
 		private readonly GUIContent _enableLoggingToggle = new("isLoggingEnabled");
+		private readonly GUIContent _enableAutomaticInitToggle = new("isAutomaticallyInitializing");
 
 		private HeliumSettings _instance;
 
@@ -89,6 +91,16 @@ namespace Helium.Editor
 			HeliumSettings.EnableLogging(EditorGUILayout.Toggle(_enableLoggingToggle, _instance.isLoggingEnabled));
 			EditorGUILayout.EndHorizontal();
 			EditorGUILayout.Space();
+			
+			// automatic init toggle
+			EditorGUILayout.BeginHorizontal();
+			EditorGUILayout.LabelField(_enableAutomaticInitLabel);
+			EditorGUILayout.EndHorizontal();
+			
+			EditorGUILayout.BeginHorizontal();
+			HeliumSettings.EnableAutomaticInit(EditorGUILayout.Toggle(_enableAutomaticInitToggle, _instance.isAutomaticInitEnabled));
+			EditorGUILayout.EndHorizontal();
+			
 		}
 	}
 }
