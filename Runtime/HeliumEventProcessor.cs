@@ -1,96 +1,121 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+
 // ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo
 namespace Helium
 {
     public static class HeliumEventProcessor
     {
+        private static readonly SynchronizationContext _context;
+        
         /// <summary>
         /// Called when an unexpected system error occurred.
         /// </summary>
         // ReSharper disable once InconsistentNaming
         public static event HeliumEvent UnexpectedSystemErrorDidOccur;
+
+        static HeliumEventProcessor()
+        {
+            _context = SynchronizationContext.Current;
+        }
+        
         public static void ProcessEventWithILRD(string dataString, HeliumILRDEvent ilrdEvent)
         {
-            try
+            _context.Post(o =>
             {
-                if (ilrdEvent == null)
-                    return;
+                try
+                {
+                    if (ilrdEvent == null)
+                        return;
 
-                if (HeliumJSON.Deserialize(dataString) is not Dictionary<object, object> data)
-                    return;
+                    if (HeliumJSON.Deserialize(dataString) is not Dictionary<object, object> data)
+                        return;
 
-                data.TryGetValue("placementName", out var placementName);
-                ilrdEvent(placementName as string, new Hashtable(data));
-            }
-            catch (Exception e)
-            {
-                ReportUnexpectedSystemError(e.ToString());
-            }
+                    data.TryGetValue("placementName", out var placementName);
+                    ilrdEvent(placementName as string, new Hashtable(data));
+                }
+                catch (Exception e)
+                {
+                    ReportUnexpectedSystemError(e.ToString());
+                }
+            }, null);
         }
 
         public static void ProcessHeliumEvent(int errorCode, string errorDescription, HeliumEvent heliumEvent)
         {
-            try
+            _context.Post(o =>
             {
-                if (heliumEvent == null)
-                    return;
+                try
+                {
+                    if (heliumEvent == null)
+                        return;
 
-                var heliumError = HeliumError.ErrorFromIntString(errorCode, errorDescription);
-                heliumEvent(heliumError);
-            }
-            catch (Exception e)
-            {
-                ReportUnexpectedSystemError(e.ToString());
-            }
+                    var heliumError = HeliumError.ErrorFromIntString(errorCode, errorDescription);
+                    heliumEvent(heliumError);
+                }
+                catch (Exception e)
+                {
+                    ReportUnexpectedSystemError(e.ToString());
+                }
+            }, null);
         }
 
         public static void ProcessHeliumPlacementEvent(string placementName, int errorCode, string errorDescription, HeliumPlacementEvent placementEvent)
         {
-            try
+            _context.Post(o =>
             {
-                if (placementEvent == null)
-                    return;
+                try
+                {
+                    if (placementEvent == null)
+                        return;
 
-                var heliumError = HeliumError.ErrorFromIntString(errorCode, errorDescription);
-                placementEvent(placementName, heliumError);
-            }
-            catch (Exception e)
-            {
-                ReportUnexpectedSystemError(e.ToString());
-            }
+                    var heliumError = HeliumError.ErrorFromIntString(errorCode, errorDescription);
+                    placementEvent(placementName, heliumError);
+                }
+                catch (Exception e)
+                {
+                    ReportUnexpectedSystemError(e.ToString());
+                }
+            }, null);
         }
 
-        public static void ProcessHeliumBidEvent(string placementName, string auctionId, double price, string seat, HeliumBidEvent bidEvent)
+        public static void ProcessHeliumBidEvent(string placementName, string partnerPlacementName, string auctionId, double price, string seat, HeliumBidEvent bidEvent)
         {
-            try
+            _context.Post(o =>
             {
-                if (bidEvent == null)
-                    return;
+                try
+                {
+                    if (bidEvent == null)
+                        return;
 
-                var heliumBid = new HeliumBidInfo(placementName, auctionId, price, seat);
-                bidEvent(placementName, heliumBid);
-            }
-            catch (Exception e)
-            {
-                ReportUnexpectedSystemError(e.ToString());
-            }
+                    var heliumBid = new HeliumBidInfo(partnerPlacementName, auctionId, price, seat);
+                    bidEvent(placementName, heliumBid);
+                }
+                catch (Exception e)
+                {
+                    ReportUnexpectedSystemError(e.ToString());
+                }
+            }, null);
         }
 
-        public static void ProcessHeliumRewardEvent(string reward, HeliumRewardEvent rewardEvent)
+        public static void ProcessHeliumRewardEvent(string placementName, string reward, HeliumRewardEvent rewardEvent)
         {
-            try
+            _context.Post(o =>
             {
-                if (rewardEvent == null)
-                    return;
-                rewardEvent(reward);
-            }
-            catch (Exception e)
-            {
-                ReportUnexpectedSystemError(e.ToString());
-            }
+                try
+                {
+                    if (rewardEvent == null)
+                        return;
+                    rewardEvent(placementName, reward);
+                }
+                catch (Exception e)
+                {
+                    ReportUnexpectedSystemError(e.ToString());
+                }
+            }, null);
         }
 
         private static void ReportUnexpectedSystemError(string message)

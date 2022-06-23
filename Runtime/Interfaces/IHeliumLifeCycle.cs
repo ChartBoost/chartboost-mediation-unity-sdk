@@ -4,7 +4,7 @@ using UnityEngine.Scripting;
 namespace Helium.Interfaces
 {
     /// <summary>
-    /// All Rewarded placement callbacks.
+    /// All Helium SDK Lifecycle callbacks.
     /// </summary>
     public interface IHeliumLifeCycle
     {
@@ -20,6 +20,6 @@ namespace Helium.Interfaces
         ///   is sent natively from iOS and Android.
         /// </summary>
         [Preserve]
-        public event HeliumILRD DidReceiveImpressionLevelRevenueData;
+        public event HeliumILRDEvent DidReceiveImpressionLevelRevenueData;
     }
 }

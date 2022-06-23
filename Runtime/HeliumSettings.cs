@@ -92,7 +92,7 @@ namespace Helium {
         [SerializeField]
 		public bool isLoggingEnabled = false;
 		[SerializeField]
-		public bool isAutomaticInitEnabled = true;
+		public bool isAutomaticInitEnabled = false;
 
         // allow mediation partners to set the appId and appSignature from code
         // if set, overrides the values set in the editor

@@ -31,9 +31,7 @@ namespace Helium
 		// Class variables
 		#if UNITY_IPHONE
 		private readonly IntPtr _uniqueId;
-		#endif
 
-		#if UNITY_IPHONE
 		public HeliumRewardedAd(IntPtr uniqueId)
 		{
 			this._uniqueId = uniqueId;

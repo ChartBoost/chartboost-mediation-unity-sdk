@@ -131,7 +131,7 @@ namespace Helium.Platforms
 
         // provide the option to override callbacks
         public virtual event HeliumEvent DidStart;
-        public virtual event HeliumILRD DidReceiveImpressionLevelRevenueData;
+        public virtual event HeliumILRDEvent DidReceiveImpressionLevelRevenueData;
         public virtual event HeliumEvent UnexpectedSystemErrorDidOccur;
         public virtual event HeliumPlacementEvent DidLoadInterstitial;
         public virtual event HeliumPlacementEvent DidShowInterstitial;

@@ -35,13 +35,6 @@ namespace Helium
             #endif
         }
 
-        [RuntimeInitializeOnLoadMethod]
-        private static void Init()
-        {
-            if (HeliumSettings.IsAutomaticInit())
-                _heliumExternal.Init();
-        }
-        
         #region LifeCycle Callbacks
         /// <inheritdoc cref="IHeliumLifeCycle.DidStart"/>>
         public static event HeliumEvent DidStart
@@ -51,7 +44,7 @@ namespace Helium
         }
         
         /// <inheritdoc cref="IHeliumLifeCycle.DidReceiveImpressionLevelRevenueData"/>>
-        public static event HeliumILRD DidReceiveImpressionLevelRevenueData
+        public static event HeliumILRDEvent DidReceiveImpressionLevelRevenueData
         {
             add => _heliumExternal.DidReceiveImpressionLevelRevenueData += value;
             remove => _heliumExternal.DidReceiveImpressionLevelRevenueData -= value;
@@ -208,8 +201,12 @@ namespace Helium
             return _heliumExternal.GetBannerAd(placementName, size);
         }
 
-
-     
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        private static void Init()
+        {
+            if (HeliumSettings.IsAutomaticInit())
+                _heliumExternal.Init();
+        }
 
         public static void StartWithAppIdAndAppSignature(string appId, string appSignature)
         {

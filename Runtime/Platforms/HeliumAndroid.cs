@@ -12,10 +12,15 @@ namespace Helium.Platforms
         private static HeliumAndroid _instance;
         private static AndroidJavaObject _plugin;
 
-        private HeliumAndroid()
+        public HeliumAndroid()
         {
             _instance = this;
             LOGTag = "Helium(Android)";
+            plugin().Call("setupEventListeners", 
+                LifeCycleEventListener.Instance,
+                InterstitialEventListener.Instance,
+                RewardedVideoEventListener.Instance,
+                BannerEventListener.Instance);
         }
 
         // Initialize the android bridge
@@ -31,6 +36,9 @@ namespace Helium.Platforms
 
         public override void Init()
         {
+            if (Initialized)
+                return;
+            
             base.Init();
             var appID = HeliumSettings.GetAndroidAppId();
             var appSignature = HeliumSettings.GetAndroidAppSignature();
@@ -39,6 +47,9 @@ namespace Helium.Platforms
 
         public override void InitWithAppIdAndSignature(string appId, string appSignature)
         {
+            if (Initialized)
+                return;
+            
             base.InitWithAppIdAndSignature(appId, appSignature);
             plugin().Call("start", appId, appSignature, Application.unityVersion);
             Initialized = true;
@@ -171,8 +182,10 @@ namespace Helium.Platforms
         [Preserve]
         internal class LifeCycleEventListener : AndroidJavaProxy
         {
-            private LifeCycleEventListener() : base("com.chartboost.heliumsdk.unity.LifeCycleEventListener") { }
+            private LifeCycleEventListener() : base("com.chartboost.heliumsdk.unity.ILifeCycleEventListener") { }
 
+            public static readonly LifeCycleEventListener Instance = new();
+            
             [Preserve]
             private void DidStart(int errorCode, string errorDescription)
             {
@@ -187,7 +200,7 @@ namespace Helium.Platforms
         }
 
         public override event HeliumEvent DidStart;
-        public override event HeliumILRD DidReceiveImpressionLevelRevenueData;
+        public override event HeliumILRDEvent DidReceiveImpressionLevelRevenueData;
         #endregion
 
         #region Interstitial Callbacks
@@ -195,6 +208,8 @@ namespace Helium.Platforms
         internal class InterstitialEventListener : AndroidJavaProxy
         {
             private InterstitialEventListener() : base("com.chartboost.heliumsdk.unity.IInterstitialEventListener") { }
+            
+            public static readonly InterstitialEventListener Instance = new();
 
             [Preserve]
             private void DidLoadInterstitial(string placementName, int errorCode, string errorDescription)
@@ -221,9 +236,9 @@ namespace Helium.Platforms
             }
             
             [Preserve]
-            private void DidWinBidInterstitial(string placementName, string auctionId, double price, string seat)
+            private void DidWinBidInterstitial(string placementName, string partnerPlacementName,  string auctionId, double price, string seat)
             {
-                HeliumEventProcessor.ProcessHeliumBidEvent(placementName, auctionId, price, seat, _instance.DidWinBidInterstitial);
+                HeliumEventProcessor.ProcessHeliumBidEvent(placementName, partnerPlacementName, auctionId, price, seat, _instance.DidWinBidInterstitial);
             }
         }
 
@@ -243,6 +258,8 @@ namespace Helium.Platforms
         internal class RewardedVideoEventListener : AndroidJavaProxy
         {
             private RewardedVideoEventListener() : base("com.chartboost.heliumsdk.unity.IRewardedEventListener") { }
+            
+            public static readonly RewardedVideoEventListener Instance = new();
             
             [Preserve]
             private void DidLoadRewarded(string placementName, int errorCode, string errorDescription)
@@ -269,15 +286,15 @@ namespace Helium.Platforms
             }
             
             [Preserve]
-            private void DidWinBidRewarded(string placementName, string auctionId, double price, string seat)
+            private void DidWinBidRewarded(string placementName, string partnerPlacementName, string auctionId, double price, string seat)
             {
-                HeliumEventProcessor.ProcessHeliumBidEvent(placementName, auctionId, price, seat, _instance.DidWinBidRewarded);
+                HeliumEventProcessor.ProcessHeliumBidEvent(placementName, partnerPlacementName, auctionId, price, seat, _instance.DidWinBidRewarded);
             }
             
             [Preserve]
-            private void DidReceiveReward(string reward)
+            private void DidReceiveReward(string placementName, string reward)
             {
-                HeliumEventProcessor.ProcessHeliumRewardEvent(reward, _instance.DidReceiveReward);
+                HeliumEventProcessor.ProcessHeliumRewardEvent(placementName, reward, _instance.DidReceiveReward);
             }
         }
 
@@ -293,6 +310,8 @@ namespace Helium.Platforms
         internal class BannerEventListener : AndroidJavaProxy
         {
             private BannerEventListener() : base("com.chartboost.heliumsdk.unity.IBannerEventListener") { }
+            
+            public static readonly BannerEventListener Instance = new();
             
             [Preserve]
             private void DidLoadBanner(string placementName, int errorCode, string errorDescription)
@@ -313,9 +332,9 @@ namespace Helium.Platforms
             }
             
             [Preserve]
-            private void DidWinBidBanner(string placementName, string auctionId, double price, string seat)
+            private void DidWinBidBanner(string placementName, string partnerPlacementName, string auctionId, double price, string seat)
             {
-                HeliumEventProcessor.ProcessHeliumBidEvent(placementName, auctionId, price, seat, _instance.DidWinBidBanner);
+                HeliumEventProcessor.ProcessHeliumBidEvent(placementName, partnerPlacementName, auctionId, price, seat, _instance.DidWinBidBanner);
             }
         }
 

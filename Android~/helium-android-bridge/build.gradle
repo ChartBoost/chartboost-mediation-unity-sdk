@@ -67,6 +67,7 @@ dependencies {
     //Make sure to bump the version on new releases.
     api fileTree(dir: 'libs', include: ['*.jar'])
     implementation(name: 'Helium-2.10.0-release', ext: 'aar')
+    implementation 'androidx.annotation:annotation:1.2.0'
 }
 
 task assembleForPlugin(type: Jar, dependsOn: 'bundleLibRuntimeToJarRelease') {
