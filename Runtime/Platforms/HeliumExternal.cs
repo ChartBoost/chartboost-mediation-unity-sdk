@@ -1,4 +1,3 @@
-using System;
 using Helium.Interfaces;
 using UnityEngine;
 
@@ -6,7 +5,8 @@ namespace Helium.Platforms
 {
     public abstract class HeliumExternal : IHeliumLifeCycle, IInterstitialEvents, IRewardedEvents, IBannerEvents
     {
-        protected static bool Initialized = false;
+        public static bool IsInitialized { get; protected set; }
+        
         protected static string LOGTag = "HeliumSDK";
 
         protected static void Log(string message)
@@ -20,8 +20,6 @@ namespace Helium.Platforms
             Debug.Log( $"{LOGTag}/{error}");
         }
 
-        public static bool IsInitialized => Initialized;
-
         protected static bool CanFetchAd(string placementName)
         {
             if (!CheckInitialized())
@@ -34,7 +32,7 @@ namespace Helium.Platforms
 
         protected static bool CheckInitialized()
         {
-            if (Initialized)
+            if (IsInitialized)
                 return true;
 
             Debug.LogError("The Helium SDK needs to be initialized before we can show any ads");
@@ -132,7 +130,6 @@ namespace Helium.Platforms
         // provide the option to override callbacks
         public virtual event HeliumEvent DidStart;
         public virtual event HeliumILRDEvent DidReceiveImpressionLevelRevenueData;
-        public virtual event HeliumEvent UnexpectedSystemErrorDidOccur;
         public virtual event HeliumPlacementEvent DidLoadInterstitial;
         public virtual event HeliumPlacementEvent DidShowInterstitial;
         public virtual event HeliumPlacementEvent DidCloseInterstitial;

@@ -36,9 +36,6 @@ namespace Helium.Platforms
 
         public override void Init()
         {
-            if (Initialized)
-                return;
-            
             base.Init();
             var appID = HeliumSettings.GetAndroidAppId();
             var appSignature = HeliumSettings.GetAndroidAppSignature();
@@ -47,12 +44,9 @@ namespace Helium.Platforms
 
         public override void InitWithAppIdAndSignature(string appId, string appSignature)
         {
-            if (Initialized)
-                return;
-            
             base.InitWithAppIdAndSignature(appId, appSignature);
             plugin().Call("start", appId, appSignature, Application.unityVersion);
-            Initialized = true;
+            IsInitialized = true;
         }
 
         public override void SetSubjectToCoppa(bool isSubject)
@@ -105,7 +99,7 @@ namespace Helium.Platforms
                 return;
             base.Destroy();
             _plugin.Call("destroy");
-            Initialized = false;
+            IsInitialized = false;
         }
 
         public override bool OnBackPressed()

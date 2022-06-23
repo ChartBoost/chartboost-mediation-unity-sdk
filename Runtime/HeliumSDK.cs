@@ -204,13 +204,14 @@ namespace Helium
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Init()
         {
-            if (HeliumSettings.IsAutomaticInit())
+            if (HeliumSettings.IsAutomaticInit() && !HeliumExternal.IsInitialized)
                 _heliumExternal.Init();
         }
 
         public static void StartWithAppIdAndAppSignature(string appId, string appSignature)
         {
-            _heliumExternal.InitWithAppIdAndSignature(appId, appSignature);
+            if (!HeliumExternal.IsInitialized)
+                _heliumExternal.InitWithAppIdAndSignature(appId, appSignature);
         }
 
         public static void SetSubjectToCoppa(bool isSubject)
