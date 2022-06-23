@@ -12,7 +12,7 @@
 
 typedef void (*HeliumEvent)(int errorCode, const char* errorDescription);
 typedef void (*HeliumPlacementEvent)(const char* placementName, int errorCode, const char* errorDescription);
-typedef void (*HeliumBidWinEvent) (const char* placementName, const char* partnerPlacementName, const char* auctionId, double price, const char* seat);
+typedef void (*HeliumBidWinEvent) (const char* placementName, const char* auctionId, const char* partnerId, double price);
 typedef void (*HeliumRewardEvent)(const char* placementName, int reward);
 typedef void (*HeliumILRDEvent)(const char* impressionData);
 

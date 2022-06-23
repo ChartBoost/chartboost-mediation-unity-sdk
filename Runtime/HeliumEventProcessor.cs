@@ -30,10 +30,8 @@ namespace Helium
                 {
                     if (ilrdEvent == null)
                         return;
-
                     if (HeliumJSON.Deserialize(dataString) is not Dictionary<object, object> data)
                         return;
-
                     data.TryGetValue("placementName", out var placementName);
                     ilrdEvent(placementName as string, new Hashtable(data));
                 }
@@ -52,7 +50,6 @@ namespace Helium
                 {
                     if (heliumEvent == null)
                         return;
-
                     var heliumError = HeliumError.ErrorFromIntString(errorCode, errorDescription);
                     heliumEvent(heliumError);
                 }
@@ -71,7 +68,6 @@ namespace Helium
                 {
                     if (placementEvent == null)
                         return;
-
                     var heliumError = HeliumError.ErrorFromIntString(errorCode, errorDescription);
                     placementEvent(placementName, heliumError);
                 }
@@ -82,7 +78,7 @@ namespace Helium
             }, null);
         }
 
-        public static void ProcessHeliumBidEvent(string placementName, string partnerPlacementName, string auctionId, double price, string seat, HeliumBidEvent bidEvent)
+        public static void ProcessHeliumBidEvent(string placementName, string auctionId, string partnerId, double price, HeliumBidEvent bidEvent)
         {
             _context.Post(o =>
             {
@@ -90,8 +86,7 @@ namespace Helium
                 {
                     if (bidEvent == null)
                         return;
-
-                    var heliumBid = new HeliumBidInfo(partnerPlacementName, auctionId, price, seat);
+                    var heliumBid = new HeliumBidInfo(auctionId, partnerId, price);
                     bidEvent(placementName, heliumBid);
                 }
                 catch (Exception e)

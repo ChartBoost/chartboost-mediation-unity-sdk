@@ -2,17 +2,15 @@
 {
     public struct HeliumBidInfo
     {
-        public string AuctionId;
-        public string PartnerPlacementName;
-        public double Price;
-        public string Seat;
+        public readonly string AuctionId;
+        public readonly string PartnerId;
+        public readonly double Price;
 
-        public HeliumBidInfo(string auctionId, string partnerPlacementName, double price, string seat)
+        public HeliumBidInfo(string auctionId, string partnerId, double price)
         {
             AuctionId = auctionId;
-            PartnerPlacementName = partnerPlacementName;
+            PartnerId = partnerId;
             Price = price;
-            Seat = seat;
         }
     }
 }

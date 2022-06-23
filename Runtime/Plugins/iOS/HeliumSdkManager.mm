@@ -85,6 +85,24 @@ const void serializeReward(NSString *placementName, NSInteger reward, HeliumRewa
     rewardEvent(placementName.UTF8String, rewardValue);
 }
 
+const void serializeWinBidInfo(NSString *placementName, NSDictionary* info, HeliumBidWinEvent bidWinEvent)
+{
+    NSString* partnerId = [info objectForKey:@"partner-id"];
+    NSString* auctionId = [info objectForKey:@"auction-id"];
+    NSNumber* price = [info objectForKey:@"price"];
+    
+    if (partnerId == nil)
+        partnerId = @"";
+    
+    if (auctionId == nil)
+        auctionId = @"";
+    
+    if (price == nil)
+        price = 0;
+    
+    bidWinEvent(placementName.UTF8String, auctionId.UTF8String, partnerId.UTF8String, [price doubleValue]);
+}
+
 
 static void heliumSubscribeToILRDNotifications()
 {
@@ -298,7 +316,7 @@ static void heliumSubscribeToILRDNotifications()
 - (void)heliumInterstitialAdWithPlacementName:(NSString*)placementName
                     didLoadWinningBidWithInfo:(NSDictionary*)info
 {
-    
+    serializeWinBidInfo(placementName, info, _interstitialDidWinBidCallback);
 }
 
 
@@ -342,7 +360,7 @@ static void heliumSubscribeToILRDNotifications()
 - (void)heliumRewardedAdWithPlacementName:(NSString*)placementName
                 didLoadWinningBidWithInfo:(NSDictionary*)info
 {
-
+    serializeWinBidInfo(placementName, info, _rewardedDidWinBidCallback);
 }
 
 
@@ -377,6 +395,6 @@ static void heliumSubscribeToILRDNotifications()
 - (void)heliumBannerAdWithPlacementName:(NSString *)placementName
               didLoadWinningBidWithInfo:(NSDictionary*)info
 {
-//    [self sendUnityEvent:@"DidWinBidBannerEvent" withParam:serializePlacementInfoDictionary(placementName, info)];
+    serializeWinBidInfo(placementName, info, _bannerDidWinBidCallback);
 }
 @end

@@ -234,10 +234,9 @@ namespace Helium.Platforms
             }
 
             [Preserve]
-            private void DidWinBidInterstitial(string placementName, string partnerPlacementName, string auctionId,
-                double price, string seat)
+            private void DidWinBidInterstitial(string placementName, string auctionId, string partnerId, double price)
             {
-                HeliumEventProcessor.ProcessHeliumBidEvent(placementName, partnerPlacementName, auctionId, price, seat,
+                HeliumEventProcessor.ProcessHeliumBidEvent(placementName, auctionId, partnerId, price,
                     _instance.DidWinBidInterstitial);
             }
         }
@@ -285,10 +284,10 @@ namespace Helium.Platforms
             }
 
             [Preserve]
-            private void DidWinBidRewarded(string placementName, string partnerPlacementName, string auctionId,
-                double price, string seat)
+            private void DidWinBidRewarded(string placementName, string auctionId, string partnerId,
+                double price)
             {
-                HeliumEventProcessor.ProcessHeliumBidEvent(placementName, partnerPlacementName, auctionId, price, seat,
+                HeliumEventProcessor.ProcessHeliumBidEvent(placementName, auctionId, partnerId, price,
                     _instance.DidWinBidRewarded);
             }
 
@@ -336,10 +335,10 @@ namespace Helium.Platforms
             }
 
             [Preserve]
-            private void DidWinBidBanner(string placementName, string partnerPlacementName, string auctionId,
-                double price, string seat)
+            private void DidWinBidBanner(string placementName, string auctionId, string partnerId,
+                double price)
             {
-                HeliumEventProcessor.ProcessHeliumBidEvent(placementName, partnerPlacementName, auctionId, price, seat,
+                HeliumEventProcessor.ProcessHeliumBidEvent(placementName, auctionId, partnerId, price,
                     _instance.DidWinBidBanner);
             }
         }

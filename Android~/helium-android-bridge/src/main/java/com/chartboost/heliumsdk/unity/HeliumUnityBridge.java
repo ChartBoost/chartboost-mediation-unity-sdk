@@ -91,31 +91,25 @@ public class HeliumUnityBridge {
     }
 
     @FunctionalInterface
-    public interface HeliumBidEventConsumer<T, V, S, X, Z>
+    public interface HeliumBidEventConsumer<T, V, S, X>
     {
-        void accept(T placementName, V partnerPlacementName, S auctionId, X price, Z seat);
+        void accept(T placementName, V auctionId, S partnerId, X price);
     }
 
-    private void serializeHeliumBidEvent(String placementName, HashMap<String, String> dataMap, HeliumBidEventConsumer<String, String, String, Double, String> eventConsumer)
+    private void serializeHeliumBidEvent(String placementName, HashMap<String, String> dataMap, HeliumBidEventConsumer<String, String, String, Double> eventConsumer)
     {
         try {
             if (placementName == null)
                 placementName = EMPTY_STRING;
 
-            String PARTNER_PLACEMENT_NAME = "partner-placement-name";
-            String partnerPlacementName = dataMap.get(PARTNER_PLACEMENT_NAME);
-            partnerPlacementName = partnerPlacementName == null ? EMPTY_STRING : partnerPlacementName;
-            String AUCTION_ID = "auction-id";
-            String auctionId = dataMap.get(AUCTION_ID);
+            String partnerId = dataMap.get("partner_id");
+            partnerId = partnerId == null ? EMPTY_STRING : partnerId;
+            String auctionId = dataMap.get("auction-id");
             auctionId = auctionId == null ? EMPTY_STRING : auctionId;
-            String PRICE = "price";
-            String priceAsString = dataMap.get(PRICE);
+            String priceAsString = dataMap.get("price");
             priceAsString = priceAsString == null ? "0" : priceAsString;
             double price = Double.parseDouble(priceAsString);
-            String SEAT = "seat";
-            String seat = dataMap.get(SEAT);
-            seat = seat == null ? EMPTY_STRING : auctionId;
-            eventConsumer.accept(placementName, partnerPlacementName, auctionId, price, seat);
+            eventConsumer.accept(placementName, auctionId, partnerId, price);
         }
         catch (Exception e) {
             Log.d(TAG, "bidFetchingInformationError", e);

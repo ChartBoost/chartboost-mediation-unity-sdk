@@ -16,8 +16,7 @@ namespace Helium.Platforms
 
         private delegate void ExternHeliumPlacementEvent(string placementName, int errorCode, string errorDescription);
 
-        private delegate void ExternHeliumWinBidEvent(string placementName, string partnerPlacementName,
-            string auctionId, double price, string seat);
+        private delegate void ExternHeliumWinBidEvent(string placementName, string auctionId, string partnerId, double price);
 
         private delegate void ExternHeliumRewardEvent(string placementName, int reward);
 
@@ -225,10 +224,10 @@ namespace Helium.Platforms
         }
 
         [MonoPInvokeCallback(typeof(ExternHeliumWinBidEvent))]
-        private static void ExternDidWinBidInterstitial(string placementName, string partnerPlacementName, string auctionId,
-            double price, string seat)
+        private static void ExternDidWinBidInterstitial(string placementName, string auctionId, string partnerId,
+            double price)
         {
-            HeliumEventProcessor.ProcessHeliumBidEvent(placementName, partnerPlacementName, auctionId, price, seat,
+            HeliumEventProcessor.ProcessHeliumBidEvent(placementName, auctionId, partnerId, price,
                 _instance.DidWinBidInterstitial);
         }
 
@@ -269,10 +268,10 @@ namespace Helium.Platforms
         }
 
         [MonoPInvokeCallback(typeof(ExternHeliumWinBidEvent))]
-        private static void ExternDidWinBidRewarded(string placementName, string partnerPlacementName, string auctionId,
-            double price, string seat)
+        private static void ExternDidWinBidRewarded(string placementName, string auctionId,
+            string partnerId, double price)
         {
-            HeliumEventProcessor.ProcessHeliumBidEvent(placementName, partnerPlacementName, auctionId, price, seat,
+            HeliumEventProcessor.ProcessHeliumBidEvent(placementName,  auctionId, partnerId, price,
                 _instance.DidWinBidRewarded);
         }
 
@@ -313,10 +312,10 @@ namespace Helium.Platforms
         }
 
         [MonoPInvokeCallback(typeof(ExternHeliumWinBidEvent))]
-        private static void ExternDidWinBidBanner(string placementName, string partnerPlacementName, string auctionId,
-            double price, string seat)
+        private static void ExternDidWinBidBanner(string placementName, string auctionId,
+            string partnerId, double price)
         {
-            HeliumEventProcessor.ProcessHeliumBidEvent(placementName, partnerPlacementName, auctionId, price, seat,
+            HeliumEventProcessor.ProcessHeliumBidEvent(placementName, auctionId, partnerId, price,
                 _instance.DidWinBidBanner);
         }
 
