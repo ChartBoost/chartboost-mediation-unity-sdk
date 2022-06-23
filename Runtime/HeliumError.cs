@@ -2,9 +2,19 @@ using System;
 
 namespace Helium
 {
+    /// <summary>
+    /// Error provided by the Helium SDK.
+    /// </summary>
     public class HeliumError
     {
+        /// <summary>
+        /// Associated error code.
+        /// </summary>
         public HeliumErrorCode ErrorCode;
+        
+        /// <summary>
+        /// Error description, if any.
+        /// </summary>
         public string ErrorDescription;
 
         public HeliumError(HeliumErrorCode code)
@@ -23,7 +33,12 @@ namespace Helium
             return $"{ErrorCode} {ErrorDescription}";
         }
         
-        public static HeliumError ErrorFromInt(object errorObj)
+        /// <summary>
+        /// Creates and HeliumError based off an integer value.
+        /// </summary>
+        /// <param name="errorObj">error code.</param>
+        /// <returns></returns>
+        private static HeliumError ErrorFromInt(object errorObj)
         {
             int error;
             try
@@ -48,6 +63,12 @@ namespace Helium
             }
         }
 
+        /// <summary>
+        /// Creates a HeliumError based off a code and description.
+        /// </summary>
+        /// <param name="errorObj">error code.</param>
+        /// <param name="errString">error description.</param>
+        /// <returns></returns>
         public static HeliumError ErrorFromIntString(object errorObj, string errString)
         {
             var e = ErrorFromInt(errorObj);

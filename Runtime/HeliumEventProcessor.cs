@@ -115,7 +115,7 @@ namespace Helium
 
         private static void ReportUnexpectedSystemError(string message)
         {
-            UnexpectedSystemErrorDidOccur?.Invoke(HeliumError.ErrorFromIntString(4, message));
+            UnexpectedSystemErrorDidOccur?.Invoke(HeliumError.ErrorFromIntString(HeliumErrorCode.Unknown, message));
         }
     }
 }
