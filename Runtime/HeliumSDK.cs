@@ -6,8 +6,8 @@ using Helium.Platforms;
 namespace Helium
 {
     /// <summary>
-    ///  Provide methods to display and controler HeliumSdk native advertising types.
-    ///  For more information on integrating and using the HeliumSdk SDK
+    ///  Provide methods to display and control HeliumSDK native advertising types.
+    ///  For more information on integrating and using the HeliumSDK
     ///  please visit our help site documentation at https://help.chartboost.com
     /// </summary>
     public class HeliumSDK
