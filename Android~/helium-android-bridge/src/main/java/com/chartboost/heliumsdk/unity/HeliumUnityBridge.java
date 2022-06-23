@@ -128,14 +128,15 @@ public class HeliumUnityBridge {
         void accept(T placementName, V reward);
     }
 
-    private void serializeHeliumRewardEvent(String placementName, String reward, HeliumRewardEventConsumer<String, String> eventConsumer) {
+    private void serializeHeliumRewardEvent(String placementName, String reward, HeliumRewardEventConsumer<String, Integer> eventConsumer) {
         if (placementName == null)
             placementName = EMPTY_STRING;
 
-        if (reward == null)
-            reward = EMPTY_STRING;
+        int rewardAsInt = 0;
+        if (reward != null)
+            rewardAsInt = Integer.parseInt(reward);
 
-        eventConsumer.accept(placementName, reward);
+        eventConsumer.accept(placementName, rewardAsInt);
     }
 
     private String serializePlacementILRDData(String placementName, JSONObject ilrdInfo) {

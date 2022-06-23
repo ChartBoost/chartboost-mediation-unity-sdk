@@ -101,7 +101,7 @@ namespace Helium
             }, null);
         }
 
-        public static void ProcessHeliumRewardEvent(string placementName, string reward, HeliumRewardEvent rewardEvent)
+        public static void ProcessHeliumRewardEvent(string placementName, int reward, HeliumRewardEvent rewardEvent)
         {
             _context.Post(o =>
             {

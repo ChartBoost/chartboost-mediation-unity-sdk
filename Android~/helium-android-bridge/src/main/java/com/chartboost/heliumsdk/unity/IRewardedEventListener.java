@@ -6,5 +6,5 @@ public interface IRewardedEventListener {
     void DidCloseRewarded(String placementName, int errorCode, String errorDescription);
     void DidClickRewarded(String placementName, int errorCode, String errorDescription);
     void DidWinBidRewarded(String placementName, String partnerPlacementName, String auctionId, double price, String seat);
-    void DidReceiveReward(String placementName, String reward);
+    void DidReceiveReward(String placementName, int reward);
 }

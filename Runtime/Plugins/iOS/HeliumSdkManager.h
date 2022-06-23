@@ -10,16 +10,24 @@
   #define HELIUM_UNITY_SDK_VERSION_STRING @"0.0.0"
 #endif
 
-typedef void (*HeliumBackgroundEventCallback)(const char* eventName, const char* eventArgsJson);
+typedef void (*HeliumEvent)(int errorCode, const char* errorDescription);
+typedef void (*HeliumPlacementEvent)(const char* placementName, int errorCode, const char* errorDescription);
+typedef void (*HeliumBidWinEvent) (const char* placementName, const char* partnerPlacementName, const char* auctionId, double price, const char* seat);
+typedef void (*HeliumRewardEvent)(const char* placementName, int reward);
+typedef void (*HeliumILRDEvent)(const char* impressionData);
+
 
 @interface HeliumSdkManager : NSObject
 
-@property (class, nonatomic) HeliumBackgroundEventCallback bgEventCallback;
 @property (nonatomic, retain) NSString *gameObjectName;
 
 + (HeliumSdkManager*)sharedManager;
 
-- (void)startHeliumWithAppId:(NSString*)appId andAppSignature:(NSString*)appSignature unityVersion:(NSString *)unityVersion bgEventCallback:(HeliumBackgroundEventCallback)bgEventCallback;
+- (void)setLifeCycleCallbacks:(HeliumEvent)didStartCallback  didReceiveILRDCallback:(HeliumILRDEvent)didReceiveILRDCallback;
+- (void)setInterstitialCallbacks:(HeliumPlacementEvent)didLoadCallback didShowCallback:(HeliumPlacementEvent)didShowCallback didClickCallback:(HeliumPlacementEvent)didClickCallback didCloseCallback:(HeliumPlacementEvent)didCloseCallback  didWinBidCallback:(HeliumBidWinEvent)didWinBidCallback;
+- (void)setRewardedCallbacks:(HeliumPlacementEvent)didLoadCallback didShowCallback:(HeliumPlacementEvent)didShowCallback didClickCallback:(HeliumPlacementEvent)didClickCallback didCloseCallback:(HeliumPlacementEvent)didCloseCallback  didWinBidCallback:(HeliumBidWinEvent)didWinBidCallback didReceiveRewardCallback:(HeliumRewardEvent)didReceiveRewardCallback;
+- (void)setBannerCallbacks:(HeliumPlacementEvent)didLoadCallback didShowCallback:(HeliumPlacementEvent)didShowCallback didClickCallback:(HeliumPlacementEvent)didClickCallback didWinBidCallback:(HeliumBidWinEvent)didWinBidCallback;
+- (void)startHeliumWithAppId:(NSString*)appId andAppSignature:(NSString*)appSignature unityVersion:(NSString *)unityVersion;
 - (void)setSubjectToCoppa:(BOOL)isSubject;
 - (void)setSubjectToGDPR:(BOOL)isSubject;
 - (void)setUserHasGivenConsent:(BOOL)hasGivenConsent;
@@ -32,7 +40,5 @@ typedef void (*HeliumBackgroundEventCallback)(const char* eventName, const char*
 - (void)freeInterstitialAd:(NSNumber*)adId;
 - (void)freeRewardedAd:(NSNumber*)adId;
 - (void)freeBannerAd:(NSNumber*)adId;
-
-+ (void)sendUnityEvent:(NSString*)eventName withParam:(const char*)param backgroundOK:(BOOL)bg;
 
 @end

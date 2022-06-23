@@ -26,5 +26,5 @@ namespace Helium
     /// <summary>
     /// <param name="reward">The reward information.</param>
     /// </summary>
-    public delegate void HeliumRewardEvent(string placement, string reward);
+    public delegate void HeliumRewardEvent(string placement, int reward);
 }
