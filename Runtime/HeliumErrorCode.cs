@@ -1,7 +1,7 @@
 namespace Helium
 {
     /// <summary>
-    /// Returned to ChartboostDelegate methods to notify of HeliumSdk SDK errors.
+    /// Returned to Helium Delegate methods to notify of Helium SDK errors.
     /// </summary>
     public enum HeliumErrorCode
     {
