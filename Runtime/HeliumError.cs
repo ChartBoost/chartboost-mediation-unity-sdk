@@ -50,17 +50,12 @@ namespace Helium
                 return new HeliumError(HeliumErrorCode.Unknown);
             }
 
-            switch (error)
-            {
-                case -1:
-                    return null;
-                case < 0:
-                // out of bounds
-                case > (int)HeliumErrorCode.Unknown:
-                    return new HeliumError(HeliumErrorCode.Unknown);
-                default:
-                    return new HeliumError((HeliumErrorCode)error);
-            }
+            if (error == -1)
+                return null;
+
+            if (error < 0 || error > (int)HeliumErrorCode.Unknown)
+                return new HeliumError(HeliumErrorCode.Unknown, null);
+            return new HeliumError((HeliumErrorCode)error, null);
         }
 
         /// <summary>

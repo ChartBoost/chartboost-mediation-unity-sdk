@@ -30,8 +30,10 @@ namespace Helium
                 {
                     if (ilrdEvent == null)
                         return;
-                    if (HeliumJSON.Deserialize(dataString) is not Dictionary<object, object> data)
+
+                    if (!(HeliumJSON.Deserialize(dataString) is Dictionary<object, object> data)) 
                         return;
+                    
                     data.TryGetValue("placementName", out var placementName);
                     ilrdEvent(placementName as string, new Hashtable(data));
                 }

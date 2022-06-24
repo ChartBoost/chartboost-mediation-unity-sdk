@@ -177,7 +177,7 @@ namespace Helium.Platforms
         {
             private LifeCycleEventListener() : base("com.chartboost.heliumsdk.unity.ILifeCycleEventListener") { }
 
-            public static readonly LifeCycleEventListener Instance = new();
+            public static readonly LifeCycleEventListener Instance = new LifeCycleEventListener();
 
             [Preserve]
             private void DidStart(int errorCode, string errorDescription)
@@ -203,7 +203,7 @@ namespace Helium.Platforms
         {
             private InterstitialEventListener() : base("com.chartboost.heliumsdk.unity.IInterstitialEventListener") { }
 
-            public static readonly InterstitialEventListener Instance = new();
+            public static readonly InterstitialEventListener Instance = new InterstitialEventListener();
 
             [Preserve]
             private void DidLoadInterstitial(string placementName, int errorCode, string errorDescription)
@@ -253,7 +253,7 @@ namespace Helium.Platforms
         {
             private RewardedVideoEventListener() : base("com.chartboost.heliumsdk.unity.IRewardedEventListener") { }
 
-            public static readonly RewardedVideoEventListener Instance = new();
+            public static readonly RewardedVideoEventListener Instance = new RewardedVideoEventListener();
 
             [Preserve]
             private void DidLoadRewarded(string placementName, int errorCode, string errorDescription)
@@ -311,7 +311,7 @@ namespace Helium.Platforms
         {
             private BannerEventListener() : base("com.chartboost.heliumsdk.unity.IBannerEventListener") { }
 
-            public static readonly BannerEventListener Instance = new();
+            public static readonly BannerEventListener Instance = new BannerEventListener();
 
             [Preserve]
             private void DidLoadBanner(string placementName, int errorCode, string errorDescription)
