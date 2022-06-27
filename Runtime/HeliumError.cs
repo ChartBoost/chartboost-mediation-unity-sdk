@@ -34,7 +34,7 @@ namespace Helium
         }
         
         /// <summary>
-        /// Creates and HeliumError based off an integer value.
+        /// Creates a HeliumError based off an integer value.
         /// </summary>
         /// <param name="errorObj">error code.</param>
         /// <returns></returns>
