@@ -8,7 +8,7 @@
 // interstitial ad objects
 NSMutableDictionary * storedAds = nil;
 
-// lyfecycle callbacks
+// lifecycle callbacks
 static HeliumEvent _didStartCallback;
 static HeliumILRDEvent _didReceiveILRDCallback;
 

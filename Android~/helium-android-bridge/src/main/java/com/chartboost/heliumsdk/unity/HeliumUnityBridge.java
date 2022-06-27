@@ -145,7 +145,6 @@ public class HeliumUnityBridge {
         return serializedString.toString();
     }
 
-
     // ##### ##### ##### ##### ##### ##### ##### #####
     // Public API
     // ##### ##### ##### ##### ##### ##### ##### #####
@@ -292,7 +291,6 @@ public class HeliumUnityBridge {
             }
         }));
     }
-
 
     public HeliumAdWrapper getBannerAd(final String placementName, final int size) {
         if (placementName == null)

@@ -1,8 +1,7 @@
 package com.chartboost.heliumsdk.unity;
 
 /**
- * Interface for sending real-time background events while the Unity Player is paused (which will happen when
- * a fullscreen ad is being displayed).
+ * Interface for sending real-time lifecycle events
  */
 public interface ILifeCycleEventListener
 {

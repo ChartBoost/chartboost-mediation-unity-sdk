@@ -1,5 +1,8 @@
 package com.chartboost.heliumsdk.unity;
 
+/**
+ * Interface for sending real-time Banner events
+ */
 public interface IBannerEventListener {
     void DidLoadBanner(String placementName, int errorCode, String errorDescription);
     void DidShowBanner(String placementName, int errorCode, String errorDescription);

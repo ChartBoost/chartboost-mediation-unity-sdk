@@ -1,5 +1,8 @@
 package com.chartboost.heliumsdk.unity;
 
+/**
+ * Interface for sending real-time rewarded events
+ */
 public interface IRewardedEventListener {
     void DidLoadRewarded(String placementName, int errorCode, String errorDescription);
     void DidShowRewarded(String placementName, int errorCode, String errorDescription);

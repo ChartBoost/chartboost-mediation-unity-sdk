@@ -1,5 +1,8 @@
 package com.chartboost.heliumsdk.unity;
 
+/**
+ * Interface for sending real-time Interstitial events
+ */
 public interface IInterstitialEventListener {
     void DidLoadInterstitial(String placementName, int errorCode, String errorDescription);
     void DidClickInterstitial(String placementName, int errorCode, String errorDescription);
