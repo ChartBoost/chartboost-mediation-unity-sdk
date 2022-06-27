@@ -11,7 +11,6 @@ import android.graphics.Color;
 
 import com.chartboost.heliumsdk.HeliumSdk;
 import com.chartboost.heliumsdk.HeliumIlrdObserver;
-import com.chartboost.heliumsdk.HeliumImpressionData;
 import com.chartboost.heliumsdk.ad.HeliumAd;
 import com.chartboost.heliumsdk.ad.HeliumAdError;
 import com.chartboost.heliumsdk.ad.HeliumBannerAd;
@@ -26,6 +25,8 @@ import com.unity3d.player.UnityPlayer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import androidx.annotation.NonNull;
+
 import java.util.HashMap;
 
 public class HeliumUnityBridge {
@@ -38,26 +39,27 @@ public class HeliumUnityBridge {
     private static final int STANDARD_HEIGHT = 50;
 
     private static final String TAG = "HeliumUnity-android";
-    private static HeliumUnityBridge _instance;
+    private static final String EMPTY_STRING = "";
+
+    private HeliumUnityBridge _instance;
     // this field is only useful when doing direct tests outside of Unity
     public Activity _activity;
     private volatile boolean isHeliumInitialized = false;
-    private String gameObjectName = "";
 
     // This is the container for the banner.  We need a relative layout to position the banner in one of the 7
     // possible positions.  HeliumBannerAd is just a FrameLayout.
     private RelativeLayout mBannerLayout;
 
-    private static IBackgroundEventListener bgEventListener;
+    private ILifeCycleEventListener lifeCycleEventListener;
+    private IBannerEventListener bannerEventsListener;
+    private IInterstitialEventListener interstitialEventsListener;
+    private IRewardedEventListener rewardedEventListener;
     private HeliumIlrdObserver ilrdObserver;
 
     // Stores a static instance of the HeliumPlugin class for easy access
     // from Unity
     public static Object instance() {
-        if (_instance == null) {
-            _instance = new HeliumUnityBridge();
-        }
-        return _instance;
+        return new HeliumUnityBridge();
     }
 
     // Fetches the current Activity that the Unity player is using
@@ -68,58 +70,67 @@ public class HeliumUnityBridge {
         return UnityPlayer.currentActivity;
     }
 
-    // Used for callbacks from Java to Unity
-    private void UnitySendMessage(String go, String m, String p) {
-        UnitySendMessage(go, m, p, false);
+    @FunctionalInterface
+    public interface HeliumEventConsumer<T, V, S> {
+        void accept(T placementName, V errorCode, S errorDescription);
     }
 
-    private void UnitySendMessage(String go, String m, String p, boolean background) {
+    private void serializeHeliumEvent(String placementName, HeliumAdError heliumAdError, HeliumEventConsumer<String, Integer, String> eventConsumer){
+        if (placementName == null)
+            placementName = EMPTY_STRING;
+
+        int errorCode = -1;
+        String errorDescription = EMPTY_STRING;
+
+        if (heliumAdError != null) {
+            errorCode = heliumAdError.getCode();
+            errorDescription = heliumAdError.getMessage();
+        }
+
+        eventConsumer.accept(placementName, errorCode, errorDescription);
+    }
+
+    @FunctionalInterface
+    public interface HeliumBidEventConsumer<T, V, S, X>
+    {
+        void accept(T placementName, V auctionId, S partnerId, X price);
+    }
+
+    private void serializeHeliumBidEvent(String placementName, HashMap<String, String> dataMap, HeliumBidEventConsumer<String, String, String, Double> eventConsumer)
+    {
         try {
-            Log.d("HeliumUnityBridge", "Send message " + go + " / " + m + " / " + p);
-            if (background && bgEventListener != null) {
-                bgEventListener.onBackgroundEvent(m, p);
-            }
-            else {
-                UnityPlayer.UnitySendMessage(go, m, p);
-            }
-        } catch (Exception e) {
-            Log.i(TAG, "UnitySendMessage error: " + e.getMessage());
-            Log.i(TAG, "UnitySendMessage: " + go + ", " + m + ", " + p);
+            if (placementName == null)
+                placementName = EMPTY_STRING;
+
+            String partnerId = dataMap.get("partner_id");
+            partnerId = partnerId == null ? EMPTY_STRING : partnerId;
+            String auctionId = dataMap.get("auction-id");
+            auctionId = auctionId == null ? EMPTY_STRING : auctionId;
+            String priceAsString = dataMap.get("price");
+            priceAsString = priceAsString == null ? "0" : priceAsString;
+            double price = Double.parseDouble(priceAsString);
+            eventConsumer.accept(placementName, auctionId, partnerId, price);
+        }
+        catch (Exception e) {
+            Log.d(TAG, "bidFetchingInformationError", e);
         }
     }
 
-    private String serializeError(Error error) {
-        JSONObject errorMessage = new JSONObject();
-        try {
-            errorMessage.put("errorCode", error != null ? 1 : -1);
-            errorMessage.put("errorDescription", error != null ? error.getMessage() : null);
-        } catch (JSONException e) {
-            Log.d(TAG, "serializeError", e);
-        }
-        return errorMessage.toString();
+    @FunctionalInterface
+    public interface HeliumRewardEventConsumer<T, V>
+    {
+        void accept(T placementName, V reward);
     }
 
-    private String serializePlacementError(String placementName, HeliumAdError error) {
-        JSONObject errorMessage = new JSONObject();
-        try {
-            errorMessage.put("placementName", placementName);
-            errorMessage.put("errorCode", error != null ? error.getCode() : -1);
-            errorMessage.put("errorDescription", error != null ? error.getMessage() : null);
-        } catch (JSONException e) {
-            Log.d(TAG, "serializeError", e);
-        }
-        return errorMessage.toString();
-    }
+    private void serializeHeliumRewardEvent(String placementName, String reward, HeliumRewardEventConsumer<String, Integer> eventConsumer) {
+        if (placementName == null)
+            placementName = EMPTY_STRING;
 
-    private String serializePlacementReward(String placementName, String reward) {
-        JSONObject errorMessage = new JSONObject();
-        try {
-            errorMessage.put("placementName", placementName);
-            errorMessage.put("reward", reward);
-        } catch (JSONException e) {
-            Log.d(TAG, "serializeError", e);
-        }
-        return errorMessage.toString();
+        int rewardAsInt = 0;
+        if (reward != null)
+            rewardAsInt = Integer.parseInt(reward);
+
+        eventConsumer.accept(placementName, rewardAsInt);
     }
 
     private String serializePlacementILRDData(String placementName, JSONObject ilrdInfo) {
@@ -134,25 +145,20 @@ public class HeliumUnityBridge {
         return serializedString.toString();
     }
 
-    private String serializeWinningBid(String placementName, HashMap<String, String> hashMap) {
-        JSONObject serializedString = new JSONObject();
-        JSONObject infoObj = new JSONObject();
-        try {
-            serializedString.put("placementName", placementName);
-            infoObj.put("seat", hashMap.get("seat"));
-            infoObj.put("partner-placement-name", hashMap.get("partner-placement-name"));
-            infoObj.put("auction-id", hashMap.get("auction-id"));
-            infoObj.put("price", Double.parseDouble(hashMap.get("price")));
-            serializedString.put("info", infoObj);
-        } catch (JSONException e) {
-            Log.d(TAG, "serializeError", e);
-        }
-        return serializedString.toString();
-    }
-
     // ##### ##### ##### ##### ##### ##### ##### #####
     // Public API
     // ##### ##### ##### ##### ##### ##### ##### #####
+
+    public void setupEventListeners(final ILifeCycleEventListener lifeCycleListener,
+                               final IInterstitialEventListener interstitialListener,
+                               final IRewardedEventListener rewardedListener,
+                               final IBannerEventListener bannerListener)
+    {
+        lifeCycleEventListener = lifeCycleListener;
+        interstitialEventsListener = interstitialListener;
+        rewardedEventListener = rewardedListener;
+        bannerEventsListener = bannerListener;
+    }
 
     public void setSubjectToCoppa(boolean isSubject) {
         HeliumSdk.setSubjectToCoppa(isSubject);
@@ -162,17 +168,11 @@ public class HeliumUnityBridge {
         HeliumSdk.setSubjectToGDPR(isSubject);
     }
 
-    public void setCCPAConsent(boolean hasGivenConsent) {
-        HeliumSdk.setCCPAConsent(hasGivenConsent);
-    }
+    public void setCCPAConsent(boolean hasGivenConsent) { HeliumSdk.setCCPAConsent(hasGivenConsent); }
 
-    public void setUserHasGivenConsent(boolean hasGivenConsent) {
-        HeliumSdk.setUserHasGivenConsent(hasGivenConsent);
-    }
+    public void setUserHasGivenConsent(boolean hasGivenConsent) { HeliumSdk.setUserHasGivenConsent(hasGivenConsent); }
 
-    public void setUserIdentifier(final String userIdentifier) {
-        HeliumSdk.setUserIdentifier(userIdentifier);
-    }
+    public void setUserIdentifier(final String userIdentifier) { HeliumSdk.setUserIdentifier(userIdentifier); }
 
     public String getUserIdentifier() {
         return HeliumSdk.getUserIdentifier();
@@ -182,37 +182,29 @@ public class HeliumUnityBridge {
        return HeliumSdk.onBackPressed();
     }
 
-    public void start(final String appId, final String appSignature, final String unityVersion, final IBackgroundEventListener backgroundEventListener) {
+    public void start(final String appId, final String appSignature, final String unityVersion) {
         _activity = UnityPlayer.currentActivity;
-        HeliumUnityBridge.bgEventListener = backgroundEventListener;
-        ilrdObserver = new HeliumIlrdObserver() {
-            @Override
-            public void onImpression(HeliumImpressionData impData) {
-                if (impData != null) {
-                    String json = serializePlacementILRDData(impData.getPlacementId(), impData.getIlrdInfo());
-                    UnitySendMessage(gameObjectName, "DidReceiveILRD", json, true);
-                }
-            }
+        ilrdObserver = impData -> {
+            String json = serializePlacementILRDData(impData.getPlacementId(), impData.getIlrdInfo());
+            lifeCycleEventListener.DidReceiveILRD(json);
         };
-        runTaskOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // This call initializes the Helium SDK. This might change in the future with two ID parameters and we'll get rid of the logControllerListener
-                HeliumSdk.start(getActivity(), appId, appSignature, new HeliumSdk.HeliumSdkListener() {
-                    @Override
-                    public void didInitialize(Error error) {
-                        if (error == null) {
-                            Log.d("Unity", "HeliumUnityBridge: Plugin Initialized");
-                            HeliumSdk.setGameEngine("unity", unityVersion);
-                            HeliumUnityBridge.this.isHeliumInitialized = true;
-                            HeliumSdk.subscribeIlrd(ilrdObserver);
-                        } else {
-                            Log.d("Unity", "HeliumUnityBridge: Plugin failed to initialize: " + error.toString());
-                        }
-                        UnitySendMessage(gameObjectName, "DidStartEvent", serializeError(error));
-                    }
-                });
-            }
+        runTaskOnUiThread(() -> {
+            // This call initializes the Helium SDK. This might change in the future with two ID parameters and we'll get rid of the logControllerListener
+            HeliumSdk.start(getActivity(), appId, appSignature, error -> {
+                boolean errorNotFound = error == null;
+                if (errorNotFound) {
+                    Log.d("Unity", "HeliumUnityBridge: Plugin Initialized");
+                    HeliumSdk.setGameEngine("unity", unityVersion);
+                    HeliumUnityBridge.this.isHeliumInitialized = true;
+                    HeliumSdk.subscribeIlrd(ilrdObserver);
+                } else {
+                    Log.d("Unity", "HeliumUnityBridge: Plugin failed to initialize: " + error);
+                }
+
+                int errorCode = errorNotFound ? -1 : 1;
+                String errorDescription = errorNotFound ? EMPTY_STRING : error.toString();
+                lifeCycleEventListener.DidStart(errorCode, errorDescription);
+            });
         });
     }
 
@@ -221,19 +213,7 @@ public class HeliumUnityBridge {
     }
 
     public void pause(final boolean pause) {
-        runTaskOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // Leaving this code here in case we need to use lifecycle callbacks again in the future
-                if (!isHeliumInitialized)
-                    return;
-                if (pause) {
 
-                } else {
-
-                }
-            }
-        });
     }
 
     public void destroy() {
@@ -241,99 +221,75 @@ public class HeliumUnityBridge {
             HeliumSdk.unsubscribeIlrd(ilrdObserver);
             ilrdObserver = null;
         }
-        runTaskOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // Leaving this code here in case we need to use lifecycle callbacks again in the future
-                if (!isHeliumInitialized)
-                    return;
-            }
-        });
-    }
-
-    public boolean isAnyViewVisible() {
-        if (!isHeliumInitialized)
-            return false;
-        return false; //Chartboost.isAnyViewVisible();
     }
 
     public HeliumAdWrapper getInterstitialAd(final String placementName) {
         if (placementName == null)
             return null;
 
-        return wrapAd(new AdCreator() {
+        return wrapAd(() -> new HeliumInterstitialAd(placementName, new HeliumInterstitialAdListener() {
             @Override
-            public HeliumAd createAd() {
-                return new HeliumInterstitialAd(placementName, new HeliumInterstitialAdListener() {
-                    @Override
-                    public void didReceiveWinningBid(String placementName, HashMap<String, String> hashMap) {
-                        UnitySendMessage(gameObjectName, "DidWinBidInterstitialEvent", serializeWinningBid(placementName, hashMap));
-                    }
-
-                    @Override
-                    public void didCache(String placementName, HeliumAdError error) {
-                        UnitySendMessage(gameObjectName, "DidLoadInterstitialEvent", serializePlacementError(placementName, error));
-                    }
-
-                    @Override
-                    public void didShow(String placementName, HeliumAdError error) {
-                        UnitySendMessage(gameObjectName, "DidShowInterstitialEvent", serializePlacementError(placementName, error));
-                    }
-
-                    @Override
-                    public void didClose(String placementName, HeliumAdError error) {
-                        UnitySendMessage(gameObjectName, "DidCloseInterstitialEvent", serializePlacementError(placementName, error));
-                    }
-
-                    @Override
-                    public void didClick(String placmenetName, HeliumAdError error) {
-                        UnitySendMessage(gameObjectName, "DidClickInterstitialEvent", serializePlacementError(placementName, error));
-                    }
-                });
+            public void didReceiveWinningBid(@NonNull String placementName, @NonNull HashMap<String, String> hashMap) {
+                serializeHeliumBidEvent(placementName, hashMap, interstitialEventsListener::DidWinBidInterstitial);
             }
-        });
+
+            @Override
+            public void didCache(@NonNull String placementName, HeliumAdError error) {
+                serializeHeliumEvent(placementName,  error, interstitialEventsListener::DidLoadInterstitial);
+            }
+
+            @Override
+            public void didShow(@NonNull String placementName, HeliumAdError error) {
+                serializeHeliumEvent(placementName,  error, interstitialEventsListener::DidShowInterstitial);
+            }
+
+            @Override
+            public void didClose(@NonNull String placementName, HeliumAdError error) {
+                serializeHeliumEvent(placementName,  error, interstitialEventsListener::DidCloseInterstitial);
+            }
+
+            @Override
+            public void didClick(@NonNull String placementName, HeliumAdError error) {
+                serializeHeliumEvent(placementName,  error, interstitialEventsListener::DidClickInterstitial);
+            }
+        }));
     }
 
     public HeliumAdWrapper getRewardedAd(final String placementName) {
         if (placementName == null)
             return null;
 
-        return wrapAd(new AdCreator() {
+        return wrapAd(() -> new HeliumRewardedAd(placementName, new HeliumRewardedAdListener() {
             @Override
-            public HeliumAd createAd() {
-                return new HeliumRewardedAd(placementName, new HeliumRewardedAdListener() {
-                    @Override
-                    public void didReceiveWinningBid(String placementName, HashMap<String, String> hashMap) {
-                        UnitySendMessage(gameObjectName, "DidWinBidRewardedEvent", serializeWinningBid(placementName, hashMap));
-                    }
-
-                    @Override
-                    public void didCache(String placementName, HeliumAdError error) {
-                        UnitySendMessage(gameObjectName, "DidLoadRewardedEvent", serializePlacementError(placementName, error));
-                    }
-
-                    @Override
-                    public void didShow(String placementName, HeliumAdError error) {
-                        UnitySendMessage(gameObjectName, "DidShowRewardedEvent", serializePlacementError(placementName, error));
-                    }
-
-                    @Override
-                    public void didClose(String placementName, HeliumAdError error) {
-                        UnitySendMessage(gameObjectName, "DidCloseRewardedEvent", serializePlacementError(placementName, error));
-                    }
-
-                    @Override
-                    public void didReceiveReward(String placementName, String reward) {
-                        UnitySendMessage(gameObjectName, "DidReceiveRewardEvent", serializePlacementReward(placementName, reward), true);
-                    }
-
-                    @Override
-                    public void didClick(String placmenetName, HeliumAdError error) {
-                        UnitySendMessage(gameObjectName, "DidClickRewardedEvent", serializePlacementError(placementName, error));
-                    }
-                });
+            public void didReceiveWinningBid(@NonNull String placementName, @NonNull HashMap<String, String> hashMap) {
+                serializeHeliumBidEvent(placementName, hashMap, rewardedEventListener::DidWinBidRewarded);
             }
-        });
+
+            @Override
+            public void didCache(@NonNull String placementName, HeliumAdError error) {
+                serializeHeliumEvent(placementName,  error, rewardedEventListener::DidLoadRewarded);
+            }
+
+            @Override
+            public void didShow(@NonNull String placementName, HeliumAdError error) {
+                serializeHeliumEvent(placementName,  error, rewardedEventListener::DidShowRewarded);
+            }
+
+            @Override
+            public void didClose(@NonNull String placementName, HeliumAdError error) {
+                serializeHeliumEvent(placementName,  error, rewardedEventListener::DidCloseRewarded);
+            }
+
+            @Override
+            public void didReceiveReward(@NonNull String placementName, @NonNull String reward) {
+                serializeHeliumRewardEvent(placementName,  reward, rewardedEventListener::DidReceiveReward);
+            }
+
+            @Override
+            public void didClick(@NonNull String placementName, HeliumAdError error) {
+                serializeHeliumEvent(placementName,  error, rewardedEventListener::DidClickRewarded);
+            }
+        }));
     }
 
     public HeliumAdWrapper getBannerAd(final String placementName, final int size) {
@@ -355,39 +311,33 @@ public class HeliumUnityBridge {
         }
         HeliumBannerAd.Size finalWantedSize = wantedSize;
 
-        return wrapAd(new AdCreator() {
+        return wrapAd(() -> new HeliumBannerAd(getActivity(), placementName, finalWantedSize, new HeliumBannerAdListener() {
             @Override
-            public HeliumAd createAd() {
-
-                return new HeliumBannerAd(getActivity(), placementName, finalWantedSize, new HeliumBannerAdListener() {
-                    @Override
-                    public void didReceiveWinningBid(String s, HashMap<String, String> hashMap) {
-                        UnitySendMessage(gameObjectName, "DidWinBidBannerEvent", serializeWinningBid(placementName, hashMap));
-                    }
-
-                    @Override
-                    public void didCache(String placementName, HeliumAdError error) {
-                        UnitySendMessage(gameObjectName, "DidLoadBannerEvent", serializePlacementError(placementName, error));
-                    }
-
-                    @Override
-                    public void didShow(String placementName, HeliumAdError error) {
-                        UnitySendMessage(gameObjectName, "DidShowBannerEvent", serializePlacementError(placementName, error));
-                    }
-
-                    @Override
-                    public void didClose(String placementName, HeliumAdError error) {
-                        // Not all partners support it, keeping from being triggered at the Unity side.
-                        // UnitySendMessage(gameObjectName, "DidCloseBannerEvent", serializePlacementError(placementName, error));
-                    }
-
-                    @Override
-                    public void didClick(String placmenetName, HeliumAdError error) {
-                        UnitySendMessage(gameObjectName, "DidClickBannerEvent", serializePlacementError(placementName, error));
-                    }
-                });
+            public void didReceiveWinningBid(@NonNull String placementName, @NonNull HashMap<String, String> hashMap) {
+                serializeHeliumBidEvent(placementName, hashMap, bannerEventsListener::DidWinBidBanner);
             }
-        });
+
+            @Override
+            public void didCache(@NonNull String placementName, HeliumAdError error) {
+                serializeHeliumEvent(placementName,  error, bannerEventsListener::DidLoadBanner);
+            }
+
+            @Override
+            public void didShow(@NonNull String placementName, HeliumAdError error) {
+                serializeHeliumEvent(placementName,  error, bannerEventsListener::DidShowBanner);
+            }
+
+            @Override
+            public void didClose(@NonNull String placementName, HeliumAdError error) {
+                // Not all partners support it, keeping from being triggered at the Unity side.
+                // UnitySendMessage(gameObjectName, "DidCloseBannerEvent", serializePlacementError(placementName, error));
+            }
+
+            @Override
+            public void didClick(@NonNull String placementName, HeliumAdError error) {
+                serializeHeliumEvent(placementName,  error, bannerEventsListener::DidClickBanner);
+            }
+        }));
     }
 
     private void createBannerLayout(int position) {
@@ -440,24 +390,17 @@ public class HeliumUnityBridge {
         mBannerLayout.setGravity(bannerGravityPosition);
     }
 
-    public void setGameObjectName(String name) {
-        gameObjectName = name;
-    }
-
     private HeliumAdWrapper wrapAd(AdCreator ad) {
         return new HeliumAdWrapper(ad);
     }
 
     // Method whenever work needs to be done on the UI thread.
     private void runTaskOnUiThread(final Runnable runnable) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    runnable.run();
-                } catch (Exception ex) {
-                    Log.w(TAG, "Exception found when running on UI Thread" + ex.getMessage());
-                }
+        getActivity().runOnUiThread(() -> {
+            try {
+                runnable.run();
+            } catch (Exception ex) {
+                Log.w(TAG, "Exception found when running on UI Thread" + ex.getMessage());
             }
         });
     }
@@ -494,52 +437,49 @@ public class HeliumUnityBridge {
 
         // Generally used for banners on unity with a given screen location.
         public void show(int screenLocation) {
-            runTaskOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    // Check if the helium banner already has a child. If so, remove it.
-                    if (mBannerLayout != null && mBannerLayout.getChildCount() >= 0) {
-                        mBannerLayout.removeAllViews();
+            runTaskOnUiThread(() -> {
+                // Check if the helium banner already has a child. If so, remove it.
+                if (mBannerLayout != null && mBannerLayout.getChildCount() >= 0) {
+                    mBannerLayout.removeAllViews();
+                }
+
+                // Create the banner layout on the given position.
+                createBannerLayout(screenLocation);
+
+                // Attach the banner layout to the activity.
+                float pixels = getDisplayDensity();
+                try {
+                    HeliumBannerAd bannerAd = (HeliumBannerAd) ad();
+                    switch (bannerAd.getSize() != null ? bannerAd.getSize() : HeliumBannerAd.Size.STANDARD) {
+                        case LEADERBOARD:
+                            bannerAd.setLayoutParams(getBannerLayoutParams(pixels, LEADERBOARD_WIDTH, LEADERBOARD_HEIGHT));
+                            break;
+                        case MEDIUM:
+                            bannerAd.setLayoutParams(getBannerLayoutParams(pixels, MEDIUM_WIDTH, MEDIUM_HEIGHT));
+                            break;
+                        case STANDARD:
+                            bannerAd.setLayoutParams(getBannerLayoutParams(pixels, STANDARD_WIDTH, STANDARD_HEIGHT));
                     }
 
-                    // Create the banner layout on the given position.
-                    createBannerLayout(screenLocation);
+                    // Attach the banner to the banner layout.
+                    mBannerLayout.addView(bannerAd);
 
-                    // Attach the banner layout to the activity.
-                    float pixels = getDisplayDensity();
-                    try {
-                        HeliumBannerAd bannerAd = (HeliumBannerAd) ad();
-                        switch (bannerAd.getSize()) {
-                            case LEADERBOARD:
-                                bannerAd.setLayoutParams(getBannerLayoutParams(pixels, LEADERBOARD_WIDTH, LEADERBOARD_HEIGHT));
-                                break;
-                            case MEDIUM:
-                                bannerAd.setLayoutParams(getBannerLayoutParams(pixels, MEDIUM_WIDTH, MEDIUM_HEIGHT));
-                                break;
-                            case STANDARD:
-                                bannerAd.setLayoutParams(getBannerLayoutParams(pixels, STANDARD_WIDTH, STANDARD_HEIGHT));
-                        }
+                    getActivity().addContentView(mBannerLayout,
+                            new FrameLayout.LayoutParams(
+                                    FrameLayout.LayoutParams.MATCH_PARENT,
+                                    FrameLayout.LayoutParams.MATCH_PARENT));
 
-                        // Attach the banner to the banner layout.
-                        mBannerLayout.addView(bannerAd);
+                    // Show the banner
+                    ad().show();
+                    // This immediately sets the visibility of this banner. If this doesn't happen
+                    // here, it is impossible to set the visibility later.
+                    bannerAd.setVisibility(View.VISIBLE);
 
-                        getActivity().addContentView(mBannerLayout,
-                                new FrameLayout.LayoutParams(
-                                        FrameLayout.LayoutParams.MATCH_PARENT,
-                                        FrameLayout.LayoutParams.MATCH_PARENT));
-
-                        // Show the banner
-                        ad().show();
-                        // This immediately sets the visibility of this banner. If this doesn't happen
-                        // here, it is impossible to set the visibility later.
-                        bannerAd.setVisibility(View.VISIBLE);
-
-                        // This affects future visibility of the banner layout. Despite it never being
-                        // set invisible, not setting this to visible here makes the banner not visible.
-                        mBannerLayout.setVisibility(View.VISIBLE);
-                    } catch(Exception ex) {
-                        Log.w(TAG, "Helium encountered an error calling banner show() - " + ex.getMessage());
-                    }
+                    // This affects future visibility of the banner layout. Despite it never being
+                    // set invisible, not setting this to visible here makes the banner not visible.
+                    mBannerLayout.setVisibility(View.VISIBLE);
+                } catch(Exception ex) {
+                    Log.w(TAG, "Helium encountered an error calling banner show() - " + ex.getMessage());
                 }
             });
         }
@@ -559,12 +499,7 @@ public class HeliumUnityBridge {
 
         // For other ad types.
         public void show() {
-            runTaskOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    ad().show();
-                }
-            });
+            runTaskOnUiThread(() -> ad().show());
         }
 
         public void setCustomData(final String customData) {
@@ -594,30 +529,24 @@ public class HeliumUnityBridge {
         }
 
         public void destroy() {
-            runTaskOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    // If the ad is a banner, let's remove it first.
-                    if (ad() instanceof HeliumBannerAd && mBannerLayout != null) {
-                        mBannerLayout.removeAllViews();
-                        mBannerLayout.setVisibility(View.GONE);
-                    }
-                    ad().destroy();
+            runTaskOnUiThread(() -> {
+                // If the ad is a banner, let's remove it first.
+                if (ad() instanceof HeliumBannerAd && mBannerLayout != null) {
+                    mBannerLayout.removeAllViews();
+                    mBannerLayout.setVisibility(View.GONE);
                 }
+                ad().destroy();
             });
         }
 
         public void setBannerVisibility(boolean isVisible) {
-            runTaskOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    HeliumAd ad = ad();
-                    if (ad instanceof HeliumBannerAd && mBannerLayout != null) {
-                        HeliumBannerAd bannerAd = (HeliumBannerAd)ad;
-                        int visibility = isVisible ? View.VISIBLE : View.INVISIBLE;
-                        mBannerLayout.setVisibility(visibility);
-                        bannerAd.setVisibility(visibility);
-                    }
+            runTaskOnUiThread(() -> {
+                HeliumAd ad = ad();
+                if (ad instanceof HeliumBannerAd && mBannerLayout != null) {
+                    HeliumBannerAd bannerAd = (HeliumBannerAd)ad;
+                    int visibility = isVisible ? View.VISIBLE : View.INVISIBLE;
+                    mBannerLayout.setVisibility(visibility);
+                    bannerAd.setVisibility(visibility);
                 }
             });
         }

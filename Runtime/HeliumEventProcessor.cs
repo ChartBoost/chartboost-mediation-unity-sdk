@@ -1,230 +1,123 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 
+// ReSharper disable InconsistentNaming
+// ReSharper disable IdentifierTypo
 namespace Helium
 {
     public static class HeliumEventProcessor
     {
+        private static readonly SynchronizationContext _context;
+        
         /// <summary>
         /// Called when an unexpected system error occurred.
-        /// <param name="message">A message that describes the unexpected system error.</param>
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        public static event Action<string> UnexpectedSystemErrorDidOccur;
+        public static event HeliumEvent UnexpectedSystemErrorDidOccur;
 
-        public static void ProcessEventWithError(string dataString, Action<HeliumError> ev)
+        static HeliumEventProcessor()
         {
-            if (ev == null)
-                return;  // only bother to do work if there are event listeners
-
-            dataString = dataString.Trim();
-            if (!dataString.StartsWith("{") || !dataString.EndsWith("}"))
+            _context = SynchronizationContext.Current;
+        }
+        
+        public static void ProcessEventWithILRD(string dataString, HeliumILRDEvent ilrdEvent)
+        {
+            _context.Post(o =>
             {
-                ReportUnexpectedSystemError($"Non JSON data received when processing event with error: {dataString}");
-                return;
-            }
-
-            try
-            {
-                if (HeliumJSON.Deserialize(dataString) is not Dictionary<object, object> data)
+                try
                 {
-                    ReportUnexpectedSystemError($"Malformed data received when processing event with error: {dataString}");
-                    return;
+                    if (ilrdEvent == null)
+                        return;
+
+                    if (!(HeliumJSON.Deserialize(dataString) is Dictionary<object, object> data)) 
+                        return;
+                    
+                    data.TryGetValue("placementName", out var placementName);
+                    ilrdEvent(placementName as string, new Hashtable(data));
                 }
-
-                data.TryGetValue("errorCode", out var errorCode);
-                data.TryGetValue("errorDescription", out var errorDescription);
-
-                var error = ImpressionErrorFromIntString(errorCode, errorDescription as string);
-                ev(error);
-            }
-            catch (Exception e)
-            {
-                ReportUnexpectedSystemError($"Malformed data received when processing event with error: {e.Message}");
-            }
+                catch (Exception e)
+                {
+                    ReportUnexpectedSystemError(e.ToString());
+                }
+            }, null);
         }
 
-        public static bool ProcessEventWithPlacementAndError(string dataString, Action<string, HeliumError> ev)
+        public static void ProcessHeliumEvent(int errorCode, string errorDescription, HeliumEvent heliumEvent)
         {
-            if (ev == null)
-                return false;  // only bother to do work if there are event listeners
-
-            dataString = dataString.Trim();
-            if (!dataString.StartsWith("{") || !dataString.EndsWith("}"))
+            _context.Post(o =>
             {
-                ReportUnexpectedSystemError($"Non JSON data received when processing event with placement: {dataString}");
-                return false;
-            }
-
-            try
-            {
-                if (HeliumJSON.Deserialize(dataString) is not Dictionary<object, object> data)
+                try
                 {
-                    ReportUnexpectedSystemError($"Malformed data received when processing event with placement: {dataString}");
-                    return false;
+                    if (heliumEvent == null)
+                        return;
+                    var heliumError = HeliumError.ErrorFromIntString(errorCode, errorDescription);
+                    heliumEvent(heliumError);
                 }
-
-                data.TryGetValue("errorCode", out var errorCode);
-                data.TryGetValue("errorDescription", out var errorDescription);
-
-                var error = ImpressionErrorFromIntString(errorCode, errorDescription as string);
-
-                if (!data.TryGetValue("placementName", out var placementName))
+                catch (Exception e)
                 {
-                    ReportUnexpectedSystemError($"Placement name not provided at root of: {dataString}");
-                    return false;
+                    ReportUnexpectedSystemError(e.ToString());
                 }
-
-                ev(placementName as string, error);
-
-                return (error == null);
-            }
-            catch (Exception e)
-            {
-                ReportUnexpectedSystemError($"Malformed data received when processing event with placement: {e.Message}");
-                return false;
-            }
+            }, null);
         }
 
-        public static void ProcessEventWithReward(string dataString, Action<string> ev)
+        public static void ProcessHeliumPlacementEvent(string placementName, int errorCode, string errorDescription, HeliumPlacementEvent placementEvent)
         {
-            if (ev == null)
-                return;  // only bother to do work if there are event listeners
-
-            dataString = dataString.Trim();
-            if (!dataString.StartsWith("{") || !dataString.EndsWith("}"))
+            _context.Post(o =>
             {
-                ReportUnexpectedSystemError($"Non JSON data received when processing event with reward: {dataString}");
-                return;
-            }
-
-            try
-            {
-                if (HeliumJSON.Deserialize(dataString) is not Dictionary<object, object> data)
+                try
                 {
-                    ReportUnexpectedSystemError($"Malformed data received when processing event with reward: {dataString}");
-                    return;
+                    if (placementEvent == null)
+                        return;
+                    var heliumError = HeliumError.ErrorFromIntString(errorCode, errorDescription);
+                    placementEvent(placementName, heliumError);
                 }
-
-                if (!data.TryGetValue("reward", out var reward))
+                catch (Exception e)
                 {
-                    ReportUnexpectedSystemError($"Reward object not included with JSON payload: {dataString}");
-                    return;
+                    ReportUnexpectedSystemError(e.ToString());
                 }
-
-                ev(reward.ToString());
-            }
-            catch (Exception e)
-            {
-                ReportUnexpectedSystemError($"Malformed data received when processing event with reward: {e.Message}");
-            }
+            }, null);
         }
 
-        public static void ProcessEventWithPlacementAndBidInfo(string dataString, Action<string, HeliumBidInfo> ev)
+        public static void ProcessHeliumBidEvent(string placementName, string auctionId, string partnerId, double price, HeliumBidEvent bidEvent)
         {
-            if (ev == null)
-                return;  // only bother to do work if there are event listeners
-
-            dataString = dataString.Trim();
-            if (!dataString.StartsWith("{") || !dataString.EndsWith("}"))
+            _context.Post(o =>
             {
-                ReportUnexpectedSystemError($"Non JSON data received when processing event with placement and bid info: {dataString}");
-                return;
-            }
-
-            try
-            {
-                if (HeliumJSON.Deserialize(dataString) is not Dictionary<object, object> data)
+                try
                 {
-                    ReportUnexpectedSystemError($"Malformed data received when processing event with placement and bid info: {dataString}");
-                    return;
+                    if (bidEvent == null)
+                        return;
+                    var heliumBid = new HeliumBidInfo(auctionId, partnerId, price);
+                    bidEvent(placementName, heliumBid);
                 }
-
-                if (!data.TryGetValue("placementName", out var placementName))
+                catch (Exception e)
                 {
-                    ReportUnexpectedSystemError($"Placement name not provided at root of: {dataString}");
-                    return;
+                    ReportUnexpectedSystemError(e.ToString());
                 }
-
-                data.TryGetValue("info", out var infoObject);
-                var infoJObject = infoObject as Newtonsoft.Json.Linq.JObject;
-
-                var info = new HeliumBidInfo();
-                if (infoJObject != null)
-                {
-                    infoJObject.TryGetValue("auction-id", out var auctionID);
-                    if (auctionID != null)
-                        info.AuctionId = auctionID.ToString();
-
-                    infoJObject.TryGetValue("price", out var price);
-                    if (price != null)
-                        double.TryParse(price.ToString(), out info.Price);
-
-                    infoJObject.TryGetValue("seat", out var seat);
-                    if (seat != null)
-                        info.Seat = seat.ToString();
-
-                    infoJObject.TryGetValue("placementName", out var partnerPlacementName);
-                    if (partnerPlacementName != null)
-                        info.PartnerPlacementName = partnerPlacementName.ToString();
-                }
-                ev(placementName as string, info);
-            }
-            catch (Exception e)
-            {
-                ReportUnexpectedSystemError($"Malformed data received when processing event with placement and bid info: {e.Message}");
-            }
+            }, null);
         }
 
-        public static void ProcessEventWithILRD(string dataString, Action<string, Hashtable> ev)
+        public static void ProcessHeliumRewardEvent(string placementName, int reward, HeliumRewardEvent rewardEvent)
         {
-            if (ev == null)
-                return;
-
-            if (HeliumJSON.Deserialize(dataString) is not Dictionary<object, object> data)
-                return;
-
-            data.TryGetValue("placementName", out var placementName);
-            ev(placementName as string, new Hashtable(data));
+            _context.Post(o =>
+            {
+                try
+                {
+                    if (rewardEvent == null)
+                        return;
+                    rewardEvent(placementName, reward);
+                }
+                catch (Exception e)
+                {
+                    ReportUnexpectedSystemError(e.ToString());
+                }
+            }, null);
         }
 
         private static void ReportUnexpectedSystemError(string message)
         {
-            UnexpectedSystemErrorDidOccur?.Invoke(message);
-        }
-
-        private static HeliumError ImpressionErrorFromInt(object errorObj)
-        {
-            int error;
-            try
-            {
-                error = Convert.ToInt32(errorObj);
-            }
-            catch
-            {
-                error = (int)HeliumErrorCode.Unknown;
-            }
-
-            switch (error)
-            {
-                case -1:
-                    return null;
-                case < 0:
-                // out of bounds
-                case > (int)HeliumErrorCode.Unknown:
-                    return new HeliumError(HeliumErrorCode.Unknown, null);
-                default:
-                    return new HeliumError((HeliumErrorCode)error, null);
-            }
-        }
-
-        private static HeliumError ImpressionErrorFromIntString(object errorObj, string errString)
-        {
-            var e = ImpressionErrorFromInt(errorObj);
-            if (e != null)
-                e.errorDescription = errString;
-            return e;
+            UnexpectedSystemErrorDidOccur?.Invoke(HeliumError.ErrorFromIntString(HeliumErrorCode.Unknown, message));
         }
     }
 }

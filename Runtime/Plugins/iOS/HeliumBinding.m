@@ -21,12 +21,31 @@ static char* ConvertNSStringToCString(const NSString* nsString) {
     return cString;
 }
 
-void _heliumSdkInit(const char *appId, const char *appSignature, const char *unityVersion, HeliumBackgroundEventCallback bgEventCallback)
+void _setLifeCycleCallbacks(HeliumEvent didStartCallback, HeliumILRDEvent didReceiveILRDCallback)
+{
+    [[HeliumSdkManager sharedManager] setLifeCycleCallbacks:didStartCallback didReceiveILRDCallback:didReceiveILRDCallback];
+}
+
+void _setInterstitialCallbacks(HeliumPlacementEvent didLoadCallback, HeliumPlacementEvent didShowCallback, HeliumPlacementEvent didClickCallback, HeliumPlacementEvent didCloseCallback, HeliumBidWinEvent didWinBidCallback)
+{
+    [[HeliumSdkManager sharedManager] setInterstitialCallbacks:didLoadCallback didShowCallback:didShowCallback didClickCallback:didClickCallback didCloseCallback:didCloseCallback didWinBidCallback:didWinBidCallback];
+}
+
+void _setRewardedCallbacks(HeliumPlacementEvent didLoadCallback, HeliumPlacementEvent didShowCallback, HeliumPlacementEvent didClickCallback, HeliumPlacementEvent didCloseCallback, HeliumBidWinEvent didWinBidCallback, HeliumRewardEvent didReceiveRewardCallback){
+    [[HeliumSdkManager sharedManager] setRewardedCallbacks:didLoadCallback didShowCallback:didShowCallback didClickCallback:didClickCallback didCloseCallback:didCloseCallback didWinBidCallback:didWinBidCallback didReceiveRewardCallback:didReceiveRewardCallback];
+}
+
+void _setBannerCallbacks(HeliumPlacementEvent didLoadCallback, HeliumPlacementEvent didShowCallback, HeliumPlacementEvent didClickCallback, HeliumBidWinEvent didWinBidCallback)
+{
+    [[HeliumSdkManager sharedManager] setBannerCallbacks:didLoadCallback didShowCallback:didShowCallback didClickCallback:didClickCallback didWinBidCallback:didWinBidCallback];
+}
+
+
+void _heliumSdkInit(const char *appId, const char *appSignature, const char *unityVersion)
 {
     [[HeliumSdkManager sharedManager] startHeliumWithAppId:GetStringParam(appId)
                                            andAppSignature:GetStringParam(appSignature)
-                                              unityVersion:GetStringParam(unityVersion)
-                                           bgEventCallback:bgEventCallback];
+                                              unityVersion:GetStringParam(unityVersion)];
 }
 
 void _heliumSdkSetSubjectToCoppa(BOOL isSubject)

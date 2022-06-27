@@ -91,6 +91,8 @@ namespace Helium {
         public string androidAppSignature = AndroidExampleAppSignatureLabel;
         [SerializeField]
 		public bool isLoggingEnabled = false;
+		[SerializeField]
+		public bool isAutomaticInitEnabled = false;
 
         // allow mediation partners to set the appId and appSignature from code
         // if set, overrides the values set in the editor
@@ -224,7 +226,18 @@ namespace Helium {
 			return Instance.isLoggingEnabled;
 		}
 
-	    private static void DirtyEditor()
+		public static void EnableAutomaticInit(bool enabled)
+		{
+			Instance.isAutomaticInitEnabled = enabled;
+			DirtyEditor();
+		}
+		
+		public static bool IsAutomaticInit()
+		{
+			return Instance.isAutomaticInitEnabled;
+		}
+
+		private static void DirtyEditor()
 	    {
 #if UNITY_EDITOR
 	        EditorUtility.SetDirty(Instance);

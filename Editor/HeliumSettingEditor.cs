@@ -8,14 +8,16 @@ namespace Helium.Editor
 	{
 		private const string AppIdLink = "https://dashboard.chartboost.com/all/publishing";
 
-		private readonly GUIContent _iOSAppIdLabel = new("App Id [?]:", "Helium App Ids can be found at " + AppIdLink);
-		private readonly GUIContent _androidAppIdLabel = new("App Id [?]:", "Helium App Ids can be found at " + AppIdLink);
-		private readonly GUIContent _iOSAppSigLabel = new("App Signature [?]:", "Helium App Signatures can be found at " + AppIdLink);
-		private readonly GUIContent _androidAppSigLabel = new("App Signature [?]:", "Helium App Signatures can be found at " + AppIdLink);
-		private readonly GUIContent _iOSLabel = new("iOS");
-		private readonly GUIContent _androidLabel = new("Google Play");
-		private readonly GUIContent _enableLoggingLabel = new("Enable Logging for Debug Builds");
-		private readonly GUIContent _enableLoggingToggle = new("isLoggingEnabled");
+		private readonly GUIContent _iOSAppIdLabel = new GUIContent("App Id [?]:", "Helium App Ids can be found at " + AppIdLink);
+		private readonly GUIContent _androidAppIdLabel = new GUIContent("App Id [?]:", "Helium App Ids can be found at " + AppIdLink);
+		private readonly GUIContent _iOSAppSigLabel = new GUIContent("App Signature [?]:", "Helium App Signatures can be found at " + AppIdLink);
+		private readonly GUIContent _androidAppSigLabel = new GUIContent("App Signature [?]:", "Helium App Signatures can be found at " + AppIdLink);
+		private readonly GUIContent _iOSLabel = new GUIContent("iOS");
+		private readonly GUIContent _androidLabel = new GUIContent("Google Play");
+		private readonly GUIContent _enableLoggingLabel = new GUIContent("Enable Logging for Debug Builds");
+		private readonly GUIContent _enableAutomaticInitLabel = new GUIContent("Enable Automatic Initialization");
+		private readonly GUIContent _enableLoggingToggle = new GUIContent("isLoggingEnabled");
+		private readonly GUIContent _enableAutomaticInitToggle = new GUIContent("isAutomaticallyInitializing");
 
 		private HeliumSettings _instance;
 
@@ -89,6 +91,16 @@ namespace Helium.Editor
 			HeliumSettings.EnableLogging(EditorGUILayout.Toggle(_enableLoggingToggle, _instance.isLoggingEnabled));
 			EditorGUILayout.EndHorizontal();
 			EditorGUILayout.Space();
+			
+			// automatic init toggle
+			EditorGUILayout.BeginHorizontal();
+			EditorGUILayout.LabelField(_enableAutomaticInitLabel);
+			EditorGUILayout.EndHorizontal();
+			
+			EditorGUILayout.BeginHorizontal();
+			HeliumSettings.EnableAutomaticInit(EditorGUILayout.Toggle(_enableAutomaticInitToggle, _instance.isAutomaticInitEnabled));
+			EditorGUILayout.EndHorizontal();
+			
 		}
 	}
 }
