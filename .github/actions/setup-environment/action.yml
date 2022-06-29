@@ -1,0 +1,36 @@
+name: Setup Environment
+description: Sets up the Unity Environment for running CI/CD tasks'
+
+runs:
+    #Required to always be `composite` https://docs.github.com/en/actions/creating-actions/creating-a-composite-action
+    using: 'composite'
+
+    #Steps to perform
+    steps:
+    - name: Grant execute permission for Java Install
+      run: chmod +x installJava.sh
+
+    - name: Install Java 11 and make it the default
+      run: installAndroidSDKTools.sh
+      shell: bash
+
+    - name: Grant execute permission for Android SDK & Tools Install
+      run: chmod +x installAndroidSDKTools.sh
+
+    - name: Install Android SDK & Tools Install
+      run: installAndroidSDKTools.sh
+      shell: bash
+
+    - name: Check Unity Installation
+      run: |
+        echo "UNITY_INSTALLED::$([ -d "/Applications/Unity/Unity.app" ] && echo true || echo false)" >> $GITHUB_ENV
+      id: version
+
+    - name: Grant execute permission for Unity Install
+      if: ${{ env.UNITY_INSTALLED == 'true' }}
+      run: chmod +x installUnity.sh
+
+    - name: Download & Install Unity
+      if: ${{ env.UNITY_INSTALLED == 'true' }}
+      run: installUnity.sh
+      shell: bash
