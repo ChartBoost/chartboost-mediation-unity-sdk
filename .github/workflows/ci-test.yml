@@ -10,23 +10,23 @@ on:
   # Manual trigger from the Github Actions tab
   workflow_dispatch:
 
-  # Cancels any queued or in-progress runs for this branch.
-  concurrency:
-    group: ${{ github.workflow }}-${{ github.ref }}
-    cancel-in-progress: true
+# Cancels any queued or in-progress runs for this branch.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
-  jobs:
-    tests:
-      # Always run on the latest MacOS version
-      runs-on: macos-latest
+jobs:
+  tests:
+    # Always run on the latest MacOS version
+    runs-on: macos-latest
 
-    # Steps to perform for unit testing.
-    steps:
-      # Checkout the code
-      - name: Checkout branch
-        uses: actions/checkout@v3
+  # Steps to perform for unit testing.
+  steps:
+    # Checkout the code
+    - name: Checkout branch
+      uses: actions/checkout@v3
 
-      # Setup the CI/CD environment
-      - name: Setup CI/CD environment
-        id: ci-setup
-        uses: ./.github/actions/setup-environment
+    # Setup the CI/CD environment
+    - name: Setup CI/CD environment
+      id: ci-setup
+      uses: ./.github/actions/setup-environment
