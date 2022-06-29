@@ -18,10 +18,10 @@ concurrency:
 jobs:
   tests:
     # Always run on the latest MacOS version
-    runs-on: macos-latest
+    runs-on: [self-hosted]
 
-  # Steps to perform for unit testing.
-  steps:
+    # Steps to perform for unit testing.
+    steps:
     # Checkout the code
     - name: Checkout branch
       uses: actions/checkout@v3
