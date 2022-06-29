@@ -1,0 +1,24 @@
+name: Setup Environment
+description: Sets up the Unity Environment for running CI/CD tasks'
+
+runs:
+    #Required to always be `composite` https://docs.github.com/en/actions/creating-actions/creating-a-composite-action
+    using: 'composite'
+
+    #Steps to perform
+    steps:
+
+    # based off current Android Helium SDK CI Setup
+    - name: Setup JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Grant execute permission for Unity Install
+      run: chmod +x installUnity.sh
+
+    - name: Download & Install Unity
+      run: installUnity.sh
+      shell: bash
