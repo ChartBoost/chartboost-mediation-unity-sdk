@@ -25,8 +25,18 @@ jobs:
     # Checkout the code
     - name: Checkout branch
       uses: actions/checkout@v3
+      with:
+        submodules: true
 
-    # Setup the CI/CD environment
-    - name: Setup CI/CD environment
-      id: ci-setup
-      uses: ./.github/actions/setup-environment
+    - name: Setup Unity Editor
+      id: unity-install
+      uses:  ./.github/actions/setup-unity
+      timeout-minutes: 60
+      with:
+        unity-version: 2020.3.15f2
+        unity-version-changeset: 6cf78cb77498
+        unity-modules:
+          android
+          ios
+      env:
+        SETUP_PASS: ${{ secrets.SETUP_PASS }}
