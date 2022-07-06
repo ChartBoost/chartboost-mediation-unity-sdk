@@ -1,13 +1,14 @@
 name: ci-tests
 
 on:
-  # Trigger on pull requests that target the following branches
+
+  push:
+    tags:
+      - '*'
   pull_request:
     branches:
       - 'develop'
       - 'main'
-      - 'release/**'
-  # Manual trigger from the Github Actions tab
   workflow_dispatch:
 
 # Cancels any queued or in-progress runs for this branch.
