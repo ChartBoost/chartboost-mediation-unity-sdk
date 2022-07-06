@@ -61,4 +61,4 @@ jobs:
       run: chmod +x ./Android~/gradlew
 
     - name: Build Android Bridge
-      run: ./Android~/gradlew Android~/githubScript
+      run: ./Android~/gradlew -p ./Android~ githubScript
