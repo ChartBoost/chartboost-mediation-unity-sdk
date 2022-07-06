@@ -19,8 +19,6 @@ ext {
     isInternalRelease = gitHubTag ==~ /\d+\.\d+\.\d+(\.?[A-Za-z0-9]+)+/
     isPublicRelease = gitHubTag ==~ /\d+\.\d+\.\d+/
 
-    unitySdkVersion = (gitHubTag != null && gitHubTag != "") ? gitHubTag.find(/^\d+\.\d+\.\d+(\.?[A-Za-z0-9]+)*/) : "0.0.0"
-
     buildArtifactsDir = "$rootDir/BuildArtifacts"
     unityBuildArtifactsDir = "$buildArtifactsDir/unity-helium-sdk"
 }
@@ -36,16 +34,8 @@ task githubScript {
     println ("githubTag (GITHUB_TAG) = "+ gitHubTag + ", " +
             "gitHubCommit (GITHUB_COMMIT) = "+ gitHubCommit)
     println()
-    println ("unitySdkVersion = "+ unitySdkVersion)
 
-//    if (isInternalRelease) {
-//        dependsOn 'downloadSdk'
-//    } else if (isPublicRelease) {
-//        dependsOn 'downloadSdk'
-//        dependsOn 'prepareForS3Deploy'
-//    } else {
-//        dependsOn 'sdk'
-//    }
+    dependsOn('buildBridge')
 }
 
 task buildBridge {
