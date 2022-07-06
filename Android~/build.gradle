@@ -1,6 +1,3 @@
-import com.chartboost.GitHub.GitHub
-import com.chartboost.tasks.DownloadReleaseAssets
-import com.chartboost.tasks.DownloadReleaseCandidateAssets
 
 buildscript {
     repositories {
@@ -15,56 +12,40 @@ buildscript {
 }
 
 ext {
-    travisTag = System.getenv("TRAVIS_TAG");
-    travisCommit = System.getenv("TRAVIS_COMMIT");
+    gitHubTag = System.getenv("GITHUB_REF");
+    gitHubCommit = System.getenv("GITHUB_SHA");
 
-    isReleaseCandidate = travisTag ==~ /\d+\.\d+\.\d+(\.?[A-Za-z0-9]+)*-rc\d+/
-    isInternalRelease = travisTag ==~ /\d+\.\d+\.\d+(\.?[A-Za-z0-9]+)+/
-    isPublicRelease = travisTag ==~ /\d+\.\d+\.\d+/
+    isReleaseCandidate = gitHubTag ==~ /\d+\.\d+\.\d+(\.?[A-Za-z0-9]+)*-rc\d+/
+    isInternalRelease = gitHubTag ==~ /\d+\.\d+\.\d+(\.?[A-Za-z0-9]+)+/
+    isPublicRelease = gitHubTag ==~ /\d+\.\d+\.\d+/
 
-    unitySdkVersion = (travisTag != null && travisTag != "") ? travisTag.find(/^\d+\.\d+\.\d+(\.?[A-Za-z0-9]+)*/) : "0.0.0"
-
-    unityExecutable = "/Applications/Unity/Unity.app/Contents/MacOS/Unity"
-    pluginPackage = "HeliumUnityPlugin_" + unitySdkVersion.replaceAll(/\./, "_") + ".unitypackage"
+    unitySdkVersion = (gitHubTag != null && gitHubTag != "") ? travisTag.find(/^\d+\.\d+\.\d+(\.?[A-Za-z0-9]+)*/) : "0.0.0"
 
     buildArtifactsDir = "$rootDir/BuildArtifacts"
     unityBuildArtifactsDir = "$buildArtifactsDir/unity-helium-sdk"
-    sdkBz2 = "$unityBuildArtifactsDir/Helium-Unity-${unitySdkVersion}.tar.bz2"
-
-    //POM CONSTANTS
-    DESCRIPTION = 'Better monetization. Powered by bidding'
-    HELIUM_URL = 'https://www.chartboost.com/helium/'
-    GIT_URL = 'https://github.com/ChartBoost/android-helium-sdk-example'
-    LICENSE = 'https://answers.chartboost.com/en-us/articles/200780239'
-    DEVELOPER_ID = 'chartboostmobile'
-    DEVELOPER_NAME = 'chartboost mobile'
-    DEVELOPER_EMAIL = 'mobile@chartboost.com'
-
-    //SNAPSHOT CONSTANT
-    SNAPSHOT = '-SNAPSHOT'
 }
 
 task ci(dependsOn: 'sdk') {}
 
-task travisScript {
+task githubScript {
     println()
     println ("isInternalRelease = "+ isInternalRelease + ", " +
             "isReleaseCandidate = "+ isReleaseCandidate + ", " +
             "isPublicRelease = "+ isPublicRelease)
     println()
-    println ("travisTag (TRAVIS_TAG) = "+ travisTag + ", " +
-            "travisCommit (TRAVIS_COMMIT) = "+ travisCommit)
+    println ("githubTag (GITHUB_TAG) = "+ gitHubTag + ", " +
+            "gitHubCommit (GITHUB_COMMIT) = "+ gitHubCommit)
     println()
     println ("unitySdkVersion = "+ unitySdkVersion)
 
-    if (isInternalRelease) {
-        dependsOn 'downloadSdk'
-    } else if (isPublicRelease) {
-        dependsOn 'downloadSdk'
-        dependsOn 'prepareForS3Deploy'
-    } else {
-        dependsOn 'sdk'
-    }
+//    if (isInternalRelease) {
+//        dependsOn 'downloadSdk'
+//    } else if (isPublicRelease) {
+//        dependsOn 'downloadSdk'
+//        dependsOn 'prepareForS3Deploy'
+//    } else {
+//        dependsOn 'sdk'
+//    }
 }
 
 task buildBridge {
@@ -72,84 +53,4 @@ task buildBridge {
     dependsOn ':helium-android-bridge:lint'
     dependsOn ':helium-android-bridge:build'
     dependsOn ':helium-android-bridge:copyReleaseAndroidBridgeForPackaging'
-}
-
-task sdk(type: Exec, dependsOn: ['buildPluginPackage','copyDocs']) {
-    doFirst {
-        file(unityBuildArtifactsDir).mkdirs()
-    }
-    commandLine "tar",
-            "-c",
-            "-j",
-            "-f", sdkBz2,
-            pluginPackage,
-            "CHANGELOG.md"
-    
-    workingDir buildDir
-}
-
-task copyDocs(type: Copy) {
-    from file("$rootDir/plugin/CHANGELOG.md")
-    into file(buildDir)
-}
-
-task prepareForS3Deploy(type: Copy, dependsOn: 'downloadSdk') {
-    from file(unityBuildArtifactsDir)
-    into file("$rootDir/deploy/s3")
-    include '*.bz2'
-}
-
-task downloadSdk (type: DownloadReleaseCandidateAssets) {
-    commit travisCommit
-    releaseTag travisTag
-    repo 'unity-helium-sdk'
-    directory file(unityBuildArtifactsDir)
-}
-
-task buildPluginPackage(type: Exec, dependsOn: 'buildBridge') {
-
-    doFirst {
-        file(buildDir).mkdirs()
-    }
-
-    List<String> command = new ArrayList<>()
-
-    command.add(unityExecutable);
-
-    command.add("-gvh_disable"); // required for PlayServicesResolver
-    command.add("-nographics");
-    command.add("-batchmode")
-    command.add("-quit")
-
-    String serial = System.getenv("UNITY_SERIAL")
-    if ( serial != null) {
-        command.add("-serial")
-        command.add(serial)
-    }
-    String username = System.getenv("UNITY_USERNAME")
-    if (username != null) {
-        command.add("-username")
-        command.add(username)
-    }
-    String password = System.getenv("UNITY_PASSWORD")
-    if (password != null) {
-        command.add("-password")
-        command.add(password)
-    }
-
-    command.add("-projectPath")
-    command.add("$rootDir/plugin")
-    command.add("-exportPackage")
-    command.add("Assets/ExternalDependencyManager")
-    command.add("Assets/HeliumSDK")
-    command.add("Assets/Plugins/iOS/HeliumBinding.m")
-    command.add("Assets/Plugins/iOS/HeliumSdkManager.h")
-    command.add("Assets/Plugins/iOS/HeliumSdkManager.mm")
-    command.add("Assets/Plugins/iOS/HeliumUnitySdk.swift")
-    command.add("Assets/Plugins/Android/HeliumSDK/AndroidManifest.xml")
-    command.add("Assets/Plugins/Android/HeliumSDK/proguard-rules.txt")
-    command.add("Assets/Plugins/Android/helium-android-bridge-${unitySdkVersion}.jar")
-    command.add("$buildDir/$pluginPackage")
-
-    commandLine command
 }
