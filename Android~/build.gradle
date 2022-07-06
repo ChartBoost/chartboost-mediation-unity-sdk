@@ -19,7 +19,7 @@ ext {
     isInternalRelease = gitHubTag ==~ /\d+\.\d+\.\d+(\.?[A-Za-z0-9]+)+/
     isPublicRelease = gitHubTag ==~ /\d+\.\d+\.\d+/
 
-    unitySdkVersion = (gitHubTag != null && gitHubTag != "") ? travisTag.find(/^\d+\.\d+\.\d+(\.?[A-Za-z0-9]+)*/) : "0.0.0"
+    unitySdkVersion = (gitHubTag != null && gitHubTag != "") ? gitHubTag.find(/^\d+\.\d+\.\d+(\.?[A-Za-z0-9]+)*/) : "0.0.0"
 
     buildArtifactsDir = "$rootDir/BuildArtifacts"
     unityBuildArtifactsDir = "$buildArtifactsDir/unity-helium-sdk"
