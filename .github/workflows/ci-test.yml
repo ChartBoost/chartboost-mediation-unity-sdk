@@ -18,12 +18,9 @@ concurrency:
 jobs:
   tests:
     name: Unit Testing
-    # Always run on the latest MacOS version
     runs-on: [self-hosted]
 
-    # Steps to perform for unit testing.
     steps:
-    # Checkout the code
     - name: Checkout branch
       uses: actions/checkout@v3
       with:
@@ -44,9 +41,10 @@ jobs:
 
   compile:
     name: Compile Android Bridge
-    needs: tests
     runs-on: [self-hosted]
+    needs: tests
 
+    steps:
     - name: Checkout branch
       uses: actions/checkout@v3
       with:
