@@ -1,13 +1,14 @@
 name: ci-tests
 
 on:
-  # Trigger on pull requests that target the following branches
+
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+.*'
   pull_request:
     branches:
       - 'develop'
       - 'main'
-      - 'release/**'
-  # Manual trigger from the Github Actions tab
   workflow_dispatch:
 
 # Cancels any queued or in-progress runs for this branch.
@@ -17,12 +18,10 @@ concurrency:
 
 jobs:
   tests:
-    # Always run on the latest MacOS version
+    name: Unit Testing
     runs-on: [self-hosted]
 
-    # Steps to perform for unit testing.
     steps:
-    # Checkout the code
     - name: Checkout branch
       uses: actions/checkout@v3
       with:
@@ -33,10 +32,34 @@ jobs:
       uses:  ./.github/actions/setup-unity
       timeout-minutes: 60
       with:
-        unity-version: 2020.3.15f2
-        unity-version-changeset: 6cf78cb77498
+        unity-version: 2020.3.27f1
+        unity-version-changeset: e759542391ea
         unity-modules:
           android
           ios
       env:
         SETUP_PASS: ${{ secrets.SETUP_PASS }}
+
+  compile:
+    name: Compile Android Bridge
+    runs-on: [self-hosted]
+    needs: tests
+
+    steps:
+    - name: Checkout branch
+      uses: actions/checkout@v3
+      with:
+        submodules: true
+
+    - name: set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x ./Android~/gradlew
+
+    - name: Build Android Bridge
+      run: ./Android~/gradlew -p ./Android~ githubScript

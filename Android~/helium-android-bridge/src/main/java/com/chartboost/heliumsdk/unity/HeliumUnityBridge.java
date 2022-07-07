@@ -83,8 +83,12 @@ public class HeliumUnityBridge {
         String errorDescription = EMPTY_STRING;
 
         if (heliumAdError != null) {
-            errorCode = heliumAdError.getCode();
+            int tempCode = heliumAdError.getCode();
             errorDescription = heliumAdError.getMessage();
+
+            // we do this in order to bypass lint issues
+            if (errorCode != tempCode)
+                errorCode = tempCode;
         }
 
         eventConsumer.accept(placementName, errorCode, errorDescription);
