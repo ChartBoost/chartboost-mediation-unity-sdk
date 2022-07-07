@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependencies>
+    <androidPackages>
+        <!-- Helium IronSource Adapter -->
+        <androidPackage spec="com.chartboost:helium-ironsource:2.10.+@aar" />
+
+        <!-- IronSource Android SDK -->
+        <repositories>
+          <repository>https://android-sdk.is.com/</repository>
+        </repositories>
+        <androidPackage spec="com.ironsource.sdk:mediationsdk:7.2.1"/>
+
+    </androidPackages>
+    <iosPods>
+        <!-- IronSource iOS SDK -->
+        <iosPod name="ChartboostHeliumAdapterIronSource" version="~> 2.10">
+            <sources>
+                <source>https://github.com/CocoaPods/Specs</source>
+            </sources>
+        </iosPod>
+    </iosPods>
+</dependencies>
