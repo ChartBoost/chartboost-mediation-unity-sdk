@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependencies>
+    <androidPackages>
+        <!-- Helium Tapjoy Adapter -->
+        <androidPackage spec="com.chartboost:helium-tapjoy:2.10.+@aar" />
+
+        <!-- Tapjoy Android SDK -->
+        <repositories>
+          <repository>https://sdk.tapjoy.com/</repository>
+        </repositories>
+        <androidPackage spec="com.tapjoy:tapjoy-android-sdk:12.9.1" />
+    </androidPackages>
+    <iosPods>
+        <!-- Tapjoy iOS SDK -->
+        <iosPod name="ChartboostHeliumAdapterTJ" version="~> 2.10">
+            <sources>
+                <source>https://github.com/CocoaPods/Specs</source>
+            </sources>
+        </iosPod>
+    </iosPods>
+</dependencies>

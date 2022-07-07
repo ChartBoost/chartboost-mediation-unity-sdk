@@ -1,1 +1,1 @@
-License information file.
+com.chartboost.helium/LICENSE.md

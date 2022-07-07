@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependencies>
+    <androidPackages>
+        <!-- Helium SDK Maven Repo -->
+        <repositories>
+            <repository>https://cboost.jfrog.io/artifactory/helium</repository>
+        </repositories>
+
+        <!-- Helium Android SDK -->
+        <androidPackage spec="com.chartboost:helium:2.10.+" />
+        <androidPackage spec="org.greenrobot:eventbus:3.3.1" />
+
+        <!-- Google Play Services dependencies -->
+        <androidPackage spec="com.google.android.gms:play-services-base:18.0.1">
+            <androidSdkPackageIds>
+                <androidSdkPackageId>extra-google-m2repository</androidSdkPackageId>
+            </androidSdkPackageIds>
+        </androidPackage>
+        <androidPackage spec="com.google.android.gms:play-services-ads-identifier:18.0.1">
+            <androidSdkPackageIds>
+                <androidSdkPackageId>extra-google-m2repository</androidSdkPackageId>
+            </androidSdkPackageIds>
+        </androidPackage>
+        <androidPackage spec="com.google.android.gms:play-services-tasks:18.0.1">
+            <androidSdkPackageIds>
+                <androidSdkPackageId>extra-google-m2repository</androidSdkPackageId>
+            </androidSdkPackageIds>
+        </androidPackage>
+        <androidPackage spec="androidx.appcompat:appcompat:1.3.0" />
+    </androidPackages>
+    <iosPods>
+        <!-- Helium iOS SDK -->
+        <iosPod name="ChartboostHelium" version="~> 2.10">
+            <sources>
+                <source>https://github.com/CocoaPods/Specs</source>
+            </sources>
+        </iosPod>
+    </iosPods>
+</dependencies>
