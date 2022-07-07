@@ -59,7 +59,7 @@ jobs:
         cache: gradle
 
     - name: Grant execute permission for gradlew
-      run: chmod +x ./Android~/gradlew
+      run: chmod +x ./com.chartboost.helium/Android~/gradlew
 
     - name: Build Android Bridge
-      run: ./Android~/gradlew -p ./Android~ githubScript
+      run: ./com.chartboost.helium/Android~/gradlew -p ./com.chartboost.helium/Android~ githubScript
