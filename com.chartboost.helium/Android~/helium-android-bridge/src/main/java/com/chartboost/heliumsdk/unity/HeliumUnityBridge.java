@@ -163,6 +163,7 @@ public class HeliumUnityBridge {
         rewardedEventListener = rewardedListener;
         bannerEventsListener = bannerListener;
     }
+    //Testing Android Bridge Changes Compilation on CI
 
     public void setSubjectToCoppa(boolean isSubject) {
         HeliumSdk.setSubjectToCoppa(isSubject);

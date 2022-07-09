@@ -63,3 +63,9 @@ jobs:
 
     - name: Build Android Bridge
       run: ./com.chartboost.helium/Android~/gradlew -p ./com.chartboost.helium/Android~ githubScript
+
+    - name: Grant execute permission for Git Actions
+      run: chmod +x ./.github/actions/uploadBridgeChanges.sh
+
+    - name: Check for .jar Changes & upload_dir
+      run: ./.github/actions/uploadBridgeChanges.sh
