@@ -10,7 +10,7 @@ else
   echo "Android Bridge Changes Found, Attempting Push!"
 
   # if we are on a pull request, find the HEAD_REF and force push our bridge changes
-  if [ -z "$GITHUB_HEAD_REF" ];
+  if [ ! -z "$GITHUB_HEAD_REF" ];
   then
     if git push -f origin HEAD:"${GITHUB_HEAD_REF}"
     then
