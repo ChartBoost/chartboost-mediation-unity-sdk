@@ -5,7 +5,6 @@ then
   echo 'No Android Bridge Changes Found, Nothing to Commit!'
 else
   echo "Android Bridge Changes Found, Attempting Push!"
-  echo "Head Ref: ${GITHUB_HEAD_REF}"
   if git push -f origin HEAD:"${GITHUB_HEAD_REF}"
   then
     echo "Successfuly Pushed Android Bridge Changes"
