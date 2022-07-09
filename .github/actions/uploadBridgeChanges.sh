@@ -1,4 +1,4 @@
-git add "../../com.chartboost.helium/Runtime/Plugins/Android/helium-android-bridge.jar"
+git add "com.chartboost.helium/Runtime/Plugins/Android/helium-android-bridge.jar"
 
 if ! git commit -m 'Android Bridge Changes Found! Updating Bridge'
 then
