@@ -28,5 +28,5 @@ else
       echo $FAILED_PUSH
       exit 1
     fi
-  if
+  fi
 fi
