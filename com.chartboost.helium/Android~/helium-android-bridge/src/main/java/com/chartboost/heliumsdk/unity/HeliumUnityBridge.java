@@ -296,10 +296,6 @@ public class HeliumUnityBridge {
         }));
     }
 
-    public void SomeEmptyMethod(){
-        String someString = "Some EmptyCode";
-    }
-
     public HeliumAdWrapper getBannerAd(final String placementName, final int size) {
         if (placementName == null)
             return null;
