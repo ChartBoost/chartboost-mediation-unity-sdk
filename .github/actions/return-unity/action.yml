@@ -1,0 +1,32 @@
+name: Return Unity License
+description: 'Returns the Unity License on the Self Hosted Runner'
+inputs:
+  unity-path:
+    description: Path to Unity Executable.
+    required: true
+  unity-username:
+    description: Unity Account Username
+    required: true
+  unity-password:
+    description: Unity Account Password
+    required: true
+  setup-pass:
+    description: Password to Elevated Permissions
+    required: true
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Grant Execute Permission for Activation Script
+      run: chmod +x ${{ github.action_path }}/return.sh
+      shell: bash
+
+    - name: Execute Activation Script
+      run: ${{ github.action_path }}/return.sh
+      shell: bash
+      env:
+        UNITY_PATH: ${{ inputs.unity-path }}
+        UNITY_USERNAME: ${{ inputs.unity-username }}
+        UNITY_PASSWORD: ${{ inputs.unity-password }}
+        SETUP_PASS: ${{ inputs.setup-pass }}
