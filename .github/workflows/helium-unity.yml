@@ -1,4 +1,4 @@
-name: ci-tests
+name: Helium Unity SDK
 
 on:
   push:
@@ -8,6 +8,10 @@ on:
     branches:
       - 'develop'
       - 'main'
+  schedule:
+    # Scheduled to run Monday - Friday at 9AM UTC which is 2AM PST.
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '0 9 * * 1-5'
   workflow_dispatch:
 
 env:
