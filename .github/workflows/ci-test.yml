@@ -10,6 +10,10 @@ on:
       - 'main'
   workflow_dispatch:
 
+env:
+  UNITY_VERSION: 2020.3.27f1
+  UNITY_EXE_PATH: /Applications/Unity/Hub/Editor/2020.3.27f1/Unity.app/Contents/MacOS/Unity
+
 # Cancels any queued or in-progress runs for this branch.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -17,7 +21,7 @@ concurrency:
 
 jobs:
   tests:
-    name: Unit Testing
+    name: Setup & Unit Testing
     runs-on: [self-hosted]
 
     steps:
@@ -31,13 +35,38 @@ jobs:
       uses: ./.github/actions/setup-unity
       timeout-minutes: 60
       with:
-        unity-version: 2020.3.27f1
+        unity-version: ${{ env.UNITY_VERSION }}
         unity-version-changeset: e759542391ea
         unity-modules:
           android
           ios
       env:
         SETUP_PASS: ${{ secrets.SETUP_PASS }}
+
+    - name: Activate Unity License
+      id: activate-unity
+      uses: ./.github/actions/activate-unity
+      with:
+        unity-username: ${{ secrets.UNITY_USERNAME }}
+        unity-password: ${{ secrets.UNITY_PASSWORD }}
+        unity-serial: ${{ secrets.UNITY_SERIAL }}
+        unity-path: ${{ env.UNITY_EXE_PATH }}
+        setup-pass: ${{ secrets.SETUP_PASS }}
+
+    - name: Check for Compiler Errors
+      id: unity-compiler-errors-check
+      run:
+        "$UNITY_EXE_PATH -batchmode -quit -projectPath com.chartboost.helium.demo -logfile -"
+
+    - name: Return Unity License
+      if: always()
+      id: return-unity
+      uses: ./.github/actions/return-unity
+      with:
+        unity-username: ${{ secrets.UNITY_USERNAME }}
+        unity-password: ${{ secrets.UNITY_PASSWORD }}
+        unity-path: ${{ env.UNITY_EXE_PATH }}
+        setup-pass: ${{ secrets.SETUP_PASS }}
 
   compile:
     name: Compile Android Bridge
