@@ -17,6 +17,7 @@ on:
 env:
   UNITY_VERSION: 2020.3.27f1
   UNITY_EXE_PATH: /Applications/Unity/Hub/Editor/2020.3.27f1/Unity.app/Contents/MacOS/Unity
+  DEMO_PATH: com.chartboost.helium.demo
 
 # Cancels any queued or in-progress runs for this branch.
 concurrency:
@@ -25,7 +26,7 @@ concurrency:
 
 jobs:
   tests:
-    name: Setup & Unit Testing
+    name: Unity Actions & Unit Testing
     runs-on: [self-hosted]
 
     steps:
@@ -60,7 +61,16 @@ jobs:
     - name: Check for Compiler Errors
       id: unity-compiler-errors-check
       run:
-        "$UNITY_EXE_PATH -batchmode -quit -projectPath com.chartboost.helium.demo -logfile -"
+        "$UNITY_EXE_PATH -batchmode -quit -projectPath $DEMO_PATH -logfile -"
+
+    # this will only tell whether the test succeded or not, we won't have any details as to what went wrong.
+    - name: Run Unit Tests
+      id: unity-unit-tests
+      uses: ./.github/actions/test-unity
+      with:
+        unity-path: ${{ env.UNITY_EXE_PATH }}
+        project-path: ${{ env.DEMO_PATH }}
+        setup-pass: ${{ secrets.SETUP_PASS }}
 
     - name: Return Unity License
       if: always()
