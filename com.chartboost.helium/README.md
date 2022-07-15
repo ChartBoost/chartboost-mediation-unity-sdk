@@ -40,9 +40,9 @@ In order to better understand the Helium Unity SDK, documentation has been split
 1. Initialization
 2. Loading Ads
 3. Showing Ads
-4. Delegate Usage
-5. [Error Codes](Documentation/integration/error-codes.md)
-6. [Unit Testing](Documentation/integration/unit-testing.md)
+4. [Delegate Usage](com.chartboost.helium/Documentation/Integration/delegate-usage.md)
+5. [Error Codes](com.chartboost.helium/Documentation/integration/error-codes.md)
+6. [Unit Testing](com.chartboost.helium/Documentation/integration/unit-testing.md)
 
 
 ## 2. Samples & Google External Dependency Manager (EDM)
