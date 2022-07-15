@@ -7,17 +7,17 @@ When you are ready to show a Rewarded or Interstitial ad, you can check that it 
 ### Interstitial Ad
 
 ```c#
-  // Showing a Helium Interstitial Ad
-  if (_interstitialAd.ReadyToShow())
-      _interstitialAd.Show();
+// Showing a Helium Interstitial Ad
+if (_interstitialAd.ReadyToShow())
+    _interstitialAd.Show();
 ```
 
 ### Rewarded Ad
 
 ```c#
-  //Showing a Helium Rewarded Ad
-  if (_rewardedAd.ReadyToShow()){
-    _rewardedAd.show();
+//Showing a Helium Rewarded Ad
+if (_rewardedAd.ReadyToShow()){
+  _rewardedAd.show();
 ```
 
 ## Showing Banner Ads
@@ -35,9 +35,9 @@ When you are ready to show a banner ad, you can check that it is ready to show a
 | HeliumBannerAdScreenLocation.BottomRight  | 6          | Positions the banner to the bottom-right screen of the device.  |
 
 ```c#
-  if (!_bannerAd.ReadyToShow())
-    return;
-  _bannerAd.Show(HeliumBannerAdScreenLocation.TopCenter);
+if (!_bannerAd.ReadyToShow())
+  return;
+_bannerAd.Show(HeliumBannerAdScreenLocation.TopCenter);
 ```
 
 If you enable auto-refresh for a banner placement in the dashboard, then the Helium SDK will apply that setting when the placement is shown.

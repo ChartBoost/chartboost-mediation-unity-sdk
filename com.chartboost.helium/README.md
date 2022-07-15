@@ -38,7 +38,7 @@ In order to better understand the Helium Unity SDK, documentation has been split
 #### Integration
 
 1. Initialization
-2. Loading Ads
+2. [Loading Ads](com.chartboost.helium/Documentation/integration/loading-ads.md)
 3. [Showing Ads](com.chartboost.helium/Documentation/integration/showing-ads.md)
 4. [Delegate Usage](com.chartboost.helium/Documentation/integration/delegate-usage.md)
 5. [Error Codes](com.chartboost.helium/Documentation/integration/error-codes.md)
