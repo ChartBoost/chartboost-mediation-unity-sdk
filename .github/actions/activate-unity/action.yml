@@ -1,21 +1,5 @@
 name: Activate Unity License
 description: 'Activates the Unity License on the Self Hosted Runner'
-inputs:
-  unity-path:
-    description: Path to Unity Executable.
-    required: true
-  unity-username:
-    description: Unity Account Username
-    required: true
-  unity-password:
-    description: Unity Account Password
-    required: true
-  unity-serial:
-    description: Unity License Serial Key.
-    required: true
-  setup-pass:
-    description: Password to Elevated Permissions
-    required: true
 
 runs:
   using: "composite"
@@ -28,9 +12,3 @@ runs:
     - name: Execute Activation Script
       run: ${{ github.action_path }}/activate.sh
       shell: bash
-      env:
-        UNITY_PATH: ${{ inputs.unity-path }}
-        UNITY_SERIAL: ${{ inputs.unity-serial }}
-        UNITY_USERNAME: ${{ inputs.unity-username }}
-        UNITY_PASSWORD: ${{ inputs.unity-password }}
-        SETUP_PASS: ${{ inputs.setup-pass }}

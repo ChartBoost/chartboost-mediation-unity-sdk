@@ -1,0 +1,16 @@
+name: Cleanup Unity Directories
+description: 'Cleans up the Unity Directories on the Self Hosted Runner'
+
+runs:
+  using: "composite"
+
+  steps:
+    #since self hosted runner does not have permission to cleanup stuff inside workspace, let's do it ourselves.
+    - name: Grant Execute Permission for Cleanup Script
+      run: chmod +x ${{ github.action_path }}/cleanup.sh
+      shell: bash
+
+    - name: Cleanup Unity Directories
+      if: always()
+      run: ${{ github.action_path }}/cleanup.sh
+      shell: bash

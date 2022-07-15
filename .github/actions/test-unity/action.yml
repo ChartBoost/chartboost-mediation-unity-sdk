@@ -1,15 +1,5 @@
 name: Unit Test Unity
 description: 'Runs unit test on a self-hosted runner'
-inputs:
-  unity-path:
-    description: Path to Unity Executable.
-    required: true
-  project-path:
-    description: Path to Unity Project.
-    required: true
-  setup-pass:
-    description: Password to Elevated Permissions.
-    required: true
 
 runs:
   using: "composite"
@@ -23,12 +13,4 @@ runs:
       run: ${{ github.action_path }}/test.sh
       shell: bash
       env:
-        UNITY_PATH: ${{ inputs.unity-path }}
-        PROJECT_PATH: ${{ inputs.project-path }}
-        TESTS_PATH: "${{ github.action_path }}/test-results/results.xml"
-        SETUP_PASS: ${{ inputs.setup-pass }}
-
-    - name: Cleanup Unit Test Files
-      if: always()
-      run: echo ${{ inputs.setup-pass }} | sudo -S rm -d -rf "${{ github.action_path }}/test-results"
-      shell: bash
+        TESTS_PATH: "test-results/results.xml"
