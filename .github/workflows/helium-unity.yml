@@ -17,7 +17,7 @@ on:
 env:
   UNITY_VERSION: 2020.3.27f1
   UNITY_EXE_PATH: /Applications/Unity/Hub/Editor/2020.3.27f1/Unity.app/Contents/MacOS/Unity
-  DEMO_PATH: com.chartboost.helium.demo
+  PROJECT_PATH: com.chartboost.helium.demo
 
 # Cancels any queued or in-progress runs for this branch.
 concurrency:
@@ -28,6 +28,11 @@ jobs:
   tests:
     name: Unity Actions & Unit Testing
     runs-on: [self-hosted]
+    env:
+      SETUP_PASS: ${{ secrets.SETUP_PASS }}
+      UNITY_USERNAME: ${{ secrets.UNITY_USERNAME }}
+      UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
 
     steps:
     - name: Checkout branch
@@ -45,42 +50,42 @@ jobs:
         unity-modules:
           android
           ios
-      env:
-        SETUP_PASS: ${{ secrets.SETUP_PASS }}
 
     - name: Activate Unity License
       id: activate-unity
       uses: ./.github/actions/activate-unity
+
+    # Once we add mor platforms maybe we can run this in a matrix? this is fine for now.
+    - name: Check for Compiler Errors in Standalone
+      id: unity-compile-standalone
+      uses: ./.github/actions/compile-unity
       with:
-        unity-username: ${{ secrets.UNITY_USERNAME }}
-        unity-password: ${{ secrets.UNITY_PASSWORD }}
-        unity-serial: ${{ secrets.UNITY_SERIAL }}
-        unity-path: ${{ env.UNITY_EXE_PATH }}
-        setup-pass: ${{ secrets.SETUP_PASS }}
+        target-platform: standalone
 
-    - name: Check for Compiler Errors
-      id: unity-compiler-errors-check
-      run:
-        "$UNITY_EXE_PATH -batchmode -quit -projectPath $DEMO_PATH -logfile -"
+    - name: Check for Compiler Errors in Android
+      id: unity-compile-android
+      uses: ./.github/actions/compile-unity
+      with:
+        target-platform: android
 
-    # this will only tell whether the test succeded or not, we won't have any details as to what went wrong.
-    - name: Run Unit Tests
+    - name: Check for Compiler Errors in iOS
+      id: unity-compile-ios
+      uses: ./.github/actions/compile-unity
+      with:
+        target-platform: ios
+
+    - name: Run Unity Unit Tests
       id: unity-unit-tests
       uses: ./.github/actions/test-unity
-      with:
-        unity-path: ${{ env.UNITY_EXE_PATH }}
-        project-path: ${{ env.DEMO_PATH }}
-        setup-pass: ${{ secrets.SETUP_PASS }}
+
+    - name: Cleanup Unity Generated Files
+      id: unity-cleanup
+      uses: ./.github/actions/cleanup-unity
 
     - name: Return Unity License
       if: always()
       id: return-unity
       uses: ./.github/actions/return-unity
-      with:
-        unity-username: ${{ secrets.UNITY_USERNAME }}
-        unity-password: ${{ secrets.UNITY_PASSWORD }}
-        unity-path: ${{ env.UNITY_EXE_PATH }}
-        setup-pass: ${{ secrets.SETUP_PASS }}
 
   compile:
     name: Compile Android Bridge
