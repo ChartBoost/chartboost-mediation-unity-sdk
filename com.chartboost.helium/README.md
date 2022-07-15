@@ -2,24 +2,48 @@
 
 [![Helium Unity SDK](https://github.com/ChartBoost/helium-unity-sdk/actions/workflows/helium-unity.yml/badge.svg?branch=develop)](https://github.com/ChartBoost/helium-unity-sdk/actions/workflows/helium-unity.yml)
 
-Helium Unity SDK that is a compliant Unity Package.
+Helium Unity SDK as a compliant Unity Package.
 
-## 1. Unit Tests
-The Helium Unity SDK package contains a series of Unit tests to ensure functionality and callbacks behave as expected.
+## Summary
 
-In order to enable test from the Helium SDK package, the following setup is needed in your Unity's project `manifest.json`, as follows:
+Helium Unity SDK provides support for Unity based games to easily integrate the Helium SDK for Android & iOS platforms. This guide will contain step by step instructions on how to integrate the SDK, as well as recommended practices to make best use of all the features offered by the Helium SDK.
+
+### Minimum Supporter Development Tools <a name="dev_tools"></a>
+
+| Software    | Version |
+| :---        | :---    |
+| [XCode](https://developer.apple.com/xcode/) | 13.1 |
+| [Android Studio](https://developer.android.com/studio) | 2020.3.1+ |
+| [iOS](https://www.apple.com/ios) | 10.0+ |
+| [Android OS](https://developer.android.com/studio/releases/platforms) | 5.0+ (API level 21) |
+
+### Integrating the Helium Unity SDK
+
+Helium Unity SDK is distributed using the publich [npm registry](https://www.npmjs.com/search?q=com.chartboost) as such it is compatible with the Unity Package Manager (UPM). In order to add the Helium Unity SDK to your project, just add the following to your Unity Project's ***manifest.json*** file.
 
 ```json
   "dependencies": {
-    "com.unity.ide.vscode": "1.2.5",
-    "com.unity.test-framework": "1.1.31",
-    "com.unity.textmeshpro": "3.0.6",
+    "com.chartboost.helium": "3.0.0",
     ...
   },
-  "testables": ["com.chartboost.helium"]
 ```
 
-Please refer to the following [Unity Documentation](https://docs.unity3d.com/Manual/cus-tests.html) for more information on Test in Packages and how to enabled them.
+In order to better understand the Helium Unity SDK, documentation has been split between Setup and Integration Steps:
+
+#### Setup
+1. Ad Networks Adapters
+2. Helium App ID & App Signature
+3. Using Proguard
+
+#### Integration
+
+1. Initialization
+2. Loading Ads
+3. Showing Ads
+4. Delegate Usage
+5. [Error Codes](Documentation/integration/error-codes.md)
+6. [Unit Testing](Documentation/integration/unit-testing.md)
+
 
 ## 2. Samples & Google External Dependency Manager (EDM)
 
