@@ -105,7 +105,7 @@ dependencies {
 **DEPS**}
 ```
 
-### iOS
+#### iOS
 Right click on the Assets folder to see actions, then visit **External Dependency Manager/iOS Resolver/Settings**
 
 Make sure the following settings are setup as follows:
