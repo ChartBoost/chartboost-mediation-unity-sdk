@@ -10,11 +10,11 @@ Helium Unity SDK provides support for Unity based games to easily integrate the 
 
 ### Minimum Supporter Development Tools <a name="dev_tools"></a>
 
-| Software    | Version |
-| :---        | :---    |
-| [XCode](https://developer.apple.com/xcode/) | 13.1 |
-| [Android Studio](https://developer.android.com/studio) | 2020.3.1+ |
-| [iOS](https://www.apple.com/ios) | 10.0+ |
+| Software                                                              | Version             |
+| :---                                                                  | :---                |
+| [XCode](https://developer.apple.com/xcode/)                           | 13.1                |
+| [Android Studio](https://developer.android.com/studio)                | 2020.3.1+           |
+| [iOS](https://www.apple.com/ios)                                      | 10.0+               |
 | [Android OS](https://developer.android.com/studio/releases/platforms) | 5.0+ (API level 21) |
 
 ### Integrating the Helium Unity SDK
@@ -39,11 +39,10 @@ In order to better understand the Helium Unity SDK, documentation has been split
 
 1. Initialization
 2. Loading Ads
-3. Showing Ads
-4. [Delegate Usage](com.chartboost.helium/Documentation/Integration/delegate-usage.md)
+3. [Showing Ads](com.chartboost.helium/Documentation/integration/showing-ads.md)
+4. [Delegate Usage](com.chartboost.helium/Documentation/integration/delegate-usage.md)
 5. [Error Codes](com.chartboost.helium/Documentation/integration/error-codes.md)
 6. [Unit Testing](com.chartboost.helium/Documentation/integration/unit-testing.md)
-
 
 ## 2. Samples & Google External Dependency Manager (EDM)
 
