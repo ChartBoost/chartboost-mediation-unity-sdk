@@ -2,14 +2,14 @@
 <dependencies>
     <androidPackages>
         <!-- Helium AdColony Adapter -->
-        <androidPackage spec="com.chartboost:helium-adcolony:2.10.+@aar" />
+        <androidPackage spec="com.chartboost:helium-adcolony:2.11.+@aar" />
 
         <!-- AdColony Android SDK-->
         <androidPackage spec="com.adcolony:sdk:4.7.0" />
     </androidPackages>
     <iosPods>
         <!-- AdColony iOS SDK-->
-        <iosPod name="ChartboostHeliumAdapterAC" version="~> 2.10">
+        <iosPod name="ChartboostHeliumAdapterAC" version="~> 2.11">
             <sources>
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>

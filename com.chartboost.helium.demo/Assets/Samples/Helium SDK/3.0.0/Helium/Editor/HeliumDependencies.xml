@@ -7,7 +7,7 @@
         </repositories>
 
         <!-- Helium Android SDK -->
-        <androidPackage spec="com.chartboost:helium:2.10.+" />
+        <androidPackage spec="com.chartboost:helium:2.11.+" />
         <androidPackage spec="org.greenrobot:eventbus:3.3.1" />
 
         <!-- Google Play Services dependencies -->

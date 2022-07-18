@@ -2,7 +2,7 @@
 <dependencies>
     <androidPackages>
         <!-- Helium Mintegral Adapter -->
-        <androidPackage spec="com.chartboost:helium-mintegral:2.10.+@aar" />
+        <androidPackage spec="com.chartboost:helium-mintegral:2.11.+@aar" />
 
         <!-- Mintegral Android SDK -->
         <repositories>
@@ -23,7 +23,7 @@
     </androidPackages>
     <iosPods>
         <!-- Mintegral iOS SDK -->
-        <iosPod name="ChartboostHeliumAdapterMintegral" version="~> 2.10">
+        <iosPod name="ChartboostHeliumAdapterMintegral" version="~> 2.11">
             <sources>
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>
