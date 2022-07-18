@@ -25,7 +25,7 @@ _interstitialAd.load();
 _rewardedAd.load();
 ```
 
-You can implement delegates in your class to receive notifications about the success or failure of the ad loading process for both Interstitial and Rewarded formats. See section [Delegate Usage](com.chartboost.helium/Documentation/integration/delegate-usage.md) for more details.
+You can implement delegates in your class to receive notifications about the success or failure of the ad loading process for both Interstitial and Rewarded formats. See section [Delegate Usage](delegate-usage.md) for more details.
 
 ## Creating Banner Ads
 
@@ -63,7 +63,7 @@ You will need to create an instance for each Placement Name you want to use. Fin
 _bannerAd.Load();
 ```
 
-You can implement delegates in your class to receive notifications about the success or failure of the ad loading process for Banner formats. See section [Delegate Usage](com.chartboost.helium/Documentation/integration/delegate-usage.md) for more details.
+You can implement delegates in your class to receive notifications about the success or failure of the ad loading process for Banner formats. See section [Delegate Usage](delegate-usage.md) for more details.
 
 ## Clearing Loaded ads
 
@@ -72,7 +72,7 @@ Sometimes, you may need to clear loaded ads on existing placements to request an
 ```c#
 _interstitialAd.ClearLoaded();
 _rewardedAd.ClearLoaded();
--bannerAd.ClearLoaded();
+_bannerAd.ClearLoaded();
 ```
 
 The clearLoaded API returns a boolean and indicates if the ad object has been cleared and is ready for another load call.

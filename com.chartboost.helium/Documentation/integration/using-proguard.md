@@ -2,7 +2,7 @@
 
 If you are using a custom ProGuard file, make sure to add the following rule to the proguard file `Assets/Plugin/Android/proguard-user.txt` for Chartboost Helium:
 
-> **_NOTE:_** Proguard contents can also be found into [`Packages/com.chartboost.helium/Runtime/Plugins/Android/proguard-user.txt`](com.chartboost.helium/Runtime/Plugins/Android/proguard-user.txt)
+> **_NOTE:_** Proguard contents can also be found into [`Packages/com.chartboost.helium/Runtime/Plugins/Android/proguard-user.txt`](../../Runtime/Plugins/Android/proguard-user.txt)
 
 ```java
 # HeliumUnityBridge

@@ -51,7 +51,7 @@ appSignature = HeliumSettings.GetIOSAppSignature();
 HeliumSDK.StartWithAppIdAndAppSignature(appID, appSignature);
 ```
 
-This will start the Helium SDK. For delegate information see section [Delegate Usage](com.chartboost.helium/Documentation/integration/delegate-usage.md)
+This will start the Helium SDK. For delegate information see section [Delegate Usage](delegate-usage.md)
 
 > **_NOTE:_** Failing to remove fillers such as HELIUM_APP_ID and HELIUM_APP_SIGNATURE will result in an error.
 
