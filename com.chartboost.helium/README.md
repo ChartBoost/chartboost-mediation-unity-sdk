@@ -32,9 +32,8 @@ In order to better understand the Helium Unity SDK, documentation has been split
 
 #### Setup
 1. Ad Networks Adapters
-2. [Helium App ID & App Signature](com.chartboost.helium/Documentation/integration/helium-ids.md)
-3. [Using Proguard](com.chartboost.helium/Documentation/integration/using-proguard.md)
-4. [Samples  & Google External Dependency Manager (EDM)](com.chartboost.helium/Documentation/integration/edm.md)
+2. [Using Proguard](com.chartboost.helium/Documentation/integration/using-proguard.md)
+3. [Samples  & Google External Dependency Manager (EDM)](com.chartboost.helium/Documentation/integration/edm.md)
 
 #### Integration
 
