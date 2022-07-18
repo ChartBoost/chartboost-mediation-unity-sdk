@@ -1,4 +1,4 @@
-# Ad Adapters
+# Ad Network Adapters
 
 ## Dependency Resolution & Google External Dependency Manager (EDM)
 
@@ -48,6 +48,8 @@ They and can be found in the `Package Manager/Sample` area, and are labeled as f
 
 `Optional-HeliumYahooDependencies.xml`
 
-They can be obtained by importing them as Samples with Unity's Package Manager.
+They can be obtained by importing them as Samples with Unity's Package Manager. When updating the Helium SDK Package through UPM. It is important to reimport any samples as to update your local dependency files.
+
+![Reimport](../images/reimport.png)
 
 > **_NOTE:_** When including 3rd-Party SDKs on android, remember to update the manifest file according to the integrated SDK’s requirements as well.
