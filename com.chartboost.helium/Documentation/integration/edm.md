@@ -1,13 +1,6 @@
-# Samples & Google External Dependency Manager (EDM)
-
-The Helium Unity SDK package contains samples with optional dependencies for ad adapters. Such samples can be found in the Package Manager / Sample sections.
-
-Each Helium Unity SDK sample contains a .xml file with dependencies for the adapter available platforms (Android/iOS). In order for such dependencies to be included into the final build the [Google External Dependency Manager](https://github.com/googlesamples/unity-jar-resolver) is needed.
-The EDM(External Dependency Manager) makes sure to download and package any dependencies with your build.
+## Recommended External Dependency Manager (EDM) Setup
 
 The EDM can be downloaded as a tarball or legacy .unitypackage from the following archive [Google Unity APIs Archive](https://developers.google.com/unity/archive#external_dependency_manager_for_unity). It is recommended to download the EDM as a tarball and integrate it through the package manager, as this will make sure future updates can be done without issues.
-
-## Recommended External Dependency Manager (EDM) Setup
 
 Since the EDM is meant to be a helper tool to sort out dependencies for Unity projects, it provides many approaches on how this can be done.
 By default, the EDM will download any available dependencies into your project's **Assets/Plugins/Android** folder. Such approach is problematic since the more ad adapters you add, the more libraries and dependencies will be downloaded locally. As a result, your Android's Plugin folder might become saturated with files.

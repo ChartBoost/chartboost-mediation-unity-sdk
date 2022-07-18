@@ -31,9 +31,9 @@ Helium Unity SDK is distributed using the publich [npm registry](https://www.npm
 In order to better understand the Helium Unity SDK, documentation has been split between Setup and Integration Steps:
 
 #### Setup
-1. Ad Networks Adapters
+1. [Ad Networks Adapters](com.chartboost.helium/Documentation/integration/ad-adapters.md)
 2. [Using Proguard](com.chartboost.helium/Documentation/integration/using-proguard.md)
-3. [Samples  & Google External Dependency Manager (EDM)](com.chartboost.helium/Documentation/integration/edm.md)
+3. [Google External Dependency Manager (EDM)](com.chartboost.helium/Documentation/integration/edm.md)
 
 #### Integration
 
