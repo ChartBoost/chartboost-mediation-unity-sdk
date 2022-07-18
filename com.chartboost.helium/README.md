@@ -2,8 +2,6 @@
 
 [![Helium Unity SDK](https://github.com/ChartBoost/helium-unity-sdk/actions/workflows/helium-unity.yml/badge.svg?branch=develop)](https://github.com/ChartBoost/helium-unity-sdk/actions/workflows/helium-unity.yml)
 
-Helium Unity SDK as a compliant Unity Package.
-
 ## Summary
 
 Helium Unity SDK provides support for Unity based games to easily integrate the Helium SDK for Android & iOS platforms. This guide will contain step by step instructions on how to integrate the SDK, as well as recommended practices to make best use of all the features offered by the Helium SDK.
