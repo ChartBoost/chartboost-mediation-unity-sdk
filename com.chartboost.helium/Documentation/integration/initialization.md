@@ -29,7 +29,7 @@ Enable Automatic Initialization on the Helium Settings Scriptable object.
 
 > **_NOTE:_** Make sure that these are the Helium AppId and App Signature values that you obtain directly from your Helium Dashboard for your app as opposed to credentials from Chartboost or any other Ad Network.
 
-## Manual Initialization
+### Manual Initialization
 
 If you would like to have more control on when to initialize the Helium SDK
 

@@ -65,7 +65,7 @@ _bannerAd.Load();
 
 You can implement delegates in your class to receive notifications about the success or failure of the ad loading process for Banner formats. See section [Delegate Usage](com.chartboost.helium/Documentation/integration/delegate-usage.md) for more details.
 
-### Clearing Loaded ads
+## Clearing Loaded ads
 
 Sometimes, you may need to clear loaded ads on existing placements to request another ad (i.e. for an in-house programmatic auction). To do this:
 
