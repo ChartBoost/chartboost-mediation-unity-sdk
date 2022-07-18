@@ -2,7 +2,7 @@
 
 The Helium Unity SDK does not embed Google’s EDM plugin.
 
-If you want to integrate ad networks with other supported SDKs as well, you will need [Google's External Dependency Manager](https://developers.google.com/unity/archive#external_dependency_manager_for_unity). For more information see our recommended setup in [Google External Dependency Manager (EDM)](com.chartboost.helium/Documentation/integration/edm.md).
+If you want to integrate ad networks with other supported SDKs as well, you will need [Google's External Dependency Manager](https://developers.google.com/unity/archive#external_dependency_manager_for_unity). For more information see our recommended setup in [Google External Dependency Manager (EDM)](edm.md).
 
 # Samples & Google External Dependency Manager (EDM)
 
