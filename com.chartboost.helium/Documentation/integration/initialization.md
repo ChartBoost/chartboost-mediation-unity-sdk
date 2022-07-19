@@ -55,4 +55,4 @@ This will start the Helium SDK. For delegate information see section [Delegate U
 
 > **_NOTE:_** Failing to remove fillers such as HELIUM_APP_ID and HELIUM_APP_SIGNATURE will result in an error.
 
-Once the Helium SDK has successfully started, you can start showing ads.
+Once the Helium SDK has successfully started, you can start requesting ads.

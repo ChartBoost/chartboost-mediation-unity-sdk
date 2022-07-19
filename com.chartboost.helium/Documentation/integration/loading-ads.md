@@ -1,6 +1,6 @@
 # Loading Ads
 
-## Creating Interstitial & Rewarded Ads
+## Creating Interstitial & Rewarded Ad Objects
 
 To show an Interstitial or Rewarded Ads, first declare a variable to hold a reference to either the Interstitial or Rewarded Helium Ad. Supply the corresponding Placement Name you set up on your dashboard as the argument for each of these functions:
 
@@ -21,13 +21,13 @@ _rewardedAd = HeliumSDK.GetRewardedAd(PLACEMENT_REWARDED);
 You will need to create an instance for each Placement Name you want to use. Finally, make the call to load the ad:
 
 ```c#
-_interstitialAd.load();
-_rewardedAd.load();
+_interstitialAd.Load();
+_rewardedAd.Load();
 ```
 
 You can implement delegates in your class to receive notifications about the success or failure of the ad loading process for both Interstitial and Rewarded formats. See section [Delegate Usage](delegate-usage.md) for more details.
 
-## Creating Banner Ads
+## Creating Banner Ad Objects
 
 To show a banner ad, first declare a variable to hold a reference to the Banner Helium Ad. Supply the corresponding Placement Name and the Banner Size.
 
@@ -65,7 +65,7 @@ _bannerAd.Load();
 
 You can implement delegates in your class to receive notifications about the success or failure of the ad loading process for Banner formats. See section [Delegate Usage](delegate-usage.md) for more details.
 
-## Clearing Loaded ads
+## Clearing Loaded Ads
 
 Sometimes, you may need to clear loaded ads on existing placements to request another ad (i.e. for an in-house programmatic auction). To do this:
 

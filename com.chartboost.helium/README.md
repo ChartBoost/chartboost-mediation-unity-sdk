@@ -17,7 +17,7 @@ Helium Unity SDK provides support for Unity based games to easily integrate the 
 
 ### Integrating the Helium Unity SDK
 
-Helium Unity SDK is distributed using the publich [npm registry](https://www.npmjs.com/search?q=com.chartboost) as such it is compatible with the Unity Package Manager (UPM). In order to add the Helium Unity SDK to your project, just add the following to your Unity Project's ***manifest.json*** file.
+Helium Unity SDK is distributed using the public [npm registry](https://www.npmjs.com/search?q=com.chartboost) as such it is compatible with the Unity Package Manager (UPM). In order to add the Helium Unity SDK to your project, just add the following to your Unity Project's ***manifest.json*** file.
 
 ```json
   "dependencies": {
