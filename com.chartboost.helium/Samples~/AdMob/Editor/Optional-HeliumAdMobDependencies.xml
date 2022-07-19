@@ -2,7 +2,7 @@
 <dependencies>
     <androidPackages>
         <!-- Helium AdMob Adapter -->
-        <androidPackage spec="com.chartboost:helium-admob:2.10.+@aar" />
+        <androidPackage spec="com.chartboost:helium-admob:2.11.+@aar" />
 
         <!-- Admob Android SDK -->
         <androidPackage spec="com.google.android.gms:play-services-ads:20.6.0" />
@@ -10,7 +10,7 @@
 
     <iosPods>
     <!-- Admob iOS SDK -->
-        <iosPod name="ChartboostHeliumAdapterAdMob" version="~> 2.10">
+        <iosPod name="ChartboostHeliumAdapterAdMob" version="~> 2.11">
             <sources>
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>

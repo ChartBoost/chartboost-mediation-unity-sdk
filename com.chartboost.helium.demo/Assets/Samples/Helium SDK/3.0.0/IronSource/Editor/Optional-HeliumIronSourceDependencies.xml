@@ -2,7 +2,7 @@
 <dependencies>
     <androidPackages>
         <!-- Helium IronSource Adapter -->
-        <androidPackage spec="com.chartboost:helium-ironsource:2.10.+@aar" />
+        <androidPackage spec="com.chartboost:helium-ironsource:2.11.+@aar" />
 
         <!-- IronSource Android SDK -->
         <repositories>
@@ -13,7 +13,7 @@
     </androidPackages>
     <iosPods>
         <!-- IronSource iOS SDK -->
-        <iosPod name="ChartboostHeliumAdapterIronSource" version="~> 2.10">
+        <iosPod name="ChartboostHeliumAdapterIronSource" version="~> 2.11">
             <sources>
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>

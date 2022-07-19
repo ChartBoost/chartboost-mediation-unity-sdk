@@ -2,14 +2,14 @@
 <dependencies>
     <androidPackages>
         <!-- Helium Facebook Adapter -->
-        <androidPackage spec="com.chartboost:helium-facebook:2.10.+@aar" />
-        
+        <androidPackage spec="com.chartboost:helium-facebook:2.11.+@aar" />
+
         <!-- FAN Android SDK -->
         <androidPackage spec="com.facebook.android:audience-network-sdk:6.8.0" />
     </androidPackages>
     <iosPods>
         <!-- FAN iOS SDK -->
-        <iosPod name="ChartboostHeliumAdapterFAN" version="~> 2.10">
+        <iosPod name="ChartboostHeliumAdapterFAN" version="~> 2.11">
             <sources>
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>
