@@ -32,7 +32,7 @@ If applicable, add screenshots to help explain your problem.
 **Android Environment (please complete for Android issues):**
  - Android Studio version: [e.g. 2020.3.1]
  - Gradle version: [e.g. 7.1]
- - Gradle plugin version: [e.g. 7.0]
+ - Android Gradle Plugin version: [e.g. 7.0]
  - Java/Kotlin version: [e.g. Kotlin 1.7.10]
 
 **iOS Environment (please complete for iOS issues):**
