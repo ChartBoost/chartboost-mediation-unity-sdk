@@ -14,25 +14,23 @@ buildscript {
 ext {
     gitHubTag = System.getenv("GITHUB_REF");
     gitHubCommit = System.getenv("GITHUB_SHA");
+    versionInput = System.getenv("HELIUM_VERSION")
 
-    isReleaseCandidate = gitHubTag ==~ /\d+\.\d+\.\d+(\.?[A-Za-z0-9]+)*-rc\d+/
-    isInternalRelease = gitHubTag ==~ /\d+\.\d+\.\d+(\.?[A-Za-z0-9]+)+/
-    isPublicRelease = gitHubTag ==~ /\d+\.\d+\.\d+/
+    releaseCandidateRegex = /[a-zA-Z0-9]+\/[a-zA-Z0-9]+\/+\d+\.\d+\.\d+(\.?[A-Za-z0-9]+)*-rc\d+/
+    internalReleaseRegex = /[a-zA-Z0-9]+\/[a-zA-Z0-9]+\/+\d+\.\d+\.\d+(\.?[A-Za-z0-9]+)+/
+    publicReleaseRegex = /[a-zA-Z0-9]+\/[a-zA-Z0-9]+\/+\d+\.\d+\.\d+/
 
-    buildArtifactsDir = "$rootDir/BuildArtifacts"
-    unityBuildArtifactsDir = "$buildArtifactsDir/unity-helium-sdk"
+    isReleaseCandidate = gitHubTag ==~ releaseCandidateRegex
+    isInternalRelease = gitHubTag ==~ internalReleaseRegex
+    isPublicRelease = gitHubTag ==~ publicReleaseRegex
+    isNotRelease = !(isPublicRelease || isInternalRelease || isReleaseCandidate)
 }
-
-task ci(dependsOn: 'sdk') {}
 
 task githubScript {
     println()
-    println ("isInternalRelease = "+ isInternalRelease + ", " +
-            "isReleaseCandidate = "+ isReleaseCandidate + ", " +
-            "isPublicRelease = "+ isPublicRelease)
+    println ("isInternalRelease = $isInternalRelease, isReleaseCandidate = $isReleaseCandidate, isPublicRelease = $isPublicRelease, isNotRelease= $isNotRelease");
     println()
-    println ("githubTag (GITHUB_TAG) = "+ gitHubTag + ", " +
-            "gitHubCommit (GITHUB_COMMIT) = "+ gitHubCommit)
+    println("githubTag (GITHUB_TAG) = $gitHubTag, gitHubCommit (GITHUB_COMMIT) =  $gitHubCommit");
     println()
 
     dependsOn('buildBridge')
@@ -42,5 +40,6 @@ task buildBridge {
     dependsOn ':helium-android-bridge:clean'
     dependsOn ':helium-android-bridge:lint'
     dependsOn ':helium-android-bridge:build'
-    dependsOn ':helium-android-bridge:copyReleaseAndroidBridgeForPackaging'
+    if (isNotRelease)
+        dependsOn ':helium-android-bridge:copyReleaseAndroidBridgeForPackaging'
 }
