@@ -13,7 +13,11 @@ on:
     # * is a special character in YAML so you have to quote this string
     - cron:  '0 9 * * 1-5'
   workflow_dispatch:
-
+    inputs:
+      helium_bridge_version:
+        description: 'Helium Android Compile Version'
+        required: false
+        default: null
 env:
   UNITY_VERSION: 2020.3.27f1
   UNITY_EXE_PATH: /Applications/Unity/Hub/Editor/2020.3.27f1/Unity.app/Contents/MacOS/Unity
@@ -110,6 +114,10 @@ jobs:
 
     - name: Build Android Bridge
       run: ./com.chartboost.helium/Android~/gradlew -p ./com.chartboost.helium/Android~ githubScript
+      env:
+        HELIUM_VERSION: ${{ github.event.inputs.helium_bridge_version }}
+        JFROG_USER: ${{ secrets.JFROG_USER }}
+        JFROG_PASS: ${{ secrets.JFROG_PASS }}
 
     - name: Grant Execute Permission for Git Bridge Commit
       run: chmod +x ./.github/actions/uploadBridgeChanges.sh
