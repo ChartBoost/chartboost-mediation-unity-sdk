@@ -44,10 +44,10 @@ repositories {
 ext {
     // use whatever is the latest in any of the repos
     heliumVersion = '+'
-    heliumDependency = "com.chartboost:helium:$heliumVersion"
-
-    if (versionInput != null && versionInput != "")
+    if (versionInput != null)
         heliumVersion = versionInput
+
+    heliumDependency = "com.chartboost:helium:$heliumVersion"
 
     print("Attempting to Compile Android Bridge with Helium SDK version: $heliumDependency")
 }

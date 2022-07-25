@@ -28,6 +28,8 @@ ext {
 
 task githubScript {
     println()
+    println("versionInput = $versionInput")
+    println()
     println ("isInternalRelease = $isInternalRelease, isReleaseCandidate = $isReleaseCandidate, isPublicRelease = $isPublicRelease, isNotRelease= $isNotRelease");
     println()
     println("githubTag (GITHUB_TAG) = $gitHubTag, gitHubCommit (GITHUB_COMMIT) =  $gitHubCommit");
