@@ -21,8 +21,22 @@
 }
 -keep enum org.greenrobot.eventbus.ThreadMode { *; }
 
+-keep public class com.chartboost.heliumsdk.utils.LogController {
+    public *;
+}
+
+-keep class kotlin.Metadata { *; }
+
 -keep public class com.chartboost.heliumsdk.HeliumSdk {
     public <methods>;
+}
+
+-keep public class com.chartboost.heliumsdk.domain.AdIdentifier { *; }
+-keep class com.chartboost.heliumsdk.domain.AppConfig { *; }
+-keep class com.chartboost.heliumsdk.ad.HeliumBannerAd$HeliumBannerSize { *; }
+
+-keep public class com.chartboost.heliumsdk.domain.AdLoadRequest {
+	public *;
 }
 
 #Adapters won't be able to make bids. We need to check what to keep.
@@ -50,7 +64,6 @@
 
 -keep public class com.chartboost.heliumsdk.ad.HeliumAdError$Code {}
 
-
 -keep public class com.chartboost.heliumsdk.proxies.* {
     public <methods>;
 }
@@ -67,6 +80,8 @@
     public <methods>;
     public <fields>;
 }
+
+-keep public class com.chartboost.heliumsdk.domain.PreBidSettings { *; }
 
 -keep public class com.chartboost.heliumsdk.ad.* {
     public <methods>;
