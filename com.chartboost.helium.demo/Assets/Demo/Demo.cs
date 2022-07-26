@@ -100,7 +100,6 @@ public class Demo : MonoBehaviour
         }
         if (_bannerAd != null)
         {
-            _bannerAd.ClearLoaded();
             _bannerAd.Destroy();
             Log("destroyed an existing banner");
         }
@@ -301,7 +300,6 @@ public class Demo : MonoBehaviour
     private void SetupBannerDelegates()
     {
         HeliumSDK.DidLoadBanner += DidLoadBanner;
-        HeliumSDK.DidShowBanner += DidShowBanner;
         HeliumSDK.DidWinBidBanner += DidWinBidBanner;
         HeliumSDK.DidClickBanner += DidClickBanner;
     }
@@ -337,46 +335,25 @@ public class Demo : MonoBehaviour
             _bannerAd.SetKeyword("bnr_keyword6", "bnr_value6"); // accepted set
             _bannerAd.SetKeyword("bnr_keyword6", "bnr_value6_replaced"); // accepted replace
         }
-        _bannerAd.Load();
-    }
-
-    public void OnDisplayBannerClick()
-    {
-        if (_bannerAd.ReadyToShow())
+        var screenPos = bannerPlacementDropdown.value switch
         {
-            var screenPos = bannerPlacementDropdown.value switch
-            {
-                0 => HeliumBannerAdScreenLocation.TopLeft,
-                1 => HeliumBannerAdScreenLocation.TopCenter,
-                2 => HeliumBannerAdScreenLocation.TopRight,
-                3 => HeliumBannerAdScreenLocation.Center,
-                4 => HeliumBannerAdScreenLocation.BottomLeft,
-                5 => HeliumBannerAdScreenLocation.BottomCenter,
-                6 => HeliumBannerAdScreenLocation.BottomRight,
-                _ => HeliumBannerAdScreenLocation.TopCenter
-            };
-            _bannerAd.Show(screenPos);
-            _bannerAdIsVisible = true;
-        }
-        else
-        {
-            Log("Banner is not ready to load.");
-        }
+            0 => HeliumBannerAdScreenLocation.TopLeft,
+            1 => HeliumBannerAdScreenLocation.TopCenter,
+            2 => HeliumBannerAdScreenLocation.TopRight,
+            3 => HeliumBannerAdScreenLocation.Center,
+            4 => HeliumBannerAdScreenLocation.BottomLeft,
+            5 => HeliumBannerAdScreenLocation.BottomCenter,
+            6 => HeliumBannerAdScreenLocation.BottomRight,
+            _ => HeliumBannerAdScreenLocation.TopCenter
+        };
+        _bannerAd.Load(screenPos);
     }
 
     public void OnRemoveBannerClick()
     {
         _bannerAd?.Remove();
         _bannerAd = null;
-        _bannerAdIsVisible = false;
         Log("Banner Removed");
-    }
-
-    public void OnClearBannerClick()
-    {
-        _bannerAd?.ClearLoaded();
-        _bannerAdIsVisible = false;
-        Log("Banner Cleared");
     }
 
     public void OnToggleBannerVisibilityClick()
@@ -391,14 +368,8 @@ public class Demo : MonoBehaviour
 
     private void DidLoadBanner(string placementName, HeliumError error)
     {
+        _bannerAdIsVisible = true;
         Log($"DidLoadBanner{placementName}: {error}");
-    }
-
-    private void DidShowBanner(string placementName, HeliumError error)
-    {
-        if (error == null)
-            _bannerAdIsVisible = true;
-        Log($"DidShowBanner {placementName}: {error}");
     }
 
     private void DidWinBidBanner(string placementName, HeliumBidInfo info)
