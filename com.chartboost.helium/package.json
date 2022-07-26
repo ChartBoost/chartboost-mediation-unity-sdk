@@ -29,62 +29,67 @@
     },
     {
       "displayName": "Amazon",
-      "description": "Support for the Google Amazon advertisement network.",
+      "description": "Support for the Amazon advertisement network.",
       "path": "Samples~/Amazon"
     },
     {
       "displayName": "AppLovin",
-      "description": "Support for the Google AppLovin advertisement network.",
+      "description": "Support for the AppLovin advertisement network.",
       "path": "Samples~/AppLovin"
     },
     {
       "displayName": "Facebook",
-      "description": "Support for the Google Facebook advertisement network.",
+      "description": "Support for the Facebook advertisement network.",
       "path": "Samples~/Facebook"
     },
     {
       "displayName": "Fyber",
-      "description": "Support for the Google Fyber advertisement network.",
+      "description": "Support for the Fyber advertisement network.",
       "path": "Samples~/Fyber"
     },
     {
+      "displayName": "Google Bidding",
+      "description": "Support for the Google Bidding advertisement network.",
+      "path": "Samples~/GoogleBidding"
+    },
+    {
       "displayName": "InMobi",
-      "description": "Support for the Google InMobi advertisement network.",
+      "description": "Support for the InMobi advertisement network.",
       "path": "Samples~/InMobi"
     },
     {
       "displayName": "IronSource",
-      "description": "Support for the Google IronSource advertisement network.",
+      "description": "Support for the IronSource advertisement network.",
       "path": "Samples~/IronSource"
     },
     {
       "displayName": "Mintegral",
-      "description": "Support for the Google Mintegral advertisement network.",
+      "description": "Support for the Mintegral advertisement network.",
       "path": "Samples~/Mintegral"
     },
     {
       "displayName": "Pangle",
-      "description": "Support for the Google Pangle advertisement network.",
+      "description": "Support for the Pangle advertisement network.",
       "path": "Samples~/Pangle"
     },
     {
       "displayName": "TapJoy",
-      "description": "Support for the Google TapJoy advertisement network.",
+      "description": "Support for the TapJoy advertisement network.",
       "path": "Samples~/TapJoy"
     },
     {
       "displayName": "UnityAds",
-      "description": "Support for the Google UnityAds advertisement network.",
+      "description": "Support for the UnityAds advertisement network.",
       "path": "Samples~/UnityAds"
     },
     {
       "displayName": "Vungle",
-      "description": "Support for the Google Vungle advertisement network.",
+      "description": "Support for the Vungle advertisement network.",
       "path": "Samples~/Vungle"
     },
     {
       "displayName": "Yahoo",
-      "description": "Support for the Google Yahoo/Verizon advertisement network.",
+      "description": "Support for the Yahoo/Verizon advertisement network.",
       "path": "Samples~/Yahoo"
     }
   ],
