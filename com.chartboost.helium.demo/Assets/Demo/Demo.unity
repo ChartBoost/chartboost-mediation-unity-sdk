@@ -2090,24 +2090,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fullScreenPanel: {fileID: 700397474}
-  fullScreenTypeButton: {fileID: 295701535}
   bannerPanel: {fileID: 642107531}
-  bannerTypeButton: {fileID: 707926653}
-  i12PlacementInputField: {fileID: 434343177}
-  i12CacheButton: {fileID: 1697690352}
-  i12ClearButton: {fileID: 133205530}
-  i12ShowButton: {fileID: 1215182087}
+  interstitialPlacementInputField: {fileID: 434343177}
   rewardedPlacementInputField: {fileID: 1020468674}
-  rewardedCacheButton: {fileID: 1352250944}
-  rewardedClearButton: {fileID: 810813440}
-  rewardedShowButton: {fileID: 1122447050}
   bannerPlacementInputField: {fileID: 1285523672}
-  bannerCreateButton: {fileID: 262299029}
-  bannerRemoveButton: {fileID: 882897233}
-  bannerDisplayButton: {fileID: 24320297}
-  bannerClearButton: {fileID: 1458895409}
   bannerSizeDropdown: {fileID: 1022742801}
-  bannerPlacementDropdown: {fileID: 858297263}
+  bannerLocationDropdown: {fileID: 858297263}
   outputTextScrollRect: {fileID: 1924329665}
   outputText: {fileID: 1230585348}
   objectToDestroyForTest: {fileID: 1938273982}
@@ -4773,7 +4761,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1132835359}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.075420186
+  m_Size: 0.3122253
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
