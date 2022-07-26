@@ -15,6 +15,7 @@ import com.chartboost.heliumsdk.ad.HeliumFullscreenAd;
 import com.chartboost.heliumsdk.ad.HeliumRewardedAd;
 import com.chartboost.heliumsdk.domain.Keywords;
 import com.unity3d.player.UnityPlayer;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HeliumUnityAdWrapper {
     private static final String TAG = "HeliumUnityAdWrapper";
@@ -66,11 +67,19 @@ public class HeliumUnityAdWrapper {
         return (HeliumFullscreenAd)ad();
     }
 
+    public void load() {
+        runTaskOnUiThread(() -> {
+            ad().load();
+            startedLoad = true;
+        });
+    }
+
     @SuppressWarnings("unused")
     public void load(int screenLocation) {
-        ad().load();
-        createBannerLayout(screenLocation);
-        startedLoad = true;
+        runTaskOnUiThread(() -> {
+            createBannerLayout(screenLocation);
+            load();
+        });
     }
 
     @SuppressWarnings("unused")
@@ -120,11 +129,14 @@ public class HeliumUnityAdWrapper {
 
     @SuppressWarnings("unused")
     public boolean clearLoaded() {
-        if (isFullScreen())
-            return asFullScreen().clearLoaded();
-        else if (isBanner())
-            return asBanner().clearAd();
-        return false;
+        AtomicBoolean ret = new AtomicBoolean(false);
+        runTaskOnUiThread(() -> {
+            if (isFullScreen())
+                ret.set(asFullScreen().clearLoaded());
+            else if (isBanner())
+                ret.set(asBanner().clearAd());
+        });
+        return ret.get();
     }
 
     @SuppressWarnings("unused")
