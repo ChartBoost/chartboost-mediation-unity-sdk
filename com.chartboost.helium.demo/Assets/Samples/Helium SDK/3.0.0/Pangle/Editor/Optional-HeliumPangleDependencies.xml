@@ -2,7 +2,7 @@
 <dependencies>
     <androidPackages>
         <!-- Helium Pangle Adapter -->
-        <androidPackage spec="com.chartboost:helium-pangle:2.11.+@aar" />
+        <androidPackage spec="com.chartboost:helium-pangle:3.0.+@aar" />
 
         <!-- Pangle Android SDK -->
         <repositories>
@@ -14,7 +14,7 @@
     </androidPackages>
     <iosPods>
         <!-- Pangle iOS SDK -->
-        <iosPod name="ChartboostHeliumAdapterPangle" version="~> 2.11">
+        <iosPod name="ChartboostHeliumAdapterPangle" version="~> 3.0">
             <sources>
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>

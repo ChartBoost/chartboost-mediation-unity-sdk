@@ -2,7 +2,7 @@
 <dependencies>
     <androidPackages>
         <!-- Helium Vungle Adapter -->
-        <androidPackage spec="com.chartboost:helium-vungle:2.11.+@aar" />
+        <androidPackage spec="com.chartboost:helium-vungle:3.0.+@aar" />
 
         <!-- Vungle Android SDK -->
         <androidPackage spec="com.vungle:publisher-sdk-android:6.10.5"/>
@@ -11,7 +11,7 @@
     </androidPackages>
     <iosPods>
         <!-- Vungle iOS SDK -->
-        <iosPod name="ChartboostHeliumAdapterVungle" version="~> 2.11">
+        <iosPod name="ChartboostHeliumAdapterVungle" version="~> 3.0">
             <sources>
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>
