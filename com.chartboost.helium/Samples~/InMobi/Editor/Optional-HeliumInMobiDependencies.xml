@@ -2,14 +2,14 @@
 <dependencies>
     <androidPackages>
         <!-- Helium InMobi Adapter -->
-        <androidPackage spec="com.chartboost:helium-inmobi:2.11.+@aar" />
+        <androidPackage spec="com.chartboost:helium-inmobi:3.0.+@aar" />
 
         <!-- InMobi Android SDK -->
         <androidPackage spec="com.inmobi.monetization:inmobi-ads:10.0.5"/>
     </androidPackages>
     <iosPods>
         <!-- InMobi iOS SDK -->
-        <iosPod name="ChartboostHeliumAdapterInMobi" version="~> 2.11">
+        <iosPod name="ChartboostHeliumAdapterInMobi" version="~> 3.0">
             <sources>
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>

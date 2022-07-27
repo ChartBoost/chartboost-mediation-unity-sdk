@@ -7,7 +7,7 @@
         </repositories>
 
         <!-- Helium Android SDK -->
-        <androidPackage spec="com.chartboost:helium:2.11.+" />
+        <androidPackage spec="com.chartboost:helium:3.0.+" />
         <androidPackage spec="org.greenrobot:eventbus:3.3.1" />
 
         <!-- Google Play Services dependencies -->
@@ -30,7 +30,7 @@
     </androidPackages>
     <iosPods>
         <!-- Helium iOS SDK -->
-        <iosPod name="ChartboostHelium" version="~> 2.10">
+        <iosPod name="ChartboostHelium" version="~> 3.0">
             <sources>
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>
