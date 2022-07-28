@@ -14,33 +14,70 @@ buildscript {
 ext {
     gitHubTag = System.getenv("GITHUB_REF");
     gitHubCommit = System.getenv("GITHUB_SHA");
+    versionInput = System.getenv("HELIUM_VERSION")
+    onlyPublic = System.getenv("ONLY_PUBLIC") == 'true'
 
-    isReleaseCandidate = gitHubTag ==~ /\d+\.\d+\.\d+(\.?[A-Za-z0-9]+)*-rc\d+/
-    isInternalRelease = gitHubTag ==~ /\d+\.\d+\.\d+(\.?[A-Za-z0-9]+)+/
-    isPublicRelease = gitHubTag ==~ /\d+\.\d+\.\d+/
+    privateUser = onlyPublic? "" : System.getenv("JFROG_USER")
+    privatePass = onlyPublic? "" : System.getenv("JFROG_PASS");
 
-    buildArtifactsDir = "$rootDir/BuildArtifacts"
-    unityBuildArtifactsDir = "$buildArtifactsDir/unity-helium-sdk"
+    inputVersionIsHigher = true
+    heliumVersion = '2.11.+'
+    if (versionInput != null && versionInput != "") {
+        inputVersionIsHigher = mostRecentVersion([heliumVersion, versionInput]) == versionInput
+        heliumVersion = versionInput
+    }
+
+    releaseCandidateRegex = /[a-zA-Z0-9]+\/[a-zA-Z0-9]+\/+\d+\.\d+\.\d+(\.?[A-Za-z0-9]+)*-rc\d+/
+    internalReleaseRegex = /[a-zA-Z0-9]+\/[a-zA-Z0-9]+\/+\d+\.\d+\.\d+(\.?[A-Za-z0-9]+)+/
+    publicReleaseRegex = /[a-zA-Z0-9]+\/[a-zA-Z0-9]+\/+\d+\.\d+\.\d+/
+
+    isReleaseCandidate = gitHubTag ==~ releaseCandidateRegex
+    isInternalRelease = gitHubTag ==~ internalReleaseRegex
+    isPublicRelease = gitHubTag ==~ publicReleaseRegex
+    isNotRelease = !(isPublicRelease || isInternalRelease || isReleaseCandidate)
 }
-
-task ci(dependsOn: 'sdk') {}
 
 task githubScript {
     println()
-    println ("isInternalRelease = "+ isInternalRelease + ", " +
-            "isReleaseCandidate = "+ isReleaseCandidate + ", " +
-            "isPublicRelease = "+ isPublicRelease)
+    println("versionInput = $versionInput, should only use public repo? $onlyPublic")
     println()
-    println ("githubTag (GITHUB_TAG) = "+ gitHubTag + ", " +
-            "gitHubCommit (GITHUB_COMMIT) = "+ gitHubCommit)
+    println ("isInternalRelease = $isInternalRelease, isReleaseCandidate = $isReleaseCandidate, isPublicRelease = $isPublicRelease, isNotRelease= $isNotRelease");
+    println()
+    println("githubTag (GITHUB_TAG) = $gitHubTag, gitHubCommit (GITHUB_COMMIT) =  $gitHubCommit");
     println()
 
     dependsOn('buildBridge')
+}
+
+String mostRecentVersion(List versions) {
+    def sorted = versions.sort(false) { a, b ->
+        def regex = /[.+]/
+        List verA = a.split(regex)
+        List verB = b.split(regex)
+
+        def commonIndices = Math.min(verA.size(), verB.size())
+
+        for (int i = 0; i < commonIndices; ++i) {
+            def numA = verA[i].toInteger()
+            def numB = verB[i].toInteger()
+
+            if (numA != numB) {
+                return numA <=> numB
+            }
+        }
+
+        // If we got this far then all the common indices are identical, so whichever version is longer must be more recent
+        verA.size() <=> verB.size()
+    }
+
+    println "sorted versions: $sorted"
+    sorted[-1]
 }
 
 task buildBridge {
     dependsOn ':helium-android-bridge:clean'
     dependsOn ':helium-android-bridge:lint'
     dependsOn ':helium-android-bridge:build'
-    dependsOn ':helium-android-bridge:copyReleaseAndroidBridgeForPackaging'
+    if (isNotRelease && inputVersionIsHigher)
+        dependsOn ':helium-android-bridge:copyReleaseAndroidBridgeForPackaging'
 }

@@ -1,6 +1,5 @@
 plugins {
     id 'com.android.library'
-    id 'maven-publish'
     id 'signing'
 }
 
@@ -9,7 +8,7 @@ android {
     buildToolsVersion = '32.0.0'
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 32
     }
 
@@ -27,48 +26,36 @@ android {
     }
 }
 
-signing {
-   required {
-       isPublicRelease && gradle.taskGraph.hasTask("publish")
-   }
-    useGpgCmd()
-    sign publishing.publications
-}
-
-tasks.withType(Sign) {
-   onlyIf {isPublicRelease}
-}
-
-task javaDoc(type: Jar) {
-    from android.sourceSets.release.java.srcDirs
-    classifier = 'javadoc'
-}
-
-task javaSources(type: Jar) {
-    from android.sourceSets.release.java.srcDirs
-    classifier = 'sources'
-}
-
 repositories {
     google()
     mavenCentral()
-    flatDir {
-        dirs 'helium-sdk-aar'
+    maven {
+        url "https://cboost.jfrog.io/artifactory/helium"
+    }
+    maven {
+        url "https://cboost.jfrog.io/artifactory/private-helium/"
+        credentials {
+            username privateUser
+            password privatePass
+        }
     }
 }
 
 ext {
-    androidPluginFolder = "$rootDir/../Runtime/Plugins/Android"
+    heliumDependency = "com.chartboost:helium:$heliumVersion"
+    print("Attempting to Compile Android Bridge with Helium SDK version: $heliumDependency")
 }
 
 dependencies {
     //Make sure to bump the version on new releases.
     api fileTree(dir: 'libs', include: ['*.jar'])
-    implementation(name: 'Helium-2.10.0-release', ext: 'aar')
+    implementation heliumDependency
     implementation 'androidx.annotation:annotation:1.4.0'
+    implementation 'org.greenrobot:eventbus:3.3.1'
 }
 
 task assembleForPlugin(type: Jar, dependsOn: 'bundleLibRuntimeToJarRelease') {
+    dependsOn 'androidDependencies'
     // We are only interested in the HeliumUnityBridge classes only.
     from zipTree("$projectDir/build/intermediates/runtime_library_classes_jar/release/classes.jar")
     include '**/*.class'
@@ -78,6 +65,6 @@ task assembleForPlugin(type: Jar, dependsOn: 'bundleLibRuntimeToJarRelease') {
 
 task copyReleaseAndroidBridgeForPackaging(type: Copy, dependsOn: 'assembleForPlugin') {
     from ("$projectDir/build/intermediates/runtime_library_classes_jar/release/classes.jar")
-    into (androidPluginFolder)
+    into ("$rootDir/../Runtime/Plugins/Android")
     rename("classes.jar", "helium-android-bridge.jar")
 }
