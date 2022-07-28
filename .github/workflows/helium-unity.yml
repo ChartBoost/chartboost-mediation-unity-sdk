@@ -21,7 +21,7 @@ on:
       only_public:
         description: 'Use only public maven repo'
         required: false
-        default: false
+        default: 'false'
 env:
   UNITY_VERSION: 2020.3.27f1
   UNITY_EXE_PATH: /Applications/Unity/Hub/Editor/2020.3.27f1/Unity.app/Contents/MacOS/Unity
