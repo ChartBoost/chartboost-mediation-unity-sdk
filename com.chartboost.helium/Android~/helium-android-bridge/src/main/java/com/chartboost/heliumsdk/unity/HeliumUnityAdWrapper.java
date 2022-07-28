@@ -32,14 +32,17 @@ public class HeliumUnityAdWrapper {
     private RelativeLayout mBannerLayout;
 
     private final HeliumAd _ad;
-    private Activity _activity;
+    private final Activity _activity;
+    private final boolean _isBanner;
+    private final boolean _isFullScreen;
+    private HeliumBannerAd _asBanner = null;
+    private HeliumFullscreenAd _asFullScreen = null;
 
     public static HeliumUnityAdWrapper Wrap(HeliumAd ad){
         return new HeliumUnityAdWrapper(ad);
     }
 
     private HeliumAd ad() {
-        _activity = UnityPlayer.currentActivity;
         if (_ad == null)
             throw new RuntimeException("cannot interact with Helium ad as ad was not created");
         return _ad;
@@ -49,23 +52,22 @@ public class HeliumUnityAdWrapper {
 
     public HeliumUnityAdWrapper(HeliumAd ad) {
         _ad = ad;
+        _activity = UnityPlayer.currentActivity;
+        _isBanner = _ad instanceof HeliumBannerAd;
+        _isFullScreen = _ad instanceof HeliumFullscreenAd;
+        if (_isBanner)
+            _asBanner = (HeliumBannerAd)_ad;
+        if (_isFullScreen)
+            _asFullScreen = (HeliumFullscreenAd)_ad;
     }
 
-    public boolean isBanner() {
-        return ad() instanceof HeliumBannerAd;
-    }
+    public boolean isBanner() { return _isBanner; }
 
-    public boolean isFullScreen() {
-        return ad() instanceof HeliumFullscreenAd;
-    }
+    public boolean isFullScreen() { return _isFullScreen; }
 
-    public HeliumBannerAd asBanner() {
-        return (HeliumBannerAd)ad();
-    }
+    public HeliumBannerAd asBanner() { return _asBanner; }
 
-    public HeliumFullscreenAd asFullScreen() {
-        return (HeliumFullscreenAd)ad();
-    }
+    public HeliumFullscreenAd asFullScreen() { return _asFullScreen; }
 
     public void load() {
         runTaskOnUiThread(() -> {
@@ -117,12 +119,10 @@ public class HeliumUnityAdWrapper {
     @SuppressWarnings("unused")
     public void setBannerVisibility(boolean isVisible) {
         runTaskOnUiThread(() -> {
-            HeliumAd ad = ad();
-            if (ad instanceof HeliumBannerAd && mBannerLayout != null) {
-                HeliumBannerAd bannerAd = (HeliumBannerAd)ad;
+            if (isBanner() && mBannerLayout != null) {
                 int visibility = isVisible ? View.VISIBLE : View.INVISIBLE;
                 mBannerLayout.setVisibility(visibility);
-                bannerAd.setVisibility(visibility);
+                asBanner().setVisibility(visibility);
             }
         });
     }
@@ -146,6 +146,10 @@ public class HeliumUnityAdWrapper {
         try {
             if (isFullScreen())
                 return asFullScreen().readyToShow();
+            else if (isBanner()) {
+                Log.w(TAG, "This should never be called, banners do not have readyToShow");
+                return false;
+            }
             else
                 return false;
         } catch (Exception ex) {

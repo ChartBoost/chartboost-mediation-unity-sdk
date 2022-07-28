@@ -82,11 +82,6 @@ BOOL _heliumSdkIsAnyViewVisible()
     return false; // TODO [HeliumSdkManager isAnyViewVisible];
 }
 
-void _heliumSdkSetGameObjectName(const char *name)
-{
-    [HeliumSdkManager sharedManager].gameObjectName = GetStringParam(name);
-}
-
 void * _heliumSdkGetInterstitialAd(const char *placementName)
 {
     return (__bridge void*) [[HeliumSdkManager sharedManager] getInterstitialAd:GetStringParam(placementName)];
@@ -136,7 +131,9 @@ BOOL _heliumSdkInterstitialAdReadyToShow(const void * uniqueId)
 
 void _heliumSdkFreeInterstitialAdObject(const void * uniqueId)
 {
-    [[HeliumSdkManager sharedManager] freeInterstitialAd: [NSNumber numberWithLong:(long)uniqueId]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[HeliumSdkManager sharedManager] freeInterstitialAd: [NSNumber numberWithLong:(long)uniqueId]];
+    });
 }
 
 void * _heliumSdkGetRewardedAd(const char *placementName)
@@ -194,7 +191,9 @@ void _heliumSdkRewardedAdSetCustomData(const void * uniqueId, const char * custo
 
 void _heliumSdkFreeRewardedAdObject(const void * uniqueId)
 {
-    [[HeliumSdkManager sharedManager] freeRewardedAd: [NSNumber numberWithLong:(long)uniqueId]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[HeliumSdkManager sharedManager] freeRewardedAd: [NSNumber numberWithLong:(long)uniqueId]];
+    });
 }
 
 void * _heliumSdkGetBannerAd(const char *placementName, long size)
@@ -304,22 +303,28 @@ BOOL _heliumSdkBannerClearLoaded(const void * uniqueId)
 
 void _heliumSdkBannerRemove(const void * uniqueId)
 {
-    HeliumBannerView* bannerView = (__bridge HeliumBannerView*)uniqueId;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [bannerView removeFromSuperview];
+        HeliumBannerView* bannerView = (__bridge HeliumBannerView*)uniqueId;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [bannerView removeFromSuperview];
+        });
+        [[HeliumSdkManager sharedManager] freeBannerAd: [NSNumber numberWithLong:(long)uniqueId]];
     });
-    [[HeliumSdkManager sharedManager] freeBannerAd: [NSNumber numberWithLong:(long)uniqueId]];
 }
 
 void _heliumSdkBannerSetVisibility(const void * uniqueId, BOOL isVisible)
 {
-    HeliumBannerView* bannerView = (__bridge HeliumBannerView*)uniqueId;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [bannerView setHidden:!isVisible];
+        HeliumBannerView* bannerView = (__bridge HeliumBannerView*)uniqueId;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [bannerView setHidden:!isVisible];
+        });
     });
 }
 
 void _heliumSdkFreeBannerAdObject(const void * uniqueId)
 {
-    [[HeliumSdkManager sharedManager] freeBannerAd: [NSNumber numberWithLong:(long)uniqueId]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[HeliumSdkManager sharedManager] freeBannerAd: [NSNumber numberWithLong:(long)uniqueId]];
+    });
 }
