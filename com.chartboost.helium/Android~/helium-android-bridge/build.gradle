@@ -35,20 +35,14 @@ repositories {
     maven {
         url "https://cboost.jfrog.io/artifactory/private-helium/"
         credentials {
-            username System.getenv("JFROG_USER")
-            password System.getenv("JFROG_PASS")
+            username privateUser
+            password privatePass
         }
     }
 }
 
 ext {
-    // use whatever is the latest in any of the repos
-    heliumVersion = '+'
-    if (versionInput != null)
-        heliumVersion = versionInput
-
     heliumDependency = "com.chartboost:helium:$heliumVersion"
-
     print("Attempting to Compile Android Bridge with Helium SDK version: $heliumDependency")
 }
 

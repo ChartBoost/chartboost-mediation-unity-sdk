@@ -18,6 +18,10 @@ on:
         description: 'Helium Android Compile Version'
         required: false
         default: null
+      only_public:
+        description: 'Use only public maven repo'
+        required: false
+        default: false
 env:
   UNITY_VERSION: 2020.3.27f1
   UNITY_EXE_PATH: /Applications/Unity/Hub/Editor/2020.3.27f1/Unity.app/Contents/MacOS/Unity
@@ -116,6 +120,7 @@ jobs:
       run: ./com.chartboost.helium/Android~/gradlew -p ./com.chartboost.helium/Android~ githubScript
       env:
         HELIUM_VERSION: ${{ github.event.inputs.helium_bridge_version }}
+        ONLY_PUBLIC: ${{ github.event.inputs.only_public }}
         JFROG_USER: ${{ secrets.JFROG_USER }}
         JFROG_PASS: ${{ secrets.JFROG_PASS }}
 
