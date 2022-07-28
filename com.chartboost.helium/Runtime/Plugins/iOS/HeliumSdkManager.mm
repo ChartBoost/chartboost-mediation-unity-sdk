@@ -171,10 +171,9 @@ static void heliumSubscribeToILRDNotifications()
     _rewardedDidReceiveRewardCallback = didReceiveRewardCallback;
 }
 
-- (void)setBannerCallbacks:(HeliumPlacementEvent)didLoadCallback didShowCallback:(HeliumPlacementEvent)didShowCallback didClickCallback:(HeliumPlacementEvent)didClickCallback didWinBidCallback:(HeliumBidWinEvent)didWinBidCallback
+- (void)setBannerCallbacks:(HeliumPlacementEvent)didLoadCallback didClickCallback:(HeliumPlacementEvent)didClickCallback didWinBidCallback:(HeliumBidWinEvent)didWinBidCallback
 {
     _bannerDidLoadCallback = didLoadCallback;
-    _bannerDidShowCallback = didShowCallback;
     _bannerDidClickCallback = didClickCallback;
     _bannerDidWinBidCallback = didWinBidCallback;
 }
@@ -375,21 +374,9 @@ static void heliumSubscribeToILRDNotifications()
 }
 
 - (void)heliumBannerAdWithPlacementName:(NSString *)placementName
-                       didShowWithError:(HeliumError *)error
-{
-    serializePlacementWithError(placementName, error, _bannerDidShowCallback);
-}
-
-- (void)heliumBannerAdWithPlacementName:(NSString *)placementName
                       didClickWithError:(HeliumError *)error
 {
     serializePlacementWithError(placementName, error, _bannerDidClickCallback);
-}
-
-- (void)heliumBannerAdWithPlacementName:(NSString *)placementName
-                      didCloseWithError:(HeliumError *)error
-{
-    // todo - not handled on Android at the moment, should it be handled in iOS?
 }
 
 - (void)heliumBannerAdWithPlacementName:(NSString *)placementName
