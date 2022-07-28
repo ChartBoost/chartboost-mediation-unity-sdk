@@ -22,7 +22,7 @@ ext {
 
     inputVersionIsHigher = true
     heliumVersion = '2.11.+'
-    if (versionInput != null) {
+    if (versionInput != null && versionInput != "") {
         inputVersionIsHigher = mostRecentVersion([heliumVersion, versionInput]) == versionInput
         heliumVersion = versionInput
     }
