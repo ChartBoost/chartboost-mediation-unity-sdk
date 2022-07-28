@@ -15,10 +15,10 @@ ext {
     gitHubTag = System.getenv("GITHUB_REF");
     gitHubCommit = System.getenv("GITHUB_SHA");
     versionInput = System.getenv("HELIUM_VERSION")
-    onlyPublic = System.getenv("ONLY_PUBLIC")
+    onlyPublic = System.getenv("ONLY_PUBLIC") == 'true'
 
-    privateUser = onlyPublic? null : System.getenv("JFROG_USER")
-    privatePass = onlyPublic? null : System.getenv("JFROG_PASS");
+    privateUser = onlyPublic? "" : System.getenv("JFROG_USER")
+    privatePass = onlyPublic? "" : System.getenv("JFROG_PASS");
 
     inputVersionIsHigher = true
     heliumVersion = '2.11.+'
