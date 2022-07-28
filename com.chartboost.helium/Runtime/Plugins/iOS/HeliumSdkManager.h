@@ -26,7 +26,7 @@ typedef void (*HeliumILRDEvent)(const char* impressionData);
 - (void)setLifeCycleCallbacks:(HeliumEvent)didStartCallback  didReceiveILRDCallback:(HeliumILRDEvent)didReceiveILRDCallback;
 - (void)setInterstitialCallbacks:(HeliumPlacementEvent)didLoadCallback didShowCallback:(HeliumPlacementEvent)didShowCallback didClickCallback:(HeliumPlacementEvent)didClickCallback didCloseCallback:(HeliumPlacementEvent)didCloseCallback  didWinBidCallback:(HeliumBidWinEvent)didWinBidCallback;
 - (void)setRewardedCallbacks:(HeliumPlacementEvent)didLoadCallback didShowCallback:(HeliumPlacementEvent)didShowCallback didClickCallback:(HeliumPlacementEvent)didClickCallback didCloseCallback:(HeliumPlacementEvent)didCloseCallback  didWinBidCallback:(HeliumBidWinEvent)didWinBidCallback didReceiveRewardCallback:(HeliumRewardEvent)didReceiveRewardCallback;
-- (void)setBannerCallbacks:(HeliumPlacementEvent)didLoadCallback didShowCallback:(HeliumPlacementEvent)didShowCallback didClickCallback:(HeliumPlacementEvent)didClickCallback didWinBidCallback:(HeliumBidWinEvent)didWinBidCallback;
+- (void)setBannerCallbacks:(HeliumPlacementEvent)didLoadCallback didClickCallback:(HeliumPlacementEvent)didClickCallback didWinBidCallback:(HeliumBidWinEvent)didWinBidCallback;
 - (void)startHeliumWithAppId:(NSString*)appId andAppSignature:(NSString*)appSignature unityVersion:(NSString *)unityVersion;
 - (void)setSubjectToCoppa:(BOOL)isSubject;
 - (void)setSubjectToGDPR:(BOOL)isSubject;

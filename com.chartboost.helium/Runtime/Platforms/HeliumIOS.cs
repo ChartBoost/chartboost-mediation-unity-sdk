@@ -37,8 +37,7 @@ namespace Helium.Platforms
 
         [DllImport("__Internal")]
         private static extern void _setBannerCallbacks(ExternHeliumPlacementEvent DidLoadCallback,
-            ExternHeliumPlacementEvent DidShowCallback, ExternHeliumPlacementEvent DidClickCallback,
-            ExternHeliumWinBidEvent DidWinBidCallback);
+            ExternHeliumPlacementEvent DidClickCallback, ExternHeliumWinBidEvent DidWinBidCallback);
 
         [DllImport("__Internal")]
         private static extern void _heliumSdkInit(string appId, string appSignature, string unityVersion);
@@ -83,7 +82,7 @@ namespace Helium.Platforms
                 ExternDidCloseInterstitial, ExternDidWinBidInterstitial);
             _setRewardedCallbacks(ExternDidLoadRewarded, ExternDidShowRewarded, ExternDidClickRewarded,
                 ExternDidCloseRewarded, ExternDidWinBidRewarded, ExternDidReceiveReward);
-            _setBannerCallbacks(ExternDidLoadBanner, ExternDidShowBanner, ExternDidClickBanner, ExternDidWinBidBanner);
+            _setBannerCallbacks(ExternDidLoadBanner, ExternDidClickBanner, ExternDidWinBidBanner);
         }
 
         public override void Init()
