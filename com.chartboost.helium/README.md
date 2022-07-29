@@ -32,6 +32,7 @@ In order to better understand the Helium Unity SDK, documentation has been split
 1. [Ad Network Adapters](com.chartboost.helium/Documentation/setup/ad-adapters.md)
 2. [Using Proguard](com.chartboost.helium/Documentation/setup/using-proguard.md)
 3. [Google External Dependency Manager (EDM)](com.chartboost.helium/Documentation/setup/edm.md)
+4. [Multidex](com.chartboost.helium/Documentation/setup/multidex.md)
 
 #### Integration
 
