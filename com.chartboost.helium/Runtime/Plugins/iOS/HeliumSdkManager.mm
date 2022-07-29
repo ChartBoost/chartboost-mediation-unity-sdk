@@ -30,7 +30,6 @@ static HeliumRewardEvent _rewardedDidReceiveRewardCallback;
 // banner callbacks
 static HeliumPlacementEvent _bannerDidLoadCallback;
 static HeliumPlacementEvent _bannerDidClickCallback;
-static HeliumPlacementEvent _bannerDidShowCallback;
 static HeliumBidWinEvent _bannerDidWinBidCallback;
 
 void UnityPause(int pause);
