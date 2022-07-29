@@ -44,7 +44,7 @@ public class HeliumUnityAdWrapper {
 
     private HeliumAd ad() {
         if (_ad == null)
-            throw new RuntimeException("cannot interact with Helium ad as ad was not created");
+            throw new RuntimeException(TAG + " cannot interact with Helium ad as ad was not created");
         return _ad;
     }
 
@@ -112,7 +112,7 @@ public class HeliumUnityAdWrapper {
             rewardedAd.setCustomData(customData);
         }
         else {
-            throw new RuntimeException("custom data can only be set on a rewarded ad");
+            throw new RuntimeException(TAG + " custom data can only be set on a rewarded ad");
         }
     }
 
