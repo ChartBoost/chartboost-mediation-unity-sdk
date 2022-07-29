@@ -147,13 +147,6 @@ namespace Helium
             remove => _heliumExternal.DidLoadBanner -= value;
         }
 
-        /// <inheritdoc cref="IBannerEvents.DidShowBanner"/>>
-        public static event HeliumPlacementEvent DidShowBanner
-        {
-            add => _heliumExternal.DidShowBanner += value;
-            remove => _heliumExternal.DidShowBanner -= value;
-        }
-
         /// <inheritdoc cref="IBannerEvents.DidClickBanner"/>>
         public static event HeliumPlacementEvent DidClickBanner
         {

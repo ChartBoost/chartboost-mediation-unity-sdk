@@ -36,13 +36,9 @@ namespace Helium
 		[DllImport("__Internal")]
 		private static extern string _heliumSdkBannerRemoveKeyword(IntPtr uniqueID, string keyword);
 		[DllImport("__Internal")]
-		private static extern void _heliumSdkBannerAdLoad(IntPtr uniqueID);
+		private static extern void _heliumSdkBannerAdLoad(IntPtr uniqueID, int screenLocation);
 		[DllImport("__Internal")]
 		private static extern bool _heliumSdkBannerClearLoaded(IntPtr uniqueID);
-		[DllImport("__Internal")]
-		private static extern void _heliumSdkBannerAdShow(IntPtr uniqueID, int screenLocation);
-		[DllImport("__Internal")]
-		private static extern bool _heliumSdkBannerAdReadyToShow(IntPtr uniqueID);
 		[DllImport("__Internal")]
 		private static extern bool _heliumSdkBannerRemove(IntPtr uniqueID);
 		[DllImport("__Internal")]
@@ -109,11 +105,12 @@ namespace Helium
 		/// <summary>
 		/// Load the advertisement.
 		/// </summary>
-		public void Load() {
+		public void Load(HeliumBannerAdScreenLocation screenLocation) 
+		{
 			#if UNITY_IPHONE
-			_heliumSdkBannerAdLoad(_uniqueId);
+			_heliumSdkBannerAdLoad(_uniqueId, (int)screenLocation);
 			#elif UNITY_ANDROID
-			_androidAd.Call("load");
+			_androidAd.Call("load", (int)screenLocation);
 			#endif
 		}
 
@@ -122,27 +119,14 @@ namespace Helium
 		/// load can be performed.
 		/// </summary>
 		/// <returns>true if successfully cleared</returns>
-		public bool ClearLoaded() {
+		public bool ClearLoaded() 
+		{
 			#if UNITY_IPHONE
 			return _heliumSdkBannerClearLoaded(_uniqueId);
 			#elif UNITY_ANDROID
 			return _androidAd.Call<bool>("clearLoaded");
 			#else
 			return false;
-			#endif
-		}
-
-		/// <summary>
-		/// Show a previously loaded advertisement at a specific screen location.
-		/// </summary>
-		/// <param name="screenLocation">The screen location to show the banner at.</param>
-		public void Show(HeliumBannerAdScreenLocation screenLocation)
-		{
-			#if UNITY_IPHONE
-			System.GC.Collect(); // make sure previous banner ads get destructed if necessary
-			_heliumSdkBannerAdShow(_uniqueId, (int) screenLocation);
-			#elif UNITY_ANDROID
-            _androidAd.Call("show", (int) screenLocation);
 			#endif
 		}
 
@@ -156,21 +140,6 @@ namespace Helium
 			#elif UNITY_ANDROID
 			//android doesn't have a remove method. Instead, calling destroy
 			Destroy();
-			#endif
-		}
-
-		/// <summary>
-		/// Indicates if an advertisement is ready to show.
-		/// </summary>
-		/// <returns>True if ready to show.</returns>
-		public bool ReadyToShow()
-		{
-			#if UNITY_IPHONE
-			return _heliumSdkBannerAdReadyToShow(_uniqueId);
-			#elif UNITY_ANDROID
-			return _androidAd.Call<bool>("readyToShow");
-			#else
-			return false;
 			#endif
 		}
 

@@ -24,32 +24,20 @@ public class Demo : MonoBehaviour
 
     // advertisement type selection
     public GameObject fullScreenPanel;
-    public Button fullScreenTypeButton;
     public GameObject bannerPanel;
-    public Button bannerTypeButton;
 
     // interstitial controls
-    public InputField i12PlacementInputField;
-    public Button i12CacheButton;
-    public Button i12ClearButton;
-    public Button i12ShowButton;
+    public InputField interstitialPlacementInputField;
     private HeliumInterstitialAd _interstitialAd;
 
     // rewarded controls
     public InputField rewardedPlacementInputField;
-    public Button rewardedCacheButton;
-    public Button rewardedClearButton;
-    public Button rewardedShowButton;
     private HeliumRewardedAd _rewardedAd;
 
     // banner controls
     public InputField bannerPlacementInputField;
-    public Button bannerCreateButton;
-    public Button bannerRemoveButton;
-    public Button bannerDisplayButton;
-    public Button bannerClearButton;
     public Dropdown bannerSizeDropdown;
-    public Dropdown bannerPlacementDropdown;
+    public Dropdown bannerLocationDropdown;
     private HeliumBannerAd _bannerAd;
     private bool _bannerAdIsVisible;
 
@@ -77,7 +65,7 @@ public class Demo : MonoBehaviour
         fullScreenPanel.SetActive(true);
         bannerPanel.SetActive(false);
 
-        i12PlacementInputField.SetTextWithoutNotify(DefaultPlacementInterstitial);
+        interstitialPlacementInputField.SetTextWithoutNotify(DefaultPlacementInterstitial);
         rewardedPlacementInputField.SetTextWithoutNotify(DefaultPlacementRewarded);
         bannerPlacementInputField.SetTextWithoutNotify(DefaultPlacementBanner);
 
@@ -150,7 +138,7 @@ public class Demo : MonoBehaviour
 
     public void OnCacheInterstitialClick()
     {
-        _interstitialAd = HeliumSDK.GetInterstitialAd(i12PlacementInputField.text);
+        _interstitialAd = HeliumSDK.GetInterstitialAd(interstitialPlacementInputField.text);
 
         if (_interstitialAd == null)
         {
@@ -301,7 +289,6 @@ public class Demo : MonoBehaviour
     private void SetupBannerDelegates()
     {
         HeliumSDK.DidLoadBanner += DidLoadBanner;
-        HeliumSDK.DidShowBanner += DidShowBanner;
         HeliumSDK.DidWinBidBanner += DidWinBidBanner;
         HeliumSDK.DidClickBanner += DidClickBanner;
     }
@@ -337,45 +324,30 @@ public class Demo : MonoBehaviour
             _bannerAd.SetKeyword("bnr_keyword6", "bnr_value6"); // accepted set
             _bannerAd.SetKeyword("bnr_keyword6", "bnr_value6_replaced"); // accepted replace
         }
-        _bannerAd.Load();
-    }
-
-    public void OnDisplayBannerClick()
-    {
-        if (_bannerAd.ReadyToShow())
+        var screenPos = bannerLocationDropdown.value switch
         {
-            var screenPos = bannerPlacementDropdown.value switch
-            {
-                0 => HeliumBannerAdScreenLocation.TopLeft,
-                1 => HeliumBannerAdScreenLocation.TopCenter,
-                2 => HeliumBannerAdScreenLocation.TopRight,
-                3 => HeliumBannerAdScreenLocation.Center,
-                4 => HeliumBannerAdScreenLocation.BottomLeft,
-                5 => HeliumBannerAdScreenLocation.BottomCenter,
-                6 => HeliumBannerAdScreenLocation.BottomRight,
-                _ => HeliumBannerAdScreenLocation.TopCenter
-            };
-            _bannerAd.Show(screenPos);
-            _bannerAdIsVisible = true;
-        }
-        else
-        {
-            Log("Banner is not ready to load.");
-        }
+            0 => HeliumBannerAdScreenLocation.TopLeft,
+            1 => HeliumBannerAdScreenLocation.TopCenter,
+            2 => HeliumBannerAdScreenLocation.TopRight,
+            3 => HeliumBannerAdScreenLocation.Center,
+            4 => HeliumBannerAdScreenLocation.BottomLeft,
+            5 => HeliumBannerAdScreenLocation.BottomCenter,
+            6 => HeliumBannerAdScreenLocation.BottomRight,
+            _ => HeliumBannerAdScreenLocation.TopCenter
+        };
+        _bannerAd.Load(screenPos);
     }
 
     public void OnRemoveBannerClick()
     {
         _bannerAd?.Remove();
         _bannerAd = null;
-        _bannerAdIsVisible = false;
         Log("Banner Removed");
     }
 
     public void OnClearBannerClick()
     {
         _bannerAd?.ClearLoaded();
-        _bannerAdIsVisible = false;
         Log("Banner Cleared");
     }
 
@@ -391,14 +363,8 @@ public class Demo : MonoBehaviour
 
     private void DidLoadBanner(string placementName, HeliumError error)
     {
+        _bannerAdIsVisible = true;
         Log($"DidLoadBanner{placementName}: {error}");
-    }
-
-    private void DidShowBanner(string placementName, HeliumError error)
-    {
-        if (error == null)
-            _bannerAdIsVisible = true;
-        Log($"DidShowBanner {placementName}: {error}");
     }
 
     private void DidWinBidBanner(string placementName, HeliumBidInfo info)
