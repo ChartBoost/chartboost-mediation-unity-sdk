@@ -128,6 +128,7 @@ namespace Helium.Platforms
         }
 
         // provide the option to override callbacks
+#pragma warning disable 67
         public virtual event HeliumEvent DidStart;
         public virtual event HeliumILRDEvent DidReceiveImpressionLevelRevenueData;
         public virtual event HeliumPlacementEvent DidLoadInterstitial;
@@ -148,5 +149,6 @@ namespace Helium.Platforms
         public virtual event HeliumPlacementEvent DidClickBanner;
         public virtual event HeliumPlacementEvent DidRecordImpressionBanner;
         public virtual event HeliumBidEvent DidWinBidBanner;
+#pragma warning restore 67
     }
 }
