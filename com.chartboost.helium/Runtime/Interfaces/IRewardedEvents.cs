@@ -36,11 +36,18 @@ namespace Helium.Interfaces
         public event HeliumPlacementEvent DidClickRewarded;
         
         /// <summary>
-        /// Called with bid information after an rewarded has been loaded from the Helium API
+        /// Called with bid information after an rewarded ad has been loaded from the Helium API
         /// servers and cached locally.
         /// </summary>
         [Preserve]
         public event HeliumBidEvent DidWinBidRewarded;
+        
+        /// <summary>
+        /// Determines an ad visibility on the screen.
+        /// Implement to be notified of when a rewarded ad has been become visible on the screen.
+        /// </summary>
+        [Preserve]
+        public event HeliumPlacementEvent DidRecordImpressionRewarded;
 
         /// <summary>
         /// Called after a rewarded has been received (after watching a rewarded video).

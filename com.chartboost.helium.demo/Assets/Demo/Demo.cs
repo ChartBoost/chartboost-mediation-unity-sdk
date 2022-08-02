@@ -133,6 +133,7 @@ public class Demo : MonoBehaviour
         HeliumSDK.DidShowInterstitial += DidShowInterstitial;
         HeliumSDK.DidCloseInterstitial += DidCloseInterstitial;
         HeliumSDK.DidClickInterstitial += DidClickInterstitial;
+        HeliumSDK.DidRecordImpressionInterstitial += DidRecordImpressionInterstitial;
         HeliumSDK.DidWinBidInterstitial += DidWinBidInterstitial;
     }
 
@@ -196,6 +197,11 @@ public class Demo : MonoBehaviour
     {
         Log($"DidClickInterstitial {placementName}: {error}");
     }
+    
+    private void DidRecordImpressionInterstitial(string placementName, HeliumError error)
+    {
+        Log($"DidRecordImpressionInterstitial {placementName}: {error}");
+    }
 
     #endregion
 
@@ -207,8 +213,9 @@ public class Demo : MonoBehaviour
         HeliumSDK.DidShowRewarded += DidShowRewarded;
         HeliumSDK.DidCloseRewarded += DidCloseRewarded;
         HeliumSDK.DidReceiveReward += DidReceiveReward;
-        HeliumSDK.DidWinBidRewarded += DidWinBidRewarded;
         HeliumSDK.DidClickRewarded += DidClickRewarded;
+        HeliumSDK.DidRecordImpressionRewarded += DidRecordImpressionRewarded;
+        HeliumSDK.DidWinBidRewarded += DidWinBidRewarded;
     }
 
     public void OnCacheRewardedClick()
@@ -272,14 +279,19 @@ public class Demo : MonoBehaviour
         Log($"DidReceiveReward {placementName}: {reward}");
     }
 
-    private void DidWinBidRewarded(string placementName, HeliumBidInfo info)
-    {
-        Log($"DidWinBidRewarded {placementName}: {placementName}: ${info.Price:F4}, Auction Id: {info.AuctionId}, Partner Id: {info.PartnerId}");
-    }
-
     private void DidClickRewarded(string placementName, HeliumError error)
     {
         Log($"DidClickRewarded {placementName}: {error}");
+    }
+    
+    private void DidRecordImpressionRewarded(string placementName, HeliumError error)
+    {
+        Log($"DidRecordImpressionRewarded {placementName}: {error}");
+    }
+    
+    private void DidWinBidRewarded(string placementName, HeliumBidInfo info)
+    {
+        Log($"DidWinBidRewarded {placementName}: {placementName}: ${info.Price:F4}, Auction Id: {info.AuctionId}, Partner Id: {info.PartnerId}");
     }
 
     #endregion
@@ -290,6 +302,7 @@ public class Demo : MonoBehaviour
     {
         HeliumSDK.DidLoadBanner += DidLoadBanner;
         HeliumSDK.DidWinBidBanner += DidWinBidBanner;
+        HeliumSDK.DidRecordImpressionBanner += DidRecordImpressionBanner;
         HeliumSDK.DidClickBanner += DidClickBanner;
     }
 
@@ -375,6 +388,11 @@ public class Demo : MonoBehaviour
     private void DidClickBanner(string placementName, HeliumError error)
     {
         Log($"DidClickBanner {placementName}: {error}");
+    }
+    
+    private void DidRecordImpressionBanner(string placementName, HeliumError error)
+    {
+        Log($"DidRecordImpressionBanner {placementName}: {error}");
     }
 
     #endregion

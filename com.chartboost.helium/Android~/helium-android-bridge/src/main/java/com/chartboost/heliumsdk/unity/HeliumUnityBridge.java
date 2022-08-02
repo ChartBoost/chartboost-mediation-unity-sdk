@@ -21,7 +21,6 @@ import androidx.annotation.NonNull;
 import java.util.HashMap;
 
 public class HeliumUnityBridge {
-
     private static final String TAG = "HeliumUnityBridge";
     private static final String EMPTY_STRING = "";
 
@@ -150,6 +149,11 @@ public class HeliumUnityBridge {
             public void didClick(@NonNull String placementName, HeliumAdError error) {
                 serializeHeliumEvent(placementName,  error, interstitialEventsListener::DidClickInterstitial);
             }
+
+            @Override
+            public void didRecordImpression(@NonNull String placementName) {
+                serializeHeliumEvent(placementName, null, interstitialEventsListener::DidRecordImpression);
+            }
         }));
     }
 
@@ -188,6 +192,11 @@ public class HeliumUnityBridge {
             public void didClick(@NonNull String placementName, HeliumAdError error) {
                 serializeHeliumEvent(placementName,  error, rewardedEventListener::DidClickRewarded);
             }
+
+            @Override
+            public void didRecordImpression(@NonNull String placementName){
+                serializeHeliumEvent(placementName, null, rewardedEventListener::DidRecordImpression);
+            }
         }));
     }
 
@@ -225,6 +234,11 @@ public class HeliumUnityBridge {
             @Override
             public void didClick(@NonNull String placementName, HeliumAdError error) {
                 serializeHeliumEvent(placementName,  error, bannerEventsListener::DidClickBanner);
+            }
+
+            @Override
+            public void didRecordImpression(@NonNull String placementName) {
+                serializeHeliumEvent(placementName, null, bannerEventsListener::DidRecordImpression);
             }
         }));
     }
