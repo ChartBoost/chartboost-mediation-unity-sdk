@@ -87,6 +87,13 @@ namespace Helium
             remove => _heliumExternal.DidClickInterstitial -= value;
         }
         
+        /// <inheritdoc cref="IInterstitialEvents.DidRecordImpressionInterstitial"/>>
+        public static event HeliumPlacementEvent DidRecordImpressionInterstitial
+        {
+            add => _heliumExternal.DidRecordImpressionInterstitial += value;
+            remove => _heliumExternal.DidRecordImpressionInterstitial -= value;
+        }
+        
         /// <inheritdoc cref="IInterstitialEvents.DidWinBidInterstitial"/>>
         public static event HeliumBidEvent DidWinBidInterstitial
         {
@@ -124,6 +131,13 @@ namespace Helium
             remove => _heliumExternal.DidClickRewarded -= value;
         }
         
+        /// <inheritdoc cref="IRewardedEvents.DidRecordImpressionRewarded"/>>
+        public static event HeliumPlacementEvent DidRecordImpressionRewarded
+        {
+            add => _heliumExternal.DidRecordImpressionRewarded += value;
+            remove => _heliumExternal.DidRecordImpressionRewarded -= value;
+        }
+        
         /// <inheritdoc cref="IRewardedEvents.DidWinBidRewarded"/>>
         public static event HeliumBidEvent DidWinBidRewarded
         {
@@ -152,6 +166,13 @@ namespace Helium
         {
             add => _heliumExternal.DidClickBanner += value;
             remove => _heliumExternal.DidClickBanner -= value;
+        }
+        
+        /// <inheritdoc cref="IBannerEvents.DidRecordImpressionBanner"/>>
+        public static event HeliumPlacementEvent DidRecordImpressionBanner
+        {
+            add => _heliumExternal.DidRecordImpressionBanner += value;
+            remove => _heliumExternal.DidRecordImpressionBanner -= value;
         }
 
         /// <inheritdoc cref="IBannerEvents.DidWinBidBanner"/>>
@@ -222,6 +243,7 @@ namespace Helium
             _heliumExternal.SetUserHasGivenConsent(hasGivenConsent);
         }
 
+        // ReSharper disable once IdentifierTypo
         public static void SetCCPAConsent(bool hasGivenConsent)
         {
             _heliumExternal.SetCCPAConsent(hasGivenConsent);

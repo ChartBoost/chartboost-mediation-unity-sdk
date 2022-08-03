@@ -27,6 +27,13 @@ namespace Helium.Interfaces
         /// </summary>
         [Preserve]
         public event HeliumPlacementEvent DidClickBanner;
+
+        /// <summary>
+        /// Determines an ad visibility on the screen.
+        /// Implement to be notified of when a banner ad has been become visible on the screen.
+        /// </summary>
+        [Preserve]
+        public event HeliumPlacementEvent DidRecordImpressionBanner;
         
         /// <summary>
         /// Called with bid information after an banner has been loaded from the Helium API

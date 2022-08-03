@@ -7,7 +7,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 public class HeliumEventProcessor {
-
     private static final String TAG = "HeliumEventProcessor";
     private static final String EMPTY_STRING = "";
 

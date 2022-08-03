@@ -6,6 +6,5 @@ package com.chartboost.heliumsdk.unity;
 public interface ILifeCycleEventListener
 {
     void DidStart(int errorCode, String errorDescription);
-
     void DidReceiveILRD(String impressionDataJson);
 }

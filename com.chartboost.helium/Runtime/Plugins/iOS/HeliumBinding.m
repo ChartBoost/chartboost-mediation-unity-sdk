@@ -3,8 +3,8 @@
  * Helium SDK
  */
 
+#import "HeliumSdk/HeliumSdk.h"
 #import "HeliumSdkManager.h"
-#import <HeliumSdk/HeliumKeywords.h>
 #import "UnityAppController.h"
 
 // Converts C style string to NSString
@@ -35,18 +35,18 @@ void _setLifeCycleCallbacks(HeliumEvent didStartCallback, HeliumILRDEvent didRec
     [[HeliumSdkManager sharedManager] setLifeCycleCallbacks:didStartCallback didReceiveILRDCallback:didReceiveILRDCallback];
 }
 
-void _setInterstitialCallbacks(HeliumPlacementEvent didLoadCallback, HeliumPlacementEvent didShowCallback, HeliumPlacementEvent didClickCallback, HeliumPlacementEvent didCloseCallback, HeliumBidWinEvent didWinBidCallback)
+void _setInterstitialCallbacks(HeliumPlacementEvent didLoadCallback, HeliumPlacementEvent didShowCallback, HeliumPlacementEvent didClickCallback, HeliumPlacementEvent didCloseCallback, HeliumPlacementEvent didRecordImpression, HeliumBidWinEvent didWinBidCallback)
 {
-    [[HeliumSdkManager sharedManager] setInterstitialCallbacks:didLoadCallback didShowCallback:didShowCallback didClickCallback:didClickCallback didCloseCallback:didCloseCallback didWinBidCallback:didWinBidCallback];
+    [[HeliumSdkManager sharedManager] setInterstitialCallbacks:didLoadCallback didShowCallback:didShowCallback didClickCallback:didClickCallback didCloseCallback:didCloseCallback didRecordImpression:didRecordImpression didWinBidCallback:didWinBidCallback];
 }
 
-void _setRewardedCallbacks(HeliumPlacementEvent didLoadCallback, HeliumPlacementEvent didShowCallback, HeliumPlacementEvent didClickCallback, HeliumPlacementEvent didCloseCallback, HeliumBidWinEvent didWinBidCallback, HeliumRewardEvent didReceiveRewardCallback){
-    [[HeliumSdkManager sharedManager] setRewardedCallbacks:didLoadCallback didShowCallback:didShowCallback didClickCallback:didClickCallback didCloseCallback:didCloseCallback didWinBidCallback:didWinBidCallback didReceiveRewardCallback:didReceiveRewardCallback];
+void _setRewardedCallbacks(HeliumPlacementEvent didLoadCallback, HeliumPlacementEvent didShowCallback, HeliumPlacementEvent didClickCallback, HeliumPlacementEvent didCloseCallback, HeliumPlacementEvent didRecordImpression, HeliumBidWinEvent didWinBidCallback, HeliumRewardEvent didReceiveRewardCallback){
+    [[HeliumSdkManager sharedManager] setRewardedCallbacks:didLoadCallback didShowCallback:didShowCallback didClickCallback:didClickCallback didCloseCallback:didCloseCallback didRecordImpression:didRecordImpression didWinBidCallback:didWinBidCallback didReceiveRewardCallback:didReceiveRewardCallback];
 }
 
-void _setBannerCallbacks(HeliumPlacementEvent didLoadCallback, HeliumPlacementEvent didClickCallback, HeliumBidWinEvent didWinBidCallback)
+void _setBannerCallbacks(HeliumPlacementEvent didLoadCallback, HeliumPlacementEvent didRecordImpression, HeliumPlacementEvent didClickCallback, HeliumBidWinEvent didWinBidCallback)
 {
-    [[HeliumSdkManager sharedManager] setBannerCallbacks:didLoadCallback didClickCallback:didClickCallback didWinBidCallback:didWinBidCallback];
+    [[HeliumSdkManager sharedManager] setBannerCallbacks:didLoadCallback didRecordImpression:didRecordImpression didClickCallback:didClickCallback  didWinBidCallback:didWinBidCallback];
 }
 
 void _heliumSdkInit(const char *appId, const char *appSignature, const char *unityVersion)
@@ -215,7 +215,7 @@ void * _heliumSdkGetBannerAd(const char *placementName, long size)
         case 1:
             cbSize = CHBHBannerSize_Medium;
             break;
-            
+
         default:
             cbSize = CHBHBannerSize_Standard;
             break;
@@ -259,7 +259,7 @@ void _heliumSdkBannerAdLoad(const void * uniqueId, long screenLocation)
         [bannerView removeFromSuperview];
         [unityVC.view  addSubview:bannerView];
         NSLayoutConstraint *xConstraint;
-        
+
         switch (screenLocation) // X Constraints
         {
             case 1: // Top Center
@@ -274,7 +274,7 @@ void _heliumSdkBannerAdLoad(const void * uniqueId, long screenLocation)
             default:
                 xConstraint = [bannerView.leadingAnchor constraintEqualToAnchor:safeGuide.leadingAnchor];
         }
-        
+
         NSLayoutConstraint *yConstraint;
         switch (screenLocation) // Y Constraints
         {
@@ -291,14 +291,14 @@ void _heliumSdkBannerAdLoad(const void * uniqueId, long screenLocation)
             default:
                 yConstraint = [bannerView.centerYAnchor constraintEqualToAnchor:safeGuide.centerYAnchor];
         }
-        
+
         [NSLayoutConstraint activateConstraints:@[
             [bannerView.widthAnchor constraintEqualToConstant:bannerView.frame.size.width],
             [bannerView.heightAnchor constraintEqualToConstant:bannerView.frame.size.height],
             xConstraint,
             yConstraint
         ]];
-        
+
         id<HeliumBannerAd> ad = (__bridge id<HeliumBannerAd>)uniqueId;
         [ad loadAdWithViewController:unityVC];
     });

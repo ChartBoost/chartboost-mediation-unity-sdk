@@ -2,6 +2,8 @@
 using System;
 using UnityEngine;
 using UnityEngine.Scripting;
+// ReSharper disable StringLiteralTypo
+// ReSharper disable InconsistentNaming
 
 namespace Helium.Platforms
 {
@@ -232,6 +234,13 @@ namespace Helium.Platforms
                 HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription,
                     _instance.DidCloseInterstitial);
             }
+            
+            [Preserve]
+            private void DidRecordImpression(string placementName, int errorCode, string errorDescription)
+            {
+                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription,
+                    _instance.DidRecordImpressionInterstitial);
+            }
 
             [Preserve]
             private void DidWinBidInterstitial(string placementName, string auctionId, string partnerId, double price)
@@ -244,7 +253,8 @@ namespace Helium.Platforms
         public override event HeliumPlacementEvent DidLoadInterstitial;
         public override event HeliumPlacementEvent DidShowInterstitial;
         public override event HeliumPlacementEvent DidClickInterstitial;
-        public override event HeliumPlacementEvent DidCloseInterstitial;
+        public override event HeliumPlacementEvent DidCloseInterstitial; 
+        public override event HeliumPlacementEvent DidRecordImpressionInterstitial;
         public override event HeliumBidEvent DidWinBidInterstitial;
         #endregion
 
@@ -282,6 +292,13 @@ namespace Helium.Platforms
                 HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription,
                     _instance.DidClickRewarded);
             }
+            
+            [Preserve]
+            private void DidRecordImpression(string placementName, int errorCode, string errorDescription)
+            {
+                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription,
+                    _instance.DidRecordImpressionRewarded);
+            }
 
             [Preserve]
             private void DidWinBidRewarded(string placementName, string auctionId, string partnerId,
@@ -302,6 +319,7 @@ namespace Helium.Platforms
         public override event HeliumPlacementEvent DidShowRewarded;
         public override event HeliumPlacementEvent DidCloseRewarded;
         public override event HeliumPlacementEvent DidClickRewarded;
+        public override event HeliumPlacementEvent DidRecordImpressionRewarded;
         public override event HeliumBidEvent DidWinBidRewarded;
         public override event HeliumRewardEvent DidReceiveReward;
         #endregion
@@ -333,6 +351,13 @@ namespace Helium.Platforms
                 HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription,
                     _instance.DidClickBanner);
             }
+            
+            [Preserve]
+            private void DidRecordImpression(string placementName, int errorCode, string errorDescription)
+            {
+                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription,
+                    _instance.DidRecordImpressionBanner);
+            }
 
             [Preserve]
             private void DidWinBidBanner(string placementName, string auctionId, string partnerId,
@@ -346,6 +371,7 @@ namespace Helium.Platforms
         public override event HeliumPlacementEvent DidLoadBanner;
         public override event HeliumPlacementEvent DidShowBanner;
         public override event HeliumPlacementEvent DidClickBanner;
+        public override event HeliumPlacementEvent DidRecordImpressionBanner;
         public override event HeliumBidEvent DidWinBidBanner;
         #endregion
     }

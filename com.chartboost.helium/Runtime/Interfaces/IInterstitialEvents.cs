@@ -36,6 +36,13 @@ namespace Helium.Interfaces
         public event HeliumPlacementEvent DidClickInterstitial;
         
         /// <summary>
+        /// Determines an ad visibility on the screen.
+        /// Implement to be notified of when a interstitial ad has been become visible on the screen.
+        /// </summary>
+        [Preserve]
+        public event HeliumPlacementEvent DidRecordImpressionInterstitial;
+        
+        /// <summary>
         /// Called with bid information after an interstitial has been loaded from the Helium API
         /// servers and cached locally.
         /// </summary>
