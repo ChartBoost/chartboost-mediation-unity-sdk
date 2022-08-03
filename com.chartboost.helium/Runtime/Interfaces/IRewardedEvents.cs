@@ -36,7 +36,7 @@ namespace Helium.Interfaces
         public event HeliumPlacementEvent DidClickRewarded;
         
         /// <summary>
-        /// Called with bid information after an rewarded ad has been loaded from the Helium API
+        /// Called with bid information after a rewarded ad has been loaded from the Helium API
         /// servers and cached locally.
         /// </summary>
         [Preserve]

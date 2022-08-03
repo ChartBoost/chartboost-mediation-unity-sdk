@@ -128,7 +128,7 @@ static void heliumSubscribeToILRDNotifications()
     }];
 }
 
-@interface HeliumSdkManager() <HeliumSdkDelegate, CHBHeliumInterstitialAdDelegate, CHBHeliumRewardedAdDelegate, HeliumBannerAdDelegate>
+@interface HeliumSdkManager() <HeliumSdkDelegate, CHBHeliumInterstitialAdDelegate, CHBHeliumRewardedAdDelegate, CHBHeliumBannerAdDelegate>
 
 @end
 
