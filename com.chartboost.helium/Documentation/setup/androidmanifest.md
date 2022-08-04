@@ -37,7 +37,8 @@ After setup, your Android Manifest might look like the following:
             <meta-data android:name="unityplayer.UnityActivity" android:value="true" />
             <meta-data android:name="unityplayer.ForwardNativeEventsToDalvik" android:value="true" />
         </activity>
-        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-6548817822928201~9780573322" />
+
+        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="SAMPLE_APPLICATION_ID" />
 
         <activity android:name="com.chartboost_helium.sdk.CBImpressionActivity"
                   android:excludeFromRecents="true"
