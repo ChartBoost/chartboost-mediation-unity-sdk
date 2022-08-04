@@ -13,7 +13,8 @@ Helium Unity SDK provides support for Unity based games to easily integrate the 
 | [XCode](https://developer.apple.com/xcode/)                           | 13.1                |
 | [Android Studio](https://developer.android.com/studio)                | 2020.3.1+           |
 | [iOS](https://www.apple.com/ios)                                      | 10.0+               |
-| [Android OS](https://developer.android.com/studio/releases/platforms) | 5.0+ (API level 21) |
+| [Minimum Android API Level](https://developer.android.com/studio/releases/platforms#5.0) | 5.0+ (API level 21) |
+| [Target Android API Level](https://developer.android.com/studio/releases/platforms#12) | 12.0 (API level 31+) |
 
 ### Integrating the Helium Unity SDK
 
@@ -30,6 +31,7 @@ In order to better understand the Helium Unity SDK, documentation has been split
 
 #### Setup
 1. [Ad Network Adapters](com.chartboost.helium/Documentation/setup/ad-adapters.md)
+2. [Android Manifest](com.chartboost.helium/Documentation/setup/androidmanifest.md)
 2. [Using Proguard](com.chartboost.helium/Documentation/setup/using-proguard.md)
 3. [Google External Dependency Manager (EDM)](com.chartboost.helium/Documentation/setup/edm.md)
 4. [Multidex](com.chartboost.helium/Documentation/setup/multidex.md)
