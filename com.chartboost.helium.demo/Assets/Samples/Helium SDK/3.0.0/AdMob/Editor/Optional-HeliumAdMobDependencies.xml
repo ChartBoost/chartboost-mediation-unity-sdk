@@ -5,7 +5,7 @@
         <androidPackage spec="com.chartboost:helium-admob:3.0.+@aar" />
 
         <!-- Admob Android SDK -->
-        <androidPackage spec="com.google.android.gms:play-services-ads:21.0.0" />
+        <androidPackage spec="com.google.android.gms:play-services-ads:20.6.0" />
     </androidPackages>
 
     <iosPods>
