@@ -33,11 +33,11 @@ To show a banner ad, first declare a variable to hold a reference to the Banner 
 
 > **_NOTE:_** The following banner sizes can be passed down. Some partners may not fill for some banner sizes.
 
-| Banner Enum | Dimensions (Width x Height) |
-| :---        | :---                        |
-| Standard    | 320 x 50                    |
-| Medium      | 300 x 250                   |
-| Leaderboard | 728 x 90                    |
+| Banner Enum   | Dimensions (Width x Height) |
+| :---          | :---                        |
+| `Standard`    | 320 x 50                    |
+| `Medium`      | 300 x 250                   |
+| `Leaderboard` | 728 x 90                    |
 
 ```c#
 private HelliumBannerAd _bannerAd;
@@ -55,12 +55,40 @@ HeliumBannerAdSize BANNER_SIZE = HeliumBannerAdSize.Standard;
 _bannerAd = HeliumSDK.GetBannerAd(PLACEMENT_BANNER, BANNER_SIZE);
 ```
 
-## Loading Banner Ads
+Banners are now shown automatically after load, as such you will need to pass a `HeliumBannerAdScreenLocation` position when calling the load method:
+
+
+| Banner Ad Location Enum                     | Enum Value | Position                                                        |
+| :---                                        | :---       | :---                                                            |
+| `HeliumBannerAdScreenLocation.TopLeft`      | 0          | Positions the banner to the top-left screen of the device.      |
+| `HeliumBannerAdScreenLocation.TopCenter`    | 1          | Positions the banner to the top-center screen of the device.    |
+| `HeliumBannerAdScreenLocation.TopRight`     | 2          | Positions the banner to the top-right screen of the device.     |
+| `HeliumBannerAdScreenLocation.Center`       | 3          | Positions the banner to the center screen of the device.        |
+| `HeliumBannerAdScreenLocation.BottomLeft`   | 4          | Positions the banner to the bottom-left screen of the device.   |
+| `HeliumBannerAdScreenLocation.BottomCenter` | 5          | Positions the banner to the bottom-center screen of the device. |
+| `HeliumBannerAdScreenLocation.BottomRight`  | 6          | Positions the banner to the bottom-right screen of the device.  |
+
+If you enable auto-refresh for a banner placement in the dashboard, then the Helium SDK will apply that setting when the placement is shown.
+
+> **_NOTE:_** Any auto refresh changes made on the dashboard will take approximately one hour to take effect and the SDK must be rebooted in order to pick up the changes once they are available.
 
 You will need to create an instance for each Placement Name you want to use. Finally, make the call to load the ad:
 
 ```c#
-_bannerAd.Load();
+
+/* All possible banner locations
+ * HeliumBannerAdScreenLocation.TopLeft,
+ * HeliumBannerAdScreenLocation.TopCenter,
+ * HeliumBannerAdScreenLocation.TopRight,
+ * HeliumBannerAdScreenLocation.Center,
+ * HeliumBannerAdScreenLocation.BottomLeft,
+ * HeliumBannerAdScreenLocation.BottomCenter,
+ * HeliumBannerAdScreenLocation.BottomRight,
+ * HeliumBannerAdScreenLocation.TopCenter
+ */
+
+// Load a banner on the top center location
+_bannerAd.Load(HeliumBannerAdScreenLocation.TopCenter);
 ```
 
 You can implement delegates in your class to receive notifications about the success or failure of the ad loading process for Banner formats. See section [Delegate Usage](delegate-usage.md) for more details.

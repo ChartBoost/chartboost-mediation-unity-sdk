@@ -21,28 +21,7 @@ if (_rewardedAd.ReadyToShow()){
 ```
 
 ## Showing Banner Ads
-When you are ready to show a banner ad, you can check that it is ready to show and then display it by also passing a `HeliumBannerAdScreenLocation` position:
-
-
-| Banner Ad Location Enum                   | Enum Value | Position                                                        |
-| :---                                      | :---       | :---                                                            |
-| HeliumBannerAdScreenLocation.TopLeft      | 0          | Positions the banner to the top-left screen of the device.      |
-| HeliumBannerAdScreenLocation.TopCenter    | 1          | Positions the banner to the top-center screen of the device.    |
-| HeliumBannerAdScreenLocation.TopRight     | 2          | Positions the banner to the top-right screen of the device.     |
-| HeliumBannerAdScreenLocation.Center       | 3          | Positions the banner to the center screen of the device.        |
-| HeliumBannerAdScreenLocation.BottomLeft   | 4          | Positions the banner to the bottom-left screen of the device.   |
-| HeliumBannerAdScreenLocation.BottomCenter | 5          | Positions the banner to the bottom-center screen of the device. |
-| HeliumBannerAdScreenLocation.BottomRight  | 6          | Positions the banner to the bottom-right screen of the device.  |
-
-```c#
-if (!_bannerAd.ReadyToShow())
-  return;
-_bannerAd.Show(HeliumBannerAdScreenLocation.TopCenter);
-```
-
-If you enable auto-refresh for a banner placement in the dashboard, then the Helium SDK will apply that setting when the placement is shown.
-
-> **_NOTE:_** Any auto refresh changes made on the dashboard will take approximately one hour to take effect and the SDK must be rebooted in order to pick up the changes once they are available.
+Banners are now automatically shown after load, see section [Loading Ads](loading-ads.md) for more information.
 
 ## Releasing Helium Ads
 

@@ -31,6 +31,7 @@ private void OnEnable() {
     HeliumSDK.DidCloseInterstitial += DidCloseInterstitial;
     HeliumSDK.DidWinBidInterstitial += DidWinBidInterstitial;
     HeliumSDK.DidClickInterstitial += DidClickInterstitial;
+    HeliumSDK.DidRecordImpressionInterstitial += DidRecordImpressionInterstitial;
 
     // Helium Rewarded Ad Delegates
     HeliumSDK.DidLoadRewarded += DidLoadRewarded;
@@ -39,12 +40,13 @@ private void OnEnable() {
     HeliumSDK.DidReceiveReward += DidReceiveReward;
     HeliumSDK.DidWinBidRewarded += DidWinBidRewarded;
     HeliumSDK.DidClickRewarded += DidClickRewarded;
+    HeliumSDK.DidRecordImpressionRewarded += DidRecordImpressionRewarded;
 
     // Helium Banner Ad Delegates
     HeliumSDK.DidLoadBanner += DidLoadBanner;
-    HeliumSDK.DidShowBanner += DidShowBanner;
-    HeliumSDK.DidWinBidBanner += DidWinBidBanner;
     HeliumSDK.DidClickBanner += DidClickBanner;
+    HeliumSDK.DidRecordImpressionBanner += DidRecordImpressionBanner;
+    HeliumSDK.DidWinBidBanner += DidWinBidBanner;
 }
 ```
 
@@ -74,6 +76,7 @@ private void OnDisable() {
     HeliumSDK.DidCloseInterstitial -= DidCloseInterstitial;
     HeliumSDK.DidWinBidInterstitial -= DidWinBidInterstitial;
     HeliumSDK.DidClickInterstitial -= DidClickInterstitial;
+    HeliumSDK.DidRecordImpressionInterstitial -= DidRecordImpressionInterstitial;
 
     HeliumSDK.DidLoadRewarded -= DidLoadRewarded;
     HeliumSDK.DidShowRewarded -= DidShowRewarded;
@@ -81,12 +84,13 @@ private void OnDisable() {
     HeliumSDK.DidReceiveReward -= DidReceiveReward;
     HeliumSDK.DidWinBidRewarded -= DidWinBidRewarded;
     HeliumSDK.DidClickRewarded -= DidClickRewarded;
+    HeliumSDK.DidRecordImpressionRewarded -= DidRecordImpressionRewarded;
 
     //Helium Banner Ad Delegates
     HeliumSDK.DidLoadBanner -= DidLoadBanner;
-    HeliumSDK.DidShowBanner -= DidShowBanner;
-    HeliumSDK.DidWinBidBanner -= DidWinBidBanner;
     HeliumSDK.DidClickBanner -= DidClickBanner;
+    HeliumSDK.DidRecordImpressionBanner -= DidRecordImpressionBanner;
+    HeliumSDK.DidWinBidBanner -= DidWinBidBanner;
 }
 ```
 
@@ -142,6 +146,11 @@ private void DidClickInterstitial(string placementName, HeliumError error)
 {
     Debug.Log($"DidClickInterstitial {placementName}: {error}");
 }
+
+private void DidRecordImpressionInterstitial(string placementName, HeliumError error)
+{
+    Log($"DidRecordImpressionInterstitial {placementName}: {error}");
+}
 ```
 
 ### Rewarded Ad Delegates
@@ -161,19 +170,24 @@ private void DidCloseRewarded(string placementName, HeliumError error)
     Debug.Log($"DidCloseRewarded {placementName}: {error}");
 }
 
+private void DidClickRewarded(string placementName, HeliumError error)
+{
+    Debug.Log($"DidClickRewarded {placementName}: {error}");
+}
+
 private void DidReceiveReward(string placementName, int reward)
 {
     Debug.Log($"DidReceiveReward {placementName}: {reward}");
 }
 
+private void DidRecordImpressionRewarded(string placementName, HeliumError error)
+{
+    Log($"DidRecordImpressionRewarded {placementName}: {error}");
+}
+
 private void DidWinBidRewarded(string placementName, HeliumBidInfo info)
 {
     Debug.Log($"DidWinBidRewarded {placementName}: {placementName}: ${info.Price:F4}, Auction Id: {info.AuctionId}, Partner Id: {info.PartnerId}");
-}
-
-private void DidClickRewarded(string placementName, HeliumError error)
-{
-    Debug.Log($"DidClickRewarded {placementName}: {error}");
 }
 ```
 
@@ -197,5 +211,11 @@ private void DidWinBidBanner(string placementName, HeliumBidInfo info)
 private void DidClickBanner(string placementName, HeliumError error)
 {
     Debug.Log($"DidClickBanner {placementName}: {error}");
+}
+
+private void DidRecordImpressionBanner(string placementName, HeliumError error)
+{
+    IsBannerVisible = true;
+    Log($"DidRecordImpressionBanner {placementName}: {error}");
 }
 ```

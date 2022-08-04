@@ -39,15 +39,6 @@ You can call the following on your `Awake` method.
 var appID = "SAMPLE_APP_ID";
 var appSignature = "SAMPLE_APP_SIGNATURE";
 
-
-#if UNITY_ANDROID
-appID = HeliumSettings.GetAndroidAppId();
-appSignature = HeliumSettings.GetAndroidAppSignature();
-#elif UNITY_IOS
-appID = HeliumSettings.GetIOSAppId();
-appSignature = HeliumSettings.GetIOSAppSignature();
-#endif
-
 HeliumSDK.StartWithAppIdAndAppSignature(appID, appSignature);
 ```
 
