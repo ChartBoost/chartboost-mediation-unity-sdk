@@ -14,7 +14,7 @@ Helium Unity SDK provides support for Unity based games to easily integrate the 
 | [Android Studio](https://developer.android.com/studio)                | 2020.3.1+           |
 | [iOS](https://www.apple.com/ios)                                      | 10.0+               |
 | [Minimum Android API Level](https://developer.android.com/studio/releases/platforms#5.0) | 5.0+ (API level 21) |
-| [Target Android API Level](https://developer.android.com/studio/releases/platforms#12) | 12.0 (API level 31+) |
+| [Target Android API Level](https://developer.android.com/studio/releases/platforms#12) | 12.0+ (API level 31) |
 
 ### Integrating the Helium Unity SDK
 
