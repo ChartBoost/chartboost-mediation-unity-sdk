@@ -75,6 +75,19 @@ If you enable auto-refresh for a banner placement in the dashboard, then the Hel
 You will need to create an instance for each Placement Name you want to use. Finally, make the call to load the ad:
 
 ```c#
+
+/* All possible banner locations
+ * HeliumBannerAdScreenLocation.TopLeft,
+ * HeliumBannerAdScreenLocation.TopCenter,
+ * HeliumBannerAdScreenLocation.TopRight,
+ * HeliumBannerAdScreenLocation.Center,
+ * HeliumBannerAdScreenLocation.BottomLeft,
+ * HeliumBannerAdScreenLocation.BottomCenter,
+ * HeliumBannerAdScreenLocation.BottomRight,
+ * HeliumBannerAdScreenLocation.TopCenter
+ */
+
+// Load a banner on the top center location
 _bannerAd.Load(HeliumBannerAdScreenLocation.TopCenter);
 ```
 
