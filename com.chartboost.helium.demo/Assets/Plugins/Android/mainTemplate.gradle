@@ -81,6 +81,7 @@ dependencies {
     implementation 'com.mbridge.msdk.oversea:videojs:16.0.31' // Assets/Samples/Helium SDK/3.0.0/Mintegral/Editor/Optional-HeliumMintegralDependencies.xml:12
     implementation 'com.pangle.global:ads-sdk:4.3.0.4' // Assets/Samples/Helium SDK/3.0.0/Pangle/Editor/Optional-HeliumPangleDependencies.xml:12
     implementation 'com.tapjoy:tapjoy-android-sdk:12.9.1' // Assets/Samples/Helium SDK/3.0.0/TapJoy/Editor/Optional-HeliumTapJoyDependencies.xml:11
+    implementation 'com.unity3d.ads:unity-ads:4.2.1' // Assets/Samples/Helium SDK/3.0.0/UnityAds/Editor/Optional-HeliumUnityAdsDependencies.xml:8
     implementation 'com.verizon.ads:android-vas-standard-edition:1.14.0' // Assets/Samples/Helium SDK/3.0.0/Yahoo/Editor/Optional-HeliumYahooDependencies.xml:13
     implementation 'com.vungle:publisher-sdk-android:6.10.5' // Assets/Samples/Helium SDK/3.0.0/Vungle/Editor/Optional-HeliumVungleDependencies.xml:8
     implementation 'org.greenrobot:eventbus:3.3.1' // Assets/Samples/Helium SDK/3.0.0/Helium/Editor/HeliumDependencies.xml:11
