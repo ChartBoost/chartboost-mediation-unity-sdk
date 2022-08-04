@@ -53,3 +53,13 @@ They can be obtained by importing them as Samples with Unity's Package Manager. 
 ![Reimport](../images/reimport.png)
 
 > **_NOTE:_** When including 3rd-Party SDKs on android, remember to update the manifest file according to the integrated SDK’s requirements as well.
+
+### Unity Ads SDK - Android
+
+There are 2 ways in which the UnityAds Android SDK can be integrated into a Unity project.
+
+1. Using Unity's Package Manager and adding Unity's Advertisement package. This will make sure the corresponding .aar file is added to your libraries when exporting your project.
+
+2. Uncommenting the reference to the UnityAds Android SDK in `Optional-HeliumUnityAdsDependencies.xml`.
+
+Only one of this solutions should be utilized, attempting to utilize both will result in a duplicate class compilation error.

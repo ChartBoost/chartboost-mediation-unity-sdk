@@ -47,6 +47,7 @@
     <package>com.mbridge.msdk.oversea:videojs:16.0.31</package>
     <package>com.pangle.global:ads-sdk:4.3.0.4</package>
     <package>com.tapjoy:tapjoy-android-sdk:12.9.1</package>
+    <package>com.unity3d.ads:unity-ads:4.2.1</package>
     <package>com.verizon.ads:android-vas-standard-edition:1.14.0</package>
     <package>com.vungle:publisher-sdk-android:6.10.5</package>
     <package>org.greenrobot:eventbus:3.3.1</package>
