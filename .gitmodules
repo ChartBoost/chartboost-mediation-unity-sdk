@@ -1,3 +1,4 @@
 [submodule ".github/actions/helium-unity-ci"]
 	path = .github/actions/helium-unity-ci
 	url = git@github.com:ChartBoost/helium-unity-ci.git
+	branch = develop
