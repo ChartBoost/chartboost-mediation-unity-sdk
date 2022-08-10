@@ -1,4 +1,4 @@
-[submodule ".github/actions/setup-unity"]
-	path = .github/actions/setup-unity
-	url = git@github.com:ChartBoost/setup-unity.git
-	branch = master
+[submodule ".github/actions/helium-unity-ci"]
+	path = .github/actions/helium-unity-ci
+	url = git@github.com:ChartBoost/helium-unity-ci.git
+	branch = develop

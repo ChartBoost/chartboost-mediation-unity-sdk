@@ -33,78 +33,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  tests:
-    name: Unity Actions & Unit Testing
-    runs-on: [self-hosted]
-    env:
-      SETUP_PASS: ${{ secrets.SETUP_PASS }}
-      UNITY_USERNAME: ${{ secrets.UNITY_USERNAME }}
-      UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-      UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
-
-    steps:
-    - name: Checkout branch
-      uses: actions/checkout@v3
-      with:
-        submodules: true
-
-    - name: Setup Unity Editor
-      id: unity-install
-      uses: ./.github/actions/setup-unity
-      timeout-minutes: 60
-      with:
-        unity-version: ${{ env.UNITY_VERSION }}
-        unity-version-changeset: 8c66806a0c04
-        unity-modules:
-          android
-          ios
-
-    - name: Activate Unity License
-      id: activate-unity
-      uses: ./.github/actions/activate-unity
-
-    # Once we add mor platforms maybe we can run this in a matrix? this is fine for now.
-    - name: Check for Compiler Errors in Standalone
-      id: unity-compile-standalone
-      uses: ./.github/actions/compile-unity
-      with:
-        target-platform: standalone
-
-    - name: Check for Compiler Errors in Android
-      id: unity-compile-android
-      uses: ./.github/actions/compile-unity
-      with:
-        target-platform: android
-
-    - name: Check for Compiler Errors in iOS
-      id: unity-compile-ios
-      uses: ./.github/actions/compile-unity
-      with:
-        target-platform: ios
-
-    - name: Run Unity Unit Tests
-      id: unity-unit-tests
-      uses: ./.github/actions/test-unity
-
-    - name: Cleanup Unity Generated Files
-      id: unity-cleanup
-      uses: ./.github/actions/cleanup-unity
-
-    - name: Return Unity License
-      if: always()
-      id: return-unity
-      uses: ./.github/actions/return-unity
-
   compile:
     name: Compile Android Bridge
     runs-on: [self-hosted]
-    needs: tests
 
     steps:
     - name: Checkout Branch
       uses: actions/checkout@v3
       with:
-        submodules: true
+        submodules: recursive
+        token: ${{ secrets.GITHUBSERVICETOKEN }}
 
     - name: Set Up JDK 11
       uses: actions/setup-java@v3
@@ -125,7 +63,74 @@ jobs:
         JFROG_PASS: ${{ secrets.JFROG_PASS }}
 
     - name: Grant Execute Permission for Git Bridge Commit
-      run: chmod +x ./.github/actions/uploadBridgeChanges.sh
+      run: "chmod +x ./.github/actions/helium-unity-ci/CheckGitChanges.sh"
 
     - name: Check for Android Bridge .jar Changes & Update
-      run: ./.github/actions/uploadBridgeChanges.sh
+      run: ./.github/actions/helium-unity-ci/CheckGitChanges.sh
+      env:
+        TARGET_FILE: "com.chartboost.helium/Runtime/Plugins/Android/helium-android-bridge.jar"
+
+  tests:
+    name: Unity Actions & Unit Testing
+    runs-on: [self-hosted]
+    needs: compile
+
+    env:
+      SETUP_PASS: ${{ secrets.SETUP_PASS }}
+      UNITY_USERNAME: ${{ secrets.UNITY_USERNAME }}
+      UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+
+    steps:
+    - name: Checkout Branch
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        token: ${{ secrets.GITHUBSERVICETOKEN }}
+
+    - name: Setup Unity Editor
+      id: unity-install
+      uses: ./.github/actions/helium-unity-ci/setup-unity
+      timeout-minutes: 60
+      with:
+        unity-version: ${{ env.UNITY_VERSION }}
+        unity-version-changeset: 8c66806a0c04
+        unity-modules:
+          android
+          ios
+
+    - name: Activate Unity License
+      id: activate-unity
+      uses: ./.github/actions/helium-unity-ci/activate-unity
+
+    # Once we add mor platforms maybe we can run this in a matrix? this is fine for now.
+    - name: Check for Compiler Errors in Standalone
+      id: unity-compile-standalone
+      uses: ./.github/actions/helium-unity-ci/compile-unity
+      with:
+        target-platform: standalone
+
+    - name: Check for Compiler Errors in Android
+      id: unity-compile-android
+      uses: ./.github/actions/helium-unity-ci/compile-unity
+      with:
+        target-platform: android
+
+    - name: Check for Compiler Errors in iOS
+      id: unity-compile-ios
+      uses: ./.github/actions/helium-unity-ci/compile-unity
+      with:
+        target-platform: ios
+
+    - name: Run Unity Unit Tests
+      id: unity-unit-tests
+      uses: ./.github/actions/helium-unity-ci/test-unity
+
+    - name: Cleanup Unity Generated Files
+      id: unity-cleanup
+      uses: ./.github/actions/helium-unity-ci/cleanup-unity
+
+    - name: Return Unity License
+      if: always()
+      id: return-unity
+      uses: ./.github/actions/helium-unity-ci/return-unity
