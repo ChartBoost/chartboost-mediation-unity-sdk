@@ -42,6 +42,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         submodules: true
+        token: ${{ secrets.GITHUBSERVICETOKEN }}
 
     - name: Set Up JDK 11
       uses: actions/setup-java@v3
@@ -81,10 +82,11 @@ jobs:
       UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
 
     steps:
-    - name: Checkout branch
+    - name: Checkout Branch
       uses: actions/checkout@v3
       with:
         submodules: true
+        token: ${{ secrets.GITHUBSERVICETOKEN }}
 
     - name: Setup Unity Editor
       id: unity-install
