@@ -72,7 +72,7 @@ jobs:
   tests:
     name: Unity Actions & Unit Testing
     runs-on: [self-hosted]
-    needs: tests
+    needs: compile
 
     env:
       SETUP_PASS: ${{ secrets.SETUP_PASS }}
