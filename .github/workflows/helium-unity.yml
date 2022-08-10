@@ -26,7 +26,6 @@ env:
   UNITY_VERSION: 2020.3.37f1
   UNITY_EXE_PATH: /Applications/Unity/Hub/Editor/2020.3.37f1/Unity.app/Contents/MacOS/Unity
   PROJECT_PATH: com.chartboost.helium.demo
-  UNITY_CI_ACTIONS: ./.github/actions/helium-unity-ci
 
 # Cancels any queued or in-progress runs for this branch.
 concurrency:
@@ -63,10 +62,10 @@ jobs:
         JFROG_PASS: ${{ secrets.JFROG_PASS }}
 
     - name: Grant Execute Permission for Git Bridge Commit
-      run: "chmod +x ${{ env.UNITY_CI_ACTIONS }}/CheckGitChanges.sh"
+      run: "chmod +x ./.github/actions/helium-unity-ci/CheckGitChanges.sh"
 
     - name: Check for Android Bridge .jar Changes & Update
-      run: "${{ env.UNITY_CI_ACTIONS }}/CheckGitChanges.sh"
+      run: ./.github/actions/helium-unity-ci/CheckGitChanges.sh
       env:
         TARGET_FILE: "com.chartboost.helium/Runtime/Plugins/Android/helium-android-bridge.jar"
 
@@ -89,7 +88,7 @@ jobs:
 
     - name: Setup Unity Editor
       id: unity-install
-      uses: "${{ env.UNITY_CI_ACTIONS }}/setup-unity"
+      uses: ./.github/actions/helium-unity-ci/setup-unity
       timeout-minutes: 60
       with:
         unity-version: ${{ env.UNITY_VERSION }}
@@ -100,36 +99,36 @@ jobs:
 
     - name: Activate Unity License
       id: activate-unity
-      uses: "${{ env.UNITY_CI_ACTIONS }}/activate-unity"
+      uses: ./.github/actions/helium-unity-ci/activate-unity
 
     # Once we add mor platforms maybe we can run this in a matrix? this is fine for now.
     - name: Check for Compiler Errors in Standalone
       id: unity-compile-standalone
-      uses: "${{ env.UNITY_CI_ACTIONS }}/compile-unity"
+      uses: ./.github/actions/helium-unity-ci/compile-unity
       with:
         target-platform: standalone
 
     - name: Check for Compiler Errors in Android
       id: unity-compile-android
-      uses: "${{ env.UNITY_CI_ACTIONS }}/compile-unity"
+      uses: ./.github/actions/helium-unity-ci/compile-unity
       with:
         target-platform: android
 
     - name: Check for Compiler Errors in iOS
       id: unity-compile-ios
-      uses: "${{ env.UNITY_CI_ACTIONS }}/compile-unity"
+      uses: ./.github/actions/helium-unity-ci/compile-unity
       with:
         target-platform: ios
 
     - name: Run Unity Unit Tests
       id: unity-unit-tests
-      uses: "${{ env.UNITY_CI_ACTIONS }}/test-unity"
+      uses: ./.github/actions/helium-unity-ci/test-unity
 
     - name: Cleanup Unity Generated Files
       id: unity-cleanup
-      uses: "${{ env.UNITY_CI_ACTIONS }}/cleanup-unity"
+      uses: ./.github/actions/helium-unity-ci/cleanup-unity
 
     - name: Return Unity License
       if: always()
       id: return-unity
-      uses: "${{ env.UNITY_CI_ACTIONS }}/return-unity"
+      uses: ./.github/actions/helium-unity-ci/return-unity
