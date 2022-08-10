@@ -63,7 +63,7 @@ jobs:
         JFROG_PASS: ${{ secrets.JFROG_PASS }}
 
     - name: Grant Execute Permission for Git Bridge Commit
-      run: "chmod +x "${{ env.UNITY_CI_ACTIONS }}/CheckGitChanges.sh"
+      run: "chmod +x ${{ env.UNITY_CI_ACTIONS }}/CheckGitChanges.sh"
 
     - name: Check for Android Bridge .jar Changes & Update
       run: "${{ env.UNITY_CI_ACTIONS }}/CheckGitChanges.sh"
