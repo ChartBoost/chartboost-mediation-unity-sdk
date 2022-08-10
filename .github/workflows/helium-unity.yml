@@ -41,7 +41,7 @@ jobs:
     - name: Checkout Branch
       uses: actions/checkout@v3
       with:
-        submodules: true
+        submodules: recursive
         token: ${{ secrets.GITHUBSERVICETOKEN }}
 
     - name: Set Up JDK 11
@@ -85,7 +85,7 @@ jobs:
     - name: Checkout Branch
       uses: actions/checkout@v3
       with:
-        submodules: true
+        submodules: recursive
         token: ${{ secrets.GITHUBSERVICETOKEN }}
 
     - name: Setup Unity Editor
