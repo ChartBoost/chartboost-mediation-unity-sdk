@@ -67,14 +67,23 @@ public class HeliumEventProcessor {
     }
 
     public static void serializeHeliumRewardEvent(String placementName, String reward, HeliumRewardEventConsumer<String, Integer> eventConsumer) {
-        if (placementName == null)
-            placementName = EMPTY_STRING;
 
-        int rewardAsInt = 0;
-        if (reward != null)
-            rewardAsInt = Integer.parseInt(reward);
+        try {
+            if (placementName == null)
+                placementName = EMPTY_STRING;
 
-        eventConsumer.accept(placementName, rewardAsInt);
+            int rewardAsInt = 0;
+
+            if (reward != null)
+                rewardAsInt = Integer.parseInt(reward);
+
+            eventConsumer.accept(placementName, rewardAsInt);
+        }
+        catch (Exception exception)
+        {
+            Log.e(TAG, "Failed to Parse Reward Information: Reward: " + reward);
+            eventConsumer.accept(placementName, 1);
+        }
     }
 
     public static String serializePlacementILRDData(String placementName, JSONObject ilrdInfo) {

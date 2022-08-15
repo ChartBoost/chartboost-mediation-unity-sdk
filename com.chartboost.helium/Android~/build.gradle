@@ -12,13 +12,13 @@ buildscript {
 }
 
 ext {
-    gitHubTag = System.getenv("GITHUB_REF");
-    gitHubCommit = System.getenv("GITHUB_SHA");
+    gitHubTag = System.getenv("GITHUB_REF")
+    gitHubCommit = System.getenv("GITHUB_SHA")
     versionInput = System.getenv("HELIUM_VERSION")
     onlyPublic = System.getenv("ONLY_PUBLIC") == 'true'
 
     privateUser = onlyPublic? "" : System.getenv("JFROG_USER")
-    privatePass = onlyPublic? "" : System.getenv("JFROG_PASS");
+    privatePass = onlyPublic? "" : System.getenv("JFROG_PASS")
 
     inputVersionIsHigher = true
     heliumVersion = '3.0.+'
