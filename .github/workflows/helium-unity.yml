@@ -8,6 +8,7 @@ on:
     branches:
       - 'develop'
       - 'main'
+      - 'release/*'
   schedule:
     # Scheduled to run Monday - Friday at 9AM UTC which is 2AM PST.
     # * is a special character in YAML so you have to quote this string
