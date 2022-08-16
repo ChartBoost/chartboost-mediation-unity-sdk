@@ -27,6 +27,8 @@ Helium Unity SDK is distributed using the public [npm registry](https://www.npmj
   },
 ```
 
+Visit the [CHANGELOG](com.chartboost.helium/CHANGELOG.md) to reference changes to each version of the Helium Unity SDK.
+
 In order to better understand the Helium Unity SDK, documentation has been split between Setup and Integration Steps:
 
 #### Setup
