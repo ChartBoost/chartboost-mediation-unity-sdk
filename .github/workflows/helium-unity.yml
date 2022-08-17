@@ -127,6 +127,7 @@ jobs:
       uses: ./.github/actions/helium-unity-ci/test-unity
 
     - name: Cleanup Unity Generated Files
+      if: always()
       id: unity-cleanup
       uses: ./.github/actions/helium-unity-ci/cleanup-unity
 
