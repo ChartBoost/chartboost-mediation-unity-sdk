@@ -16,6 +16,9 @@ Helium Unity SDK provides support for Unity based games to easily integrate the 
 | [Minimum Android API Level](https://developer.android.com/studio/releases/platforms#5.0) | 5.0+ (API level 21) |
 | [Target Android API Level](https://developer.android.com/studio/releases/platforms#12) | 12.0+ (API level 31) |
 
+### CHANGELOG
+Visit the [CHANGELOG](com.chartboost.helium/CHANGELOG.md) to reference changes to each version of the Helium Unity SDK.
+
 ### Integrating the Helium Unity SDK
 
 Helium Unity SDK is distributed using the public [npm registry](https://www.npmjs.com/search?q=com.chartboost) as such it is compatible with the Unity Package Manager (UPM). In order to add the Helium Unity SDK to your project, just add the following to your Unity Project's ***manifest.json*** file.

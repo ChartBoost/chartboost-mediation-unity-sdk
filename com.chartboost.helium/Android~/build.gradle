@@ -49,6 +49,14 @@ task githubScript {
     dependsOn('buildBridge')
 }
 
+task buildBridge {
+    dependsOn ':helium-android-bridge:clean'
+    dependsOn ':helium-android-bridge:lint'
+    dependsOn ':helium-android-bridge:build'
+    if (isNotRelease && inputVersionIsHigher)
+        dependsOn ':helium-android-bridge:copyReleaseAndroidBridgeForPackaging'
+}
+
 String mostRecentVersion(List versions) {
     def sorted = versions.sort(false) { a, b ->
         def regex = /[.+]/
@@ -72,12 +80,4 @@ String mostRecentVersion(List versions) {
 
     println "sorted versions: $sorted"
     sorted[-1]
-}
-
-task buildBridge {
-    dependsOn ':helium-android-bridge:clean'
-    dependsOn ':helium-android-bridge:lint'
-    dependsOn ':helium-android-bridge:build'
-    if (isNotRelease && inputVersionIsHigher)
-        dependsOn ':helium-android-bridge:copyReleaseAndroidBridgeForPackaging'
 }
