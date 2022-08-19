@@ -73,7 +73,7 @@ jobs:
 
   tests:
     name: Unity Actions & Unit Testing
-    runs-on: [self-hosted]
+    runs-on: cb-office-mac-intel-1
     needs: compile
 
     env:
