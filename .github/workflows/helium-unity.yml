@@ -36,7 +36,7 @@ concurrency:
 jobs:
   compile:
     name: Compile Android Bridge
-    runs-on: [self-hosted]
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Branch
@@ -73,7 +73,7 @@ jobs:
 
   tests:
     name: Unity Actions & Unit Testing
-    runs-on: cb-office-mac-intel-1
+    runs-on: macos-latest
     needs: compile
 
     env:
