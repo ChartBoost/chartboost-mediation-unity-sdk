@@ -12,9 +12,9 @@ COPPA Settings can be configured utilizing the following method:
   HeliumSDK.SetSubjectToCoppa(false);
 ```
 
-* By sending `setSubjectToCoppa (true)`, you indicate that you want your content treated as child-directed for purposes of COPPA. We will take steps to disable interest-based advertising for such ad requests.
+* By sending `SetSubjectToCoppa (true)`, you indicate that you want your content treated as child-directed for purposes of COPPA. We will take steps to disable interest-based advertising for such ad requests.
 
-* By sending `setSubjectToCoppa (false)`, you indicate that you don't want your content treated as child-directed for purposes of COPPA. You represent and warrant that your applications and services are not directed towards children and that you will not provide any information to Helium from a user under the age of 13.
+* By sending `SetSubjectToCoppa (false)`, you indicate that you don't want your content treated as child-directed for purposes of COPPA. You represent and warrant that your applications and services are not directed towards children and that you will not provide any information to Helium from a user under the age of 13.
 
 ## GDPR
 ```csharp
@@ -23,9 +23,9 @@ COPPA Settings can be configured utilizing the following method:
   HeliumSDK.SetSubjectToGDPR(false);
 ```
 
-* By sending `setSubjectToGDPR (true)`, you indicate that GDPR is applied to this user from your application.
+* By sending `SetSubjectToGDPR (true)`, you indicate that GDPR is applied to this user from your application.
 
-* By sending `setSubjectToGDPR (false)`, you indicate that GDPR is not applied to this user from your application.
+* By sending `SetSubjectToGDPR (false)`, you indicate that GDPR is not applied to this user from your application.
 
 ```csharp
   HeliumSDK.SetUserHasGivenConsent(true);
@@ -33,9 +33,9 @@ COPPA Settings can be configured utilizing the following method:
   HeliumSDK.SetUserHasGivenConsent(false);
 ```
 
-* By sending `setUserHasGivenConsent (true)`, you indicate that this user from your application has given consent to share personal data for behavioral targeted advertising.
+* By sending `SetUserHasGivenConsent (true)`, you indicate that this user from your application has given consent to share personal data for behavioral targeted advertising.
 
-* By sending `setUserHasGivenConsent (false)`, you indicate that this user from your application has not given consent to use its personal data for behavioral targeted advertising, so only contextual advertising is allowed.
+* By sending `SetUserHasGivenConsent (false)`, you indicate that this user from your application has not given consent to use its personal data for behavioral targeted advertising, so only contextual advertising is allowed.
 
 ## CCPA
 ```csharp
@@ -44,9 +44,9 @@ COPPA Settings can be configured utilizing the following method:
   HeliumSDK.SetCCPAConsent(false);
 ```
 
-* By sending `setCCPAConsent (true)`, you indicate that this user from your application has given consent to share personal data for behavioral targeted advertising under CCPA regulation.
+* By sending `SetCCPAConsent (true)`, you indicate that this user from your application has given consent to share personal data for behavioral targeted advertising under CCPA regulation.
 
-* By sending `setCCPAConsent (false)`, you indicate that this user from your application has not given consent to allow sharing personal data for behavioral targeted advertising under CCPA regulation.
+* By sending `SetCCPAConsent (false)`, you indicate that this user from your application has not given consent to allow sharing personal data for behavioral targeted advertising under CCPA regulation.
 
 > **_NOTE:_** Helium will send CCPA information to the bidding network and set the CCPA information for the adapters.
 
