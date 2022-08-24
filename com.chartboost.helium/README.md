@@ -21,13 +21,22 @@ Visit the [CHANGELOG](com.chartboost.helium/CHANGELOG.md) to reference changes t
 
 ### Integrating the Helium Unity SDK
 
-Helium Unity SDK is distributed using the public [npm registry](https://www.npmjs.com/search?q=com.chartboost) as such it is compatible with the Unity Package Manager (UPM). In order to add the Helium Unity SDK to your project, just add the following to your Unity Project's ***manifest.json*** file.
+Helium Unity SDK is distributed using the public [npm registry](https://www.npmjs.com/search?q=com.chartboost) as such it is compatible with the Unity Package Manager (UPM). In order to add the Helium Unity SDK to your project, just add the following to your Unity Project's ***manifest.json*** file. The scoped registry section is required in order to fetch packages from the NpmJS registry.
 
 ```json
   "dependencies": {
     "com.chartboost.helium": "3.0.0",
     ...
   },
+  "scopedRegistries": [
+    {
+      "name": "NpmJS",
+      "url": "https://registry.npmjs.org",
+      "scopes": [
+        "com.chartboost"
+      ]
+    }
+  ]
 ```
 
 In order to better understand the Helium Unity SDK, documentation has been split between Setup and Integration Steps:
@@ -42,8 +51,9 @@ In order to better understand the Helium Unity SDK, documentation has been split
 #### Integration
 
 1. [Initialization](com.chartboost.helium/Documentation/integration/initialization.md)
-2. [Loading Ads](com.chartboost.helium/Documentation/integration/loading-ads.md)
-3. [Showing Ads](com.chartboost.helium/Documentation/integration/showing-ads.md)
-4. [Delegate Usage](com.chartboost.helium/Documentation/integration/delegate-usage.md)
-5. [Error Codes](com.chartboost.helium/Documentation/integration/error-codes.md)
-6. [Unit Testing](com.chartboost.helium/Documentation/integration/unit-testing.md)
+2. [Configure Helium](com.chartboost.helium/Documentation/integration/configure.md)
+3. [Loading Ads](com.chartboost.helium/Documentation/integration/loading-ads.md)
+4. [Showing Ads](com.chartboost.helium/Documentation/integration/showing-ads.md)
+5. [Delegate Usage](com.chartboost.helium/Documentation/integration/delegate-usage.md)
+6. [Error Codes](com.chartboost.helium/Documentation/integration/error-codes.md)
+7. [Unit Testing](com.chartboost.helium/Documentation/integration/unit-testing.md)
