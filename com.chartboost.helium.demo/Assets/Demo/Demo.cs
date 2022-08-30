@@ -164,7 +164,12 @@ public class Demo : MonoBehaviour
 
     public void OnClearInterstitialClick()
     {
-        _interstitialAd.ClearLoaded();
+        if (_interstitialAd == null)
+        {
+            Log("interstitial ad does not exist");
+            return;
+        }
+        Log(_interstitialAd.ClearLoaded() ? "interstitial ad has been cleared" : "interstitial ad has failed to clear");
     }
 
     public void OnShowInterstitialClick()
@@ -250,7 +255,12 @@ public class Demo : MonoBehaviour
 
     public void OnClearRewardedClick()
     {
-        _rewardedAd.ClearLoaded();
+        if (_rewardedAd == null)
+        {
+            Log("rewarded ad does not exist");
+            return;
+        }
+        Log(_rewardedAd.ClearLoaded() ? "rewarded ad has been cleared" : "rewarded ad has failed to clear");
     }
 
     public void OnShowRewardedClick()
@@ -360,8 +370,12 @@ public class Demo : MonoBehaviour
 
     public void OnClearBannerClick()
     {
-        _bannerAd?.ClearLoaded();
-        Log("Banner Cleared");
+        if (_bannerAd == null)
+        {
+            Log("banner ad does not exist");
+            return;
+        }
+        Log(_bannerAd.ClearLoaded() ? "banner ad has been cleared" : "banner ad has failed to clear");
     }
 
     public void OnToggleBannerVisibilityClick()
