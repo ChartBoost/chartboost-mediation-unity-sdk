@@ -1,6 +1,7 @@
 package com.chartboost.heliumsdk.unity;
 
 import static com.chartboost.heliumsdk.unity.HeliumUnityBridge.runTaskOnUiThread;
+
 import android.app.Activity;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
@@ -9,13 +10,13 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+
 import com.chartboost.heliumsdk.ad.HeliumAd;
 import com.chartboost.heliumsdk.ad.HeliumBannerAd;
 import com.chartboost.heliumsdk.ad.HeliumFullscreenAd;
 import com.chartboost.heliumsdk.ad.HeliumRewardedAd;
 import com.chartboost.heliumsdk.domain.Keywords;
 import com.unity3d.player.UnityPlayer;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class HeliumUnityAdWrapper {
     private static final String TAG = "HeliumUnityAdWrapper";
@@ -129,14 +130,13 @@ public class HeliumUnityAdWrapper {
 
     @SuppressWarnings("unused")
     public boolean clearLoaded() {
-        AtomicBoolean ret = new AtomicBoolean(false);
-        runTaskOnUiThread(() -> {
-            if (isFullScreen())
-                ret.set(asFullScreen().clearLoaded());
-            else if (isBanner())
-                ret.set(asBanner().clearAd());
-        });
-        return ret.get();
+       if (isFullScreen())
+           return asFullScreen().clearLoaded();
+       if (isBanner()) {
+           runTaskOnUiThread(() ->  asBanner().clearAd());
+           return true;
+       }
+        return false;
     }
 
     @SuppressWarnings("unused")
