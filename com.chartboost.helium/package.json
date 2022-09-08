@@ -1,6 +1,6 @@
 {
   "name": "com.chartboost.helium",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "displayName": "Helium SDK",
   "description": "The Helium Unity SDK by Chartboost: Better monetization powered by bidding",
   "unity": "2020.3",
