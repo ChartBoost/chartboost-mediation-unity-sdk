@@ -21,7 +21,7 @@ ext {
     privatePass = onlyPublic? "" : System.getenv("JFROG_PASS")
 
     inputVersionIsHigher = true
-    heliumVersion = '3.0.+'
+    heliumVersion = '3.1.+'
     if (versionInput != null && versionInput != "") {
         inputVersionIsHigher = mostRecentVersion([heliumVersion, versionInput]) == versionInput
         heliumVersion = versionInput
