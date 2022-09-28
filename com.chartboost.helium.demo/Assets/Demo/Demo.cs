@@ -324,29 +324,29 @@ public class Demo : MonoBehaviour
             1 => HeliumBannerAdSize.MediumRect,
             _ => HeliumBannerAdSize.Standard
         };
+
+        _bannerAd?.ClearLoaded();
+
+        Log("Creating banner on placement: " + bannerPlacementInputField.text + " with size: " + size);
+        _bannerAd = HeliumSDK.GetBannerAd(bannerPlacementInputField.text, size);
+        
         if (_bannerAd == null)
         {
-            Log("Creating banner on placement: " + bannerPlacementInputField.text + " with size: " + size);
-            _bannerAd = HeliumSDK.GetBannerAd(bannerPlacementInputField.text, size);
-            
-            if (_bannerAd == null)
-            {
-                Log("Banner not found");
-                return;
-            }
-
-            // example keywords usage
-            _bannerAd.SetKeyword("bnr_keyword1", "bnr_value1"); // accepted set
-            _bannerAd.SetKeyword("bnr_keyword2", "bnr_value2"); // accepted set
-            _bannerAd.SetKeyword(GenerateRandomString(65), "bnr_value2"); // rejected set
-            _bannerAd.SetKeyword("bnr_keyword3", GenerateRandomString(257)); // rejected set
-            _bannerAd.SetKeyword("bnr_keyword4", "bnr_value4"); // accepted set
-            var keyword4 = this._bannerAd.RemoveKeyword("bnr_keyword4"); // removal of existing
-            _bannerAd.RemoveKeyword("bnr_keyword4"); // removal of non-existing
-            _bannerAd.SetKeyword("bnr_keyword5", keyword4); // accepted set using prior value
-            _bannerAd.SetKeyword("bnr_keyword6", "bnr_value6"); // accepted set
-            _bannerAd.SetKeyword("bnr_keyword6", "bnr_value6_replaced"); // accepted replace
+            Log("Banner not found");
+            return;
         }
+
+        // example keywords usage
+        _bannerAd.SetKeyword("bnr_keyword1", "bnr_value1"); // accepted set
+        _bannerAd.SetKeyword("bnr_keyword2", "bnr_value2"); // accepted set
+        _bannerAd.SetKeyword(GenerateRandomString(65), "bnr_value2"); // rejected set
+        _bannerAd.SetKeyword("bnr_keyword3", GenerateRandomString(257)); // rejected set
+        _bannerAd.SetKeyword("bnr_keyword4", "bnr_value4"); // accepted set
+        var keyword4 = this._bannerAd.RemoveKeyword("bnr_keyword4"); // removal of existing
+        _bannerAd.RemoveKeyword("bnr_keyword4"); // removal of non-existing
+        _bannerAd.SetKeyword("bnr_keyword5", keyword4); // accepted set using prior value
+        _bannerAd.SetKeyword("bnr_keyword6", "bnr_value6"); // accepted set
+        _bannerAd.SetKeyword("bnr_keyword6", "bnr_value6_replaced"); // accepted replace
         var screenPos = bannerLocationDropdown.value switch
         {
             0 => HeliumBannerAdScreenLocation.TopLeft,
