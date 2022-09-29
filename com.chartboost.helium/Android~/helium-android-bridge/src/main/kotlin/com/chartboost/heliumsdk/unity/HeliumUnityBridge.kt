@@ -371,6 +371,7 @@ class HeliumUnityBridge {
 
         // Stores a static instance of the HeliumPlugin class for easy access
         // from Unity
+        @JvmStatic
         fun instance(): HeliumUnityBridge {
             return HeliumUnityBridge()
         }

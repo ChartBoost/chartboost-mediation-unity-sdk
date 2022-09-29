@@ -24,12 +24,12 @@ class HeliumUnityAdWrapper(private val _ad: HeliumAd?) {
     private val isFullScreen: Boolean = _ad is HeliumFullscreenAd
     private var _asBanner: HeliumBannerAd? = null
     private var _asFullScreen: HeliumFullscreenAd? = null
+    private var startedLoad = false
+
     private fun ad(): HeliumAd {
         if (_ad == null) throw RuntimeException("$TAG cannot interact with Helium ad as ad was not created")
         return _ad
     }
-
-    private var startedLoad = false
 
     init {
         if (isBanner) _asBanner = _ad as HeliumBannerAd?
