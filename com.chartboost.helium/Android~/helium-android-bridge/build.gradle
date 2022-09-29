@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'signing'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
@@ -15,14 +16,16 @@ android {
     sourceSets {
         main {
             java {
-                srcDir 'src/main/java'
+                srcDir 'src/main/kotlin'
             }
         }
     }
-
     compileOptions {
-        sourceCompatibility 1.8
-        targetCompatibility 1.8
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 }
 
@@ -43,6 +46,7 @@ repositories {
 
 ext {
     heliumDependency = "com.chartboost:helium:$heliumVersion"
+    androidPluginFolder = "$rootDir/../Runtime/Plugins/Android"
     print("Attempting to Compile Android Bridge with Helium SDK version: $heliumDependency")
 }
 
@@ -65,6 +69,6 @@ task assembleForPlugin(type: Jar, dependsOn: 'bundleLibRuntimeToJarRelease') {
 
 task copyReleaseAndroidBridgeForPackaging(type: Copy, dependsOn: 'assembleForPlugin') {
     from ("$projectDir/build/intermediates/runtime_library_classes_jar/release/classes.jar")
-    into ("$rootDir/../Runtime/Plugins/Android")
+    into (androidPluginFolder)
     rename("classes.jar", "helium-android-bridge.jar")
 }
