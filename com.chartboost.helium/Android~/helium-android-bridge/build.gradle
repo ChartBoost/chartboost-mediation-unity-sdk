@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.library'
-    id 'signing'
-    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android'
 }
 
 android {
@@ -12,10 +11,9 @@ android {
         minSdkVersion 21
         targetSdkVersion 32
     }
-
     sourceSets {
         main {
-            java {
+            kotlin {
                 srcDir 'src/main/kotlin'
             }
         }
