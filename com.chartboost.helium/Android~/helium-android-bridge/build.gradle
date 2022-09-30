@@ -14,7 +14,7 @@ android {
     sourceSets {
         main {
             kotlin {
-                srcDir 'src/main/kotlin'
+                srcDir 'src/main/java'
             }
         }
     }

@@ -1,6 +1,5 @@
 package com.chartboost.heliumsdk.unity
 
-import android.app.Activity
 import android.util.Log
 import com.chartboost.heliumsdk.HeliumIlrdObserver
 import com.chartboost.heliumsdk.HeliumImpressionData
@@ -19,17 +18,17 @@ import com.unity3d.player.UnityPlayer
 
 @Suppress("NAME_SHADOWING")
 class HeliumUnityBridge {
-    private lateinit var _activity: Activity
     private var lifeCycleEventListener: ILifeCycleEventListener? = null
     private var bannerEventsListener: IBannerEventListener? = null
     private var interstitialEventsListener: IInterstitialEventListener? = null
     private var rewardedEventListener: IRewardedEventListener? = null
     private var ilrdObserver: HeliumIlrdObserver? = null
+
     fun setupEventListeners(
-        lifeCycleListener: ILifeCycleEventListener?,
-        interstitialListener: IInterstitialEventListener?,
-        rewardedListener: IRewardedEventListener?,
-        bannerListener: IBannerEventListener?
+        lifeCycleListener: ILifeCycleEventListener,
+        interstitialListener: IInterstitialEventListener,
+        rewardedListener: IRewardedEventListener,
+        bannerListener: IBannerEventListener
     ) {
         lifeCycleEventListener = lifeCycleListener
         interstitialEventsListener = interstitialListener
@@ -53,28 +52,27 @@ class HeliumUnityBridge {
         HeliumSdk.setUserHasGivenConsent(hasGivenConsent)
     }
 
+    fun onBackPressed(): Boolean {
+        return HeliumSdk.onBackPressed()
+    }
+
     var userIdentifier: String?
         get() = HeliumSdk.getUserIdentifier()
         set(userIdentifier) {
             HeliumSdk.setUserIdentifier(userIdentifier)
         }
 
-    fun onBackPressed(): Boolean {
-        return HeliumSdk.onBackPressed()
-    }
-
-    fun start(appId: String?, appSignature: String?, unityVersion: String?) {
-        _activity = UnityPlayer.currentActivity
-
+    fun start(appId: String, appSignature: String, unityVersion: String) {
         ilrdObserver = object : HeliumIlrdObserver {
             override fun onImpression(impData: HeliumImpressionData) {
                 val json = serializePlacementILRDData(impData.placementId, impData.ilrdInfo)
-                lifeCycleEventListener!!.DidReceiveILRD(json)
+                lifeCycleEventListener?.DidReceiveILRD(json)
             }
         }
+
         runTaskOnUiThread {
             // This call initializes the Helium SDK. This might change in the future with two ID parameters and we'll get rid of the logControllerListener
-            HeliumSdk.start(_activity, appId!!, appSignature!!) { error: Error? ->
+            HeliumSdk.start(UnityPlayer.currentActivity, appId, appSignature) { error: Error? ->
                 val errorNotFound = error == null
                 if (errorNotFound) {
                     Log.d("Unity", "HeliumUnityBridge: Plugin Initialized")
@@ -83,9 +81,7 @@ class HeliumUnityBridge {
                 } else {
                     Log.d("Unity", "HeliumUnityBridge: Plugin failed to initialize: $error")
                 }
-                val errorCode = if (errorNotFound) -1 else 1
-                val errorDescription = if (errorNotFound) EMPTY_STRING else error.toString()
-                lifeCycleEventListener!!.DidStart(errorCode, errorDescription)
+                lifeCycleEventListener?.DidStart(error?.hashCode() ?: -1, error?.toString() ?: "")
             }
         }
     }
@@ -101,8 +97,8 @@ class HeliumUnityBridge {
         }
     }
 
-    fun getInterstitialAd(placementName: String?): HeliumUnityAdWrapper? {
-        return if (placementName == null) null else wrap(
+    fun getInterstitialAd(placementName: String): HeliumUnityAdWrapper {
+        return wrap(
             HeliumInterstitialAd(
                 placementName,
                 object : HeliumInterstitialAdListener {
@@ -113,8 +109,8 @@ class HeliumUnityBridge {
                         serializeHeliumBidEvent(
                             placementName,
                             hashMap,
-                            HeliumBidEventConsumer { placementName: String?, auctionId: String?, partnerId: String?, price: Double ->
-                                interstitialEventsListener!!.DidWinBidInterstitial(
+                            HeliumBidEventConsumer { placementName: String, auctionId: String, partnerId: String, price: Double ->
+                                interstitialEventsListener?.DidWinBidInterstitial(
                                     placementName,
                                     auctionId,
                                     partnerId,
@@ -127,8 +123,8 @@ class HeliumUnityBridge {
                         serializeHeliumEvent(
                             placementName,
                             error,
-                            HeliumEventConsumer { placementName: String?, errorCode: Int, errorDescription: String? ->
-                                interstitialEventsListener!!.DidLoadInterstitial(
+                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
+                                interstitialEventsListener?.DidLoadInterstitial(
                                     placementName,
                                     errorCode,
                                     errorDescription
@@ -140,8 +136,8 @@ class HeliumUnityBridge {
                         serializeHeliumEvent(
                             placementName,
                             error,
-                            HeliumEventConsumer { placementName: String?, errorCode: Int, errorDescription: String? ->
-                                interstitialEventsListener!!.DidShowInterstitial(
+                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
+                                interstitialEventsListener?.DidShowInterstitial(
                                     placementName,
                                     errorCode,
                                     errorDescription
@@ -153,8 +149,8 @@ class HeliumUnityBridge {
                         serializeHeliumEvent(
                             placementName,
                             error,
-                            HeliumEventConsumer { placementName: String?, errorCode: Int, errorDescription: String? ->
-                                interstitialEventsListener!!.DidCloseInterstitial(
+                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
+                                interstitialEventsListener?.DidCloseInterstitial(
                                     placementName,
                                     errorCode,
                                     errorDescription
@@ -166,8 +162,8 @@ class HeliumUnityBridge {
                         serializeHeliumEvent(
                             placementName,
                             error,
-                            HeliumEventConsumer { placementName: String?, errorCode: Int, errorDescription: String? ->
-                                interstitialEventsListener!!.DidClickInterstitial(
+                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
+                                interstitialEventsListener?.DidClickInterstitial(
                                     placementName,
                                     errorCode,
                                     errorDescription
@@ -179,8 +175,8 @@ class HeliumUnityBridge {
                         serializeHeliumEvent(
                             placementName,
                             null,
-                            HeliumEventConsumer { placementName: String?, errorCode: Int, errorDescription: String? ->
-                                interstitialEventsListener!!.DidRecordImpression(
+                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
+                                interstitialEventsListener?.DidRecordImpression(
                                     placementName,
                                     errorCode,
                                     errorDescription
@@ -191,8 +187,8 @@ class HeliumUnityBridge {
         )
     }
 
-    fun getRewardedAd(placementName: String?): HeliumUnityAdWrapper? {
-        return if (placementName == null) null else wrap(
+    fun getRewardedAd(placementName: String): HeliumUnityAdWrapper {
+        return wrap(
             HeliumRewardedAd(
                 placementName,
                 object : HeliumRewardedAdListener {
@@ -203,8 +199,8 @@ class HeliumUnityBridge {
                         serializeHeliumBidEvent(
                             placementName,
                             hashMap,
-                            HeliumBidEventConsumer { placementName: String?, auctionId: String?, partnerId: String?, price: Double ->
-                                rewardedEventListener!!.DidWinBidRewarded(
+                            HeliumBidEventConsumer { placementName: String, auctionId: String, partnerId: String, price: Double ->
+                                rewardedEventListener?.DidWinBidRewarded(
                                     placementName,
                                     auctionId,
                                     partnerId,
@@ -217,8 +213,8 @@ class HeliumUnityBridge {
                         serializeHeliumEvent(
                             placementName,
                             error,
-                            HeliumEventConsumer { placementName: String?, errorCode: Int, errorDescription: String? ->
-                                rewardedEventListener!!.DidLoadRewarded(
+                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
+                                rewardedEventListener?.DidLoadRewarded(
                                     placementName,
                                     errorCode,
                                     errorDescription
@@ -230,8 +226,8 @@ class HeliumUnityBridge {
                         serializeHeliumEvent(
                             placementName,
                             error,
-                            HeliumEventConsumer { placementName: String?, errorCode: Int, errorDescription: String? ->
-                                rewardedEventListener!!.DidShowRewarded(
+                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
+                                rewardedEventListener?.DidShowRewarded(
                                     placementName,
                                     errorCode,
                                     errorDescription
@@ -243,8 +239,8 @@ class HeliumUnityBridge {
                         serializeHeliumEvent(
                             placementName,
                             error,
-                            HeliumEventConsumer { placementName: String?, errorCode: Int, errorDescription: String? ->
-                                rewardedEventListener!!.DidCloseRewarded(
+                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
+                                rewardedEventListener?.DidCloseRewarded(
                                     placementName,
                                     errorCode,
                                     errorDescription
@@ -256,8 +252,8 @@ class HeliumUnityBridge {
                         serializeHeliumRewardEvent(
                             placementName,
                             reward,
-                            HeliumRewardEventConsumer { placementName: String?, reward: Int ->
-                                rewardedEventListener!!.DidReceiveReward(
+                            HeliumRewardEventConsumer { placementName: String, reward: Int ->
+                                rewardedEventListener?.DidReceiveReward(
                                     placementName,
                                     reward
                                 )
@@ -268,8 +264,8 @@ class HeliumUnityBridge {
                         serializeHeliumEvent(
                             placementName,
                             error,
-                            HeliumEventConsumer { placementName: String?, errorCode: Int, errorDescription: String? ->
-                                rewardedEventListener!!.DidClickRewarded(
+                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
+                                rewardedEventListener?.DidClickRewarded(
                                     placementName,
                                     errorCode,
                                     errorDescription
@@ -281,8 +277,8 @@ class HeliumUnityBridge {
                         serializeHeliumEvent(
                             placementName,
                             null,
-                            HeliumEventConsumer { placementName: String?, errorCode: Int, errorDescription: String? ->
-                                rewardedEventListener!!.DidRecordImpression(
+                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
+                                rewardedEventListener?.DidRecordImpression(
                                     placementName,
                                     errorCode,
                                     errorDescription
@@ -293,28 +289,26 @@ class HeliumUnityBridge {
         )
     }
 
-    fun getBannerAd(placementName: String?, size: Int): HeliumUnityAdWrapper? {
-        if (placementName == null) return null
+    fun getBannerAd(placementName: String, size: Int): HeliumUnityAdWrapper {
         var wantedSize: HeliumBannerSize? = null
         when (size) {
             0 -> wantedSize = HeliumBannerSize.STANDARD
             1 -> wantedSize = HeliumBannerSize.MEDIUM
             2 -> wantedSize = HeliumBannerSize.LEADERBOARD
         }
-        val finalWantedSize = wantedSize
         return wrap(
             HeliumBannerAd(
-                _activity,
+                UnityPlayer.currentActivity,
                 placementName,
-                finalWantedSize!!,
+                wantedSize!!,
                 object : HeliumBannerAdListener {
                     override fun didReceiveWinningBid(
                         placementName: String,
                         bidInfo: HashMap<String, String>
                     ) {
                         serializeHeliumBidEvent(placementName, bidInfo,
-                            HeliumBidEventConsumer { placementName: String?, auctionId: String?, partnerId: String?, price: Double ->
-                                bannerEventsListener!!.DidWinBidBanner(
+                            HeliumBidEventConsumer { placementName: String, auctionId: String, partnerId: String, price: Double ->
+                                bannerEventsListener?.DidWinBidBanner(
                                     placementName,
                                     auctionId,
                                     partnerId,
@@ -327,8 +321,8 @@ class HeliumUnityBridge {
                         serializeHeliumEvent(
                             placementName,
                             error,
-                            HeliumEventConsumer { placementName: String?, errorCode: Int, errorDescription: String? ->
-                                bannerEventsListener!!.DidLoadBanner(
+                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
+                                bannerEventsListener?.DidLoadBanner(
                                     placementName,
                                     errorCode,
                                     errorDescription
@@ -340,8 +334,8 @@ class HeliumUnityBridge {
                         serializeHeliumEvent(
                             placementName,
                             error,
-                            HeliumEventConsumer { placementName: String?, errorCode: Int, errorDescription: String? ->
-                                bannerEventsListener!!.DidClickBanner(
+                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
+                                bannerEventsListener?.DidClickBanner(
                                     placementName,
                                     errorCode,
                                     errorDescription
@@ -353,8 +347,8 @@ class HeliumUnityBridge {
                         serializeHeliumEvent(
                             placementName,
                             null,
-                            HeliumEventConsumer { placementName: String?, errorCode: Int, errorDescription: String? ->
-                                bannerEventsListener!!.DidRecordImpression(
+                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
+                                bannerEventsListener?.DidRecordImpression(
                                     placementName,
                                     errorCode,
                                     errorDescription
@@ -367,7 +361,6 @@ class HeliumUnityBridge {
 
     companion object {
         private const val TAG = "HeliumUnityBridge"
-        private const val EMPTY_STRING = ""
 
         // Stores a static instance of the HeliumPlugin class for easy access
         // from Unity
