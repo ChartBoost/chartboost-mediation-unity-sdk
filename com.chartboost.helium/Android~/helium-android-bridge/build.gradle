@@ -13,7 +13,7 @@ android {
     }
     sourceSets {
         main {
-            kotlin {
+            java {
                 srcDir 'src/main/java'
             }
         }
