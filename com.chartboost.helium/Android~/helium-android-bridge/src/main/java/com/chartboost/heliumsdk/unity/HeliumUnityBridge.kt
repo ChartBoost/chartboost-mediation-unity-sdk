@@ -12,7 +12,7 @@ import com.chartboost.heliumsdk.unity.HeliumEventProcessor.HeliumRewardEventCons
 import com.chartboost.heliumsdk.unity.HeliumEventProcessor.serializeHeliumBidEvent
 import com.chartboost.heliumsdk.unity.HeliumEventProcessor.serializeHeliumEvent
 import com.chartboost.heliumsdk.unity.HeliumEventProcessor.serializeHeliumRewardEvent
-import com.chartboost.heliumsdk.unity.HeliumEventProcessor.serializePlacementILRDData
+import com.chartboost.heliumsdk.unity.HeliumEventProcessor.serializePlacementIlrdData
 import com.chartboost.heliumsdk.unity.HeliumUnityAdWrapper.Companion.wrap
 import com.unity3d.player.UnityPlayer
 
@@ -65,7 +65,7 @@ class HeliumUnityBridge {
     fun start(appId: String, appSignature: String, unityVersion: String) {
         ilrdObserver = object : HeliumIlrdObserver {
             override fun onImpression(impData: HeliumImpressionData) {
-                val json = serializePlacementILRDData(impData.placementId, impData.ilrdInfo)
+                val json = serializePlacementIlrdData(impData.placementId, impData.ilrdInfo)
                 lifeCycleEventListener?.DidReceiveILRD(json)
             }
         }
@@ -73,8 +73,7 @@ class HeliumUnityBridge {
         runTaskOnUiThread {
             // This call initializes the Helium SDK. This might change in the future with two ID parameters and we'll get rid of the logControllerListener
             HeliumSdk.start(UnityPlayer.currentActivity, appId, appSignature) { error: Error? ->
-                val errorNotFound = error == null
-                if (errorNotFound) {
+                if (error == null) {
                     Log.d("Unity", "HeliumUnityBridge: Plugin Initialized")
                     HeliumSdk.setGameEngine("unity", unityVersion)
                     ilrdObserver?.let {

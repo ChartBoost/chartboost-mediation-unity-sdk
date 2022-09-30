@@ -25,12 +25,11 @@ object HeliumEventProcessor {
     ) {
         val partnerId = dataMap["partner_id"] ?: ""
         val auctionId = dataMap["auction-id"] ?: ""
-        val priceAsString = dataMap["price"] ?: "0"
-        var price = 0.0
-        try {
-            price = priceAsString.toDouble()
+        val price = try {
+            dataMap["price"]?.toDouble() ?: 0.0
         } catch (e: NumberFormatException) {
-            Log.d(TAG, "bidFetchingInformationError", e)
+            Log.d(TAG, "HeliumBidEvent failed to serialize price, defaulting", e)
+            0.0
         }
         eventConsumer.accept(placementName, auctionId, partnerId, price)
     }
@@ -41,28 +40,26 @@ object HeliumEventProcessor {
         reward: String,
         eventConsumer: HeliumRewardEventConsumer<String, Int>
     ) {
-        var rewardAsInt = 1
-        // some rewards are coming as JSON or other values not pure numbers, so this is in place to catch such scenarios
-        try {
-            rewardAsInt = reward.toInt()
-        } catch (exception: NumberFormatException) {
-            Log.e(TAG, "Failed to Parse Reward Information: Reward: $reward")
+        val rewardAmount = try {
+            reward.toInt()
+        } catch (e: NumberFormatException) {
+            Log.d(TAG, "HeliumRewardEvent failed to serialize reward amount, defaulting", e)
+            1
         }
-        eventConsumer.accept(placementName, rewardAsInt)
+        eventConsumer.accept(placementName, rewardAmount)
     }
 
     @JvmStatic
-    fun serializePlacementILRDData(placementName: String?, ilrdInfo: JSONObject?): String {
-        val serializedString = JSONObject()
-        try {
-            return serializedString.apply {
+    fun serializePlacementIlrdData(placementName: String, ilrdInfo: JSONObject?): String {
+        return try {
+            JSONObject().apply {
                 put("placementName", placementName)
                 put("ilrd", ilrdInfo)
             }.toString()
         } catch (e: JSONException) {
             Log.d(TAG, "serializeError", e)
+            ""
         }
-        return serializedString.toString()
     }
 
     fun interface HeliumEventConsumer<PlacementName, ErrorCode, ErrorDescription> {
