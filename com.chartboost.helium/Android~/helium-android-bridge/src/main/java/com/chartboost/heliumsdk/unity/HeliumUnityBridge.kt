@@ -77,10 +77,13 @@ class HeliumUnityBridge {
                 if (errorNotFound) {
                     Log.d("Unity", "HeliumUnityBridge: Plugin Initialized")
                     HeliumSdk.setGameEngine("unity", unityVersion)
-                    HeliumSdk.subscribeIlrd(ilrdObserver!!)
+                    ilrdObserver?.let {
+                        HeliumSdk.subscribeIlrd(it)
+                    }
                 } else {
                     Log.d("Unity", "HeliumUnityBridge: Plugin failed to initialize: $error")
                 }
+
                 lifeCycleEventListener?.DidStart(error?.hashCode() ?: -1, error?.toString() ?: "")
             }
         }
@@ -91,8 +94,8 @@ class HeliumUnityBridge {
     }
 
     fun destroy() {
-        if (ilrdObserver != null) {
-            HeliumSdk.unsubscribeIlrd(ilrdObserver!!)
+        ilrdObserver?.let {
+            HeliumSdk.unsubscribeIlrd(it)
             ilrdObserver = null
         }
     }
@@ -290,7 +293,9 @@ class HeliumUnityBridge {
     }
 
     fun getBannerAd(placementName: String, size: Int): HeliumUnityAdWrapper {
-        var wantedSize: HeliumBannerSize? = null
+        // default to standard
+        var wantedSize = HeliumBannerSize.STANDARD
+
         when (size) {
             0 -> wantedSize = HeliumBannerSize.STANDARD
             1 -> wantedSize = HeliumBannerSize.MEDIUM
@@ -300,7 +305,7 @@ class HeliumUnityBridge {
             HeliumBannerAd(
                 UnityPlayer.currentActivity,
                 placementName,
-                wantedSize!!,
+                wantedSize,
                 object : HeliumBannerAdListener {
                     override fun didReceiveWinningBid(
                         placementName: String,
