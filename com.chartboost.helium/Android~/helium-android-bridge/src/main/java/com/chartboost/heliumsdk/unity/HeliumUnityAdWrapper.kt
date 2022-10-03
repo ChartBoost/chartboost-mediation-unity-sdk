@@ -16,21 +16,17 @@ import com.chartboost.heliumsdk.ad.HeliumRewardedAd
 import com.unity3d.player.UnityPlayer
 
 class HeliumUnityAdWrapper(private val ad: HeliumAd) {
-    //
-    private val activity: Activity? = UnityPlayer.currentActivity
-
     /**
      * This is the container for the banner.
      * We need a relative layout to position the banner in one of the 7 possible positions.
      * HeliumBannerAd is just a ViewGroup.
      * */
     private var bannerLayout: RelativeLayout? = null
-    private var startedLoad = false
+    private val activity: Activity? = UnityPlayer.currentActivity
 
     fun load() {
         HeliumUnityBridge.runTaskOnUiThread {
             ad.load()
-            startedLoad = true
         }
     }
 
@@ -43,8 +39,9 @@ class HeliumUnityAdWrapper(private val ad: HeliumAd) {
 
     fun show() {
         HeliumUnityBridge.runTaskOnUiThread {
-            if (ad is HeliumFullscreenAd)
+            if (ad is HeliumFullscreenAd) {
                 ad.show()
+            }
         }
     }
 
@@ -75,8 +72,9 @@ class HeliumUnityAdWrapper(private val ad: HeliumAd) {
     }
 
     fun clearLoaded(): Boolean {
-        if (ad is HeliumFullscreenAd)
+        if (ad is HeliumFullscreenAd) {
             return ad.clearLoaded()
+        }
         if (ad is HeliumBannerAd) {
             HeliumUnityBridge.runTaskOnUiThread { ad.clearAd() }
             return true
@@ -85,7 +83,7 @@ class HeliumUnityAdWrapper(private val ad: HeliumAd) {
     }
 
     fun readyToShow(): Boolean {
-        return startedLoad && try {
+        return try {
             when (ad) {
                 is HeliumFullscreenAd -> ad.readyToShow()
                 is HeliumBannerAd -> {
@@ -108,19 +106,26 @@ class HeliumUnityAdWrapper(private val ad: HeliumAd) {
     }
 
     private fun createBannerLayout(screenLocation: Int) {
-        if (ad !is HeliumBannerAd)
+        if (ad !is HeliumBannerAd) {
+            return
+        }
+
+        if (activity == null)
             return
 
         // Create the banner layout on the given position.
         // Check if there is an already existing banner layout. If so, remove it. Otherwise,
         // create a new one.
-        bannerLayout?.let {
+        var layout = bannerLayout
+
+        layout?.let {
             it.removeAllViews()
             val bannerParent = it.parent as ViewGroup
             bannerParent.removeView(it)
-        } ?: run {
+        }.also {
             bannerLayout = RelativeLayout(activity)
-            bannerLayout?.setBackgroundColor(Color.TRANSPARENT)
+            layout = bannerLayout
+            layout?.setBackgroundColor(Color.TRANSPARENT)
         }
 
         /*
@@ -142,20 +147,20 @@ class HeliumUnityAdWrapper(private val ad: HeliumAd) {
             5 -> bannerGravityPosition = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
             6 -> bannerGravityPosition = Gravity.BOTTOM or Gravity.RIGHT
         }
-        bannerLayout?.gravity = bannerGravityPosition
+        layout?.gravity = bannerGravityPosition
 
         // Attach the banner layout to the activity.
         val density = displayDensity
         try {
             when (ad.getSize() ?: HeliumBannerSize.STANDARD) {
-                HeliumBannerSize.LEADERBOARD -> ad.layoutParams = density?.let { getBannerLayoutParams(it, LEADERBOARD.first, LEADERBOARD.second) }
-                HeliumBannerSize.MEDIUM -> ad.layoutParams = density?.let { getBannerLayoutParams(it, MEDIUM.first, MEDIUM.second) }
-                HeliumBannerSize.STANDARD -> ad.layoutParams = density?.let { getBannerLayoutParams(it, STANDARD.first, STANDARD.second) }
+                HeliumBannerSize.LEADERBOARD -> ad.layoutParams = getBannerLayoutParams(density, LEADERBOARD.first, LEADERBOARD.second)
+                HeliumBannerSize.MEDIUM -> ad.layoutParams = getBannerLayoutParams(density, MEDIUM.first, MEDIUM.second)
+                HeliumBannerSize.STANDARD -> ad.layoutParams = getBannerLayoutParams(density, STANDARD.first, STANDARD.second)
             }
 
             // Attach the banner to the banner layout.
-            bannerLayout?.addView(ad)
-            activity?.addContentView(bannerLayout, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
+            layout?.addView(ad)
+            activity.addContentView(layout, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
 
             // This immediately sets the visibility of this banner. If this doesn't happen
             // here, it is impossible to set the visibility later.
@@ -163,31 +168,24 @@ class HeliumUnityAdWrapper(private val ad: HeliumAd) {
 
             // This affects future visibility of the banner layout. Despite it never being
             // set invisible, not setting this to visible here makes the banner not visible.
-            bannerLayout?.visibility = View.VISIBLE
+            layout?.visibility = View.VISIBLE
         } catch (ex: Exception) {
             Log.w(TAG, "Helium encountered an error calling banner load() - ${ex.message}")
         }
     }
 
     private fun destroyBannerLayout() {
-        if (ad is HeliumBannerAd && bannerLayout != null) {
-            bannerLayout?.removeAllViews()
-            bannerLayout?.visibility = View.GONE
-        }
+        bannerLayout?.removeAllViews()
+        bannerLayout?.visibility = View.GONE
     }
 
     private fun getBannerLayoutParams(pixels: Float, width: Int, height: Int): ViewGroup.LayoutParams {
         return ViewGroup.LayoutParams((pixels * width).toInt(), (pixels * height).toInt())
     }
 
-    private val displayDensity: Float?
+    private val displayDensity: Float
         get() {
-            return try {
-                activity?.resources?.displayMetrics?.density
-            } catch (ex: Exception) {
-                Log.w(TAG, "Helium encountered an error calling getDisplayDensity() - ${ex.message}")
-                DisplayMetrics.DENSITY_DEFAULT.toFloat()
-            }
+            return activity?.resources?.displayMetrics?.density ?: DisplayMetrics.DENSITY_DEFAULT.toFloat()
         }
 
     companion object {
