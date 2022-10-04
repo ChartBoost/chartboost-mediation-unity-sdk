@@ -113,20 +113,20 @@ class HeliumUnityAdWrapper(private val ad: HeliumAd) {
         if (activity == null)
             return
 
+        var layout = bannerLayout
+
         // Create the banner layout on the given position.
         // Check if there is an already existing banner layout. If so, remove it. Otherwise,
         // create a new one.
-        var layout = bannerLayout
 
         layout?.let {
             it.removeAllViews()
             val bannerParent = it.parent as ViewGroup
             bannerParent.removeView(it)
-        }.also {
-            bannerLayout = RelativeLayout(activity)
-            layout = bannerLayout
-            layout?.setBackgroundColor(Color.TRANSPARENT)
         }
+
+        layout = RelativeLayout(activity)
+        layout.setBackgroundColor(Color.TRANSPARENT)
 
         /*
             //     TopLeft = 0,
@@ -147,7 +147,7 @@ class HeliumUnityAdWrapper(private val ad: HeliumAd) {
             5 -> bannerGravityPosition = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
             6 -> bannerGravityPosition = Gravity.BOTTOM or Gravity.RIGHT
         }
-        layout?.gravity = bannerGravityPosition
+        layout.gravity = bannerGravityPosition
 
         // Attach the banner layout to the activity.
         val density = displayDensity
@@ -159,19 +159,20 @@ class HeliumUnityAdWrapper(private val ad: HeliumAd) {
             }
 
             // Attach the banner to the banner layout.
-            layout?.addView(ad)
+            layout.addView(ad)
             activity.addContentView(layout, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
 
             // This immediately sets the visibility of this banner. If this doesn't happen
             // here, it is impossible to set the visibility later.
-            ad.visibility = View.VISIBLE
+            layout.visibility = View.VISIBLE
 
             // This affects future visibility of the banner layout. Despite it never being
             // set invisible, not setting this to visible here makes the banner not visible.
-            layout?.visibility = View.VISIBLE
+            layout.visibility = View.VISIBLE
         } catch (ex: Exception) {
             Log.w(TAG, "Helium encountered an error calling banner load() - ${ex.message}")
         }
+        bannerLayout = layout
     }
 
     private fun destroyBannerLayout() {
