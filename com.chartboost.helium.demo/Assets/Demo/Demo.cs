@@ -325,7 +325,7 @@ public class Demo : MonoBehaviour
             _ => HeliumBannerAdSize.Standard
         };
 
-        _bannerAd?.ClearLoaded();
+        _bannerAd?.Remove();
 
         Log("Creating banner on placement: " + bannerPlacementInputField.text + " with size: " + size);
         _bannerAd = HeliumSDK.GetBannerAd(bannerPlacementInputField.text, size);
