@@ -182,8 +182,10 @@ class HeliumUnityAdWrapper(private val ad: HeliumAd) {
     }
 
     private fun destroyBannerLayout() {
-        bannerLayout?.removeAllViews()
-        bannerLayout?.visibility = View.GONE
+        bannerLayout?.let {
+            it.removeAllViews()
+            it.visibility = View.GONE
+        }
     }
 
     private fun getBannerLayoutParams(pixels: Float, width: Int, height: Int): ViewGroup.LayoutParams {

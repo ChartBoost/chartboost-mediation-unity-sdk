@@ -377,7 +377,7 @@ class HeliumUnityBridge {
                 try {
                     runnable.run()
                 } catch (ex: Exception) {
-                    Log.w(TAG, "Exception found when running on UI Thread" + ex.message)
+                    Log.w(TAG, "Exception found when running on UI Thread: ${ex.message}")
                 }
             }
         }
