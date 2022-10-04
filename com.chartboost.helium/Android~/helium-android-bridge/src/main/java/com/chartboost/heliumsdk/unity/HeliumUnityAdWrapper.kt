@@ -57,7 +57,7 @@ class HeliumUnityAdWrapper(private val ad: HeliumAd) {
         if (ad is HeliumRewardedAd) {
             ad.customData = customData
         } else {
-            Log.d(TAG,"custom data can only be set on a rewarded ad")
+            Log.d(TAG, "custom data can only be set on a rewarded ad")
         }
     }
 
@@ -72,29 +72,29 @@ class HeliumUnityAdWrapper(private val ad: HeliumAd) {
     }
 
     fun clearLoaded(): Boolean {
-        if (ad is HeliumFullscreenAd) {
-            return ad.clearLoaded()
+        return when(ad) {
+            is HeliumFullscreenAd -> { ad.clearLoaded() }
+            is HeliumBannerAd -> {
+                HeliumUnityBridge.runTaskOnUiThread { ad.clearAd() }
+                return true
+            }
+            else -> false
         }
-        if (ad is HeliumBannerAd) {
-            HeliumUnityBridge.runTaskOnUiThread { ad.clearAd() }
-            return true
-        }
-        return false
     }
 
     fun readyToShow(): Boolean {
-        return try {
-            when (ad) {
-                is HeliumFullscreenAd -> ad.readyToShow()
-                is HeliumBannerAd -> {
-                    Log.w(TAG, "This should never be called, banners do not have readyToShow")
-                    false
-                }
-                else -> false
+        return when (ad) {
+            is HeliumFullscreenAd -> try {
+                ad.readyToShow()
+            } catch (ex: Exception) {
+                Log.w(TAG, "Helium encountered an error calling Ad.readyToShow() - ${ex.message}")
+                false
             }
-        } catch (ex: Exception) {
-            Log.w(TAG, "Helium encountered an error calling Ad.readyToShow() - ${ex.message}")
-            false
+            is HeliumBannerAd -> {
+                Log.w(TAG, "This should never be called, banners do not have readyToShow")
+                false
+            }
+            else -> false
         }
     }
 
@@ -107,11 +107,14 @@ class HeliumUnityAdWrapper(private val ad: HeliumAd) {
 
     private fun createBannerLayout(screenLocation: Int) {
         if (ad !is HeliumBannerAd) {
+            Log.w(TAG, "createBannerLayout should only be called on Banner Ads")
             return
         }
 
-        if (activity == null)
+        if (activity == null) {
+            Log.w(TAG, "Activity not found")
             return
+        }
 
         var layout = bannerLayout
 
@@ -137,16 +140,19 @@ class HeliumUnityAdWrapper(private val ad: HeliumAd) {
             //     BottomCenter = 5,
             //     BottomRight = 6
         */
-        var bannerGravityPosition = 0
-        when (screenLocation) {
-            0 -> bannerGravityPosition = Gravity.TOP or Gravity.LEFT
-            1 -> bannerGravityPosition = Gravity.TOP or Gravity.CENTER_HORIZONTAL
-            2 -> bannerGravityPosition = Gravity.TOP or Gravity.RIGHT
-            3 -> bannerGravityPosition = Gravity.CENTER_VERTICAL or Gravity.CENTER_HORIZONTAL
-            4 -> bannerGravityPosition = Gravity.BOTTOM or Gravity.LEFT
-            5 -> bannerGravityPosition = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
-            6 -> bannerGravityPosition = Gravity.BOTTOM or Gravity.RIGHT
+
+        val bannerGravityPosition = when (screenLocation) {
+            0 -> Gravity.TOP or Gravity.LEFT
+            1 -> Gravity.TOP or Gravity.CENTER_HORIZONTAL
+            2 -> Gravity.TOP or Gravity.RIGHT
+            3 -> Gravity.CENTER_VERTICAL or Gravity.CENTER_HORIZONTAL
+            4 -> Gravity.BOTTOM or Gravity.LEFT
+            5 -> Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
+            6 -> Gravity.BOTTOM or Gravity.RIGHT
+            // Other cases
+            else -> Gravity.TOP or Gravity.CENTER_HORIZONTAL
         }
+
         layout.gravity = bannerGravityPosition
 
         // Attach the banner layout to the activity.
@@ -190,7 +196,7 @@ class HeliumUnityAdWrapper(private val ad: HeliumAd) {
         }
 
     companion object {
-        private const val TAG = "HeliumUnityAdWrapper"
+        private val TAG = HeliumUnityAdWrapper::class.java.simpleName
         private val STANDARD = Pair(320, 50)
         private val MEDIUM = Pair(300, 250)
         private val LEADERBOARD = Pair(728, 90)
