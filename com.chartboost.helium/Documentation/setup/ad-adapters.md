@@ -52,14 +52,14 @@ They can be obtained by importing them as Samples with Unity's Package Manager. 
 
 ![Reimport](../images/reimport.png)
 
-> **_NOTE:_** When including 3rd-Party SDKs on android, remember to update the manifest file according to the integrated SDK’s requirements as well.
+> **_NOTE:_** When including 3rd-Party SDKs on Android, remember to update the manifest file according to the integrated SDK’s requirements as well.
 
-### Unity Ads SDK - Android
+### Adding Unity Ads SDK - Android
 
-There are 2 ways in which the UnityAds Android SDK can be integrated into a Unity project.
+Including the `Optional-HeliumUnityAdsDependencies.xml` file will NOT automatically import the Unity Ads SDK to your Unity Android build (unlike the other dependency files which will do that automatically). You should manually include the correct version of the Unity Ads SDK by either:
 
-1. Using Unity's Package Manager and adding Unity's Advertisement package. This will make sure the corresponding .aar file is added to your libraries when exporting your project.
+* Uncommenting out the appropriate line in the `Optional-HeliumUnityAdsDependencies.xml` : `<!-- <androidPackage spec="com.unity3d.ads:unity-ads:4.2.1""/> -->`.
 
-2. Uncommenting the reference to the UnityAds Android SDK in `Optional-HeliumUnityAdsDependencies.xml`.
+* Importing the correct version of the Unity Ads SDK via the built-in Unity Package Manager.
 
-Only one of this solutions should be utilized, attempting to utilize both will result in a duplicate class compilation error.
+> **_NOTE:_** Only one of this solutions should be utilized, as utilizing both will create gradle compilation errors.
