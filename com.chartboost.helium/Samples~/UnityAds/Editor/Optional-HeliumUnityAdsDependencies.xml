@@ -2,7 +2,7 @@
 <dependencies>
     <androidPackages>
         <!-- Helium Unity Ads Adapter -->
-        <androidPackage spec="com.chartboost:helium-unityads:3.1.+@aar" />
+        <androidPackage spec="com.chartboost:helium-unityads:3.2.+@aar" />
 
         <!-- Unity Ads Android SDK -->
         <!-- <androidPackage spec="com.unity3d.ads:unity-ads:4.2.1"/> -->
@@ -10,7 +10,7 @@
     </androidPackages>
     <iosPods>
         <!-- Unity Ads iOS SDK -->
-        <iosPod name="ChartboostHeliumAdapterUnity" version="~> 3.1">
+        <iosPod name="ChartboostHeliumAdapterUnity" version="~> 3.2">
             <sources>
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>
