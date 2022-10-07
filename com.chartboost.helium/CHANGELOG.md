@@ -1,7 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file using the standards as defined at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0).
 
-### Version 3.1.0 *(2022-09-15)* 
+### Version 3.2.0 *(2022-10-20)*
+----------------------------
+Improvements:
+- Converted Android Java bridge to Kotlin.
+
+Documentation:
+- Improved UnityAds integration guide and requirements.
+
+### Version 3.1.0 *(2022-09-15)*
 ----------------------------
 Improvements:
 - Removed proguard for Android/Unity integration.
