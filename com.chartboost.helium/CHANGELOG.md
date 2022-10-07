@@ -4,10 +4,10 @@ All notable changes to this project will be documented in this file using the st
 ### Version 3.2.0 *(2022-10-20)*
 ----------------------------
 Improvements:
-- Converted Android Java bridge to Kotlin
+- Converted Android Java bridge to Kotlin.
 
 Documentation:
-- Improved UnityAds integration guide and requirements
+- Improved UnityAds integration guide and requirements.
 
 ### Version 3.1.0 *(2022-09-15)*
 ----------------------------
