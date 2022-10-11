@@ -163,10 +163,13 @@ namespace Editor
             }
             else
             {
-                EditorUtility.DisplayDialog(
+                var addHeliumSample = EditorUtility.DisplayDialog(
                     HeliumWindowTitle,
-                    "No Samples directory found.\n\nMake sure to include at least the Helium dependencies.",
-                    "Ok");
+                    "No Samples directory found.\n\nMake sure to include at least the Helium dependencies.\n\nWould you like to add them?",
+                    "Yes", "No");
+
+                if (addHeliumSample)
+                    ImportSample(Helium, helium.version);
             }
         }
     }
