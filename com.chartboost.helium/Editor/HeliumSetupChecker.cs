@@ -50,8 +50,8 @@ namespace Editor
         /// <param name="version">Helium package version to use, must coincide with the currently installed version.</param>
         public static void ReimportExistingHeliumSamples(ICollection<string> existingSamples, string version)
         {
-            File.Delete(Path.Combine(HeliumSamplesInAssets, ".meta"));
             Directory.Delete(HeliumSamplesInAssets, true);
+            File.Delete($"{HeliumSamplesInAssets}.meta");
             AssetDatabase.Refresh();
 
             var allSamples = Sample.FindByPackage(HeliumPackageName, version);
@@ -63,14 +63,41 @@ namespace Editor
             }
         }
 
-        [MenuItem("Helium/Check Integration")]
+        [MenuItem("Helium/Integration/Reimport Existing Adapters")]
+        public static void ReimportExistingAdapters()
+        {
+            var helium = FindPackage(HeliumPackageName);
+
+            if (!Directory.Exists(HeliumSamplesInAssets))
+                return;
+
+            var subdirectories = Directory.GetDirectories(HeliumSamplesInAssets);
+            if (subdirectories.Length <= 0)
+                return;
+            
+            var versionDirectory = subdirectories[0];
+            var importedDependencies = new HashSet<string>();
+            // find all samples/ad adapters
+            foreach (var imported in Directory.GetDirectories(versionDirectory))
+            {
+                var sampleName = Path.GetFileName(imported);
+                importedDependencies.Add(sampleName);
+            }
+
+            ReimportExistingHeliumSamples(importedDependencies, helium.version);
+        }
+
+        [MenuItem("Helium/Integration/Status Check")]
         public static void CheckHeliumIntegration()
         {
             var helium = FindPackage(HeliumPackageName);
 
+            // check if Helium Samples exists
             if (Directory.Exists(HeliumSamplesInAssets))
             {
                 var subDirectories = Directory.GetDirectories(HeliumSamplesInAssets);
+
+                // no versioning folder
                 if (subDirectories.Length <= 0)
                 {
                     var addHeliumSample = EditorUtility.DisplayDialog(
@@ -81,6 +108,7 @@ namespace Editor
                     if (addHeliumSample)
                         ImportSample(Helium, helium.version);
                 }
+                // at least one versioning sample
                 else
                 {
                     // we have found a directory with dependencies
@@ -89,6 +117,7 @@ namespace Editor
                     // get the version of the dependencies found
                     var heliumVersionStr = Path.GetFileName(versionDirectory);
 
+                    // parse versioning folder vesion
                     if (!Version.TryParse(heliumVersionStr, out var versionInAssets))
                     {
                         EditorUtility.DisplayDialog(
@@ -98,16 +127,17 @@ namespace Editor
                         return;
                     }
 
-                    var optionalDependencies = Directory.GetDirectories(versionDirectory);
                     var importedDependencies = new HashSet<string>();
 
-                    foreach (var imported in optionalDependencies)
+                    // find all samples/ad adapters
+                    foreach (var imported in Directory.GetDirectories(versionDirectory))
                     {
                         var sampleName = Path.GetFileName(imported);
                         importedDependencies.Add(sampleName);
                     }
 
-                    if (optionalDependencies.Length <= 0)
+                    // no samples/ad adapters
+                    if (importedDependencies.Count <= 0)
                     {
                         var addHeliumSamples = EditorUtility.DisplayDialog(
                             HeliumWindowTitle,
@@ -117,6 +147,7 @@ namespace Editor
                         if (addHeliumSamples)
                             ImportSample(Helium, helium.version);
                     }
+                    // at least one sample
                     else
                     {
                         if (!importedDependencies.Contains(Helium))
@@ -131,6 +162,7 @@ namespace Editor
                         }
                     }
 
+                    // parse package version
                     if (!Version.TryParse(helium.version, out var versionInPackage))
                     {
                         EditorUtility.DisplayDialog(
@@ -139,6 +171,7 @@ namespace Editor
                             "Ok");
                     }
 
+                    // act based off version
                     if (versionInAssets < versionInPackage)
                     {
                         var dialogInput = EditorUtility.DisplayDialog(
@@ -161,6 +194,7 @@ namespace Editor
                     }
                 }
             }
+            // no samples at all!
             else
             {
                 var addHeliumSample = EditorUtility.DisplayDialog(
