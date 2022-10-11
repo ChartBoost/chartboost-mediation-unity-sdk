@@ -36,7 +36,7 @@ namespace Editor
         /// </summary>
         /// <param name="sampleName">Sample to include into project</param>
         /// <param name="version">Helium package version to use, must coincide with the currently installed version.</param>
-        /// /// <returns>Import success status</returns>
+        /// <returns>Import success status</returns>
         public static bool ImportSample(string sampleName, string version)
         {
             var sample = Sample.FindByPackage(HeliumPackageName, version).Single(x => x.displayName.Equals(sampleName));
@@ -63,17 +63,20 @@ namespace Editor
             }
         }
 
-        [MenuItem("Helium/Integration/Reimport Existing Adapters")]
-        public static void ReimportExistingAdapters()
+        /// <summary>
+        /// Used to attempt to update all existing Ad Adapters without extra input. Good for CI/CD usage and update of Adapters.
+        /// </summary>
+        /// <returns>Update attempt status</returns>
+        public static bool ReimportExistingAdapters()
         {
             var helium = FindPackage(HeliumPackageName);
 
             if (!Directory.Exists(HeliumSamplesInAssets))
-                return;
+                return false;
 
             var subdirectories = Directory.GetDirectories(HeliumSamplesInAssets);
             if (subdirectories.Length <= 0)
-                return;
+                return false;
             
             var versionDirectory = subdirectories[0];
             var importedDependencies = new HashSet<string>();
@@ -85,8 +88,25 @@ namespace Editor
             }
 
             ReimportExistingHeliumSamples(importedDependencies, helium.version);
+            return true;
         }
 
+        /// <summary>
+        /// Used to update all existing adapters by Devs choice. This will utilize current's Helium Package version to override all adapters with such version.
+        /// </summary>
+        [MenuItem("Helium/Integration/Force Reimport Adapters")]
+        public static void ForceReimportExistingAdapters()
+        {
+            var confirmUpdate = EditorUtility.DisplayDialog(HeliumWindowTitle,
+                "Attempting to force reimport all existing adapters.\n\nIs this intentional?", "Yes", "No");
+
+            if (confirmUpdate)
+                ReimportExistingAdapters();
+        }
+
+        /// <summary>
+        /// Used to detect and address general Helium Integration issues
+        /// </summary>
         [MenuItem("Helium/Integration/Status Check")]
         public static void CheckHeliumIntegration()
         {
