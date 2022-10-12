@@ -12,6 +12,7 @@ namespace Editor
 {
     public class HeliumSetupChecker
     {
+        private const string UnityAds = "UnityAds";
         private const string Helium = "Helium";
         private const string HeliumWindowTitle = "Helium Unity SDK - Integration Status Checker";
         private const string HeliumPackageName = "com.chartboost.helium";
@@ -77,7 +78,7 @@ namespace Editor
             var subdirectories = Directory.GetDirectories(HeliumSamplesInAssets);
             if (subdirectories.Length <= 0)
                 return false;
-            
+
             var versionDirectory = subdirectories[0];
             var importedDependencies = new HashSet<string>();
             // find all samples/ad adapters
@@ -91,10 +92,84 @@ namespace Editor
             return true;
         }
 
+        public static bool CheckUnityAdsIntegration(string heliumVersion = null)
+        {
+            var heliumUnityAdsSupportedVersion = new Version(4, 2, 1);
+            var unityAds = FindPackage("com.unity.ads");
+
+            if (unityAds != null)
+            {
+                Debug.Log($"UnityAds Package version: {unityAds.version} found, checking Helium Compatibility.");
+                
+                if (!Version.TryParse(unityAds.version, out var unityAdsVersion))
+                {
+                    Debug.LogError($"Failed to parse UnityAds version: {unityAds.version}");
+                    return false;
+                }
+
+                if (!unityAdsVersion.Equals(heliumUnityAdsSupportedVersion))
+                {
+                    EditorUtility.DisplayDialog(
+                        HeliumWindowTitle,
+                        $"UnityAds SDK integrated through Unity Package Manager. Helium recommended version is {heliumUnityAdsSupportedVersion}, but found version {unityAdsVersion}.\n\nUnexpected behaviors can occur.",
+                        "Ok");
+                }
+
+                return true;
+            }
+            
+            if (string.IsNullOrEmpty(heliumVersion))
+            {
+                var helium = FindPackage(HeliumPackageName);
+                if (!Version.TryParse(helium.version, out var heliumFoundVersion))
+                {
+                    Debug.LogError($"Failed to parse Helium Unity SDK version: {helium.version}");
+                    return false;
+                }
+                heliumVersion = heliumFoundVersion.ToString();
+            }
+
+            var unityAdsDependencyPath = $"Assets/Samples/Helium SDK/{heliumVersion}/UnityAds/Editor/Optional-HeliumUnityAdsDependencies.xml";
+
+            if (!File.Exists(unityAdsDependencyPath))
+            {
+                Debug.Log("UnityAds not integrated through samples.");
+                return false;
+            }
+
+            var unityAdsDependencyLines = File.ReadLines(unityAdsDependencyPath).ToList();
+
+            var unityAdsSDKCommented = $"<!-- <androidPackage spec=\"com.unity3d.ads:unity-ads:{heliumUnityAdsSupportedVersion}\"/> -->";
+
+            var commentedLineIndex = unityAdsDependencyLines.FindIndex(line => line.Contains(unityAdsSDKCommented));
+
+            if (commentedLineIndex == -1) 
+                return true;
+            
+            var updateUnityAdsSample = EditorUtility.DisplayDialog(
+                HeliumWindowTitle,
+                "Helium UnityAds Samples/Dependency found, but UnityAdsSDK is commented. This will lead to a non-functional adapter.\n\nDo you wish to uncomment it?",
+                "Yes", "No");
+
+            if (!updateUnityAdsSample)
+                return false;
+
+            var unityAdsSDKUncommented = $"        <androidPackage spec=\"com.unity3d.ads:unity-ads:{heliumUnityAdsSupportedVersion}\"/>";
+            unityAdsDependencyLines[commentedLineIndex] = unityAdsSDKUncommented;
+            File.WriteAllLines(unityAdsDependencyPath, unityAdsDependencyLines);
+            return true;
+        }
+
+        [MenuItem("Helium/Integration/UnityAds Check", false, 1)]
+        public static void CheckUnityAdsIntegrationEditor()
+        {
+            CheckUnityAdsIntegration();
+        }
+
         /// <summary>
         /// Used to update all existing adapters by Devs choice. This will utilize current's Helium Package version to override all adapters with such version.
         /// </summary>
-        [MenuItem("Helium/Integration/Force Reimport Adapters")]
+        [MenuItem("Helium/Integration/Force Reimport Adapters", false, 2)]
         public static void ForceReimportExistingAdapters()
         {
             var confirmUpdate = EditorUtility.DisplayDialog(HeliumWindowTitle,
@@ -107,7 +182,7 @@ namespace Editor
         /// <summary>
         /// Used to detect and address general Helium Integration issues
         /// </summary>
-        [MenuItem("Helium/Integration/Status Check")]
+        [MenuItem("Helium/Integration/Status Check", false, 0)]
         public static void CheckHeliumIntegration()
         {
             var helium = FindPackage(HeliumPackageName);
@@ -179,6 +254,11 @@ namespace Editor
 
                             if (addHeliumSamples)
                                 ImportSample(Helium, helium.version);
+                        }
+
+                        if (importedDependencies.Contains(UnityAds))
+                        {
+                            CheckUnityAdsIntegration(heliumVersionStr);
                         }
                     }
 
