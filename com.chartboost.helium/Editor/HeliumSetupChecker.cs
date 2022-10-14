@@ -17,6 +17,10 @@ namespace Editor
         private const string HeliumWindowTitle = "Helium Unity SDK - Integration Status Checker";
         private const string HeliumPackageName = "com.chartboost.helium";
         private const string HeliumSamplesInAssets = "Assets/Samples/Helium SDK";
+        private const string UnityAdsPackageName = "com.unity.ads";
+        private static readonly string HeliumSamplesMetaInAssets = $"{HeliumSamplesInAssets}.meta";
+        private static readonly Version HeliumUnityAdsSupportedVersion = new Version(4, 2, 1);
+
 
         /// <summary>
         /// Finds a package in the Unity project non-restricted to the Unity Registry. Any package on the package.json file can be loaded with this method.
@@ -52,7 +56,7 @@ namespace Editor
         public static void ReimportExistingHeliumSamples(ICollection<string> existingSamples, string version)
         {
             Directory.Delete(HeliumSamplesInAssets, true);
-            File.Delete($"{HeliumSamplesInAssets}.meta");
+            File.Delete(HeliumSamplesMetaInAssets);
             AssetDatabase.Refresh();
 
             var allSamples = Sample.FindByPackage(HeliumPackageName, version);
@@ -94,30 +98,6 @@ namespace Editor
 
         public static bool CheckUnityAdsIntegration(string heliumVersion = null)
         {
-            var heliumUnityAdsSupportedVersion = new Version(4, 2, 1);
-            var unityAds = FindPackage("com.unity.ads");
-
-            if (unityAds != null)
-            {
-                Debug.Log($"UnityAds Package version: {unityAds.version} found, checking Helium Compatibility.");
-                
-                if (!Version.TryParse(unityAds.version, out var unityAdsVersion))
-                {
-                    Debug.LogError($"Failed to parse UnityAds version: {unityAds.version}");
-                    return false;
-                }
-
-                if (!unityAdsVersion.Equals(heliumUnityAdsSupportedVersion))
-                {
-                    EditorUtility.DisplayDialog(
-                        HeliumWindowTitle,
-                        $"UnityAds SDK integrated through Unity Package Manager. Helium recommended version is {heliumUnityAdsSupportedVersion}, but found version {unityAdsVersion}.\n\nUnexpected behaviors can occur.",
-                        "Ok");
-                }
-
-                return true;
-            }
-            
             if (string.IsNullOrEmpty(heliumVersion))
             {
                 var helium = FindPackage(HeliumPackageName);
@@ -128,8 +108,29 @@ namespace Editor
                 }
                 heliumVersion = heliumFoundVersion.ToString();
             }
-
+            
+            var unityAdsPackage = FindPackage(UnityAdsPackageName);
             var unityAdsDependencyPath = $"Assets/Samples/Helium SDK/{heliumVersion}/UnityAds/Editor/Optional-HeliumUnityAdsDependencies.xml";
+
+            if (unityAdsPackage != null)
+            {
+                if (!Version.TryParse(unityAdsPackage.version, out var unityAdsVersion))
+                {
+                    return false;
+                }
+
+                if (!unityAdsVersion.Equals(HeliumUnityAdsSupportedVersion))
+                {
+                    EditorUtility.DisplayDialog(
+                        HeliumWindowTitle,
+                        $"UnityAds SDK integrated through Unity Package Manager. Helium recommended version is {HeliumUnityAdsSupportedVersion}, but found version {unityAdsVersion}.\n\nUnexpected behaviors can occur.",
+                        "Ok");
+                }
+
+                return true;
+            }
+            
+           
 
             if (!File.Exists(unityAdsDependencyPath))
             {
@@ -139,7 +140,7 @@ namespace Editor
 
             var unityAdsDependencyLines = File.ReadLines(unityAdsDependencyPath).ToList();
 
-            var unityAdsSDKCommented = $"<!-- <androidPackage spec=\"com.unity3d.ads:unity-ads:{heliumUnityAdsSupportedVersion}\"/> -->";
+            var unityAdsSDKCommented = $"<!-- <androidPackage spec=\"com.unity3d.ads:unity-ads:{HeliumUnityAdsSupportedVersion}\"/> -->";
 
             var commentedLineIndex = unityAdsDependencyLines.FindIndex(line => line.Contains(unityAdsSDKCommented));
 
@@ -154,7 +155,7 @@ namespace Editor
             if (!updateUnityAdsSample)
                 return false;
 
-            var unityAdsSDKUncommented = $"        <androidPackage spec=\"com.unity3d.ads:unity-ads:{heliumUnityAdsSupportedVersion}\"/>";
+            var unityAdsSDKUncommented = $"        <androidPackage spec=\"com.unity3d.ads:unity-ads:{HeliumUnityAdsSupportedVersion}\"/>";
             unityAdsDependencyLines[commentedLineIndex] = unityAdsSDKUncommented;
             File.WriteAllLines(unityAdsDependencyPath, unityAdsDependencyLines);
             return true;
