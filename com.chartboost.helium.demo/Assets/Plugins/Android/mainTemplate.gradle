@@ -41,7 +41,7 @@ dependencies {
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0' // Assets/Samples/Helium SDK/3.2.0/Vungle/Editor/Optional-HeliumVungleDependencies.xml:9
     implementation 'androidx.multidex:multidex:2.0.1' // Assets/Demo/Editor/MultidexDependencies.xml:4
     implementation 'com.adcolony:sdk:4.7.0' // Assets/Samples/Helium SDK/3.2.0/AdColony/Editor/Optional-HeliumAdColonyDependencies.xml:8
-    implementation 'com.amazon.android:aps-sdk:9.4.3' // Assets/Samples/Helium SDK/3.2.0/Amazon/Editor/Optional-HeliumApsDependencies.xml:8
+    implementation 'com.amazon.android:aps-sdk:9.5.7' // Assets/Samples/Helium SDK/3.2.0/Amazon/Editor/Optional-HeliumApsDependencies.xml:8
     implementation 'com.applovin:applovin-sdk:11.3.1' // Assets/Samples/Helium SDK/3.2.0/AppLovin/Editor/Optional-HeliumAppLovinDependencies.xml:8
     implementation 'com.chartboost:helium:3.2.+' // Assets/Samples/Helium SDK/3.2.0/Helium/Editor/HeliumDependencies.xml:10
     implementation 'com.chartboost:helium-adcolony:3.2.+@aar' // Assets/Samples/Helium SDK/3.2.0/AdColony/Editor/Optional-HeliumAdColonyDependencies.xml:5
