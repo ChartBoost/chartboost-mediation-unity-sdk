@@ -111,7 +111,7 @@ namespace Editor
                 {
                     EditorUtility.DisplayDialog(
                         HeliumWindowTitle,
-                        $"Failed to parse version {helium.version} in Package.\n\n**This is probably a bad setup, contact Helium Support**",
+                        $"Failed to parse version {helium.version} in Package.\n\n**This is probably a bad setup, contact Helium Support at support@chartboost.com**",
                         "Ok");
                 }
                 return;
@@ -151,7 +151,7 @@ namespace Editor
             {
                 EditorUtility.DisplayDialog(
                     HeliumWindowTitle, 
-                    $"Failed to parse version {helium.version} in Package.\n\n**This is probably a bad setup, contact Helium Support**",
+                    $"Failed to parse version {helium.version} in Package.\n\n**This is probably a bad setup, contact Helium Support at support@chartboost.com**",
                     "Ok");
                 return;
             }
@@ -235,7 +235,7 @@ namespace Editor
                     {
                         EditorUtility.DisplayDialog(
                             HeliumWindowTitle,
-                            $"Failed to parse version {heliumVersionStr} in Assets. \n\n**This is probably a bad setup, contact Helium Support**",
+                            $"Failed to parse version {heliumVersionStr} in Assets. \n\n**This is probably a bad setup, contact Helium Support at support@chartboost.com**",
                             "Ok");
                         return;
                     }
@@ -280,7 +280,7 @@ namespace Editor
                     {
                         EditorUtility.DisplayDialog(
                             HeliumWindowTitle,
-                            $"Failed to parse version {heliumVersionStr} in Package.\n\n**This is probably a bad setup, contact Helium Support**",
+                            $"Failed to parse version {heliumVersionStr} in Package.\n\n**This is probably a bad setup, contact Helium Support at support@chartboost.com**",
                             "Ok");
                     }
 
@@ -299,7 +299,7 @@ namespace Editor
                     {
                         var dialogInput = EditorUtility.DisplayDialog(
                             HeliumWindowTitle,
-                            $"Ad Adapters for version {versionInAssets} found, Helium Unity SDK is using lower version {versionInPackage}.\n\nDo you wish to downgrade your existing Ad Adapters?\n\n**This is probably a bad setup, contact Helium Support**",
+                            $"Ad Adapters for version {versionInAssets} found, Helium Unity SDK is using lower version {versionInPackage}.\n\nDo you wish to downgrade your existing Ad Adapters?\n\n**This is probably a bad setup, contact Helium Support at support@chartboost.com**",
                             "Yes", "No");
 
                         if (dialogInput)
