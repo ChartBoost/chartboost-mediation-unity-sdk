@@ -98,5 +98,6 @@
     "name": "Chartboost",
     "email": "sales@chartboost.com",
     "url": "https://www.chartboost.com/helium"
-  }
+  },
+  "hideInEditor": false
 }
