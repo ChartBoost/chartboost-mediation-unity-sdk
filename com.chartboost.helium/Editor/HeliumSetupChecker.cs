@@ -109,39 +109,31 @@ namespace Editor
                 heliumVersion = heliumFoundVersion.ToString();
             }
             
-            var unityAdsPackage = FindPackage(UnityAdsPackageName);
             var unityAdsDependencyPath = $"Assets/Samples/Helium SDK/{heliumVersion}/UnityAds/Editor/Optional-HeliumUnityAdsDependencies.xml";
 
+            // check if UnityAds is integrated
+            if (!File.Exists(unityAdsDependencyPath))
+                return false;
+            
+            var unityAdsPackage = FindPackage(UnityAdsPackageName);
+            
             if (unityAdsPackage != null)
             {
                 if (!Version.TryParse(unityAdsPackage.version, out var unityAdsVersion))
-                {
                     return false;
-                }
 
                 if (!unityAdsVersion.Equals(HeliumUnityAdsSupportedVersion))
                 {
                     EditorUtility.DisplayDialog(
                         HeliumWindowTitle,
-                        $"UnityAds SDK integrated through Unity Package Manager. Helium recommended version is {HeliumUnityAdsSupportedVersion}, but found version {unityAdsVersion}.\n\nUnexpected behaviors can occur.",
+                        $"UnityAds SDK integrated through Unity Package Manager with version: {unityAdsPackage.version}. Helium recommended version is {HeliumUnityAdsSupportedVersion}.\n\nUnexpected behaviors can occur.",
                         "Ok");
                 }
-
                 return true;
             }
             
-           
-
-            if (!File.Exists(unityAdsDependencyPath))
-            {
-                Debug.Log("UnityAds not integrated through samples.");
-                return false;
-            }
-
             var unityAdsDependencyLines = File.ReadLines(unityAdsDependencyPath).ToList();
-
             var unityAdsSDKCommented = $"<!-- <androidPackage spec=\"com.unity3d.ads:unity-ads:{HeliumUnityAdsSupportedVersion}\"/> -->";
-
             var commentedLineIndex = unityAdsDependencyLines.FindIndex(line => line.Contains(unityAdsSDKCommented));
 
             if (commentedLineIndex == -1) 
@@ -150,7 +142,7 @@ namespace Editor
             var updateUnityAdsSample = EditorUtility.DisplayDialog(
                 HeliumWindowTitle,
                 "Helium UnityAds Samples/Dependency found, but UnityAdsSDK is commented. This will lead to a non-functional adapter.\n\nDo you wish to uncomment it?",
-                "Yes", "No");
+                "Yes", "No", DialogOptOutDecisionType.ForThisMachine, "unity-ads");
 
             if (!updateUnityAdsSample)
                 return false;
@@ -256,11 +248,6 @@ namespace Editor
                             if (addHeliumSamples)
                                 ImportSample(Helium, helium.version);
                         }
-
-                        if (importedDependencies.Contains(UnityAds))
-                        {
-                            CheckUnityAdsIntegration(heliumVersionStr);
-                        }
                     }
 
                     // parse package version
@@ -293,6 +280,14 @@ namespace Editor
                         if (dialogInput)
                             ReimportExistingHeliumSamples(importedDependencies, helium.version);
                     }
+                    
+                    // check for Unity Ads integration
+                    if (importedDependencies.Contains(UnityAds))
+                    {
+                        CheckUnityAdsIntegration(helium.version);
+                    }
+                    
+                    AssetDatabase.Refresh();
                 }
             }
             // no samples at all!
