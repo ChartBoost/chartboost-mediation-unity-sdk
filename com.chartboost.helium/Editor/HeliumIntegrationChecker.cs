@@ -10,7 +10,7 @@ using ImportOptions = UnityEditor.PackageManager.UI.Sample.ImportOptions;
 
 namespace Editor
 {
-    public class HeliumSetupChecker
+    public class HeliumIntegrationChecker
     {
         private const string UnityAds = "UnityAds";
         private const string Helium = "Helium";
@@ -18,9 +18,11 @@ namespace Editor
         private const string HeliumPackageName = "com.chartboost.helium";
         private const string HeliumSamplesInAssets = "Assets/Samples/Helium SDK";
         private const string UnityAdsPackageName = "com.unity.ads";
+        private const string UnityAdsUncommentWindow = "unity-ads-uncomment-window";
         private static readonly string HeliumSamplesMetaInAssets = $"{HeliumSamplesInAssets}.meta";
         private static readonly Version HeliumUnityAdsSupportedVersion = new Version(4, 2, 1);
-
+        private static readonly string UnityAdsSDKCommented = $"<!-- <androidPackage spec=\"com.unity3d.ads:unity-ads:{HeliumUnityAdsSupportedVersion}\"/> -->";
+        private static readonly string UnityAdsSDKUncommented = $"        <androidPackage spec=\"com.unity3d.ads:unity-ads:{HeliumUnityAdsSupportedVersion}\"/>";
 
         /// <summary>
         /// Finds a package in the Unity project non-restricted to the Unity Registry. Any package on the package.json file can be loaded with this method.
@@ -96,67 +98,88 @@ namespace Editor
             return true;
         }
 
-        public static bool CheckUnityAdsIntegration(string heliumVersion = null)
+        /// <summary>
+        /// Uncomment UnityAds dependency on Optional-HeliumUnityAdsDependencies.xml if present.
+        /// </summary>
+        /// <param name="skipDialog">Optional parameter to skip any dialog windows, if true, UnityAds dependency will be uncommented if possible.</param>
+        public static void UncommentUnityAdsDependency(bool skipDialog = false)
         {
-            if (string.IsNullOrEmpty(heliumVersion))
+            var helium = FindPackage(HeliumPackageName);
+            if (!Version.TryParse(helium.version, out var heliumFoundVersion))
             {
-                var helium = FindPackage(HeliumPackageName);
-                if (!Version.TryParse(helium.version, out var heliumFoundVersion))
+                if (!skipDialog)
                 {
-                    Debug.LogError($"Failed to parse Helium Unity SDK version: {helium.version}");
-                    return false;
+                    EditorUtility.DisplayDialog(
+                        HeliumWindowTitle,
+                        $"Failed to parse version {helium.version} in Package.\n\n**This is probably a bad setup, contact Helium Support**",
+                        "Ok");
                 }
-                heliumVersion = heliumFoundVersion.ToString();
+                return;
             }
-            
+
+            var heliumVersion = heliumFoundVersion.ToString();
             var unityAdsDependencyPath = $"Assets/Samples/Helium SDK/{heliumVersion}/UnityAds/Editor/Optional-HeliumUnityAdsDependencies.xml";
 
             // check if UnityAds is integrated
             if (!File.Exists(unityAdsDependencyPath))
-                return false;
-            
+                return;
+
+            var unityAdsDependencyLines = File.ReadLines(unityAdsDependencyPath).ToList();
+            var commentedLineIndex = unityAdsDependencyLines.FindIndex(line => line.Contains(UnityAdsSDKCommented));
+            if (commentedLineIndex == -1)
+                return;
+
+            var updateUnityAdsSample = true;
+            if (!skipDialog)
+            {
+                updateUnityAdsSample = EditorUtility.DisplayDialog(
+                    HeliumWindowTitle,
+                    "Helium UnityAds Ad Adapter found, but UnityAds dependency is commented. This will lead to a non-functional adapter.\n\nDo you wish to uncomment it?",
+                    "Yes", "No", DialogOptOutDecisionType.ForThisMachine, UnityAdsUncommentWindow);
+            }
+            if (!updateUnityAdsSample)
+                return;
+            unityAdsDependencyLines[commentedLineIndex] = UnityAdsSDKUncommented;
+            File.WriteAllLines(unityAdsDependencyPath, unityAdsDependencyLines);
+        }
+
+        [MenuItem("Helium/Integration/UnityAds Check", false, 1)]
+        public static void CheckUnityAdsIntegration()
+        {
+            var helium = FindPackage(HeliumPackageName);
+            if (!Version.TryParse(helium.version, out var heliumFoundVersion))
+            {
+                EditorUtility.DisplayDialog(
+                    HeliumWindowTitle, 
+                    $"Failed to parse version {helium.version} in Package.\n\n**This is probably a bad setup, contact Helium Support**",
+                    "Ok");
+                return;
+            }
+
+            var heliumVersion = heliumFoundVersion.ToString();
+            var unityAdsDependencyPath = $"Assets/Samples/Helium SDK/{heliumVersion}/UnityAds/Editor/Optional-HeliumUnityAdsDependencies.xml";
+
+            // check if UnityAds is integrated
+            if (!File.Exists(unityAdsDependencyPath))
+                return;
+
             var unityAdsPackage = FindPackage(UnityAdsPackageName);
-            
+
             if (unityAdsPackage != null)
             {
                 if (!Version.TryParse(unityAdsPackage.version, out var unityAdsVersion))
-                    return false;
-
+                    return;
                 if (!unityAdsVersion.Equals(HeliumUnityAdsSupportedVersion))
                 {
                     EditorUtility.DisplayDialog(
                         HeliumWindowTitle,
-                        $"UnityAds SDK integrated through Unity Package Manager with version: {unityAdsPackage.version}. Helium recommended version is {HeliumUnityAdsSupportedVersion}.\n\nUnexpected behaviors can occur.",
+                        $"UnityAds integrated through Unity Package Manager with version: {unityAdsPackage.version}. Helium recommended version is {HeliumUnityAdsSupportedVersion}.\n\nUnexpected behaviors can occur.",
                         "Ok");
                 }
-                return true;
+                return;
             }
-            
-            var unityAdsDependencyLines = File.ReadLines(unityAdsDependencyPath).ToList();
-            var unityAdsSDKCommented = $"<!-- <androidPackage spec=\"com.unity3d.ads:unity-ads:{HeliumUnityAdsSupportedVersion}\"/> -->";
-            var commentedLineIndex = unityAdsDependencyLines.FindIndex(line => line.Contains(unityAdsSDKCommented));
 
-            if (commentedLineIndex == -1) 
-                return true;
-            
-            var updateUnityAdsSample = EditorUtility.DisplayDialog(
-                HeliumWindowTitle,
-                "Helium UnityAds Samples/Dependency found, but UnityAdsSDK is commented. This will lead to a non-functional adapter.\n\nDo you wish to uncomment it?",
-                "Yes", "No", DialogOptOutDecisionType.ForThisMachine, "unity-ads");
-
-            if (!updateUnityAdsSample)
-                return false;
-
-            var unityAdsSDKUncommented = $"        <androidPackage spec=\"com.unity3d.ads:unity-ads:{HeliumUnityAdsSupportedVersion}\"/>";
-            unityAdsDependencyLines[commentedLineIndex] = unityAdsSDKUncommented;
-            File.WriteAllLines(unityAdsDependencyPath, unityAdsDependencyLines);
-            return true;
-        }
-
-        [MenuItem("Helium/Integration/UnityAds Check", false, 1)]
-        public static void CheckUnityAdsIntegrationEditor()
-        {
-            CheckUnityAdsIntegration();
+            UncommentUnityAdsDependency();
         }
 
         /// <summary>
@@ -170,6 +193,8 @@ namespace Editor
 
             if (confirmUpdate)
                 ReimportExistingAdapters();
+            CheckUnityAdsIntegration();
+            AssetDatabase.Refresh();
         }
 
         /// <summary>
@@ -190,7 +215,7 @@ namespace Editor
                 {
                     var addHeliumSample = EditorUtility.DisplayDialog(
                         HeliumWindowTitle,
-                        "Helium Samples directory found, but not ad adapters in place.\n\nMake sure to include at least the Helium dependencies.\n\nWould you like to add them?",
+                        "Helium Ad Adapters directory found, but not ad adapters in place.\n\nMake sure to include at least the Helium dependencies.\n\nWould you like to add them?",
                         "Yes", "No");
 
                     if (addHeliumSample)
@@ -205,12 +230,12 @@ namespace Editor
                     // get the version of the dependencies found
                     var heliumVersionStr = Path.GetFileName(versionDirectory);
 
-                    // parse versioning folder vesion
+                    // parse versioning folder version
                     if (!Version.TryParse(heliumVersionStr, out var versionInAssets))
                     {
                         EditorUtility.DisplayDialog(
                             HeliumWindowTitle,
-                            $"Failed to parse version {heliumVersionStr} in Assets, please contact Helium Support.",
+                            $"Failed to parse version {heliumVersionStr} in Assets. \n\n**This is probably a bad setup, contact Helium Support**",
                             "Ok");
                         return;
                     }
@@ -229,7 +254,7 @@ namespace Editor
                     {
                         var addHeliumSamples = EditorUtility.DisplayDialog(
                             HeliumWindowTitle,
-                            $"Helium Samples/Dependencies directory found for version {versionInAssets}, but not Ad adapters in place.\n\nYou must at least include the Helium dependencies.\n\nWould you like to add them?",
+                            $"Helium Ad Adapters directory found for version {versionInAssets}, but not Ad Adapters in place.\n\nYou must at least include the Helium dependencies.\n\nWould you like to add them?",
                             "Yes", "No");
 
                         if (addHeliumSamples)
@@ -242,7 +267,7 @@ namespace Editor
                         {
                             var addHeliumSamples = EditorUtility.DisplayDialog(
                                 HeliumWindowTitle,
-                                $"Helium Samples/Dependencies not found in Assets.\n\nWould you like to add them?",
+                                $"Helium dependencies not found in Assets.\n\nMake sure to include at least the Helium dependencies.\n\nWould you like to add them?",
                                 "Yes", "No");
 
                             if (addHeliumSamples)
@@ -255,7 +280,7 @@ namespace Editor
                     {
                         EditorUtility.DisplayDialog(
                             HeliumWindowTitle,
-                            $"Failed to parse version {heliumVersionStr} in Package, please contact Helium Support.",
+                            $"Failed to parse version {heliumVersionStr} in Package.\n\n**This is probably a bad setup, contact Helium Support**",
                             "Ok");
                     }
 
@@ -264,7 +289,7 @@ namespace Editor
                     {
                         var dialogInput = EditorUtility.DisplayDialog(
                             HeliumWindowTitle,
-                            $"Newer Samples/Dependencies for version {versionInAssets}, package is using version {versionInPackage}.\n\nDo you wish to update your existing Ad adapters?",
+                            $"Ad Adapters for version {versionInAssets}, Helium Unity SDK is using higher version {versionInPackage}.\n\nDo you wish to upgrade your existing Ad Adapters?",
                             "Yes", "No");
 
                         if (dialogInput)
@@ -274,19 +299,17 @@ namespace Editor
                     {
                         var dialogInput = EditorUtility.DisplayDialog(
                             HeliumWindowTitle,
-                            $"Older Samples/Dependencies for version {versionInAssets} found, package is using newer version {versionInPackage}.\n\nDo you wish to downgrade your existing Ad adapters?\n\n**This is probably a bad setup, contact Helium Support**",
+                            $"Ad Adapters for version {versionInAssets} found, Helium Unity SDK is using lower version {versionInPackage}.\n\nDo you wish to downgrade your existing Ad Adapters?\n\n**This is probably a bad setup, contact Helium Support**",
                             "Yes", "No");
 
                         if (dialogInput)
                             ReimportExistingHeliumSamples(importedDependencies, helium.version);
                     }
-                    
+
                     // check for Unity Ads integration
                     if (importedDependencies.Contains(UnityAds))
-                    {
-                        CheckUnityAdsIntegration(helium.version);
-                    }
-                    
+                        CheckUnityAdsIntegration();
+
                     AssetDatabase.Refresh();
                 }
             }
@@ -295,7 +318,7 @@ namespace Editor
             {
                 var addHeliumSample = EditorUtility.DisplayDialog(
                     HeliumWindowTitle,
-                    "No Samples directory found.\n\nMake sure to include at least the Helium dependencies.\n\nWould you like to add them?",
+                    "No Ad Adapters directory found.\n\nMake sure to include at least the Helium dependencies.\n\nWould you like to add them?",
                     "Yes", "No");
 
                 if (addHeliumSample)
