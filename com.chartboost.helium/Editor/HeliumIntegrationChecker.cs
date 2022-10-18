@@ -57,6 +57,12 @@ namespace Editor
         /// <param name="version">Helium package version to use, must coincide with the currently installed version.</param>
         public static void ReimportExistingHeliumSamples(ICollection<string> existingSamples, string version)
         {
+            if (!Directory.Exists(HeliumSamplesInAssets))
+            {
+                Debug.Log($"[Helium Builder] {HeliumSamplesInAssets} does not exist.");
+                return;
+            }
+
             Directory.Delete(HeliumSamplesInAssets, true);
             File.Delete(HeliumSamplesMetaInAssets);
             AssetDatabase.Refresh();
