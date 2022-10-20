@@ -73,14 +73,15 @@ class HeliumUnityBridge {
         runTaskOnUiThread {
             // This call initializes the Helium SDK. This might change in the future with two ID parameters and we'll get rid of the logControllerListener
             HeliumSdk.start(UnityPlayer.currentActivity, appId, appSignature) { error ->
-                Log.d("Unity", "HeliumUnityBridge: Plugin ${
-                    error?.let {
-                        HeliumSdk.setGameEngine("unity", unityVersion)
-                        ilrdObserver?.let { observer ->
-                            HeliumSdk.subscribeIlrd(observer)
-                        }
-                        "failed to initialize: $it."
-                    } ?: "initialized" }")
+                error?.let {
+                    Log.d("Unity", "HeliumUnityBridge: Plugin failed to initialize: $it.")
+                } ?: run {
+                    HeliumSdk.setGameEngine("unity", unityVersion)
+                    ilrdObserver?.let { observer ->
+                        HeliumSdk.subscribeIlrd(observer)
+                    }
+                    Log.d("Unity", "HeliumUnityBridge: Plugin initialized.")
+                }
                 lifeCycleEventListener?.DidStart(error?.hashCode() ?: -1, error?.toString() ?: "")
             }
         }

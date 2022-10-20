@@ -7,7 +7,7 @@
     <package>androidx.localbroadcastmanager:localbroadcastmanager:1.1.0</package>
     <package>androidx.multidex:multidex:2.0.1</package>
     <package>com.adcolony:sdk:4.7.0</package>
-    <package>com.amazon.android:aps-sdk:9.4.3</package>
+    <package>com.amazon.android:aps-sdk:9.5.7</package>
     <package>com.applovin:applovin-sdk:11.3.1</package>
     <package>com.chartboost:helium:3.2.+</package>
     <package>com.chartboost:helium-adcolony:3.2.+@aar</package>

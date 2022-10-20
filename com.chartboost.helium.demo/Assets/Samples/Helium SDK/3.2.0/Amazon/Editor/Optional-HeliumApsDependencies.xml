@@ -5,7 +5,7 @@
         <androidPackage spec="com.chartboost:helium-aps:3.2.+@aar" />
 
         <!-- APS Android SDK -->
-        <androidPackage spec="com.amazon.android:aps-sdk:9.4.3"/>
+        <androidPackage spec="com.amazon.android:aps-sdk:9.5.7"/>
 
         <!-- Other Adapter Dependencies -->
         <androidPackage spec="org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0"/>
