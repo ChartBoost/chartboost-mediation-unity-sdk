@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using UnityEditor;
 using UnityEditor.PackageManager.UI;
 using UnityEngine;
@@ -68,12 +69,22 @@ namespace Editor
             AssetDatabase.Refresh();
 
             var allSamples = Sample.FindByPackage(HeliumPackageName, version);
-
+            var sb = new StringBuilder();
+            sb.AppendLine("<color='green'>[Helium Integration Checker] Ad Adapter Reimport Started!</color>");
             foreach (var sample in allSamples)
             {
-                if (existingSamples.Contains(sample.displayName))
-                    sample.Import(ImportOptions.HideImportWindow | ImportOptions.OverridePreviousImports);
+                if (!existingSamples.Contains(sample.displayName))
+                {
+                    sb.AppendLine($"<color='yellow'> * Skipping Ad Adapter: <b>{sample.displayName}</b></color>");
+                    continue;
+                }
+
+                sample.Import(ImportOptions.HideImportWindow | ImportOptions.OverridePreviousImports);
+                sb.AppendLine($"<color='green'> * Importing Ad Adapter: <b>{sample.displayName}</b></color>");
             }
+
+            sb.AppendLine("<color='green'>[Helium Integration Checker] Ad Adapter Reimport Completed</color>");
+            Debug.LogFormat(LogType.Log, LogOption.NoStacktrace, null, sb.ToString());
         }
 
         /// <summary>
@@ -143,6 +154,7 @@ namespace Editor
                     "Helium UnityAds Ad Adapter found, but UnityAds dependency is commented. This will lead to a non-functional adapter.\n\nDo you wish to uncomment it?",
                     "Yes", "No", DialogOptOutDecisionType.ForThisMachine, UnityAdsUncommentWindow);
             }
+
             if (!updateUnityAdsSample)
                 return;
             unityAdsDependencyLines[commentedLineIndex] = UnityAdsSDKUncommented;
@@ -156,7 +168,7 @@ namespace Editor
             if (!Version.TryParse(helium.version, out var heliumFoundVersion))
             {
                 EditorUtility.DisplayDialog(
-                    HeliumWindowTitle, 
+                    HeliumWindowTitle,
                     $"Failed to parse version {helium.version} in Package.\n\n**This is probably a bad setup, contact Helium Support at support@chartboost.com**",
                     "Ok");
                 return;
@@ -186,6 +198,7 @@ namespace Editor
             }
 
             UncommentUnityAdsDependency();
+            Log("[Helium Integration Checker] UnityAds Ad Adapter Check Completed!", "green");
         }
 
         /// <summary>
@@ -330,6 +343,13 @@ namespace Editor
                 if (addHeliumSample)
                     ImportSample(Helium, helium.version);
             }
+
+            Log("[Helium Integration Checker] Status Check Completed!", "green");
+        }
+
+        private static void Log(string message, string color = "white")
+        {
+            Debug.LogFormat(LogType.Log, LogOption.NoStacktrace, null, $"<color='{color}'>{message}</color>");
         }
     }
 }
