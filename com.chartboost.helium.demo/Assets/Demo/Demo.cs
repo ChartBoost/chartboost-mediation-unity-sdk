@@ -111,6 +111,12 @@ public class Demo : MonoBehaviour
         Log($"DidReceiveImpressionLevelRevenueData {placement}: {json}");
     }
 
+    private void DidReceivePartnerInitializationData(Hashtable partnerInitializationData)
+    {
+        var json = HeliumJSON.Serialize(partnerInitializationData);
+        Log($"DidReceiveImpressionLevelRevenueData: {json}");
+    }
+
     public void OnSelectFullScreenClicked()
     {
         fullScreenPanel.SetActive(true);

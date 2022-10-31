@@ -131,6 +131,7 @@ namespace Helium.Platforms
 #pragma warning disable 67
         public virtual event HeliumEvent DidStart;
         public virtual event HeliumILRDEvent DidReceiveImpressionLevelRevenueData;
+        public virtual event HeliumPartnerInitializationEvent DidReceivePartnerInitializationData;
         public virtual event HeliumPlacementEvent DidLoadInterstitial;
         public virtual event HeliumPlacementEvent DidShowInterstitial;
         public virtual event HeliumPlacementEvent DidCloseInterstitial;

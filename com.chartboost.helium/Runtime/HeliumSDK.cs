@@ -49,6 +49,12 @@ namespace Helium
             add => _heliumExternal.DidReceiveImpressionLevelRevenueData += value;
             remove => _heliumExternal.DidReceiveImpressionLevelRevenueData -= value;
         }
+        
+        public static event HeliumPartnerInitializationEvent DidReceivePartnerInitializationData
+        {
+            add => _heliumExternal.DidReceivePartnerInitializationData += value;
+            remove => _heliumExternal.DidReceivePartnerInitializationData -= value;
+        }
 
         /// <inheritdoc cref="HeliumEventProcessor.UnexpectedSystemErrorDidOccur"/>>
         public static event HeliumEvent UnexpectedSystemErrorDidOccur

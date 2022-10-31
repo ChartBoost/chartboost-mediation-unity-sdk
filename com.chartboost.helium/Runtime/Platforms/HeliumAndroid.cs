@@ -193,10 +193,18 @@ namespace Helium.Platforms
                 HeliumEventProcessor.ProcessEventWithILRD(impressionDataJson,
                     _instance.DidReceiveImpressionLevelRevenueData);
             }
+
+            [Preserve]
+            private void DidReceivePartnerInitializationData(string partnerInitializationDataJson)
+            {
+                HeliumEventProcessor.ProcessEventWithPartnerInitializationData(partnerInitializationDataJson,
+                    _instance.DidReceivePartnerInitializationData);
+            }
         }
 
         public override event HeliumEvent DidStart;
         public override event HeliumILRDEvent DidReceiveImpressionLevelRevenueData;
+        public override event HeliumPartnerInitializationEvent DidReceivePartnerInitializationData;
         #endregion
 
         #region Interstitial Callbacks
