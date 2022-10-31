@@ -14,7 +14,7 @@ namespace Helium
     /// <summary>
     /// <param name="partnerInitializationEventData">The partner initialization data delivered within a hashtable.</param>
     /// </summary>
-    public delegate void HeliumPartnerInitializationEvent(Hashtable partnerInitializationEventData);
+    public delegate void HeliumPartnerInitializationEvent(string partnerInitializationEventData);
 
     /// <summary>
     /// <param name="placement">The placement name for the placement.</param>

@@ -52,6 +52,7 @@ public class Demo : MonoBehaviour
     {        
         HeliumSDK.DidStart += DidStartHelium;
         HeliumSDK.DidReceiveImpressionLevelRevenueData += DidReceiveImpressionLevelRevenueData;
+        HeliumSDK.DidReceivePartnerInitializationData += DidReceivePartnerInitializationData;
         HeliumSDK.UnexpectedSystemErrorDidOccur += UnexpectedSystemErrorDidOccur;
         SetupInterstitialDelegates();
         SetupRewardedDelegates();
@@ -111,10 +112,9 @@ public class Demo : MonoBehaviour
         Log($"DidReceiveImpressionLevelRevenueData {placement}: {json}");
     }
 
-    private void DidReceivePartnerInitializationData(Hashtable partnerInitializationData)
+    private void DidReceivePartnerInitializationData(string partnerInitializationData)
     {
-        var json = HeliumJSON.Serialize(partnerInitializationData);
-        Log($"DidReceiveImpressionLevelRevenueData: {json}");
+        Log($"DidReceivePartnerInitializationData: {partnerInitializationData}");
     }
 
     public void OnSelectFullScreenClicked()

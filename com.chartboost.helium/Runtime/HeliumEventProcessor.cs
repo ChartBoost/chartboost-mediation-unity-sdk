@@ -44,27 +44,6 @@ namespace Helium
             }, null);
         }
 
-        public static void ProcessEventWithPartnerInitializationData(string dataString, HeliumPartnerInitializationEvent partnerInitializationEvent)
-        {
-            _context.Post(o =>
-            {
-                try
-                {
-                    if (partnerInitializationEvent == null)
-                        return;
-                    
-                    if (!(HeliumJSON.Deserialize(dataString) is Dictionary<object, object> data)) 
-                        return;
-                    
-                    partnerInitializationEvent(new Hashtable(data));
-                }
-                catch (Exception e)
-                {
-                    ReportUnexpectedSystemError(e.ToString());
-                }
-            }, null);
-        }
-
         public static void ProcessHeliumEvent(int errorCode, string errorDescription, HeliumEvent heliumEvent)
         {
             _context.Post(o =>
