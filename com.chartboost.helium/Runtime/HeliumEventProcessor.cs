@@ -44,6 +44,21 @@ namespace Helium
             }, null);
         }
 
+        public static void ProcessEventWithPartnerInitializationData(string dataString, HeliumPartnerInitializationEvent partnerInitializationEvent)
+        {
+            _context.Post(o =>
+            {
+                try
+                {
+                    partnerInitializationEvent(dataString);
+                }
+                catch (Exception e)
+                {
+                    ReportUnexpectedSystemError(e.ToString());
+                }
+            }, null);
+        }
+
         public static void ProcessHeliumEvent(int errorCode, string errorDescription, HeliumEvent heliumEvent)
         {
             _context.Post(o =>

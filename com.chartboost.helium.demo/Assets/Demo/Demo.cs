@@ -51,8 +51,8 @@ public class Demo : MonoBehaviour
     private void Awake()
     {        
         HeliumSDK.DidStart += DidStartHelium;
-        HeliumSDK.DidReceiveImpressionLevelRevenueData += DidReceiveImpressionLevelRevenueData;
         HeliumSDK.DidReceivePartnerInitializationData += DidReceivePartnerInitializationData;
+        HeliumSDK.DidReceiveImpressionLevelRevenueData += DidReceiveImpressionLevelRevenueData;
         HeliumSDK.UnexpectedSystemErrorDidOccur += UnexpectedSystemErrorDidOccur;
         SetupInterstitialDelegates();
         SetupRewardedDelegates();

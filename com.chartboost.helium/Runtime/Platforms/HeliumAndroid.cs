@@ -197,7 +197,8 @@ namespace Helium.Platforms
             [Preserve]
             private void DidReceivePartnerInitializationData(string partnerInitializationDataJson)
             {
-                _instance.DidReceivePartnerInitializationData?.Invoke(partnerInitializationDataJson);
+                HeliumEventProcessor.ProcessEventWithPartnerInitializationData(partnerInitializationDataJson, 
+                    _instance.DidReceivePartnerInitializationData);
             }
         }
 
