@@ -137,7 +137,7 @@ namespace Editor
             var heliumVersion = heliumFoundVersion.ToString();
             var unityAdsDependencyPath = $"Assets/Samples/Helium SDK/{heliumVersion}/UnityAds/Editor/Optional-HeliumUnityAdsDependencies.xml";
 
-            // check if UnityAds is integrated
+            // Check if UnityAds is integrated
             if (!File.Exists(unityAdsDependencyPath))
                 return;
 
