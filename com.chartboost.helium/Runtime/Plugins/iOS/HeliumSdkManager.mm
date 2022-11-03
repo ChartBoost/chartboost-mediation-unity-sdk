@@ -1,10 +1,11 @@
 /*
- * HeliumSdkManager.mm
- * Helium SDK
- */
+* HeliumSdkManager.mm
+* Helium SDK
+*/
 
 #import "HeliumSdkManager.h"
 #import "HeliumSdk/HeliumSdk-Swift.h"
+#import <HeliumSdk/HeliumInitResultsEvent.h>
 
 // interstitial ad objects
 NSMutableDictionary * storedAds = nil;
@@ -12,6 +13,7 @@ NSMutableDictionary * storedAds = nil;
 // lifecycle callbacks
 static HeliumEvent _didStartCallback;
 static HeliumILRDEvent _didReceiveILRDCallback;
+static HeliumPartnerInitializationDataEvent _didReceivePartnerInitializationDataCallback;
 
 // interstitial callbacks
 static HeliumPlacementEvent _interstitialDidLoadCallback;
@@ -111,8 +113,10 @@ const void serializeWinBidInfo(NSString *placementName, NSDictionary* info, Heli
 static void heliumSubscribeToILRDNotifications()
 {
     static id ilrdObserverId = nil;
+
     if (ilrdObserverId != nil)
         [[NSNotificationCenter defaultCenter] removeObserver:ilrdObserverId];
+
     ilrdObserverId = [[NSNotificationCenter defaultCenter] addObserverForName:kHeliumDidReceiveILRDNotification object:nil queue:nil usingBlock:^(NSNotification* _Nonnull note) {
         HeliumImpressionData *ilrd = note.object;
         NSString *placement = ilrd.placement;
@@ -126,6 +130,22 @@ static void heliumSubscribeToILRDNotifications()
         if (_didReceiveILRDCallback != nil)
             _didReceiveILRDCallback(jsonToUnity);
     }];
+}
+
+static void heliumSubscribeToPartnerInitializationNotifications()
+{
+	static id partnerInitializationObserver = nil;
+	
+	if (partnerInitializationObserver != nil)
+		[[NSNotificationCenter defaultCenter] removeObserver:partnerInitializationObserver];
+	
+	partnerInitializationObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kHeliumDidReceiveInitResultsNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+		// Extract the results payload.
+		NSDictionary *results = (NSDictionary *)notification.object;
+		const char* jsonToUnity = serializeDictionary(results);
+		if (_didReceivePartnerInitializationDataCallback != nil)
+			_didReceivePartnerInitializationDataCallback(jsonToUnity);
+	}];
 }
 
 @interface HeliumSdkManager() <HeliumSdkDelegate, CHBHeliumInterstitialAdDelegate, CHBHeliumRewardedAdDelegate, CHBHeliumBannerAdDelegate>
@@ -150,10 +170,11 @@ static void heliumSubscribeToILRDNotifications()
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Public
 
-- (void)setLifeCycleCallbacks:(HeliumEvent)didStartCallback didReceiveILRDCallback:(HeliumILRDEvent)didReceiveILRDCallback
+- (void)setLifeCycleCallbacks:(HeliumEvent)didStartCallback didReceiveILRDCallback:(HeliumILRDEvent)didReceiveILRDCallback didReceivePartnerInitializationData:(HeliumPartnerInitializationDataEvent)didReceivePartnerInitializationDataCallback
 {
-    _didStartCallback = didStartCallback;
-    _didReceiveILRDCallback = didReceiveILRDCallback;
+	_didStartCallback = didStartCallback;
+	_didReceiveILRDCallback = didReceiveILRDCallback;
+	_didReceivePartnerInitializationDataCallback = didReceivePartnerInitializationDataCallback;
 }
 
 - (void)setInterstitialCallbacks:(HeliumPlacementEvent)didLoadCallback didShowCallback:(HeliumPlacementEvent)didShowCallback didClickCallback:(HeliumPlacementEvent)didClickCallback didCloseCallback:(HeliumPlacementEvent)didCloseCallback didRecordImpression:(HeliumPlacementEvent)didRecordImpression didWinBidCallback:(HeliumBidWinEvent)didWinBidCallback
@@ -190,6 +211,7 @@ static void heliumSubscribeToILRDNotifications()
                 unityVersion:(NSString *)unityVersion
 {
     heliumSubscribeToILRDNotifications();
+	heliumSubscribeToPartnerInitializationNotifications();
     [[Helium sharedHelium] startWithAppId: appId andAppSignature:appSignature delegate: self];
 }
 

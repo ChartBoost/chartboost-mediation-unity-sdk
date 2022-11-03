@@ -12,6 +12,11 @@ namespace Helium
     public delegate void HeliumILRDEvent(string placement, Hashtable impressionData);
 
     /// <summary>
+    /// <param name="partnerInitializationEventData">The partner initialization data delivered within a hashtable.</param>
+    /// </summary>
+    public delegate void HeliumPartnerInitializationEvent(string partnerInitializationEventData);
+
+    /// <summary>
     /// <param name="placement">The placement name for the placement.</param>
     /// <param name="error">The error encountered, if any.</param>
     /// </summary>

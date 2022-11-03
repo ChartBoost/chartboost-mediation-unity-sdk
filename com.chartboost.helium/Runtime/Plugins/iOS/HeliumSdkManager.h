@@ -15,6 +15,7 @@ typedef void (*HeliumPlacementEvent)(const char* placementName, int errorCode, c
 typedef void (*HeliumBidWinEvent) (const char* placementName, const char* auctionId, const char* partnerId, double price);
 typedef void (*HeliumRewardEvent)(const char* placementName, int reward);
 typedef void (*HeliumILRDEvent)(const char* impressionData);
+typedef void (*HeliumPartnerInitializationDataEvent)(const char* partnerInitializationData);
 
 
 @interface HeliumSdkManager : NSObject
@@ -23,7 +24,7 @@ typedef void (*HeliumILRDEvent)(const char* impressionData);
 
 + (HeliumSdkManager*)sharedManager;
 
-- (void)setLifeCycleCallbacks:(HeliumEvent)didStartCallback  didReceiveILRDCallback:(HeliumILRDEvent)didReceiveILRDCallback;
+- (void)setLifeCycleCallbacks:(HeliumEvent)didStartCallback  didReceiveILRDCallback:(HeliumILRDEvent)didReceiveILRDCallback didReceivePartnerInitializationData:(HeliumPartnerInitializationDataEvent)didReceivePartnerInitializationDataCallback;
 - (void)setInterstitialCallbacks:(HeliumPlacementEvent)didLoadCallback didShowCallback:(HeliumPlacementEvent)didShowCallback didClickCallback:(HeliumPlacementEvent)didClickCallback didCloseCallback:(HeliumPlacementEvent)didCloseCallback didRecordImpression:(HeliumPlacementEvent)didRecordImpression didWinBidCallback:(HeliumBidWinEvent)didWinBidCallback;
 - (void)setRewardedCallbacks:(HeliumPlacementEvent)didLoadCallback didShowCallback:(HeliumPlacementEvent)didShowCallback didClickCallback:(HeliumPlacementEvent)didClickCallback didCloseCallback:(HeliumPlacementEvent)didCloseCallback didRecordImpression:(HeliumPlacementEvent)didRecordImpression didWinBidCallback:(HeliumBidWinEvent)didWinBidCallback didReceiveRewardCallback:(HeliumRewardEvent)didReceiveRewardCallback;
 - (void)setBannerCallbacks:(HeliumPlacementEvent)didLoadCallback didRecordImpression:(HeliumPlacementEvent)didRecordImpression didClickCallback:(HeliumPlacementEvent)didClickCallback didWinBidCallback:(HeliumBidWinEvent)didWinBidCallback;

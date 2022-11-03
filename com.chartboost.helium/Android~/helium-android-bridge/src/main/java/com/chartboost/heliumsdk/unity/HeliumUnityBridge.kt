@@ -1,9 +1,7 @@
 package com.chartboost.heliumsdk.unity
 
 import android.util.Log
-import com.chartboost.heliumsdk.HeliumIlrdObserver
-import com.chartboost.heliumsdk.HeliumImpressionData
-import com.chartboost.heliumsdk.HeliumSdk
+import com.chartboost.heliumsdk.*
 import com.chartboost.heliumsdk.ad.*
 import com.chartboost.heliumsdk.ad.HeliumBannerAd.HeliumBannerSize
 import com.chartboost.heliumsdk.unity.HeliumEventProcessor.HeliumBidEventConsumer
@@ -23,6 +21,7 @@ class HeliumUnityBridge {
     private var interstitialEventsListener: IInterstitialEventListener? = null
     private var rewardedEventListener: IRewardedEventListener? = null
     private var ilrdObserver: HeliumIlrdObserver? = null
+    private var initResultsObserver: PartnerInitializationResultsObserver? = null
 
     fun setupEventListeners(
         lifeCycleListener: ILifeCycleEventListener,
@@ -70,6 +69,13 @@ class HeliumUnityBridge {
             }
         }
 
+        initResultsObserver = object : PartnerInitializationResultsObserver {
+            override fun onPartnerInitializationResultsReady(data : PartnerInitializationResultsData) {
+                val json = data.data.toString()
+                lifeCycleEventListener?.DidReceivePartnerInitializationData(json)
+            }
+        }
+
         runTaskOnUiThread {
             // This call initializes the Helium SDK. This might change in the future with two ID parameters and we'll get rid of the logControllerListener
             HeliumSdk.start(UnityPlayer.currentActivity, appId, appSignature) { error ->
@@ -79,6 +85,10 @@ class HeliumUnityBridge {
                     HeliumSdk.setGameEngine("unity", unityVersion)
                     ilrdObserver?.let { observer ->
                         HeliumSdk.subscribeIlrd(observer)
+                    }
+                    initResultsObserver?.let {
+                        observer ->
+                        HeliumSdk.subscribeInitializationResults(observer)
                     }
                     Log.d("Unity", "HeliumUnityBridge: Plugin initialized.")
                 }
@@ -105,11 +115,11 @@ class HeliumUnityBridge {
                 object : HeliumInterstitialAdListener {
                     override fun didReceiveWinningBid(
                         placementName: String,
-                        hashMap: HashMap<String, String>
+                        bidInfo: HashMap<String, String>
                     ) {
                         serializeHeliumBidEvent(
                             placementName,
-                            hashMap,
+                            bidInfo,
                             HeliumBidEventConsumer { placementName: String, auctionId: String, partnerId: String, price: Double ->
                                 interstitialEventsListener?.DidWinBidInterstitial(
                                     placementName,
@@ -195,11 +205,11 @@ class HeliumUnityBridge {
                 object : HeliumRewardedAdListener {
                     override fun didReceiveWinningBid(
                         placementName: String,
-                        hashMap: HashMap<String, String>
+                        bidInfo: HashMap<String, String>
                     ) {
                         serializeHeliumBidEvent(
                             placementName,
-                            hashMap,
+                            bidInfo,
                             HeliumBidEventConsumer { placementName: String, auctionId: String, partnerId: String, price: Double ->
                                 rewardedEventListener?.DidWinBidRewarded(
                                     placementName,
