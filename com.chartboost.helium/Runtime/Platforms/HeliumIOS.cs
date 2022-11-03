@@ -13,18 +13,15 @@ namespace Helium.Platforms
         #region Objective-C Extern Members
         // callback definitions for objective-c layer
         private delegate void ExternHeliumEvent(int errorCode, string errorDescription);
-
         private delegate void ExternHeliumILRDEvent(string impressionDataJson);
-
+        private delegate void ExternHeliumPartnerInitializationDataEvent(string partnerInitializationData);
         private delegate void ExternHeliumPlacementEvent(string placementName, int errorCode, string errorDescription);
-
         private delegate void ExternHeliumWinBidEvent(string placementName, string auctionId, string partnerId, double price);
-
         private delegate void ExternHeliumRewardEvent(string placementName, int reward);
 
         [DllImport("__Internal")]
         private static extern void _setLifeCycleCallbacks(ExternHeliumEvent DidStartCallback,
-            ExternHeliumILRDEvent DidReceiveILRDCallback);
+            ExternHeliumILRDEvent DidReceiveILRDCallback, ExternHeliumPartnerInitializationDataEvent DidReceivePartnerInitializationDataCallback);
 
         [DllImport("__Internal")]
         private static extern void _setInterstitialCallbacks(ExternHeliumPlacementEvent DidLoadCallback,
@@ -79,7 +76,7 @@ namespace Helium.Platforms
         {
             _instance = this;
             LOGTag = "Helium(iOS)";
-            _setLifeCycleCallbacks(ExternDidStart, ExternDidReceiveILRD);
+            _setLifeCycleCallbacks(ExternDidStart, ExternDidReceiveILRD, ExternDidReceivePartnerInitializationData);
             _setInterstitialCallbacks(ExternDidLoadInterstitial, ExternDidShowInterstitial, ExternDidClickInterstitial,
                 ExternDidCloseInterstitial, ExternDidRecordImpressionInterstitial, ExternDidWinBidInterstitial);
             _setRewardedCallbacks(ExternDidLoadRewarded, ExternDidShowRewarded, ExternDidClickRewarded,
@@ -191,8 +188,17 @@ namespace Helium.Platforms
             HeliumEventProcessor.ProcessEventWithILRD(impressionDataJson,
                 _instance.DidReceiveImpressionLevelRevenueData);
         }
+
+        [MonoPInvokeCallback(typeof(ExternHeliumPartnerInitializationDataEvent))]
+        private static void ExternDidReceivePartnerInitializationData(string partnerInitializationData)
+        {
+            HeliumEventProcessor.ProcessEventWithPartnerInitializationData(partnerInitializationData, 
+                _instance.DidReceivePartnerInitializationData);
+        }
+
         public override event HeliumEvent DidStart;
         public override event HeliumILRDEvent DidReceiveImpressionLevelRevenueData;
+        public override event HeliumPartnerInitializationEvent DidReceivePartnerInitializationData;
         #endregion
 
         #region Interstitial Callbacks

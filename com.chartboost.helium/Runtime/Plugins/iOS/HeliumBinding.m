@@ -30,9 +30,9 @@ static void sendToBackground(block block) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), block);
 }
 
-void _setLifeCycleCallbacks(HeliumEvent didStartCallback, HeliumILRDEvent didReceiveILRDCallback)
+void _setLifeCycleCallbacks(HeliumEvent didStartCallback, HeliumILRDEvent didReceiveILRDCallback, HeliumPartnerInitializationDataEvent didReceivePartnerInitializationDataCallback)
 {
-    [[HeliumSdkManager sharedManager] setLifeCycleCallbacks:didStartCallback didReceiveILRDCallback:didReceiveILRDCallback];
+    [[HeliumSdkManager sharedManager] setLifeCycleCallbacks:didStartCallback didReceiveILRDCallback:didReceiveILRDCallback didReceivePartnerInitializationData:didReceivePartnerInitializationDataCallback];
 }
 
 void _setInterstitialCallbacks(HeliumPlacementEvent didLoadCallback, HeliumPlacementEvent didShowCallback, HeliumPlacementEvent didClickCallback, HeliumPlacementEvent didCloseCallback, HeliumPlacementEvent didRecordImpression, HeliumBidWinEvent didWinBidCallback)
