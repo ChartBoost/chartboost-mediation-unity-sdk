@@ -11,7 +11,7 @@ namespace Helium.Platforms
 
         protected static void Log(string message)
         {
-            if (HeliumSettings.IsLogging() && Debug.isDebugBuild)
+            if (HeliumSettings.IsLoggingEnabled && Debug.isDebugBuild)
                 Debug.Log( $"{LOGTag}/{message}");
         }
 
@@ -51,8 +51,6 @@ namespace Helium.Platforms
         public virtual void InitWithAppIdAndSignature(string appId, string appSignature)
         {
             Log($"InitWithAppIdAndSignature {appId}, {appSignature} and version {Application.unityVersion}");
-            HeliumSettings.SetAppId(appId);
-            HeliumSettings.SetAppSignature(appSignature);
         }
         
         public virtual void SetSubjectToCoppa(bool isSubject)

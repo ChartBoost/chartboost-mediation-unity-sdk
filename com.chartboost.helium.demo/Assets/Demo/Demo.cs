@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.IO;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Helium;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
 
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public class Demo : MonoBehaviour
 {
 #if UNITY_ANDROID
