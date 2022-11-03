@@ -71,7 +71,7 @@ class HeliumUnityBridge {
 
         initResultsObserver = object : PartnerInitializationResultsObserver {
             override fun onPartnerInitializationResultsReady(data : PartnerInitializationResultsData) {
-                val json = data.toString()
+                val json = data.data.toString()
                 lifeCycleEventListener?.DidReceivePartnerInitializationData(json)
             }
         }
@@ -115,11 +115,11 @@ class HeliumUnityBridge {
                 object : HeliumInterstitialAdListener {
                     override fun didReceiveWinningBid(
                         placementName: String,
-                        hashMap: HashMap<String, String>
+                        bidInfo: HashMap<String, String>
                     ) {
                         serializeHeliumBidEvent(
                             placementName,
-                            hashMap,
+                            bidInfo,
                             HeliumBidEventConsumer { placementName: String, auctionId: String, partnerId: String, price: Double ->
                                 interstitialEventsListener?.DidWinBidInterstitial(
                                     placementName,
@@ -205,11 +205,11 @@ class HeliumUnityBridge {
                 object : HeliumRewardedAdListener {
                     override fun didReceiveWinningBid(
                         placementName: String,
-                        hashMap: HashMap<String, String>
+                        bidInfo: HashMap<String, String>
                     ) {
                         serializeHeliumBidEvent(
                             placementName,
-                            hashMap,
+                            bidInfo,
                             HeliumBidEventConsumer { placementName: String, auctionId: String, partnerId: String, price: Double ->
                                 rewardedEventListener?.DidWinBidRewarded(
                                     placementName,
