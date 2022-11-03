@@ -38,14 +38,14 @@ namespace Helium.Platforms
         public override void Init()
         {
             base.Init();
-            var appID = HeliumSettings.GetAndroidAppId();
-            var appSignature = HeliumSettings.GetAndroidAppSignature();
-            InitWithAppIdAndSignature(appID, appSignature);
+            InitWithAppIdAndSignature(HeliumSettings.AndroidAppId, HeliumSettings.AndroidAppSignature);
         }
 
         public override void InitWithAppIdAndSignature(string appId, string appSignature)
         {
             base.InitWithAppIdAndSignature(appId, appSignature);
+            HeliumSettings.AndroidAppId = appId;
+            HeliumSettings.AndroidAppSignature = appSignature;
             plugin().Call("start", appId, appSignature, Application.unityVersion);
             IsInitialized = true;
         }
