@@ -42,7 +42,7 @@ namespace Helium.Editor
 			EditorGUILayout.EndHorizontal();
 
 			EditorGUILayout.BeginHorizontal();
-			HeliumSettings.SetIOSAppId(EditorGUILayout.TextField(_instance.iOSAppId));
+			HeliumSettings.IOSAppId = EditorGUILayout.TextField(HeliumSettings.IOSAppId);
 			EditorGUILayout.EndHorizontal();
 			EditorGUILayout.Space();
 			EditorGUILayout.Space();
@@ -52,7 +52,7 @@ namespace Helium.Editor
 			EditorGUILayout.EndHorizontal();
 
 			EditorGUILayout.BeginHorizontal();
-			HeliumSettings.SetiOSAppSignature(EditorGUILayout.TextField(_instance.iOSAppSignature));
+			HeliumSettings.IOSAppSignature = EditorGUILayout.TextField(HeliumSettings.IOSAppSignature);
 			EditorGUILayout.EndHorizontal();
 			EditorGUILayout.Space();
 			EditorGUILayout.Space();
@@ -67,7 +67,7 @@ namespace Helium.Editor
 			EditorGUILayout.EndHorizontal();
 
 			EditorGUILayout.BeginHorizontal();
-			HeliumSettings.SetAndroidAppId(EditorGUILayout.TextField(_instance.androidAppId));
+			HeliumSettings.AndroidAppId = EditorGUILayout.TextField(HeliumSettings.AndroidAppId);
 			EditorGUILayout.EndHorizontal();
 			EditorGUILayout.Space();
 			EditorGUILayout.Space();
@@ -77,7 +77,7 @@ namespace Helium.Editor
 			EditorGUILayout.EndHorizontal();
 
 			EditorGUILayout.BeginHorizontal();
-			HeliumSettings.SetAndroidAppSignature(EditorGUILayout.TextField(_instance.androidAppSignature));
+			HeliumSettings.AndroidAppSignature = EditorGUILayout.TextField(HeliumSettings.AndroidAppSignature);
 			EditorGUILayout.EndHorizontal();
 			EditorGUILayout.Space();
 			EditorGUILayout.Space();
@@ -88,7 +88,7 @@ namespace Helium.Editor
 			EditorGUILayout.EndHorizontal();
 
 			EditorGUILayout.BeginHorizontal();
-			HeliumSettings.EnableLogging(EditorGUILayout.Toggle(_enableLoggingToggle, _instance.isLoggingEnabled));
+			HeliumSettings.IsLoggingEnabled = EditorGUILayout.Toggle(_enableLoggingToggle, HeliumSettings.IsLoggingEnabled);
 			EditorGUILayout.EndHorizontal();
 			EditorGUILayout.Space();
 			
@@ -98,7 +98,7 @@ namespace Helium.Editor
 			EditorGUILayout.EndHorizontal();
 			
 			EditorGUILayout.BeginHorizontal();
-			HeliumSettings.EnableAutomaticInit(EditorGUILayout.Toggle(_enableAutomaticInitToggle, _instance.isAutomaticInitEnabled));
+			HeliumSettings.IsAutomaticInitializationEnabled = EditorGUILayout.Toggle(_enableAutomaticInitToggle, HeliumSettings.IsAutomaticInitializationEnabled);
 			EditorGUILayout.EndHorizontal();
 			
 		}

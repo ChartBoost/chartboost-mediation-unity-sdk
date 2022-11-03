@@ -218,7 +218,7 @@ namespace Helium
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Init()
         {
-            if (HeliumSettings.IsAutomaticInit() && !HeliumExternal.IsInitialized)
+            if (HeliumSettings.IsAutomaticInitializationEnabled && !HeliumExternal.IsInitialized)
                 _heliumExternal.Init();
         }
 
