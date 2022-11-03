@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using UnityEngine;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo
@@ -9,7 +10,7 @@ namespace Helium
 {
     public static class HeliumEventProcessor
     {
-        private static readonly SynchronizationContext _context;
+        private static SynchronizationContext _context;
         
         /// <summary>
         /// Called when an unexpected system error occurred.
@@ -17,20 +18,23 @@ namespace Helium
         // ReSharper disable once InconsistentNaming
         public static event HeliumEvent UnexpectedSystemErrorDidOccur;
 
-        static HeliumEventProcessor()
+        /// <summary>
+        /// Initializes Helium Event Processor, must be called from main thread.
+        /// </summary>
+        internal static void Initialize()
         {
             _context = SynchronizationContext.Current;
         }
-        
+
         public static void ProcessEventWithILRD(string dataString, HeliumILRDEvent ilrdEvent)
         {
+            if (ilrdEvent == null)
+                return;
+            
             _context.Post(o =>
             {
                 try
                 {
-                    if (ilrdEvent == null)
-                        return;
-
                     if (!(HeliumJSON.Deserialize(dataString) is Dictionary<object, object> data)) 
                         return;
                     
@@ -46,6 +50,9 @@ namespace Helium
 
         public static void ProcessEventWithPartnerInitializationData(string dataString, HeliumPartnerInitializationEvent partnerInitializationEvent)
         {
+            if (partnerInitializationEvent == null)
+                return;
+            
             _context.Post(o =>
             {
                 try
@@ -61,12 +68,13 @@ namespace Helium
 
         public static void ProcessHeliumEvent(int errorCode, string errorDescription, HeliumEvent heliumEvent)
         {
+            if (heliumEvent == null)
+                return;
+            
             _context.Post(o =>
             {
                 try
                 {
-                    if (heliumEvent == null)
-                        return;
                     var heliumError = HeliumError.ErrorFromIntString(errorCode, errorDescription);
                     heliumEvent(heliumError);
                 }
@@ -79,12 +87,13 @@ namespace Helium
 
         public static void ProcessHeliumPlacementEvent(string placementName, int errorCode, string errorDescription, HeliumPlacementEvent placementEvent)
         {
+            if (placementEvent == null)
+                return;
+            
             _context.Post(o =>
             {
                 try
                 {
-                    if (placementEvent == null)
-                        return;
                     var heliumError = HeliumError.ErrorFromIntString(errorCode, errorDescription);
                     placementEvent(placementName, heliumError);
                 }
@@ -97,12 +106,13 @@ namespace Helium
 
         public static void ProcessHeliumBidEvent(string placementName, string auctionId, string partnerId, double price, HeliumBidEvent bidEvent)
         {
+            if (bidEvent == null)
+                return;
+            
             _context.Post(o =>
             {
                 try
                 {
-                    if (bidEvent == null)
-                        return;
                     var heliumBid = new HeliumBidInfo(auctionId, partnerId, price);
                     bidEvent(placementName, heliumBid);
                 }
@@ -115,12 +125,13 @@ namespace Helium
 
         public static void ProcessHeliumRewardEvent(string placementName, int reward, HeliumRewardEvent rewardEvent)
         {
+            if (rewardEvent == null)
+                return;
+            
             _context.Post(o =>
             {
                 try
                 {
-                    if (rewardEvent == null)
-                        return;
                     rewardEvent(placementName, reward);
                 }
                 catch (Exception e)

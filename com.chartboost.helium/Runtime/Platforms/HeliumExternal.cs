@@ -51,6 +51,7 @@ namespace Helium.Platforms
         public virtual void InitWithAppIdAndSignature(string appId, string appSignature)
         {
             Log($"InitWithAppIdAndSignature {appId}, {appSignature} and version {Application.unityVersion}");
+            HeliumEventProcessor.Initialize();
         }
         
         public virtual void SetSubjectToCoppa(bool isSubject)
