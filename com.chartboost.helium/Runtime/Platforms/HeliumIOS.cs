@@ -87,14 +87,14 @@ namespace Helium.Platforms
         public override void Init()
         {
             base.Init();
-            var appID = HeliumSettings.GetIOSAppId();
-            var appSignature = HeliumSettings.GetIOSAppSignature();
-            InitWithAppIdAndSignature(appID, appSignature);
+            InitWithAppIdAndSignature(HeliumSettings.IOSAppId, HeliumSettings.IOSAppSignature);
         }
 
         public override void InitWithAppIdAndSignature(string appId, string appSignature)
         {
             base.InitWithAppIdAndSignature(appId, appSignature);
+            HeliumSettings.IOSAppId = appId;
+            HeliumSettings.IOSAppSignature = appSignature;
             _heliumSdkInit(appId, appSignature, Application.unityVersion);
             IsInitialized = true;
         }
