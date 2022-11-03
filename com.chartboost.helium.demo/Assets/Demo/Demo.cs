@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 using System.Text;
 using Helium;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -109,12 +111,12 @@ public class Demo : MonoBehaviour
     private void DidReceiveImpressionLevelRevenueData(string placement, Hashtable impressionData)
     {
         var json =  HeliumJSON.Serialize(impressionData);
-        Log($"DidReceiveImpressionLevelRevenueData {placement}: {json}");
+        Log($"DidReceiveImpressionLevelRevenueData {placement}: {JsonPrettify(json)}");
     }
 
     private void DidReceivePartnerInitializationData(string partnerInitializationData)
     {
-        Log($"DidReceivePartnerInitializationData: {partnerInitializationData}");
+        Log($"DidReceivePartnerInitializationData: ${JsonPrettify(partnerInitializationData)}");
     }
 
     public void OnSelectFullScreenClicked()
@@ -460,6 +462,17 @@ public class Demo : MonoBehaviour
     {
         Debug.LogErrorFormat(error.ErrorDescription);
     }
-
+    
+    public static string JsonPrettify(string json)
+    {
+        using (var stringReader = new StringReader(json))
+        using (var stringWriter = new StringWriter())
+        {
+            var jsonReader = new JsonTextReader(stringReader);
+            var jsonWriter = new JsonTextWriter(stringWriter) { Formatting = Formatting.Indented };
+            jsonWriter.WriteToken(jsonReader);
+            return stringWriter.ToString();
+        }
+    }
     #endregion
 }

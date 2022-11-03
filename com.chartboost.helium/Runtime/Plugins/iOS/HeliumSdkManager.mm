@@ -144,7 +144,7 @@ static void heliumSubscribeToPartnerInitializationNotifications()
 		NSDictionary *results = (NSDictionary *)notification.object;
 		const char* jsonToUnity = serializeDictionary(results);
 		if (_didReceivePartnerInitializationDataCallback != nil)
-		_didReceivePartnerInitializationDataCallback(jsonToUnity);
+			_didReceivePartnerInitializationDataCallback(jsonToUnity);
 	}];
 }
 
