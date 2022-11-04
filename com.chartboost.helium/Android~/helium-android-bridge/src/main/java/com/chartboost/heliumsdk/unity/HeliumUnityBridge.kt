@@ -61,7 +61,7 @@ class HeliumUnityBridge {
             HeliumSdk.setUserIdentifier(userIdentifier)
         }
 
-    fun start(appId: String, appSignature: String, unityVersion: String) {
+    fun start(appId: String, appSignature: String, unityVersion: String, initializationOptions: Array<String>) {
         ilrdObserver = object : HeliumIlrdObserver {
             override fun onImpression(impData: HeliumImpressionData) {
                 val json = serializePlacementIlrdData(impData.placementId, impData.ilrdInfo)
@@ -77,22 +77,23 @@ class HeliumUnityBridge {
         }
 
         runTaskOnUiThread {
-            // This call initializes the Helium SDK. This might change in the future with two ID parameters and we'll get rid of the logControllerListener
-            HeliumSdk.start(UnityPlayer.currentActivity, appId, appSignature) { error ->
-                error?.let {
-                    Log.d("Unity", "HeliumUnityBridge: Plugin failed to initialize: $it.")
-                } ?: run {
-                    HeliumSdk.setGameEngine("unity", unityVersion)
-                    ilrdObserver?.let { observer ->
-                        HeliumSdk.subscribeIlrd(observer)
+            UnityPlayer.currentActivity.let { activity ->
+                HeliumSdk.start(activity, appId, appSignature,  HeliumInitializationOptions(initializationOptions.toSet()))  { error ->
+                    error?.let {
+                        Log.d("Unity", "HeliumUnityBridge: Plugin failed to initialize: $it.")
+                    } ?: run {
+                        HeliumSdk.setGameEngine("unity", unityVersion)
+                        ilrdObserver?.let { observer ->
+                            HeliumSdk.subscribeIlrd(observer)
+                        }
+                        initResultsObserver?.let {
+                                observer ->
+                            HeliumSdk.subscribeInitializationResults(observer)
+                        }
+                        Log.d("Unity", "HeliumUnityBridge: Plugin initialized.")
                     }
-                    initResultsObserver?.let {
-                        observer ->
-                        HeliumSdk.subscribeInitializationResults(observer)
-                    }
-                    Log.d("Unity", "HeliumUnityBridge: Plugin initialized.")
+                    lifeCycleEventListener?.DidStart(error?.hashCode() ?: -1, error?.toString() ?: "")
                 }
-                lifeCycleEventListener?.DidStart(error?.hashCode() ?: -1, error?.toString() ?: "")
             }
         }
     }

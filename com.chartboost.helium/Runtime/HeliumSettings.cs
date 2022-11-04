@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using UnityEngine;
 using System.IO;
 
@@ -8,6 +9,43 @@ using UnityEditor;
 
 namespace Helium
 {
+    [Flags]
+    public enum HeliumPartners
+    {
+        [Description("none")]
+        None = 0,
+        [Description("adcolony")]
+        AdColony = 1,
+        [Description("admob")]
+        AdMob = 2,
+        [Description("amazon_aps")]
+        Amazon = 4,
+        [Description("applovin")]
+        AppLovin = 8,
+        [Description("facebook")]
+        Facebook = 16,
+        [Description("fyber")]
+        Fyber = 32,
+        [Description("google_googlebidding")]
+        GoogleBidding = 64,
+        [Description("inmobi")]
+        InMobi = 128,
+        [Description("ironsource")]
+        IronSource = 256,
+        [Description("mintegral")]
+        Mintegral = 512,
+        [Description("pangle")]
+        Pangle = 1024,
+        [Description("tapjoy")]
+        TapJoy = 2048,
+        [Description("unity")]
+        UnityAds = 4096,
+        [Description("vungle")]
+        Vungle = 8192,
+        [Description("yahoo")]
+        Yahoo = 16384
+    }
+
     public class HeliumSettings : ScriptableObject
     {
         private const string Package = "com.chartboost.helium";
@@ -89,6 +127,16 @@ namespace Helium
         [SerializeField] private string androidAppSignature = AndroidExampleAppSignatureLabel;
         [SerializeField] private bool isLoggingEnabled;
         [SerializeField] private bool isAutomaticInitEnabled;
+        [SerializeField] private HeliumPartners partnerKillSwitch = HeliumPartners.None;
+
+        /// <summary>
+        /// Accessor for PartnerKillswich 
+        /// </summary>
+        public static HeliumPartners PartnersKillSwitch
+        {
+            get => Instance.partnerKillSwitch;
+            set => Instance.partnerKillSwitch = value;
+        }
 
         /// <summary>
         /// Accessor for androidAppId

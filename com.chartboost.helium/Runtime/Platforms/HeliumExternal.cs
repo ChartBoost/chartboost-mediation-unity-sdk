@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using Helium.Interfaces;
 using UnityEngine;
 
@@ -124,6 +128,36 @@ namespace Helium.Platforms
         public virtual void SetGameObjectName(string name)
         {
             Log($"Setting GameObjectName: {name}");
+        }
+        
+        protected static string[] GetInitializationOptions()
+        {
+            string GetEnumDescription(Enum value)
+            {
+                var fi = value.GetType().GetField(value.ToString());
+                var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+                return attributes.Length > 0 ? attributes[0].Description : value.ToString();
+            }
+            
+            var killSwitch = HeliumSettings.PartnersKillSwitch;
+            var initOptions  = Array.Empty<string>();;
+
+            if (killSwitch == HeliumPartners.None)
+                return initOptions;
+            
+            var selectedPartners  = new HashSet<HeliumPartners>();
+            foreach (HeliumPartners value in Enum.GetValues(killSwitch.GetType()))
+                if (value != HeliumPartners.None && killSwitch.HasFlag(value))
+                    selectedPartners.Add(value);
+
+            var partnerIds = new HashSet<string>();
+            
+            foreach (var name in selectedPartners.Select(value => GetEnumDescription(value)))
+                partnerIds.Add(name);
+
+            initOptions = partnerIds.ToArray();
+
+            return initOptions;
         }
 
         // provide the option to override callbacks

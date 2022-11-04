@@ -18,3 +18,4 @@ MonoBehaviour:
   androidAppSignature: HE_ANDROID_APP_SIGNATURE
   isLoggingEnabled: 0
   isAutomaticInitEnabled: 0
+  partnerKillSwitch: 0
