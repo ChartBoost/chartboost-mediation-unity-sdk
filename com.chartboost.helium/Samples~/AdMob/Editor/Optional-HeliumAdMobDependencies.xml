@@ -10,7 +10,7 @@
 
     <iosPods>
     <!-- Admob iOS SDK -->
-        <iosPod name="ChartboostHeliumAdapterAdMob" version="~> 3.2">
+        <iosPod name="ChartboostHeliumAdapterAdMob" version="~> 3.3">
             <sources>
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>

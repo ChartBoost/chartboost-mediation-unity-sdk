@@ -9,7 +9,7 @@
     </androidPackages>
     <iosPods>
         <!-- InMobi iOS SDK -->
-        <iosPod name="ChartboostHeliumAdapterInMobi" version="~> 3.2">
+        <iosPod name="ChartboostHeliumAdapterInMobi" version="~> 3.3">
             <sources>
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>

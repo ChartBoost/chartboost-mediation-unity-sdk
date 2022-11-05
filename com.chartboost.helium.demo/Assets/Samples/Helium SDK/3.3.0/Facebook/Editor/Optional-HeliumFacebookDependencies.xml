@@ -9,7 +9,7 @@
     </androidPackages>
     <iosPods>
         <!-- FAN iOS SDK -->
-        <iosPod name="ChartboostHeliumAdapterFAN" version="~> 3.2">
+        <iosPod name="ChartboostHeliumAdapterFAN" version="~> 3.3">
             <sources>
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>

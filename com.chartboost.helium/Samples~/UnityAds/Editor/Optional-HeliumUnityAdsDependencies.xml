@@ -10,7 +10,7 @@
     </androidPackages>
     <iosPods>
         <!-- Unity Ads iOS SDK -->
-        <iosPod name="ChartboostHeliumAdapterUnity" version="~> 3.2">
+        <iosPod name="ChartboostHeliumAdapterUnity" version="~> 3.3">
             <sources>
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>

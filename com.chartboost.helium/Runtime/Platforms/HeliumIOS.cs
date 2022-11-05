@@ -39,7 +39,7 @@ namespace Helium.Platforms
             ExternHeliumPlacementEvent DidClickCallback, ExternHeliumWinBidEvent DidWinBidCallback);
 
         [DllImport("__Internal")]
-        private static extern void _heliumSdkInit(string appId, string appSignature, string unityVersion);
+        private static extern void _heliumSdkInit(string appId, string appSignature, string unityVersion, string[] initializationOptions, int initializationOptionsSize);
 
         [DllImport("__Internal")]
         private static extern IntPtr _heliumSdkGetInterstitialAd(string placementName);
@@ -95,7 +95,8 @@ namespace Helium.Platforms
             base.InitWithAppIdAndSignature(appId, appSignature);
             HeliumSettings.IOSAppId = appId;
             HeliumSettings.IOSAppSignature = appSignature;
-            _heliumSdkInit(appId, appSignature, Application.unityVersion);
+            var initializationOptions = GetInitializationOptions();
+            _heliumSdkInit(appId, appSignature, Application.unityVersion, initializationOptions, initializationOptions.Length);
             IsInitialized = true;
         }
 

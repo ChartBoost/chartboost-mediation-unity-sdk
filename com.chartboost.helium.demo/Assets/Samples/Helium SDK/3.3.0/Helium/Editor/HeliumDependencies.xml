@@ -30,7 +30,7 @@
     </androidPackages>
     <iosPods>
         <!-- Helium iOS SDK -->
-        <iosPod name="ChartboostHelium" version="~> 3.2">
+        <iosPod name="ChartboostHelium" version="~> 3.3">
             <sources>
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>

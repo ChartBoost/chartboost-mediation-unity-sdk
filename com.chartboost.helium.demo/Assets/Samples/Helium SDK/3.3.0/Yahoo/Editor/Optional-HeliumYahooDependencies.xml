@@ -15,7 +15,7 @@
     </androidPackages>
     <iosPods>
         <!-- Yahoo iOS SDK -->
-        <iosPod name="ChartboostHeliumAdapterYahoo" version="~> 3.2">
+        <iosPod name="ChartboostHeliumAdapterYahoo" version="~> 3.3">
             <sources>
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>

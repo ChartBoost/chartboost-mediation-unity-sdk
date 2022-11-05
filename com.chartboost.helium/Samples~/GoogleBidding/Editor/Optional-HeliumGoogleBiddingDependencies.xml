@@ -14,7 +14,7 @@
     </androidPackages>
     <iosPods>
         <!-- Google Bidding iOS SDK -->
-        <iosPod name="ChartboostHeliumAdapterGoogleBidding" version="~> 3.2">
+        <iosPod name="ChartboostHeliumAdapterGoogleBidding" version="~> 3.3">
             <sources>
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>

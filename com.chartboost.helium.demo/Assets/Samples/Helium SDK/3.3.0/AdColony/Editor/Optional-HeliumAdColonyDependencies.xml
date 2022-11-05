@@ -9,7 +9,7 @@
     </androidPackages>
     <iosPods>
         <!-- AdColony iOS SDK-->
-        <iosPod name="ChartboostHeliumAdapterAC" version="~> 3.2">
+        <iosPod name="ChartboostHeliumAdapterAC" version="~> 3.3">
             <sources>
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>

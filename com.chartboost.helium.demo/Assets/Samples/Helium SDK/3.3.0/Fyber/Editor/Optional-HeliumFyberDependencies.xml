@@ -9,7 +9,7 @@
     </androidPackages>
     <iosPods>
         <!-- Fyber iOS SDK -->
-        <iosPod name="ChartboostHeliumAdapterFyber" version="~> 3.2">
+        <iosPod name="ChartboostHeliumAdapterFyber" version="~> 3.3">
             <sources>
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>

@@ -13,7 +13,7 @@
     </androidPackages>
     <iosPods>
         <!-- APS iOS SDK -->
-        <iosPod name="ChartboostHeliumAdapterAPS" version="~> 3.2">
+        <iosPod name="ChartboostHeliumAdapterAPS" version="~> 3.3">
             <sources>
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>

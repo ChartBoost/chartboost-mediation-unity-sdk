@@ -14,7 +14,7 @@
     </androidPackages>
     <iosPods>
         <!-- Pangle iOS SDK -->
-        <iosPod name="ChartboostHeliumAdapterPangle" version="~> 3.2">
+        <iosPod name="ChartboostHeliumAdapterPangle" version="~> 3.3">
             <sources>
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>

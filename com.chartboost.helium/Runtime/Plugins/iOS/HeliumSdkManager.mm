@@ -206,13 +206,23 @@ static void heliumSubscribeToPartnerInitializationNotifications()
     _bannerDidWinBidCallback = didWinBidCallback;
 }
 
-- (void)startHeliumWithAppId:(NSString*)appId
-             andAppSignature:(NSString*)appSignature
-                unityVersion:(NSString *)unityVersion
+- (void)startHeliumWithAppId:(NSString*)appId andAppSignature:(NSString*)appSignature unityVersion:(NSString *)unityVersion initializationOptions:(const char**)initializationOptions initializationOptionsSize:(int)initializationOptionsSize
 {
-    heliumSubscribeToILRDNotifications();
+	heliumSubscribeToILRDNotifications();
 	heliumSubscribeToPartnerInitializationNotifications();
-    [[Helium sharedHelium] startWithAppId: appId andAppSignature:appSignature delegate: self];
+	HeliumInitializationOptions* heliumInitializationOptions = nil;
+	
+	if (initializationOptionsSize > 0) {
+		NSMutableArray *initializationPartners = [NSMutableArray new];
+		for (int x=0; x < initializationOptionsSize; x++)
+		{
+			if(strlen(initializationOptions[x]) > 0)
+				[initializationPartners addObject:[NSString stringWithUTF8String:initializationOptions[x]]];
+		}
+		heliumInitializationOptions = [[HeliumInitializationOptions alloc] initWithSkippedPartnerIdentifiers:initializationPartners];
+	}
+	
+	[[Helium sharedHelium] startWithAppId:appId andAppSignature:appSignature options:heliumInitializationOptions delegate:self];
 }
 
 - (void)setSubjectToCoppa:(BOOL)isSubject
