@@ -50,6 +50,7 @@ namespace Helium
             remove => _heliumExternal.DidReceiveImpressionLevelRevenueData -= value;
         }
         
+        /// <inheritdoc cref="IHeliumLifeCycle.DidReceivePartnerInitializationData"/>>
         public static event HeliumPartnerInitializationEvent DidReceivePartnerInitializationData
         {
             add => _heliumExternal.DidReceivePartnerInitializationData += value;

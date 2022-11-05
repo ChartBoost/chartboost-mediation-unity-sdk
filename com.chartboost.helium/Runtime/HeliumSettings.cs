@@ -9,6 +9,9 @@ using UnityEditor;
 
 namespace Helium
 {
+    /// <summary>
+    /// List of officially supported Helium mediation partners and their identifiers
+    /// </summary>
     [Flags]
     public enum HeliumPartners
     {
@@ -46,6 +49,9 @@ namespace Helium
         Yahoo = 16384
     }
 
+    /// <summary>
+    /// Helium Unity SDK Settings as an scriptable object with accessors
+    /// </summary>
     public class HeliumSettings : ScriptableObject
     {
         private const string Package = "com.chartboost.helium";
@@ -130,16 +136,16 @@ namespace Helium
         [SerializeField] private HeliumPartners partnerKillSwitch = HeliumPartners.None;
 
         /// <summary>
-        /// Accessor for PartnerKillswich 
+        /// Accessor for partnerKillSwitch. 
         /// </summary>
-        public static HeliumPartners PartnersKillSwitch
+        public static HeliumPartners PartnerKillSwitch
         {
             get => Instance.partnerKillSwitch;
             set => Instance.partnerKillSwitch = value;
         }
 
         /// <summary>
-        /// Accessor for androidAppId
+        /// Accessor for androidAppId.
         /// </summary>
         public static string AndroidAppId
         {
@@ -155,7 +161,7 @@ namespace Helium
         }
 
         /// <summary>
-        /// Accessor for androidAppSignature
+        /// Accessor for androidAppSignature.
         /// </summary>
         public static string AndroidAppSignature
         {
@@ -171,7 +177,7 @@ namespace Helium
         }
 
         /// <summary>
-        /// Accessor for iOSAppId
+        /// Accessor for iOSAppId.
         /// </summary>
         public static string IOSAppId
         {
@@ -187,7 +193,7 @@ namespace Helium
         }
 
         /// <summary>
-        /// Accessor for iOSAppSignature
+        /// Accessor for iOSAppSignature.
         /// </summary>
         public static string IOSAppSignature
         {
@@ -203,7 +209,7 @@ namespace Helium
         }
 
         /// <summary>
-        /// Accessor for LoggingEnabled settings
+        /// Accessor for isLoggingEnabled.
         /// </summary>
         public static bool IsLoggingEnabled
         {

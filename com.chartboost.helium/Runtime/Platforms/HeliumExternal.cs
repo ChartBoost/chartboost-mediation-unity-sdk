@@ -139,7 +139,7 @@ namespace Helium.Platforms
                 return attributes.Length > 0 ? attributes[0].Description : value.ToString();
             }
             
-            var killSwitch = HeliumSettings.PartnersKillSwitch;
+            var killSwitch = HeliumSettings.PartnerKillSwitch;
             var initOptions  = Array.Empty<string>();;
 
             if (killSwitch == HeliumPartners.None)

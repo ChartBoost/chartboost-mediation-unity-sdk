@@ -43,10 +43,10 @@ namespace Helium.Editor
 		{
 			// partner kill-switch
 			EditorGUILayout.BeginVertical();
-			EditorGUILayout.LabelField("Partner Kill-Switch", _title);
+			EditorGUILayout.LabelField("Partner Kill Switch", _title);
 			EditorGUILayout.Space();
 			EditorGUILayout.HelpBox("Select partners to disable their initialization.", MessageType.Info);
-			HeliumSettings.PartnersKillSwitch = (HeliumPartners)EditorGUILayout.EnumFlagsField(HeliumSettings.PartnersKillSwitch);
+			HeliumSettings.PartnerKillSwitch = (HeliumPartners)EditorGUILayout.EnumFlagsField(HeliumSettings.PartnerKillSwitch);
 			EditorGUILayout.EndVertical();
 			
 			EditorGUILayout.Space();

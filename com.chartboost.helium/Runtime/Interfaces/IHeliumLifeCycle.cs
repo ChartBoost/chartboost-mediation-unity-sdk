@@ -16,10 +16,14 @@ namespace Helium.Interfaces
         
         /// <summary>
         /// Called immediately when impression level revenue data has been received after an
-        /// ad was displayed on the screen. This may be called in a background thread. This event
-        /// is sent natively from iOS and Android.
+        /// ad was displayed on the screen.
         /// </summary>
         [Preserve]
         public event HeliumILRDEvent DidReceiveImpressionLevelRevenueData;
+        
+        /// <summary>
+        /// Provides Helium initialization metrics data in a json format.
+        /// </summary>
+        public event HeliumPartnerInitializationEvent DidReceivePartnerInitializationData;
     }
 }
