@@ -22,6 +22,9 @@ private void OnEnable() {
     // Helium ILRD Delegate
     HeliumSDK.DidReceiveImpressionLevelRevenueData += DidReceiveImpressionLevelRevenueData;
 
+    // Helium Partner Initialization Data Delegate
+    HeliumSDK.DidReceivePartnerInitializationData += DidReceivePartnerInitializationData;
+
     // Helium Error Handling Delegate
     HeliumSDK.UnexpectedSystemErrorDidOccur += UnexpectedSystemErrorDidOccur;
 
@@ -68,6 +71,9 @@ private void OnDisable() {
     // Helium ILRD Delegate
     HeliumSDK.DidReceiveImpressionLevelRevenueData -= DidReceiveImpressionLevelRevenueData;
 
+    // Helium Partner Initialization Data Delegate
+    HeliumSDK.DidReceivePartnerInitializationData -= DidReceivePartnerInitializationData;
+
     // Helium Error Handling Delegate
     HeliumSDK.UnexpectedSystemErrorDidOccur -= UnexpectedSystemErrorDidOccur;
 
@@ -111,6 +117,12 @@ private void DidReceiveImpressionLevelRevenueData(string placement, Hashtable im
 {
     var json =  HeliumJSON.Serialize(impressionData);
     Debug.Log($"DidReceiveImpressionLevelRevenueData {placement}: {json}");
+}
+
+// Helium Partner Initialization Data Delegate
+private void DidReceivePartnerInitializationData(string partnerInitializationData)
+{
+    Debug.Log($"DidReceivePartnerInitializationData: ${partnerInitializationData}");
 }
 
 // Helium Error Handling Delegate

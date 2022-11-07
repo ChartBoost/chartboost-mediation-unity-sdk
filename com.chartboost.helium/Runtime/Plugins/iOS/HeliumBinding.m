@@ -49,11 +49,13 @@ void _setBannerCallbacks(HeliumPlacementEvent didLoadCallback, HeliumPlacementEv
     [[HeliumSdkManager sharedManager] setBannerCallbacks:didLoadCallback didRecordImpression:didRecordImpression didClickCallback:didClickCallback  didWinBidCallback:didWinBidCallback];
 }
 
-void _heliumSdkInit(const char *appId, const char *appSignature, const char *unityVersion)
+void _heliumSdkInit(const char *appId, const char *appSignature, const char *unityVersion, const char** initOptions, int optionsSize)
 {
     [[HeliumSdkManager sharedManager] startHeliumWithAppId:GetStringParam(appId)
                                            andAppSignature:GetStringParam(appSignature)
-                                              unityVersion:GetStringParam(unityVersion)];
+                                              unityVersion:GetStringParam(unityVersion)
+                                     initializationOptions:initOptions
+                                 initializationOptionsSize:optionsSize];
 }
 
 void _heliumSdkSetSubjectToCoppa(BOOL isSubject)

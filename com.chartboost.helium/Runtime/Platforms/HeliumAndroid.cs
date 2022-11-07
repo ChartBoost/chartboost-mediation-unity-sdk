@@ -46,7 +46,7 @@ namespace Helium.Platforms
             base.InitWithAppIdAndSignature(appId, appSignature);
             HeliumSettings.AndroidAppId = appId;
             HeliumSettings.AndroidAppSignature = appSignature;
-            plugin().Call("start", appId, appSignature, Application.unityVersion);
+            plugin().Call("start", appId, appSignature, Application.unityVersion, GetInitializationOptions());
             IsInitialized = true;
         }
 

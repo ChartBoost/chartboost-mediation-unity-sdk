@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using UnityEngine;
 using System.IO;
 
@@ -8,6 +9,49 @@ using UnityEditor;
 
 namespace Helium
 {
+    /// <summary>
+    /// List of officially supported Helium mediation partners and their identifiers
+    /// </summary>
+    [Flags]
+    public enum HeliumPartners
+    {
+        [Description("none")]
+        None = 0,
+        [Description("adcolony")]
+        AdColony = 1,
+        [Description("admob")]
+        AdMob = 2,
+        [Description("amazon_aps")]
+        Amazon = 4,
+        [Description("applovin")]
+        AppLovin = 8,
+        [Description("facebook")]
+        Facebook = 16,
+        [Description("fyber")]
+        Fyber = 32,
+        [Description("google_googlebidding")]
+        GoogleBidding = 64,
+        [Description("inmobi")]
+        InMobi = 128,
+        [Description("ironsource")]
+        IronSource = 256,
+        [Description("mintegral")]
+        Mintegral = 512,
+        [Description("pangle")]
+        Pangle = 1024,
+        [Description("tapjoy")]
+        TapJoy = 2048,
+        [Description("unity")]
+        UnityAds = 4096,
+        [Description("vungle")]
+        Vungle = 8192,
+        [Description("yahoo")]
+        Yahoo = 16384
+    }
+
+    /// <summary>
+    /// Helium Unity SDK Settings as an scriptable object with accessors
+    /// </summary>
     public class HeliumSettings : ScriptableObject
     {
         private const string Package = "com.chartboost.helium";
@@ -89,9 +133,19 @@ namespace Helium
         [SerializeField] private string androidAppSignature = AndroidExampleAppSignatureLabel;
         [SerializeField] private bool isLoggingEnabled;
         [SerializeField] private bool isAutomaticInitEnabled;
+        [SerializeField] private HeliumPartners partnerKillSwitch = HeliumPartners.None;
 
         /// <summary>
-        /// Accessor for androidAppId
+        /// Accessor for partnerKillSwitch. 
+        /// </summary>
+        public static HeliumPartners PartnerKillSwitch
+        {
+            get => Instance.partnerKillSwitch;
+            set => Instance.partnerKillSwitch = value;
+        }
+
+        /// <summary>
+        /// Accessor for androidAppId.
         /// </summary>
         public static string AndroidAppId
         {
@@ -107,7 +161,7 @@ namespace Helium
         }
 
         /// <summary>
-        /// Accessor for androidAppSignature
+        /// Accessor for androidAppSignature.
         /// </summary>
         public static string AndroidAppSignature
         {
@@ -123,7 +177,7 @@ namespace Helium
         }
 
         /// <summary>
-        /// Accessor for iOSAppId
+        /// Accessor for iOSAppId.
         /// </summary>
         public static string IOSAppId
         {
@@ -139,7 +193,7 @@ namespace Helium
         }
 
         /// <summary>
-        /// Accessor for iOSAppSignature
+        /// Accessor for iOSAppSignature.
         /// </summary>
         public static string IOSAppSignature
         {
@@ -155,7 +209,7 @@ namespace Helium
         }
 
         /// <summary>
-        /// Accessor for LoggingEnabled settings
+        /// Accessor for isLoggingEnabled.
         /// </summary>
         public static bool IsLoggingEnabled
         {

@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -20,22 +21,42 @@ namespace Helium.Editor
 		private readonly GUIContent _enableAutomaticInitToggle = new GUIContent("isAutomaticallyInitializing");
 
 		private HeliumSettings _instance;
+		private GUIStyle _title;
 
 		public override void OnInspectorGUI()
 		{
 			_instance = (HeliumSettings)target;
-
+			_title = new GUIStyle {
+				fontSize = 16,
+				fontStyle = FontStyle.Bold,
+				normal =
+				{
+					textColor = Color.white
+				}
+			};
 			SetupUI();
 		}
 
+
+
 		private void SetupUI()
 		{
-			EditorGUILayout.HelpBox("Add the Helium App Id associated with this game", MessageType.None);
-
+			// partner kill-switch
+			EditorGUILayout.BeginVertical();
+			EditorGUILayout.LabelField("Partner Kill Switch", _title);
+			EditorGUILayout.Space();
+			EditorGUILayout.HelpBox("Select partners to disable their initialization.", MessageType.Info);
+			HeliumSettings.PartnerKillSwitch = (HeliumPartners)EditorGUILayout.EnumFlagsField(HeliumSettings.PartnerKillSwitch);
+			EditorGUILayout.EndVertical();
+			
+			EditorGUILayout.Space();
+			EditorGUILayout.Space();
+			
+			EditorGUILayout.LabelField("Platform IDs", _title);
+			
+			EditorGUILayout.HelpBox("Add the Helium App Id & App Signature associated with this game.", MessageType.Info);
 			// iOS
-			EditorGUILayout.BeginHorizontal();
-			EditorGUILayout.LabelField(_iOSLabel);
-			EditorGUILayout.EndHorizontal();
+			EditorGUILayout.LabelField("iOS", _title);
 
 			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.LabelField(_iOSAppIdLabel);
@@ -59,7 +80,7 @@ namespace Helium.Editor
 
 			// Android
 			EditorGUILayout.BeginHorizontal();
-			EditorGUILayout.LabelField(_androidLabel);
+			EditorGUILayout.LabelField("Android", _title);
 			EditorGUILayout.EndHorizontal();
 
 			EditorGUILayout.BeginHorizontal();
@@ -81,22 +102,14 @@ namespace Helium.Editor
 			EditorGUILayout.EndHorizontal();
 			EditorGUILayout.Space();
 			EditorGUILayout.Space();
-
-			// Loggin toggle.
-			EditorGUILayout.BeginHorizontal();
-			EditorGUILayout.LabelField(_enableLoggingLabel);
-			EditorGUILayout.EndHorizontal();
-
+			
+			EditorGUILayout.LabelField("Debugging", _title);
 			EditorGUILayout.BeginHorizontal();
 			HeliumSettings.IsLoggingEnabled = EditorGUILayout.Toggle(_enableLoggingToggle, HeliumSettings.IsLoggingEnabled);
 			EditorGUILayout.EndHorizontal();
 			EditorGUILayout.Space();
 			
-			// automatic init toggle
-			EditorGUILayout.BeginHorizontal();
-			EditorGUILayout.LabelField(_enableAutomaticInitLabel);
-			EditorGUILayout.EndHorizontal();
-			
+			EditorGUILayout.LabelField("Automatic Initialization", _title);
 			EditorGUILayout.BeginHorizontal();
 			HeliumSettings.IsAutomaticInitializationEnabled = EditorGUILayout.Toggle(_enableAutomaticInitToggle, HeliumSettings.IsAutomaticInitializationEnabled);
 			EditorGUILayout.EndHorizontal();
