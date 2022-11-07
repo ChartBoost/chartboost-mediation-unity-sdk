@@ -56,7 +56,7 @@
   </packages>
   <files />
   <settings>
-    <setting name="androidAbis" value="armeabi-v7a" />
+    <setting name="androidAbis" value="arm64-v8a,armeabi-v7a" />
     <setting name="bundleId" value="com.chartboost.HeliumUnitySDKDemo" />
     <setting name="explodeAars" value="True" />
     <setting name="gradleBuildEnabled" value="True" />
