@@ -5,7 +5,7 @@
         <androidPackage spec="com.chartboost:helium-googlebidding:3.3.+@aar" />
 
         <!-- Google Bidding Android SDK -->
-        <androidPackage spec="com.google.android.gms:play-services-ads:20.6.0"/>
+        <androidPackage spec="com.google.android.gms:play-services-ads:21.3.0"/>
         <androidPackage spec="org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0"/>
         <androidPackage spec="org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.20"/>
         <androidPackage spec="androidx.appcompat:appcompat:1.4.2"/>

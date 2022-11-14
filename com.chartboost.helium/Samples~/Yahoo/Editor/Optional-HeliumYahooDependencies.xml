@@ -12,7 +12,7 @@
         <!-- Yahoo Android SDK -->
         <androidPackage spec="com.verizon.ads:android-vas-standard-edition:1.14.0"/>
 
-    </androidPackages>
+    </androidPackages>\
     <iosPods>
         <!-- Yahoo iOS SDK -->
         <iosPod name="ChartboostHeliumAdapterYahoo" version="~> 3.3">

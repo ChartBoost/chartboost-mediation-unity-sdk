@@ -21,7 +21,7 @@ namespace Editor
         private const string UnityAdsPackageName = "com.unity.ads";
         private const string UnityAdsUncommentWindow = "unity-ads-uncomment-window";
         private static readonly string HeliumSamplesMetaInAssets = $"{HeliumSamplesInAssets}.meta";
-        private static readonly Version HeliumUnityAdsSupportedVersion = new Version(4, 2, 1);
+        private static readonly Version HeliumUnityAdsSupportedVersion = new Version(4, 4, 1);
         private static readonly string UnityAdsSDKCommented = $"<!-- <androidPackage spec=\"com.unity3d.ads:unity-ads:{HeliumUnityAdsSupportedVersion}\"/> -->";
         private static readonly string UnityAdsSDKUncommented = $"        <androidPackage spec=\"com.unity3d.ads:unity-ads:{HeliumUnityAdsSupportedVersion}\"/>";
 
