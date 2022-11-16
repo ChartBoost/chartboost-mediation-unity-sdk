@@ -5,7 +5,7 @@
         <androidPackage spec="com.chartboost:helium-inmobi:3.3.+@aar" />
 
         <!-- InMobi Android SDK -->
-        <androidPackage spec="com.inmobi.monetization:inmobi-ads:10.0.9"/>
+        <androidPackage spec="com.inmobi.monetization:inmobi-ads:10.1.1"/>
     </androidPackages>
     <iosPods>
         <!-- InMobi iOS SDK -->

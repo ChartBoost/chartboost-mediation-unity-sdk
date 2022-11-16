@@ -10,7 +10,7 @@
         </repositories>
 
         <!-- Yahoo Android SDK -->
-        <androidPackage spec="com.verizon.ads:android-vas-standard-edition:1.14.0"/>
+        <androidPackage spec="com.verizon.ads:android-vas-standard-edition:1.2.0"/>
 
     </androidPackages>\
     <iosPods>
