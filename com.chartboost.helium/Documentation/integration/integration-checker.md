@@ -1,6 +1,6 @@
 # Helium Integration Checker
 
-`HeliumIntegrationChecker.cs` is a utility class introduced in Helium Unity 3.3.0. The `HeliumIntegrationChecker` provides common utility methods to make developers life easier when integrating, updating, and testing the Helium Unity SDK. The following functionality can be found in it, and it is accessible through Unity Context Menus:
+`HeliumIntegrationChecker.cs` is a utility class introduced in Helium Unity 3.3.0. The `HeliumIntegrationChecker` provides common utility methods to make developers life easier when integrating, updating, and testing the Helium Unity SDK. The following functionality can be found in the Editor, and it can be triggered through Unity Context Menus:
 
 * *`Helium/Integration/Status Check`*
 
