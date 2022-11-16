@@ -4,15 +4,15 @@
 
 * *`Helium/Integration/Status Check`*
 
-This will run a series of checks and test inside the Helium Unity SDK. It attempts to corroborate that any common integration issues are surfaced to developers with a popup window. It is recommended to developers to run this method once after every Helium Unity SDK update, as it will raise any issues that might need correction after package update is completed.
+This will run a series of checks and tests inside the Helium Unity SDK. It attempts to corroborate that any common integration issues are surfaced to developers with a popup window. It is recommended for developers to run this method once after every Helium Unity SDK update, as it will arise any issues that might need correction after the package update has completed.
 
 * *`Helium/Integration/UnityAds Check`*
 
-This will run a UnityAds integration specific check, it is completely optional and its only purpose is to make sure your integration is aligned with Helium / UnityAds integration standards. Whether you integrate the UnityAds SDK through the Unity Package Manager, or throug the Helium Optional dependency, this check will make sure that any warning are mentioned to developers through a popup window.
+This will run a UnityAds integration specific check, it is completely optional and its only purpose is to make sure your integration is aligned with Helium / UnityAds integration standards. Whether you integrate the UnityAds SDK through the Unity Package Manager, or through the Helium Optional dependency, this check will make sure that any warnings are shown to developers through a popup window.
 
 * *`Helium/Integration/Force Reimport Adapters`*
 
-This will automatically reimport all of your existing Ad Adapters. This utility function will double check this is an intended action. Reimporting Ad Adapters is particularly useful in scenarios where you update your Helium Unity SDK and want to make sure all of your ad adapters are up to date. On the other hand, if you were to downgrade your Helium Unity SDK, this could help you get that version specific dependencies in a much more efficient manner.
+This will automatically reimport all of your existing Ad Adapters. This utility function will double-check this is an intended action. Reimporting Ad Adapters is particularly useful in scenarios where you update your Helium Unity SDK and want to make sure all of your ad adapters are up to date. On the other hand, if you were to downgrade your Helium Unity SDK, this could help you get that version specific dependencies in a much more efficient manner.
 
 ## C# API
 
