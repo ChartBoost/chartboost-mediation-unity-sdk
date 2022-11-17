@@ -8,12 +8,12 @@ Helium Unity SDK provides support for Unity based games to easily integrate the 
 
 ### Minimum Supporter Development Tools <a name="dev_tools"></a>
 
-| Software                                                              | Version             |
-| :---                                                                  | :---                |
-| [XCode](https://developer.apple.com/xcode/)                           | 13.1                |
-| [Android Studio](https://developer.android.com/studio)                | 2020.3.1+           |
-| [iOS](https://www.apple.com/ios)                                      | 10.0+               |
-| [Minimum Android API Level](https://developer.android.com/studio/releases/platforms#5.0) | 5.0+ (API level 21) |
+| Software                                                              | Version              |
+| :---                                                                  |:---------------------|
+| [XCode](https://developer.apple.com/xcode/)                           | 14.1                 |
+| [Android Studio](https://developer.android.com/studio)                | 2020.3.1+            |
+| [iOS](https://www.apple.com/ios)                                      | 10.0+                |
+| [Minimum Android API Level](https://developer.android.com/studio/releases/platforms#5.0) | 5.0+ (API level 21)  |
 | [Target Android API Level](https://developer.android.com/studio/releases/platforms#12) | 12.0+ (API level 31) |
 
 ### CHANGELOG
@@ -25,7 +25,7 @@ Helium Unity SDK is distributed using the public [npm registry](https://www.npmj
 
 ```json
   "dependencies": {
-    "com.chartboost.helium": "3.0.0",
+    "com.chartboost.helium": "3.3.0",
     ...
   },
   "scopedRegistries": [
@@ -46,6 +46,7 @@ In order to better understand the Helium Unity SDK, documentation has been split
 2. [Android Manifest](com.chartboost.helium/Documentation/setup/androidmanifest.md)
 3. [Google External Dependency Manager (EDM)](com.chartboost.helium/Documentation/setup/edm.md)
 4. [Multidex](com.chartboost.helium/Documentation/setup/multidex.md)
+5. [Helium Integration Checker](com.chartboost.helium/Documentation/integration-checker.md)
 
 #### Integration
 
