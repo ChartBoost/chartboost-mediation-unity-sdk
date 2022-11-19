@@ -7,7 +7,7 @@
     <package>androidx.multidex:multidex:2.0.1</package>
     <package>com.adcolony:sdk:4.8.0</package>
     <package>com.amazon.android:aps-sdk:9.6.2</package>
-    <package>com.applovin:applovin-sdk:11.5.4</package>
+    <package>com.applovin:applovin-sdk:11.5.5</package>
     <package>com.chartboost:helium:3.3.+</package>
     <package>com.chartboost:helium-adcolony:3.3.+@aar</package>
     <package>com.chartboost:helium-admob:3.3.+@aar</package>
