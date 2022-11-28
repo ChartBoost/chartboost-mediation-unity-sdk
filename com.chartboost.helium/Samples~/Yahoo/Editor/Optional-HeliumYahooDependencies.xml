@@ -10,7 +10,7 @@
         </repositories>
 
         <!-- Yahoo Android SDK -->
-        <androidPackage spec="com.yahoo.mobile.ads:android-yahoo-mobile-sdk:1.2.0"/>
+        <androidPackage spec="com.yahoo.mobile.ads:android-yahoo-mobile-sdk:1.3.0"/>
 
     </androidPackages>\
     <iosPods>
