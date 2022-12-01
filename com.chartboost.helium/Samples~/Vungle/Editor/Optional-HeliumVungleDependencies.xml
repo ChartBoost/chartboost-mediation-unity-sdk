@@ -5,7 +5,7 @@
         <androidPackage spec="com.chartboost:helium-vungle:3.3.+@aar" />
 
         <!-- Vungle Android SDK -->
-        <androidPackage spec="com.vungle:publisher-sdk-android:6.10.5"/>
+        <androidPackage spec="com.vungle:publisher-sdk-android:6.12.0"/>
         <androidPackage spec="androidx.localbroadcastmanager:localbroadcastmanager:1.1.0"/>
         <androidPackage spec="androidx.core:core:1.2.0"/>
     </androidPackages>

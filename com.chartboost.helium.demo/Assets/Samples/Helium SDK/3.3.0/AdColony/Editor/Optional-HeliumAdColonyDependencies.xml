@@ -5,7 +5,7 @@
         <androidPackage spec="com.chartboost:helium-adcolony:3.3.+@aar" />
 
         <!-- AdColony Android SDK-->
-        <androidPackage spec="com.adcolony:sdk:4.7.0" />
+        <androidPackage spec="com.adcolony:sdk:4.8.0" />
     </androidPackages>
     <iosPods>
         <!-- AdColony iOS SDK-->
