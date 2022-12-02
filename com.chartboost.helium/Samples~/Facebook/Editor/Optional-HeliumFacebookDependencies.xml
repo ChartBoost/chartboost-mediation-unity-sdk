@@ -14,6 +14,5 @@
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>
         </iosPod>
-        <iosPod name="FBAudienceNetwork" version="~> 6.9.0" />
     </iosPods>
 </dependencies>
