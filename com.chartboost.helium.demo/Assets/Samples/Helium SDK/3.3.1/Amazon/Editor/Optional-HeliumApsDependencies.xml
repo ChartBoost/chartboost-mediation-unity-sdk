@@ -18,5 +18,10 @@
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>
         </iosPod>
+        <iosPod name="AmazonPublisherServicesSDK" version="~> 4.4" addToAllTargets="true">
+            <sources>
+                <source>https://github.com/CocoaPods/Specs</source>
+            </sources>
+        </iosPod>
     </iosPods>
 </dependencies>
