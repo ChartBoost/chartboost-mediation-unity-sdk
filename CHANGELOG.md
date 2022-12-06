@@ -1,6 +1,21 @@
 # Changelog
 All notable changes to this project will be documented in this file using the standards as defined at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0).
 
+## Version 3.3.1 *(2022-12-06)*
+Bug Fixes:
+- Updated FAN Dependency from 6.9.0 to 6.12.0
+
+## Version 3.3.0 *(2022-12-01)*
+Improvements:
+- Refactoring of HeliumSettings Scriptable Object API.
+- Network Kill Switch.
+- Provide a Publisher API for Partner Initialization Metrics.
+
+Bug Fixes:
+- `NullReferenceException` after initialization without callback subscription.
+- Credentials warning spamming
+- Detect Misconfigured Unity setup & utility methods.
+
 ### Version 3.2.0 *(2022-10-20)*
 ----------------------------
 Improvements:
