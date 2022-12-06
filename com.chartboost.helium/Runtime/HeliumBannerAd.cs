@@ -119,12 +119,12 @@ namespace Helium
 		/// load can be performed.
 		/// </summary>
 		/// <returns>true if successfully cleared</returns>
-		public bool ClearLoaded() 
+		public void ClearLoaded() 
 		{
 			#if UNITY_IPHONE
 			return _heliumSdkBannerClearLoaded(_uniqueId);
 			#elif UNITY_ANDROID
-			return _androidAd.Call<bool>("clearLoaded");
+			_androidAd.Call<bool>("clearLoaded");
 			#else
 			return false;
 			#endif
