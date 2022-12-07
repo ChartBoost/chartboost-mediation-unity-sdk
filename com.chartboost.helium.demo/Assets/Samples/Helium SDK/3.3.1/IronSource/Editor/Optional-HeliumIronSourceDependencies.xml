@@ -12,11 +12,10 @@
 
     </androidPackages>
     <iosPods>
+        <!-- Helium IronSource Adapter -->
+        <iosPod name="ChartboostHeliumAdapterIronSource" version="~> 3.3"/>
+
         <!-- IronSource iOS SDK -->
-        <iosPod name="ChartboostHeliumAdapterIronSource" version="~> 3.3">
-            <sources>
-                <source>https://github.com/CocoaPods/Specs</source>
-            </sources>
-        </iosPod>
+        <iosPod name="IronSourceSDK" version="~> 7.1"/>
     </iosPods>
 </dependencies>

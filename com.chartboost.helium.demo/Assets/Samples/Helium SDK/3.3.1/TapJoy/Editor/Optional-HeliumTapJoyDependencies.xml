@@ -11,11 +11,10 @@
         <androidPackage spec="com.tapjoy:tapjoy-android-sdk:12.9.1" />
     </androidPackages>
     <iosPods>
+        <!-- Helium Tapjoy Adapter -->
+        <iosPod name="ChartboostHeliumAdapterTJ" version="~> 3.3"/>
+
         <!-- Tapjoy iOS SDK -->
-        <iosPod name="ChartboostHeliumAdapterTJ" version="~> 3.3">
-            <sources>
-                <source>https://github.com/CocoaPods/Specs</source>
-            </sources>
-        </iosPod>
+        <iosPod name="TapjoySDK" version="~> 12.8"/>
     </iosPods>
 </dependencies>
