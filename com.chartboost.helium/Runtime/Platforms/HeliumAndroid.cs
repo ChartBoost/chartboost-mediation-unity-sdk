@@ -124,8 +124,7 @@ namespace Helium.Platforms
             }
             catch (Exception e)
             {
-                LogError("interstitial failed to load");
-                LogError(e.ToString());
+                LogError($"interstitial failed to load {e}");
                 return null;
             }
         }
@@ -145,8 +144,7 @@ namespace Helium.Platforms
             }
             catch (Exception e)
             {
-                LogError("rewarded ad failed to load");
-                LogError(e.ToString());
+                LogError($"rewarded ad failed to load {e}");
                 return null;
             }
         }
@@ -166,8 +164,7 @@ namespace Helium.Platforms
             }
             catch (Exception e)
             {
-                LogError("Helium(Android): banner ad failed to load");
-                LogError(e.ToString());
+                LogError($"banner ad failed to load {e}");
                 return null;
             }
         }

@@ -15,13 +15,14 @@ namespace Helium.Platforms
 
         protected static void Log(string message)
         {
-            if (HeliumSettings.IsLoggingEnabled && Debug.isDebugBuild)
+            if (HeliumSettings.IsLoggingEnabled)
                 Debug.Log( $"{LOGTag}/{message}");
         }
 
         protected static void LogError(string error)
         {
-            Debug.Log( $"{LOGTag}/{error}");
+            if (HeliumSettings.IsLoggingEnabled)
+                Debug.Log( $"{LOGTag}/{error}");
         }
 
         protected static bool CanFetchAd(string placementName)
