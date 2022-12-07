@@ -306,10 +306,10 @@ void _heliumSdkBannerAdLoad(const void * uniqueId, long screenLocation)
     });
 }
 
-BOOL _heliumSdkBannerClearLoaded(const void * uniqueId)
+void _heliumSdkBannerClearLoaded(const void * uniqueId)
 {
     id<HeliumBannerAd> ad = (__bridge id<HeliumBannerAd>)uniqueId;
-    return [ad clearAd];
+    [ad clearAd];
 }
 
 void _heliumSdkBannerRemove(const void * uniqueId)

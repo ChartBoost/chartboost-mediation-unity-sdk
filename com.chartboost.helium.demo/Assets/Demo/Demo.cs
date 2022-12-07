@@ -385,7 +385,8 @@ public class Demo : MonoBehaviour
             Log("banner ad does not exist");
             return;
         }
-        Log(_bannerAd.ClearLoaded() ? "banner ad has been cleared" : "banner ad has failed to clear");
+        _bannerAd.ClearLoaded();
+        Log("banner ad has been cleared");
     }
 
     public void OnToggleBannerVisibilityClick()

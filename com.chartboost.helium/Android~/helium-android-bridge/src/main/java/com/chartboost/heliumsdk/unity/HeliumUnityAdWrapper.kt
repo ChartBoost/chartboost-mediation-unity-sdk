@@ -71,14 +71,12 @@ class HeliumUnityAdWrapper(private val ad: HeliumAd) {
         }
     }
 
-    fun clearLoaded(): Boolean {
-        return when(ad) {
+    fun clearLoaded() {
+        when(ad) {
             is HeliumFullscreenAd -> { ad.clearLoaded() }
             is HeliumBannerAd -> {
                 HeliumUnityBridge.runTaskOnUiThread { ad.clearAd() }
-                return true
             }
-            else -> false
         }
     }
 
