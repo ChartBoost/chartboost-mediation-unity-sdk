@@ -12,6 +12,6 @@
         <iosPod name="ChartboostHeliumAdapterFyber" version="~> 3.3"/>
 
         <!-- Fyber iOS SDK -->
-        <iosPod name="Fyber_Marketplace_SDK" version="~> 8.1.0"/>
+        <iosPod name="Fyber_Marketplace_SDK" version="~> 8.1"/>
     </iosPods>
 </dependencies>

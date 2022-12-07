@@ -12,6 +12,6 @@
         <iosPod name="ChartboostHeliumAdapterFAN" version="~> 3.3"/>
 
         <!-- FAN iOS SDK -->
-        <iosPod name="FBAudienceNetwork" version="~> 6.12.0"/>
+        <iosPod name="FBAudienceNetwork" version="~> 6.12"/>
     </iosPods>
 </dependencies>
