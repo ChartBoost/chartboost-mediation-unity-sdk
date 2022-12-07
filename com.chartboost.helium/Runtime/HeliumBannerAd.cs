@@ -125,7 +125,7 @@ namespace Helium
 			_heliumSdkBannerClearLoaded(_uniqueId);
 			#elif UNITY_ANDROID
 			_androidAd.Call("clearLoaded");
-                        #endif
+			#endif
 		}
 
 		/// <summary>
