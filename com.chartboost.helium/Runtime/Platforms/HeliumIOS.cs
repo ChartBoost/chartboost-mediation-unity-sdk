@@ -150,7 +150,7 @@ namespace Helium.Platforms
             }
             catch (Exception e)
             {
-                LogError($"interstitial failed to load {e}");
+                HeliumLogger. LogError(LOGTag, $"interstitial failed to load {e}");
                 return null;
             }
         }
@@ -169,26 +169,7 @@ namespace Helium.Platforms
             }
             catch (Exception e)
             {
-                LogError($"rewarded failed to load {e}");
-                return null;
-            }
-        }
-
-        public override HeliumBannerAd GetBannerAd(string placementName, HeliumBannerAdSize size)
-        {
-            if (!CanFetchAd(placementName))
-                return null;
-
-            base.GetBannerAd(placementName, size);
-
-            try
-            {
-                var adId = _heliumSdkGetBannerAd(placementName, (int)size);
-                return adId == IntPtr.Zero ? null : new HeliumBannerAd(adId);
-            }
-            catch (Exception e)
-            {
-                LogError($"banner ad failed to load {e}");
+                HeliumLogger. LogError(LOGTag, $"rewarded failed to load {e}");
                 return null;
             }
         }
