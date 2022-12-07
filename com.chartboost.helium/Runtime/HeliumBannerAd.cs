@@ -38,7 +38,7 @@ namespace Helium
 		[DllImport("__Internal")]
 		private static extern void _heliumSdkBannerAdLoad(IntPtr uniqueID, int screenLocation);
 		[DllImport("__Internal")]
-		private static extern bool _heliumSdkBannerClearLoaded(IntPtr uniqueID);
+		private static extern void _heliumSdkBannerClearLoaded(IntPtr uniqueID);
 		[DllImport("__Internal")]
 		private static extern bool _heliumSdkBannerRemove(IntPtr uniqueID);
 		[DllImport("__Internal")]
@@ -122,9 +122,9 @@ namespace Helium
 		public void ClearLoaded() 
 		{
 			#if UNITY_IPHONE
-			return _heliumSdkBannerClearLoaded(_uniqueId);
+			_heliumSdkBannerClearLoaded(_uniqueId);
 			#elif UNITY_ANDROID
-			_androidAd.Call<bool>("clearLoaded");
+			_androidAd.Call("clearLoaded");
 			#else
 			return false;
 			#endif
