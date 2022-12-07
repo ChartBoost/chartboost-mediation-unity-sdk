@@ -143,8 +143,16 @@ namespace Helium.Platforms
 
             base.GetInterstitialAd(placementName);
 
-            var adId = _heliumSdkGetInterstitialAd(placementName);
-            return adId == IntPtr.Zero ? null : new HeliumInterstitialAd(adId);
+            try
+            {
+                var adId = _heliumSdkGetInterstitialAd(placementName);
+                return adId == IntPtr.Zero ? null : new HeliumInterstitialAd(adId);
+            }
+            catch (Exception e)
+            {
+                LogError($"interstitial failed to load {e}");
+                return null;
+            }
         }
 
         public override HeliumRewardedAd GetRewardedAd(string placementName)
@@ -154,11 +162,16 @@ namespace Helium.Platforms
 
             base.GetRewardedAd(placementName);
 
-            var adId = _heliumSdkGetRewardedAd(placementName);
-            if (adId == IntPtr.Zero)
+            try
+            {
+                var adId = _heliumSdkGetRewardedAd(placementName);
+                return adId == IntPtr.Zero ? null : new HeliumRewardedAd(adId);
+            }
+            catch (Exception e)
+            {
+                LogError($"rewarded failed to load {e}");
                 return null;
-
-            return adId == IntPtr.Zero ? null : new HeliumRewardedAd(adId);
+            }
         }
 
         public override HeliumBannerAd GetBannerAd(string placementName, HeliumBannerAdSize size)
@@ -168,11 +181,16 @@ namespace Helium.Platforms
 
             base.GetBannerAd(placementName, size);
 
-            var adId = _heliumSdkGetBannerAd(placementName, (int)size);
-            if (adId == IntPtr.Zero)
+            try
+            {
+                var adId = _heliumSdkGetBannerAd(placementName, (int)size);
+                return adId == IntPtr.Zero ? null : new HeliumBannerAd(adId);
+            }
+            catch (Exception e)
+            {
+                LogError($"banner ad failed to load {e}");
                 return null;
-
-            return adId == IntPtr.Zero ? null : new HeliumBannerAd(adId);
+            }
         }
         #endregion
 
