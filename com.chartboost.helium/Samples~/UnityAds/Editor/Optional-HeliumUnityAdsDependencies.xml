@@ -9,11 +9,10 @@
         <androidPackage spec="androidx.core:core:1.2.0"/>
     </androidPackages>
     <iosPods>
+        <!-- Helium Unity Ads Adapter -->
+        <iosPod name="ChartboostHeliumAdapterUnity" version="~> 3.3"/>
+
         <!-- Unity Ads iOS SDK -->
-        <iosPod name="ChartboostHeliumAdapterUnity" version="~> 3.3">
-            <sources>
-                <source>https://github.com/CocoaPods/Specs</source>
-            </sources>
-        </iosPod>
+        <iosPod name="UnityAds" version="~> 4.2"/>
     </iosPods>
 </dependencies>

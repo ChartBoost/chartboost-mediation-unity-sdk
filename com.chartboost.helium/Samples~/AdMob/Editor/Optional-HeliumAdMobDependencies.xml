@@ -7,13 +7,11 @@
         <!-- Admob Android SDK -->
         <androidPackage spec="com.google.android.gms:play-services-ads:21.3.0" />
     </androidPackages>
-
     <iosPods>
-    <!-- Admob iOS SDK -->
-        <iosPod name="ChartboostHeliumAdapterAdMob" version="~> 3.3">
-            <sources>
-                <source>https://github.com/CocoaPods/Specs</source>
-            </sources>
-        </iosPod>
+        <!-- Helium AdMob Adapter -->
+        <iosPod name="ChartboostHeliumAdapterAdMob" version="~> 3.3"/>
+
+        <!-- Admob iOS SDK -->
+        <iosPod name="Google-Mobile-Ads-SDK" version="~> 9.12"/>
     </iosPods>
 </dependencies>

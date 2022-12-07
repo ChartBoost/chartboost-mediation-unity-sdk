@@ -10,11 +10,10 @@
         <androidPackage spec="androidx.core:core:1.2.0"/>
     </androidPackages>
     <iosPods>
+        <!-- Helium Vungle Adapter -->
+        <iosPod name="ChartboostHeliumAdapterVungle" version="~> 3.3"/>
+
         <!-- Vungle iOS SDK -->
-        <iosPod name="ChartboostHeliumAdapterVungle" version="~> 3.3">
-            <sources>
-                <source>https://github.com/CocoaPods/Specs</source>
-            </sources>
-        </iosPod>
+        <iosPod name="VungleSDK-iOS" version="~> 6.10"/>
     </iosPods>
 </dependencies>

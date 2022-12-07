@@ -13,11 +13,10 @@
         <androidPackage spec="com.google.guava:guava:31.1-android"/>
     </androidPackages>
     <iosPods>
+        <!-- Helium Google Bidding Adapter -->
+        <iosPod name="ChartboostHeliumAdapterGoogleBidding" version="~> 3.3"/>
+
         <!-- Google Bidding iOS SDK -->
-        <iosPod name="ChartboostHeliumAdapterGoogleBidding" version="~> 3.3">
-            <sources>
-                <source>https://github.com/CocoaPods/Specs</source>
-            </sources>
-        </iosPod>
+        <iosPod name="Google-Mobile-Ads-SDK" version="~> 9.12"/>
     </iosPods>
 </dependencies>

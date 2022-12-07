@@ -8,12 +8,10 @@
         <androidPackage spec="com.facebook.android:audience-network-sdk:6.12.0" />
     </androidPackages>
     <iosPods>
+        <!-- Helium Facebook Adapter -->
+        <iosPod name="ChartboostHeliumAdapterFAN" version="~> 3.3"/>
+
         <!-- FAN iOS SDK -->
-        <iosPod name="ChartboostHeliumAdapterFAN" version="~> 3.3">
-            <sources>
-                <source>https://github.com/CocoaPods/Specs</source>
-            </sources>
-        </iosPod>
-        <iosPod name="FBAudienceNetwork" version="~> 6.12.0" />
+        <iosPod name="FBAudienceNetwork" version="~> 6.12"/>
     </iosPods>
 </dependencies>

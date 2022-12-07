@@ -8,11 +8,10 @@
         <androidPackage spec="com.adcolony:sdk:4.8.0" />
     </androidPackages>
     <iosPods>
+        <!-- Helium AdMob Adapter -->
+        <iosPod name="ChartboostHeliumAdapterAC" version="~> 3.3"/>
+        
         <!-- AdColony iOS SDK-->
-        <iosPod name="ChartboostHeliumAdapterAC" version="~> 3.3">
-            <sources>
-                <source>https://github.com/CocoaPods/Specs</source>
-            </sources>
-        </iosPod>
+        <iosPod name="AdColony" version="~> 4.8"/>
     </iosPods>
 </dependencies>
