@@ -1,6 +1,4 @@
 #if UNITY_ANDROID
-using System;
-using Helium.Banner;
 using UnityEngine;
 using UnityEngine.Scripting;
 // ReSharper disable StringLiteralTypo
@@ -108,25 +106,6 @@ namespace Helium.Platforms
         {
             var handled = base.OnBackPressed() && _plugin.Call<bool>("onBackPressed");
             return handled;
-        }
-        public override HeliumRewardedAd GetRewardedAd(string placementName)
-        {
-            if (!CanFetchAd(placementName))
-                return null;
-
-            base.GetRewardedAd(placementName);
-
-            try
-            {
-                var androidAd = _plugin.Call<AndroidJavaObject>("getRewardedAd", placementName);
-                var ad = new HeliumRewardedAd(androidAd);
-                return ad;
-            }
-            catch (Exception e)
-            {
-                HeliumLogger.LogError(LOGTag, $"rewarded ad failed to load {e}");
-                return null;
-            }
         }
         #endregion
 
