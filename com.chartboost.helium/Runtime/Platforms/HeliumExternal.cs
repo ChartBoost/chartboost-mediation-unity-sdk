@@ -108,7 +108,7 @@ namespace Helium.Platforms
             }
             catch (Exception e)
             {
-                HeliumLogger. LogError(LogTag, $"interstitial failed to be obtained {e}");
+                HeliumLogger.LogError(LogTag, $"interstitial failed to be obtained {e}");
                 return null;
             }
         }

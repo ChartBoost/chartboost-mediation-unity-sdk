@@ -1,7 +1,7 @@
 namespace Helium.FullScreen.Rewarded
 {
     /// <summary>
-    /// All Interstitial placement callbacks.
+    /// Interface implemented by all Helium rewarded ads. 
     /// </summary>
     public interface IHeliumRewardedAd
     {
