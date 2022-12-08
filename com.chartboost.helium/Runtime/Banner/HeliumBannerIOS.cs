@@ -59,7 +59,7 @@ namespace Helium.Banner
         ~HeliumBannerIOS()
             => _heliumSdkFreeBannerAdObject(_uniqueId);
 
-        #region EXTERNAL_METHODS
+        #region External Methods
         [DllImport("__Internal")]
         private static extern IntPtr _heliumSdkGetBannerAd(string placementName, int size);
         [DllImport("__Internal")]

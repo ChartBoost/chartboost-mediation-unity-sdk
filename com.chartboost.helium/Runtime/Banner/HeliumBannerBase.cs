@@ -1,3 +1,5 @@
+using Helium.Interfaces;
+
 namespace Helium.Banner
 {
     public abstract class HeliumBannerBase : IHeliumAd, IHeliumBannerAd

@@ -115,7 +115,7 @@ public class Demo : MonoBehaviour
 
     private void DidReceiveImpressionLevelRevenueData(string placement, Hashtable impressionData)
     {
-        var json =  HeliumJSON.Serialize(impressionData);
+        var json =  HeliumJson.Serialize(impressionData);
         Log($"DidReceiveImpressionLevelRevenueData {placement}: {JsonPrettify(json)}");
     }
 

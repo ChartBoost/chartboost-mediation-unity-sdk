@@ -1,7 +1,7 @@
 // ReSharper disable InconsistentNaming
 using UnityEngine.Scripting;
 
-namespace Helium.Interfaces
+namespace Helium.FullScreen.Rewarded
 {
     /// <summary>
     /// All Rewarded placement callbacks.

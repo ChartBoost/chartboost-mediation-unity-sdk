@@ -60,6 +60,7 @@ namespace Helium.FullScreen.Interstitial
         ~HeliumInterstitialIOS() 
             => _heliumSdkFreeInterstitialAdObject(_uniqueId);
 
+        #region External Methods
         [DllImport("__Internal")]
         private static extern IntPtr _heliumSdkGetInterstitialAd(string placementName);
         [DllImport("__Internal")]
@@ -76,6 +77,7 @@ namespace Helium.FullScreen.Interstitial
         private static extern bool _heliumSdkInterstitialAdReadyToShow(IntPtr uniqueID);
         [DllImport("__Internal")]
         private static extern void _heliumSdkFreeInterstitialAdObject(IntPtr uniqueID);
+        #endregion
     }
 }
 #endif

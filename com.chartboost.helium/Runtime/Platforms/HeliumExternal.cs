@@ -145,13 +145,6 @@ namespace Helium.Platforms
             }
         }
         
-        // todo - https://chartboost.atlassian.net/browse/HB-3868  remove this, change with MonoPInvokeCallback https://docs.unity3d.com/Manual/PluginsForIOS.html
-        /// Sets the name of the game object to be used by the Helium iOS SDK
-        public virtual void SetGameObjectName(string name)
-        {
-            HeliumLogger.Log(LOGTag, $"Setting GameObjectName: {name}");
-        }
-        
         protected static string[] GetInitializationOptions()
         {
             string GetEnumDescription(Enum value)

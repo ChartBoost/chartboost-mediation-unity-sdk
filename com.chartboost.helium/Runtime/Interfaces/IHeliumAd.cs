@@ -1,4 +1,6 @@
-namespace Helium
+using UnityEngine.Scripting;
+
+namespace Helium.Interfaces
 {
     public interface IHeliumAd
     {
@@ -10,6 +12,7 @@ namespace Helium
         /// <param name="keyword">The keyword (maximum of 64 characters)</param>
         /// <param name="value">The value (maximum of 256 characters)</param>
         /// <returns>true if the keyword was successfully set, else false</returns>
+        [Preserve] 
         bool SetKeyword(string keyword, string value);
 
         /// <summary>
@@ -17,11 +20,13 @@ namespace Helium
         /// </summary>
         /// <param name="keyword">The keyword to remove.</param>
         /// <returns>The currently set value, else null</returns>
+        [Preserve]
         string RemoveKeyword(string keyword);
         
         /// <summary>
         /// Destroy the advertisement to free up memory resources.
         /// </summary>
+        [Preserve]
         void Destroy();
     }
 }

@@ -1,3 +1,5 @@
+using Helium.Interfaces;
+
 namespace Helium.FullScreen
 {
     public abstract class HeliumFullScreenBase : IHeliumAd, IHeliumFullScreenAd

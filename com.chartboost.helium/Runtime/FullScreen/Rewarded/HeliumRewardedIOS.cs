@@ -66,6 +66,7 @@ namespace Helium.FullScreen.Rewarded
         ~HeliumRewardedIOS()
             => _heliumSdkFreeRewardedAdObject(_uniqueId);
 
+        #region External Methods
         [DllImport("__Internal")]
         private static extern IntPtr _heliumSdkGetRewardedAd(string placementName);
         [DllImport("__Internal")]
@@ -84,6 +85,7 @@ namespace Helium.FullScreen.Rewarded
         private static extern void _heliumSdkRewardedAdSetCustomData(IntPtr uniqueID, string customData);
         [DllImport("__Internal")]
         private static extern void _heliumSdkFreeRewardedAdObject(IntPtr uniqueID);
+        #endregion
     }
 }
 #endif
