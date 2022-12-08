@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Helium.Banner
 {
+    /// <summary>
+    /// Helium banner object for Android.
+    /// </summary>
     public class HeliumBannerAndroid : HeliumBannerBase
     {
         private readonly AndroidJavaObject _androidAd;

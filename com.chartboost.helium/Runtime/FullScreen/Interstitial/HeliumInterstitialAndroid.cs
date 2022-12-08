@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Helium.FullScreen.Interstitial
 {
+    /// <summary>
+    /// Helium interstitial object for Android.
+    /// </summary>
     public class HeliumInterstitialAndroid : HeliumFullScreenBase
     {
         private readonly AndroidJavaObject _androidAd;

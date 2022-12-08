@@ -2,6 +2,9 @@ using UnityEngine.Scripting;
 
 namespace Helium.FullScreen
 {
+    /// <summary>
+    /// Interface implemented by Helium fullscreen ads. 
+    /// </summary>
     public interface IHeliumFullScreenAd
     {
         /// <summary>

@@ -2,6 +2,9 @@ using UnityEngine.Scripting;
 
 namespace Helium.Banner
 {
+    /// <summary>
+    /// Interface implemented by all Helium banners. 
+    /// </summary>
     public interface IHeliumBannerAd
     {
         /// <summary>

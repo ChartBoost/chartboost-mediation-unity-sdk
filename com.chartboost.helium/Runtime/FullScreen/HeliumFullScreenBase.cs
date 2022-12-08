@@ -2,6 +2,9 @@ using Helium.Interfaces;
 
 namespace Helium.FullScreen
 {
+    /// <summary>
+    /// Helium fullscreen ad base structure.
+    /// </summary>
     public abstract class HeliumFullScreenBase : IHeliumAd, IHeliumFullScreenAd
     {
         protected static string LOGTag = "HeliumFullScreen (Base)";
@@ -50,7 +53,10 @@ namespace Helium.FullScreen
             return true;
         }
     }
-
+    
+    /// <summary>
+    /// Helium interstitial ad object for unsupported platforms.
+    /// </summary>
     public class HeliumInterstitialUnsupported : HeliumFullScreenBase
     {
         public HeliumInterstitialUnsupported(string placementName) : base(placementName)

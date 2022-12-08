@@ -1,5 +1,8 @@
 namespace Helium.FullScreen.Rewarded
 {
+    /// <summary>
+    /// Helium rewarded ad base structure.
+    /// </summary>
     public class HeliumRewardedBase : HeliumFullScreenBase, IHeliumRewardedAd
     {
         public HeliumRewardedBase(string placementName) : base(placementName) 
@@ -9,6 +12,9 @@ namespace Helium.FullScreen.Rewarded
         public virtual void SetCustomData(string customData) => HeliumLogger.Log(LOGTag, $"rewarded: {PlacementName}, setting custom data: {customData}");
     }
     
+    /// <summary>
+    /// Helium rewarded ad object for unsupported platforms.
+    /// </summary>
     public class HeliumRewardedUnsupported : HeliumRewardedBase
     {
         public HeliumRewardedUnsupported(string placementName) : base(placementName) => LOGTag = "HeliumRewarded (Unsupported)";

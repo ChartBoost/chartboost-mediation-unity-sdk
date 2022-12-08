@@ -34,7 +34,7 @@ namespace Helium
             {
                 try
                 {
-                    if (!(HeliumJSON.Deserialize(dataString) is Dictionary<object, object> data)) 
+                    if (!(HeliumJson.Deserialize(dataString) is Dictionary<object, object> data)) 
                         return;
                     
                     data.TryGetValue("placementName", out var placementName);

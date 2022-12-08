@@ -4,7 +4,7 @@ using UnityEngine.Scripting;
 namespace Helium.FullScreen.Rewarded
 {
     /// <summary>
-    /// All Rewarded placement callbacks.
+    /// Interface implemented by Helium rewarded ads. 
     /// </summary>
     public interface IRewardedEvents
     {

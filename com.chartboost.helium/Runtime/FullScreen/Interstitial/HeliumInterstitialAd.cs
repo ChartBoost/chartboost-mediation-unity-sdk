@@ -1,5 +1,8 @@
 namespace Helium.FullScreen.Interstitial
 {
+    /// <summary>
+    /// Helium interstitial ad object.
+    /// </summary>
     public class HeliumInterstitialAd : HeliumFullScreenBase
     {
         private readonly HeliumFullScreenBase _platformInterstitial;

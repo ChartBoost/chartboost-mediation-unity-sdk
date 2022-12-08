@@ -1,7 +1,7 @@
 namespace Helium.Banner
 {
     /// <summary>
-    /// Helium defined banner sizes
+    /// Helium defined banner sizes.
     /// </summary>
     public enum HeliumBannerAdSize
     {
@@ -14,7 +14,7 @@ namespace Helium.Banner
     }
 
     /// <summary>
-    /// Helium defined screen locations
+    /// Helium defined screen locations.
     /// </summary>
     public enum HeliumBannerAdScreenLocation
     {
@@ -27,6 +27,9 @@ namespace Helium.Banner
         BottomRight = 6
     }
 
+    /// <summary>
+    /// Helium banner ad object.
+    /// </summary>
     public class HeliumBannerAd : HeliumBannerBase
     {
         private readonly HeliumBannerBase _platformBanner;

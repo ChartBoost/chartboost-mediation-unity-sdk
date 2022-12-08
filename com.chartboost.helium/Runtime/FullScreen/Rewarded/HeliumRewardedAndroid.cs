@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Helium.FullScreen.Rewarded
 {
+    /// <summary>
+    /// Helium rewarded ad object for Android.
+    /// </summary>
     public class HeliumRewardedAndroid : HeliumRewardedBase
     {
         private readonly AndroidJavaObject _androidAd;

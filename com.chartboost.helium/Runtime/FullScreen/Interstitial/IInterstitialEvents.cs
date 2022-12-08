@@ -4,7 +4,7 @@ using UnityEngine.Scripting;
 namespace Helium.FullScreen.Interstitial
 {
     /// <summary>
-    /// All Interstitial placement callbacks.
+    /// All interstitial placement callbacks.
     /// </summary>
     public interface IInterstitialEvents
     {

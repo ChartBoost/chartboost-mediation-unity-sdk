@@ -2,6 +2,9 @@ using Helium.Interfaces;
 
 namespace Helium.Banner
 {
+    /// <summary>
+    /// Helium banner base structure.
+    /// </summary>
     public abstract class HeliumBannerBase : IHeliumAd, IHeliumBannerAd
     {
         protected static string LOGTag = "HeliumBanner (Base)";
@@ -49,6 +52,9 @@ namespace Helium.Banner
             => HeliumLogger.Log(LOGTag, $"removing banner: {_placementName}");
     }
 
+    /// <summary>
+    /// Helium banner object for unsupported platforms.
+    /// </summary>
     public class HeliumBannerUnsupported : HeliumBannerBase
     {
         public HeliumBannerUnsupported(string placementName, HeliumBannerAdSize size) : base(placementName, size)

@@ -4,6 +4,9 @@ using System.Runtime.InteropServices;
 
 namespace Helium.Banner
 {
+    /// <summary>
+    /// Helium banner object for iOS.
+    /// </summary>
     public class HeliumBannerIOS : HeliumBannerBase
     {
         private readonly IntPtr _uniqueId;

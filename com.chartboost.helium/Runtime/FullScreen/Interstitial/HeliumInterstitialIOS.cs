@@ -4,6 +4,9 @@ using System.Runtime.InteropServices;
 
 namespace Helium.FullScreen.Interstitial
 {
+    /// <summary>
+    /// Helium interstitial object for iOS.
+    /// </summary>
     public class HeliumInterstitialIOS : HeliumFullScreenBase
     {
         private readonly IntPtr _uniqueId;

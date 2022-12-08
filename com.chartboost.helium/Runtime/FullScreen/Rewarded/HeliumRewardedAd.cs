@@ -1,5 +1,8 @@
 namespace Helium.FullScreen.Rewarded
 {
+	/// <summary>
+	/// Helium rewarded ad object.
+	/// </summary>
 	public class HeliumRewardedAd : HeliumRewardedBase {
 		private readonly HeliumRewardedBase _platformRewarded;
 		
