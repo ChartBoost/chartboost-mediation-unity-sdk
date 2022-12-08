@@ -10,7 +10,7 @@ namespace Helium.FullScreen.Rewarded
 
         public HeliumRewardedIOS(string placementName) : base(placementName)
         {
-            LOGTag = "HeliumRewarded (iOS)";
+            LogTag = "HeliumRewarded (iOS)";
             _uniqueId = _heliumSdkGetRewardedAd(placementName);
         }
 

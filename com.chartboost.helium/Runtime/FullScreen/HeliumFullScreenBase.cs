@@ -7,7 +7,7 @@ namespace Helium.FullScreen
     /// </summary>
     public abstract class HeliumFullScreenBase : IHeliumAd, IHeliumFullScreenAd
     {
-        protected static string LOGTag = "HeliumFullScreen (Base)";
+        protected static string LogTag = "HeliumFullScreen (Base)";
         protected readonly string PlacementName;
 
         protected HeliumFullScreenBase(string placementName)
@@ -16,40 +16,40 @@ namespace Helium.FullScreen
         /// <inheritdoc cref="IHeliumAd.SetKeyword"/>>
         public virtual bool SetKeyword(string keyword, string value)
         {
-            HeliumLogger.Log(LOGTag, $"fullscreen: {PlacementName}, setting keyword {keyword} with value: {value}");
+            HeliumLogger.Log(LogTag, $"fullscreen: {PlacementName}, setting keyword {keyword} with value: {value}");
             return false;
         }
 
         /// <inheritdoc cref="IHeliumAd.RemoveKeyword"/>>
         public virtual string RemoveKeyword(string keyword)
         {
-            HeliumLogger.Log(LOGTag, $"fullscreen: {PlacementName}, removing keyword {keyword}");
+            HeliumLogger.Log(LogTag, $"fullscreen: {PlacementName}, removing keyword {keyword}");
             return keyword;
         }
 
         /// <inheritdoc cref="IHeliumAd.Destroy"/>>
         public virtual void Destroy()
-            => HeliumLogger.Log(LOGTag, $"destroying fullscreen: {PlacementName}");
+            => HeliumLogger.Log(LogTag, $"destroying fullscreen: {PlacementName}");
 
         /// <inheritdoc cref="IHeliumFullScreenAd.Load"/>>
         public virtual void Load()
-            => HeliumLogger.Log(LOGTag, $"loading fullscreen: {PlacementName}");
+            => HeliumLogger.Log(LogTag, $"loading fullscreen: {PlacementName}");
 
         /// <inheritdoc cref="IHeliumFullScreenAd.Show"/>>
         public virtual void Show()
-            => HeliumLogger.Log(LOGTag, $"showing fullscreen: {PlacementName}");
+            => HeliumLogger.Log(LogTag, $"showing fullscreen: {PlacementName}");
 
         /// <inheritdoc cref="IHeliumFullScreenAd.ReadyToShow"/>>
         public virtual bool ReadyToShow()
         {
-            HeliumLogger.Log(LOGTag, $"checking fullscreen: {PlacementName} availability");
+            HeliumLogger.Log(LogTag, $"checking fullscreen: {PlacementName} availability");
             return false;
         }
 
         /// <inheritdoc cref="IHeliumFullScreenAd.ClearLoaded"/>>
         public virtual bool ClearLoaded()
         {
-            HeliumLogger.Log(LOGTag, $"clearing fullscreen: {PlacementName}");
+            HeliumLogger.Log(LogTag, $"clearing fullscreen: {PlacementName}");
             return true;
         }
     }
@@ -61,7 +61,7 @@ namespace Helium.FullScreen
     {
         public HeliumInterstitialUnsupported(string placementName) : base(placementName)
         {
-            LOGTag = "HeliumInterstitial (Unsupported)";
+            LogTag = "HeliumInterstitial (Unsupported)";
         }
     }
 }

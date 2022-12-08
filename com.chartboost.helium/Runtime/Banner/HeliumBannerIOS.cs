@@ -13,7 +13,7 @@ namespace Helium.Banner
 
         public HeliumBannerIOS(string placement, HeliumBannerAdSize size) : base(placement, size)
         {
-            LOGTag = "HeliumBanner (iOS)";
+            LogTag = "HeliumBanner (iOS)";
             _uniqueId = _heliumSdkGetBannerAd(placement, (int)size);
         }
 

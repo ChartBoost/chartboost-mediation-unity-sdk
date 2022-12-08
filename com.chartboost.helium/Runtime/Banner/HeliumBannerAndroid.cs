@@ -13,7 +13,7 @@ namespace Helium.Banner
 
         public HeliumBannerAndroid(string placementName, HeliumBannerAdSize size) : base(placementName, size)
         {
-            LOGTag = "HeliumBanner (Android)";
+            LogTag = "HeliumBanner (Android)";
             _androidAd = HeliumAndroid.plugin().Call<AndroidJavaObject>("getBannerAd", placementName, (int)size);
         }
 

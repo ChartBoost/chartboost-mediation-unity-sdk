@@ -15,7 +15,7 @@ namespace Helium.Platforms
         public HeliumAndroid()
         {
             _instance = this;
-            LOGTag = "Helium(Android)";
+            LogTag = "Helium(Android)";
             plugin().Call("setupEventListeners",
                 LifeCycleEventListener.Instance,
                 InterstitialEventListener.Instance,

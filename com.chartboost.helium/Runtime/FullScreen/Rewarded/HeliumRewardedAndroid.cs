@@ -13,7 +13,7 @@ namespace Helium.FullScreen.Rewarded
 
         public HeliumRewardedAndroid(string placementName) : base(placementName)
         {
-            LOGTag = "HeliumRewarded (Android)";
+            LogTag = "HeliumRewarded (Android)";
             _androidAd = HeliumAndroid.plugin().Call<AndroidJavaObject>("getRewardedAd", placementName);
         }
         

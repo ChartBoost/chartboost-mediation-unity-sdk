@@ -13,7 +13,7 @@ namespace Helium.FullScreen.Interstitial
 
         public HeliumInterstitialAndroid(string placementName) : base(placementName)
         {
-            LOGTag = "HeliumInterstitial (Android)";
+            LogTag = "HeliumInterstitial (Android)";
             _androidAd = HeliumAndroid.plugin().Call<AndroidJavaObject>("getInterstitialAd", placementName);
         }
 

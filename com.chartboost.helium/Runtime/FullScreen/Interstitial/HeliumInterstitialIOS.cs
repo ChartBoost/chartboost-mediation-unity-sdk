@@ -13,7 +13,7 @@ namespace Helium.FullScreen.Interstitial
 
         public HeliumInterstitialIOS(string placementName) : base(placementName)
         {
-            LOGTag = "HeliumInterstitial (iOS)";
+            LogTag = "HeliumInterstitial (iOS)";
             _uniqueId = _heliumSdkGetInterstitialAd(placementName);
         }
         

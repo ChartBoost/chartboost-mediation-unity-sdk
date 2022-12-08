@@ -9,7 +9,7 @@ namespace Helium.Banner
         Standard = 0,
         /// 300 x 250
         MediumRect = 1,
-        /// 720 x 90
+        /// 728 x 90
         Leaderboard = 2
     }
 

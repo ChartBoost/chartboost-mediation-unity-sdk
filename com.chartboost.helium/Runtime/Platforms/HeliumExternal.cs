@@ -14,7 +14,7 @@ namespace Helium.Platforms
     {
         public static bool IsInitialized { get; protected set; }
         
-        protected static string LOGTag = "HeliumSDK";
+        protected static string LogTag = "HeliumSDK";
 
         protected static bool CanFetchAd(string placementName)
         {
@@ -22,7 +22,7 @@ namespace Helium.Platforms
                 return false;
             if (placementName != null) 
                 return true;
-            HeliumLogger.LogError(LOGTag, "placementName passed is null cannot perform the operation requested");
+            HeliumLogger.LogError(LogTag, "placementName passed is null cannot perform the operation requested");
             return false;
         }
 
@@ -31,7 +31,7 @@ namespace Helium.Platforms
             if (IsInitialized)
                 return true;
 
-            HeliumLogger.LogError(LOGTag, "The Helium SDK needs to be initialized before we can show any ads");
+            HeliumLogger.LogError(LogTag, "The Helium SDK needs to be initialized before we can show any ads");
             return false;
         }
         
@@ -39,67 +39,67 @@ namespace Helium.Platforms
         /// This must be called before using any other Helium features.
         public virtual void Init()
         {
-            HeliumLogger.Log(LOGTag, "Init - Attempting to Initialize Helium SDK from HeliumSettings.");
+            HeliumLogger.Log(LogTag, "Init - Attempting to Initialize Helium SDK from HeliumSettings.");
         }
 
         /// Initialize the Helium plugin with a specific appId
         /// Either one of the init() methods must be called before using any other Helium feature
         public virtual void InitWithAppIdAndSignature(string appId, string appSignature)
         {
-            HeliumLogger.Log(LOGTag, $"InitWithAppIdAndSignature {appId}, {appSignature} and version {Application.unityVersion}");
+            HeliumLogger.Log(LogTag, $"InitWithAppIdAndSignature {appId}, {appSignature} and version {Application.unityVersion}");
             HeliumEventProcessor.Initialize();
         }
         
         public virtual void SetSubjectToCoppa(bool isSubject)
         {
-            HeliumLogger.Log(LOGTag, $"SetSubjectToCoppa {isSubject}");
+            HeliumLogger.Log(LogTag, $"SetSubjectToCoppa {isSubject}");
         }
         
         public virtual void SetSubjectToGDPR(bool isSubject)
         {
-            HeliumLogger.Log(LOGTag, $"SetSubjectToGDPR {isSubject}");
+            HeliumLogger.Log(LogTag, $"SetSubjectToGDPR {isSubject}");
         }
 
         public virtual void SetUserHasGivenConsent(bool hasGivenConsent)
         {
-            HeliumLogger.Log(LOGTag, $"SetUserHasGivenConsent {hasGivenConsent}");
+            HeliumLogger.Log(LogTag, $"SetUserHasGivenConsent {hasGivenConsent}");
         }
 
         public virtual void SetCCPAConsent(bool hasGivenConsent)
         {
-            HeliumLogger.Log(LOGTag, $"SetCCPAConsent {hasGivenConsent}");
+            HeliumLogger.Log(LogTag, $"SetCCPAConsent {hasGivenConsent}");
         }
 
         public virtual void SetUserIdentifier(string userIdentifier)
         {
-            HeliumLogger.Log(LOGTag, $"SetUserIdentifier {userIdentifier}");
+            HeliumLogger.Log(LogTag, $"SetUserIdentifier {userIdentifier}");
         }
 
         public virtual string GetUserIdentifier()
         {
-            HeliumLogger.Log(LOGTag, "GetUserIdentifier");
+            HeliumLogger.Log(LogTag, "GetUserIdentifier");
             return string.Empty;
         }
 
         public virtual void Destroy()
         {
-            HeliumLogger.Log(LOGTag, "Destroy");
+            HeliumLogger.Log(LogTag, "Destroy");
         }
 
         public virtual void Pause(bool paused)
         {
-            HeliumLogger.Log(LOGTag, "pause");
+            HeliumLogger.Log(LogTag, "pause");
         }
 
         public virtual bool OnBackPressed()
         {
-            HeliumLogger.Log(LOGTag, "OnBackPressed");
+            HeliumLogger.Log(LogTag, "OnBackPressed");
             return CheckInitialized();
         }
 
         public HeliumInterstitialAd GetInterstitialAd(string placementName)
         {
-            HeliumLogger.Log(LOGTag, $"GetInterstitialAd at placement: {placementName}");
+            HeliumLogger.Log(LogTag, $"GetInterstitialAd at placement: {placementName}");
             if (!CanFetchAd(placementName))
                 return null;
             try
@@ -108,14 +108,14 @@ namespace Helium.Platforms
             }
             catch (Exception e)
             {
-                HeliumLogger. LogError(LOGTag, $"interstitial failed to be obtained {e}");
+                HeliumLogger. LogError(LogTag, $"interstitial failed to be obtained {e}");
                 return null;
             }
         }
         
         public HeliumRewardedAd GetRewardedAd(string placementName)
         {
-            HeliumLogger.Log(LOGTag, $"GetRewardedAd at placement: {placementName}");
+            HeliumLogger.Log(LogTag, $"GetRewardedAd at placement: {placementName}");
             if (!CanFetchAd(placementName))
                 return null;
             try
@@ -124,14 +124,14 @@ namespace Helium.Platforms
             }
             catch (Exception e)
             {
-                HeliumLogger.LogError(LOGTag, $"rewarded ad failed to be obtained {e}");
+                HeliumLogger.LogError(LogTag, $"rewarded ad failed to be obtained {e}");
                 return null;
             }
         }
         
         public HeliumBannerAd GetBannerAd(string placementName, HeliumBannerAdSize size)
         {
-            HeliumLogger.Log(LOGTag, $"GetBannerAd at placement: {placementName}");
+            HeliumLogger.Log(LogTag, $"GetBannerAd at placement: {placementName}");
             if (!CanFetchAd(placementName))
                 return null;
             try
@@ -140,7 +140,7 @@ namespace Helium.Platforms
             }
             catch (Exception e)
             {
-                HeliumLogger.LogError(LOGTag, $"banner ad failed to be obtained {e}");
+                HeliumLogger.LogError(LogTag, $"banner ad failed to be obtained {e}");
                 return null;
             }
         }

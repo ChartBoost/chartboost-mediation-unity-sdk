@@ -65,7 +65,7 @@ namespace Helium.Platforms
         public HeliumIOS()
         {
             _instance = this;
-            LOGTag = "Helium(iOS)";
+            LogTag = "Helium(iOS)";
             _setLifeCycleCallbacks(ExternDidStart, ExternDidReceiveILRD, ExternDidReceivePartnerInitializationData);
             _setInterstitialCallbacks(ExternDidLoadInterstitial, ExternDidShowInterstitial, ExternDidClickInterstitial,
                 ExternDidCloseInterstitial, ExternDidRecordImpressionInterstitial, ExternDidWinBidInterstitial);
