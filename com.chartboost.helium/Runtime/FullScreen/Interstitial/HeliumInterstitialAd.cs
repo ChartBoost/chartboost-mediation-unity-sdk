@@ -12,7 +12,7 @@ namespace Helium.FullScreen.Interstitial
             #if UNITY_ANDROID
             _platformInterstitial = new HeliumInterstitialAndroid(placementName);
             #elif UNITY_IOS
-			_platformInterstitial = new HeliumInterstitialIOS(placementName);
+            _platformInterstitial = new HeliumInterstitialIOS(placementName);
             #else
             _platformInterstitial = new HeliumInterstitialUnsupported(placementName);
             #endif
