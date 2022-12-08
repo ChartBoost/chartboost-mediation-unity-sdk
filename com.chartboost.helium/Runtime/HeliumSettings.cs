@@ -234,61 +234,7 @@ namespace Helium
                 DirtyEditor();
             }
         }
-
-        #region Obsolete
-
-        [Obsolete("Method will be removed in future versions of Helium Unity SDK. Use platform specific accessors instead.")]
-        public static void SetAppId(string appId)
-        {
-#if UNITY_IPHONE
-            Debug.Log("Overriding IOS AppId: " + appId);
-            IOSAppId = appId;
-#elif UNITY_ANDROID
-            Debug.Log("Overriding Google AppId: " + appId);
-            AndroidAppId = appId;
-#endif
-        }
-
-        [Obsolete("Method will be removed in future versions of Helium Unity SDK. Use platform specific accessors instead.")]
-        public static void SetAppSignature(string appSignature)
-        {
-#if UNITY_IPHONE
-            Debug.Log("Overriding IOS AppSignature: " + appSignature);
-            IOSAppSignature = appSignature;
-#elif UNITY_ANDROID
-            Debug.Log("Overriding Google AppSignature: " + appSignature);
-            AndroidAppSignature = appSignature;
-#endif
-        }
-
-        // iOS
-        [Obsolete("Method will be removed in future versions of Helium Unity SDK. Use IOSAppId accessor instead.")]
-        public static void SetIOSAppId(string id) => IOSAppId = id;
-        [Obsolete("Method will be removed in future versions of Helium Unity SDK. Use IOSAppSignature accessor instead.")]
-        public static void SetiOSAppSignature(string signature) => IOSAppSignature = signature;
-        [Obsolete("Method will be removed in future versions of Helium Unity SDK. Use IOSAppId accessor instead.")]
-        public static string GetIOSAppId() => IOSAppId;
-        [Obsolete("Method will be removed in future versions of Helium Unity SDK. Use IOSAppSignature accessor instead.")]
-        public static string GetIOSAppSignature() => IOSAppSignature;
-        // Android
-        [Obsolete("Method will be removed in future versions of Helium Unity SDK. Use AndroidAppId accessor instead.")]
-        public static void SetAndroidAppId(string id) => AndroidAppId = id;
-        [Obsolete("Method will be removed in future versions of Helium Unity SDK. Use AndroidAppSignature accessor instead.")]
-        public static void SetAndroidAppSignature(string signature) => AndroidAppSignature = signature;
-        [Obsolete("Method will be removed in future versions of Helium Unity SDK. Use AndroidAppId accessor instead.")]
-        public static string GetAndroidAppId() => AndroidAppId;
-        [Obsolete("Method will be removed in future versions of Helium Unity SDK. Use AndroidAppSignature accessor instead.")]
-        public static string GetAndroidAppSignature() => AndroidAppSignature;
-        [Obsolete("Method will be removed in future versions of Helium Unity SDK. Use IsLoggingEnabled accessor instead.")]
-        public static void EnableLogging(bool enabled) => IsLoggingEnabled = enabled;
-        [Obsolete("Method will be removed in future versions of Helium Unity SDK. Use IsLoggingEnabled accessor instead.")]
-        public static bool IsLogging() => IsLoggingEnabled;
-        [Obsolete("Method will be removed in future versions of Helium Unity SDK. Use IsAutomaticInitializationEnabled accessor instead.")]
-        public static void EnableAutomaticInit(bool enabled) => IsAutomaticInitializationEnabled = enabled;
-        [Obsolete("Method will be removed in future versions of Helium Unity SDK. Use IsAutomaticInitializationEnabled accessor instead.")]
-        public static bool IsAutomaticInit() => IsAutomaticInitializationEnabled;
-        #endregion
-
+        
         private static void DirtyEditor()
         {
 #if UNITY_EDITOR
