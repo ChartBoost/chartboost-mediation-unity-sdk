@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using Helium.Banner;
+using Helium.FullScreen.Interstitial;
+using Helium.FullScreen.Rewarded;
 using Helium.Interfaces;
 using UnityEngine;
 
@@ -11,19 +14,7 @@ namespace Helium.Platforms
     {
         public static bool IsInitialized { get; protected set; }
         
-        protected static string LOGTag = "HeliumSDK";
-
-        protected static void Log(string message)
-        {
-            if (HeliumSettings.IsLoggingEnabled)
-                Debug.Log( $"{LOGTag}/{message}");
-        }
-
-        protected static void LogError(string error)
-        {
-            if (HeliumSettings.IsLoggingEnabled)
-                Debug.Log( $"{LOGTag}/{error}");
-        }
+        protected static string LogTag = "HeliumSDK";
 
         protected static bool CanFetchAd(string placementName)
         {
@@ -31,7 +22,7 @@ namespace Helium.Platforms
                 return false;
             if (placementName != null) 
                 return true;
-            Debug.LogError("placementName passed is null cannot perform the operation requested");
+            HeliumLogger.LogError(LogTag, "placementName passed is null cannot perform the operation requested");
             return false;
         }
 
@@ -40,7 +31,7 @@ namespace Helium.Platforms
             if (IsInitialized)
                 return true;
 
-            Debug.LogError("The Helium SDK needs to be initialized before we can show any ads");
+            HeliumLogger.LogError(LogTag, "The Helium SDK needs to be initialized before we can show any ads");
             return false;
         }
         
@@ -48,87 +39,110 @@ namespace Helium.Platforms
         /// This must be called before using any other Helium features.
         public virtual void Init()
         {
-            Log("Init - Attempting to Initialize Helium SDK from HeliumSettings.");
+            HeliumLogger.Log(LogTag, "Init - Attempting to Initialize Helium SDK from HeliumSettings.");
         }
 
         /// Initialize the Helium plugin with a specific appId
         /// Either one of the init() methods must be called before using any other Helium feature
         public virtual void InitWithAppIdAndSignature(string appId, string appSignature)
         {
-            Log($"InitWithAppIdAndSignature {appId}, {appSignature} and version {Application.unityVersion}");
+            HeliumLogger.Log(LogTag, $"InitWithAppIdAndSignature {appId}, {appSignature} and version {Application.unityVersion}");
             HeliumEventProcessor.Initialize();
         }
         
         public virtual void SetSubjectToCoppa(bool isSubject)
         {
-            Log($"SetSubjectToCoppa {isSubject}");
+            HeliumLogger.Log(LogTag, $"SetSubjectToCoppa {isSubject}");
         }
         
         public virtual void SetSubjectToGDPR(bool isSubject)
         {
-            Log($"SetSubjectToGDPR {isSubject}");
+            HeliumLogger.Log(LogTag, $"SetSubjectToGDPR {isSubject}");
         }
 
         public virtual void SetUserHasGivenConsent(bool hasGivenConsent)
         {
-            Log($"SetUserHasGivenConsent {hasGivenConsent}");
+            HeliumLogger.Log(LogTag, $"SetUserHasGivenConsent {hasGivenConsent}");
         }
 
         public virtual void SetCCPAConsent(bool hasGivenConsent)
         {
-            Log($"SetCCPAConsent {hasGivenConsent}");
+            HeliumLogger.Log(LogTag, $"SetCCPAConsent {hasGivenConsent}");
         }
 
         public virtual void SetUserIdentifier(string userIdentifier)
         {
-            Log($"SetUserIdentifier {userIdentifier}");
+            HeliumLogger.Log(LogTag, $"SetUserIdentifier {userIdentifier}");
         }
 
         public virtual string GetUserIdentifier()
         {
-            Log("GetUserIdentifier");
+            HeliumLogger.Log(LogTag, "GetUserIdentifier");
             return string.Empty;
         }
 
         public virtual void Destroy()
         {
-            Log("Destroy");
+            HeliumLogger.Log(LogTag, "Destroy");
         }
 
         public virtual void Pause(bool paused)
         {
-            Log("pause");
+            HeliumLogger.Log(LogTag, "pause");
         }
 
         public virtual bool OnBackPressed()
         {
-            Log("OnBackPressed");
+            HeliumLogger.Log(LogTag, "OnBackPressed");
             return CheckInitialized();
         }
 
-        public virtual HeliumInterstitialAd GetInterstitialAd(string placementName)
+        public HeliumInterstitialAd GetInterstitialAd(string placementName)
         {
-            Log($"GetInterstitialAd at placement: {placementName}");
-            return null;
+            HeliumLogger.Log(LogTag, $"GetInterstitialAd at placement: {placementName}");
+            if (!CanFetchAd(placementName))
+                return null;
+            try
+            {
+                return new HeliumInterstitialAd(placementName);
+            }
+            catch (Exception e)
+            {
+                HeliumLogger.LogError(LogTag, $"interstitial failed to be obtained {e}");
+                return null;
+            }
         }
         
-        public virtual HeliumRewardedAd GetRewardedAd(string placementName)
+        public HeliumRewardedAd GetRewardedAd(string placementName)
         {
-            Log($"GetRewardedAd at placement: {placementName}");
-            return null;
+            HeliumLogger.Log(LogTag, $"GetRewardedAd at placement: {placementName}");
+            if (!CanFetchAd(placementName))
+                return null;
+            try
+            {
+                return new HeliumRewardedAd(placementName);
+            }
+            catch (Exception e)
+            {
+                HeliumLogger.LogError(LogTag, $"rewarded ad failed to be obtained {e}");
+                return null;
+            }
         }
         
-        public virtual HeliumBannerAd GetBannerAd(string placementName, HeliumBannerAdSize size)
+        public HeliumBannerAd GetBannerAd(string placementName, HeliumBannerAdSize size)
         {
-            Log($"GetBannerAd at placement: {placementName}");
-            return null;
-        }
-        
-        // todo - https://chartboost.atlassian.net/browse/HB-3868  remove this, change with MonoPInvokeCallback https://docs.unity3d.com/Manual/PluginsForIOS.html
-        /// Sets the name of the game object to be used by the Helium iOS SDK
-        public virtual void SetGameObjectName(string name)
-        {
-            Log($"Setting GameObjectName: {name}");
+            HeliumLogger.Log(LogTag, $"GetBannerAd at placement: {placementName}");
+            if (!CanFetchAd(placementName))
+                return null;
+            try
+            {
+                return new HeliumBannerAd(placementName, size);
+            }
+            catch (Exception e)
+            {
+                HeliumLogger.LogError(LogTag, $"banner ad failed to be obtained {e}");
+                return null;
+            }
         }
         
         protected static string[] GetInitializationOptions()

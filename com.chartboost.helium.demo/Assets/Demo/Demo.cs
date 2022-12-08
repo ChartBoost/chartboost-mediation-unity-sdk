@@ -4,6 +4,9 @@ using System.IO;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Helium;
+using Helium.Banner;
+using Helium.FullScreen.Interstitial;
+using Helium.FullScreen.Rewarded;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
@@ -112,7 +115,7 @@ public class Demo : MonoBehaviour
 
     private void DidReceiveImpressionLevelRevenueData(string placement, Hashtable impressionData)
     {
-        var json =  HeliumJSON.Serialize(impressionData);
+        var json =  HeliumJson.Serialize(impressionData);
         Log($"DidReceiveImpressionLevelRevenueData {placement}: {JsonPrettify(json)}");
     }
 

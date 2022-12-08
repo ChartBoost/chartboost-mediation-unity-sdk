@@ -1,5 +1,4 @@
 #if UNITY_ANDROID
-using System;
 using UnityEngine;
 using UnityEngine.Scripting;
 // ReSharper disable StringLiteralTypo
@@ -16,7 +15,7 @@ namespace Helium.Platforms
         public HeliumAndroid()
         {
             _instance = this;
-            LOGTag = "Helium(Android)";
+            LogTag = "Helium(Android)";
             plugin().Call("setupEventListeners",
                 LifeCycleEventListener.Instance,
                 InterstitialEventListener.Instance,
@@ -25,7 +24,7 @@ namespace Helium.Platforms
         }
 
         // Initialize the android bridge
-        private static AndroidJavaObject plugin()
+        internal static AndroidJavaObject plugin()
         {
             if (_plugin != null)
                 return _plugin;
@@ -107,66 +106,6 @@ namespace Helium.Platforms
         {
             var handled = base.OnBackPressed() && _plugin.Call<bool>("onBackPressed");
             return handled;
-        }
-
-        public override HeliumInterstitialAd GetInterstitialAd(string placementName)
-        {
-            if (!CanFetchAd(placementName))
-                return null;
-
-            base.GetInterstitialAd(placementName);
-
-            try
-            {
-                var androidAd = _plugin.Call<AndroidJavaObject>("getInterstitialAd", placementName);
-                var ad = new HeliumInterstitialAd(androidAd);
-                return ad;
-            }
-            catch (Exception e)
-            {
-                LogError($"interstitial failed to load {e}");
-                return null;
-            }
-        }
-
-        public override HeliumRewardedAd GetRewardedAd(string placementName)
-        {
-            if (!CanFetchAd(placementName))
-                return null;
-
-            base.GetRewardedAd(placementName);
-
-            try
-            {
-                var androidAd = _plugin.Call<AndroidJavaObject>("getRewardedAd", placementName);
-                var ad = new HeliumRewardedAd(androidAd);
-                return ad;
-            }
-            catch (Exception e)
-            {
-                LogError($"rewarded ad failed to load {e}");
-                return null;
-            }
-        }
-
-        public override HeliumBannerAd GetBannerAd(string placementName, HeliumBannerAdSize size)
-        {
-            if (!CanFetchAd(placementName))
-                return null;
-
-            base.GetBannerAd(placementName, size);
-
-            try
-            {
-                var androidAd = _plugin.Call<AndroidJavaObject>("getBannerAd", placementName, (int)size);
-                var ad = new HeliumBannerAd(androidAd);
-                return ad;
-            }
-            catch (Exception e)
-            {
-                LogError($"banner ad failed to load {e}");
-                return null;
-            }
         }
         #endregion
 

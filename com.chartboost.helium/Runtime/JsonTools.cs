@@ -1,11 +1,9 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace Helium {
-    public static class HeliumJSON
+    public static class HeliumJson
     {
         public static object Deserialize(string json)
         {

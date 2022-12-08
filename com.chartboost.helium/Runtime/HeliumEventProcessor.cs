@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using UnityEngine;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo
@@ -35,7 +34,7 @@ namespace Helium
             {
                 try
                 {
-                    if (!(HeliumJSON.Deserialize(dataString) is Dictionary<object, object> data)) 
+                    if (!(HeliumJson.Deserialize(dataString) is Dictionary<object, object> data)) 
                         return;
                     
                     data.TryGetValue("placementName", out var placementName);

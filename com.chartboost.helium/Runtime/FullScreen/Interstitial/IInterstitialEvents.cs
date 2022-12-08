@@ -1,10 +1,10 @@
 // ReSharper disable InconsistentNaming
 using UnityEngine.Scripting;
 
-namespace Helium.Interfaces
+namespace Helium.FullScreen.Interstitial
 {
     /// <summary>
-    /// All Interstitial placement callbacks.
+    /// All interstitial placement callbacks.
     /// </summary>
     public interface IInterstitialEvents
     {

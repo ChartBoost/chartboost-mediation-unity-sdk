@@ -6,7 +6,7 @@ namespace Helium.Platforms
         
         public HeliumUnsupported()
         {
-            LOGTag = "Helium(Unsupported)";
+            LogTag = "Helium(Unsupported)";
         }
 
         public override void Init()

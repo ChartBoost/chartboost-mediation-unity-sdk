@@ -1,5 +1,4 @@
 #if UNITY_IPHONE
-using System;
 using System.Runtime.InteropServices;
 using AOT;
 using UnityEngine;
@@ -42,15 +41,6 @@ namespace Helium.Platforms
         private static extern void _heliumSdkInit(string appId, string appSignature, string unityVersion, string[] initializationOptions, int initializationOptionsSize);
 
         [DllImport("__Internal")]
-        private static extern IntPtr _heliumSdkGetInterstitialAd(string placementName);
-
-        [DllImport("__Internal")]
-        private static extern IntPtr _heliumSdkGetRewardedAd(string placementName);
-
-        [DllImport("__Internal")]
-        private static extern IntPtr _heliumSdkGetBannerAd(string placementName, int size);
-
-        [DllImport("__Internal")]
         private static extern void _heliumSdkSetSubjectToCoppa(bool isSubject);
 
         [DllImport("__Internal")]
@@ -75,7 +65,7 @@ namespace Helium.Platforms
         public HeliumIOS()
         {
             _instance = this;
-            LOGTag = "Helium(iOS)";
+            LogTag = "Helium(iOS)";
             _setLifeCycleCallbacks(ExternDidStart, ExternDidReceiveILRD, ExternDidReceivePartnerInitializationData);
             _setInterstitialCallbacks(ExternDidLoadInterstitial, ExternDidShowInterstitial, ExternDidClickInterstitial,
                 ExternDidCloseInterstitial, ExternDidRecordImpressionInterstitial, ExternDidWinBidInterstitial);
@@ -134,63 +124,6 @@ namespace Helium.Platforms
         {
             base.GetUserIdentifier();
             return _heliumGetUserIdentifier();
-        }
-
-        public override HeliumInterstitialAd GetInterstitialAd(string placementName)
-        {
-            if (!CanFetchAd(placementName))
-                return null;
-
-            base.GetInterstitialAd(placementName);
-
-            try
-            {
-                var adId = _heliumSdkGetInterstitialAd(placementName);
-                return adId == IntPtr.Zero ? null : new HeliumInterstitialAd(adId);
-            }
-            catch (Exception e)
-            {
-                LogError($"interstitial failed to load {e}");
-                return null;
-            }
-        }
-
-        public override HeliumRewardedAd GetRewardedAd(string placementName)
-        {
-            if (!CanFetchAd(placementName))
-                return null;
-
-            base.GetRewardedAd(placementName);
-
-            try
-            {
-                var adId = _heliumSdkGetRewardedAd(placementName);
-                return adId == IntPtr.Zero ? null : new HeliumRewardedAd(adId);
-            }
-            catch (Exception e)
-            {
-                LogError($"rewarded failed to load {e}");
-                return null;
-            }
-        }
-
-        public override HeliumBannerAd GetBannerAd(string placementName, HeliumBannerAdSize size)
-        {
-            if (!CanFetchAd(placementName))
-                return null;
-
-            base.GetBannerAd(placementName, size);
-
-            try
-            {
-                var adId = _heliumSdkGetBannerAd(placementName, (int)size);
-                return adId == IntPtr.Zero ? null : new HeliumBannerAd(adId);
-            }
-            catch (Exception e)
-            {
-                LogError($"banner ad failed to load {e}");
-                return null;
-            }
         }
         #endregion
 

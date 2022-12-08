@@ -83,7 +83,7 @@ namespace Helium
                 var json = reader.ReadToEnd();
                 reader.Close();
 
-                var rawResult = HeliumJSON.Deserialize(json);
+                var rawResult = HeliumJson.Deserialize(json);
                 switch (acceptance)
                 {
                     case Acceptance.Optional:
