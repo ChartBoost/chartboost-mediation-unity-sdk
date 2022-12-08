@@ -41,13 +41,6 @@ namespace Helium.Platforms
         [DllImport("__Internal")]
         private static extern void _heliumSdkInit(string appId, string appSignature, string unityVersion, string[] initializationOptions, int initializationOptionsSize);
 
-
-        [DllImport("__Internal")]
-        private static extern IntPtr _heliumSdkGetRewardedAd(string placementName);
-
-        [DllImport("__Internal")]
-        private static extern IntPtr _heliumSdkGetBannerAd(string placementName, int size);
-
         [DllImport("__Internal")]
         private static extern void _heliumSdkSetSubjectToCoppa(bool isSubject);
 
@@ -132,25 +125,6 @@ namespace Helium.Platforms
         {
             base.GetUserIdentifier();
             return _heliumGetUserIdentifier();
-        }
-
-        public override HeliumRewardedAd GetRewardedAd(string placementName)
-        {
-            if (!CanFetchAd(placementName))
-                return null;
-
-            base.GetRewardedAd(placementName);
-
-            try
-            {
-                var adId = _heliumSdkGetRewardedAd(placementName);
-                return adId == IntPtr.Zero ? null : new HeliumRewardedAd(adId);
-            }
-            catch (Exception e)
-            {
-                HeliumLogger. LogError(LOGTag, $"rewarded failed to load {e}");
-                return null;
-            }
         }
         #endregion
 

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Helium.Banner;
+using Helium.FullScreen.Interstitial;
+using Helium.FullScreen.Rewarded;
 using Helium.Interfaces;
 using UnityEngine;
 
@@ -111,10 +113,20 @@ namespace Helium.Platforms
             }
         }
         
-        public virtual HeliumRewardedAd GetRewardedAd(string placementName)
+        public HeliumRewardedAd GetRewardedAd(string placementName)
         {
             HeliumLogger.Log(LOGTag, $"GetRewardedAd at placement: {placementName}");
-            return null;
+            if (!CanFetchAd(placementName))
+                return null;
+            try
+            {
+                return new HeliumRewardedAd(placementName);
+            }
+            catch (Exception e)
+            {
+                HeliumLogger.LogError(LOGTag, $"rewarded ad failed to be obtained {e}");
+                return null;
+            }
         }
         
         public HeliumBannerAd GetBannerAd(string placementName, HeliumBannerAdSize size)

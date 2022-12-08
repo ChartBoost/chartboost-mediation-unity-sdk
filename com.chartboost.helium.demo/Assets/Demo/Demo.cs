@@ -6,6 +6,7 @@ using System.Text;
 using Helium;
 using Helium.Banner;
 using Helium.FullScreen.Interstitial;
+using Helium.FullScreen.Rewarded;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;

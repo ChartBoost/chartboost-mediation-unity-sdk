@@ -1,6 +1,7 @@
+using UnityEngine;
 using Helium.Banner;
 using Helium.FullScreen.Interstitial;
-using UnityEngine;
+using Helium.FullScreen.Rewarded;
 using Helium.Interfaces;
 using Helium.Platforms;
 
