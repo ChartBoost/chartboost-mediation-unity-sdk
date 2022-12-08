@@ -24,15 +24,4 @@ namespace Helium
         /// </summary>
         void Destroy();
     }
-
-    public interface IHeliumFullScreenAd
-    {
-        void Load();
-
-        bool ClearLoaded();
-
-        void Show();
-
-        bool ReadyToShow();
-    }
 }

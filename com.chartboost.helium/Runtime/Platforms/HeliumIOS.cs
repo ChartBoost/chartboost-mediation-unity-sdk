@@ -41,8 +41,6 @@ namespace Helium.Platforms
         [DllImport("__Internal")]
         private static extern void _heliumSdkInit(string appId, string appSignature, string unityVersion, string[] initializationOptions, int initializationOptionsSize);
 
-        [DllImport("__Internal")]
-        private static extern IntPtr _heliumSdkGetInterstitialAd(string placementName);
 
         [DllImport("__Internal")]
         private static extern IntPtr _heliumSdkGetRewardedAd(string placementName);
@@ -134,25 +132,6 @@ namespace Helium.Platforms
         {
             base.GetUserIdentifier();
             return _heliumGetUserIdentifier();
-        }
-
-        public override HeliumInterstitialAd GetInterstitialAd(string placementName)
-        {
-            if (!CanFetchAd(placementName))
-                return null;
-
-            base.GetInterstitialAd(placementName);
-
-            try
-            {
-                var adId = _heliumSdkGetInterstitialAd(placementName);
-                return adId == IntPtr.Zero ? null : new HeliumInterstitialAd(adId);
-            }
-            catch (Exception e)
-            {
-                HeliumLogger. LogError(LOGTag, $"interstitial failed to load {e}");
-                return null;
-            }
         }
 
         public override HeliumRewardedAd GetRewardedAd(string placementName)

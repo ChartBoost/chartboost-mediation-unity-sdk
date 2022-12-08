@@ -95,10 +95,20 @@ namespace Helium.Platforms
             return CheckInitialized();
         }
 
-        public virtual HeliumInterstitialAd GetInterstitialAd(string placementName)
+        public HeliumInterstitialAd GetInterstitialAd(string placementName)
         {
             HeliumLogger.Log(LOGTag, $"GetInterstitialAd at placement: {placementName}");
-            return null;
+            if (!CanFetchAd(placementName))
+                return null;
+            try
+            {
+                return new HeliumInterstitialAd(placementName);
+            }
+            catch (Exception e)
+            {
+                HeliumLogger. LogError(LOGTag, $"interstitial failed to be obtained {e}");
+                return null;
+            }
         }
         
         public virtual HeliumRewardedAd GetRewardedAd(string placementName)
@@ -118,7 +128,7 @@ namespace Helium.Platforms
             }
             catch (Exception e)
             {
-                HeliumLogger.LogError(LOGTag, $"banner ad failed to load {e}");
+                HeliumLogger.LogError(LOGTag, $"banner ad failed to be obtained {e}");
                 return null;
             }
         }

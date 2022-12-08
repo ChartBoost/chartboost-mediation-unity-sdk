@@ -1,4 +1,5 @@
 using Helium.Banner;
+using Helium.FullScreen.Interstitial;
 using UnityEngine;
 using Helium.Interfaces;
 using Helium.Platforms;

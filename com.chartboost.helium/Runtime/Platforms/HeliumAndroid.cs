@@ -109,27 +109,6 @@ namespace Helium.Platforms
             var handled = base.OnBackPressed() && _plugin.Call<bool>("onBackPressed");
             return handled;
         }
-
-        public override HeliumInterstitialAd GetInterstitialAd(string placementName)
-        {
-            if (!CanFetchAd(placementName))
-                return null;
-
-            base.GetInterstitialAd(placementName);
-
-            try
-            {
-                var androidAd = plugin().Call<AndroidJavaObject>("getInterstitialAd", placementName);
-                var ad = new HeliumInterstitialAd(androidAd);
-                return ad;
-            }
-            catch (Exception e)
-            {
-                HeliumLogger.LogError(LOGTag, $"interstitial failed to load {e}");
-                return null;
-            }
-        }
-
         public override HeliumRewardedAd GetRewardedAd(string placementName)
         {
             if (!CanFetchAd(placementName))

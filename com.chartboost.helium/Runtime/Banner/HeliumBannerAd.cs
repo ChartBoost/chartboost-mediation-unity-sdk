@@ -1,5 +1,8 @@
 namespace Helium.Banner
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public enum HeliumBannerAdSize
     {
         /// 320 x 50
@@ -10,6 +13,9 @@ namespace Helium.Banner
         Leaderboard = 2
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public enum HeliumBannerAdScreenLocation
     {
         TopLeft = 0,
@@ -21,40 +27,47 @@ namespace Helium.Banner
         BottomRight = 6
     }
 
-    public class HeliumBannerAd
+    public class HeliumBannerAd : HeliumBannerBase
     {
-        private readonly HeliumBannerBase _banner;
+        private readonly HeliumBannerBase _platformBanner;
 
-        public HeliumBannerAd(string placementName, HeliumBannerAdSize size)
+        public HeliumBannerAd(string placementName, HeliumBannerAdSize size) : base(placementName, size)
         {
             #if UNITY_ANDROID
-            _banner = new HeliumBannerAndroid(placementName, size);
+            _platformBanner = new HeliumBannerAndroid(placementName, size);
             #elif UNITY_IOS
-            _banner = new HeliumBannerIOS(placementName, size);
+            _platformBanner = new HeliumBannerIOS(placementName, size);
             #else
-            _banner = new HeliumBannerUnsupported(placementName, size);
+            _platformBanner = new HeliumBannerUnsupported(placementName, size);
             #endif
         }
 
-        /// <inheritdoc cref="IHeliumAd.SetKeyword"/>>
-        public bool SetKeyword(string keyword, string value) => _banner.SetKeyword(keyword, value);
+        /// <inheritdoc cref="HeliumBannerBase.SetKeyword"/>>
+        public override bool SetKeyword(string keyword, string value) 
+            => _platformBanner.SetKeyword(keyword, value);
         
-        /// <inheritdoc cref="IHeliumAd.RemoveKeyword"/>>
-        public string RemoveKeyword(string keyword) => _banner.RemoveKeyword(keyword);
+        /// <inheritdoc cref="HeliumBannerBase.RemoveKeyword"/>>
+        public override string RemoveKeyword(string keyword) 
+            => _platformBanner.RemoveKeyword(keyword);
         
-        /// <inheritdoc cref="IHeliumAd.Destroy"/>>
-        public void Destroy() => _banner.Destroy();
+        /// <inheritdoc cref="HeliumBannerBase.Destroy"/>>
+        public override void Destroy() 
+            => _platformBanner.Destroy();
         
-        /// <inheritdoc cref="IHeliumBannerAd.Load"/>>
-        public void Load(HeliumBannerAdScreenLocation location) => _banner.Load(location);
+        /// <inheritdoc cref="HeliumBannerBase.Load"/>>
+        public override void Load(HeliumBannerAdScreenLocation location) 
+            => _platformBanner.Load(location);
         
-        /// <inheritdoc cref="IHeliumBannerAd.SetVisibility"/>>
-        public void SetVisibility(bool isVisible) =>_banner.SetVisibility(isVisible);
+        /// <inheritdoc cref="HeliumBannerBase.SetVisibility"/>>
+        public override void SetVisibility(bool isVisible) 
+            =>_platformBanner.SetVisibility(isVisible);
 
-        /// <inheritdoc cref="IHeliumBannerAd.ClearLoaded"/>>
-        public void ClearLoaded() => _banner.ClearLoaded();
+        /// <inheritdoc cref="HeliumBannerBase.ClearLoaded"/>>
+        public override void ClearLoaded() 
+            => _platformBanner.ClearLoaded();
 
-        /// <inheritdoc cref="IHeliumBannerAd.Remove"/>>
-        public void Remove() =>_banner.Remove();
+        /// <inheritdoc cref="HeliumBannerBase.Remove"/>>
+        public override void Remove()
+            =>_platformBanner.Remove();
     }
 }

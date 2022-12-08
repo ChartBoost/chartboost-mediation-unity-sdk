@@ -1,7 +1,7 @@
 // ReSharper disable InconsistentNaming
 using UnityEngine.Scripting;
 
-namespace Helium.Interfaces
+namespace Helium.Banner
 {
     /// <summary>
     /// All Banner placement callbacks.
