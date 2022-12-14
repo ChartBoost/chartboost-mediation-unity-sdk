@@ -63,13 +63,14 @@ jobs:
         JFROG_USER: ${{ secrets.JFROG_USER }}
         JFROG_PASS: ${{ secrets.JFROG_PASS }}
 
-    - name: Grant Execute Permission for Git Bridge Commit
-      run: "chmod +x ./.github/actions/helium-unity-ci/CheckGitChanges.sh"
-
-    - name: Check for Android Bridge .jar Changes & Update
-      run: ./.github/actions/helium-unity-ci/CheckGitChanges.sh
-      env:
-        TARGET_FILE: "com.chartboost.helium/Runtime/Plugins/Android/helium-android-bridge.jar"
+    - name: Upload Android Bridge Changes
+      continue-on-error: true
+      run: |
+        git config user.name ${{ secrets.GIT_USER }}
+        git config user.email ${{ secrets.GIT_EMAIL }}
+        git add com.chartboost.helium/Runtime/Plugins/Android/helium-android-bridge.jar
+        git commit -m "Updating Helium Unity SDK Android Bridge .jar"
+        git push
 
   tests:
     name: Unity Actions & Unit Testing
