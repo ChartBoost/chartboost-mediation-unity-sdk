@@ -56,7 +56,8 @@ public class Demo : MonoBehaviour
     #region Lifecycle
 
     private void Awake()
-    {        
+    {
+        Application.targetFrameRate = 60;
         HeliumSDK.DidStart += DidStartHelium;
         HeliumSDK.DidReceivePartnerInitializationData += DidReceivePartnerInitializationData;
         HeliumSDK.DidReceiveImpressionLevelRevenueData += DidReceiveImpressionLevelRevenueData;
@@ -297,9 +298,9 @@ public class Demo : MonoBehaviour
         Log($"DidCloseRewarded {placementName}: {error}");
     }
 
-    private void DidReceiveReward(string placementName, int reward)
+    private void DidReceiveReward(string placementName)
     {
-        Log($"DidReceiveReward {placementName}: {reward}");
+        Log($"DidReceiveReward {placementName}");
     }
 
     private void DidClickRewarded(string placementName, HeliumError error)

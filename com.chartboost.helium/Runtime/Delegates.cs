@@ -29,7 +29,7 @@ namespace Helium
     public delegate void HeliumBidEvent(string placement, HeliumBidInfo bid);
 
     /// <summary>
-    /// <param name="reward">The reward information.</param>
+    /// <param name="placement">The placement name for the placement.</param>
     /// </summary>
-    public delegate void HeliumRewardEvent(string placement, int reward);
+    public delegate void HeliumRewardEvent(string placement);
 }

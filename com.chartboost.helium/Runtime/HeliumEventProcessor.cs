@@ -122,7 +122,7 @@ namespace Helium
             }, null);
         }
 
-        public static void ProcessHeliumRewardEvent(string placementName, int reward, HeliumRewardEvent rewardEvent)
+        public static void ProcessHeliumRewardEvent(string placementName, HeliumRewardEvent rewardEvent)
         {
             if (rewardEvent == null)
                 return;
@@ -131,7 +131,7 @@ namespace Helium
             {
                 try
                 {
-                    rewardEvent(placementName, reward);
+                    rewardEvent(placementName);
                 }
                 catch (Exception e)
                 {

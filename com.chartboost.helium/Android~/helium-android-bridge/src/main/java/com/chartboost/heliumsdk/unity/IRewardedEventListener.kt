@@ -10,5 +10,5 @@ interface IRewardedEventListener {
     fun DidClickRewarded(placementName: String, errorCode: Int, errorDescription: String)
     fun DidRecordImpression(placementName: String, errorCode: Int, errorDescription: String)
     fun DidWinBidRewarded(placementName: String, auctionId: String, partnerId: String, price: Double)
-    fun DidReceiveReward(placementName: String, reward: Int)
+    fun DidReceiveReward(placementName: String)
 }

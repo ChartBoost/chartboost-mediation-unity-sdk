@@ -16,7 +16,7 @@ namespace Helium.Platforms
         private delegate void ExternHeliumPartnerInitializationDataEvent(string partnerInitializationData);
         private delegate void ExternHeliumPlacementEvent(string placementName, int errorCode, string errorDescription);
         private delegate void ExternHeliumWinBidEvent(string placementName, string auctionId, string partnerId, double price);
-        private delegate void ExternHeliumRewardEvent(string placementName, int reward);
+        private delegate void ExternHeliumRewardEvent(string placementName);
 
         [DllImport("__Internal")]
         private static extern void _setLifeCycleCallbacks(ExternHeliumEvent DidStartCallback,
@@ -250,9 +250,9 @@ namespace Helium.Platforms
         }
 
         [MonoPInvokeCallback(typeof(ExternHeliumRewardEvent))]
-        private static void ExternDidReceiveReward(string placementName, int reward)
+        private static void ExternDidReceiveReward(string placementName)
         {
-            HeliumEventProcessor.ProcessHeliumRewardEvent(placementName, reward, _instance.DidReceiveReward);
+            HeliumEventProcessor.ProcessHeliumRewardEvent(placementName, _instance.DidReceiveReward);
         }
 
         public override event HeliumPlacementEvent DidLoadRewarded;

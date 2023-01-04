@@ -260,15 +260,13 @@ class HeliumUnityBridge {
                             })
                     }
 
+                    // todo - this needs to be updated with 4.x signature when candidates become available
                     override fun didReceiveReward(placementName: String, reward: String) {
                         serializeHeliumRewardEvent(
                             placementName,
                             reward,
                             HeliumRewardEventConsumer { placementName: String, reward: Int ->
-                                rewardedEventListener?.DidReceiveReward(
-                                    placementName,
-                                    reward
-                                )
+                                rewardedEventListener?.DidReceiveReward(placementName)
                             })
                     }
 

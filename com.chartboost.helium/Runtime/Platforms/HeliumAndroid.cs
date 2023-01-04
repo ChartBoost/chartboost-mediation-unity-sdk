@@ -253,9 +253,9 @@ namespace Helium.Platforms
             }
 
             [Preserve]
-            private void DidReceiveReward(string placementName, int reward)
+            private void DidReceiveReward(string placementName)
             {
-                HeliumEventProcessor.ProcessHeliumRewardEvent(placementName, reward, _instance.DidReceiveReward);
+                HeliumEventProcessor.ProcessHeliumRewardEvent(placementName, _instance.DidReceiveReward);
             }
         }
 

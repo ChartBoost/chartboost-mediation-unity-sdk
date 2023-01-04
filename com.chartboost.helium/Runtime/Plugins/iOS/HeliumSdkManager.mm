@@ -42,10 +42,10 @@ void UnityPause(int pause);
 
 const char* serializeDictionary(NSDictionary *data)
 {
-	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:NULL];
-	NSString *json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:NULL];
+    NSString *json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     NSLog(@"event: %@", json);
-	return json.UTF8String;
+    return json.UTF8String;
 }
 
 const void serializeError(HeliumError *error, HeliumEvent event)
@@ -81,14 +81,6 @@ const void serializePlacementWithError(NSString *placementName, HeliumError *err
     }
 
     placementEvent(placementName.UTF8String, errorCode, errorDescription);
-}
-
-const void serializeReward(NSString *placementName, NSInteger reward, HeliumRewardEvent rewardEvent)
-{
-    if (rewardEvent == nil)
-        return;
-    int rewardValue = (int)reward;
-    rewardEvent(placementName.UTF8String, rewardValue);
 }
 
 const void serializeWinBidInfo(NSString *placementName, NSDictionary* info, HeliumBidWinEvent bidWinEvent)
@@ -134,18 +126,18 @@ static void heliumSubscribeToILRDNotifications()
 
 static void heliumSubscribeToPartnerInitializationNotifications()
 {
-	static id partnerInitializationObserver = nil;
-	
-	if (partnerInitializationObserver != nil)
-		[[NSNotificationCenter defaultCenter] removeObserver:partnerInitializationObserver];
-	
-	partnerInitializationObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kHeliumDidReceiveInitResultsNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
-		// Extract the results payload.
-		NSDictionary *results = (NSDictionary *)notification.object;
-		const char* jsonToUnity = serializeDictionary(results);
-		if (_didReceivePartnerInitializationDataCallback != nil)
-			_didReceivePartnerInitializationDataCallback(jsonToUnity);
-	}];
+    static id partnerInitializationObserver = nil;
+    
+    if (partnerInitializationObserver != nil)
+        [[NSNotificationCenter defaultCenter] removeObserver:partnerInitializationObserver];
+    
+    partnerInitializationObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kHeliumDidReceiveInitResultsNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+        // Extract the results payload.
+        NSDictionary *results = (NSDictionary *)notification.object;
+        const char* jsonToUnity = serializeDictionary(results);
+        if (_didReceivePartnerInitializationDataCallback != nil)
+            _didReceivePartnerInitializationDataCallback(jsonToUnity);
+    }];
 }
 
 @interface HeliumSdkManager() <HeliumSdkDelegate, CHBHeliumInterstitialAdDelegate, CHBHeliumRewardedAdDelegate, CHBHeliumBannerAdDelegate>
@@ -159,12 +151,12 @@ static void heliumSubscribeToPartnerInitializationNotifications()
 
 + (HeliumSdkManager*)sharedManager
 {
-	static HeliumSdkManager *sharedSingleton;
+    static HeliumSdkManager *sharedSingleton;
 
-	if (!sharedSingleton)
-		sharedSingleton = [[HeliumSdkManager alloc] init];
+    if (!sharedSingleton)
+        sharedSingleton = [[HeliumSdkManager alloc] init];
 
-	return sharedSingleton;
+    return sharedSingleton;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -172,9 +164,9 @@ static void heliumSubscribeToPartnerInitializationNotifications()
 
 - (void)setLifeCycleCallbacks:(HeliumEvent)didStartCallback didReceiveILRDCallback:(HeliumILRDEvent)didReceiveILRDCallback didReceivePartnerInitializationData:(HeliumPartnerInitializationDataEvent)didReceivePartnerInitializationDataCallback
 {
-	_didStartCallback = didStartCallback;
-	_didReceiveILRDCallback = didReceiveILRDCallback;
-	_didReceivePartnerInitializationDataCallback = didReceivePartnerInitializationDataCallback;
+    _didStartCallback = didStartCallback;
+    _didReceiveILRDCallback = didReceiveILRDCallback;
+    _didReceivePartnerInitializationDataCallback = didReceivePartnerInitializationDataCallback;
 }
 
 - (void)setInterstitialCallbacks:(HeliumPlacementEvent)didLoadCallback didShowCallback:(HeliumPlacementEvent)didShowCallback didClickCallback:(HeliumPlacementEvent)didClickCallback didCloseCallback:(HeliumPlacementEvent)didCloseCallback didRecordImpression:(HeliumPlacementEvent)didRecordImpression didWinBidCallback:(HeliumBidWinEvent)didWinBidCallback
@@ -208,21 +200,21 @@ static void heliumSubscribeToPartnerInitializationNotifications()
 
 - (void)startHeliumWithAppId:(NSString*)appId andAppSignature:(NSString*)appSignature unityVersion:(NSString *)unityVersion initializationOptions:(const char**)initializationOptions initializationOptionsSize:(int)initializationOptionsSize
 {
-	heliumSubscribeToILRDNotifications();
-	heliumSubscribeToPartnerInitializationNotifications();
-	HeliumInitializationOptions* heliumInitializationOptions = nil;
-	
-	if (initializationOptionsSize > 0) {
-		NSMutableArray *initializationPartners = [NSMutableArray new];
-		for (int x=0; x < initializationOptionsSize; x++)
-		{
-			if(strlen(initializationOptions[x]) > 0)
-				[initializationPartners addObject:[NSString stringWithUTF8String:initializationOptions[x]]];
-		}
-		heliumInitializationOptions = [[HeliumInitializationOptions alloc] initWithSkippedPartnerIdentifiers:initializationPartners];
-	}
-	
-	[[Helium sharedHelium] startWithAppId:appId andAppSignature:appSignature options:heliumInitializationOptions delegate:self];
+    heliumSubscribeToILRDNotifications();
+    heliumSubscribeToPartnerInitializationNotifications();
+    HeliumInitializationOptions* heliumInitializationOptions = nil;
+    
+    if (initializationOptionsSize > 0) {
+        NSMutableArray *initializationPartners = [NSMutableArray new];
+        for (int x=0; x < initializationOptionsSize; x++)
+        {
+            if(strlen(initializationOptions[x]) > 0)
+                [initializationPartners addObject:[NSString stringWithUTF8String:initializationOptions[x]]];
+        }
+        heliumInitializationOptions = [[HeliumInitializationOptions alloc] initWithSkippedPartnerIdentifiers:initializationPartners];
+    }
+    
+    [[Helium sharedHelium] startWithAppId:appId andAppSignature:appSignature options:heliumInitializationOptions delegate:self];
 }
 
 - (void)setSubjectToCoppa:(BOOL)isSubject
@@ -399,10 +391,11 @@ static void heliumSubscribeToPartnerInitializationNotifications()
     serializePlacementWithError(placementName, nil, _rewardedDidRecordImpressionCallback);
 }
 
+// todo - fix signature when release candidates are ready
 - (void)heliumRewardedAdWithPlacementName:(NSString*)placementName
                              didGetReward:(NSInteger)reward
 {
-    serializeReward(placementName, reward, _rewardedDidReceiveRewardCallback);
+    _rewardedDidReceiveRewardCallback(placementName.UTF8String);
 }
 
 - (void)heliumRewardedAdWithPlacementName:(NSString*)placementName
