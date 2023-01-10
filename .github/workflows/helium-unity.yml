@@ -139,6 +139,7 @@ jobs:
         run-tests: true
         test-results: test-results/results.xml
         test-platform: EditMode
+        quit: false
 
     - name: Cleanup Unity Generated Files
       if: always()
