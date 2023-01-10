@@ -77,12 +77,6 @@ jobs:
     runs-on: macos-latest
     needs: compile
 
-    env:
-      SETUP_PASS: ${{ secrets.SETUP_PASS }}
-      UNITY_USERNAME: ${{ secrets.UNITY_USERNAME }}
-      UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-      UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
-
     steps:
     - name: Checkout Branch
       uses: actions/checkout@v3
@@ -103,37 +97,63 @@ jobs:
 
     - name: Activate Unity License
       id: activate-unity
-      uses: ./.github/actions/helium-unity-ci/activate-unity
+      uses: ./.github/actions/helium-unity-ci/run-unity
+      with:
+        unity-executable-path: ${{ env.UNITY_EXE_PATH }}
+        setup-pass: ${{ secrets.SETUP_PASS }}
+        serial: ${{ secrets.UNITY_SERIAL }}
+        username: ${{ secrets.UNITY_USERNAME }}
+        password: ${{ secrets.UNITY_PASSWORD }}
 
     # Once we add mor platforms maybe we can run this in a matrix? this is fine for now.
     - name: Check for Compiler Errors in Standalone
       id: unity-compile-standalone
-      uses: ./.github/actions/helium-unity-ci/compile-unity
+      uses: ./.github/actions/helium-unity-ci/run-unity
       with:
+        unity-executable-path: ${{ env.UNITY_EXE_PATH }}
+        project-path: ${{ env.PROJECT_PATH }}
         target-platform: standalone
 
     - name: Check for Compiler Errors in Android
       id: unity-compile-android
-      uses: ./.github/actions/helium-unity-ci/compile-unity
+      uses: ./.github/actions/helium-unity-ci/run-unity
       with:
+        unity-executable-path: ${{ env.UNITY_EXE_PATH }}
+        project-path: ${{ env.PROJECT_PATH }}
         target-platform: android
 
     - name: Check for Compiler Errors in iOS
       id: unity-compile-ios
-      uses: ./.github/actions/helium-unity-ci/compile-unity
+      uses: ./.github/actions/helium-unity-ci/run-unity
       with:
+        unity-executable-path: ${{ env.UNITY_EXE_PATH }}
+        project-path: ${{ env.PROJECT_PATH }}
         target-platform: ios
 
     - name: Run Unity Unit Tests
       id: unity-unit-tests
-      uses: ./.github/actions/helium-unity-ci/test-unity
+      uses: ./.github/actions/helium-unity-ci/run-unity
+      with:
+        unity-executable-path: ${{ env.UNITY_EXE_PATH }}
+        project-path: ${{ env.PROJECT_PATH }}
+        run-test: true
+        test-results: test-results/results.xml
+        test-platform: EditMode
 
     - name: Cleanup Unity Generated Files
       if: always()
       id: unity-cleanup
       uses: ./.github/actions/helium-unity-ci/cleanup-unity
+      with:
+        setup-pass: ${{ secrets.SETUP_PASS }}
 
     - name: Return Unity License
       if: always()
       id: return-unity
-      uses: ./.github/actions/helium-unity-ci/return-unity
+      uses: ./.github/actions/helium-unity-ci/run-unity
+      with:
+        unity-executable-path: ${{ env.UNITY_EXE_PATH }}
+        setup-pass: ${{ secrets.SETUP_PASS }}
+        username: ${{ secrets.UNITY_USERNAME }}
+        password: ${{ secrets.UNITY_PASSWORD }}
+        return-license: true
