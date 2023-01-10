@@ -136,7 +136,7 @@ jobs:
       with:
         unity-executable-path: ${{ env.UNITY_EXE_PATH }}
         project-path: ${{ env.PROJECT_PATH }}
-        run-test: true
+        run-tests: true
         test-results: test-results/results.xml
         test-platform: EditMode
 
