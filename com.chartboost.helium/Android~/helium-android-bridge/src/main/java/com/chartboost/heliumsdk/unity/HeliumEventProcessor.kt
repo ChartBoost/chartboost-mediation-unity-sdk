@@ -1,7 +1,7 @@
 package com.chartboost.heliumsdk.unity
 
 import android.util.Log
-import com.chartboost.heliumsdk.ad.HeliumAdError
+import com.chartboost.heliumsdk.domain.HeliumAdException
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -11,17 +11,18 @@ object HeliumEventProcessor {
     @JvmStatic
     fun serializeHeliumEvent(
         placementName: String,
-        error: HeliumAdError?,
-        eventConsumer: HeliumEventConsumer<String, Int, String>
+        error: HeliumAdException?,
+        eventConsumer: HeliumEventConsumer<String, String>
     ) {
-        eventConsumer.accept(placementName, error?.getCode() ?: -1, error?.getMessage() ?: "")
+        eventConsumer.accept(placementName,error?.toString() ?: "")
     }
 
     @JvmStatic
-    fun serializeHeliumBidEvent(
+    fun serializeHeliumLoadEvent(
         placementName: String,
-        data: HashMap<String, String>,
-        eventConsumer: HeliumBidEventConsumer<String, String, String, Double>
+        data: Map<String, String>,
+        error: HeliumAdException?,
+        eventConsumer: HeliumLoadEventConsumer<String, String, String, Double, String>
     ) {
         val partnerId = data["partner_id"] ?: ""
         val auctionId = data["auction-id"] ?: ""
@@ -31,22 +32,7 @@ object HeliumEventProcessor {
             Log.d(TAG, "HeliumBidEvent failed to serialize price, defaulting to 0.0", e)
             0.0
         }
-        eventConsumer.accept(placementName, auctionId, partnerId, price)
-    }
-
-    @JvmStatic
-    fun serializeHeliumRewardEvent(
-        placementName: String,
-        reward: String,
-        eventConsumer: HeliumRewardEventConsumer<String, Int>
-    ) {
-        val rewardAmount = try {
-            reward.toInt()
-        } catch (e: NumberFormatException) {
-            Log.d(TAG, "HeliumRewardEvent failed to serialize reward amount, defaulting", e)
-            1
-        }
-        eventConsumer.accept(placementName, rewardAmount)
+        eventConsumer.accept(placementName, auctionId, partnerId, price, error?.toString() ?: "")
     }
 
     @JvmStatic
@@ -62,12 +48,12 @@ object HeliumEventProcessor {
         }
     }
 
-    fun interface HeliumEventConsumer<PlacementName, ErrorCode, ErrorDescription> {
-        fun accept(placementName: PlacementName, errorCode: ErrorCode, errorDescription: ErrorDescription)
+    fun interface HeliumEventConsumer<PlacementName, ErrorMessage> {
+        fun accept(placementName: PlacementName, errorMessage: ErrorMessage)
     }
 
-    fun interface HeliumBidEventConsumer<PlacementName, AuctionId, PartnerId, Price> {
-        fun accept(placementName: PlacementName, auctionId: AuctionId, partnerId: PartnerId, price: Price)
+    fun interface HeliumLoadEventConsumer<PlacementName, AuctionId, PartnerId, Price, Error> {
+        fun accept(placementName: PlacementName, auctionId: AuctionId, partnerId: PartnerId, price: Price, error: Error)
     }
 
     fun interface HeliumRewardEventConsumer<PlacementName, Reward> {

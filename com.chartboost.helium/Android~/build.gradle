@@ -23,7 +23,7 @@ ext {
     privatePass = onlyPublic? "" : System.getenv("JFROG_PASS")
 
     inputVersionIsHigher = true
-    heliumVersion = '3.+'
+    heliumVersion = '4.+'
     if (versionInput != null && versionInput != "") {
         inputVersionIsHigher = mostRecentVersion([heliumVersion, versionInput]) == versionInput
         heliumVersion = versionInput
@@ -43,9 +43,9 @@ task githubScript {
     println()
     println("versionInput = $versionInput, should only use public repo? $onlyPublic")
     println()
-    println ("isInternalRelease = $isInternalRelease, isReleaseCandidate = $isReleaseCandidate, isPublicRelease = $isPublicRelease, isNotRelease= $isNotRelease");
+    println ("isInternalRelease = $isInternalRelease, isReleaseCandidate = $isReleaseCandidate, isPublicRelease = $isPublicRelease, isNotRelease= $isNotRelease")
     println()
-    println("githubTag (GITHUB_TAG) = $gitHubTag, gitHubCommit (GITHUB_COMMIT) =  $gitHubCommit");
+    println("githubTag (GITHUB_TAG) = $gitHubTag, gitHubCommit (GITHUB_COMMIT) =  $gitHubCommit")
     println()
 
     dependsOn('buildBridge')

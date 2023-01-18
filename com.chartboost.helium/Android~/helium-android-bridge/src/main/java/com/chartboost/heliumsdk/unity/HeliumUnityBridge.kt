@@ -4,12 +4,11 @@ import android.util.Log
 import com.chartboost.heliumsdk.*
 import com.chartboost.heliumsdk.ad.*
 import com.chartboost.heliumsdk.ad.HeliumBannerAd.HeliumBannerSize
-import com.chartboost.heliumsdk.unity.HeliumEventProcessor.HeliumBidEventConsumer
+import com.chartboost.heliumsdk.domain.HeliumAdException
+import com.chartboost.heliumsdk.unity.HeliumEventProcessor.HeliumLoadEventConsumer
 import com.chartboost.heliumsdk.unity.HeliumEventProcessor.HeliumEventConsumer
-import com.chartboost.heliumsdk.unity.HeliumEventProcessor.HeliumRewardEventConsumer
-import com.chartboost.heliumsdk.unity.HeliumEventProcessor.serializeHeliumBidEvent
 import com.chartboost.heliumsdk.unity.HeliumEventProcessor.serializeHeliumEvent
-import com.chartboost.heliumsdk.unity.HeliumEventProcessor.serializeHeliumRewardEvent
+import com.chartboost.heliumsdk.unity.HeliumEventProcessor.serializeHeliumLoadEvent
 import com.chartboost.heliumsdk.unity.HeliumEventProcessor.serializePlacementIlrdData
 import com.chartboost.heliumsdk.unity.HeliumUnityAdWrapper.Companion.wrap
 import com.unity3d.player.UnityPlayer
@@ -49,10 +48,6 @@ class HeliumUnityBridge {
 
     fun setUserHasGivenConsent(hasGivenConsent: Boolean) {
         HeliumSdk.setUserHasGivenConsent(hasGivenConsent)
-    }
-
-    fun onBackPressed(): Boolean {
-        return HeliumSdk.onBackPressed()
     }
 
     var userIdentifier: String?
@@ -110,265 +105,223 @@ class HeliumUnityBridge {
     }
 
     fun getInterstitialAd(placementName: String): HeliumUnityAdWrapper {
-        return wrap(
-            HeliumInterstitialAd(
-                placementName,
-                object : HeliumInterstitialAdListener {
-                    override fun didReceiveWinningBid(
-                        placementName: String,
-                        bidInfo: HashMap<String, String>
-                    ) {
-                        serializeHeliumBidEvent(
+        val interstitialAd = HeliumInterstitialAd(UnityPlayer.currentActivity, placementName, object : HeliumFullscreenAdListener {
+            override fun onAdCached(
+                placementName: String,
+                loadId: String,
+                bidInfo: Map<String, String>,
+                error: HeliumAdException?
+            ) {
+                serializeHeliumLoadEvent(
+                    placementName,
+                    bidInfo,
+                    error,
+                    HeliumLoadEventConsumer {placementName: String, auctionId: String, partnerId: String, price: Double, error: String ->
+                        interstitialEventsListener?.DidLoadInterstitial(
                             placementName,
-                            bidInfo,
-                            HeliumBidEventConsumer { placementName: String, auctionId: String, partnerId: String, price: Double ->
-                                interstitialEventsListener?.DidWinBidInterstitial(
-                                    placementName,
-                                    auctionId,
-                                    partnerId,
-                                    price
-                                )
-                            })
-                    }
+                            auctionId,
+                            partnerId,
+                            price,
+                            error
+                        )
+                    })
+            }
 
-                    override fun didCache(placementName: String, error: HeliumAdError?) {
-                        serializeHeliumEvent(
+            override fun onAdShown(placementName: String, error: HeliumAdException?) {
+                serializeHeliumEvent(
+                    placementName,
+                    error,
+                    HeliumEventConsumer { placementName: String, error: String ->
+                        interstitialEventsListener?.DidShowInterstitial(
                             placementName,
-                            error,
-                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
-                                interstitialEventsListener?.DidLoadInterstitial(
-                                    placementName,
-                                    errorCode,
-                                    errorDescription
-                                )
-                            })
-                    }
+                            error
+                        )
+                    })
+            }
 
-                    override fun didShow(placementName: String, error: HeliumAdError?) {
-                        serializeHeliumEvent(
+            override fun onAdClicked(placementName: String) {
+                serializeHeliumEvent(
+                    placementName,
+                    null,
+                    HeliumEventConsumer { placementName: String, error ->
+                        interstitialEventsListener?.DidClickInterstitial(
                             placementName,
-                            error,
-                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
-                                interstitialEventsListener?.DidShowInterstitial(
-                                    placementName,
-                                    errorCode,
-                                    errorDescription
-                                )
-                            })
-                    }
+                            error
+                        )
+                    })
+            }
 
-                    override fun didClose(placementName: String, error: HeliumAdError?) {
-                        serializeHeliumEvent(
+            override fun onAdClosed(placementName: String, error: HeliumAdException?) {
+                serializeHeliumEvent(
+                    placementName,
+                    error,
+                    HeliumEventConsumer { placementName: String, error: String ->
+                        interstitialEventsListener?.DidCloseInterstitial(
                             placementName,
-                            error,
-                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
-                                interstitialEventsListener?.DidCloseInterstitial(
-                                    placementName,
-                                    errorCode,
-                                    errorDescription
-                                )
-                            })
-                    }
+                            error
+                        )
+                    })
+            }
 
-                    override fun didClick(placementName: String, error: HeliumAdError?) {
-                        serializeHeliumEvent(
+            override fun onAdImpressionRecorded(placementName: String) {
+                serializeHeliumEvent(
+                    placementName,
+                    null,
+                    HeliumEventConsumer { placementName: String, error ->
+                        interstitialEventsListener?.DidRecordImpression(
                             placementName,
-                            error,
-                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
-                                interstitialEventsListener?.DidClickInterstitial(
-                                    placementName,
-                                    errorCode,
-                                    errorDescription
-                                )
-                            })
-                    }
+                            error
+                        )
+                    })
+            }
 
-                    override fun didRecordImpression(placementName: String) {
-                        serializeHeliumEvent(
-                            placementName,
-                            null,
-                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
-                                interstitialEventsListener?.DidRecordImpression(
-                                    placementName,
-                                    errorCode,
-                                    errorDescription
-                                )
-                            })
-                    }
-                })
-        )
+            override fun onAdRewarded(placementName: String) {
+                TODO("Not yet implemented")
+            }
+        })
+        return wrap(interstitialAd)
     }
 
     fun getRewardedAd(placementName: String): HeliumUnityAdWrapper {
-        return wrap(
-            HeliumRewardedAd(
-                placementName,
-                object : HeliumRewardedAdListener {
-                    override fun didReceiveWinningBid(
-                        placementName: String,
-                        bidInfo: HashMap<String, String>
-                    ) {
-                        serializeHeliumBidEvent(
+        val rewardedAd = HeliumRewardedAd(UnityPlayer.currentActivity, placementName, object : HeliumFullscreenAdListener {
+            override fun onAdCached(
+                placementName: String,
+                loadId: String,
+                bidInfo: Map<String, String>,
+                error: HeliumAdException?
+            ) {
+                serializeHeliumLoadEvent(
+                    placementName,
+                    bidInfo,
+                    error,
+                    HeliumLoadEventConsumer {placementName: String, auctionId: String, partnerId: String, price: Double, error: String ->
+                        rewardedEventListener?.DidLoadRewarded(
                             placementName,
-                            bidInfo,
-                            HeliumBidEventConsumer { placementName: String, auctionId: String, partnerId: String, price: Double ->
-                                rewardedEventListener?.DidWinBidRewarded(
-                                    placementName,
-                                    auctionId,
-                                    partnerId,
-                                    price
-                                )
-                            })
-                    }
+                            auctionId,
+                            partnerId,
+                            price,
+                            error
+                        )
+                    })
+            }
 
-                    override fun didCache(placementName: String, error: HeliumAdError?) {
-                        serializeHeliumEvent(
+            override fun onAdShown(placementName: String, error: HeliumAdException?) {
+                serializeHeliumEvent(
+                    placementName,
+                    error,
+                    HeliumEventConsumer { placementName: String, error: String ->
+                        rewardedEventListener?.DidShowRewarded(
                             placementName,
-                            error,
-                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
-                                rewardedEventListener?.DidLoadRewarded(
-                                    placementName,
-                                    errorCode,
-                                    errorDescription
-                                )
-                            })
-                    }
+                            error
+                        )
+                    })
+            }
 
-                    override fun didShow(placementName: String, error: HeliumAdError?) {
-                        serializeHeliumEvent(
+            override fun onAdClicked(placementName: String) {
+                serializeHeliumEvent(
+                    placementName,
+                    null,
+                    HeliumEventConsumer { placementName: String, error ->
+                        rewardedEventListener?.DidClickRewarded(
                             placementName,
-                            error,
-                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
-                                rewardedEventListener?.DidShowRewarded(
-                                    placementName,
-                                    errorCode,
-                                    errorDescription
-                                )
-                            })
-                    }
+                            error
+                        )
+                    })
+            }
 
-                    override fun didClose(placementName: String, error: HeliumAdError?) {
-                        serializeHeliumEvent(
+            override fun onAdClosed(placementName: String, error: HeliumAdException?) {
+                serializeHeliumEvent(
+                    placementName,
+                    error,
+                    HeliumEventConsumer { placementName: String, error: String ->
+                        rewardedEventListener?.DidCloseRewarded(
                             placementName,
-                            error,
-                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
-                                rewardedEventListener?.DidCloseRewarded(
-                                    placementName,
-                                    errorCode,
-                                    errorDescription
-                                )
-                            })
-                    }
+                            error
+                        )
+                    })
+            }
 
-                    // todo - this needs to be updated with 4.x signature when candidates become available
-                    override fun didReceiveReward(placementName: String, reward: String) {
-                        serializeHeliumRewardEvent(
+            override fun onAdImpressionRecorded(placementName: String) {
+                serializeHeliumEvent(
+                    placementName,
+                    null,
+                    HeliumEventConsumer { placementName: String, error ->
+                        rewardedEventListener?.DidRecordImpression(
                             placementName,
-                            reward,
-                            HeliumRewardEventConsumer { placementName: String, reward: Int ->
-                                rewardedEventListener?.DidReceiveReward(placementName)
-                            })
-                    }
+                            error
+                        )
+                    })
+            }
 
-                    override fun didClick(placementName: String, error: HeliumAdError?) {
-                        serializeHeliumEvent(
-                            placementName,
-                            error,
-                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
-                                rewardedEventListener?.DidClickRewarded(
-                                    placementName,
-                                    errorCode,
-                                    errorDescription
-                                )
-                            })
-                    }
-
-                    override fun didRecordImpression(placementName: String) {
-                        serializeHeliumEvent(
-                            placementName,
-                            null,
-                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
-                                rewardedEventListener?.DidRecordImpression(
-                                    placementName,
-                                    errorCode,
-                                    errorDescription
-                                )
-                            })
-                    }
-                })
-        )
+            override fun onAdRewarded(placementName: String) {
+                serializeHeliumEvent(
+                    placementName,
+                    null,
+                    HeliumEventConsumer { placementName: String, _ ->
+                        rewardedEventListener?.DidReceiveReward(
+                            placementName
+                        )
+                    })
+            }
+        })
+        return wrap(rewardedAd)
     }
 
     fun getBannerAd(placementName: String, size: Int): HeliumUnityAdWrapper {
         // default to standard
         var wantedSize = HeliumBannerSize.STANDARD
-
         when (size) {
             0 -> wantedSize = HeliumBannerSize.STANDARD
             1 -> wantedSize = HeliumBannerSize.MEDIUM
             2 -> wantedSize = HeliumBannerSize.LEADERBOARD
         }
-        return wrap(
-            HeliumBannerAd(
-                UnityPlayer.currentActivity,
-                placementName,
-                wantedSize,
-                object : HeliumBannerAdListener {
-                    override fun didReceiveWinningBid(
-                        placementName: String,
-                        bidInfo: HashMap<String, String>
-                    ) {
-                        serializeHeliumBidEvent(placementName, bidInfo,
-                            HeliumBidEventConsumer { placementName: String, auctionId: String, partnerId: String, price: Double ->
-                                bannerEventsListener?.DidWinBidBanner(
-                                    placementName,
-                                    auctionId,
-                                    partnerId,
-                                    price
-                                )
-                            })
-                    }
-
-                    override fun didCache(placementName: String, error: HeliumAdError?) {
-                        serializeHeliumEvent(
+        val bannerAd = HeliumBannerAd(UnityPlayer.currentActivity, placementName, wantedSize, object : HeliumBannerAdListener {
+            override fun onAdCached(
+                placementName: String,
+                loadId: String,
+                bidInfo: Map<String, String>,
+                error: HeliumAdException?
+            ) {
+                serializeHeliumLoadEvent(
+                    placementName,
+                    bidInfo,
+                    error,
+                    HeliumLoadEventConsumer {placementName: String, auctionId: String, partnerId: String, price: Double, error: String ->
+                        bannerEventsListener?.DidLoadBanner(
                             placementName,
-                            error,
-                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
-                                bannerEventsListener?.DidLoadBanner(
-                                    placementName,
-                                    errorCode,
-                                    errorDescription
-                                )
-                            })
-                    }
+                            auctionId,
+                            partnerId,
+                            price,
+                            error
+                        )
+                    })
+            }
 
-                    override fun didClick(placementName: String, error: HeliumAdError?) {
-                        serializeHeliumEvent(
+            override fun onAdClicked(placementName: String) {
+                serializeHeliumEvent(
+                    placementName,
+                    null,
+                    HeliumEventConsumer { placementName: String, error ->
+                        bannerEventsListener?.DidClickBanner(
                             placementName,
-                            error,
-                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
-                                bannerEventsListener?.DidClickBanner(
-                                    placementName,
-                                    errorCode,
-                                    errorDescription
-                                )
-                            })
-                    }
+                            error
+                        )
+                    })
+            }
 
-                    override fun didRecordImpression(placementName: String) {
-                        serializeHeliumEvent(
+            override fun onAdImpressionRecorded(placementName: String) {
+                serializeHeliumEvent(
+                    placementName,
+                    null,
+                    HeliumEventConsumer { placementName: String, error ->
+                        bannerEventsListener?.DidRecordImpression(
                             placementName,
-                            null,
-                            HeliumEventConsumer { placementName: String, errorCode: Int, errorDescription: String ->
-                                bannerEventsListener?.DidRecordImpression(
-                                    placementName,
-                                    errorCode,
-                                    errorDescription
-                                )
-                            })
-                    }
-                })
-        )
+                            error
+                        )
+                    })
+            }
+        })
+        return wrap(bannerAd)
     }
 
     companion object {
