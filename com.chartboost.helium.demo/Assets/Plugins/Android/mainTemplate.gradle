@@ -43,21 +43,21 @@ dependencies {
     implementation 'com.amazon.android:aps-sdk:9.6.2' // Assets/Samples/Helium SDK/4.0.0/Amazon/Editor/Optional-HeliumApsDependencies.xml:8
     implementation 'com.applovin:applovin-sdk:11.5.5' // Assets/Samples/Helium SDK/4.0.0/AppLovin/Editor/Optional-HeliumAppLovinDependencies.xml:8
     implementation 'com.chartboost:helium:4.0.+' // Assets/Samples/Helium SDK/4.0.0/Helium/Editor/HeliumDependencies.xml:10
-    implementation 'com.chartboost:helium-adcolony:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/AdColony/Editor/Optional-HeliumAdColonyDependencies.xml:5
-    implementation 'com.chartboost:helium-admob:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/AdMob/Editor/Optional-HeliumAdMobDependencies.xml:5
-    implementation 'com.chartboost:helium-applovin:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/AppLovin/Editor/Optional-HeliumAppLovinDependencies.xml:5
-    implementation 'com.chartboost:helium-aps:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/Amazon/Editor/Optional-HeliumApsDependencies.xml:5
-    implementation 'com.chartboost:helium-facebook:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/Facebook/Editor/Optional-HeliumFacebookDependencies.xml:5
-    implementation 'com.chartboost:helium-fyber:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/Fyber/Editor/Optional-HeliumFyberDependencies.xml:5
-    implementation 'com.chartboost:helium-googlebidding:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/Google Bidding/Editor/Optional-HeliumGoogleBiddingDependencies.xml:5
-    implementation 'com.chartboost:helium-inmobi:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/InMobi/Editor/Optional-HeliumInMobiDependencies.xml:5
-    implementation 'com.chartboost:helium-ironsource:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/IronSource/Editor/Optional-HeliumIronSourceDependencies.xml:5
-    implementation 'com.chartboost:helium-mintegral:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/Mintegral/Editor/Optional-HeliumMintegralDependencies.xml:5
-    implementation 'com.chartboost:helium-pangle:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/Pangle/Editor/Optional-HeliumPangleDependencies.xml:5
-    implementation 'com.chartboost:helium-tapjoy:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/TapJoy/Editor/Optional-HeliumTapJoyDependencies.xml:5
-    implementation 'com.chartboost:helium-unityads:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/UnityAds/Editor/Optional-HeliumUnityAdsDependencies.xml:5
-    implementation 'com.chartboost:helium-vungle:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/Vungle/Editor/Optional-HeliumVungleDependencies.xml:5
-    implementation 'com.chartboost:helium-yahoo:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/Yahoo/Editor/Optional-HeliumYahooDependencies.xml:5
+    implementation 'com.chartboost:helium-adapter-adcolony:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/AdColony/Editor/Optional-HeliumAdColonyDependencies.xml:5
+    implementation 'com.chartboost:helium-adapter-admob:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/AdMob/Editor/Optional-HeliumAdMobDependencies.xml:5
+    implementation 'com.chartboost:helium-adapter-applovin:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/AppLovin/Editor/Optional-HeliumAppLovinDependencies.xml:5
+    implementation 'com.chartboost:helium-adapter-aps:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/Amazon/Editor/Optional-HeliumApsDependencies.xml:5
+    implementation 'com.chartboost:helium-adapter-facebook:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/Facebook/Editor/Optional-HeliumFacebookDependencies.xml:5
+    implementation 'com.chartboost:helium-adapter-fyber:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/Fyber/Editor/Optional-HeliumFyberDependencies.xml:5
+    implementation 'com.chartboost:helium-adapter-googlebidding:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/Google Bidding/Editor/Optional-HeliumGoogleBiddingDependencies.xml:5
+    implementation 'com.chartboost:helium-adapter-inmobi:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/InMobi/Editor/Optional-HeliumInMobiDependencies.xml:5
+    implementation 'com.chartboost:helium-adapter-ironsource:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/IronSource/Editor/Optional-HeliumIronSourceDependencies.xml:5
+    implementation 'com.chartboost:helium-adapter-mintegral:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/Mintegral/Editor/Optional-HeliumMintegralDependencies.xml:5
+    implementation 'com.chartboost:helium-adapter-pangle:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/Pangle/Editor/Optional-HeliumPangleDependencies.xml:5
+    implementation 'com.chartboost:helium-adapter-tapjoy:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/TapJoy/Editor/Optional-HeliumTapJoyDependencies.xml:5
+    implementation 'com.chartboost:helium-adapter-unityads:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/UnityAds/Editor/Optional-HeliumUnityAdsDependencies.xml:5
+    implementation 'com.chartboost:helium-adapter-vungle:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/Vungle/Editor/Optional-HeliumVungleDependencies.xml:5
+    implementation 'com.chartboost:helium-adapter-yahoo:4.0.+@aar' // Assets/Samples/Helium SDK/4.0.0/Yahoo/Editor/Optional-HeliumYahooDependencies.xml:5
     implementation 'com.facebook.android:audience-network-sdk:6.12.0' // Assets/Samples/Helium SDK/4.0.0/Facebook/Editor/Optional-HeliumFacebookDependencies.xml:8
     implementation 'com.fyber:marketplace-sdk:8.2.1' // Assets/Samples/Helium SDK/4.0.0/Fyber/Editor/Optional-HeliumFyberDependencies.xml:8
     implementation 'com.google.android.gms:play-services-ads:21.3.0' // Assets/Samples/Helium SDK/4.0.0/Google Bidding/Editor/Optional-HeliumGoogleBiddingDependencies.xml:8

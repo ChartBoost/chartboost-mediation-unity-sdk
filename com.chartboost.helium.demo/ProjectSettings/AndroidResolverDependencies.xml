@@ -9,21 +9,21 @@
     <package>com.amazon.android:aps-sdk:9.6.2</package>
     <package>com.applovin:applovin-sdk:11.5.5</package>
     <package>com.chartboost:helium:4.0.+</package>
-    <package>com.chartboost:helium-adapteradcolony:4.0.+@aar</package>
-    <package>com.chartboost:helium-adapteradmob:4.0.+@aar</package>
-    <package>com.chartboost:helium-adapterapplovin:4.0.+@aar</package>
-    <package>com.chartboost:helium-adapteraps:4.0.+@aar</package>
-    <package>com.chartboost:helium-adapterfacebook:4.0.+@aar</package>
-    <package>com.chartboost:helium-adapterfyber:4.0.+@aar</package>
-    <package>com.chartboost:helium-adaptergooglebidding:4.0.+@aar</package>
-    <package>com.chartboost:helium-adapterinmobi:4.0.+@aar</package>
-    <package>com.chartboost:helium-adapterironsource:4.0.+@aar</package>
-    <package>com.chartboost:helium-adaptermintegral:4.0.+@aar</package>
-    <package>com.chartboost:helium-adapterpangle:4.0.+@aar</package>
-    <package>com.chartboost:helium-adaptertapjoy:4.0.+@aar</package>
-    <package>com.chartboost:helium-adapterunityads:4.0.+@aar</package>
-    <package>com.chartboost:helium-adaptervungle:4.0.+@aar</package>
-    <package>com.chartboost:helium-adapteryahoo:4.0.+@aar</package>
+    <package>com.chartboost:helium-adapter-adcolony:4.0.+@aar</package>
+    <package>com.chartboost:helium-adapter-admob:4.0.+@aar</package>
+    <package>com.chartboost:helium-adapter-applovin:4.0.+@aar</package>
+    <package>com.chartboost:helium-adapter-aps:4.0.+@aar</package>
+    <package>com.chartboost:helium-adapter-facebook:4.0.+@aar</package>
+    <package>com.chartboost:helium-adapter-fyber:4.0.+@aar</package>
+    <package>com.chartboost:helium-adapter-googlebidding:4.0.+@aar</package>
+    <package>com.chartboost:helium-adapter-inmobi:4.0.+@aar</package>
+    <package>com.chartboost:helium-adapter-ironsource:4.0.+@aar</package>
+    <package>com.chartboost:helium-adapter-mintegral:4.0.+@aar</package>
+    <package>com.chartboost:helium-adapter-pangle:4.0.+@aar</package>
+    <package>com.chartboost:helium-adapter-tapjoy:4.0.+@aar</package>
+    <package>com.chartboost:helium-adapter-unityads:4.0.+@aar</package>
+    <package>com.chartboost:helium-adapter-vungle:4.0.+@aar</package>
+    <package>com.chartboost:helium-adapter-yahoo:4.0.+@aar</package>
     <package>com.facebook.android:audience-network-sdk:6.12.0</package>
     <package>com.fyber:marketplace-sdk:8.2.1</package>
     <package>com.google.android.gms:play-services-ads:21.3.0</package>
