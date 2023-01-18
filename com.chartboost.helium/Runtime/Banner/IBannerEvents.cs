@@ -13,13 +13,7 @@ namespace Helium.Banner
         /// servers and cached locally.
         /// </summary>
         [Preserve]
-        public event HeliumPlacementEvent DidLoadBanner;
-
-        /// <summary>
-        /// Called after a banner has been displayed on screen.
-        /// </summary>
-        [Preserve]
-        public event HeliumPlacementEvent DidShowBanner;
+        public event HeliumPlacementLoadEvent DidLoadBanner;
 
         /// <summary>
         /// Called after a banner ad has been clicked.
@@ -34,12 +28,5 @@ namespace Helium.Banner
         /// </summary>
         [Preserve]
         public event HeliumPlacementEvent DidRecordImpressionBanner;
-        
-        /// <summary>
-        /// Called with bid information after an banner has been loaded from the Helium API
-        /// servers and cached locally.
-        /// </summary>
-        [Preserve]
-        public event HeliumBidEvent DidWinBidBanner;
     }
 }

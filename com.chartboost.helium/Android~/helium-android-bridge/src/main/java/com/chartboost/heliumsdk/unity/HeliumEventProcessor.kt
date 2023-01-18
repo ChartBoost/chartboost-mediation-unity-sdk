@@ -11,11 +11,15 @@ object HeliumEventProcessor {
     @JvmStatic
     fun serializeHeliumEvent(
         placementName: String,
+        eventConsumer: HeliumEventConsumer<String>
+    ) = eventConsumer.accept(placementName)
+
+    @JvmStatic
+    fun serializeHeliumEventWithError(
+        placementName: String,
         error: HeliumAdException?,
-        eventConsumer: HeliumEventConsumer<String, String>
-    ) {
-        eventConsumer.accept(placementName,error?.toString() ?: "")
-    }
+        eventConsumer: HeliumEventConsumerWithError<String, String>
+    ) = eventConsumer.accept(placementName,error?.toString() ?: "")
 
     @JvmStatic
     fun serializeHeliumLoadEvent(
@@ -48,7 +52,11 @@ object HeliumEventProcessor {
         }
     }
 
-    fun interface HeliumEventConsumer<PlacementName, ErrorMessage> {
+    fun interface HeliumEventConsumer<PlacementName>{
+        fun accept(placementName: PlacementName)
+    }
+
+    fun interface HeliumEventConsumerWithError<PlacementName, ErrorMessage> {
         fun accept(placementName: PlacementName, errorMessage: ErrorMessage)
     }
 

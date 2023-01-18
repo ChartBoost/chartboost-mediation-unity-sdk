@@ -6,8 +6,10 @@ import com.chartboost.heliumsdk.ad.*
 import com.chartboost.heliumsdk.ad.HeliumBannerAd.HeliumBannerSize
 import com.chartboost.heliumsdk.domain.HeliumAdException
 import com.chartboost.heliumsdk.unity.HeliumEventProcessor.HeliumLoadEventConsumer
+import com.chartboost.heliumsdk.unity.HeliumEventProcessor.HeliumEventConsumerWithError
 import com.chartboost.heliumsdk.unity.HeliumEventProcessor.HeliumEventConsumer
 import com.chartboost.heliumsdk.unity.HeliumEventProcessor.serializeHeliumEvent
+import com.chartboost.heliumsdk.unity.HeliumEventProcessor.serializeHeliumEventWithError
 import com.chartboost.heliumsdk.unity.HeliumEventProcessor.serializeHeliumLoadEvent
 import com.chartboost.heliumsdk.unity.HeliumEventProcessor.serializePlacementIlrdData
 import com.chartboost.heliumsdk.unity.HeliumUnityAdWrapper.Companion.wrap
@@ -87,7 +89,7 @@ class HeliumUnityBridge {
                         }
                         Log.d("Unity", "HeliumUnityBridge: Plugin initialized.")
                     }
-                    lifeCycleEventListener?.DidStart(error?.hashCode() ?: -1, error?.toString() ?: "")
+                    lifeCycleEventListener?.DidStart(error?.toString() ?: "")
                 }
             }
         }
@@ -128,50 +130,36 @@ class HeliumUnityBridge {
             }
 
             override fun onAdShown(placementName: String, error: HeliumAdException?) {
-                serializeHeliumEvent(
+                serializeHeliumEventWithError(
                     placementName,
                     error,
-                    HeliumEventConsumer { placementName: String, error: String ->
-                        interstitialEventsListener?.DidShowInterstitial(
-                            placementName,
-                            error
-                        )
+                    HeliumEventConsumerWithError { placementName: String, error: String ->
+                        interstitialEventsListener?.DidShowInterstitial(placementName, error)
+                    })
+            }
+
+            override fun onAdClosed(placementName: String, error: HeliumAdException?) {
+                serializeHeliumEventWithError(
+                    placementName,
+                    error,
+                    HeliumEventConsumerWithError { placementName: String, error: String ->
+                        interstitialEventsListener?.DidCloseInterstitial(placementName, error)
                     })
             }
 
             override fun onAdClicked(placementName: String) {
                 serializeHeliumEvent(
                     placementName,
-                    null,
-                    HeliumEventConsumer { placementName: String, error ->
-                        interstitialEventsListener?.DidClickInterstitial(
-                            placementName,
-                            error
-                        )
-                    })
-            }
-
-            override fun onAdClosed(placementName: String, error: HeliumAdException?) {
-                serializeHeliumEvent(
-                    placementName,
-                    error,
-                    HeliumEventConsumer { placementName: String, error: String ->
-                        interstitialEventsListener?.DidCloseInterstitial(
-                            placementName,
-                            error
-                        )
+                    HeliumEventConsumer { placementName: String ->
+                        interstitialEventsListener?.DidClickInterstitial(placementName)
                     })
             }
 
             override fun onAdImpressionRecorded(placementName: String) {
                 serializeHeliumEvent(
                     placementName,
-                    null,
-                    HeliumEventConsumer { placementName: String, error ->
-                        interstitialEventsListener?.DidRecordImpression(
-                            placementName,
-                            error
-                        )
+                    HeliumEventConsumer { placementName: String ->
+                        interstitialEventsListener?.DidRecordImpression(placementName)
                     })
             }
 
@@ -206,61 +194,44 @@ class HeliumUnityBridge {
             }
 
             override fun onAdShown(placementName: String, error: HeliumAdException?) {
-                serializeHeliumEvent(
+                serializeHeliumEventWithError(
                     placementName,
                     error,
-                    HeliumEventConsumer { placementName: String, error: String ->
-                        rewardedEventListener?.DidShowRewarded(
-                            placementName,
-                            error
-                        )
+                    HeliumEventConsumerWithError { placementName: String, error: String ->
+                        rewardedEventListener?.DidShowRewarded(placementName, error)
+                    })
+            }
+
+            override fun onAdClosed(placementName: String, error: HeliumAdException?) {
+                serializeHeliumEventWithError(
+                    placementName,
+                    error,
+                    HeliumEventConsumerWithError { placementName: String, error: String ->
+                        rewardedEventListener?.DidCloseRewarded(placementName, error)
                     })
             }
 
             override fun onAdClicked(placementName: String) {
                 serializeHeliumEvent(
                     placementName,
-                    null,
-                    HeliumEventConsumer { placementName: String, error ->
-                        rewardedEventListener?.DidClickRewarded(
-                            placementName,
-                            error
-                        )
-                    })
-            }
-
-            override fun onAdClosed(placementName: String, error: HeliumAdException?) {
-                serializeHeliumEvent(
-                    placementName,
-                    error,
-                    HeliumEventConsumer { placementName: String, error: String ->
-                        rewardedEventListener?.DidCloseRewarded(
-                            placementName,
-                            error
-                        )
+                    HeliumEventConsumer { placementName: String ->
+                        rewardedEventListener?.DidClickRewarded(placementName,)
                     })
             }
 
             override fun onAdImpressionRecorded(placementName: String) {
                 serializeHeliumEvent(
                     placementName,
-                    null,
-                    HeliumEventConsumer { placementName: String, error ->
-                        rewardedEventListener?.DidRecordImpression(
-                            placementName,
-                            error
-                        )
+                    HeliumEventConsumer { placementName: String ->
+                        rewardedEventListener?.DidRecordImpression(placementName)
                     })
             }
 
             override fun onAdRewarded(placementName: String) {
                 serializeHeliumEvent(
                     placementName,
-                    null,
-                    HeliumEventConsumer { placementName: String, _ ->
-                        rewardedEventListener?.DidReceiveReward(
-                            placementName
-                        )
+                    HeliumEventConsumer { placementName: String->
+                        rewardedEventListener?.DidReceiveReward(placementName)
                     })
             }
         })
@@ -300,24 +271,16 @@ class HeliumUnityBridge {
             override fun onAdClicked(placementName: String) {
                 serializeHeliumEvent(
                     placementName,
-                    null,
-                    HeliumEventConsumer { placementName: String, error ->
-                        bannerEventsListener?.DidClickBanner(
-                            placementName,
-                            error
-                        )
+                    HeliumEventConsumer { placementName: String ->
+                        bannerEventsListener?.DidClickBanner(placementName)
                     })
             }
 
             override fun onAdImpressionRecorded(placementName: String) {
                 serializeHeliumEvent(
                     placementName,
-                    null,
-                    HeliumEventConsumer { placementName: String, error ->
-                        bannerEventsListener?.DidRecordImpression(
-                            placementName,
-                            error
-                        )
+                    HeliumEventConsumer { placementName: String ->
+                        bannerEventsListener?.DidRecordImpression(placementName)
                     })
             }
         })

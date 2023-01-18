@@ -3,7 +3,7 @@ using System.Collections;
 namespace Helium
 {
     /// <param name="error">The error encountered, if any.</param>
-    public delegate void HeliumEvent(HeliumError error);
+    public delegate void HeliumEvent(string error);
 
     /// <param name="placement">The placement name.</param>
     /// <param name="impressionData">The impression data delivered within a hashtable.</param>
@@ -20,16 +20,15 @@ namespace Helium
     /// <param name="placement">The placement name for the placement.</param>
     /// <param name="error">The error encountered, if any.</param>
     /// </summary>
-    public delegate void HeliumPlacementEvent(string placement, HeliumError error);
-    
-    /// <summary>
-    /// <param name="placement">The placement name for the placement.</param>
-    /// <param name="bid">The bid information, if any.</param>
-    /// </summary>
-    public delegate void HeliumBidEvent(string placement, HeliumBidInfo bid);
+    public delegate void HeliumPlacementEventWithError(string placement, string error);
 
     /// <summary>
     /// <param name="placement">The placement name for the placement.</param>
     /// </summary>
-    public delegate void HeliumRewardEvent(string placement);
+    public delegate void HeliumPlacementEvent(string placement);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public delegate void HeliumPlacementLoadEvent(string placement, HeliumBidInfo bidInfo, string error);
 }
