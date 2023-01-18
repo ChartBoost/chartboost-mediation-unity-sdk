@@ -1,12 +1,19 @@
+#nullable enable
 #if UNITY_IOS
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
 using UnityEngine;
 using UnityEngine.Networking;
+// ReSharper disable InconsistentNaming
+// ReSharper disable StringLiteralTypo
+// ReSharper disable IdentifierTypo
+// ReSharper disable CommentTypo
 
 namespace Editor
 {
@@ -45,17 +52,19 @@ namespace Editor
         private const string TapJoy = "https://skadnetwork.tapjoy.com/skadnetworkids.json";
         private const string Vungle = "https://vungle.com/skadnetworkids.json";
         private const string Unity = "https://skan.mz.unity3d.com/v3/partner/skadnetworks.plist.json";
+        private const string AdColony = "https://raw.githubusercontent.com/AdColony/AdColony-iOS-SDK/master/AdNetworks.csv";
 
-        private const string AdColony =
-            "https://raw.githubusercontent.com/AdColony/AdColony-iOS-SDK/master/AdNetworks.csv";
-
-        public static List<string> GetSKAdNetworkIds()
+        private const string SKAdNetworkItemsKey = "SKAdNetworkItems";
+        private const string SKAdNetworkIdKey = "SKAdNetworkIdentifier";
+        
+        private static IEnumerable<string> GetSKAdNetworkIds()
         {
             var idsToAdd = new List<string>();
 
             void AppendToFinalList(SKAdNetworkIds ids, ref List<string> finalIds)
             {
-                finalIds.AddRange(ids.skadnetwork_ids.Select(id => id.skadnetwork_id));
+                if (ids.skadnetwork_ids != null)
+                    finalIds.AddRange(ids.skadnetwork_ids.Select(id => id.skadnetwork_id)!);
             }
 
             void MergeIDs(params SKAdNetworkIds[] ids)
@@ -66,19 +75,23 @@ namespace Editor
                 }
             }
 
+            // json compatible SkAdNetworkFetching
             var appLovinIds = SKAdNetworkRequest(AppLovin);
             var chartboostIds = SKAdNetworkRequest(Chartboost);
             var fyberIds = SKAdNetworkRequest(Fyber);
             var inMobiIds = SKAdNetworkRequest(InMobi);
             var tapJoyIds = SKAdNetworkRequest(TapJoy);
             var vungleIds = SKAdNetworkRequest(Vungle);
-            // var unityIds = SKAdNetworkRequest(Unity);
-
-            MergeIDs(appLovinIds, chartboostIds, fyberIds, inMobiIds, tapJoyIds, vungleIds);
-
+            var unityIds = SkAdNetworkRequestUnity(Unity);
+            
+            // merge all ids
+            MergeIDs(appLovinIds, chartboostIds, fyberIds, inMobiIds, tapJoyIds, vungleIds, unityIds);
+            
+            // cvs based SkAdNetworkFetching
             var adColonyIds = CSVSKAdNetworkRequest(AdColony);
             idsToAdd.AddRange(adColonyIds);
 
+            // SkAdNetwork that does not provide easy json/cvs compatibility
             // 1. Facebook (https://developers.facebook.com/docs/setting-up/platform-setup/ios/SKAdNetwork/)
             idsToAdd.Add("v9wttpbfk9.skadnetwork");
             idsToAdd.Add("n38lu8286q.skadnetwork");
@@ -100,65 +113,86 @@ namespace Editor
             idsToAdd.Add("8s468mfl3y.skadnetwork");
             idsToAdd.Add("uw77j35x4d.skadnetwork");
 
-            return idsToAdd.Distinct().ToList();
+            // return unique ids, it's possible some of them can be duplicated.
+            return idsToAdd.Distinct();
         }
-
-        private const string SKAdNetworkItemsKey = "SKAdNetworkItems";
-        private const string SKAdNetworkIdKey = "SKAdNetworkIdentifier";
-
-        [Serializable]
-        private class IdEntry
-        {
-            public string skadnetwork_id;
-            public string creation_date;
-        }
-
-        [Serializable]
-        private class SKAdNetworkIds
-        {
-            public string company_name;
-            public string company_address;
-            public string company_domain;
-            public List<IdEntry> skadnetwork_ids;
-        }
-
+        
         private static SKAdNetworkIds SKAdNetworkRequest(string url)
         {
             var skanIdsRequest = UnityWebRequest.Get(url);
             var request = skanIdsRequest.SendWebRequest();
 
-            while (!request.isDone)
-            {
-            }
+            while (!request.isDone) { }
 
             if (skanIdsRequest.error != null)
-            {
-                Debug.Log(skanIdsRequest.error);
-            }
+                Debug.Log( $"SKAdNetworkRequest failed with error: {skanIdsRequest.error}" );
 
             var skanIds = JsonUtility.FromJson<SKAdNetworkIds>(skanIdsRequest.downloadHandler.text);
             return skanIds;
         }
 
-        private static List<string> CSVSKAdNetworkRequest(string url)
+        private static SKAdNetworkIds SkAdNetworkRequestUnity(string url) 
         {
             var skanIdsRequest = UnityWebRequest.Get(url);
             var request = skanIdsRequest.SendWebRequest();
 
-            while (!request.isDone)
+            while (!request.isDone) { }
+            
+            if (skanIdsRequest.error != null)
+                Debug.Log( $"SkAdNetworkRequestUnity failed with error: {skanIdsRequest.error}" );
+
+            var contents = JsonConvert.DeserializeObject(skanIdsRequest.downloadHandler.text);
+            
+            var ret = new SKAdNetworkIds
             {
+                company_name = "Unity",
+                skadnetwork_ids = new List<IdEntry>()
+            };
+            
+            if (!(contents is JArray asArray)) return ret;
+
+            foreach (var element in asArray)
+            {
+                var id = element["skadnetwork_id"];
+                if (id != null)
+                    ret.skadnetwork_ids.Add( new IdEntry { skadnetwork_id = id.ToString()});
             }
 
+            return ret;
+        }
+
+        private static IEnumerable<string> CSVSKAdNetworkRequest(string url)
+        {
+            var skanIdsRequest = UnityWebRequest.Get(url);
+            var request = skanIdsRequest.SendWebRequest();
+
+            while (!request.isDone) { }
+
             if (skanIdsRequest.error != null)
-            {
-                Debug.Log(skanIdsRequest.error);
-            }
+                Debug.Log( $"CSVSKAdNetworkRequest failed with error: {skanIdsRequest.error}" );
 
             var csv = skanIdsRequest.downloadHandler.text;
             var data = csv.Split('\n').ToList();
             data.RemoveAt(0);
             data.RemoveAll(string.IsNullOrEmpty);
             return data;
+        }
+        
+        [Serializable]
+        private class SKAdNetworkIds
+        {
+            public string? company_name;
+            public string? company_address;
+            public string? company_domain;
+            public List<IdEntry>? skadnetwork_ids;
+        }
+        
+        [Serializable]
+        private class IdEntry
+        {
+            public string? skadnetwork_id;
+            public string? creation_date;
+            public string? entity_name;
         }
     }
 }
