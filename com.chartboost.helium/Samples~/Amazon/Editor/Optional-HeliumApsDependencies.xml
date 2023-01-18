@@ -12,7 +12,7 @@
     </androidPackages>
     <iosPods>
         <!-- Helium APS Adapter -->
-        <iosPod name="ChartboostHeliumAdapterAPS" version="~> 3.3"/>
+        <iosPod name="ChartboostHeliumAdapterAPS" version="~> 4.0"/>
 
         <!-- APS iOS SDK -->
         <iosPod name="AmazonPublisherServicesSDK" version="~> 4.4" addToAllTargets="true"/>

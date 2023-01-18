@@ -10,7 +10,7 @@
     </androidPackages>
     <iosPods>
         <!-- Helium Unity Ads Adapter -->
-        <iosPod name="ChartboostHeliumAdapterUnity" version="~> 3.3"/>
+        <iosPod name="ChartboostHeliumAdapterUnity" version="~> 4.0"/>
 
         <!-- Unity Ads iOS SDK -->
         <iosPod name="UnityAds" version="~> 4.2"/>

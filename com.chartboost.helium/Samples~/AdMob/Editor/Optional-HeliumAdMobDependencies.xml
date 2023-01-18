@@ -9,7 +9,7 @@
     </androidPackages>
     <iosPods>
         <!-- Helium AdMob Adapter -->
-        <iosPod name="ChartboostHeliumAdapterAdMob" version="~> 3.3"/>
+        <iosPod name="ChartboostHeliumAdapterAdMob" version="~> 4.0"/>
 
         <!-- Admob iOS SDK -->
         <iosPod name="Google-Mobile-Ads-SDK" version="~> 9.12"/>

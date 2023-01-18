@@ -23,7 +23,7 @@
     </androidPackages>
     <iosPods>
         <!-- Helium Mintegral Adapter -->
-        <iosPod name="ChartboostHeliumAdapterMintegral" version="~> 3.3"/>
+        <iosPod name="ChartboostHeliumAdapterMintegral" version="~> 4.0"/>
 
         <!-- Mintegral iOS SDK -->
         <iosPod name="MintegralAdSDK" version="~> 7.1"/>

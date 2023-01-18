@@ -9,7 +9,7 @@
     </androidPackages>
     <iosPods>
         <!-- Helium Facebook Adapter -->
-        <iosPod name="ChartboostHeliumAdapterFAN" version="~> 3.3"/>
+        <iosPod name="ChartboostHeliumAdapterFAN" version="~> 4.0"/>
 
         <!-- FAN iOS SDK -->
         <iosPod name="FBAudienceNetwork" version="~> 6.12"/>

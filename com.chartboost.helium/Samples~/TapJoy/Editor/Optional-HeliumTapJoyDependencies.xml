@@ -12,7 +12,7 @@
     </androidPackages>
     <iosPods>
         <!-- Helium Tapjoy Adapter -->
-        <iosPod name="ChartboostHeliumAdapterTJ" version="~> 3.3"/>
+        <iosPod name="ChartboostHeliumAdapterTJ" version="~> 4.0"/>
 
         <!-- Tapjoy iOS SDK -->
         <iosPod name="TapjoySDK" version="~> 12.8"/>
