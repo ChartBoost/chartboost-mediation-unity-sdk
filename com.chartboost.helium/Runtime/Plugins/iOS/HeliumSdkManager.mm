@@ -206,7 +206,7 @@ static void heliumSubscribeToPartnerInitializationNotifications()
     
     if (initializationOptionsSize > 0) {
         NSMutableArray *initializationPartners = [NSMutableArray new];
-        for (int x=0; x < initializationOptionsSize; x++)
+        for (int x = 0; x < initializationOptionsSize; x++)
         {
             if(strlen(initializationOptions[x]) > 0)
                 [initializationPartners addObject:[NSString stringWithUTF8String:initializationOptions[x]]];
