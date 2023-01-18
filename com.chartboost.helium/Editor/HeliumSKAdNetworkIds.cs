@@ -56,7 +56,7 @@ namespace Editor
         private const string TapJoy = "https://skadnetwork.tapjoy.com/skadnetworkids.json";
         private const string Vungle = "https://vungle.com/skadnetworkids.json";
         private const string Unity = "https://skan.mz.unity3d.com/v3/partner/skadnetworks.plist.json";
-        private const string AdColony = "https://raw.githubusercontent.com/AdColony/AdColony-iOS-SDK/master/AdNetworks.csv";
+        private const string AdColony = "https://raw.githubusercontent.com/AdColony/AdColony-iOS-SDK/master/skadnetworkids.json";
 
         private const string SKAdNetworkItemsKey = "SKAdNetworkItems";
         private const string SKAdNetworkIdKey = "SKAdNetworkIdentifier";
@@ -81,6 +81,7 @@ namespace Editor
 
             // json compatible SkAdNetworkFetching
             var appLovinIds = SKAdNetworkRequest(AppLovin);
+            var adColonyIds = SKAdNetworkRequest(AdColony);
             var chartboostIds = SKAdNetworkRequest(Chartboost);
             var fyberIds = SKAdNetworkRequest(Fyber);
             var inMobiIds = SKAdNetworkRequest(InMobi);
@@ -89,12 +90,8 @@ namespace Editor
             var unityIds = SkAdNetworkRequestUnity(Unity);
             
             // merge all ids
-            MergeIDs(appLovinIds, chartboostIds, fyberIds, inMobiIds, tapJoyIds, vungleIds, unityIds);
+            MergeIDs(appLovinIds, adColonyIds, chartboostIds, fyberIds, inMobiIds, tapJoyIds, vungleIds, unityIds);
             
-            // cvs based SkAdNetworkFetching
-            var adColonyIds = CSVSKAdNetworkRequest(AdColony);
-            idsToAdd.AddRange(adColonyIds);
-
             // SkAdNetwork that does not provide easy json/cvs compatibility
             // 1. Facebook (https://developers.facebook.com/docs/setting-up/platform-setup/ios/SKAdNetwork/)
             idsToAdd.Add("v9wttpbfk9.skadnetwork");
@@ -116,6 +113,58 @@ namespace Editor
             idsToAdd.Add("klf5c3l5u5.skadnetwork");
             idsToAdd.Add("8s468mfl3y.skadnetwork");
             idsToAdd.Add("uw77j35x4d.skadnetwork");
+            // 6. AdMob (https://developers.google.com/admob/ios/ios14) ........
+            idsToAdd.Add("cstr6suwn9.skadnetwork");
+            idsToAdd.Add("4fzdc2evr5.skadnetwork");
+            idsToAdd.Add("4pfyvq9l8r.skadnetwork");
+            idsToAdd.Add("2fnua5tdw4.skadnetwork");
+            idsToAdd.Add("ydx93a7ass.skadnetwork");
+            idsToAdd.Add("5a6flpkh64.skadnetwork");
+            idsToAdd.Add("p78axxw29g.skadnetwork");
+            idsToAdd.Add("p78axxw29g.skadnetwork");
+            idsToAdd.Add("v72qych5uu.skadnetwork");
+            idsToAdd.Add("ludvb6z3bs.skadnetwork");
+            idsToAdd.Add("cp8zw746q7.skadnetwork");
+            idsToAdd.Add("c6k4g5qg8m.skadnetwork");
+            idsToAdd.Add("s39g8k73mm.skadnetwork");
+            idsToAdd.Add("3qy4746246.skadnetwork");
+            idsToAdd.Add("3sh42y64q3.skadnetwork");
+            idsToAdd.Add("f38h382jlk.skadnetwork");
+            idsToAdd.Add("hs6bdukanm.skadnetwork");
+            idsToAdd.Add("prcb7njmu6.skadnetwork");
+            idsToAdd.Add("v4nxqhlyqp.skadnetwork");
+            idsToAdd.Add("wzmmz9fp6w.skadnetwork");
+            idsToAdd.Add("yclnxrl5pm.skadnetwork");
+            idsToAdd.Add("t38b2kh725.skadnetwork");
+            idsToAdd.Add("7ug5zh24hu.skadnetwork");
+            idsToAdd.Add("9rd848q2bz.skadnetwork");
+            idsToAdd.Add("y5ghdn5j9k.skadnetwork");
+            idsToAdd.Add("n6fk4nfna4.skadnetwork");
+            idsToAdd.Add("v9wttpbfk9.skadnetwork");
+            idsToAdd.Add("n38lu8286q.skadnetwork");
+            idsToAdd.Add("47vhws6wlr.skadnetwork");
+            idsToAdd.Add("kbd757ywx3.skadnetwork");
+            idsToAdd.Add("9t245vhmpl.skadnetwork");
+            idsToAdd.Add("a2p9lx4jpn.skadnetwork");
+            idsToAdd.Add("22mmun2rn5.skadnetwork");
+            idsToAdd.Add("4468km3ulz.skadnetwork");
+            idsToAdd.Add("2u9pt9hc89.skadnetwork");
+            idsToAdd.Add("8s468mfl3y.skadnetwork");
+            idsToAdd.Add("av6w8kgt66.skadnetwork");
+            idsToAdd.Add("klf5c3l5u5.skadnetwork");
+            idsToAdd.Add("ppxm28t8ap.skadnetwork");
+            idsToAdd.Add("424m5254lk.skadnetwork");
+            idsToAdd.Add("ecpz2srf59.skadnetwork");
+            idsToAdd.Add("uw77j35x4d.skadnetwork");
+            idsToAdd.Add("mlmmfzh3r3.skadnetwork");
+            idsToAdd.Add("578prtvx9j.skadnetwork");
+            idsToAdd.Add("4dzt52r2t5.skadnetwork");
+            idsToAdd.Add("gta9lk7p23.skadnetwork");
+            idsToAdd.Add("e5fvkxwrpn.skadnetwork");
+            idsToAdd.Add("8c4e2ghe7u.skadnetwork");
+            idsToAdd.Add("zq492l623r.skadnetwork");
+            idsToAdd.Add("3rd42ekr43.skadnetwork");
+            idsToAdd.Add("3qcr597p9d.skadnetwork");
 
             // return unique ids, it's possible some of them can be duplicated.
             return idsToAdd.Distinct();
@@ -165,23 +214,6 @@ namespace Editor
             return ret;
         }
 
-        private static IEnumerable<string> CSVSKAdNetworkRequest(string url)
-        {
-            var skanIdsRequest = UnityWebRequest.Get(url);
-            var request = skanIdsRequest.SendWebRequest();
-
-            while (!request.isDone) { }
-
-            if (skanIdsRequest.error != null)
-                Debug.Log( $"CSVSKAdNetworkRequest failed with error: {skanIdsRequest.error}" );
-
-            var csv = skanIdsRequest.downloadHandler.text;
-            var data = csv.Split('\n').ToList();
-            data.RemoveAt(0);
-            data.RemoveAll(string.IsNullOrEmpty);
-            return data;
-        }
-        
         [Serializable]
         private class SKAdNetworkIds
         {
