@@ -179,7 +179,7 @@ namespace Helium.Platforms
             public static readonly RewardedVideoEventListener Instance = new RewardedVideoEventListener();
 
             [Preserve]
-            private void DidLoadRewarded(string placementName,  string auctionId, string partnerId, double price, string error) 
+            private void DidLoadRewarded(string placementName, string auctionId, string partnerId, double price, string error) 
                 => HeliumEventProcessor.ProcessHeliumLoadEvent(placementName, auctionId, partnerId, price, error, _instance.DidLoadRewarded);
 
             [Preserve]
