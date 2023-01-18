@@ -2,7 +2,7 @@
 <dependencies>
     <androidPackages>
         <!-- Helium InMobi Adapter -->
-        <androidPackage spec="com.chartboost:helium-inmobi:4.0.+@aar" />
+        <androidPackage spec="com.chartboost:helium-adapter-inmobi:4.0.+@aar" />
 
         <!-- InMobi Android SDK -->
         <androidPackage spec="com.inmobi.monetization:inmobi-ads:10.1.1"/>

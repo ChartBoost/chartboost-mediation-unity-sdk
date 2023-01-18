@@ -2,7 +2,7 @@
 <dependencies>
     <androidPackages>
         <!-- Helium Mintegral Adapter -->
-        <androidPackage spec="com.chartboost:helium-mintegral:4.0.+@aar" />
+        <androidPackage spec="com.chartboost:helium-adapter-mintegral:4.0.+@aar" />
 
         <!-- Mintegral Android SDK -->
         <repositories>

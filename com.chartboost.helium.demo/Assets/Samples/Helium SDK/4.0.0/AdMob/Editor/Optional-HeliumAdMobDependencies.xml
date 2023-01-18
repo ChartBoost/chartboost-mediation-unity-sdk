@@ -2,7 +2,7 @@
 <dependencies>
     <androidPackages>
         <!-- Helium AdMob Adapter -->
-        <androidPackage spec="com.chartboost:helium-admob:4.0.+@aar" />
+        <androidPackage spec="com.chartboost:helium-adapter-admob:4.0.+@aar" />
 
         <!-- Admob Android SDK -->
         <androidPackage spec="com.google.android.gms:play-services-ads:21.3.0" />

@@ -2,7 +2,7 @@
 <dependencies>
     <androidPackages>
         <!-- Helium AppLovin Adapter -->
-        <androidPackage spec="com.chartboost:helium-applovin:4.0.+@aar" />
+        <androidPackage spec="com.chartboost:helium-adapter-applovin:4.0.+@aar" />
 
         <!-- AppLovin Android SDK -->
         <androidPackage spec="com.applovin:applovin-sdk:11.5.5" />

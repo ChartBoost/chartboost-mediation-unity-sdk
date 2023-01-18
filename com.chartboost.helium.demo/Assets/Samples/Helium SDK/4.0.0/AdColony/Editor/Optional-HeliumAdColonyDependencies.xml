@@ -2,7 +2,7 @@
 <dependencies>
     <androidPackages>
         <!-- Helium AdColony Adapter -->
-        <androidPackage spec="com.chartboost:helium-adcolony:4.0.+@aar" />
+        <androidPackage spec="com.chartboost:helium-adapter-adcolony:4.0.+@aar" />
 
         <!-- AdColony Android SDK-->
         <androidPackage spec="com.adcolony:sdk:4.8.0" />

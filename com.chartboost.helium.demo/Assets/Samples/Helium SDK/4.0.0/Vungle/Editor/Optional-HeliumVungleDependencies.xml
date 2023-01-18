@@ -2,7 +2,7 @@
 <dependencies>
     <androidPackages>
         <!-- Helium Vungle Adapter -->
-        <androidPackage spec="com.chartboost:helium-vungle:4.0.+@aar" />
+        <androidPackage spec="com.chartboost:helium-adapter-vungle:4.0.+@aar" />
 
         <!-- Vungle Android SDK -->
         <androidPackage spec="com.vungle:publisher-sdk-android:6.12.0"/>

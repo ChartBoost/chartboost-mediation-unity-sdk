@@ -2,7 +2,7 @@
 <dependencies>
     <androidPackages>
         <!-- Helium Fyber Adapter -->
-        <androidPackage spec="com.chartboost:helium-fyber:4.0.+@aar" />
+        <androidPackage spec="com.chartboost:helium-adapter-fyber:4.0.+@aar" />
 
         <!-- Fyber Android SDK -->
         <androidPackage spec="com.fyber:marketplace-sdk:8.2.1"/>

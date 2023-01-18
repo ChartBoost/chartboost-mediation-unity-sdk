@@ -2,7 +2,7 @@
 <dependencies>
     <androidPackages>
         <!-- Helium Yahoo Adapter -->
-        <androidPackage spec="com.chartboost:helium-yahoo:4.0.+@aar" />
+        <androidPackage spec="com.chartboost:helium-adapter-yahoo:4.0.+@aar" />
 
         <!-- Yahoo Android SDK -->
         <repositories>

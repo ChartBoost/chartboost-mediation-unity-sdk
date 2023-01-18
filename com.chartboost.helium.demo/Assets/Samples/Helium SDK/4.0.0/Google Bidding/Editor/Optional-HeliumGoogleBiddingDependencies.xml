@@ -2,7 +2,7 @@
 <dependencies>
     <androidPackages>
         <!-- Helium Google Bidding Adapter -->
-        <androidPackage spec="com.chartboost:helium-googlebidding:4.0.+@aar" />
+        <androidPackage spec="com.chartboost:helium-adapter-googlebidding:4.0.+@aar" />
 
         <!-- Google Bidding Android SDK -->
         <androidPackage spec="com.google.android.gms:play-services-ads:21.3.0"/>

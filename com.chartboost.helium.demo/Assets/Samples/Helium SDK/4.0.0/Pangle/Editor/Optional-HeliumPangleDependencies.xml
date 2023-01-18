@@ -2,7 +2,7 @@
 <dependencies>
     <androidPackages>
         <!-- Helium Pangle Adapter -->
-        <androidPackage spec="com.chartboost:helium-pangle:4.0.+@aar" />
+        <androidPackage spec="com.chartboost:helium-adapter-pangle:4.0.+@aar" />
 
         <!-- Pangle Android SDK -->
         <repositories>

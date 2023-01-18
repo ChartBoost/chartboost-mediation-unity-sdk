@@ -2,7 +2,7 @@
 <dependencies>
     <androidPackages>
         <!-- Helium IronSource Adapter -->
-        <androidPackage spec="com.chartboost:helium-ironsource:4.0.+@aar" />
+        <androidPackage spec="com.chartboost:helium-adapter-ironsource:4.0.+@aar" />
 
         <!-- IronSource Android SDK -->
         <repositories>
