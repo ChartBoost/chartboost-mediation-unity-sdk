@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Helium;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEditor;
@@ -25,6 +26,9 @@ namespace Editor
         [PostProcessBuild]
         public static void PostProcess(BuildTarget buildTarget, string pathToBuiltProject)
         {
+            if (!HeliumSettings.IsSkAdNetworkResolutionEnabled)
+                return;
+            
             if (buildTarget != BuildTarget.iOS)
                 return;
 
