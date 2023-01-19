@@ -74,9 +74,7 @@ namespace Editor
             void MergeIDs(params SKAdNetworkIds[] ids)
             {
                 foreach (var id in ids)
-                {
                     AppendToFinalList(id, ref idsToAdd);
-                }
             }
 
             // json compatible SkAdNetworkFetching
@@ -120,7 +118,6 @@ namespace Editor
             idsToAdd.Add("2fnua5tdw4.skadnetwork");
             idsToAdd.Add("ydx93a7ass.skadnetwork");
             idsToAdd.Add("5a6flpkh64.skadnetwork");
-            idsToAdd.Add("p78axxw29g.skadnetwork");
             idsToAdd.Add("p78axxw29g.skadnetwork");
             idsToAdd.Add("v72qych5uu.skadnetwork");
             idsToAdd.Add("ludvb6z3bs.skadnetwork");
@@ -178,7 +175,10 @@ namespace Editor
             while (!request.isDone) { }
 
             if (skanIdsRequest.error != null)
-                Debug.Log( $"SKAdNetworkRequest failed with error: {skanIdsRequest.error}" );
+            {
+                Debug.Log($"SKAdNetworkRequest failed with error: {skanIdsRequest.error}");
+                return new SKAdNetworkIds();
+            }
 
             var skanIds = JsonUtility.FromJson<SKAdNetworkIds>(skanIdsRequest.downloadHandler.text);
             return skanIds;
@@ -191,16 +191,19 @@ namespace Editor
 
             while (!request.isDone) { }
             
-            if (skanIdsRequest.error != null)
-                Debug.Log( $"SkAdNetworkRequestUnity failed with error: {skanIdsRequest.error}" );
-
-            var contents = JsonConvert.DeserializeObject(skanIdsRequest.downloadHandler.text);
-            
             var ret = new SKAdNetworkIds
             {
                 company_name = "Unity",
                 skadnetwork_ids = new List<IdEntry>()
             };
+
+            if (skanIdsRequest.error != null)
+            {
+                Debug.Log($"SkAdNetworkRequestUnity failed with error: {skanIdsRequest.error}");
+                return ret;
+            }
+
+            var contents = JsonConvert.DeserializeObject(skanIdsRequest.downloadHandler.text);
             
             if (!(contents is JArray asArray)) return ret;
 
