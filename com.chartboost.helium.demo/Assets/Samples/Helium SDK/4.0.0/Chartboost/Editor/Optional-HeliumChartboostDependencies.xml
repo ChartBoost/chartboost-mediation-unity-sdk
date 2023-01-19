@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependencies>
+    <androidPackages>
+        <!-- Helium Chartboost Adapter -->
+        <androidPackage spec="com.chartboost:helium-adapter-chartboost:4.9.1.1.0+@aar" />
+
+        <!-- Helium Chartboost SDK -->
+        <androidPackage spec="com.chartboost:donotdeploy-chartboost-ads:9.2.+@aar" />
+
+        <!-- Partner SDK Dependencies-->
+        <androidPackage spec="org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4" />
+    </androidPackages>
+</dependencies>

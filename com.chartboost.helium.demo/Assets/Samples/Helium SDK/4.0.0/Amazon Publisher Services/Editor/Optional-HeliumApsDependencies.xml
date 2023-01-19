@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependencies>
+    <androidPackages>
+        <!-- Helium APS Adapter -->
+        <androidPackage spec="com.chartboost:helium-adapter-amazon-publisher-services:4.9.6.2.0+@aar" />
+
+        <!-- APS Android SDK -->
+        <androidPackage spec="com.amazon.android:aps-sdk:9.6.2"/>
+
+        <!-- Other Adapter Dependencies -->
+        <androidPackage spec="org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0"/>
+    </androidPackages>
+    <iosPods>
+        <!-- Helium APS Adapter -->
+        <iosPod name="ChartboostHeliumAdapterAPS" version="~> 4.0"/>
+
+        <!-- APS iOS SDK -->
+        <iosPod name="AmazonPublisherServicesSDK" version="~> 4.4" addToAllTargets="true"/>
+    </iosPods>
+</dependencies>

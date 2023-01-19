@@ -2,7 +2,7 @@
 <dependencies>
     <androidPackages>
         <!-- Helium Facebook Adapter -->
-        <androidPackage spec="com.chartboost:helium-adapter-facebook:4.0.+@aar" />
+        <androidPackage spec="com.chartboost:helium-adapter-meta-audience-network:4.6.12.0.0+@aar" />
 
         <!-- FAN Android SDK -->
         <androidPackage spec="com.facebook.android:audience-network-sdk:6.12.0" />
