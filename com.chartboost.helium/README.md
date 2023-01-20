@@ -46,7 +46,8 @@ In order to better understand the Helium Unity SDK, documentation has been split
 2. [Android Manifest](com.chartboost.helium/Documentation/setup/androidmanifest.md)
 3. [Google External Dependency Manager (EDM)](com.chartboost.helium/Documentation/setup/edm.md)
 4. [Multidex](com.chartboost.helium/Documentation/setup/multidex.md)
-5. [Helium Integration Checker](com.chartboost.helium/Documentation/integration-checker.md)
+5. [Helium Integration Checker](com.chartboost.helium/Documentation/setup/integration-checker.md)
+6. [Enabling SKAdNetwork](com.chartboost.helium/Documentation/setup/skadnetwork.md)
 
 #### Integration
 

@@ -133,6 +133,7 @@ namespace Helium
         [SerializeField] private string androidAppSignature = AndroidExampleAppSignatureLabel;
         [SerializeField] private bool isLoggingEnabled;
         [SerializeField] private bool isAutomaticInitEnabled;
+        [SerializeField] private bool isSkAdNetworkResolutionEnabled;
         [SerializeField] private HeliumPartners partnerKillSwitch = HeliumPartners.None;
 
         /// <summary>
@@ -234,7 +235,20 @@ namespace Helium
                 DirtyEditor();
             }
         }
-        
+
+        /// <summary>
+        /// Accessor for isSkAdNetworkResolutionEnabled.
+        /// </summary>
+        public static bool IsSkAdNetworkResolutionEnabled
+        {
+            get => Instance.isSkAdNetworkResolutionEnabled;
+            set
+            {
+                Instance.isSkAdNetworkResolutionEnabled = value;
+                DirtyEditor();
+            }
+        }
+
         private static void DirtyEditor()
         {
 #if UNITY_EDITOR
