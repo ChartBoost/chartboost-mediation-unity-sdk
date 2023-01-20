@@ -180,8 +180,16 @@ namespace Editor
                 return new SKAdNetworkIds();
             }
 
-            var skanIds = JsonUtility.FromJson<SKAdNetworkIds>(skanIdsRequest.downloadHandler.text);
-            return skanIds;
+            try
+            {
+                var skanIds = JsonUtility.FromJson<SKAdNetworkIds>(skanIdsRequest.downloadHandler.text);
+                return skanIds;
+            }
+            catch (NullReferenceException e)
+            {
+                Debug.Log($"SKAdNetworkRequest failed to parse json due to exception {e}");
+                return new SKAdNetworkIds();
+            }
         }
 
         private static SKAdNetworkIds SkAdNetworkRequestUnity(string url) 
@@ -207,14 +215,23 @@ namespace Editor
             
             if (!(contents is JArray asArray)) return ret;
 
-            foreach (var element in asArray)
-            {
-                var id = element["skadnetwork_id"];
-                if (id != null)
-                    ret.skadnetwork_ids.Add( new IdEntry { skadnetwork_id = id.ToString()});
-            }
 
-            return ret;
+            try
+            {
+                foreach (var element in asArray)
+                {
+                    var id = element["skadnetwork_id"];
+                    if (id != null)
+                        ret.skadnetwork_ids.Add( new IdEntry { skadnetwork_id = id.ToString()});
+                }
+
+                return ret;
+            }
+            catch (NullReferenceException e)
+            {
+                Debug.Log($"SkAdNetworkRequestUnity failed to parse json due to exception {e}");
+                return ret;
+            }
         }
 
         [Serializable]
