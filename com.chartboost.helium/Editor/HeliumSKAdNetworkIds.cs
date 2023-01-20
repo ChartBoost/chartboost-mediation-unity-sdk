@@ -43,7 +43,7 @@ namespace Editor
             foreach (var skadnetworkID in ids)
             {
                 var skanId = skanItems.AddDict();
-                skanId.SetString(SKAdNetworkIdKey, skadnetworkID);
+                skanId.SetString(SKAdNetworkIdKey, skadnetworkID.ToLower());
             }
 
             plist.WriteToFile(plistPath);
