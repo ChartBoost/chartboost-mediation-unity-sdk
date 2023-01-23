@@ -55,7 +55,7 @@ dependencies {
     implementation 'com.chartboost:helium-adapter-digital-turbine-exchange:4.8.2.1+@aar' // Assets/Samples/Helium SDK/4.0.0/Digital Turbine Exchange/Editor/Optional-HeliumDigitalTurbineExchangeDependencies.xml:5
     implementation 'com.chartboost:helium-adapter-google-bidding:4.21.3.0+@aar' // Assets/Samples/Helium SDK/4.0.0/Google Bidding/Editor/Optional-HeliumGoogleBiddingDependencies.xml:5
     implementation 'com.chartboost:helium-adapter-inmobi:4.10.1.1+@aar' // Assets/Samples/Helium SDK/4.0.0/InMobi/Editor/Optional-HeliumInMobiDependencies.xml:5
-    implementation 'com.chartboost:helium-adapter-ironsource:4.7.2.5.1+@aar' // Assets/Samples/Helium SDK/4.0.0/IronSource/Editor/Optional-HeliumIronSourceDependencies.xml:5
+    implementation 'com.chartboost:helium-adapter-ironsource:4.7.2.5+@aar' // Assets/Samples/Helium SDK/4.0.0/IronSource/Editor/Optional-HeliumIronSourceDependencies.xml:5
     implementation 'com.chartboost:helium-adapter-meta-audience-network:4.6.12.0+@aar' // Assets/Samples/Helium SDK/4.0.0/Meta Audience Network/Editor/Optional-HeliumMetaAudienceNetworkDependencies.xml:5
     implementation 'com.chartboost:helium-adapter-mintegral:4.16.0.31+@aar' // Assets/Samples/Helium SDK/4.0.0/Mintegral/Editor/Optional-HeliumMintegralDependencies.xml:5
     implementation 'com.chartboost:helium-adapter-pangle:4.4.3.0.4+@aar' // Assets/Samples/Helium SDK/4.0.0/Pangle/Editor/Optional-HeliumPangleDependencies.xml:5
@@ -71,7 +71,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-tasks:18.0.1' // Assets/Samples/Helium SDK/4.0.0/Helium/Editor/HeliumDependencies.xml:28
     implementation 'com.google.guava:guava:31.1-android' // Assets/Samples/Helium SDK/4.0.0/Google Bidding/Editor/Optional-HeliumGoogleBiddingDependencies.xml:15
     implementation 'com.inmobi.monetization:inmobi-ads:10.1.1' // Assets/Samples/Helium SDK/4.0.0/InMobi/Editor/Optional-HeliumInMobiDependencies.xml:8
-    implementation 'com.ironsource.sdk:mediationsdk:7.2.5.1' // Assets/Samples/Helium SDK/4.0.0/IronSource/Editor/Optional-HeliumIronSourceDependencies.xml:11
+    implementation 'com.ironsource.sdk:mediationsdk:7.2.5' // Assets/Samples/Helium SDK/4.0.0/IronSource/Editor/Optional-HeliumIronSourceDependencies.xml:11
     implementation 'com.mbridge.msdk.oversea:interstitialvideo:16.0.31' // Assets/Samples/Helium SDK/4.0.0/Mintegral/Editor/Optional-HeliumMintegralDependencies.xml:18
     implementation 'com.mbridge.msdk.oversea:mbbanner:16.0.31' // Assets/Samples/Helium SDK/4.0.0/Mintegral/Editor/Optional-HeliumMintegralDependencies.xml:21
     implementation 'com.mbridge.msdk.oversea:mbbid:16.0.31' // Assets/Samples/Helium SDK/4.0.0/Mintegral/Editor/Optional-HeliumMintegralDependencies.xml:22

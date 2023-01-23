@@ -18,7 +18,7 @@
     <package>com.chartboost:helium-adapter-digital-turbine-exchange:4.8.2.1+@aar</package>
     <package>com.chartboost:helium-adapter-google-bidding:4.21.3.0+@aar</package>
     <package>com.chartboost:helium-adapter-inmobi:4.10.1.1+@aar</package>
-    <package>com.chartboost:helium-adapter-ironsource:4.7.2.5.1+@aar</package>
+    <package>com.chartboost:helium-adapter-ironsource:4.7.2.5+@aar</package>
     <package>com.chartboost:helium-adapter-meta-audience-network:4.6.12.0+@aar</package>
     <package>com.chartboost:helium-adapter-mintegral:4.16.0.31+@aar</package>
     <package>com.chartboost:helium-adapter-pangle:4.4.3.0.4+@aar</package>
@@ -34,7 +34,7 @@
     <package>com.google.android.gms:play-services-tasks:18.0.1</package>
     <package>com.google.guava:guava:31.1-android</package>
     <package>com.inmobi.monetization:inmobi-ads:10.1.1</package>
-    <package>com.ironsource.sdk:mediationsdk:7.2.5.1</package>
+    <package>com.ironsource.sdk:mediationsdk:7.2.5</package>
     <package>com.mbridge.msdk.oversea:interstitialvideo:16.0.31</package>
     <package>com.mbridge.msdk.oversea:mbbanner:16.0.31</package>
     <package>com.mbridge.msdk.oversea:mbbid:16.0.31</package>

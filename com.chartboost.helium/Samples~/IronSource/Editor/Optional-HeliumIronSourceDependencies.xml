@@ -2,13 +2,13 @@
 <dependencies>
     <androidPackages>
         <!-- Helium IronSource Adapter -->
-        <androidPackage spec="com.chartboost:helium-adapter-ironsource:4.7.2.5.1+@aar" />
+        <androidPackage spec="com.chartboost:helium-adapter-ironsource:4.7.2.5+@aar" />
 
         <!-- IronSource Android SDK -->
         <repositories>
           <repository>https://android-sdk.is.com/</repository>
         </repositories>
-        <androidPackage spec="com.ironsource.sdk:mediationsdk:7.2.5.1"/>
+        <androidPackage spec="com.ironsource.sdk:mediationsdk:7.2.5"/>
 
     </androidPackages>
     <iosPods>
