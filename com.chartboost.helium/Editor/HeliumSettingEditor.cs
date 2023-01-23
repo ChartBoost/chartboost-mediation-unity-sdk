@@ -19,8 +19,10 @@ namespace Helium.Editor
 		private readonly GUIContent _androidLabel = new GUIContent("Android");
 		private readonly GUIContent _debuggingTitle = new GUIContent("Debugging");
 		private readonly GUIContent _automaticInitLabel = new GUIContent("Automatic Initialization");
-		private readonly GUIContent _enableLoggingToggle = new GUIContent("isLoggingEnabled");
-		private readonly GUIContent _enableAutomaticInitToggle = new GUIContent("isAutomaticallyInitializing");
+		private readonly GUIContent _enableLoggingToggle = new GUIContent("Logging Enabled");
+		private readonly GUIContent _enableAutomaticInitToggle = new GUIContent("Initialize Helium Automatically");
+		private readonly GUIContent _skAdNetworkLabel = new GUIContent("SKAdNetwork");
+		private readonly GUIContent _skAdNetworkToggle = new GUIContent("Use Helium SKAdNetwork Identifier Resolution");
 
 		private HeliumSettings _instance;
 		private GUIStyle _title;
@@ -110,12 +112,17 @@ namespace Helium.Editor
 			HeliumSettings.IsLoggingEnabled = EditorGUILayout.Toggle(_enableLoggingToggle, HeliumSettings.IsLoggingEnabled);
 			EditorGUILayout.EndHorizontal();
 			EditorGUILayout.Space();
-			
+
 			EditorGUILayout.LabelField(_automaticInitLabel, _title);
 			EditorGUILayout.BeginHorizontal();
 			HeliumSettings.IsAutomaticInitializationEnabled = EditorGUILayout.Toggle(_enableAutomaticInitToggle, HeliumSettings.IsAutomaticInitializationEnabled);
 			EditorGUILayout.EndHorizontal();
+			EditorGUILayout.Space();
 			
+			EditorGUILayout.LabelField(_skAdNetworkLabel, _title);
+			EditorGUILayout.BeginHorizontal();
+			HeliumSettings.IsSkAdNetworkResolutionEnabled = EditorGUILayout.Toggle(_skAdNetworkToggle, HeliumSettings.IsSkAdNetworkResolutionEnabled);
+			EditorGUILayout.EndHorizontal();
 		}
 	}
 }
