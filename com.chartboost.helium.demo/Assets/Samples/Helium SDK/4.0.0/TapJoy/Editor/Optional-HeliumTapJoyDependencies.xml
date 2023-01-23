@@ -2,7 +2,7 @@
 <dependencies>
     <androidPackages>
         <!-- Helium Tapjoy Adapter -->
-        <androidPackage spec="com.chartboost:helium-adapter-tapjoy:4.12.9.1.0+@aar" />
+        <androidPackage spec="com.chartboost:helium-adapter-tapjoy:4.12.9.1+@aar" />
 
         <!-- Tapjoy Android SDK -->
         <repositories>
@@ -12,9 +12,9 @@
     </androidPackages>
     <iosPods>
         <!-- Helium Tapjoy Adapter -->
-        <iosPod name="ChartboostHeliumAdapterTJ" version="~> 4.0"/>
+        <iosPod name="ChartboostHeliumAdapterTapJoy" version="~> 4.12.10.0"/>
 
         <!-- Tapjoy iOS SDK -->
-        <iosPod name="TapjoySDK" version="~> 12.8"/>
+        <iosPod name="TapjoySDK" version="~> 12.10.0"/>
     </iosPods>
 </dependencies>

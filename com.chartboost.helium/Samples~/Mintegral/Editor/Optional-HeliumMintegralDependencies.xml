@@ -2,7 +2,7 @@
 <dependencies>
     <androidPackages>
         <!-- Helium Mintegral Adapter -->
-        <androidPackage spec="com.chartboost:helium-adapter-mintegral:4.16.0.31.0+@aar" />
+        <androidPackage spec="com.chartboost:helium-adapter-mintegral:4.16.0.31+@aar" />
 
         <!-- Mintegral Android SDK -->
         <repositories>
@@ -23,9 +23,9 @@
     </androidPackages>
     <iosPods>
         <!-- Helium Mintegral Adapter -->
-        <iosPod name="ChartboostHeliumAdapterMintegral" version="~> 4.0"/>
+        <iosPod name="ChartboostHeliumAdapterMintegral" version="~> 4.7.1.9"/>
 
         <!-- Mintegral iOS SDK -->
-        <iosPod name="MintegralAdSDK" version="~> 7.1"/>
+        <iosPod name="MintegralAdSDK" version="~> 7.1.9"/>
     </iosPods>
 </dependencies>

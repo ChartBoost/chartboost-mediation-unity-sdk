@@ -2,16 +2,16 @@
 <dependencies>
     <androidPackages>
         <!-- Helium InMobi Adapter -->
-        <androidPackage spec="com.chartboost:helium-adapter-inmobi:4.10.1.1.0+@aar" />
+        <androidPackage spec="com.chartboost:helium-adapter-inmobi:4.10.1.1+@aar" />
 
         <!-- InMobi Android SDK -->
         <androidPackage spec="com.inmobi.monetization:inmobi-ads:10.1.1"/>
     </androidPackages>
     <iosPods>
         <!-- Helium InMobi Adapter -->
-        <iosPod name="ChartboostHeliumAdapterInMobi" version="~> 4.0"/>
+        <iosPod name="ChartboostHeliumAdapterInMobi" version="~> 4.10.1.2"/>
 
         <!-- InMobi iOS SDK -->
-        <iosPod name="InMobiSDK" version="~> 10.0"/>
+        <iosPod name="InMobiSDK" version="~> 10.1.2"/>
     </iosPods>
 </dependencies>
