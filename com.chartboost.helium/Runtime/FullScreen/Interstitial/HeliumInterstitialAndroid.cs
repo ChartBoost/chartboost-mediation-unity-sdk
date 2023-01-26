@@ -60,10 +60,10 @@ namespace Helium.FullScreen.Interstitial
         }
 
         /// <inheritdoc cref="HeliumFullScreenBase.ClearLoaded"/>>
-        public override bool ClearLoaded()
+        public override void ClearLoaded()
         {
             base.ClearLoaded();
-            return _androidAd.Call<bool>("clearLoaded");
+            _androidAd.Call<bool>("clearLoaded");
         }
     }
 }

@@ -108,56 +108,39 @@ class HeliumUnityBridge {
 
     fun getInterstitialAd(placementName: String): HeliumUnityAdWrapper {
         val interstitialAd = HeliumInterstitialAd(UnityPlayer.currentActivity, placementName, object : HeliumFullscreenAdListener {
-            override fun onAdCached(
-                placementName: String,
-                loadId: String,
-                bidInfo: Map<String, String>,
-                error: HeliumAdException?
-            ) {
-                serializeHeliumLoadEvent(
-                    placementName,
-                    bidInfo,
-                    error,
-                    HeliumLoadEventConsumer {placementName: String, auctionId: String, partnerId: String, price: Double, error: String ->
-                        interstitialEventsListener?.DidLoadInterstitial(
-                            placementName,
-                            auctionId,
-                            partnerId,
-                            price,
-                            error
-                        )
-                    })
+            override fun onAdCached(placementName: String, loadId: String, bidInfo: Map<String, String>, error: HeliumAdException?) {
+                serializeHeliumLoadEvent(placementName, loadId, bidInfo, error,
+                    HeliumLoadEventConsumer { placementName: String, loadId: String, error: String ->
+                        interstitialEventsListener?.DidLoadInterstitial(placementName, loadId, error)
+                    },
+                    HeliumEventProcessor.HeliumBidEventConsumer { placementName: String, auctionId: String, partnerId: String, price: Double, error: String ->
+                        interstitialEventsListener?.DidWinBidInterstitial(placementName, auctionId, partnerId, price, error) }
+                )
             }
 
             override fun onAdShown(placementName: String, error: HeliumAdException?) {
-                serializeHeliumEventWithError(
-                    placementName,
-                    error,
+                serializeHeliumEventWithError(placementName, error,
                     HeliumEventConsumerWithError { placementName: String, error: String ->
                         interstitialEventsListener?.DidShowInterstitial(placementName, error)
                     })
             }
 
             override fun onAdClosed(placementName: String, error: HeliumAdException?) {
-                serializeHeliumEventWithError(
-                    placementName,
-                    error,
+                serializeHeliumEventWithError(placementName, error,
                     HeliumEventConsumerWithError { placementName: String, error: String ->
                         interstitialEventsListener?.DidCloseInterstitial(placementName, error)
                     })
             }
 
             override fun onAdClicked(placementName: String) {
-                serializeHeliumEvent(
-                    placementName,
+                serializeHeliumEvent(placementName,
                     HeliumEventConsumer { placementName: String ->
                         interstitialEventsListener?.DidClickInterstitial(placementName)
                     })
             }
 
             override fun onAdImpressionRecorded(placementName: String) {
-                serializeHeliumEvent(
-                    placementName,
+                serializeHeliumEvent(placementName,
                     HeliumEventConsumer { placementName: String ->
                         interstitialEventsListener?.DidRecordImpression(placementName)
                     })
@@ -172,64 +155,46 @@ class HeliumUnityBridge {
 
     fun getRewardedAd(placementName: String): HeliumUnityAdWrapper {
         val rewardedAd = HeliumRewardedAd(UnityPlayer.currentActivity, placementName, object : HeliumFullscreenAdListener {
-            override fun onAdCached(
-                placementName: String,
-                loadId: String,
-                bidInfo: Map<String, String>,
-                error: HeliumAdException?
-            ) {
-                serializeHeliumLoadEvent(
-                    placementName,
-                    bidInfo,
-                    error,
-                    HeliumLoadEventConsumer {placementName: String, auctionId: String, partnerId: String, price: Double, error: String ->
-                        rewardedEventListener?.DidLoadRewarded(
-                            placementName,
-                            auctionId,
-                            partnerId,
-                            price,
-                            error
-                        )
-                    })
+            override fun onAdCached(placementName: String, loadId: String, bidInfo: Map<String, String>, error: HeliumAdException?) {
+                serializeHeliumLoadEvent(placementName, loadId, bidInfo, error,
+                    HeliumLoadEventConsumer { placementName: String, loadId: String, error: String ->
+                        rewardedEventListener?.DidLoadRewarded(placementName, loadId, error)
+                    },
+                    HeliumEventProcessor.HeliumBidEventConsumer { placementName: String, auctionId: String, partnerId: String, price: Double, error: String ->
+                        rewardedEventListener?.DidWinBidRewarded(placementName, auctionId, partnerId, price, error) }
+                )
             }
 
             override fun onAdShown(placementName: String, error: HeliumAdException?) {
-                serializeHeliumEventWithError(
-                    placementName,
-                    error,
+                serializeHeliumEventWithError(placementName, error,
                     HeliumEventConsumerWithError { placementName: String, error: String ->
                         rewardedEventListener?.DidShowRewarded(placementName, error)
                     })
             }
 
             override fun onAdClosed(placementName: String, error: HeliumAdException?) {
-                serializeHeliumEventWithError(
-                    placementName,
-                    error,
+                serializeHeliumEventWithError(placementName, error,
                     HeliumEventConsumerWithError { placementName: String, error: String ->
                         rewardedEventListener?.DidCloseRewarded(placementName, error)
                     })
             }
 
             override fun onAdClicked(placementName: String) {
-                serializeHeliumEvent(
-                    placementName,
+                serializeHeliumEvent(placementName,
                     HeliumEventConsumer { placementName: String ->
-                        rewardedEventListener?.DidClickRewarded(placementName,)
+                        rewardedEventListener?.DidClickRewarded(placementName)
                     })
             }
 
             override fun onAdImpressionRecorded(placementName: String) {
-                serializeHeliumEvent(
-                    placementName,
+                serializeHeliumEvent(placementName,
                     HeliumEventConsumer { placementName: String ->
                         rewardedEventListener?.DidRecordImpression(placementName)
                     })
             }
 
             override fun onAdRewarded(placementName: String) {
-                serializeHeliumEvent(
-                    placementName,
+                serializeHeliumEvent(placementName,
                     HeliumEventConsumer { placementName: String->
                         rewardedEventListener?.DidReceiveReward(placementName)
                     })
@@ -247,25 +212,14 @@ class HeliumUnityBridge {
             2 -> wantedSize = HeliumBannerSize.LEADERBOARD
         }
         val bannerAd = HeliumBannerAd(UnityPlayer.currentActivity, placementName, wantedSize, object : HeliumBannerAdListener {
-            override fun onAdCached(
-                placementName: String,
-                loadId: String,
-                bidInfo: Map<String, String>,
-                error: HeliumAdException?
-            ) {
-                serializeHeliumLoadEvent(
-                    placementName,
-                    bidInfo,
-                    error,
-                    HeliumLoadEventConsumer {placementName: String, auctionId: String, partnerId: String, price: Double, error: String ->
-                        bannerEventsListener?.DidLoadBanner(
-                            placementName,
-                            auctionId,
-                            partnerId,
-                            price,
-                            error
-                        )
-                    })
+            override fun onAdCached(placementName: String, loadId: String, bidInfo: Map<String, String>, error: HeliumAdException?) {
+                serializeHeliumLoadEvent(placementName, loadId, bidInfo, error,
+                    HeliumLoadEventConsumer { placementName: String, loadId: String, error: String ->
+                        bannerEventsListener?.DidLoadBanner(placementName, loadId, error)
+                    },
+                    HeliumEventProcessor.HeliumBidEventConsumer { placementName: String, auctionId: String, partnerId: String, price: Double, error: String ->
+                        bannerEventsListener?.DidWinBidBanner(placementName, auctionId, partnerId, price, error) }
+                )
             }
 
             override fun onAdClicked(placementName: String) {

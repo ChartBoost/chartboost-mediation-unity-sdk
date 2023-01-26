@@ -24,10 +24,15 @@ object HeliumEventProcessor {
     @JvmStatic
     fun serializeHeliumLoadEvent(
         placementName: String,
+        loadId: String,
         data: Map<String, String>,
         error: HeliumAdException?,
-        eventConsumer: HeliumLoadEventConsumer<String, String, String, Double, String>
+        loadConsumer: HeliumLoadEventConsumer<String, String, String>,
+        bidConsumer: HeliumBidEventConsumer<String, String, String, Double, String>
     ) {
+        val errorMessage = error?.toString() ?: ""
+        loadConsumer.accept(placementName, loadId, errorMessage)
+
         val partnerId = data["partner_id"] ?: ""
         val auctionId = data["auction-id"] ?: ""
         val price = try {
@@ -36,7 +41,8 @@ object HeliumEventProcessor {
             Log.d(TAG, "HeliumBidEvent failed to serialize price, defaulting to 0.0", e)
             0.0
         }
-        eventConsumer.accept(placementName, auctionId, partnerId, price, error?.toString() ?: "")
+
+        bidConsumer.accept(placementName, auctionId, partnerId, price, errorMessage)
     }
 
     @JvmStatic
@@ -60,7 +66,11 @@ object HeliumEventProcessor {
         fun accept(placementName: PlacementName, errorMessage: ErrorMessage)
     }
 
-    fun interface HeliumLoadEventConsumer<PlacementName, AuctionId, PartnerId, Price, Error> {
+    fun interface HeliumLoadEventConsumer<PlacementName, LoadId, Error> {
+        fun accept(placementName: PlacementName, loadId: LoadId, error: Error)
+    }
+
+    fun interface HeliumBidEventConsumer<PlacementName, AuctionId, PartnerId, Price, Error> {
         fun accept(placementName: PlacementName, auctionId: AuctionId, partnerId: PartnerId, price: Price, error: Error)
     }
 
