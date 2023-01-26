@@ -19,14 +19,14 @@ namespace Helium.FullScreen.Interstitial
         /// Called after an interstitial has been displayed on screen.
         /// </summary>
         [Preserve]
-        public event HeliumPlacementEventWithError DidShowInterstitial;
+        public event HeliumPlacementEvent DidShowInterstitial;
 
         /// <summary>
         /// Called after an interstitial has been closed.
         /// Implement to be notified of when an interstitial has been closed for a given placement.
         /// </summary>
         [Preserve]
-        public event HeliumPlacementEventWithError DidCloseInterstitial;
+        public event HeliumPlacementEvent DidCloseInterstitial;
 
         /// <summary>
         /// Called after an interstitial has been clicked.
@@ -41,5 +41,12 @@ namespace Helium.FullScreen.Interstitial
         /// </summary>
         [Preserve]
         public event HeliumPlacementEvent DidRecordImpressionInterstitial;
+        
+        /// <summary>
+        /// Called with bid information after an interstitial has been loaded from the Helium API
+        /// servers and cached locally.
+        /// </summary>
+        [Preserve]
+        public event HeliumBidEvent DidWinBidInterstitial;
     }
 }

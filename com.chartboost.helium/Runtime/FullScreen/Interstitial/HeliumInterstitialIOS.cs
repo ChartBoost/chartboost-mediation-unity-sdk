@@ -54,10 +54,10 @@ namespace Helium.FullScreen.Interstitial
         }
 
         /// <inheritdoc cref="HeliumFullScreenBase.ClearLoaded"/>>
-        public override bool ClearLoaded()
+        public override void ClearLoaded()
         {
             base.ClearLoaded();
-            return _heliumSdkInterstitialClearLoaded(_uniqueId);
+            _heliumSdkInterstitialClearLoaded(_uniqueId);
         }
 
         ~HeliumInterstitialIOS() 

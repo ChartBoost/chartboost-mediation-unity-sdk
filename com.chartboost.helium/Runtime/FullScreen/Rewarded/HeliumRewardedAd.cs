@@ -42,7 +42,7 @@ namespace Helium.FullScreen.Rewarded
 			=> _platformRewarded.ReadyToShow();
 		
 		/// <inheritdoc cref="HeliumRewardedBase.ClearLoaded"/>>
-		public override bool ClearLoaded()
+		public override void ClearLoaded()
 			=> _platformRewarded.ClearLoaded();
 
 		/// <inheritdoc cref="HeliumRewardedBase.SetCustomData"/>>

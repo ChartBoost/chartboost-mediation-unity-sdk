@@ -35,16 +35,17 @@ void _setLifeCycleCallbacks(HeliumEvent didStartCallback, HeliumILRDEvent didRec
     [[HeliumSdkManager sharedManager] setLifeCycleCallbacks:didStartCallback didReceiveILRDCallback:didReceiveILRDCallback didReceivePartnerInitializationData:didReceivePartnerInitializationDataCallback];
 }
 
-void _setInterstitialCallbacks(HeliumPlacementEvent didLoadCallback, HeliumPlacementEvent didShowCallback, HeliumPlacementEvent didClickCallback, HeliumPlacementEvent didCloseCallback, HeliumPlacementEvent didRecordImpression, HeliumBidWinEvent didWinBidCallback)
+void _setInterstitialCallbacks(HeliumPlacementLoadEvent didLoadCallback, HeliumPlacementEvent didShowCallback, HeliumPlacementEvent didCloseCallback, HeliumPlacementEvent didClickCallback, HeliumPlacementEvent didRecordImpression, HeliumBidWinEvent didWinBidCallback)
 {
-    [[HeliumSdkManager sharedManager] setInterstitialCallbacks:didLoadCallback didShowCallback:didShowCallback didClickCallback:didClickCallback didCloseCallback:didCloseCallback didRecordImpression:didRecordImpression didWinBidCallback:didWinBidCallback];
+    [[HeliumSdkManager sharedManager] setInterstitialCallbacks:didLoadCallback didShowCallback:didShowCallback didCloseCallback:didCloseCallback didClickCallback:didClickCallback didRecordImpression:didRecordImpression didWinBidCallback:didWinBidCallback];
 }
 
-void _setRewardedCallbacks(HeliumPlacementEvent didLoadCallback, HeliumPlacementEvent didShowCallback, HeliumPlacementEvent didClickCallback, HeliumPlacementEvent didCloseCallback, HeliumPlacementEvent didRecordImpression, HeliumBidWinEvent didWinBidCallback, HeliumRewardEvent didReceiveRewardCallback){
-    [[HeliumSdkManager sharedManager] setRewardedCallbacks:didLoadCallback didShowCallback:didShowCallback didClickCallback:didClickCallback didCloseCallback:didCloseCallback didRecordImpression:didRecordImpression didWinBidCallback:didWinBidCallback didReceiveRewardCallback:didReceiveRewardCallback];
+void _setRewardedCallbacks(HeliumPlacementLoadEvent didLoadCallback, HeliumPlacementEvent didShowCallback, HeliumPlacementEvent didCloseCallback, HeliumPlacementEvent didClickCallback, HeliumPlacementEvent didRecordImpression, HeliumPlacementEvent didReceiveRewardCallback, HeliumBidWinEvent didWinBidCallback){
+        
+    [[HeliumSdkManager sharedManager] setRewardedCallbacks:didLoadCallback didShowCallback:didShowCallback didCloseCallback:didCloseCallback didClickCallback:didClickCallback didRecordImpression:didRecordImpression didReceiveRewardCallback:didReceiveRewardCallback didWinBidCallback:didWinBidCallback];
 }
 
-void _setBannerCallbacks(HeliumPlacementEvent didLoadCallback, HeliumPlacementEvent didRecordImpression, HeliumPlacementEvent didClickCallback, HeliumBidWinEvent didWinBidCallback)
+void _setBannerCallbacks(HeliumPlacementLoadEvent didLoadCallback, HeliumPlacementEvent didRecordImpression, HeliumPlacementEvent didClickCallback, HeliumBidWinEvent didWinBidCallback)
 {
     [[HeliumSdkManager sharedManager] setBannerCallbacks:didLoadCallback didRecordImpression:didRecordImpression didClickCallback:didClickCallback  didWinBidCallback:didWinBidCallback];
 }
@@ -120,10 +121,10 @@ void _heliumSdkInterstitialAdLoad(const void * uniqueId)
     });
 }
 
-BOOL _heliumSdkInterstitialClearLoaded(const void * uniqueId)
+void _heliumSdkInterstitialClearLoaded(const void * uniqueId)
 {
     id<HeliumInterstitialAd> ad = (__bridge id<HeliumInterstitialAd>)uniqueId;
-    return [ad clearLoadedAd];
+    [ad clearLoadedAd];
 }
 
 void _heliumSdkInterstitialAdShow(const void * uniqueId)
@@ -174,10 +175,10 @@ void _heliumSdkRewardedAdLoad(const void * uniqueId)
     });
 }
 
-BOOL _heliumSdkRewardedClearLoaded(const void * uniqueId)
+void _heliumSdkRewardedClearLoaded(const void * uniqueId)
 {
     id<HeliumRewardedAd> ad = (__bridge id<HeliumRewardedAd>)uniqueId;
-    return [ad clearLoadedAd];
+    [ad clearLoadedAd];
 }
 
 void _heliumSdkRewardedAdShow(const void * uniqueId)

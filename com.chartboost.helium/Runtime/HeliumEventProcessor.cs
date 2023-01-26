@@ -82,26 +82,7 @@ namespace Helium
                 }
             }, null);
         }
-
-        public static void ProcessHeliumPlacementEvent(string placementName, HeliumPlacementEvent placementEvent)
-        {
-            if (placementEvent == null)
-                return;
-            
-            _context.Post(o =>
-            {
-                try
-                {
-                        placementEvent(placementName);
-                }
-                catch (Exception e)
-                {
-                    ReportUnexpectedSystemError(e.ToString());
-                }
-            }, null);
-        }
-        
-        public static void ProcessHeliumPlacementEventWithError(string placementName, string error, HeliumPlacementEventWithError placementEvent)
+        public static void ProcessHeliumPlacementEvent(string placementName, string error, HeliumPlacementEvent placementEvent)
         {
             if (placementEvent == null)
                 return;
@@ -119,7 +100,7 @@ namespace Helium
             }, null);
         }
 
-        public static void ProcessHeliumLoadEvent(string placementName, string auctionId, string partnerId, double price, string error, HeliumPlacementLoadEvent bidEvent)
+        public static void ProcessHeliumLoadEvent(string placementName, string loadId, string error, HeliumPlacementLoadEvent bidEvent)
         {
             if (bidEvent == null)
                 return;
@@ -128,8 +109,26 @@ namespace Helium
             {
                 try
                 {
-                    var bidIn = new HeliumBidInfo(auctionId, partnerId, price);
-                    bidEvent(placementName, bidIn, error);
+                    bidEvent(placementName, loadId, error);
+                }
+                catch (Exception e)
+                {
+                    ReportUnexpectedSystemError(e.ToString());
+                }
+            }, null);
+        }
+        
+        public static void ProcessHeliumBidEvent(string placementName, string auctionId, string partnerId, double price, string error, HeliumBidEvent bidEvent)
+        {
+            if (bidEvent == null)
+                return;
+            
+            _context.Post(o =>
+            {
+                try
+                {
+                    var heliumBid = new HeliumBidInfo(auctionId, partnerId, price);
+                    bidEvent(placementName, heliumBid, error);
                 }
                 catch (Exception e)
                 {

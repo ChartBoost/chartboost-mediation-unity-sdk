@@ -32,6 +32,6 @@ namespace Helium.FullScreen
         /// </summary>
         /// <returns>true if successfully cleared</returns>
         [Preserve]
-        bool ClearLoaded();
+        void ClearLoaded();
     }
 }

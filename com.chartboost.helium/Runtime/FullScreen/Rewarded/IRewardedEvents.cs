@@ -19,14 +19,14 @@ namespace Helium.FullScreen.Rewarded
         /// Called after a rewarded ad has been displayed on screen.
         /// </summary>
         [Preserve]
-        public event HeliumPlacementEventWithError DidShowRewarded;
+        public event HeliumPlacementEvent DidShowRewarded;
 
         /// <summary>
         /// Called after a rewarded ad has been closed.
         /// Implement to be notified of when a rewarded ad has been closed for a given placement
         /// </summary>
         [Preserve]
-        public event HeliumPlacementEventWithError DidCloseRewarded;
+        public event HeliumPlacementEvent DidCloseRewarded;
 
         /// <summary>
         /// Called after a rewarded ad has been clicked.
@@ -49,5 +49,12 @@ namespace Helium.FullScreen.Rewarded
         /// </summary>
         [Preserve]
         public event HeliumPlacementEvent DidReceiveReward;
+        
+        /// <summary>
+        /// Called with bid information after a rewarded ad has been loaded from the Helium API
+        /// servers and cached locally.
+        /// </summary>
+        [Preserve]
+        public event HeliumBidEvent DidWinBidRewarded;
     }
 }

@@ -178,28 +178,33 @@ namespace Helium.Platforms
         }
 
 #pragma warning disable 67
-        // Interstitials
+        // Life-cycle
         public virtual event HeliumEvent DidStart;
         public virtual event HeliumILRDEvent DidReceiveImpressionLevelRevenueData;
         public virtual event HeliumPartnerInitializationEvent DidReceivePartnerInitializationData;
+        
+        // Interstitials
         public virtual event HeliumPlacementLoadEvent DidLoadInterstitial;
-        public virtual event HeliumPlacementEventWithError DidShowInterstitial;
-        public virtual event HeliumPlacementEventWithError DidCloseInterstitial;
+        public virtual event HeliumPlacementEvent DidShowInterstitial;
+        public virtual event HeliumPlacementEvent DidCloseInterstitial;
         public virtual event HeliumPlacementEvent DidClickInterstitial;
         public virtual event HeliumPlacementEvent DidRecordImpressionInterstitial;
-        
+        public virtual event HeliumBidEvent DidWinBidInterstitial;
+
         // Rewarded Videos
         public virtual event HeliumPlacementLoadEvent DidLoadRewarded;
-        public virtual event HeliumPlacementEventWithError DidShowRewarded;
-        public virtual event HeliumPlacementEventWithError DidCloseRewarded;
+        public virtual event HeliumPlacementEvent DidShowRewarded;
+        public virtual event HeliumPlacementEvent DidCloseRewarded;
         public virtual event HeliumPlacementEvent DidClickRewarded;
         public virtual event HeliumPlacementEvent DidRecordImpressionRewarded;
         public virtual event HeliumPlacementEvent DidReceiveReward;
-        
+        public virtual event HeliumBidEvent DidWinBidRewarded;
+
         // Banners
         public virtual event HeliumPlacementLoadEvent DidLoadBanner;
         public virtual event HeliumPlacementEvent DidClickBanner;
         public virtual event HeliumPlacementEvent DidRecordImpressionBanner;
+        public virtual event HeliumBidEvent DidWinBidBanner;
 #pragma warning restore 67
     }
 }

@@ -43,7 +43,7 @@ namespace Helium.FullScreen.Interstitial
             => _platformInterstitial.ReadyToShow();
 
         /// <inheritdoc cref="HeliumFullScreenBase.ClearLoaded"/>>
-        public override bool ClearLoaded()
+        public override void ClearLoaded()
             => _platformInterstitial.ClearLoaded();
     }
 }

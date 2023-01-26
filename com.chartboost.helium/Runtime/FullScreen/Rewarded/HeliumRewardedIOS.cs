@@ -50,10 +50,10 @@ namespace Helium.FullScreen.Rewarded
         }
 
         /// <inheritdoc cref="HeliumRewardedBase.ClearLoaded"/>>
-        public override bool ClearLoaded()
+        public override void ClearLoaded()
         {
             base.ClearLoaded();
-            return _heliumSdkRewardedClearLoaded(_uniqueId);
+            _heliumSdkRewardedClearLoaded(_uniqueId);
         }
 
         /// <inheritdoc cref="HeliumRewardedBase.SetCustomData"/>>
