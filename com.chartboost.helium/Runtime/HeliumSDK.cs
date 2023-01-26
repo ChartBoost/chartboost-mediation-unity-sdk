@@ -184,7 +184,7 @@ namespace Helium
             add => _heliumExternal.DidRecordImpressionBanner += value;
             remove => _heliumExternal.DidRecordImpressionBanner -= value;
         }
-        
+
         /// <inheritdoc cref="IBannerEvents.DidWinBidBanner"/>>
         public static event HeliumBidEvent DidWinBidBanner
         {

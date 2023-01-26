@@ -117,7 +117,7 @@ namespace Helium
                 }
             }, null);
         }
-        
+
         public static void ProcessHeliumBidEvent(string placementName, string auctionId, string partnerId, double price, string error, HeliumBidEvent bidEvent)
         {
             if (bidEvent == null)
