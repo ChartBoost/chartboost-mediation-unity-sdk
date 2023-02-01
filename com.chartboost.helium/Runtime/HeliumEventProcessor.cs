@@ -100,7 +100,7 @@ namespace Helium
             }, null);
         }
 
-        public static void ProcessHeliumLoadEvent(string placementName, string loadId, string error, HeliumPlacementLoadEvent bidEvent)
+        public static void ProcessHeliumLoadEvent(string placementName, string loadId, string auctionId, string partnerId, double price, string error, HeliumPlacementLoadEvent bidEvent)
         {
             if (bidEvent == null)
                 return;
@@ -109,26 +109,8 @@ namespace Helium
             {
                 try
                 {
-                    bidEvent(placementName, loadId, error);
-                }
-                catch (Exception e)
-                {
-                    ReportUnexpectedSystemError(e.ToString());
-                }
-            }, null);
-        }
-
-        public static void ProcessHeliumBidEvent(string placementName, string auctionId, string partnerId, double price, string error, HeliumBidEvent bidEvent)
-        {
-            if (bidEvent == null)
-                return;
-            
-            _context.Post(o =>
-            {
-                try
-                {
-                    var heliumBid = new HeliumBidInfo(auctionId, partnerId, price);
-                    bidEvent(placementName, heliumBid, error);
+                    var bidInfo = new HeliumBidInfo(auctionId, partnerId, price);
+                    bidEvent(placementName, loadId, bidInfo, error);
                 }
                 catch (Exception e)
                 {

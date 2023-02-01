@@ -27,12 +27,5 @@ namespace Helium
     /// /// <param name="loadId">The placement name for the placement.</param>
     /// <param name="error">The error encountered, if any.</param>
     /// </summary>
-    public delegate void HeliumPlacementLoadEvent(string placement, string loadId, string error);
-    
-    /// <summary>
-    /// <param name="placement">The placement name for the placement.</param>
-    /// <param name="bid">The bid information, if any.</param>
-    /// </summary>
-    public delegate void HeliumBidEvent(string placement, HeliumBidInfo bid, string error);
-
+    public delegate void HeliumPlacementLoadEvent(string placement, string loadId, HeliumBidInfo bidInfo, string error);
 }

@@ -13,7 +13,7 @@
 
     <iosPods>
         <!-- Helium Chartboost Adapter -->
-        <iosPod name="ChartboostHeliumAdapterChartboost" version="~> 4.9.2.0"/>
+        <iosPod name="ChartboostMediationAdapterChartboost" version="~> 4.9.2.0"/>
 
         <!-- Chartboost iOS SDK -->
         <iosPod name="ChartboostSDK" version="~> 9.2.0"/>

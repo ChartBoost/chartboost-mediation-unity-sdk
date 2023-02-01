@@ -16,7 +16,7 @@
     </androidPackages>
     <iosPods>
         <!-- Helium Google Bidding Adapter -->
-        <iosPod name="ChartboostHeliumAdapterGoogleBidding" version="~> 4.9.12.0"/>
+        <iosPod name="ChartboostMediationAdapterGoogleBidding" version="~> 4.9.12.0"/>
 
         <!-- Google Bidding iOS SDK -->
         <iosPod name="Google-Mobile-Ads-SDK" version="~> 9.12.0"/>

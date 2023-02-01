@@ -189,7 +189,6 @@ namespace Helium.Platforms
         public virtual event HeliumPlacementEvent DidCloseInterstitial;
         public virtual event HeliumPlacementEvent DidClickInterstitial;
         public virtual event HeliumPlacementEvent DidRecordImpressionInterstitial;
-        public virtual event HeliumBidEvent DidWinBidInterstitial;
 
         // Rewarded Videos
         public virtual event HeliumPlacementLoadEvent DidLoadRewarded;
@@ -198,13 +197,11 @@ namespace Helium.Platforms
         public virtual event HeliumPlacementEvent DidClickRewarded;
         public virtual event HeliumPlacementEvent DidRecordImpressionRewarded;
         public virtual event HeliumPlacementEvent DidReceiveReward;
-        public virtual event HeliumBidEvent DidWinBidRewarded;
 
         // Banners
         public virtual event HeliumPlacementLoadEvent DidLoadBanner;
         public virtual event HeliumPlacementEvent DidClickBanner;
         public virtual event HeliumPlacementEvent DidRecordImpressionBanner;
-        public virtual event HeliumBidEvent DidWinBidBanner;
 #pragma warning restore 67
     }
 }

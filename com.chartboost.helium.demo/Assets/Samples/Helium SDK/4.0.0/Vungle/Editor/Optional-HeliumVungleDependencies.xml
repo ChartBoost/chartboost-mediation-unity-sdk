@@ -11,7 +11,7 @@
     </androidPackages>
     <iosPods>
         <!-- Helium Vungle Adapter -->
-        <iosPod name="ChartboostHeliumAdapterVungle" version="~> 4.6.12.1"/>
+        <iosPod name="ChartboostMediationAdapterVungle" version="~> 4.6.12.1"/>
 
         <!-- Vungle iOS SDK -->
         <iosPod name="VungleSDK-iOS" version="~> 6.12.1"/>

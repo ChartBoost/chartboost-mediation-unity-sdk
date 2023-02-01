@@ -9,7 +9,7 @@
     </androidPackages>
     <iosPods>
         <!-- Helium AppLovin Adapter -->
-        <iosPod name="ChartboostHeliumAdapterAppLovin" version="~> 4.11.5.4"/>
+        <iosPod name="ChartboostMediationAdapterAppLovin" version="~> 4.11.5.4"/>
 
         <!-- AppLovin iOS SDK -->
         <iosPod name="AppLovinSDK" version="~> 11.5.4"/>

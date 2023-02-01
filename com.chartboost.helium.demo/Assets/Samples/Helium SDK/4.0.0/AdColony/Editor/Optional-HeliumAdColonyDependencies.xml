@@ -9,7 +9,7 @@
     </androidPackages>
     <iosPods>
         <!-- Helium AdMob Adapter -->
-        <iosPod name="ChartboostHeliumAdapterAdColony" version="~> 4.4.9.0"/>
+        <iosPod name="ChartboostMediationAdapterAdColony" version="~> 4.4.9.0"/>
         
         <!-- AdColony iOS SDK-->
         <iosPod name="AdColony" version="~> 4.9.0"/>

@@ -14,7 +14,7 @@
     </androidPackages>
     <iosPods>
         <!-- Helium Pangle Adapter -->
-        <iosPod name="ChartboostHeliumAdapterPangle" version="~> 4.4.6.2"/>
+        <iosPod name="ChartboostMediationAdapterPangle" version="~> 4.4.6.2"/>
 
         <!-- Pangle iOS SDK -->
         <iosPod name="Ads-Global" version="~> 4.6.2.2"/>

@@ -49,12 +49,5 @@ namespace Helium.FullScreen.Rewarded
         /// </summary>
         [Preserve]
         public event HeliumPlacementEvent DidReceiveReward;
-        
-        /// <summary>
-        /// Called with bid information after a rewarded ad has been loaded from the Helium API
-        /// servers and cached locally.
-        /// </summary>
-        [Preserve]
-        public event HeliumBidEvent DidWinBidRewarded;
     }
 }

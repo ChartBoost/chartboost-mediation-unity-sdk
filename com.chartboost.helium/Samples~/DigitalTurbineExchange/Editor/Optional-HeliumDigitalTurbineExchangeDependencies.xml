@@ -9,7 +9,7 @@
     </androidPackages>
     <iosPods>
         <!-- Helium Fyber Adapter -->
-        <iosPod name="ChartboostHeliumAdapterDigitalTurbineExchange" version="~> 4.8.1.7"/>
+        <iosPod name="ChartboostMediationAdapterDigitalTurbineExchange" version="~> 4.8.1.7"/>
 
         <!-- Fyber iOS SDK -->
         <iosPod name="Fyber_Marketplace_SDK" version="~> 8.1.7"/>

@@ -15,9 +15,8 @@ namespace Helium.Platforms
         private delegate void ExternHeliumILRDEvent(string impressionDataJson);
         private delegate void ExternHeliumPartnerInitializationDataEvent(string partnerInitializationData);
         private delegate void ExternHeliumPlacementEvent(string placementName, string error);
-        private delegate void ExternHeliumPlacementLoadEvent(string placementName, string loadId, string error);
-        private delegate void ExternHeliumWinBidEvent(string placementName, string auctionId, string partnerId, double price);
-
+        private delegate void ExternHeliumPlacementLoadEvent(string placementName, string loadId, string auctionId, string partnerId, double price, string error);
+        
         [DllImport("__Internal")]
         private static extern void _setLifeCycleCallbacks(ExternHeliumEvent DidStartCallback,
             ExternHeliumILRDEvent DidReceiveILRDCallback, ExternHeliumPartnerInitializationDataEvent DidReceivePartnerInitializationDataCallback);
@@ -25,16 +24,15 @@ namespace Helium.Platforms
         [DllImport("__Internal")]
         private static extern void _setInterstitialCallbacks(ExternHeliumPlacementLoadEvent DidLoadCallback,
             ExternHeliumPlacementEvent DidShowCallback, ExternHeliumPlacementEvent DidCloseCallback,
-            ExternHeliumPlacementEvent DidClickCallback, ExternHeliumPlacementEvent DidRecordImpression, ExternHeliumWinBidEvent DidWinBidCallback);
+            ExternHeliumPlacementEvent DidClickCallback, ExternHeliumPlacementEvent DidRecordImpression);
 
         [DllImport("__Internal")]
         private static extern void _setRewardedCallbacks(ExternHeliumPlacementLoadEvent DidLoadCallback,
             ExternHeliumPlacementEvent DidShowCallback, ExternHeliumPlacementEvent DidCloseCallback, ExternHeliumPlacementEvent DidClickCallback,
-            ExternHeliumPlacementEvent DidRecordImpression, ExternHeliumPlacementEvent DidReceiveReward, ExternHeliumWinBidEvent DidWinBidCallback);
+            ExternHeliumPlacementEvent DidRecordImpression, ExternHeliumPlacementEvent DidReceiveReward);
 
         [DllImport("__Internal")]
-        private static extern void _setBannerCallbacks(ExternHeliumPlacementLoadEvent DidLoadCallback, ExternHeliumPlacementEvent DidRecordImpression,
-            ExternHeliumPlacementEvent DidClickCallback, ExternHeliumWinBidEvent DidWinBidCallback);
+        private static extern void _setBannerCallbacks(ExternHeliumPlacementLoadEvent DidLoadCallback, ExternHeliumPlacementEvent DidRecordImpression, ExternHeliumPlacementEvent DidClickCallback);
 
         [DllImport("__Internal")]
         private static extern void _heliumSdkInit(string appId, string appSignature, string unityVersion, string[] initializationOptions, int initializationOptionsSize);
@@ -73,21 +71,18 @@ namespace Helium.Platforms
                 ExternDidShowInterstitial,
                 ExternDidCloseInterstitial, 
                 ExternDidClickInterstitial, 
-                ExternDidRecordImpressionInterstitial, 
-                ExternDidWinBidInterstitial);
+                ExternDidRecordImpressionInterstitial);
             
             _setRewardedCallbacks(ExternDidLoadRewarded, 
                 ExternDidShowRewarded,
                 ExternDidCloseRewarded, 
                 ExternDidClickRewarded,
                 ExternDidRecordImpressionRewarded, 
-                ExternDidReceiveReward, 
-                ExternDidWinBidRewarded);
+                ExternDidReceiveReward);
             
             _setBannerCallbacks(ExternDidLoadBanner,
                 ExternDidRecordImpressionBanner, 
-                ExternDidClickBanner, 
-                ExternDidWinBidBanner);
+                ExternDidClickBanner);
         }
 
         public override void Init()
@@ -163,8 +158,8 @@ namespace Helium.Platforms
 
         #region Interstitial Callbacks
         [MonoPInvokeCallback(typeof(ExternHeliumPlacementLoadEvent))]
-        private static void ExternDidLoadInterstitial(string placementName, string loadId, string error)
-            => HeliumEventProcessor.ProcessHeliumLoadEvent(placementName, loadId, error, _instance.DidLoadInterstitial);
+        private static void ExternDidLoadInterstitial(string placementName, string loadId, string auctionId, string partnerId, double price, string error)
+            => HeliumEventProcessor.ProcessHeliumLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadInterstitial);
 
         [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
         private static void ExternDidShowInterstitial(string placementName, string error) 
@@ -182,22 +177,17 @@ namespace Helium.Platforms
         private static void ExternDidRecordImpressionInterstitial(string placementName, string error)
             => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidRecordImpressionInterstitial);
         
-        [MonoPInvokeCallback(typeof(ExternHeliumWinBidEvent))]
-        private static void ExternDidWinBidInterstitial(string placementName, string auctionId, string partnerId, double price)
-            => HeliumEventProcessor.ProcessHeliumBidEvent(placementName, auctionId, partnerId, price, null, _instance.DidWinBidInterstitial);
-
         public override event HeliumPlacementLoadEvent DidLoadInterstitial;
         public override event HeliumPlacementEvent DidShowInterstitial;
         public override event HeliumPlacementEvent DidCloseInterstitial;
         public override event HeliumPlacementEvent DidClickInterstitial;
         public override event HeliumPlacementEvent DidRecordImpressionInterstitial;
-        public override event HeliumBidEvent DidWinBidInterstitial;
         #endregion
 
         #region Rewarded Callbacks
         [MonoPInvokeCallback(typeof(ExternHeliumPlacementLoadEvent))]
-        private static void ExternDidLoadRewarded(string placementName, string loadId, string error) 
-            => HeliumEventProcessor.ProcessHeliumLoadEvent(placementName, loadId, error, _instance.DidLoadRewarded);
+        private static void ExternDidLoadRewarded(string placementName, string loadId, string auctionId, string partnerId, double price, string error) 
+            => HeliumEventProcessor.ProcessHeliumLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadRewarded);
 
         [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
         private static void ExternDidShowRewarded(string placementName, string error) 
@@ -218,24 +208,18 @@ namespace Helium.Platforms
         [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
         private static void ExternDidReceiveReward(string placementName, string error) 
             => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidReceiveReward);
-        
-        [MonoPInvokeCallback(typeof(ExternHeliumWinBidEvent))]
-        private static void ExternDidWinBidRewarded(string placementName, string auctionId, string partnerId, double price) 
-            => HeliumEventProcessor.ProcessHeliumBidEvent(placementName,  auctionId, partnerId, price, null, _instance.DidWinBidRewarded);
-
         public override event HeliumPlacementLoadEvent DidLoadRewarded;
         public override event HeliumPlacementEvent DidShowRewarded;
         public override event HeliumPlacementEvent DidCloseRewarded;
         public override event HeliumPlacementEvent DidClickRewarded;
         public override event HeliumPlacementEvent DidRecordImpressionRewarded;
         public override event HeliumPlacementEvent DidReceiveReward;
-        public override event HeliumBidEvent DidWinBidRewarded;
         #endregion
 
         #region Banner Callbacks
         [MonoPInvokeCallback(typeof(ExternHeliumPlacementLoadEvent))]
-        private static void ExternDidLoadBanner(string placementName, string loadId, string error) 
-            => HeliumEventProcessor.ProcessHeliumLoadEvent(placementName, loadId, error, _instance.DidLoadBanner);
+        private static void ExternDidLoadBanner(string placementName, string loadId, string auctionId, string partnerId, double price, string error) 
+            => HeliumEventProcessor.ProcessHeliumLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadBanner);
 
         [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
         private static void ExternDidClickBanner(string placementName, string error) 
@@ -244,15 +228,10 @@ namespace Helium.Platforms
         [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
         private static void ExternDidRecordImpressionBanner(string placementName, string error) 
             => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, error,  _instance.DidRecordImpressionBanner);
-        
-        [MonoPInvokeCallback(typeof(ExternHeliumWinBidEvent))]
-        private static void ExternDidWinBidBanner(string placementName, string auctionId, string partnerId, double price) 
-            => HeliumEventProcessor.ProcessHeliumBidEvent(placementName, auctionId, partnerId, price, null, _instance.DidWinBidBanner);
 
         public override event HeliumPlacementLoadEvent DidLoadBanner;
         public override event HeliumPlacementEvent DidClickBanner;
         public override event HeliumPlacementEvent DidRecordImpressionBanner;
-        public override event HeliumBidEvent DidWinBidBanner;
         #endregion
     }
 }

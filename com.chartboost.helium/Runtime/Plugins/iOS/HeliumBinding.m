@@ -3,7 +3,7 @@
  * Helium SDK
  */
 
-#import "HeliumSdk/HeliumSdk.h"
+#import <ChartboostMediationSDK/ChartboostMediationSDK-Swift.h>
 #import "HeliumSdkManager.h"
 #import "UnityAppController.h"
 
@@ -35,28 +35,24 @@ void _setLifeCycleCallbacks(HeliumEvent didStartCallback, HeliumILRDEvent didRec
     [[HeliumSdkManager sharedManager] setLifeCycleCallbacks:didStartCallback didReceiveILRDCallback:didReceiveILRDCallback didReceivePartnerInitializationData:didReceivePartnerInitializationDataCallback];
 }
 
-void _setInterstitialCallbacks(HeliumPlacementLoadEvent didLoadCallback, HeliumPlacementEvent didShowCallback, HeliumPlacementEvent didCloseCallback, HeliumPlacementEvent didClickCallback, HeliumPlacementEvent didRecordImpression, HeliumBidWinEvent didWinBidCallback)
+void _setInterstitialCallbacks(HeliumPlacementLoadEvent didLoadCallback, HeliumPlacementEvent didShowCallback, HeliumPlacementEvent didCloseCallback, HeliumPlacementEvent didClickCallback, HeliumPlacementEvent didRecordImpression)
 {
-    [[HeliumSdkManager sharedManager] setInterstitialCallbacks:didLoadCallback didShowCallback:didShowCallback didCloseCallback:didCloseCallback didClickCallback:didClickCallback didRecordImpression:didRecordImpression didWinBidCallback:didWinBidCallback];
+    [[HeliumSdkManager sharedManager] setInterstitialCallbacks:didLoadCallback didShowCallback:didShowCallback didCloseCallback:didCloseCallback didClickCallback:didClickCallback didRecordImpression:didRecordImpression];
 }
 
-void _setRewardedCallbacks(HeliumPlacementLoadEvent didLoadCallback, HeliumPlacementEvent didShowCallback, HeliumPlacementEvent didCloseCallback, HeliumPlacementEvent didClickCallback, HeliumPlacementEvent didRecordImpression, HeliumPlacementEvent didReceiveRewardCallback, HeliumBidWinEvent didWinBidCallback){
+void _setRewardedCallbacks(HeliumPlacementLoadEvent didLoadCallback, HeliumPlacementEvent didShowCallback, HeliumPlacementEvent didCloseCallback, HeliumPlacementEvent didClickCallback, HeliumPlacementEvent didRecordImpression, HeliumPlacementEvent didReceiveRewardCallback){
         
-    [[HeliumSdkManager sharedManager] setRewardedCallbacks:didLoadCallback didShowCallback:didShowCallback didCloseCallback:didCloseCallback didClickCallback:didClickCallback didRecordImpression:didRecordImpression didReceiveRewardCallback:didReceiveRewardCallback didWinBidCallback:didWinBidCallback];
+    [[HeliumSdkManager sharedManager] setRewardedCallbacks:didLoadCallback didShowCallback:didShowCallback didCloseCallback:didCloseCallback didClickCallback:didClickCallback didRecordImpression:didRecordImpression didReceiveRewardCallback:didReceiveRewardCallback];
 }
 
-void _setBannerCallbacks(HeliumPlacementLoadEvent didLoadCallback, HeliumPlacementEvent didRecordImpression, HeliumPlacementEvent didClickCallback, HeliumBidWinEvent didWinBidCallback)
+void _setBannerCallbacks(HeliumPlacementLoadEvent didLoadCallback, HeliumPlacementEvent didRecordImpression, HeliumPlacementEvent didClickCallback)
 {
-    [[HeliumSdkManager sharedManager] setBannerCallbacks:didLoadCallback didRecordImpression:didRecordImpression didClickCallback:didClickCallback  didWinBidCallback:didWinBidCallback];
+    [[HeliumSdkManager sharedManager] setBannerCallbacks:didLoadCallback didRecordImpression:didRecordImpression didClickCallback:didClickCallback];
 }
 
 void _heliumSdkInit(const char *appId, const char *appSignature, const char *unityVersion, const char** initOptions, int optionsSize)
 {
-    [[HeliumSdkManager sharedManager] startHeliumWithAppId:GetStringParam(appId)
-                                           andAppSignature:GetStringParam(appSignature)
-                                              unityVersion:GetStringParam(unityVersion)
-                                     initializationOptions:initOptions
-                                 initializationOptionsSize:optionsSize];
+    [[HeliumSdkManager sharedManager] startHeliumWithAppId:GetStringParam(appId) andAppSignature:GetStringParam(appSignature) unityVersion:GetStringParam(unityVersion) initializationOptions:initOptions initializationOptionsSize:optionsSize];
 }
 
 void _heliumSdkSetSubjectToCoppa(BOOL isSubject)
@@ -87,11 +83,6 @@ void _heliumSetUserIdentifier(const char * userIdentifier)
 char * _heliumGetUserIdentifier()
 {
     return ConvertNSStringToCString([[HeliumSdkManager sharedManager] getUserIdentifier]);
-}
-
-BOOL _heliumSdkIsAnyViewVisible()
-{
-    return false; // TODO [HeliumSdkManager isAnyViewVisible];
 }
 
 void * _heliumSdkGetInterstitialAd(const char *placementName)

@@ -13,7 +13,7 @@
     </androidPackages>
     <iosPods>
         <!-- Helium IronSource Adapter -->
-        <iosPod name="ChartboostHeliumAdapterIronSource" version="~> 4.7.2.5.1"/>
+        <iosPod name="ChartboostMediationAdapterIronSource" version="~> 4.7.2.5.1"/>
 
         <!-- IronSource iOS SDK -->
         <iosPod name="IronSourceSDK" version="~> 7.2.5.1"/>
