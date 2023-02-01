@@ -55,6 +55,7 @@ namespace Helium.Platforms
             HeliumLogger.Log(LogTag, $"SetSubjectToCoppa {isSubject}");
         }
         
+        // ReSharper disable once InconsistentNaming
         public virtual void SetSubjectToGDPR(bool isSubject)
         {
             HeliumLogger.Log(LogTag, $"SetSubjectToGDPR {isSubject}");
@@ -65,6 +66,7 @@ namespace Helium.Platforms
             HeliumLogger.Log(LogTag, $"SetUserHasGivenConsent {hasGivenConsent}");
         }
 
+        // ReSharper disable once InconsistentNaming
         public virtual void SetCCPAConsent(bool hasGivenConsent)
         {
             HeliumLogger.Log(LogTag, $"SetCCPAConsent {hasGivenConsent}");
@@ -155,7 +157,7 @@ namespace Helium.Platforms
             }
             
             var killSwitch = HeliumSettings.PartnerKillSwitch;
-            var initOptions  = Array.Empty<string>();;
+            var initOptions  = Array.Empty<string>();
 
             if (killSwitch == HeliumPartners.None)
                 return initOptions;
@@ -175,29 +177,31 @@ namespace Helium.Platforms
             return initOptions;
         }
 
-        // provide the option to override callbacks
 #pragma warning disable 67
+        // Life-cycle
         public virtual event HeliumEvent DidStart;
         public virtual event HeliumILRDEvent DidReceiveImpressionLevelRevenueData;
         public virtual event HeliumPartnerInitializationEvent DidReceivePartnerInitializationData;
-        public virtual event HeliumPlacementEvent DidLoadInterstitial;
+        
+        // Interstitials
+        public virtual event HeliumPlacementLoadEvent DidLoadInterstitial;
         public virtual event HeliumPlacementEvent DidShowInterstitial;
         public virtual event HeliumPlacementEvent DidCloseInterstitial;
         public virtual event HeliumPlacementEvent DidClickInterstitial;
         public virtual event HeliumPlacementEvent DidRecordImpressionInterstitial;
-        public virtual event HeliumBidEvent DidWinBidInterstitial;
-        public virtual event HeliumPlacementEvent DidLoadRewarded;
+
+        // Rewarded Videos
+        public virtual event HeliumPlacementLoadEvent DidLoadRewarded;
         public virtual event HeliumPlacementEvent DidShowRewarded;
         public virtual event HeliumPlacementEvent DidCloseRewarded;
         public virtual event HeliumPlacementEvent DidClickRewarded;
         public virtual event HeliumPlacementEvent DidRecordImpressionRewarded;
-        public virtual event HeliumBidEvent DidWinBidRewarded;
-        public virtual event HeliumRewardEvent DidReceiveReward;
-        public virtual event HeliumPlacementEvent DidLoadBanner;
-        public virtual event HeliumPlacementEvent DidShowBanner;
+        public virtual event HeliumPlacementEvent DidReceiveReward;
+
+        // Banners
+        public virtual event HeliumPlacementLoadEvent DidLoadBanner;
         public virtual event HeliumPlacementEvent DidClickBanner;
         public virtual event HeliumPlacementEvent DidRecordImpressionBanner;
-        public virtual event HeliumBidEvent DidWinBidBanner;
 #pragma warning restore 67
     }
 }

@@ -70,7 +70,7 @@ namespace Helium
 
         #region Interstitial Callbacks
         /// <inheritdoc cref="IInterstitialEvents.DidLoadInterstitial"/>>
-        public static event HeliumPlacementEvent DidLoadInterstitial
+        public static event HeliumPlacementLoadEvent DidLoadInterstitial
         {
             add => _heliumExternal.DidLoadInterstitial += value;
             remove => _heliumExternal.DidLoadInterstitial -= value;
@@ -103,18 +103,11 @@ namespace Helium
             add => _heliumExternal.DidRecordImpressionInterstitial += value;
             remove => _heliumExternal.DidRecordImpressionInterstitial -= value;
         }
-        
-        /// <inheritdoc cref="IInterstitialEvents.DidWinBidInterstitial"/>>
-        public static event HeliumBidEvent DidWinBidInterstitial
-        {
-            add => _heliumExternal.DidWinBidInterstitial += value;
-            remove => _heliumExternal.DidWinBidInterstitial -= value;
-        }
         #endregion
 
         #region Rewarded Callbacks
         /// <inheritdoc cref="IRewardedEvents.DidLoadRewarded"/>>
-        public static event HeliumPlacementEvent DidLoadRewarded
+        public static event HeliumPlacementLoadEvent DidLoadRewarded
         {
             add => _heliumExternal.DidLoadRewarded += value;
             remove => _heliumExternal.DidLoadRewarded -= value;
@@ -148,15 +141,8 @@ namespace Helium
             remove => _heliumExternal.DidRecordImpressionRewarded -= value;
         }
         
-        /// <inheritdoc cref="IRewardedEvents.DidWinBidRewarded"/>>
-        public static event HeliumBidEvent DidWinBidRewarded
-        {
-            add => _heliumExternal.DidWinBidRewarded += value;
-            remove => _heliumExternal.DidWinBidRewarded -= value;
-        }
-        
         /// <inheritdoc cref="IRewardedEvents.DidReceiveReward"/>>
-        public static event HeliumRewardEvent DidReceiveReward
+        public static event HeliumPlacementEvent DidReceiveReward
         {
             add => _heliumExternal.DidReceiveReward += value;
             remove => _heliumExternal.DidReceiveReward -= value;
@@ -165,7 +151,7 @@ namespace Helium
 
         #region Banner Callbacks
         /// <inheritdoc cref="IBannerEvents.DidLoadBanner"/>>
-        public static event HeliumPlacementEvent DidLoadBanner
+        public static event HeliumPlacementLoadEvent DidLoadBanner
         {
             add => _heliumExternal.DidLoadBanner += value;
             remove => _heliumExternal.DidLoadBanner -= value;
@@ -183,13 +169,6 @@ namespace Helium
         {
             add => _heliumExternal.DidRecordImpressionBanner += value;
             remove => _heliumExternal.DidRecordImpressionBanner -= value;
-        }
-
-        /// <inheritdoc cref="IBannerEvents.DidWinBidBanner"/>>
-        public static event HeliumBidEvent DidWinBidBanner
-        {
-            add => _heliumExternal.DidWinBidBanner += value;
-            remove => _heliumExternal.DidWinBidBanner -= value;
         }
         #endregion
 

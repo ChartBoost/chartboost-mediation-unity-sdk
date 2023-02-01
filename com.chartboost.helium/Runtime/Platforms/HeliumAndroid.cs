@@ -118,24 +118,16 @@ namespace Helium.Platforms
             public static readonly LifeCycleEventListener Instance = new LifeCycleEventListener();
 
             [Preserve]
-            private void DidStart(int errorCode, string errorDescription)
-            {
-                HeliumEventProcessor.ProcessHeliumEvent(errorCode, errorDescription, _instance.DidStart);
-            }
+            private void DidStart(string error) 
+                => HeliumEventProcessor.ProcessHeliumEvent(error, _instance.DidStart);
 
             [Preserve]
-            private void DidReceiveILRD(string impressionDataJson)
-            {
-                HeliumEventProcessor.ProcessEventWithILRD(impressionDataJson,
-                    _instance.DidReceiveImpressionLevelRevenueData);
-            }
+            private void DidReceiveILRD(string impressionDataJson) 
+                => HeliumEventProcessor.ProcessEventWithILRD(impressionDataJson, _instance.DidReceiveImpressionLevelRevenueData);
 
             [Preserve]
-            private void DidReceivePartnerInitializationData(string partnerInitializationDataJson)
-            {
-                HeliumEventProcessor.ProcessEventWithPartnerInitializationData(partnerInitializationDataJson, 
-                    _instance.DidReceivePartnerInitializationData);
-            }
+            private void DidReceivePartnerInitializationData(string partnerInitializationDataJson) 
+                => HeliumEventProcessor.ProcessEventWithPartnerInitializationData(partnerInitializationDataJson, _instance.DidReceivePartnerInitializationData);
         }
 
         public override event HeliumEvent DidStart;
@@ -152,54 +144,31 @@ namespace Helium.Platforms
             public static readonly InterstitialEventListener Instance = new InterstitialEventListener();
 
             [Preserve]
-            private void DidLoadInterstitial(string placementName, int errorCode, string errorDescription)
-            {
-                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription,
-                    _instance.DidLoadInterstitial);
-            }
+            private void DidLoadInterstitial(string placementName, string loadId, string auctionId, string partnerId, double price, string error)
+                => HeliumEventProcessor.ProcessHeliumLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadInterstitial);
 
             [Preserve]
-            private void DidShowInterstitial(string placementName, int errorCode, string errorDescription)
-            {
-                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription,
-                    _instance.DidShowInterstitial);
-            }
+            private void DidShowInterstitial(string placementName, string error) 
+                => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidShowInterstitial);
 
             [Preserve]
-            private void DidClickInterstitial(string placementName, int errorCode, string errorDescription)
-            {
-                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription,
-                    _instance.DidClickInterstitial);
-            }
-
-            [Preserve]
-            private void DidCloseInterstitial(string placementName, int errorCode, string errorDescription)
-            {
-                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription,
-                    _instance.DidCloseInterstitial);
-            }
+            private void DidCloseInterstitial(string placementName, string error) 
+                => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidCloseInterstitial);
             
             [Preserve]
-            private void DidRecordImpression(string placementName, int errorCode, string errorDescription)
-            {
-                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription,
-                    _instance.DidRecordImpressionInterstitial);
-            }
+            private void DidClickInterstitial(string placementName) 
+                => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidClickInterstitial);
 
             [Preserve]
-            private void DidWinBidInterstitial(string placementName, string auctionId, string partnerId, double price)
-            {
-                HeliumEventProcessor.ProcessHeliumBidEvent(placementName, auctionId, partnerId, price,
-                    _instance.DidWinBidInterstitial);
-            }
+            private void DidRecordImpression(string placementName) 
+                => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidRecordImpressionInterstitial);
         }
 
-        public override event HeliumPlacementEvent DidLoadInterstitial;
+        public override event HeliumPlacementLoadEvent DidLoadInterstitial;
         public override event HeliumPlacementEvent DidShowInterstitial;
-        public override event HeliumPlacementEvent DidClickInterstitial;
         public override event HeliumPlacementEvent DidCloseInterstitial; 
+        public override event HeliumPlacementEvent DidClickInterstitial;
         public override event HeliumPlacementEvent DidRecordImpressionInterstitial;
-        public override event HeliumBidEvent DidWinBidInterstitial;
         #endregion
 
         #region Rewarded Callbacks
@@ -210,62 +179,36 @@ namespace Helium.Platforms
             public static readonly RewardedVideoEventListener Instance = new RewardedVideoEventListener();
 
             [Preserve]
-            private void DidLoadRewarded(string placementName, int errorCode, string errorDescription)
-            {
-                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription,
-                    _instance.DidLoadRewarded);
-            }
+            private void DidLoadRewarded(string placementName, string loadId, string auctionId, string partnerId, double price, string error) 
+                => HeliumEventProcessor.ProcessHeliumLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadRewarded);
 
             [Preserve]
-            private void DidShowRewarded(string placementName, int errorCode, string errorDescription)
-            {
-                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription,
-                    _instance.DidShowRewarded);
-            }
+            private void DidShowRewarded(string placementName, string error) 
+                => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidShowRewarded);
 
             [Preserve]
-            private void DidCloseRewarded(string placementName, int errorCode, string errorDescription)
-            {
-                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription,
-                    _instance.DidCloseRewarded);
-            }
+            private void DidCloseRewarded(string placementName, string error) 
+                => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidCloseRewarded);
 
             [Preserve]
-            private void DidClickRewarded(string placementName, int errorCode, string errorDescription)
-            {
-                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription,
-                    _instance.DidClickRewarded);
-            }
-            
-            [Preserve]
-            private void DidRecordImpression(string placementName, int errorCode, string errorDescription)
-            {
-                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription,
-                    _instance.DidRecordImpressionRewarded);
-            }
+            private void DidClickRewarded(string placementName) 
+                => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidClickRewarded);
 
             [Preserve]
-            private void DidWinBidRewarded(string placementName, string auctionId, string partnerId,
-                double price)
-            {
-                HeliumEventProcessor.ProcessHeliumBidEvent(placementName, auctionId, partnerId, price,
-                    _instance.DidWinBidRewarded);
-            }
+            private void DidRecordImpression(string placementName) 
+                => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidRecordImpressionRewarded);
 
             [Preserve]
-            private void DidReceiveReward(string placementName, int reward)
-            {
-                HeliumEventProcessor.ProcessHeliumRewardEvent(placementName, reward, _instance.DidReceiveReward);
-            }
+            private void DidReceiveReward(string placementName) 
+                => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidReceiveReward);
         }
 
-        public override event HeliumPlacementEvent DidLoadRewarded;
+        public override event HeliumPlacementLoadEvent DidLoadRewarded;
         public override event HeliumPlacementEvent DidShowRewarded;
         public override event HeliumPlacementEvent DidCloseRewarded;
         public override event HeliumPlacementEvent DidClickRewarded;
         public override event HeliumPlacementEvent DidRecordImpressionRewarded;
-        public override event HeliumBidEvent DidWinBidRewarded;
-        public override event HeliumRewardEvent DidReceiveReward;
+        public override event HeliumPlacementEvent DidReceiveReward;
         #endregion
 
         #region Banner Callbacks
@@ -276,47 +219,21 @@ namespace Helium.Platforms
             public static readonly BannerEventListener Instance = new BannerEventListener();
 
             [Preserve]
-            private void DidLoadBanner(string placementName, int errorCode, string errorDescription)
-            {
-                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription,
-                    _instance.DidLoadBanner);
-            }
+            private void DidLoadBanner(string placementName, string loadId, string auctionId, string partnerId, double price, string error) 
+                => HeliumEventProcessor.ProcessHeliumLoadEvent(placementName,  loadId, auctionId, partnerId, price, error, _instance.DidLoadBanner);
 
             [Preserve]
-            private void DidShowBanner(string placementName, int errorCode, string errorDescription)
-            {
-                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription,
-                    _instance.DidShowBanner);
-            }
+            private void DidClickBanner(string placementName) 
+                => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidClickBanner);
 
             [Preserve]
-            private void DidClickBanner(string placementName, int errorCode, string errorDescription)
-            {
-                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription,
-                    _instance.DidClickBanner);
-            }
-            
-            [Preserve]
-            private void DidRecordImpression(string placementName, int errorCode, string errorDescription)
-            {
-                HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, errorCode, errorDescription,
-                    _instance.DidRecordImpressionBanner);
-            }
-
-            [Preserve]
-            private void DidWinBidBanner(string placementName, string auctionId, string partnerId,
-                double price)
-            {
-                HeliumEventProcessor.ProcessHeliumBidEvent(placementName, auctionId, partnerId, price,
-                    _instance.DidWinBidBanner);
-            }
+            private void DidRecordImpression(string placementName) 
+                => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidRecordImpressionBanner);
         }
 
-        public override event HeliumPlacementEvent DidLoadBanner;
-        public override event HeliumPlacementEvent DidShowBanner;
+        public override event HeliumPlacementLoadEvent DidLoadBanner;
         public override event HeliumPlacementEvent DidClickBanner;
         public override event HeliumPlacementEvent DidRecordImpressionBanner;
-        public override event HeliumBidEvent DidWinBidBanner;
         #endregion
     }
 }

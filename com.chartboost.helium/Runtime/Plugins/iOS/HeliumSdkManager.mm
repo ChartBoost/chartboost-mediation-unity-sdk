@@ -4,8 +4,8 @@
 */
 
 #import "HeliumSdkManager.h"
-#import "HeliumSdk/HeliumSdk-Swift.h"
-#import <HeliumSdk/HeliumInitResultsEvent.h>
+#import <ChartboostMediationSDK/ChartboostMediationSDK-Swift.h>
+#import <ChartboostMediationSDK/HeliumInitResultsEvent.h>
 
 // interstitial ad objects
 NSMutableDictionary * storedAds = nil;
@@ -16,86 +16,71 @@ static HeliumILRDEvent _didReceiveILRDCallback;
 static HeliumPartnerInitializationDataEvent _didReceivePartnerInitializationDataCallback;
 
 // interstitial callbacks
-static HeliumPlacementEvent _interstitialDidLoadCallback;
+static HeliumPlacementLoadEvent _interstitialDidLoadCallback;
 static HeliumPlacementEvent _interstitialDidClickCallback;
 static HeliumPlacementEvent _interstitialDidCloseCallback;
 static HeliumPlacementEvent _interstitialDidShowCallback;
 static HeliumPlacementEvent _interstitialDidRecordImpressionCallback;
-static HeliumBidWinEvent _interstitialDidWinBidCallback;
 
 // rewarded callbacks
-static HeliumPlacementEvent _rewardedDidLoadCallback;
+static HeliumPlacementLoadEvent _rewardedDidLoadCallback;
 static HeliumPlacementEvent _rewardedDidClickCallback;
 static HeliumPlacementEvent _rewardedDidCloseCallback;
 static HeliumPlacementEvent _rewardedDidShowCallback;
 static HeliumPlacementEvent _rewardedDidRecordImpressionCallback;
-static HeliumBidWinEvent _rewardedDidWinBidCallback;
-static HeliumRewardEvent _rewardedDidReceiveRewardCallback;
+static HeliumPlacementEvent _rewardedDidReceiveRewardCallback;
 
 // banner callbacks
-static HeliumPlacementEvent _bannerDidLoadCallback;
+static HeliumPlacementLoadEvent _bannerDidLoadCallback;
 static HeliumPlacementEvent _bannerDidRecordImpressionCallback;
 static HeliumPlacementEvent _bannerDidClickCallback;
-static HeliumBidWinEvent _bannerDidWinBidCallback;
 
 void UnityPause(int pause);
 
 const char* serializeDictionary(NSDictionary *data)
 {
-	NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:NULL];
-	NSString *json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:NULL];
+    NSString *json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     NSLog(@"event: %@", json);
-	return json.UTF8String;
+    return json.UTF8String;
 }
 
 const void serializeError(HeliumError *error, HeliumEvent event)
 {
     if (event == nil)
         return;
-
-    int errorCode = -1;
-    const char* errorDescription = "";
-
+    
+    const char* errorMessage = "";
+    
     if (error != nil)
-    {
-        errorCode =  [[NSNumber numberWithFloat:error.code] intValue];
-        errorDescription = error.localizedDescription.UTF8String;
-    }
-
-    event(errorCode, errorDescription);
+        errorMessage = error.description.UTF8String;
+    
+    event(errorMessage);
 }
 
 const void serializePlacementWithError(NSString *placementName, HeliumError *error, HeliumPlacementEvent placementEvent)
 {
     if (placementEvent == nil)
         return;
-
-
-    int errorCode = -1;
-    const char* errorDescription = "";
-
+    
+    const char* errorMessage = "";
+    
     if (error != nil)
-    {
-        errorCode =  [[NSNumber numberWithFloat:error.code] intValue];
-        errorDescription = error.localizedDescription.UTF8String;
-    }
-
-    placementEvent(placementName.UTF8String, errorCode, errorDescription);
+        errorMessage = error.description.UTF8String;
+    
+    placementEvent(placementName.UTF8String, errorMessage);
 }
 
-const void serializeReward(NSString *placementName, NSInteger reward, HeliumRewardEvent rewardEvent)
+const void serializePlacementLoadWithError(NSString *placementName, NSString *requestIdentifier, NSDictionary *winningBidInfo, HeliumError *error, HeliumPlacementLoadEvent placementLoadEvent)
 {
-    if (rewardEvent == nil)
+    if (placementLoadEvent == nil)
         return;
-    int rewardValue = (int)reward;
-    rewardEvent(placementName.UTF8String, rewardValue);
-}
-
-const void serializeWinBidInfo(NSString *placementName, NSDictionary* info, HeliumBidWinEvent bidWinEvent)
-{
-    NSString* partnerId = [info objectForKey:@"partner-id"];
-    NSString* auctionId = [info objectForKey:@"auction-id"];
-    NSNumber* price = [info objectForKey:@"price"];
+    
+    const char* errorMessage = "";
+    
+    NSString* partnerId = [winningBidInfo objectForKey:@"partner-id"];
+    NSString* auctionId = [winningBidInfo objectForKey:@"auction-id"];
+    NSNumber* price = [winningBidInfo objectForKey:@"price"];
 
     if (partnerId == nil)
         partnerId = @"";
@@ -105,10 +90,12 @@ const void serializeWinBidInfo(NSString *placementName, NSDictionary* info, Heli
 
     if (price == nil)
         price = 0;
-
-    bidWinEvent(placementName.UTF8String, auctionId.UTF8String, partnerId.UTF8String, [price doubleValue]);
+    
+    if (error != nil)
+        errorMessage = error.description.UTF8String;
+    
+    placementLoadEvent(placementName.UTF8String, requestIdentifier.UTF8String, auctionId.UTF8String, partnerId.UTF8String, [price doubleValue], errorMessage);
 }
-
 
 static void heliumSubscribeToILRDNotifications()
 {
@@ -134,18 +121,18 @@ static void heliumSubscribeToILRDNotifications()
 
 static void heliumSubscribeToPartnerInitializationNotifications()
 {
-	static id partnerInitializationObserver = nil;
-	
-	if (partnerInitializationObserver != nil)
-		[[NSNotificationCenter defaultCenter] removeObserver:partnerInitializationObserver];
-	
-	partnerInitializationObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kHeliumDidReceiveInitResultsNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
-		// Extract the results payload.
-		NSDictionary *results = (NSDictionary *)notification.object;
-		const char* jsonToUnity = serializeDictionary(results);
-		if (_didReceivePartnerInitializationDataCallback != nil)
-			_didReceivePartnerInitializationDataCallback(jsonToUnity);
-	}];
+    static id partnerInitializationObserver = nil;
+    
+    if (partnerInitializationObserver != nil)
+        [[NSNotificationCenter defaultCenter] removeObserver:partnerInitializationObserver];
+    
+    partnerInitializationObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kHeliumDidReceiveInitResultsNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+        // Extract the results payload.
+        NSDictionary *results = (NSDictionary *)notification.object;
+        const char* jsonToUnity = serializeDictionary(results);
+        if (_didReceivePartnerInitializationDataCallback != nil)
+            _didReceivePartnerInitializationDataCallback(jsonToUnity);
+    }];
 }
 
 @interface HeliumSdkManager() <HeliumSdkDelegate, CHBHeliumInterstitialAdDelegate, CHBHeliumRewardedAdDelegate, CHBHeliumBannerAdDelegate>
@@ -159,12 +146,12 @@ static void heliumSubscribeToPartnerInitializationNotifications()
 
 + (HeliumSdkManager*)sharedManager
 {
-	static HeliumSdkManager *sharedSingleton;
+    static HeliumSdkManager *sharedSingleton;
 
-	if (!sharedSingleton)
-		sharedSingleton = [[HeliumSdkManager alloc] init];
+    if (!sharedSingleton)
+        sharedSingleton = [[HeliumSdkManager alloc] init];
 
-	return sharedSingleton;
+    return sharedSingleton;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -172,57 +159,54 @@ static void heliumSubscribeToPartnerInitializationNotifications()
 
 - (void)setLifeCycleCallbacks:(HeliumEvent)didStartCallback didReceiveILRDCallback:(HeliumILRDEvent)didReceiveILRDCallback didReceivePartnerInitializationData:(HeliumPartnerInitializationDataEvent)didReceivePartnerInitializationDataCallback
 {
-	_didStartCallback = didStartCallback;
-	_didReceiveILRDCallback = didReceiveILRDCallback;
-	_didReceivePartnerInitializationDataCallback = didReceivePartnerInitializationDataCallback;
+    _didStartCallback = didStartCallback;
+    _didReceiveILRDCallback = didReceiveILRDCallback;
+    _didReceivePartnerInitializationDataCallback = didReceivePartnerInitializationDataCallback;
 }
 
-- (void)setInterstitialCallbacks:(HeliumPlacementEvent)didLoadCallback didShowCallback:(HeliumPlacementEvent)didShowCallback didClickCallback:(HeliumPlacementEvent)didClickCallback didCloseCallback:(HeliumPlacementEvent)didCloseCallback didRecordImpression:(HeliumPlacementEvent)didRecordImpression didWinBidCallback:(HeliumBidWinEvent)didWinBidCallback
+- (void)setInterstitialCallbacks:(HeliumPlacementLoadEvent)didLoadCallback didShowCallback:(HeliumPlacementEvent)didShowCallback  didCloseCallback:(HeliumPlacementEvent)didCloseCallback didClickCallback:(HeliumPlacementEvent)didClickCallback didRecordImpression:(HeliumPlacementEvent)didRecordImpression
 {
     _interstitialDidLoadCallback = didLoadCallback;
     _interstitialDidShowCallback = didShowCallback;
     _interstitialDidClickCallback = didClickCallback;
     _interstitialDidCloseCallback = didCloseCallback;
     _interstitialDidRecordImpressionCallback = didRecordImpression;
-    _interstitialDidWinBidCallback = didWinBidCallback;
 }
 
-- (void)setRewardedCallbacks:(HeliumPlacementEvent)didLoadCallback didShowCallback:(HeliumPlacementEvent)didShowCallback didClickCallback:(HeliumPlacementEvent)didClickCallback didCloseCallback:(HeliumPlacementEvent)didCloseCallback didRecordImpression:(HeliumPlacementEvent)didRecordImpression didWinBidCallback:(HeliumBidWinEvent)didWinBidCallback didReceiveRewardCallback:(HeliumRewardEvent)didReceiveRewardCallback
+- (void)setRewardedCallbacks:(HeliumPlacementLoadEvent)didLoadCallback didShowCallback:(HeliumPlacementEvent)didShowCallback didCloseCallback:(HeliumPlacementEvent)didCloseCallback didClickCallback:(HeliumPlacementEvent)didClickCallback didRecordImpression:(HeliumPlacementEvent)didRecordImpression didReceiveRewardCallback:(HeliumPlacementEvent)didReceiveRewardCallback
 {
     _rewardedDidLoadCallback = didLoadCallback;
     _rewardedDidShowCallback = didShowCallback;
     _rewardedDidClickCallback = didClickCallback;
     _rewardedDidCloseCallback = didCloseCallback;
     _rewardedDidRecordImpressionCallback = didRecordImpression;
-    _rewardedDidWinBidCallback = didWinBidCallback;
     _rewardedDidReceiveRewardCallback = didReceiveRewardCallback;
 }
 
-- (void)setBannerCallbacks:(HeliumPlacementEvent)didLoadCallback didRecordImpression:(HeliumPlacementEvent)didRecordImpression didClickCallback:(HeliumPlacementEvent)didClickCallback didWinBidCallback:(HeliumBidWinEvent)didWinBidCallback
+- (void)setBannerCallbacks:(HeliumPlacementLoadEvent)didLoadCallback didRecordImpression:(HeliumPlacementEvent)didRecordImpression didClickCallback:(HeliumPlacementEvent)didClickCallback
 {
     _bannerDidLoadCallback = didLoadCallback;
     _bannerDidRecordImpressionCallback = didRecordImpression;
     _bannerDidClickCallback = didClickCallback;
-    _bannerDidWinBidCallback = didWinBidCallback;
 }
 
 - (void)startHeliumWithAppId:(NSString*)appId andAppSignature:(NSString*)appSignature unityVersion:(NSString *)unityVersion initializationOptions:(const char**)initializationOptions initializationOptionsSize:(int)initializationOptionsSize
 {
-	heliumSubscribeToILRDNotifications();
-	heliumSubscribeToPartnerInitializationNotifications();
-	HeliumInitializationOptions* heliumInitializationOptions = nil;
-	
-	if (initializationOptionsSize > 0) {
-		NSMutableArray *initializationPartners = [NSMutableArray new];
-		for (int x=0; x < initializationOptionsSize; x++)
-		{
-			if(strlen(initializationOptions[x]) > 0)
-				[initializationPartners addObject:[NSString stringWithUTF8String:initializationOptions[x]]];
-		}
-		heliumInitializationOptions = [[HeliumInitializationOptions alloc] initWithSkippedPartnerIdentifiers:initializationPartners];
-	}
-	
-	[[Helium sharedHelium] startWithAppId:appId andAppSignature:appSignature options:heliumInitializationOptions delegate:self];
+    heliumSubscribeToILRDNotifications();
+    heliumSubscribeToPartnerInitializationNotifications();
+    HeliumInitializationOptions* heliumInitializationOptions = nil;
+    
+    if (initializationOptionsSize > 0) {
+        NSMutableArray *initializationPartners = [NSMutableArray new];
+        for (int x = 0; x < initializationOptionsSize; x++)
+        {
+            if(strlen(initializationOptions[x]) > 0)
+                [initializationPartners addObject:[NSString stringWithUTF8String:initializationOptions[x]]];
+        }
+        heliumInitializationOptions = [[HeliumInitializationOptions alloc] initWithSkippedPartnerIdentifiers:initializationPartners];
+    }
+    
+    [[Helium sharedHelium] startWithAppId:appId andAppSignature:appSignature options:heliumInitializationOptions delegate:self];
 }
 
 - (void)setSubjectToCoppa:(BOOL)isSubject
@@ -323,14 +307,12 @@ static void heliumSubscribeToPartnerInitializationNotifications()
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark CHBHeliumInterstitialAdDelegate
 
-- (void)heliumInterstitialAdWithPlacementName:(NSString*)placementName
-                             didLoadWithError:(HeliumError *)error
+- (void)heliumInterstitialAdWithPlacementName:(NSString*)placementName requestIdentifier:(NSString *) requestIdentifier winningBidInfo:(NSDictionary<NSString *, id> *)winningBidInfo didLoadWithError:(HeliumError *)error
 {
-    serializePlacementWithError(placementName, error, _interstitialDidLoadCallback);
+    serializePlacementLoadWithError(placementName, requestIdentifier, winningBidInfo, error, _interstitialDidLoadCallback);
 }
 
-- (void)heliumInterstitialAdWithPlacementName:(NSString*)placementName
-                             didShowWithError:(HeliumError *)error
+- (void)heliumInterstitialAdWithPlacementName:(NSString*)placementName didShowWithError:(HeliumError *)error
 {
     serializePlacementWithError(placementName, error, _interstitialDidShowCallback);
     if (!error) {
@@ -338,42 +320,30 @@ static void heliumSubscribeToPartnerInitializationNotifications()
     }
 }
 
-- (void)heliumInterstitialAdWithPlacementName:(NSString *)placementName
-                            didClickWithError:(HeliumError *)error
-{
-    serializePlacementWithError(placementName, error, _interstitialDidClickCallback);
-}
-
-- (void)heliumInterstitialAdWithPlacementName:(NSString*)placementName
-                            didCloseWithError:(HeliumError *)error
+- (void)heliumInterstitialAdWithPlacementName:(NSString*)placementName didCloseWithError:(HeliumError *)error
 {
     UnityPause(false);
     serializePlacementWithError(placementName, error, _interstitialDidCloseCallback);
+}
+
+- (void)heliumInterstitialAdWithPlacementName:(NSString *)placementName didClickWithError:(HeliumError *)error
+{
+    serializePlacementWithError(placementName, error, _interstitialDidClickCallback);
 }
 
 - (void)heliumInterstitialAdDidRecordImpressionWithPlacementName: (NSString*)placementName
 {
     serializePlacementWithError(placementName, nil, _interstitialDidRecordImpressionCallback);
 }
-
-- (void)heliumInterstitialAdWithPlacementName:(NSString*)placementName
-                    didLoadWinningBidWithInfo:(NSDictionary*)info
-{
-    serializeWinBidInfo(placementName, info, _interstitialDidWinBidCallback);
-}
-
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark CHBHeliumRewardedVideoAdDelegate
 
-- (void)heliumRewardedAdWithPlacementName:(NSString*)placementName
-                         didLoadWithError:(HeliumError *)error
+- (void)heliumRewardedAdWithPlacementName:(NSString*)placementName requestIdentifier:(NSString *) requestIdentifier winningBidInfo:(NSDictionary<NSString *, id> *)winningBidInfo didLoadWithError:(HeliumError *)error
 {
-    serializePlacementWithError(placementName, error, _rewardedDidLoadCallback);
+    serializePlacementLoadWithError(placementName, requestIdentifier, winningBidInfo, error, _rewardedDidLoadCallback);
 }
 
-- (void)heliumRewardedAdWithPlacementName:(NSString*)placementName
-                         didShowWithError:(HeliumError *)error
+- (void)heliumRewardedAdWithPlacementName:(NSString*)placementName didShowWithError:(HeliumError *)error
 {
     serializePlacementWithError(placementName, error, _rewardedDidShowCallback);
     if (!error) {
@@ -381,17 +351,15 @@ static void heliumSubscribeToPartnerInitializationNotifications()
     }
 }
 
-- (void)heliumRewardedAdWithPlacementName:(NSString*)placementName
-                        didClickWithError:(HeliumError *)error
-{
-    serializePlacementWithError(placementName, error, _rewardedDidClickCallback);
-}
-
-- (void)heliumRewardedAdWithPlacementName:(NSString*)placementName
-                        didCloseWithError:(HeliumError *)error
+- (void)heliumRewardedAdWithPlacementName:(NSString*)placementName didCloseWithError:(HeliumError *)error
 {
     UnityPause(false);
     serializePlacementWithError(placementName, error, _rewardedDidCloseCallback);
+}
+
+- (void)heliumRewardedAdWithPlacementName:(NSString*)placementName didClickWithError:(HeliumError *)error
+{
+    serializePlacementWithError(placementName, error, _rewardedDidClickCallback);
 }
 
 - (void)heliumRewardedAdDidRecordImpressionWithPlacementName: (NSString*)placementName
@@ -399,29 +367,20 @@ static void heliumSubscribeToPartnerInitializationNotifications()
     serializePlacementWithError(placementName, nil, _rewardedDidRecordImpressionCallback);
 }
 
-- (void)heliumRewardedAdWithPlacementName:(NSString*)placementName
-                             didGetReward:(NSInteger)reward
+- (void)heliumRewardedAdDidGetRewardWithPlacementName:(NSString *)placementName
 {
-    serializeReward(placementName, reward, _rewardedDidReceiveRewardCallback);
-}
-
-- (void)heliumRewardedAdWithPlacementName:(NSString*)placementName
-                didLoadWinningBidWithInfo:(NSDictionary*)info
-{
-    serializeWinBidInfo(placementName, info, _rewardedDidWinBidCallback);
+    serializePlacementWithError(placementName, nil, _rewardedDidReceiveRewardCallback);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark CHBHeliumBannerAdDelegate
 
-- (void)heliumBannerAdWithPlacementName:(NSString *)placementName
-                       didLoadWithError:(HeliumError *)error
+- (void)heliumBannerAdWithPlacementName:(NSString*)placementName requestIdentifier:(NSString *) requestIdentifier winningBidInfo:(NSDictionary<NSString *, id> *)winningBidInfo didLoadWithError:(HeliumError *)error
 {
-    serializePlacementWithError(placementName, error, _bannerDidLoadCallback);
+    serializePlacementLoadWithError(placementName, requestIdentifier, winningBidInfo, error, _bannerDidLoadCallback);
 }
 
-- (void)heliumBannerAdWithPlacementName:(NSString *)placementName
-                      didClickWithError:(HeliumError *)error
+- (void)heliumBannerAdWithPlacementName:(NSString *)placementName didClickWithError:(HeliumError *)error
 {
     serializePlacementWithError(placementName, error, _bannerDidClickCallback);
 }
@@ -429,11 +388,5 @@ static void heliumSubscribeToPartnerInitializationNotifications()
 - (void)heliumBannerAdDidRecordImpressionWithPlacementName: (NSString*)placementName
 {
     serializePlacementWithError(placementName, nil, _bannerDidRecordImpressionCallback);
-}
-
-- (void)heliumBannerAdWithPlacementName:(NSString *)placementName
-              didLoadWinningBidWithInfo:(NSDictionary*)info
-{
-    serializeWinBidInfo(placementName, info, _bannerDidWinBidCallback);
 }
 @end

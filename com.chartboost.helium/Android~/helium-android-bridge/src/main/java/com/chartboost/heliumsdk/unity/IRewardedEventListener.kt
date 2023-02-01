@@ -4,11 +4,10 @@ package com.chartboost.heliumsdk.unity
  * Interface for sending real-time rewarded events
  */
 interface IRewardedEventListener {
-    fun DidLoadRewarded(placementName: String, errorCode: Int, errorDescription: String)
-    fun DidShowRewarded(placementName: String, errorCode: Int, errorDescription: String)
-    fun DidCloseRewarded(placementName: String, errorCode: Int, errorDescription: String)
-    fun DidClickRewarded(placementName: String, errorCode: Int, errorDescription: String)
-    fun DidRecordImpression(placementName: String, errorCode: Int, errorDescription: String)
-    fun DidWinBidRewarded(placementName: String, auctionId: String, partnerId: String, price: Double)
-    fun DidReceiveReward(placementName: String, reward: Int)
+    fun DidLoadRewarded(placementName: String, loadId: String, auctionId: String, partnerId: String, price: Double, error: String)
+    fun DidShowRewarded(placementName: String, error: String)
+    fun DidCloseRewarded(placementName: String, error: String)
+    fun DidClickRewarded(placementName: String)
+    fun DidRecordImpression(placementName: String)
+    fun DidReceiveReward(placementName: String)
 }

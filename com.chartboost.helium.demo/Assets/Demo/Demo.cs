@@ -56,7 +56,8 @@ public class Demo : MonoBehaviour
     #region Lifecycle
 
     private void Awake()
-    {        
+    {
+        Application.targetFrameRate = 60;
         HeliumSDK.DidStart += DidStartHelium;
         HeliumSDK.DidReceivePartnerInitializationData += DidReceivePartnerInitializationData;
         HeliumSDK.DidReceiveImpressionLevelRevenueData += DidReceiveImpressionLevelRevenueData;
@@ -102,7 +103,7 @@ public class Demo : MonoBehaviour
         }
     }
 
-    private void DidStartHelium(HeliumError error)
+    private void DidStartHelium(string error)
     {
         Log($"DidStart: {error}");
         HeliumSDK.SetUserIdentifier(DefaultUserIdentifier);
@@ -147,7 +148,6 @@ public class Demo : MonoBehaviour
         HeliumSDK.DidCloseInterstitial += DidCloseInterstitial;
         HeliumSDK.DidClickInterstitial += DidClickInterstitial;
         HeliumSDK.DidRecordImpressionInterstitial += DidRecordImpressionInterstitial;
-        HeliumSDK.DidWinBidInterstitial += DidWinBidInterstitial;
     }
 
     public void OnCacheInterstitialClick()
@@ -182,7 +182,9 @@ public class Demo : MonoBehaviour
             Log("interstitial ad does not exist");
             return;
         }
-        Log(_interstitialAd.ClearLoaded() ? "interstitial ad has been cleared" : "interstitial ad has failed to clear");
+
+        _interstitialAd.ClearLoaded();
+        Log("interstitial ad has been cleared");
     }
 
     public void OnShowInterstitialClick()
@@ -191,36 +193,20 @@ public class Demo : MonoBehaviour
             _interstitialAd.Show();
     }
 
-    private void DidLoadInterstitial(string placementName, HeliumError error)
-    {
-        Log($"DidLoadInterstitial {placementName}: {error}");
-    }
+    private void DidLoadInterstitial(string placementName, string loadId, HeliumBidInfo info, string error) 
+        => Log($"DidLoadInterstitial {placementName}: \nLoadId: ${loadId} \nPrice: ${info.Price:F4} \nAuction Id: {info.AuctionId} \nPartner Id: {info.PartnerId} \nError: {error}");
 
-    private  void DidShowInterstitial(string placementName, HeliumError error)
-    {
-        Log($"DidShowInterstitial {placementName}: {error}");
-    }
+    private  void DidShowInterstitial(string placementName, string error) 
+        => Log($"DidShowInterstitial {placementName}: {error}");
 
-    private void DidCloseInterstitial(string placementName, HeliumError error)
-    {
-        Log($"DidCloseInterstitial {placementName}: {error}");
-    }
-
-    private void DidWinBidInterstitial(string placementName, HeliumBidInfo info)
-    {
-        Log($"DidWinBidInterstitial {placementName}: ${info.Price:F4}, Auction Id: {info.AuctionId}, Partner Id: {info.PartnerId}");
-    }
-
-    private void DidClickInterstitial(string placementName, HeliumError error)
-    {
-        Log($"DidClickInterstitial {placementName}: {error}");
-    }
+    private void DidCloseInterstitial(string placementName, string error) 
+        => Log($"DidCloseInterstitial {placementName}: {error}");
     
-    private void DidRecordImpressionInterstitial(string placementName, HeliumError error)
-    {
-        Log($"DidRecordImpressionInterstitial {placementName}: {error}");
-    }
+    private void DidClickInterstitial(string placementName, string error) 
+        => Log($"DidClickInterstitial {placementName}: {error}");
 
+    private void DidRecordImpressionInterstitial(string placementName, string error) 
+        => Log($"DidRecordImpressionInterstitial {placementName}: {error}");
     #endregion
 
     #region Rewarded
@@ -233,7 +219,6 @@ public class Demo : MonoBehaviour
         HeliumSDK.DidReceiveReward += DidReceiveReward;
         HeliumSDK.DidClickRewarded += DidClickRewarded;
         HeliumSDK.DidRecordImpressionRewarded += DidRecordImpressionRewarded;
-        HeliumSDK.DidWinBidRewarded += DidWinBidRewarded;
     }
 
     public void OnCacheRewardedClick()
@@ -273,7 +258,8 @@ public class Demo : MonoBehaviour
             Log("rewarded ad does not exist");
             return;
         }
-        Log(_rewardedAd.ClearLoaded() ? "rewarded ad has been cleared" : "rewarded ad has failed to clear");
+        _rewardedAd.ClearLoaded();
+        Log("rewarded ad has been cleared");
     }
 
     public void OnShowRewardedClick()
@@ -282,51 +268,31 @@ public class Demo : MonoBehaviour
             _rewardedAd.Show();
     }
 
-    private void DidLoadRewarded(string placementName, HeliumError error)
-    {
-        Log($"DidLoadRewarded {placementName}: {error}");
-    }
+    private void DidLoadRewarded(string placementName, string loadId, HeliumBidInfo info, string error)
+        => Log($"DidLoadRewarded {placementName} \nLoadId: ${loadId} \nPrice: ${info.Price:F4} \nAuction Id: {info.AuctionId} \nPartner Id: {info.PartnerId} \nError: {error}");
 
-    private void DidShowRewarded(string placementName, HeliumError error)
-    {
-        Log($"DidShowRewarded {placementName}: {error}");
-    }
+    private void DidShowRewarded(string placementName, string error) 
+        => Log($"DidShowRewarded {placementName}: {error}");
 
-    private void DidCloseRewarded(string placementName, HeliumError error)
-    {
-        Log($"DidCloseRewarded {placementName}: {error}");
-    }
+    private void DidCloseRewarded(string placementName, string error) 
+        => Log($"DidCloseRewarded {placementName}: {error}");
 
-    private void DidReceiveReward(string placementName, int reward)
-    {
-        Log($"DidReceiveReward {placementName}: {reward}");
-    }
+    private void DidClickRewarded(string placementName, string error) 
+        => Log($"DidClickRewarded {placementName}: {error}");
 
-    private void DidClickRewarded(string placementName, HeliumError error)
-    {
-        Log($"DidClickRewarded {placementName}: {error}");
-    }
+    private void DidRecordImpressionRewarded(string placementName, string error) 
+        => Log($"DidRecordImpressionRewarded {placementName}: {error}");
     
-    private void DidRecordImpressionRewarded(string placementName, HeliumError error)
-    {
-        Log($"DidRecordImpressionRewarded {placementName}: {error}");
-    }
-    
-    private void DidWinBidRewarded(string placementName, HeliumBidInfo info)
-    {
-        Log($"DidWinBidRewarded {placementName}: {placementName}: ${info.Price:F4}, Auction Id: {info.AuctionId}, Partner Id: {info.PartnerId}");
-    }
-
+    private void DidReceiveReward(string placementName, string error) 
+        => Log($"DidReceiveReward {placementName}: {error}");
     #endregion
 
     #region Banners
-
     private void SetupBannerDelegates()
     {
         HeliumSDK.DidLoadBanner += DidLoadBanner;
-        HeliumSDK.DidWinBidBanner += DidWinBidBanner;
-        HeliumSDK.DidRecordImpressionBanner += DidRecordImpressionBanner;
         HeliumSDK.DidClickBanner += DidClickBanner;
+        HeliumSDK.DidRecordImpressionBanner += DidRecordImpressionBanner;
     }
 
     public void OnCreateBannerClick()
@@ -402,27 +368,17 @@ public class Demo : MonoBehaviour
         Log("Banner Visibility Toggled");
     }
 
-    private void DidLoadBanner(string placementName, HeliumError error)
+    private void DidLoadBanner(string placementName, string loadId, HeliumBidInfo info, string error)
     {
         _bannerAdIsVisible = true;
-        Log($"DidLoadBanner{placementName}: {error}");
+        Log($"DidLoadBanner{placementName}: \nLoadId: ${loadId} \nPrice: ${info.Price:F4} \nAuction Id: {info.AuctionId} \nPartner Id: {info.PartnerId} \nError: {error}");
     }
 
-    private void DidWinBidBanner(string placementName, HeliumBidInfo info)
-    {
-        Log($"DidWinBidBanner {placementName}: {placementName}: ${info.Price:F4}, Auction Id: {info.AuctionId}, Partner Id: {info.PartnerId}");
-    }
+    private void DidClickBanner(string placementName, string error) 
+        => Log($"DidClickBanner {placementName}: {error}");
 
-    private void DidClickBanner(string placementName, HeliumError error)
-    {
-        Log($"DidClickBanner {placementName}: {error}");
-    }
-    
-    private void DidRecordImpressionBanner(string placementName, HeliumError error)
-    {
-        Log($"DidRecordImpressionBanner {placementName}: {error}");
-    }
-
+    private void DidRecordImpressionBanner(string placementName, string error) 
+        => Log($"DidRecordImpressionBanner {placementName}: {error}");
     #endregion
 
     #region Utility
@@ -464,9 +420,9 @@ public class Demo : MonoBehaviour
         return new string(stringChars);
     }
 
-    private static void UnexpectedSystemErrorDidOccur(HeliumError error)
+    private static void UnexpectedSystemErrorDidOccur(string error)
     {
-        Debug.LogErrorFormat(error.ErrorDescription);
+        Debug.LogErrorFormat(error);
     }
     
     public static string JsonPrettify(string json)

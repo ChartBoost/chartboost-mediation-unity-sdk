@@ -63,10 +63,10 @@ namespace Helium.FullScreen.Rewarded
         }
 
         /// <inheritdoc cref="HeliumRewardedBase.ClearLoaded"/>>
-        public override bool ClearLoaded()
+        public override void ClearLoaded()
         {
             base.ClearLoaded();
-            return _androidAd.Call<bool>("clearLoaded");
+            _androidAd.Call<bool>("clearLoaded");
         }
 
         /// <inheritdoc cref="HeliumRewardedBase.SetCustomData"/>>

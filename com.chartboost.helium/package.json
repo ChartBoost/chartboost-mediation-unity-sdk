@@ -1,6 +1,6 @@
 {
   "name": "com.chartboost.helium",
-  "version": "3.3.1",
+  "version": "4.0.0",
   "displayName": "Helium SDK",
   "description": "The Helium Unity SDK by Chartboost: Better monetization powered by bidding",
   "unity": "2020.3",
@@ -28,9 +28,9 @@
       "path": "Samples~/AdMob"
     },
     {
-      "displayName": "Amazon",
-      "description": "Support for the Amazon advertisement network.",
-      "path": "Samples~/Amazon"
+      "displayName": "Amazon Publisher Services",
+      "description": "Support for the Amazon Publisher Services advertisement network.",
+      "path": "Samples~/AmazonPublisherServices"
     },
     {
       "displayName": "AppLovin",
@@ -38,14 +38,19 @@
       "path": "Samples~/AppLovin"
     },
     {
-      "displayName": "Facebook",
-      "description": "Support for the Facebook advertisement network.",
-      "path": "Samples~/Facebook"
+      "displayName": "Chartboost",
+      "description": "Support for the Chartboost advertisement network.",
+      "path": "Samples~/Chartboost"
     },
     {
-      "displayName": "Fyber",
-      "description": "Support for the Fyber advertisement network.",
-      "path": "Samples~/Fyber"
+      "displayName": "Meta Audience Network",
+      "description": "Support for the Meta Audience Network advertisement network.",
+      "path": "Samples~/MetaAudienceNetwork"
+    },
+    {
+      "displayName": "Digital Turbine Exchange",
+      "description": "Support for the Digital Turbine Exchange advertisement network.",
+      "path": "Samples~/DigitalTurbineExchange"
     },
     {
       "displayName": "Google Bidding",

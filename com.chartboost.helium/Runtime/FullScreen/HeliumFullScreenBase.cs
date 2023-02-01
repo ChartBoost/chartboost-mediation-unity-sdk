@@ -47,10 +47,9 @@ namespace Helium.FullScreen
         }
 
         /// <inheritdoc cref="IHeliumFullScreenAd.ClearLoaded"/>>
-        public virtual bool ClearLoaded()
+        public virtual void ClearLoaded()
         {
             HeliumLogger.Log(LogTag, $"clearing fullscreen: {PlacementName}");
-            return true;
         }
     }
     

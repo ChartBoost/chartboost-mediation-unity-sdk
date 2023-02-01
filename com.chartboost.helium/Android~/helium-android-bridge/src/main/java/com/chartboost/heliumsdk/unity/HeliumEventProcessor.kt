@@ -1,7 +1,7 @@
 package com.chartboost.heliumsdk.unity
 
 import android.util.Log
-import com.chartboost.heliumsdk.ad.HeliumAdError
+import com.chartboost.heliumsdk.domain.HeliumAdException
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -9,20 +9,18 @@ object HeliumEventProcessor {
     private val TAG = HeliumEventProcessor::class.java.simpleName
 
     @JvmStatic
-    fun serializeHeliumEvent(
-        placementName: String,
-        error: HeliumAdError?,
-        eventConsumer: HeliumEventConsumer<String, Int, String>
-    ) {
-        eventConsumer.accept(placementName, error?.getCode() ?: -1, error?.getMessage() ?: "")
-    }
+    fun serializeHeliumEvent(placementName: String, eventConsumer: HeliumEventConsumer<String>)
+        = eventConsumer.accept(placementName)
 
     @JvmStatic
-    fun serializeHeliumBidEvent(
-        placementName: String,
-        data: HashMap<String, String>,
-        eventConsumer: HeliumBidEventConsumer<String, String, String, Double>
-    ) {
+    fun serializeHeliumEventWithError(placementName: String, error: HeliumAdException?, eventConsumer: HeliumEventConsumerWithError<String, String>)
+        = eventConsumer.accept(placementName,error?.toString() ?: "")
+
+    @JvmStatic
+    fun serializeHeliumLoadEvent(placementName: String, loadId: String, data: Map<String, String>, error: HeliumAdException?,
+        loadConsumer: HeliumLoadEventConsumer<String, String, String, String, Double, String>) {
+        val errorMessage = error?.toString() ?: ""
+
         val partnerId = data["partner_id"] ?: ""
         val auctionId = data["auction-id"] ?: ""
         val price = try {
@@ -31,22 +29,8 @@ object HeliumEventProcessor {
             Log.d(TAG, "HeliumBidEvent failed to serialize price, defaulting to 0.0", e)
             0.0
         }
-        eventConsumer.accept(placementName, auctionId, partnerId, price)
-    }
 
-    @JvmStatic
-    fun serializeHeliumRewardEvent(
-        placementName: String,
-        reward: String,
-        eventConsumer: HeliumRewardEventConsumer<String, Int>
-    ) {
-        val rewardAmount = try {
-            reward.toInt()
-        } catch (e: NumberFormatException) {
-            Log.d(TAG, "HeliumRewardEvent failed to serialize reward amount, defaulting", e)
-            1
-        }
-        eventConsumer.accept(placementName, rewardAmount)
+        loadConsumer.accept(placementName, loadId, auctionId, partnerId, price, errorMessage)
     }
 
     @JvmStatic
@@ -62,12 +46,16 @@ object HeliumEventProcessor {
         }
     }
 
-    fun interface HeliumEventConsumer<PlacementName, ErrorCode, ErrorDescription> {
-        fun accept(placementName: PlacementName, errorCode: ErrorCode, errorDescription: ErrorDescription)
+    fun interface HeliumEventConsumer<PlacementName>{
+        fun accept(placementName: PlacementName)
     }
 
-    fun interface HeliumBidEventConsumer<PlacementName, AuctionId, PartnerId, Price> {
-        fun accept(placementName: PlacementName, auctionId: AuctionId, partnerId: PartnerId, price: Price)
+    fun interface HeliumEventConsumerWithError<PlacementName, ErrorMessage> {
+        fun accept(placementName: PlacementName, errorMessage: ErrorMessage)
+    }
+
+    fun interface HeliumLoadEventConsumer<PlacementName, LoadId, AuctionId, PartnerId, Price, Error> {
+        fun accept(placementName: PlacementName, loadId: LoadId, auctionId: AuctionId, partnerId: PartnerId, price: Price, error: Error)
     }
 
     fun interface HeliumRewardEventConsumer<PlacementName, Reward> {

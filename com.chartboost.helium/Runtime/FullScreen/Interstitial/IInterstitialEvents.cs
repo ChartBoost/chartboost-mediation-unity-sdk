@@ -13,7 +13,7 @@ namespace Helium.FullScreen.Interstitial
         /// servers and cached locally.
         /// </summary>
         [Preserve]
-        public event HeliumPlacementEvent DidLoadInterstitial;
+        public event HeliumPlacementLoadEvent DidLoadInterstitial;
 
         /// <summary>
         /// Called after an interstitial has been displayed on screen.
@@ -41,12 +41,5 @@ namespace Helium.FullScreen.Interstitial
         /// </summary>
         [Preserve]
         public event HeliumPlacementEvent DidRecordImpressionInterstitial;
-        
-        /// <summary>
-        /// Called with bid information after an interstitial has been loaded from the Helium API
-        /// servers and cached locally.
-        /// </summary>
-        [Preserve]
-        public event HeliumBidEvent DidWinBidInterstitial;
     }
 }
