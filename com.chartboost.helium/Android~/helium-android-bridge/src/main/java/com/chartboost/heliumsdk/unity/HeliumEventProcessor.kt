@@ -9,29 +9,17 @@ object HeliumEventProcessor {
     private val TAG = HeliumEventProcessor::class.java.simpleName
 
     @JvmStatic
-    fun serializeHeliumEvent(
-        placementName: String,
-        eventConsumer: HeliumEventConsumer<String>
-    ) = eventConsumer.accept(placementName)
+    fun serializeHeliumEvent(placementName: String, eventConsumer: HeliumEventConsumer<String>)
+        = eventConsumer.accept(placementName)
 
     @JvmStatic
-    fun serializeHeliumEventWithError(
-        placementName: String,
-        error: HeliumAdException?,
-        eventConsumer: HeliumEventConsumerWithError<String, String>
-    ) = eventConsumer.accept(placementName,error?.toString() ?: "")
+    fun serializeHeliumEventWithError(placementName: String, error: HeliumAdException?, eventConsumer: HeliumEventConsumerWithError<String, String>)
+        = eventConsumer.accept(placementName,error?.toString() ?: "")
 
     @JvmStatic
-    fun serializeHeliumLoadEvent(
-        placementName: String,
-        loadId: String,
-        data: Map<String, String>,
-        error: HeliumAdException?,
-        loadConsumer: HeliumLoadEventConsumer<String, String, String>,
-        bidConsumer: HeliumBidEventConsumer<String, String, String, Double, String>
-    ) {
+    fun serializeHeliumLoadEvent(placementName: String, loadId: String, data: Map<String, String>, error: HeliumAdException?,
+        loadConsumer: HeliumLoadEventConsumer<String, String, String, String, Double, String>) {
         val errorMessage = error?.toString() ?: ""
-        loadConsumer.accept(placementName, loadId, errorMessage)
 
         val partnerId = data["partner_id"] ?: ""
         val auctionId = data["auction-id"] ?: ""
@@ -42,7 +30,7 @@ object HeliumEventProcessor {
             0.0
         }
 
-        bidConsumer.accept(placementName, auctionId, partnerId, price, errorMessage)
+        loadConsumer.accept(placementName, loadId, auctionId, partnerId, price, errorMessage)
     }
 
     @JvmStatic
@@ -66,12 +54,8 @@ object HeliumEventProcessor {
         fun accept(placementName: PlacementName, errorMessage: ErrorMessage)
     }
 
-    fun interface HeliumLoadEventConsumer<PlacementName, LoadId, Error> {
-        fun accept(placementName: PlacementName, loadId: LoadId, error: Error)
-    }
-
-    fun interface HeliumBidEventConsumer<PlacementName, AuctionId, PartnerId, Price, Error> {
-        fun accept(placementName: PlacementName, auctionId: AuctionId, partnerId: PartnerId, price: Price, error: Error)
+    fun interface HeliumLoadEventConsumer<PlacementName, LoadId, AuctionId, PartnerId, Price, Error> {
+        fun accept(placementName: PlacementName, loadId: LoadId, auctionId: AuctionId, partnerId: PartnerId, price: Price, error: Error)
     }
 
     fun interface HeliumRewardEventConsumer<PlacementName, Reward> {

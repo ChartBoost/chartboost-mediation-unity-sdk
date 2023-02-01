@@ -110,11 +110,9 @@ class HeliumUnityBridge {
         val interstitialAd = HeliumInterstitialAd(UnityPlayer.currentActivity, placementName, object : HeliumFullscreenAdListener {
             override fun onAdCached(placementName: String, loadId: String, bidInfo: Map<String, String>, error: HeliumAdException?) {
                 serializeHeliumLoadEvent(placementName, loadId, bidInfo, error,
-                    HeliumLoadEventConsumer { placementName: String, loadId: String, error: String ->
-                        interstitialEventsListener?.DidLoadInterstitial(placementName, loadId, error)
-                    },
-                    HeliumEventProcessor.HeliumBidEventConsumer { placementName: String, auctionId: String, partnerId: String, price: Double, error: String ->
-                        interstitialEventsListener?.DidWinBidInterstitial(placementName, auctionId, partnerId, price, error) }
+                    HeliumLoadEventConsumer { placementName: String, loadId: String, auctionId: String, partnerId: String, price: Double, error: String ->
+                        interstitialEventsListener?.DidLoadInterstitial(placementName, loadId, auctionId, partnerId, price, error)
+                    }
                 )
             }
 
@@ -147,7 +145,7 @@ class HeliumUnityBridge {
             }
 
             override fun onAdRewarded(placementName: String) {
-                TODO("Not yet implemented")
+//                TODO("Not yet implemented")
             }
         })
         return wrap(interstitialAd)
@@ -157,11 +155,9 @@ class HeliumUnityBridge {
         val rewardedAd = HeliumRewardedAd(UnityPlayer.currentActivity, placementName, object : HeliumFullscreenAdListener {
             override fun onAdCached(placementName: String, loadId: String, bidInfo: Map<String, String>, error: HeliumAdException?) {
                 serializeHeliumLoadEvent(placementName, loadId, bidInfo, error,
-                    HeliumLoadEventConsumer { placementName: String, loadId: String, error: String ->
-                        rewardedEventListener?.DidLoadRewarded(placementName, loadId, error)
-                    },
-                    HeliumEventProcessor.HeliumBidEventConsumer { placementName: String, auctionId: String, partnerId: String, price: Double, error: String ->
-                        rewardedEventListener?.DidWinBidRewarded(placementName, auctionId, partnerId, price, error) }
+                    HeliumLoadEventConsumer { placementName: String, loadId: String, auctionId: String, partnerId: String, price: Double, error: String ->
+                        rewardedEventListener?.DidLoadRewarded(placementName, loadId, auctionId, partnerId, price, error)
+                    }
                 )
             }
 
@@ -214,11 +210,9 @@ class HeliumUnityBridge {
         val bannerAd = HeliumBannerAd(UnityPlayer.currentActivity, placementName, wantedSize, object : HeliumBannerAdListener {
             override fun onAdCached(placementName: String, loadId: String, bidInfo: Map<String, String>, error: HeliumAdException?) {
                 serializeHeliumLoadEvent(placementName, loadId, bidInfo, error,
-                    HeliumLoadEventConsumer { placementName: String, loadId: String, error: String ->
-                        bannerEventsListener?.DidLoadBanner(placementName, loadId, error)
-                    },
-                    HeliumEventProcessor.HeliumBidEventConsumer { placementName: String, auctionId: String, partnerId: String, price: Double, error: String ->
-                        bannerEventsListener?.DidWinBidBanner(placementName, auctionId, partnerId, price, error) }
+                    HeliumLoadEventConsumer { placementName: String, loadId: String, auctionId: String, partnerId: String, price: Double, error: String ->
+                        bannerEventsListener?.DidLoadBanner(placementName, loadId, auctionId, partnerId, price, error)
+                    }
                 )
             }
 

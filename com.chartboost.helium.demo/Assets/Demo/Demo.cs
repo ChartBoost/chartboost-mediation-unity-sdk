@@ -194,7 +194,7 @@ public class Demo : MonoBehaviour
     }
 
     private void DidLoadInterstitial(string placementName, string loadId, HeliumBidInfo info, string error) 
-        => Log($"DidLoadInterstitial {placementName}: LoadId: ${loadId}. ${info.Price:F4}, Auction Id: {info.AuctionId}, Partner Id: {info.PartnerId}: {error}");
+        => Log($"DidLoadInterstitial {placementName}: \nLoadId: ${loadId} \nPrice: ${info.Price:F4} \nAuction Id: {info.AuctionId} \nPartner Id: {info.PartnerId} \nError: {error}");
 
     private  void DidShowInterstitial(string placementName, string error) 
         => Log($"DidShowInterstitial {placementName}: {error}");
@@ -269,7 +269,7 @@ public class Demo : MonoBehaviour
     }
 
     private void DidLoadRewarded(string placementName, string loadId, HeliumBidInfo info, string error)
-        => Log($"DidLoadRewarded {placementName}, LoadId: ${loadId}. ${info.Price:F4}, Auction Id: {info.AuctionId}, Partner Id: {info.PartnerId}: {error}");
+        => Log($"DidLoadRewarded {placementName} \nLoadId: ${loadId} \nPrice: ${info.Price:F4} \nAuction Id: {info.AuctionId} \nPartner Id: {info.PartnerId} \nError: {error}");
 
     private void DidShowRewarded(string placementName, string error) 
         => Log($"DidShowRewarded {placementName}: {error}");
@@ -371,7 +371,7 @@ public class Demo : MonoBehaviour
     private void DidLoadBanner(string placementName, string loadId, HeliumBidInfo info, string error)
     {
         _bannerAdIsVisible = true;
-        Log($"DidLoadBanner{placementName}: LoadId: ${loadId}. ${info.Price:F4}, Auction Id: {info.AuctionId}, Partner Id: {info.PartnerId}: {error}");
+        Log($"DidLoadBanner{placementName}: \nLoadId: ${loadId} \nPrice: ${info.Price:F4} \nAuction Id: {info.AuctionId} \nPartner Id: {info.PartnerId} \nError: {error}");
     }
 
     private void DidClickBanner(string placementName, string error) 

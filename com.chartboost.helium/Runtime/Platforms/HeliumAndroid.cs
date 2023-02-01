@@ -144,8 +144,8 @@ namespace Helium.Platforms
             public static readonly InterstitialEventListener Instance = new InterstitialEventListener();
 
             [Preserve]
-            private void DidLoadInterstitial(string placementName, string loadId, string error)
-                => HeliumEventProcessor.ProcessHeliumLoadEvent(placementName,  loadId, error, _instance.DidLoadInterstitial);
+            private void DidLoadInterstitial(string placementName, string loadId, string auctionId, string partnerId, double price, string error)
+                => HeliumEventProcessor.ProcessHeliumLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadInterstitial);
 
             [Preserve]
             private void DidShowInterstitial(string placementName, string error) 
@@ -162,10 +162,6 @@ namespace Helium.Platforms
             [Preserve]
             private void DidRecordImpression(string placementName) 
                 => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidRecordImpressionInterstitial);
-
-            [Preserve]
-            private void DidWinBidInterstitial(string placementName, string auctionId, string partnerId, double price, string error) 
-                => HeliumEventProcessor.ProcessHeliumBidEvent(placementName, auctionId, partnerId, price, error, _instance.DidWinBidInterstitial);
         }
 
         public override event HeliumPlacementLoadEvent DidLoadInterstitial;
@@ -173,7 +169,6 @@ namespace Helium.Platforms
         public override event HeliumPlacementEvent DidCloseInterstitial; 
         public override event HeliumPlacementEvent DidClickInterstitial;
         public override event HeliumPlacementEvent DidRecordImpressionInterstitial;
-        public override event HeliumBidEvent DidWinBidInterstitial;
         #endregion
 
         #region Rewarded Callbacks
@@ -184,8 +179,8 @@ namespace Helium.Platforms
             public static readonly RewardedVideoEventListener Instance = new RewardedVideoEventListener();
 
             [Preserve]
-            private void DidLoadRewarded(string placementName, string loadId, string error) 
-                => HeliumEventProcessor.ProcessHeliumLoadEvent(placementName, loadId, error, _instance.DidLoadRewarded);
+            private void DidLoadRewarded(string placementName, string loadId, string auctionId, string partnerId, double price, string error) 
+                => HeliumEventProcessor.ProcessHeliumLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadRewarded);
 
             [Preserve]
             private void DidShowRewarded(string placementName, string error) 
@@ -206,10 +201,6 @@ namespace Helium.Platforms
             [Preserve]
             private void DidReceiveReward(string placementName) 
                 => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidReceiveReward);
-            
-            [Preserve]
-            private void DidWinBidRewarded(string placementName, string auctionId, string partnerId, double price, string error) 
-                => HeliumEventProcessor.ProcessHeliumBidEvent(placementName, auctionId, partnerId, price, error, _instance.DidWinBidRewarded);
         }
 
         public override event HeliumPlacementLoadEvent DidLoadRewarded;
@@ -218,7 +209,6 @@ namespace Helium.Platforms
         public override event HeliumPlacementEvent DidClickRewarded;
         public override event HeliumPlacementEvent DidRecordImpressionRewarded;
         public override event HeliumPlacementEvent DidReceiveReward;
-        public override event HeliumBidEvent DidWinBidRewarded;
         #endregion
 
         #region Banner Callbacks
@@ -229,8 +219,8 @@ namespace Helium.Platforms
             public static readonly BannerEventListener Instance = new BannerEventListener();
 
             [Preserve]
-            private void DidLoadBanner(string placementName, string loadId, string error) 
-                => HeliumEventProcessor.ProcessHeliumLoadEvent(placementName,  loadId, error, _instance.DidLoadBanner);
+            private void DidLoadBanner(string placementName, string loadId, string auctionId, string partnerId, double price, string error) 
+                => HeliumEventProcessor.ProcessHeliumLoadEvent(placementName,  loadId, auctionId, partnerId, price, error, _instance.DidLoadBanner);
 
             [Preserve]
             private void DidClickBanner(string placementName) 
@@ -239,16 +229,11 @@ namespace Helium.Platforms
             [Preserve]
             private void DidRecordImpression(string placementName) 
                 => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidRecordImpressionBanner);
-            
-            [Preserve]
-            private void DidWinBidRewarded(string placementName, string auctionId, string partnerId, double price, string error) 
-                => HeliumEventProcessor.ProcessHeliumBidEvent(placementName, auctionId, partnerId, price, error, _instance.DidWinBidBanner);
         }
 
         public override event HeliumPlacementLoadEvent DidLoadBanner;
         public override event HeliumPlacementEvent DidClickBanner;
         public override event HeliumPlacementEvent DidRecordImpressionBanner;
-        public override event HeliumBidEvent DidWinBidBanner;
         #endregion
     }
 }
