@@ -54,7 +54,7 @@ namespace Helium
     /// </summary>
     public class HeliumSettings : ScriptableObject
     {
-        private const string Package = "com.chartboost.helium";
+        private const string Package = "com.chartboost.mediation";
         private const string CbSettingsAssetName = "HeliumSettings";
         private const string CbSettingsPath = Package + "/Resources";
         private const string CbSettingsAssetExtension = ".asset";

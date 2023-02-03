@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.chartboost.helium": "file:../../com.chartboost.helium",
+    "com.chartboost.mediation": "file:../../com.chartboost.mediation",
     "com.google.external-dependency-manager": "file:../GooglePackages/com.google.external-dependency-manager-1.2.171.tgz",
     "com.unity.collab-proxy": "1.17.0",
     "com.unity.ide.rider": "3.0.16",
@@ -43,6 +43,6 @@
     "com.unity.modules.xr": "1.0.0"
   },
   "testables": [
-    "com.chartboost.helium"
+    "com.chartboost.mediation"
   ]
 }

@@ -26,7 +26,7 @@ on:
 env:
   UNITY_VERSION: 2020.3.37f1
   UNITY_EXE_PATH: /Applications/Unity/Hub/Editor/2020.3.37f1/Unity.app/Contents/MacOS/Unity
-  PROJECT_PATH: com.chartboost.helium.demo
+  PROJECT_PATH: com.chartboost.mediation.demo
 
 # Cancels any queued or in-progress runs for this branch.
 concurrency:
@@ -53,10 +53,10 @@ jobs:
         cache: gradle
 
     - name: Grant Execute Permission for Gradlew
-      run: chmod +x ./com.chartboost.helium/Android~/gradlew
+      run: chmod +x ./com.chartboost.mediation/Android~/gradlew
 
     - name: Build Android Bridge
-      run: ./com.chartboost.helium/Android~/gradlew -p ./com.chartboost.helium/Android~ githubScript
+      run: ./com.chartboost.mediation/Android~/gradlew -p ./com.chartboost.mediation/Android~ githubScript
       env:
         HELIUM_VERSION: ${{ github.event.inputs.helium_bridge_version }}
         ONLY_PUBLIC: ${{ github.event.inputs.only_public }}
@@ -68,7 +68,7 @@ jobs:
       run: |
         git config user.name ${{ secrets.GIT_USER }}
         git config user.email ${{ secrets.GIT_EMAIL }}
-        git add com.chartboost.helium/Runtime/Plugins/Android/helium-android-bridge.jar
+        git add com.chartboost.mediation/Runtime/Plugins/Android/helium-android-bridge.jar
         git commit -m "Updating Helium Unity SDK Android Bridge .jar"
         git push
 

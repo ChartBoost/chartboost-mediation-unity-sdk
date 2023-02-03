@@ -16,7 +16,7 @@ namespace Editor
         private const string UnityAds = "UnityAds";
         private const string Helium = "Helium";
         private const string HeliumWindowTitle = "Helium Unity SDK - Integration Status Checker";
-        private const string HeliumPackageName = "com.chartboost.helium";
+        private const string HeliumPackageName = "com.chartboost.mediation";
         private const string HeliumSamplesInAssets = "Assets/Samples/Helium SDK";
         private const string UnityAdsPackageName = "com.unity.ads";
         private const string UnityAdsUncommentWindow = "unity-ads-uncomment-window";

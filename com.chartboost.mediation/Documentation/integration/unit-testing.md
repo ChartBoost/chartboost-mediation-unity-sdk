@@ -7,7 +7,7 @@ In order to enable test from the Helium SDK package, the following setup is need
   "dependencies": {
     ...
   },
-  "testables": ["com.chartboost.helium"]
+  "testables": ["com.chartboost.mediation"]
 ```
 
 Please refer to the following [Unity Documentation](https://docs.unity3d.com/Manual/cus-tests.html) for more information on Test in Packages and how to enabled them.

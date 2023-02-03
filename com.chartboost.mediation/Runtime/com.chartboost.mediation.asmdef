@@ -1,5 +1,5 @@
 {
-    "name": "com.chartboost.helium",
+    "name": "com.chartboost.mediation",
     "rootNamespace": "Helium",
     "references": [],
     "includePlatforms": [

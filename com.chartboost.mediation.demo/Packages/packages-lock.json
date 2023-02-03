@@ -1,7 +1,7 @@
 {
   "dependencies": {
-    "com.chartboost.helium": {
-      "version": "file:../../com.chartboost.helium",
+    "com.chartboost.mediation": {
+      "version": "file:../../com.chartboost.mediation",
       "depth": 0,
       "source": "local",
       "dependencies": {

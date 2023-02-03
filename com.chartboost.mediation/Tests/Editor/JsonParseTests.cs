@@ -44,7 +44,7 @@ namespace Helium
 
         private string[] _testFiles;
 
-        private const string JsonTestLocation = "Packages/com.chartboost.helium/Tests/TestJSON";
+        private const string JsonTestLocation = "Packages/com.chartboost.mediation/Tests/TestJSON";
 
         [SetUp]
         public void Setup()

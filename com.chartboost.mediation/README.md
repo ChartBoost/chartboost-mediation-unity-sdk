@@ -17,7 +17,7 @@ Helium Unity SDK provides support for Unity based games to easily integrate the 
 | [Target Android API Level](https://developer.android.com/studio/releases/platforms#12) | 12.0+ (API level 31) |
 
 ### CHANGELOG
-Visit the [CHANGELOG](com.chartboost.helium/CHANGELOG.md) to reference changes to each version of the Helium Unity SDK.
+Visit the [CHANGELOG](com.chartboost.mediation/CHANGELOG.md) to reference changes to each version of the Helium Unity SDK.
 
 ### Integrating the Helium Unity SDK
 
@@ -25,7 +25,7 @@ Helium Unity SDK is distributed using the public [npm registry](https://www.npmj
 
 ```json
   "dependencies": {
-    "com.chartboost.helium": "3.3.0",
+    "com.chartboost.mediation": "3.3.0",
     ...
   },
   "scopedRegistries": [
@@ -42,19 +42,19 @@ Helium Unity SDK is distributed using the public [npm registry](https://www.npmj
 In order to better understand the Helium Unity SDK, documentation has been split between Setup and Integration Steps:
 
 #### Setup
-1. [Ad Network Adapters](com.chartboost.helium/Documentation/setup/ad-adapters.md)
-2. [Android Manifest](com.chartboost.helium/Documentation/setup/androidmanifest.md)
-3. [Google External Dependency Manager (EDM)](com.chartboost.helium/Documentation/setup/edm.md)
-4. [Multidex](com.chartboost.helium/Documentation/setup/multidex.md)
-5. [Helium Integration Checker](com.chartboost.helium/Documentation/setup/integration-checker.md)
-6. [Enabling SKAdNetwork](com.chartboost.helium/Documentation/setup/skadnetwork.md)
+1. [Ad Network Adapters](com.chartboost.mediation/Documentation/setup/ad-adapters.md)
+2. [Android Manifest](com.chartboost.mediation/Documentation/setup/androidmanifest.md)
+3. [Google External Dependency Manager (EDM)](com.chartboost.mediation/Documentation/setup/edm.md)
+4. [Multidex](com.chartboost.mediation/Documentation/setup/multidex.md)
+5. [Helium Integration Checker](com.chartboost.mediation/Documentation/setup/integration-checker.md)
+6. [Enabling SKAdNetwork](com.chartboost.mediation/Documentation/setup/skadnetwork.md)
 
 #### Integration
 
-1. [Initialization](com.chartboost.helium/Documentation/integration/initialization.md)
-2. [Configure Helium](com.chartboost.helium/Documentation/integration/configure.md)
-3. [Loading Ads](com.chartboost.helium/Documentation/integration/loading-ads.md)
-4. [Showing Ads](com.chartboost.helium/Documentation/integration/showing-ads.md)
-5. [Delegate Usage](com.chartboost.helium/Documentation/integration/delegate-usage.md)
-6. [Error Codes](com.chartboost.helium/Documentation/integration/error-codes.md)
-7. [Unit Testing](com.chartboost.helium/Documentation/integration/unit-testing.md)
+1. [Initialization](com.chartboost.mediation/Documentation/integration/initialization.md)
+2. [Configure Helium](com.chartboost.mediation/Documentation/integration/configure.md)
+3. [Loading Ads](com.chartboost.mediation/Documentation/integration/loading-ads.md)
+4. [Showing Ads](com.chartboost.mediation/Documentation/integration/showing-ads.md)
+5. [Delegate Usage](com.chartboost.mediation/Documentation/integration/delegate-usage.md)
+6. [Error Codes](com.chartboost.mediation/Documentation/integration/error-codes.md)
+7. [Unit Testing](com.chartboost.mediation/Documentation/integration/unit-testing.md)
