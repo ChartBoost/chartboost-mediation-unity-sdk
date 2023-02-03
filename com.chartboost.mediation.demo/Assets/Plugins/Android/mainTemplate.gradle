@@ -42,7 +42,7 @@ dependencies {
     implementation 'com.adcolony:sdk:4.8.0' // Assets/Samples/Chartboost Mediation/4.0.0/AdColony/Editor/Optional-AdColonyDependencies.xml:8
     implementation 'com.amazon.android:aps-sdk:9.6.2' // Assets/Samples/Chartboost Mediation/4.0.0/Amazon Publisher Services/Editor/Optional-AmazonPublisherServicesDependencies.xml:8
     implementation 'com.applovin:applovin-sdk:11.5.5' // Assets/Samples/Chartboost Mediation/4.0.0/AppLovin/Editor/Optional-AppLovinDependencies.xml:8
-    implementation 'com.chartboost:donotdeploy-chartboost-ads:9.2.+@aar' // Assets/Samples/Chartboost Mediation/4.0.0/Chartboost Monetization/Editor/Optional-ChartboostDependencies.xml:8
+    implementation 'com.chartboost:chartboost-sdk:9.2.+@aar' // Assets/Samples/Chartboost Mediation/4.0.0/Chartboost Monetization/Editor/Optional-ChartboostDependencies.xml:8
     implementation 'com.chartboost:helium:4.0+' // Assets/Samples/Chartboost Mediation/4.0.0/Chartboost Mediation/Editor/ChartboostMediationDependencies.xml:10
     implementation 'com.chartboost:helium-adapter-adcolony:4.4.8.0+@aar' // Assets/Samples/Chartboost Mediation/4.0.0/AdColony/Editor/Optional-AdColonyDependencies.xml:5
     implementation 'com.chartboost:helium-adapter-admob:4.21.3.0+@aar' // Assets/Samples/Chartboost Mediation/4.0.0/AdMob/Editor/Optional-AdMobDependencies.xml:5
