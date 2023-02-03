@@ -1,0 +1,73 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
+android {
+    compileSdkVersion = 33
+    buildToolsVersion = '33.0.0'
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 33
+    }
+    sourceSets {
+        main {
+            java {
+                srcDir 'src/main/java'
+            }
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+repositories {
+    google()
+    mavenCentral()
+    maven {
+        url "https://cboost.jfrog.io/artifactory/helium"
+    }
+    maven {
+        url "https://cboost.jfrog.io/artifactory/private-helium/"
+        credentials {
+            username privateUser
+            password privatePass
+        }
+    }
+}
+
+ext {
+    heliumDependency = "com.chartboost:helium:$heliumVersion"
+    androidPluginFolder = "$rootDir/../Runtime/Plugins/Android"
+    print("Attempting to Compile Android Bridge with Helium SDK version: $heliumDependency")
+}
+
+dependencies {
+    //Make sure to bump the version on new releases.
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    implementation heliumDependency
+    implementation 'androidx.annotation:annotation:1.4.0'
+    implementation 'org.greenrobot:eventbus:3.3.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+
+task assembleForPlugin(type: Jar, dependsOn: 'bundleLibRuntimeToJarRelease') {
+    dependsOn 'androidDependencies'
+    // We are only interested in the HeliumUnityBridge classes only.
+    from zipTree("$projectDir/build/intermediates/runtime_library_classes_jar/release/classes.jar")
+    include '**/*.class'
+    exclude 'META-INF/'
+    exclude 'META-INF/MANIFEST.MF'
+}
+
+task copyReleaseAndroidBridgeForPackaging(type: Copy, dependsOn: 'assembleForPlugin') {
+    from ("$projectDir/build/intermediates/runtime_library_classes_jar/release/classes.jar")
+    into (androidPluginFolder)
+    rename("classes.jar", "helium-android-bridge.jar")
+}
