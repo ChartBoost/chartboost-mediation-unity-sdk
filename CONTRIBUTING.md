@@ -43,17 +43,17 @@ _You wish to contribute on behalf of your employer._
 #### Submitting a Pull Request
 Follow these steps to have your contribution considered by the maintainers:
 
-1. Review and sign the [Chartboost Contribution License Agreement](#chartboost-contribution-license-agreement).
+1. Review and sign the [Contribution License Agreement (CLA)](https://developers.chartboost.com/docs/mediation-contribution-license-agreement).
 2. Identify the issue related to your fix. If an issue doesn't exist, then create a new issue.
 3. Create a pull request. 
 4. Format the title starting with the issue number, followed by a brief description of the fox. _Example: `[ISSUE-60] Fix null pointer exception`._
-5. Follow the [styleguides](#styleguides) in your pull request.
+5. Follow the [style-guides](#styleguides) in your pull request.
 6. Submit your pull request.
 7. Verify that all [status checks](https://help.github.com/articles/about-status-checks/) are passing. If a status check is failing and you believe that the failure is unrelated to your change, then leave a comment on the pull request explaining why you believe the failure is unrelated. A maintainer will re-run the status check. If we conclude that the failure was a false positive, then we will open an issue to track the problem with our status check suite.
 
 While the prerequisites above must be satisfied before your pull request is reviewed, the reviewer(s) may ask you to complete additional design work, tests, or other changes before your pull request can be accepted.
 
-## Styleguides
+## Style Guides
 
 ### Git Commit Messages
 
