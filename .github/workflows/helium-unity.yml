@@ -58,7 +58,7 @@ jobs:
     - name: Build Android Bridge
       run: ./com.chartboost.mediation/Android~/gradlew -p ./com.chartboost.mediation/Android~ githubScript
       env:
-        HELIUM_VERSION: ${{ github.event.inputs.chartboost_mediation_bridge_version }}
+        CHARTBOOST_MEDIATION_VERSION: ${{ github.event.inputs.chartboost_mediation_bridge_version }}
         ONLY_PUBLIC: ${{ github.event.inputs.only_public }}
         JFROG_USER: ${{ secrets.JFROG_USER }}
         JFROG_PASS: ${{ secrets.JFROG_PASS }}
@@ -86,7 +86,7 @@ jobs:
 
     - name: Setup Unity Editor
       id: unity-install
-      uses: ./.github/actions/helium-unity-ci/setup-unity
+      uses: ./.github/actions/chartboost-mediation-unity-ci/setup-unity
       timeout-minutes: 60
       with:
         unity-version: ${{ env.UNITY_VERSION }}
@@ -97,7 +97,7 @@ jobs:
 
     - name: Activate Unity License
       id: activate-unity
-      uses: ./.github/actions/helium-unity-ci/run-unity
+      uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
       with:
         unity-executable-path: ${{ env.UNITY_EXE_PATH }}
         setup-pass: ${{ secrets.SETUP_PASS }}
@@ -108,7 +108,7 @@ jobs:
     # Once we add mor platforms maybe we can run this in a matrix? this is fine for now.
     - name: Check for Compiler Errors in Standalone
       id: unity-compile-standalone
-      uses: ./.github/actions/helium-unity-ci/run-unity
+      uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
       with:
         unity-executable-path: ${{ env.UNITY_EXE_PATH }}
         project-path: ${{ env.PROJECT_PATH }}
@@ -116,7 +116,7 @@ jobs:
 
     - name: Check for Compiler Errors in Android
       id: unity-compile-android
-      uses: ./.github/actions/helium-unity-ci/run-unity
+      uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
       with:
         unity-executable-path: ${{ env.UNITY_EXE_PATH }}
         project-path: ${{ env.PROJECT_PATH }}
@@ -124,7 +124,7 @@ jobs:
 
     - name: Check for Compiler Errors in iOS
       id: unity-compile-ios
-      uses: ./.github/actions/helium-unity-ci/run-unity
+      uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
       with:
         unity-executable-path: ${{ env.UNITY_EXE_PATH }}
         project-path: ${{ env.PROJECT_PATH }}
@@ -132,7 +132,7 @@ jobs:
 
     - name: Run Unity Unit Tests
       id: unity-unit-tests
-      uses: ./.github/actions/helium-unity-ci/run-unity
+      uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
       with:
         unity-executable-path: ${{ env.UNITY_EXE_PATH }}
         project-path: ${{ env.PROJECT_PATH }}
@@ -144,14 +144,14 @@ jobs:
     - name: Cleanup Unity Generated Files
       if: always()
       id: unity-cleanup
-      uses: ./.github/actions/helium-unity-ci/cleanup-unity
+      uses: ./.github/actions/chartboost-mediation-unity-ci/cleanup-unity
       with:
         setup-pass: ${{ secrets.SETUP_PASS }}
 
     - name: Return Unity License
       if: always()
       id: return-unity
-      uses: ./.github/actions/helium-unity-ci/run-unity
+      uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
       with:
         unity-executable-path: ${{ env.UNITY_EXE_PATH }}
         setup-pass: ${{ secrets.SETUP_PASS }}
@@ -162,7 +162,7 @@ jobs:
     - name : Notify Slack on failure
       if : ${{ failure() }}
       id : notify-slack
-      uses: ./.github/actions/helium-unity-ci/notify-slack
+      uses: ./.github/actions/chartboost-mediation-unity-ci/notify-slack
       with:
         slack-webhook-url: ${{ secrets.SLACK_NOTIFY_HELIUM_UNITY_SDK_WEBHOOK }}
         workflow-run-id: ${{ github.run_id }}
