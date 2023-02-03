@@ -112,13 +112,13 @@ namespace Helium
         }
 
 #if UNITY_EDITOR
-        [MenuItem("Helium/Edit Settings")]
+        [MenuItem("Chartboost Mediation/Edit Settings")]
         public static void Edit()
         {
             Selection.activeObject = Instance;
         }
 
-        [MenuItem("Helium/Documentation")]
+        [MenuItem("Chartboost Mediation/Documentation")]
         public static void OpenDocumentation()
         {
             const string url = "https://developers.chartboost.com/docs/unity-add-the-helium-sdk";

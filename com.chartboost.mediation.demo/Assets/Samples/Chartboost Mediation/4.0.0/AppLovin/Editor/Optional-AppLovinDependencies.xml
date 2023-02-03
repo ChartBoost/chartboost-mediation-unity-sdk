@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependencies>
+    <androidPackages>
+        <!-- Helium AppLovin Adapter -->
+        <androidPackage spec="com.chartboost:helium-adapter-applovin:4.11.5.5+@aar" />
+
+        <!-- AppLovin Android SDK -->
+        <androidPackage spec="com.applovin:applovin-sdk:11.5.5" />
+    </androidPackages>
+    <iosPods>
+        <!-- Helium AppLovin Adapter -->
+        <iosPod name="ChartboostMediationAdapterAppLovin" version="~> 4.11.5.4"/>
+
+        <!-- AppLovin iOS SDK -->
+        <iosPod name="AppLovinSDK" version="~> 11.5.4"/>
+    </iosPods>
+</dependencies>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependencies>
+    <androidPackages>
+        <!-- Helium Pangle Adapter -->
+        <androidPackage spec="com.chartboost:helium-adapter-pangle:4.4.3.0.4+@aar" />
+
+        <!-- Pangle Android SDK -->
+        <repositories>
+            <repository>https://artifact.bytedance.com/repository/pangle</repository>
+        </repositories>
+
+        <androidPackage spec="com.pangle.global:ads-sdk:4.3.0.4"/>
+
+    </androidPackages>
+    <iosPods>
+        <!-- Helium Pangle Adapter -->
+        <iosPod name="ChartboostMediationAdapterPangle" version="~> 4.4.6.2"/>
+
+        <!-- Pangle iOS SDK -->
+        <iosPod name="Ads-Global" version="~> 4.6.2.2"/>
+    </iosPods>
+</dependencies>

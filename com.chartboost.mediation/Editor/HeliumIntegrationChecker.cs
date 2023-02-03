@@ -14,16 +14,16 @@ namespace Editor
     public class HeliumIntegrationChecker
     {
         private const string UnityAds = "UnityAds";
-        private const string Helium = "Helium";
-        private const string HeliumWindowTitle = "Helium Unity SDK - Integration Status Checker";
-        private const string HeliumPackageName = "com.chartboost.mediation";
-        private const string HeliumSamplesInAssets = "Assets/Samples/Helium SDK";
+        private const string ChartboostMediation = "Chartboost Mediation";
+        private const string WindowTitle = "Chartboost Mediation Unity SDK - Integration Status Checker";
+        private const string ChartboostMediationPackageName = "com.chartboost.mediation";
+        private const string ChartboostMediationSamplesInAssets = "Assets/Samples/Chartboost Mediation";
         private const string UnityAdsPackageName = "com.unity.ads";
         private const string UnityAdsUncommentWindow = "unity-ads-uncomment-window";
-        private static readonly string HeliumSamplesMetaInAssets = $"{HeliumSamplesInAssets}.meta";
-        private static readonly Version HeliumUnityAdsSupportedVersion = new Version(4, 4, 1);
-        private static readonly string UnityAdsSDKCommented = $"<!-- <androidPackage spec=\"com.unity3d.ads:unity-ads:{HeliumUnityAdsSupportedVersion}\"/> -->";
-        private static readonly string UnityAdsSDKUncommented = $"        <androidPackage spec=\"com.unity3d.ads:unity-ads:{HeliumUnityAdsSupportedVersion}\"/>";
+        private static readonly string ChartboostMediationSamplesMetaInAssets = $"{ChartboostMediationSamplesInAssets}.meta";
+        private static readonly Version UnityAdsSupportedVersion = new Version(4, 4, 1);
+        private static readonly string UnityAdsSDKCommented = $"<!-- <androidPackage spec=\"com.unity3d.ads:unity-ads:{UnityAdsSupportedVersion}\"/> -->";
+        private static readonly string UnityAdsSDKUncommented = $"        <androidPackage spec=\"com.unity3d.ads:unity-ads:{UnityAdsSupportedVersion}\"/>";
 
         /// <summary>
         /// Finds a package in the Unity project non-restricted to the Unity Registry. Any package on the package.json file can be loaded with this method.
@@ -40,14 +40,14 @@ namespace Editor
         }
 
         /// <summary>
-        /// Imports a sample in the Helium Unity SDK package
+        /// Imports a sample in the Chartboost Mediation  Unity SDK package
         /// </summary>
         /// <param name="sampleName">Sample to include into project</param>
-        /// <param name="version">Helium package version to use, must coincide with the currently installed version.</param>
+        /// <param name="version">Chartboost Mediation package version to use, must coincide with the currently installed version.</param>
         /// <returns>Import success status</returns>
         public static bool ImportSample(string sampleName, string version)
         {
-            var sample = Sample.FindByPackage(HeliumPackageName, version).Single(x => x.displayName.Equals(sampleName));
+            var sample = Sample.FindByPackage(ChartboostMediationPackageName, version).Single(x => x.displayName.Equals(sampleName));
             return sample.Import(ImportOptions.HideImportWindow | ImportOptions.OverridePreviousImports);
         }
 
@@ -55,22 +55,22 @@ namespace Editor
         /// Re-imports a series of Samples based of a collection of Samples names. This is to only update what it's currently in place regardless of the version.
         /// </summary>
         /// <param name="existingSamples">Existing Samples to re-import regardless of the version. Name based</param>
-        /// <param name="version">Helium package version to use, must coincide with the currently installed version.</param>
+        /// <param name="version">Chartboost Mediation package version to use, must coincide with the currently installed version.</param>
         public static void ReimportExistingHeliumSamples(ICollection<string> existingSamples, string version)
         {
-            if (!Directory.Exists(HeliumSamplesInAssets))
+            if (!Directory.Exists(ChartboostMediationSamplesInAssets))
             {
-                Debug.Log($"[Helium Builder] {HeliumSamplesInAssets} does not exist.");
+                Debug.Log($"[Chartboost Mediation Checker] {ChartboostMediationSamplesInAssets} does not exist.");
                 return;
             }
 
-            Directory.Delete(HeliumSamplesInAssets, true);
-            File.Delete(HeliumSamplesMetaInAssets);
+            Directory.Delete(ChartboostMediationSamplesInAssets, true);
+            File.Delete(ChartboostMediationSamplesMetaInAssets);
             AssetDatabase.Refresh();
 
-            var allSamples = Sample.FindByPackage(HeliumPackageName, version);
+            var allSamples = Sample.FindByPackage(ChartboostMediationPackageName, version);
             var sb = new StringBuilder();
-            sb.AppendLine("<color='green'>[Helium Integration Checker] Ad Adapter Reimport Started!</color>");
+            sb.AppendLine("<color='green'>[Chartboost Mediation Checker] Ad Adapter Reimport Started!</color>");
             foreach (var sample in allSamples)
             {
                 if (!existingSamples.Contains(sample.displayName))
@@ -83,7 +83,7 @@ namespace Editor
                 sb.AppendLine($"<color='green'> * Importing Ad Adapter: <b>{sample.displayName}</b></color>");
             }
 
-            sb.AppendLine("<color='green'>[Helium Integration Checker] Ad Adapter Reimport Completed</color>");
+            sb.AppendLine("<color='green'>[Chartboost Mediation Integration Checker] Ad Adapter Reimport Completed</color>");
             Debug.LogFormat(LogType.Log, LogOption.NoStacktrace, null, sb.ToString());
         }
 
@@ -93,12 +93,12 @@ namespace Editor
         /// <returns>Update attempt status</returns>
         public static bool ReimportExistingAdapters()
         {
-            var helium = FindPackage(HeliumPackageName);
+            var chartboostMediation = FindPackage(ChartboostMediationPackageName);
 
-            if (!Directory.Exists(HeliumSamplesInAssets))
+            if (!Directory.Exists(ChartboostMediationSamplesInAssets))
                 return false;
 
-            var subdirectories = Directory.GetDirectories(HeliumSamplesInAssets);
+            var subdirectories = Directory.GetDirectories(ChartboostMediationSamplesInAssets);
             if (subdirectories.Length <= 0)
                 return false;
 
@@ -111,31 +111,31 @@ namespace Editor
                 importedDependencies.Add(sampleName);
             }
 
-            ReimportExistingHeliumSamples(importedDependencies, helium.version);
+            ReimportExistingHeliumSamples(importedDependencies, chartboostMediation.version);
             return true;
         }
 
         /// <summary>
-        /// Uncomment UnityAds dependency on Optional-HeliumUnityAdsDependencies.xml if present.
+        /// Uncomment UnityAds dependency on Optional-UnityAdsDependencies.xml if present.
         /// </summary>
         /// <param name="skipDialog">Optional parameter to skip any dialog windows, if true, UnityAds dependency will be uncommented if possible.</param>
         public static void UncommentUnityAdsDependency(bool skipDialog = false)
         {
-            var helium = FindPackage(HeliumPackageName);
-            if (!Version.TryParse(helium.version, out var heliumFoundVersion))
+            var chartboostMediation = FindPackage(ChartboostMediationPackageName);
+            if (!Version.TryParse(chartboostMediation.version, out var chartboostMediationFoundVersion))
             {
                 if (!skipDialog)
                 {
                     EditorUtility.DisplayDialog(
-                        HeliumWindowTitle,
-                        $"Failed to parse version {helium.version} in Package.\n\n**This is probably a bad setup, contact Helium Support at support@chartboost.com**",
+                        WindowTitle,
+                        $"Failed to parse version {chartboostMediation.version} in Package.\n\n**This is probably a bad setup, contact Chartboost Mediation Support at support@chartboost.com**",
                         "Ok");
                 }
                 return;
             }
 
-            var heliumVersion = heliumFoundVersion.ToString();
-            var unityAdsDependencyPath = $"Assets/Samples/Helium SDK/{heliumVersion}/UnityAds/Editor/Optional-HeliumUnityAdsDependencies.xml";
+            var chartboostMediationVersion = chartboostMediationFoundVersion.ToString();
+            var unityAdsDependencyPath = $"Assets/Samples/Chartboost Mediation/{chartboostMediationVersion}/UnityAds/Editor/Optional-UnityAdsDependencies.xml";
 
             // Check if UnityAds is integrated
             if (!File.Exists(unityAdsDependencyPath))
@@ -150,8 +150,8 @@ namespace Editor
             if (!skipDialog)
             {
                 updateUnityAdsSample = EditorUtility.DisplayDialog(
-                    HeliumWindowTitle,
-                    "Helium UnityAds Ad Adapter found, but UnityAds dependency is commented. This will lead to a non-functional adapter.\n\nDo you wish to uncomment it?",
+                    WindowTitle,
+                    "Chartboost Mediation UnityAds Adapter found, but UnityAds dependency is commented. This will lead to a non-functional adapter.\n\nDo you wish to uncomment it?",
                     "Yes", "No", DialogOptOutDecisionType.ForThisMachine, UnityAdsUncommentWindow);
             }
 
@@ -161,21 +161,21 @@ namespace Editor
             File.WriteAllLines(unityAdsDependencyPath, unityAdsDependencyLines);
         }
 
-        [MenuItem("Helium/Integration/UnityAds Check", false, 1)]
+        [MenuItem("Chartboost Mediation/Integration/UnityAds Check", false, 1)]
         public static void CheckUnityAdsIntegration()
         {
-            var helium = FindPackage(HeliumPackageName);
-            if (!Version.TryParse(helium.version, out var heliumFoundVersion))
+            var chartboostMediation = FindPackage(ChartboostMediationPackageName);
+            if (!Version.TryParse(chartboostMediation.version, out var chartboostMediationFoundVersion))
             {
                 EditorUtility.DisplayDialog(
-                    HeliumWindowTitle,
-                    $"Failed to parse version {helium.version} in Package.\n\n**This is probably a bad setup, contact Helium Support at support@chartboost.com**",
+                    WindowTitle,
+                    $"Failed to parse version {chartboostMediation.version} in Package.\n\n**This is probably a bad setup, contact Chartboost Mediation Support at support@chartboost.com**",
                     "Ok");
                 return;
             }
 
-            var heliumVersion = heliumFoundVersion.ToString();
-            var unityAdsDependencyPath = $"Assets/Samples/Helium SDK/{heliumVersion}/UnityAds/Editor/Optional-HeliumUnityAdsDependencies.xml";
+            var chartboostMediationVersion = chartboostMediationFoundVersion.ToString();
+            var unityAdsDependencyPath = $"Assets/Samples/Chartboost Mediation/{chartboostMediationVersion}/UnityAds/Editor/Optional-UnityAdsDependencies.xml";
 
             // check if UnityAds is integrated
             if (!File.Exists(unityAdsDependencyPath))
@@ -187,27 +187,28 @@ namespace Editor
             {
                 if (!Version.TryParse(unityAdsPackage.version, out var unityAdsVersion))
                     return;
-                if (!unityAdsVersion.Equals(HeliumUnityAdsSupportedVersion))
+                if (!unityAdsVersion.Equals(UnityAdsSupportedVersion))
                 {
                     EditorUtility.DisplayDialog(
-                        HeliumWindowTitle,
-                        $"UnityAds integrated through Unity Package Manager with version: {unityAdsPackage.version}. Helium recommended version is {HeliumUnityAdsSupportedVersion}.\n\nUnexpected behaviors can occur.",
+                        WindowTitle,
+                        $"UnityAds integrated through Unity Package Manager with version: {unityAdsPackage.version}. Chartboost Mediation recommended version is {UnityAdsSupportedVersion}.\n\nUnexpected behaviors can occur.",
                         "Ok");
                 }
                 return;
             }
 
             UncommentUnityAdsDependency();
-            Log("[Helium Integration Checker] UnityAds Ad Adapter Check Completed!", "green");
+            AssetDatabase.Refresh();
+            Log("[Chartboost Mediation Integration Checker] UnityAds Ad Adapter Check Completed!", "green");
         }
 
         /// <summary>
-        /// Used to update all existing adapters by Devs choice. This will utilize current's Helium Package version to override all adapters with such version.
+        /// Used to update all existing adapters by Devs choice. This will utilize current's Chartboost Mediation Package version to override all adapters with such version.
         /// </summary>
-        [MenuItem("Helium/Integration/Force Reimport Adapters", false, 2)]
+        [MenuItem("Chartboost Mediation/Integration/Force Reimport Adapters", false, 2)]
         public static void ForceReimportExistingAdapters()
         {
-            var confirmUpdate = EditorUtility.DisplayDialog(HeliumWindowTitle,
+            var confirmUpdate = EditorUtility.DisplayDialog(WindowTitle,
                 "Attempting to force reimport all existing adapters.\n\nIs this intentional?", "Yes", "No");
 
             if (confirmUpdate)
@@ -217,28 +218,28 @@ namespace Editor
         }
 
         /// <summary>
-        /// Used to detect and address general Helium Integration issues
+        /// Used to detect and address general Chartboost Mediation Integration issues
         /// </summary>
-        [MenuItem("Helium/Integration/Status Check", false, 0)]
+        [MenuItem("Chartboost Mediation/Integration/Status Check", false, 0)]
         public static void CheckHeliumIntegration()
         {
-            var helium = FindPackage(HeliumPackageName);
+            var chartboostMediation = FindPackage(ChartboostMediationPackageName);
 
-            // check if Helium Samples exists
-            if (Directory.Exists(HeliumSamplesInAssets))
+            // check if Chartboost Mediation Samples exists
+            if (Directory.Exists(ChartboostMediationSamplesInAssets))
             {
-                var subDirectories = Directory.GetDirectories(HeliumSamplesInAssets);
+                var subDirectories = Directory.GetDirectories(ChartboostMediationSamplesInAssets);
 
                 // no versioning folder
                 if (subDirectories.Length <= 0)
                 {
-                    var addHeliumSample = EditorUtility.DisplayDialog(
-                        HeliumWindowTitle,
-                        "Helium Ad Adapters directory found, but not ad adapters in place.\n\nMake sure to include at least the Helium dependencies.\n\nWould you like to add them?",
+                    var addChartboostMediationSample = EditorUtility.DisplayDialog(
+                        WindowTitle,
+                        "Chartboost Mediation Adapters directory found, but not ad adapters in place.\n\nMake sure to include at least the Chartboost Mediation dependencies.\n\nWould you like to add them?",
                         "Yes", "No");
 
-                    if (addHeliumSample)
-                        ImportSample(Helium, helium.version);
+                    if (addChartboostMediationSample)
+                        ImportSample(ChartboostMediation, chartboostMediation.version);
                 }
                 // at least one versioning sample
                 else
@@ -247,14 +248,14 @@ namespace Editor
                     var versionDirectory = subDirectories[0];
 
                     // get the version of the dependencies found
-                    var heliumVersionStr = Path.GetFileName(versionDirectory);
+                    var versionStr = Path.GetFileName(versionDirectory);
 
                     // parse versioning folder version
-                    if (!Version.TryParse(heliumVersionStr, out var versionInAssets))
+                    if (!Version.TryParse(versionStr, out var versionInAssets))
                     {
                         EditorUtility.DisplayDialog(
-                            HeliumWindowTitle,
-                            $"Failed to parse version {heliumVersionStr} in Assets. \n\n**This is probably a bad setup, contact Helium Support at support@chartboost.com**",
+                            WindowTitle,
+                            $"Failed to parse version {versionStr} in Assets. \n\n**This is probably a bad setup, contact Chartboost Mediation Support at support@chartboost.com**",
                             "Ok");
                         return;
                     }
@@ -271,35 +272,35 @@ namespace Editor
                     // no samples/ad adapters
                     if (importedDependencies.Count <= 0)
                     {
-                        var addHeliumSamples = EditorUtility.DisplayDialog(
-                            HeliumWindowTitle,
-                            $"Helium Ad Adapters directory found for version {versionInAssets}, but not Ad Adapters in place.\n\nYou must at least include the Helium dependencies.\n\nWould you like to add them?",
+                        var addChartboostMediationSamples = EditorUtility.DisplayDialog(
+                            WindowTitle,
+                            $"Chartboost Mediation Ad Adapters directory found for version {versionInAssets}, but not Ad Adapters in place.\n\nYou must at least include the Chartboost Mediation dependencies.\n\nWould you like to add them?",
                             "Yes", "No");
 
-                        if (addHeliumSamples)
-                            ImportSample(Helium, helium.version);
+                        if (addChartboostMediationSamples)
+                            ImportSample(ChartboostMediation, chartboostMediation.version);
                     }
                     // at least one sample
                     else
                     {
-                        if (!importedDependencies.Contains(Helium))
+                        if (!importedDependencies.Contains(ChartboostMediation))
                         {
-                            var addHeliumSamples = EditorUtility.DisplayDialog(
-                                HeliumWindowTitle,
-                                $"Helium dependencies not found in Assets.\n\nMake sure to include at least the Helium dependencies.\n\nWould you like to add them?",
+                            var addChartboostMediationSamples = EditorUtility.DisplayDialog(
+                                WindowTitle,
+                                "Chartboost Mediation dependencies not found in Assets.\n\nMake sure to include at least the Chartboost Mediation dependencies.\n\nWould you like to add them?",
                                 "Yes", "No");
 
-                            if (addHeliumSamples)
-                                ImportSample(Helium, helium.version);
+                            if (addChartboostMediationSamples)
+                                ImportSample(ChartboostMediation, chartboostMediation.version);
                         }
                     }
 
                     // parse package version
-                    if (!Version.TryParse(helium.version, out var versionInPackage))
+                    if (!Version.TryParse(chartboostMediation.version, out var versionInPackage))
                     {
                         EditorUtility.DisplayDialog(
-                            HeliumWindowTitle,
-                            $"Failed to parse version {heliumVersionStr} in Package.\n\n**This is probably a bad setup, contact Helium Support at support@chartboost.com**",
+                            WindowTitle,
+                            $"Failed to parse version {versionStr} in Package.\n\n**This is probably a bad setup, contact Chartboost Mediation Support at support@chartboost.com**",
                             "Ok");
                     }
 
@@ -307,22 +308,22 @@ namespace Editor
                     if (versionInAssets < versionInPackage)
                     {
                         var dialogInput = EditorUtility.DisplayDialog(
-                            HeliumWindowTitle,
-                            $"Ad Adapters for version {versionInAssets}, Helium Unity SDK is using higher version {versionInPackage}.\n\nDo you wish to upgrade your existing Ad Adapters?",
+                            WindowTitle,
+                            $"Ad Adapters for version {versionInAssets}, Chartboost Mediation  Unity SDK is using higher version {versionInPackage}.\n\nDo you wish to upgrade your existing Ad Adapters?",
                             "Yes", "No");
 
                         if (dialogInput)
-                            ReimportExistingHeliumSamples(importedDependencies, helium.version);
+                            ReimportExistingHeliumSamples(importedDependencies, chartboostMediation.version);
                     }
                     else if (versionInAssets > versionInPackage)
                     {
                         var dialogInput = EditorUtility.DisplayDialog(
-                            HeliumWindowTitle,
-                            $"Ad Adapters for version {versionInAssets} found, Helium Unity SDK is using lower version {versionInPackage}.\n\nDo you wish to downgrade your existing Ad Adapters?\n\n**This is probably a bad setup, contact Helium Support at support@chartboost.com**",
+                            WindowTitle,
+                            $"Ad Adapters for version {versionInAssets} found, Chartboost Mediation  Unity SDK is using lower version {versionInPackage}.\n\nDo you wish to downgrade your existing Ad Adapters?\n\n**This is probably a bad setup, contact Chartboost Mediation  Support at support@chartboost.com**",
                             "Yes", "No");
 
                         if (dialogInput)
-                            ReimportExistingHeliumSamples(importedDependencies, helium.version);
+                            ReimportExistingHeliumSamples(importedDependencies, chartboostMediation.version);
                     }
 
                     // check for Unity Ads integration
@@ -335,16 +336,16 @@ namespace Editor
             // no samples at all!
             else
             {
-                var addHeliumSample = EditorUtility.DisplayDialog(
-                    HeliumWindowTitle,
-                    "No Ad Adapters directory found.\n\nMake sure to include at least the Helium dependencies.\n\nWould you like to add them?",
+                var addChartboostMediationSample = EditorUtility.DisplayDialog(
+                    WindowTitle,
+                    "No Ad Adapters directory found.\n\nMake sure to include at least the Chartboost Mediation  dependencies.\n\nWould you like to add them?",
                     "Yes", "No");
 
-                if (addHeliumSample)
-                    ImportSample(Helium, helium.version);
+                if (addChartboostMediationSample)
+                    ImportSample(ChartboostMediation, chartboostMediation.version);
             }
 
-            Log("[Helium Integration Checker] Status Check Completed!", "green");
+            Log("[Chartboost Mediation  Integration Checker] Status Check Completed!", "green");
         }
 
         private static void Log(string message, string color = "white")

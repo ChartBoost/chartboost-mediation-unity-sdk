@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependencies>
+    <androidPackages>
+        <!-- Helium Fyber Adapter -->
+        <androidPackage spec="com.chartboost:helium-adapter-digital-turbine-exchange:4.8.2.1+@aar" />
+
+        <!-- Fyber Android SDK -->
+        <androidPackage spec="com.fyber:marketplace-sdk:8.2.1"/>
+    </androidPackages>
+    <iosPods>
+        <!-- Helium Fyber Adapter -->
+        <iosPod name="ChartboostMediationAdapterDigitalTurbineExchange" version="~> 4.8.1.7"/>
+
+        <!-- Fyber iOS SDK -->
+        <iosPod name="Fyber_Marketplace_SDK" version="~> 8.1.7"/>
+    </iosPods>
+</dependencies>
