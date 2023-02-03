@@ -1,12 +1,12 @@
-# Helium Unity SDK
+# Chartboost Mediation Unity SDK
 
-[![Helium Unity SDK](https://github.com/ChartBoost/helium-unity-sdk/actions/workflows/helium-unity.yml/badge.svg?branch=develop)](https://github.com/ChartBoost/helium-unity-sdk/actions/workflows/helium-unity.yml)
+[![Chartboost Mediation Unity SDK](https://github.com/ChartBoost/helium-unity-sdk/actions/workflows/helium-unity.yml/badge.svg?branch=develop)](https://github.com/ChartBoost/helium-unity-sdk/actions/workflows/helium-unity.yml)
 
 ## Summary
 
-Helium Unity SDK provides support for Unity based games to easily integrate the Helium SDK for Android & iOS platforms. This guide will contain step by step instructions on how to integrate the SDK, as well as recommended practices to make best use of all the features offered by the Helium SDK.
+Chartboost Mediation Unity SDK provides support for Unity based games to easily integrate the Chartboost Mediation for Android & iOS platforms. This guide will contain step by step instructions on how to integrate the SDK, as well as recommended practices to make best use of all the features offered by the Chartboost Mediation SDK.
 
-### Minimum Supporter Development Tools <a name="dev_tools"></a>
+### Minimum Supporter Development Tools
 
 | Software                                                              | Version              |
 | :---                                                                  |:---------------------|
@@ -17,11 +17,11 @@ Helium Unity SDK provides support for Unity based games to easily integrate the 
 | [Target Android API Level](https://developer.android.com/studio/releases/platforms#12) | 12.0+ (API level 31) |
 
 ### CHANGELOG
-Visit the [CHANGELOG](com.chartboost.mediation/CHANGELOG.md) to reference changes to each version of the Helium Unity SDK.
+Visit the [CHANGELOG](com.chartboost.mediation/CHANGELOG.md) to reference changes to each version of the Chartboost Mediation Unity SDK.
 
-### Integrating the Helium Unity SDK
+### Integrating the Chartboost Mediation Unity SDK
 
-Helium Unity SDK is distributed using the public [npm registry](https://www.npmjs.com/search?q=com.chartboost) as such it is compatible with the Unity Package Manager (UPM). In order to add the Helium Unity SDK to your project, just add the following to your Unity Project's ***manifest.json*** file. The scoped registry section is required in order to fetch packages from the NpmJS registry.
+Chartboost Mediation Unity SDK is distributed using the public [npm registry](https://www.npmjs.com/search?q=com.chartboost.mediation) as such it is compatible with the Unity Package Manager (UPM). In order to add the Chartboost Mediation Unity SDK to your project, just add the following to your Unity Project's ***manifest.json*** file. The scoped registry section is required in order to fetch packages from the NpmJS registry.
 
 ```json
   "dependencies": {
@@ -39,20 +39,20 @@ Helium Unity SDK is distributed using the public [npm registry](https://www.npmj
   ]
 ```
 
-In order to better understand the Helium Unity SDK, documentation has been split between Setup and Integration Steps:
+In order to better understand the Chartboost Mediation Unity SDK, documentation has been split between Setup and Integration Steps:
 
 #### Setup
 1. [Ad Network Adapters](com.chartboost.mediation/Documentation/setup/ad-adapters.md)
 2. [Android Manifest](com.chartboost.mediation/Documentation/setup/androidmanifest.md)
 3. [Google External Dependency Manager (EDM)](com.chartboost.mediation/Documentation/setup/edm.md)
 4. [Multidex](com.chartboost.mediation/Documentation/setup/multidex.md)
-5. [Helium Integration Checker](com.chartboost.mediation/Documentation/setup/integration-checker.md)
+5. [Chartboost Mediation Integration Checker](com.chartboost.mediation/Documentation/setup/integration-checker.md)
 6. [Enabling SKAdNetwork](com.chartboost.mediation/Documentation/setup/skadnetwork.md)
 
 #### Integration
 
 1. [Initialization](com.chartboost.mediation/Documentation/integration/initialization.md)
-2. [Configure Helium](com.chartboost.mediation/Documentation/integration/configure.md)
+2. [Configure Chartboost Mediation](com.chartboost.mediation/Documentation/integration/configure.md)
 3. [Loading Ads](com.chartboost.mediation/Documentation/integration/loading-ads.md)
 4. [Showing Ads](com.chartboost.mediation/Documentation/integration/showing-ads.md)
 5. [Delegate Usage](com.chartboost.mediation/Documentation/integration/delegate-usage.md)
