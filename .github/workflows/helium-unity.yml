@@ -1,9 +1,9 @@
-name: Helium Unity SDK
+name: Chartboost Mediation Unity SDK
 
 on:
   push:
     tags:
-      - '3.*'
+      - '4.*'
   pull_request:
     branches:
       - 'develop'
@@ -15,8 +15,8 @@ on:
     - cron:  '0 9 * * 1-5'
   workflow_dispatch:
     inputs:
-      helium_bridge_version:
-        description: 'Helium Android Compile Version'
+      chartboost_mediation_bridge_version:
+        description: 'Chartboost Mediation Android Compile Version'
         required: false
         default: null
       only_public:
@@ -58,7 +58,7 @@ jobs:
     - name: Build Android Bridge
       run: ./com.chartboost.mediation/Android~/gradlew -p ./com.chartboost.mediation/Android~ githubScript
       env:
-        HELIUM_VERSION: ${{ github.event.inputs.helium_bridge_version }}
+        HELIUM_VERSION: ${{ github.event.inputs.chartboost_mediation_bridge_version }}
         ONLY_PUBLIC: ${{ github.event.inputs.only_public }}
         JFROG_USER: ${{ secrets.JFROG_USER }}
         JFROG_PASS: ${{ secrets.JFROG_PASS }}
@@ -68,8 +68,8 @@ jobs:
       run: |
         git config user.name ${{ secrets.GIT_USER }}
         git config user.email ${{ secrets.GIT_EMAIL }}
-        git add com.chartboost.mediation/Runtime/Plugins/Android/helium-android-bridge.jar
-        git commit -m "Updating Helium Unity SDK Android Bridge .jar"
+        git add com.chartboost.mediation/Runtime/Plugins/Android/chartboost-mediation-android-bridge.jar
+        git commit -m "Updating Chastboost Mediation Unity SDK Android Bridge .jar"
         git push
 
   tests:
