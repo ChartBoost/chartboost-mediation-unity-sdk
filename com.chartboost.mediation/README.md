@@ -1,6 +1,6 @@
 # Chartboost Mediation Unity SDK
 
-[![Chartboost Mediation Unity SDK](https://github.com/ChartBoost/helium-unity-sdk/actions/workflows/helium-unity.yml/badge.svg?branch=develop)](https://github.com/ChartBoost/helium-unity-sdk/actions/workflows/helium-unity.yml)
+[![Chartboost Mediation Unity SDK](https://github.com/ChartBoost/helium-unity-sdk/actions/workflows/status.yml/badge.svg?branch=develop)](https://github.com/ChartBoost/helium-unity-sdk/actions/workflows/status.yml)
 
 ## Summary
 
