@@ -1,1 +1,1 @@
-com.chartboost.helium/README.md
+com.chartboost.mediation/README.md
