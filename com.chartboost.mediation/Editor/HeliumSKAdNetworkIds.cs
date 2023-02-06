@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Helium;
+using Chartboost;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEditor;
@@ -16,7 +16,7 @@ using UnityEngine.Networking;
 // ReSharper disable IdentifierTypo
 // ReSharper disable CommentTypo
 
-namespace Editor
+namespace Helium.Editor
 {
     /// <summary>
     /// Adds the SKAdNetwork Ids to the app's Info.plist
@@ -26,7 +26,7 @@ namespace Editor
         [PostProcessBuild]
         public static void PostProcess(BuildTarget buildTarget, string pathToBuiltProject)
         {
-            if (!HeliumSettings.IsSkAdNetworkResolutionEnabled)
+            if (!ChartboostMediationSettings.IsSkAdNetworkResolutionEnabled)
                 return;
             
             if (buildTarget != BuildTarget.iOS)

@@ -1,6 +1,7 @@
 #if UNITY_IPHONE
 using System.Runtime.InteropServices;
 using AOT;
+using Chartboost;
 using UnityEngine;
 // ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo
@@ -88,14 +89,14 @@ namespace Helium.Platforms
         public override void Init()
         {
             base.Init();
-            InitWithAppIdAndSignature(HeliumSettings.IOSAppId, HeliumSettings.IOSAppSignature);
+            InitWithAppIdAndSignature(ChartboostMediationSettings.IOSAppId, ChartboostMediationSettings.IOSAppSignature);
         }
 
         public override void InitWithAppIdAndSignature(string appId, string appSignature)
         {
             base.InitWithAppIdAndSignature(appId, appSignature);
-            HeliumSettings.IOSAppId = appId;
-            HeliumSettings.IOSAppSignature = appSignature;
+            ChartboostMediationSettings.IOSAppId = appId;
+            ChartboostMediationSettings.IOSAppSignature = appSignature;
             var initializationOptions = GetInitializationOptions();
             _heliumSdkInit(appId, appSignature, Application.unityVersion, initializationOptions, initializationOptions.Length);
             IsInitialized = true;

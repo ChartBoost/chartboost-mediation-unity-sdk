@@ -1,4 +1,5 @@
 #if UNITY_ANDROID
+using Chartboost;
 using UnityEngine;
 using UnityEngine.Scripting;
 // ReSharper disable StringLiteralTypo
@@ -37,14 +38,14 @@ namespace Helium.Platforms
         public override void Init()
         {
             base.Init();
-            InitWithAppIdAndSignature(HeliumSettings.AndroidAppId, HeliumSettings.AndroidAppSignature);
+            InitWithAppIdAndSignature(ChartboostMediationSettings.AndroidAppId, ChartboostMediationSettings.AndroidAppSignature);
         }
 
         public override void InitWithAppIdAndSignature(string appId, string appSignature)
         {
             base.InitWithAppIdAndSignature(appId, appSignature);
-            HeliumSettings.AndroidAppId = appId;
-            HeliumSettings.AndroidAppSignature = appSignature;
+            ChartboostMediationSettings.AndroidAppId = appId;
+            ChartboostMediationSettings.AndroidAppSignature = appSignature;
             plugin().Call("start", appId, appSignature, Application.unityVersion, GetInitializationOptions());
             IsInitialized = true;
         }
