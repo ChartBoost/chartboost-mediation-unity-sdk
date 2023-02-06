@@ -160,12 +160,12 @@ namespace Helium.Platforms
             var killSwitch = ChartboostMediationSettings.PartnerKillSwitch;
             var initOptions  = Array.Empty<string>();
 
-            if (killSwitch == MediationPartners.None)
+            if (killSwitch == ChartboostMediationPartners.None)
                 return initOptions;
             
-            var selectedPartners  = new HashSet<MediationPartners>();
-            foreach (MediationPartners value in Enum.GetValues(killSwitch.GetType()))
-                if (value != MediationPartners.None && killSwitch.HasFlag(value))
+            var selectedPartners  = new HashSet<ChartboostMediationPartners>();
+            foreach (ChartboostMediationPartners value in Enum.GetValues(killSwitch.GetType()))
+                if (value != ChartboostMediationPartners.None && killSwitch.HasFlag(value))
                     selectedPartners.Add(value);
 
             var partnerIds = new HashSet<string>();

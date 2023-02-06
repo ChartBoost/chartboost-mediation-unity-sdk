@@ -13,7 +13,7 @@ namespace Chartboost
     /// List of officially supported Helium mediation partners and their identifiers
     /// </summary>
     [Flags]
-    public enum MediationPartners
+    public enum ChartboostMediationPartners
     {
         [Description("none")] None = 0,
         [Description("adcolony")] AdColony = 1,
@@ -124,12 +124,12 @@ namespace Chartboost
         [SerializeField] private bool isLoggingEnabled;
         [SerializeField] private bool isAutomaticInitEnabled;
         [SerializeField] private bool isSkAdNetworkResolutionEnabled;
-        [SerializeField] private MediationPartners partnerKillSwitch = MediationPartners.None;
+        [SerializeField] private ChartboostMediationPartners partnerKillSwitch = ChartboostMediationPartners.None;
 
         /// <summary>
         /// Accessor for partnerKillSwitch. 
         /// </summary>
-        public static MediationPartners PartnerKillSwitch
+        public static ChartboostMediationPartners PartnerKillSwitch
         {
             get => Instance.partnerKillSwitch;
             set => Instance.partnerKillSwitch = value;
@@ -288,7 +288,7 @@ namespace Helium
 
         private static ChartboostMediationSettings Instance = ChartboostMediationSettings.Instance;
 
-        public static MediationPartners PartnerKillSwitch
+        public static ChartboostMediationPartners PartnerKillSwitch
         {
             get => ChartboostMediationSettings.PartnerKillSwitch;
             set => ChartboostMediationSettings.PartnerKillSwitch = value;

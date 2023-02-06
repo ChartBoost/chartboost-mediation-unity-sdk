@@ -10,13 +10,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bf2f8a4ebf2214f869e82e211b89fe04, type: 3}
-  m_Name: HeliumSettings
+  m_Name: ChartboostMediationSettings
   m_EditorClassIdentifier: 
-  iOSAppId: HE_IOS_APP_ID
-  iOSAppSignature: HE_IOS_APP_SIGNATURE
-  androidAppId: HE_ANDROID_APP_ID
-  androidAppSignature: HE_ANDROID_APP_SIGNATURE
-  isLoggingEnabled: 0
-  isAutomaticInitEnabled: 0
-  isSkAdNetworkResolutionEnabled: 1
-  partnerKillSwitch: 0

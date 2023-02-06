@@ -49,7 +49,7 @@ namespace Chartboost.Editor
 			EditorGUILayout.LabelField(_partnerKilLSwitchTitle, _title);
 			EditorGUILayout.Space();
 			EditorGUILayout.HelpBox("Select partners to disable their initialization.", MessageType.Info);
-			ChartboostMediationSettings.PartnerKillSwitch = (MediationPartners)EditorGUILayout.EnumFlagsField(ChartboostMediationSettings.PartnerKillSwitch);
+			ChartboostMediationSettings.PartnerKillSwitch = (ChartboostMediationPartners)EditorGUILayout.EnumFlagsField(ChartboostMediationSettings.PartnerKillSwitch);
 			EditorGUILayout.EndVertical();
 			
 			EditorGUILayout.Space();
