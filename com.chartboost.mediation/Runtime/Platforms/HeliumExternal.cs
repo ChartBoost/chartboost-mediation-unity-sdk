@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using Chartboost;
 using Helium.Banner;
 using Helium.FullScreen.Interstitial;
 using Helium.FullScreen.Rewarded;
@@ -39,7 +40,7 @@ namespace Helium.Platforms
         /// This must be called before using any other Helium features.
         public virtual void Init()
         {
-            HeliumLogger.Log(LogTag, "Init - Attempting to Initialize Helium SDK from HeliumSettings.");
+            HeliumLogger.Log(LogTag, "Init - Attempting to Initialize Helium SDK from ChartboostMediationSettings.");
         }
 
         /// Initialize the Helium plugin with a specific appId
@@ -156,15 +157,15 @@ namespace Helium.Platforms
                 return attributes.Length > 0 ? attributes[0].Description : value.ToString();
             }
             
-            var killSwitch = HeliumSettings.PartnerKillSwitch;
+            var killSwitch = ChartboostMediationSettings.PartnerKillSwitch;
             var initOptions  = Array.Empty<string>();
 
-            if (killSwitch == HeliumPartners.None)
+            if (killSwitch == MediationPartners.None)
                 return initOptions;
             
-            var selectedPartners  = new HashSet<HeliumPartners>();
-            foreach (HeliumPartners value in Enum.GetValues(killSwitch.GetType()))
-                if (value != HeliumPartners.None && killSwitch.HasFlag(value))
+            var selectedPartners  = new HashSet<MediationPartners>();
+            foreach (MediationPartners value in Enum.GetValues(killSwitch.GetType()))
+                if (value != MediationPartners.None && killSwitch.HasFlag(value))
                     selectedPartners.Add(value);
 
             var partnerIds = new HashSet<string>();

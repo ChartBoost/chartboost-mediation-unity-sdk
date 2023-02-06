@@ -1,10 +1,9 @@
-using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace Helium.Editor
+namespace Chartboost.Editor
 {
-	[CustomEditor(typeof(HeliumSettings))]
+	[CustomEditor(typeof(ChartboostMediationSettings))]
 	public class HeliumSettingEditor : UnityEditor.Editor
 	{
 		private const string AppIdLink = "https://dashboard.chartboost.com/all/publishing";
@@ -24,12 +23,12 @@ namespace Helium.Editor
 		private readonly GUIContent _skAdNetworkLabel = new GUIContent("SKAdNetwork");
 		private readonly GUIContent _skAdNetworkToggle = new GUIContent("Use Helium SKAdNetwork Identifier Resolution");
 
-		private HeliumSettings _instance;
+		private ChartboostMediationSettings _instance;
 		private GUIStyle _title;
 
 		public override void OnInspectorGUI()
 		{
-			_instance = (HeliumSettings)target;
+			_instance = (ChartboostMediationSettings)target;
 			_title = new GUIStyle {
 				fontSize = 16,
 				fontStyle = FontStyle.Bold,
@@ -50,7 +49,7 @@ namespace Helium.Editor
 			EditorGUILayout.LabelField(_partnerKilLSwitchTitle, _title);
 			EditorGUILayout.Space();
 			EditorGUILayout.HelpBox("Select partners to disable their initialization.", MessageType.Info);
-			HeliumSettings.PartnerKillSwitch = (HeliumPartners)EditorGUILayout.EnumFlagsField(HeliumSettings.PartnerKillSwitch);
+			ChartboostMediationSettings.PartnerKillSwitch = (MediationPartners)EditorGUILayout.EnumFlagsField(ChartboostMediationSettings.PartnerKillSwitch);
 			EditorGUILayout.EndVertical();
 			
 			EditorGUILayout.Space();
@@ -67,7 +66,7 @@ namespace Helium.Editor
 			EditorGUILayout.EndHorizontal();
 
 			EditorGUILayout.BeginHorizontal();
-			HeliumSettings.IOSAppId = EditorGUILayout.TextField(HeliumSettings.IOSAppId);
+			ChartboostMediationSettings.IOSAppId = EditorGUILayout.TextField(ChartboostMediationSettings.IOSAppId);
 			EditorGUILayout.EndHorizontal();
 			EditorGUILayout.Space();
 			EditorGUILayout.Space();
@@ -77,7 +76,7 @@ namespace Helium.Editor
 			EditorGUILayout.EndHorizontal();
 
 			EditorGUILayout.BeginHorizontal();
-			HeliumSettings.IOSAppSignature = EditorGUILayout.TextField(HeliumSettings.IOSAppSignature);
+			ChartboostMediationSettings.IOSAppSignature = EditorGUILayout.TextField(ChartboostMediationSettings.IOSAppSignature);
 			EditorGUILayout.EndHorizontal();
 			EditorGUILayout.Space();
 			EditorGUILayout.Space();
@@ -92,7 +91,7 @@ namespace Helium.Editor
 			EditorGUILayout.EndHorizontal();
 
 			EditorGUILayout.BeginHorizontal();
-			HeliumSettings.AndroidAppId = EditorGUILayout.TextField(HeliumSettings.AndroidAppId);
+			ChartboostMediationSettings.AndroidAppId = EditorGUILayout.TextField(ChartboostMediationSettings.AndroidAppId);
 			EditorGUILayout.EndHorizontal();
 			EditorGUILayout.Space();
 			EditorGUILayout.Space();
@@ -102,26 +101,26 @@ namespace Helium.Editor
 			EditorGUILayout.EndHorizontal();
 
 			EditorGUILayout.BeginHorizontal();
-			HeliumSettings.AndroidAppSignature = EditorGUILayout.TextField(HeliumSettings.AndroidAppSignature);
+			ChartboostMediationSettings.AndroidAppSignature = EditorGUILayout.TextField(ChartboostMediationSettings.AndroidAppSignature);
 			EditorGUILayout.EndHorizontal();
 			EditorGUILayout.Space();
 			EditorGUILayout.Space();
 			
 			EditorGUILayout.LabelField(_debuggingTitle, _title);
 			EditorGUILayout.BeginHorizontal();
-			HeliumSettings.IsLoggingEnabled = EditorGUILayout.Toggle(_enableLoggingToggle, HeliumSettings.IsLoggingEnabled);
+			ChartboostMediationSettings.IsLoggingEnabled = EditorGUILayout.Toggle(_enableLoggingToggle, ChartboostMediationSettings.IsLoggingEnabled);
 			EditorGUILayout.EndHorizontal();
 			EditorGUILayout.Space();
 
 			EditorGUILayout.LabelField(_automaticInitLabel, _title);
 			EditorGUILayout.BeginHorizontal();
-			HeliumSettings.IsAutomaticInitializationEnabled = EditorGUILayout.Toggle(_enableAutomaticInitToggle, HeliumSettings.IsAutomaticInitializationEnabled);
+			ChartboostMediationSettings.IsAutomaticInitializationEnabled = EditorGUILayout.Toggle(_enableAutomaticInitToggle, ChartboostMediationSettings.IsAutomaticInitializationEnabled);
 			EditorGUILayout.EndHorizontal();
 			EditorGUILayout.Space();
 			
 			EditorGUILayout.LabelField(_skAdNetworkLabel, _title);
 			EditorGUILayout.BeginHorizontal();
-			HeliumSettings.IsSkAdNetworkResolutionEnabled = EditorGUILayout.Toggle(_skAdNetworkToggle, HeliumSettings.IsSkAdNetworkResolutionEnabled);
+			ChartboostMediationSettings.IsSkAdNetworkResolutionEnabled = EditorGUILayout.Toggle(_skAdNetworkToggle, ChartboostMediationSettings.IsSkAdNetworkResolutionEnabled);
 			EditorGUILayout.EndHorizontal();
 		}
 	}

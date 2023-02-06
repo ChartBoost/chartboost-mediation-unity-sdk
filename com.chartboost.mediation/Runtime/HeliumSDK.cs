@@ -1,3 +1,4 @@
+using Chartboost;
 using UnityEngine;
 using Helium.Banner;
 using Helium.FullScreen.Interstitial;
@@ -207,7 +208,7 @@ namespace Helium
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Init()
         {
-            if (HeliumSettings.IsAutomaticInitializationEnabled && !HeliumExternal.IsInitialized)
+            if (ChartboostMediationSettings.IsAutomaticInitializationEnabled && !HeliumExternal.IsInitialized)
                 _heliumExternal.Init();
         }
 
