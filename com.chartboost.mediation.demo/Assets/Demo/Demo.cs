@@ -59,10 +59,10 @@ public class Demo : MonoBehaviour
     private void Awake()
     {
         Application.targetFrameRate = 60;
-        HeliumSDK.DidStart += DidStartHelium;
-        HeliumSDK.DidReceivePartnerInitializationData += DidReceivePartnerInitializationData;
-        HeliumSDK.DidReceiveImpressionLevelRevenueData += DidReceiveImpressionLevelRevenueData;
-        HeliumSDK.UnexpectedSystemErrorDidOccur += UnexpectedSystemErrorDidOccur;
+        ChartboostMediation.DidStart += DidStartHelium;
+        ChartboostMediation.DidReceivePartnerInitializationData += DidReceivePartnerInitializationData;
+        ChartboostMediation.DidReceiveImpressionLevelRevenueData += DidReceiveImpressionLevelRevenueData;
+        ChartboostMediation.UnexpectedSystemErrorDidOccur += UnexpectedSystemErrorDidOccur;
         SetupInterstitialDelegates();
         SetupRewardedDelegates();
         SetupBannerDelegates();
@@ -79,7 +79,7 @@ public class Demo : MonoBehaviour
         rewardedPlacementInputField.SetTextWithoutNotify(DefaultPlacementRewarded);
         bannerPlacementInputField.SetTextWithoutNotify(DefaultPlacementBanner);
 
-        HeliumSDK.StartWithAppIdAndAppSignature(AppID, AppSIG);
+        ChartboostMediation.StartWithAppIdAndAppSignature(AppID, AppSIG);
     }
 
     private void OnDestroy()
@@ -107,12 +107,12 @@ public class Demo : MonoBehaviour
     private void DidStartHelium(string error)
     {
         Log($"DidStart: {error}");
-        HeliumSDK.SetUserIdentifier(DefaultUserIdentifier);
+        ChartboostMediation.SetUserIdentifier(DefaultUserIdentifier);
 
         if (error != null) return;
-        HeliumSDK.SetSubjectToGDPR(false);
-        HeliumSDK.SetSubjectToCoppa(false);
-        HeliumSDK.SetUserHasGivenConsent(true);
+        ChartboostMediation.SetSubjectToGDPR(false);
+        ChartboostMediation.SetSubjectToCoppa(false);
+        ChartboostMediation.SetUserHasGivenConsent(true);
     }
 
     private void DidReceiveImpressionLevelRevenueData(string placement, Hashtable impressionData)
@@ -144,16 +144,16 @@ public class Demo : MonoBehaviour
 
     private void SetupInterstitialDelegates()
     {
-        HeliumSDK.DidLoadInterstitial += DidLoadInterstitial;
-        HeliumSDK.DidShowInterstitial += DidShowInterstitial;
-        HeliumSDK.DidCloseInterstitial += DidCloseInterstitial;
-        HeliumSDK.DidClickInterstitial += DidClickInterstitial;
-        HeliumSDK.DidRecordImpressionInterstitial += DidRecordImpressionInterstitial;
+        ChartboostMediation.DidLoadInterstitial += DidLoadInterstitial;
+        ChartboostMediation.DidShowInterstitial += DidShowInterstitial;
+        ChartboostMediation.DidCloseInterstitial += DidCloseInterstitial;
+        ChartboostMediation.DidClickInterstitial += DidClickInterstitial;
+        ChartboostMediation.DidRecordImpressionInterstitial += DidRecordImpressionInterstitial;
     }
 
     public void OnCacheInterstitialClick()
     {
-        _interstitialAd = HeliumSDK.GetInterstitialAd(interstitialPlacementInputField.text);
+        _interstitialAd = ChartboostMediation.GetInterstitialAd(interstitialPlacementInputField.text);
 
         if (_interstitialAd == null)
         {
@@ -214,17 +214,17 @@ public class Demo : MonoBehaviour
 
     private void SetupRewardedDelegates()
     {
-        HeliumSDK.DidLoadRewarded += DidLoadRewarded;
-        HeliumSDK.DidShowRewarded += DidShowRewarded;
-        HeliumSDK.DidCloseRewarded += DidCloseRewarded;
-        HeliumSDK.DidReceiveReward += DidReceiveReward;
-        HeliumSDK.DidClickRewarded += DidClickRewarded;
-        HeliumSDK.DidRecordImpressionRewarded += DidRecordImpressionRewarded;
+        ChartboostMediation.DidLoadRewarded += DidLoadRewarded;
+        ChartboostMediation.DidShowRewarded += DidShowRewarded;
+        ChartboostMediation.DidCloseRewarded += DidCloseRewarded;
+        ChartboostMediation.DidReceiveReward += DidReceiveReward;
+        ChartboostMediation.DidClickRewarded += DidClickRewarded;
+        ChartboostMediation.DidRecordImpressionRewarded += DidRecordImpressionRewarded;
     }
 
     public void OnCacheRewardedClick()
     {
-        _rewardedAd = HeliumSDK.GetRewardedAd(rewardedPlacementInputField.text);
+        _rewardedAd = ChartboostMediation.GetRewardedAd(rewardedPlacementInputField.text);
         
         if (_rewardedAd == null)
         {
@@ -291,9 +291,9 @@ public class Demo : MonoBehaviour
     #region Banners
     private void SetupBannerDelegates()
     {
-        HeliumSDK.DidLoadBanner += DidLoadBanner;
-        HeliumSDK.DidClickBanner += DidClickBanner;
-        HeliumSDK.DidRecordImpressionBanner += DidRecordImpressionBanner;
+        ChartboostMediation.DidLoadBanner += DidLoadBanner;
+        ChartboostMediation.DidClickBanner += DidClickBanner;
+        ChartboostMediation.DidRecordImpressionBanner += DidRecordImpressionBanner;
     }
 
     public void OnCreateBannerClick()
@@ -308,7 +308,7 @@ public class Demo : MonoBehaviour
         _bannerAd?.Remove();
 
         Log("Creating banner on placement: " + bannerPlacementInputField.text + " with size: " + size);
-        _bannerAd = HeliumSDK.GetBannerAd(bannerPlacementInputField.text, size);
+        _bannerAd = ChartboostMediation.GetBannerAd(bannerPlacementInputField.text, size);
         
         if (_bannerAd == null)
         {
