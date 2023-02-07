@@ -1,6 +1,6 @@
 {
     "name": "com.chartboost.mediation",
-    "rootNamespace": "Helium",
+    "rootNamespace": "Chartboost",
     "references": [],
     "includePlatforms": [
         "Android",

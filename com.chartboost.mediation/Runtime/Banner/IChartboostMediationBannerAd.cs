@@ -1,18 +1,18 @@
 using UnityEngine.Scripting;
 
-namespace Helium.Banner
+namespace Chartboost.Banner
 {
     /// <summary>
     /// Interface implemented by all Helium banners. 
     /// </summary>
-    public interface IHeliumBannerAd
+    public interface IChartboostMediationBannerAd
     {
         /// <summary>
         /// 
         /// </summary>
         /// <param name="location"></param>
         [Preserve]
-        void Load(HeliumBannerAdScreenLocation location);
+        void Load(ChartboostMediationBannerAdScreenLocation location);
 
         /// <summary>This method changes the visibility of the banner ad.</summary>
         /// <param name="isVisible">Specify if the banner should be visible.</param>

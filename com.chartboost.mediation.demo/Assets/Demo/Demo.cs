@@ -3,10 +3,11 @@ using System.Collections;
 using System.IO;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using Chartboost;
+using Chartboost.Banner;
+using Chartboost.FullScreen.Interstitial;
+using Chartboost.FullScreen.Rewarded;
 using Helium;
-using Helium.Banner;
-using Helium.FullScreen.Interstitial;
-using Helium.FullScreen.Rewarded;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
@@ -35,17 +36,17 @@ public class Demo : MonoBehaviour
 
     // interstitial controls
     public InputField interstitialPlacementInputField;
-    private HeliumInterstitialAd _interstitialAd;
+    private ChartboostMediationInterstitialAd _interstitialAd;
 
     // rewarded controls
     public InputField rewardedPlacementInputField;
-    private HeliumRewardedAd _rewardedAd;
+    private ChartboostMediationRewardedAd _rewardedAd;
 
     // banner controls
     public InputField bannerPlacementInputField;
     public Dropdown bannerSizeDropdown;
     public Dropdown bannerLocationDropdown;
-    private HeliumBannerAd _bannerAd;
+    private ChartboostMediationBannerAd _bannerAd;
     private bool _bannerAdIsVisible;
 
     public ScrollRect outputTextScrollRect;
@@ -116,7 +117,7 @@ public class Demo : MonoBehaviour
 
     private void DidReceiveImpressionLevelRevenueData(string placement, Hashtable impressionData)
     {
-        var json =  HeliumJson.Serialize(impressionData);
+        var json =  JsonTools.Serialize(impressionData);
         Log($"DidReceiveImpressionLevelRevenueData {placement}: {JsonPrettify(json)}");
     }
 
@@ -193,7 +194,7 @@ public class Demo : MonoBehaviour
             _interstitialAd.Show();
     }
 
-    private void DidLoadInterstitial(string placementName, string loadId, HeliumBidInfo info, string error) 
+    private void DidLoadInterstitial(string placementName, string loadId, BidInfo info, string error) 
         => Log($"DidLoadInterstitial {placementName}: \nLoadId: ${loadId} \nPrice: ${info.Price:F4} \nAuction Id: {info.AuctionId} \nPartner Id: {info.PartnerId} \nError: {error}");
 
     private  void DidShowInterstitial(string placementName, string error) 
@@ -268,7 +269,7 @@ public class Demo : MonoBehaviour
             _rewardedAd.Show();
     }
 
-    private void DidLoadRewarded(string placementName, string loadId, HeliumBidInfo info, string error)
+    private void DidLoadRewarded(string placementName, string loadId, BidInfo info, string error)
         => Log($"DidLoadRewarded {placementName} \nLoadId: ${loadId} \nPrice: ${info.Price:F4} \nAuction Id: {info.AuctionId} \nPartner Id: {info.PartnerId} \nError: {error}");
 
     private void DidShowRewarded(string placementName, string error) 
@@ -299,9 +300,9 @@ public class Demo : MonoBehaviour
     {
         var size = bannerSizeDropdown.value switch
         {
-            2 => HeliumBannerAdSize.Leaderboard,
-            1 => HeliumBannerAdSize.MediumRect,
-            _ => HeliumBannerAdSize.Standard
+            2 => ChartboostMediationBannerAdSize.Leaderboard,
+            1 => ChartboostMediationBannerAdSize.MediumRect,
+            _ => ChartboostMediationBannerAdSize.Standard
         };
 
         _bannerAd?.Remove();
@@ -328,14 +329,14 @@ public class Demo : MonoBehaviour
         _bannerAd.SetKeyword("bnr_keyword6", "bnr_value6_replaced"); // accepted replace
         var screenPos = bannerLocationDropdown.value switch
         {
-            0 => HeliumBannerAdScreenLocation.TopLeft,
-            1 => HeliumBannerAdScreenLocation.TopCenter,
-            2 => HeliumBannerAdScreenLocation.TopRight,
-            3 => HeliumBannerAdScreenLocation.Center,
-            4 => HeliumBannerAdScreenLocation.BottomLeft,
-            5 => HeliumBannerAdScreenLocation.BottomCenter,
-            6 => HeliumBannerAdScreenLocation.BottomRight,
-            _ => HeliumBannerAdScreenLocation.TopCenter
+            0 => ChartboostMediationBannerAdScreenLocation.TopLeft,
+            1 => ChartboostMediationBannerAdScreenLocation.TopCenter,
+            2 => ChartboostMediationBannerAdScreenLocation.TopRight,
+            3 => ChartboostMediationBannerAdScreenLocation.Center,
+            4 => ChartboostMediationBannerAdScreenLocation.BottomLeft,
+            5 => ChartboostMediationBannerAdScreenLocation.BottomCenter,
+            6 => ChartboostMediationBannerAdScreenLocation.BottomRight,
+            _ => ChartboostMediationBannerAdScreenLocation.TopCenter
         };
         _bannerAd.Load(screenPos);
     }
@@ -368,7 +369,7 @@ public class Demo : MonoBehaviour
         Log("Banner Visibility Toggled");
     }
 
-    private void DidLoadBanner(string placementName, string loadId, HeliumBidInfo info, string error)
+    private void DidLoadBanner(string placementName, string loadId, BidInfo info, string error)
     {
         _bannerAdIsVisible = true;
         Log($"DidLoadBanner{placementName}: \nLoadId: ${loadId} \nPrice: ${info.Price:F4} \nAuction Id: {info.AuctionId} \nPartner Id: {info.PartnerId} \nError: {error}");

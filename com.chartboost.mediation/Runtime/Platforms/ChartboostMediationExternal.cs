@@ -2,20 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using Chartboost;
-using Helium.Banner;
-using Helium.FullScreen.Interstitial;
-using Helium.FullScreen.Rewarded;
-using Helium.Interfaces;
+using Chartboost.Banner;
+using Chartboost.FullScreen.Interstitial;
+using Chartboost.FullScreen.Rewarded;
 using UnityEngine;
 
-namespace Helium.Platforms
+namespace Chartboost.Platforms
 {
-    public abstract class HeliumExternal : IHeliumLifeCycle, IInterstitialEvents, IRewardedEvents, IBannerEvents
+    public abstract class ChartboostMediationExternal : IChartboostMediationLifeCycle, IChartboostMediationInterstitialEvents, IChartboostMediationRewardedEvents, IChartboostMediationBannerEvents
     {
         public static bool IsInitialized { get; protected set; }
         
-        protected static string LogTag = "HeliumSDK";
+        protected static string LogTag = "ChartboostMediation (External)";
 
         protected static bool CanFetchAd(string placementName)
         {
@@ -23,7 +21,7 @@ namespace Helium.Platforms
                 return false;
             if (placementName != null) 
                 return true;
-            HeliumLogger.LogError(LogTag, "placementName passed is null cannot perform the operation requested");
+            Logger.LogError(LogTag, "placementName passed is null cannot perform the operation requested");
             return false;
         }
 
@@ -32,7 +30,7 @@ namespace Helium.Platforms
             if (IsInitialized)
                 return true;
 
-            HeliumLogger.LogError(LogTag, "The Helium SDK needs to be initialized before we can show any ads");
+            Logger.LogError(LogTag, "The Helium SDK needs to be initialized before we can show any ads");
             return false;
         }
         
@@ -40,110 +38,110 @@ namespace Helium.Platforms
         /// This must be called before using any other Helium features.
         public virtual void Init()
         {
-            HeliumLogger.Log(LogTag, "Init - Attempting to Initialize Helium SDK from ChartboostMediationSettings.");
+            Logger.Log(LogTag, "Init - Attempting to Initialize Helium SDK from ChartboostMediationSettings.");
         }
 
         /// Initialize the Helium plugin with a specific appId
         /// Either one of the init() methods must be called before using any other Helium feature
         public virtual void InitWithAppIdAndSignature(string appId, string appSignature)
         {
-            HeliumLogger.Log(LogTag, $"InitWithAppIdAndSignature {appId}, {appSignature} and version {Application.unityVersion}");
-            HeliumEventProcessor.Initialize();
+            Logger.Log(LogTag, $"InitWithAppIdAndSignature {appId}, {appSignature} and version {Application.unityVersion}");
+            EventProcessor.Initialize();
         }
         
         public virtual void SetSubjectToCoppa(bool isSubject)
         {
-            HeliumLogger.Log(LogTag, $"SetSubjectToCoppa {isSubject}");
+            Logger.Log(LogTag, $"SetSubjectToCoppa {isSubject}");
         }
         
         // ReSharper disable once InconsistentNaming
         public virtual void SetSubjectToGDPR(bool isSubject)
         {
-            HeliumLogger.Log(LogTag, $"SetSubjectToGDPR {isSubject}");
+            Logger.Log(LogTag, $"SetSubjectToGDPR {isSubject}");
         }
 
         public virtual void SetUserHasGivenConsent(bool hasGivenConsent)
         {
-            HeliumLogger.Log(LogTag, $"SetUserHasGivenConsent {hasGivenConsent}");
+            Logger.Log(LogTag, $"SetUserHasGivenConsent {hasGivenConsent}");
         }
 
         // ReSharper disable once InconsistentNaming
         public virtual void SetCCPAConsent(bool hasGivenConsent)
         {
-            HeliumLogger.Log(LogTag, $"SetCCPAConsent {hasGivenConsent}");
+            Logger.Log(LogTag, $"SetCCPAConsent {hasGivenConsent}");
         }
 
         public virtual void SetUserIdentifier(string userIdentifier)
         {
-            HeliumLogger.Log(LogTag, $"SetUserIdentifier {userIdentifier}");
+            Logger.Log(LogTag, $"SetUserIdentifier {userIdentifier}");
         }
 
         public virtual string GetUserIdentifier()
         {
-            HeliumLogger.Log(LogTag, "GetUserIdentifier");
+            Logger.Log(LogTag, "GetUserIdentifier");
             return string.Empty;
         }
 
         public virtual void Destroy()
         {
-            HeliumLogger.Log(LogTag, "Destroy");
+            Logger.Log(LogTag, "Destroy");
         }
 
         public virtual void Pause(bool paused)
         {
-            HeliumLogger.Log(LogTag, "pause");
+            Logger.Log(LogTag, "pause");
         }
 
         public virtual bool OnBackPressed()
         {
-            HeliumLogger.Log(LogTag, "OnBackPressed");
+            Logger.Log(LogTag, "OnBackPressed");
             return CheckInitialized();
         }
 
-        public HeliumInterstitialAd GetInterstitialAd(string placementName)
+        public ChartboostMediationInterstitialAd GetInterstitialAd(string placementName)
         {
-            HeliumLogger.Log(LogTag, $"GetInterstitialAd at placement: {placementName}");
+            Logger.Log(LogTag, $"GetInterstitialAd at placement: {placementName}");
             if (!CanFetchAd(placementName))
                 return null;
             try
             {
-                return new HeliumInterstitialAd(placementName);
+                return new ChartboostMediationInterstitialAd(placementName);
             }
             catch (Exception e)
             {
-                HeliumLogger.LogError(LogTag, $"interstitial failed to be obtained {e}");
+                Logger.LogError(LogTag, $"interstitial failed to be obtained {e}");
                 return null;
             }
         }
         
-        public HeliumRewardedAd GetRewardedAd(string placementName)
+        public ChartboostMediationRewardedAd GetRewardedAd(string placementName)
         {
-            HeliumLogger.Log(LogTag, $"GetRewardedAd at placement: {placementName}");
+            Logger.Log(LogTag, $"GetRewardedAd at placement: {placementName}");
             if (!CanFetchAd(placementName))
                 return null;
             try
             {
-                return new HeliumRewardedAd(placementName);
+                return new ChartboostMediationRewardedAd(placementName);
             }
             catch (Exception e)
             {
-                HeliumLogger.LogError(LogTag, $"rewarded ad failed to be obtained {e}");
+                Logger.LogError(LogTag, $"rewarded ad failed to be obtained {e}");
                 return null;
             }
         }
         
-        public HeliumBannerAd GetBannerAd(string placementName, HeliumBannerAdSize size)
+        public ChartboostMediationBannerAd GetBannerAd(string placementName, ChartboostMediationBannerAdSize size)
         {
-            HeliumLogger.Log(LogTag, $"GetBannerAd at placement: {placementName}");
+            Logger.Log(LogTag, $"GetBannerAd at placement: {placementName}");
             if (!CanFetchAd(placementName))
                 return null;
             try
             {
-                return new HeliumBannerAd(placementName, size);
+                return new ChartboostMediationBannerAd(placementName, size);
             }
             catch (Exception e)
             {
-                HeliumLogger.LogError(LogTag, $"banner ad failed to be obtained {e}");
+                Logger.LogError(LogTag, $"banner ad failed to be obtained {e}");
                 return null;
             }
         }
@@ -180,29 +178,29 @@ namespace Helium.Platforms
 
 #pragma warning disable 67
         // Life-cycle
-        public virtual event HeliumEvent DidStart;
-        public virtual event HeliumILRDEvent DidReceiveImpressionLevelRevenueData;
-        public virtual event HeliumPartnerInitializationEvent DidReceivePartnerInitializationData;
+        public virtual event ChartboostMediationEvent DidStart;
+        public virtual event ChartboostMediationILRDEvent DidReceiveImpressionLevelRevenueData;
+        public virtual event ChartboostMediationPartnerInitializationEvent DidReceivePartnerInitializationData;
         
         // Interstitials
-        public virtual event HeliumPlacementLoadEvent DidLoadInterstitial;
-        public virtual event HeliumPlacementEvent DidShowInterstitial;
-        public virtual event HeliumPlacementEvent DidCloseInterstitial;
-        public virtual event HeliumPlacementEvent DidClickInterstitial;
-        public virtual event HeliumPlacementEvent DidRecordImpressionInterstitial;
+        public virtual event ChartboostMediationPlacementLoadEvent DidLoadInterstitial;
+        public virtual event ChartboostMediationPlacementEvent DidShowInterstitial;
+        public virtual event ChartboostMediationPlacementEvent DidCloseInterstitial;
+        public virtual event ChartboostMediationPlacementEvent DidClickInterstitial;
+        public virtual event ChartboostMediationPlacementEvent DidRecordImpressionInterstitial;
 
         // Rewarded Videos
-        public virtual event HeliumPlacementLoadEvent DidLoadRewarded;
-        public virtual event HeliumPlacementEvent DidShowRewarded;
-        public virtual event HeliumPlacementEvent DidCloseRewarded;
-        public virtual event HeliumPlacementEvent DidClickRewarded;
-        public virtual event HeliumPlacementEvent DidRecordImpressionRewarded;
-        public virtual event HeliumPlacementEvent DidReceiveReward;
+        public virtual event ChartboostMediationPlacementLoadEvent DidLoadRewarded;
+        public virtual event ChartboostMediationPlacementEvent DidShowRewarded;
+        public virtual event ChartboostMediationPlacementEvent DidCloseRewarded;
+        public virtual event ChartboostMediationPlacementEvent DidClickRewarded;
+        public virtual event ChartboostMediationPlacementEvent DidRecordImpressionRewarded;
+        public virtual event ChartboostMediationPlacementEvent DidReceiveReward;
 
         // Banners
-        public virtual event HeliumPlacementLoadEvent DidLoadBanner;
-        public virtual event HeliumPlacementEvent DidClickBanner;
-        public virtual event HeliumPlacementEvent DidRecordImpressionBanner;
+        public virtual event ChartboostMediationPlacementLoadEvent DidLoadBanner;
+        public virtual event ChartboostMediationPlacementEvent DidClickBanner;
+        public virtual event ChartboostMediationPlacementEvent DidRecordImpressionBanner;
 #pragma warning restore 67
     }
 }

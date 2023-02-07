@@ -2,64 +2,64 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Helium.Banner
+namespace Chartboost.Banner
 {
     /// <summary>
-    /// Helium banner object for iOS.
+    /// Chartboost Mediation banner object for iOS.
     /// </summary>
-    public class HeliumBannerIOS : HeliumBannerBase
+    public class ChartboostMediationBannerIOS : ChartboostMediationBannerBase
     {
         private readonly IntPtr _uniqueId;
 
-        public HeliumBannerIOS(string placement, HeliumBannerAdSize size) : base(placement, size)
+        public ChartboostMediationBannerIOS(string placement, ChartboostMediationBannerAdSize size) : base(placement, size)
         {
-            LogTag = "HeliumBanner (iOS)";
+            LogTag = "ChartboostMediation Banner (iOS)";
             _uniqueId = _heliumSdkGetBannerAd(placement, (int)size);
         }
 
-        /// <inheritdoc cref="HeliumBannerBase.SetKeyword"/>>
+        /// <inheritdoc cref="ChartboostMediationBannerBase.SetKeyword"/>>
         public override bool SetKeyword(string keyword, string value)
         {
             base.SetKeyword(keyword, value);
             return _heliumSdkBannerSetKeyword(_uniqueId, keyword, value);
         }
 
-        /// <inheritdoc cref="HeliumBannerBase.RemoveKeyword"/>>
+        /// <inheritdoc cref="ChartboostMediationBannerBase.RemoveKeyword"/>>
         public override string RemoveKeyword(string keyword)
         {
             base.RemoveKeyword(keyword);
             return _heliumSdkBannerRemoveKeyword(_uniqueId, keyword);
         }
 
-        /// <inheritdoc cref="HeliumBannerBase.Load"/>>
-        public override void Load(HeliumBannerAdScreenLocation location)
+        /// <inheritdoc cref="ChartboostMediationBannerBase.Load"/>>
+        public override void Load(ChartboostMediationBannerAdScreenLocation location)
         {
             base.Load(location);
             _heliumSdkBannerAdLoad(_uniqueId, (int)location);
         }
 
-        /// <inheritdoc cref="HeliumBannerBase.SetVisibility"/>>
+        /// <inheritdoc cref="ChartboostMediationBannerBase.SetVisibility"/>>
         public override void SetVisibility(bool isVisible)
         {
             base.SetVisibility(isVisible);
             _heliumSdkBannerSetVisibility(_uniqueId, isVisible);
         }
 
-        /// <inheritdoc cref="HeliumBannerBase.ClearLoaded"/>>
+        /// <inheritdoc cref="ChartboostMediationBannerBase.ClearLoaded"/>>
         public override void ClearLoaded()
         {
             base.ClearLoaded();
             _heliumSdkBannerClearLoaded(_uniqueId);
         }
 
-        /// <inheritdoc cref="HeliumBannerBase.Remove"/>>
+        /// <inheritdoc cref="ChartboostMediationBannerBase.Remove"/>>
         public override void Remove()
         {
             base.Remove();
             _heliumSdkBannerRemove(_uniqueId);
         }
 
-        ~HeliumBannerIOS()
+        ~ChartboostMediationBannerIOS()
             => _heliumSdkFreeBannerAdObject(_uniqueId);
 
         #region External Methods

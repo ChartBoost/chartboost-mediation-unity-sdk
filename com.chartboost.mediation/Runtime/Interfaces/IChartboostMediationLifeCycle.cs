@@ -1,29 +1,31 @@
 // ReSharper disable InconsistentNaming
 using UnityEngine.Scripting;
 
-namespace Helium.Interfaces
+// ReSharper disable once CheckNamespace
+namespace Chartboost
 {
     /// <summary>
     /// All Helium SDK Lifecycle callbacks.
     /// </summary>
-    public interface IHeliumLifeCycle
+    public interface IChartboostMediationLifeCycle
     {
         /// <summary>
         /// Called after an the SDK has been initialized
         /// </summary>
         [Preserve]
-        public event HeliumEvent DidStart;
+        public event ChartboostMediationEvent DidStart;
         
         /// <summary>
         /// Called immediately when impression level revenue data has been received after an
         /// ad was displayed on the screen.
         /// </summary>
         [Preserve]
-        public event HeliumILRDEvent DidReceiveImpressionLevelRevenueData;
+        public event ChartboostMediationILRDEvent DidReceiveImpressionLevelRevenueData;
         
         /// <summary>
         /// Provides Helium initialization metrics data in a json format.
         /// </summary>
-        public event HeliumPartnerInitializationEvent DidReceivePartnerInitializationData;
+        [Preserve]
+        public event ChartboostMediationPartnerInitializationEvent DidReceivePartnerInitializationData;
     }
 }

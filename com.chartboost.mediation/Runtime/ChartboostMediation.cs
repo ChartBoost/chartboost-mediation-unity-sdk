@@ -1,4 +1,3 @@
-using System;
 using Chartboost;
 using Chartboost.Banner;
 using Chartboost.FullScreen.Interstitial;
@@ -7,19 +6,18 @@ using Chartboost.Platforms;
 using UnityEngine;
 
 // ReSharper disable InconsistentNaming
-namespace Helium
+namespace Chartboost
 {
     /// <summary>
     ///  Provide methods to display and control HeliumSDK native advertising types.
     ///  For more information on integrating and using the HeliumSDK
     ///  please visit our help site documentation at https://help.chartboost.com
     /// </summary>
-    [Obsolete("HeliumSDK has been replaced by ChartboostMediation, and will be removed in future releases.")]
-    public class HeliumSDK
+    public class ChartboostMediation
     {
         private static readonly ChartboostMediationExternal _chartboostMediationExternal;
 
-        static HeliumSDK() 
+        static ChartboostMediation() 
         {
             #if UNITY_EDITOR
             _chartboostMediationExternal = new ChartboostMediationUnsupported();
@@ -32,7 +30,7 @@ namespace Helium
             #endif
         }
         
-        ~HeliumSDK()
+        ~ChartboostMediation()
         {
             // Shut down the HeliumSdk plugin
             #if UNITY_ANDROID

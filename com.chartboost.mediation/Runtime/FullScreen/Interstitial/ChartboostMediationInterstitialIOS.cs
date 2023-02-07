@@ -2,36 +2,36 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Helium.FullScreen.Interstitial
+namespace Chartboost.FullScreen.Interstitial
 {
     /// <summary>
     /// Helium interstitial object for iOS.
     /// </summary>
-    public class HeliumInterstitialIOS : HeliumFullScreenBase
+    public class ChartboostMediationInterstitialIOS : ChartboostMediationFullScreenBase
     {
         private readonly IntPtr _uniqueId;
 
-        public HeliumInterstitialIOS(string placementName) : base(placementName)
+        public ChartboostMediationInterstitialIOS(string placementName) : base(placementName)
         {
             LogTag = "HeliumInterstitial (iOS)";
             _uniqueId = _heliumSdkGetInterstitialAd(placementName);
         }
         
-        /// <inheritdoc cref="HeliumFullScreenBase.SetKeyword"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBase.SetKeyword"/>>
         public override bool SetKeyword(string keyword, string value)
         {
             base.SetKeyword(keyword, value);
             return _heliumSdkInterstitialSetKeyword(_uniqueId, keyword, value);
         }
 
-        /// <inheritdoc cref="HeliumFullScreenBase.RemoveKeyword"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBase.RemoveKeyword"/>>
         public override string RemoveKeyword(string keyword)
         {
             base.RemoveKeyword(keyword);
             return _heliumSdkInterstitialRemoveKeyword(_uniqueId, keyword);
         }
 
-        /// <inheritdoc cref="HeliumFullScreenBase.Load"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBase.Load"/>>
         public override void Load()
         {
             base.Load();
@@ -39,28 +39,28 @@ namespace Helium.FullScreen.Interstitial
             _heliumSdkInterstitialAdLoad(_uniqueId);
         }
 
-        /// <inheritdoc cref="HeliumFullScreenBase.Show"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBase.Show"/>>
         public override void Show()
         {
             base.Show();
             _heliumSdkInterstitialAdShow(_uniqueId);
         }
 
-        /// <inheritdoc cref="HeliumFullScreenBase.ReadyToShow"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBase.ReadyToShow"/>>
         public override bool ReadyToShow()
         {
             base.ReadyToShow();
             return _heliumSdkInterstitialAdReadyToShow(_uniqueId);
         }
 
-        /// <inheritdoc cref="HeliumFullScreenBase.ClearLoaded"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBase.ClearLoaded"/>>
         public override void ClearLoaded()
         {
             base.ClearLoaded();
             _heliumSdkInterstitialClearLoaded(_uniqueId);
         }
 
-        ~HeliumInterstitialIOS() 
+        ~ChartboostMediationInterstitialIOS() 
             => _heliumSdkFreeInterstitialAdObject(_uniqueId);
 
         #region External Methods

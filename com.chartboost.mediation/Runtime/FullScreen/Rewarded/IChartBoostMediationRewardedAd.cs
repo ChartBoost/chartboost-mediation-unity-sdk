@@ -1,9 +1,9 @@
-namespace Helium.FullScreen.Rewarded
+namespace Chartboost.FullScreen.Rewarded
 {
     /// <summary>
     /// Interface implemented by all Helium rewarded ads. 
     /// </summary>
-    public interface IHeliumRewardedAd
+    public interface IChartBoostMediationRewardedAd
     {
         /// <summary>
         /// Specify custom data that can be passed along with the rewarded advertisement.

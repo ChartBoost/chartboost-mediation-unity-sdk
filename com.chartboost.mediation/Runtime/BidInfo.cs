@@ -1,12 +1,12 @@
-﻿namespace Helium
+﻿namespace Chartboost
 {
-    public struct HeliumBidInfo
+    public struct BidInfo
     {
         public readonly string AuctionId;
         public readonly string PartnerId;
         public readonly double Price;
 
-        public HeliumBidInfo(string auctionId, string partnerId, double price)
+        public BidInfo(string auctionId, string partnerId, double price)
         {
             AuctionId = auctionId;
             PartnerId = partnerId;

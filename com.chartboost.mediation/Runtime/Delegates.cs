@@ -1,31 +1,31 @@
 using System.Collections;
 
-namespace Helium
+namespace Chartboost
 {
     /// <param name="error">The error encountered, if any.</param>
-    public delegate void HeliumEvent(string error);
+    public delegate void ChartboostMediationEvent(string error);
 
     /// <param name="placement">The placement name.</param>
     /// <param name="impressionData">The impression data delivered within a hashtable.</param>
     // ReSharper disable once InconsistentNaming
     // ReSharper disable once IdentifierTypo
-    public delegate void HeliumILRDEvent(string placement, Hashtable impressionData);
+    public delegate void ChartboostMediationILRDEvent(string placement, Hashtable impressionData);
 
     /// <summary>
     /// <param name="partnerInitializationEventData">The partner initialization data delivered within a hashtable.</param>
     /// </summary>
-    public delegate void HeliumPartnerInitializationEvent(string partnerInitializationEventData);
+    public delegate void ChartboostMediationPartnerInitializationEvent(string partnerInitializationEventData);
 
     /// <summary>
     /// <param name="placement">The placement name for the placement.</param>
     /// <param name="error">The error encountered, if any.</param>
     /// </summary>
-    public delegate void HeliumPlacementEvent(string placement, string error);
+    public delegate void ChartboostMediationPlacementEvent(string placement, string error);
 
     /// <summary>
     /// <param name="placement">The placement name for the placement.</param>
     /// /// <param name="loadId">The placement name for the placement.</param>
     /// <param name="error">The error encountered, if any.</param>
     /// </summary>
-    public delegate void HeliumPlacementLoadEvent(string placement, string loadId, HeliumBidInfo bidInfo, string error);
+    public delegate void ChartboostMediationPlacementLoadEvent(string placement, string loadId, BidInfo bidInfo, string error);
 }

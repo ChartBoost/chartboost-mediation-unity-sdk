@@ -1,22 +1,21 @@
 #if UNITY_ANDROID
-using Chartboost;
 using UnityEngine;
 using UnityEngine.Scripting;
 // ReSharper disable StringLiteralTypo
 // ReSharper disable InconsistentNaming
 
-namespace Helium.Platforms
+namespace Chartboost.Platforms
 {
-    public sealed class HeliumAndroid : HeliumExternal
+    public sealed class ChartboostMediationAndroid : ChartboostMediationExternal
     {
         #region Helium
-        private static HeliumAndroid _instance;
+        private static ChartboostMediationAndroid _instance;
         private static AndroidJavaObject _plugin;
 
-        public HeliumAndroid()
+        public ChartboostMediationAndroid()
         {
             _instance = this;
-            LogTag = "Helium(Android)";
+            LogTag = "ChartboostMediation (Android)";
             plugin().Call("setupEventListeners",
                 LifeCycleEventListener.Instance,
                 InterstitialEventListener.Instance,
@@ -120,20 +119,20 @@ namespace Helium.Platforms
 
             [Preserve]
             private void DidStart(string error) 
-                => HeliumEventProcessor.ProcessHeliumEvent(error, _instance.DidStart);
+                => EventProcessor.ProcessHeliumEvent(error, _instance.DidStart);
 
             [Preserve]
             private void DidReceiveILRD(string impressionDataJson) 
-                => HeliumEventProcessor.ProcessEventWithILRD(impressionDataJson, _instance.DidReceiveImpressionLevelRevenueData);
+                => EventProcessor.ProcessEventWithILRD(impressionDataJson, _instance.DidReceiveImpressionLevelRevenueData);
 
             [Preserve]
             private void DidReceivePartnerInitializationData(string partnerInitializationDataJson) 
-                => HeliumEventProcessor.ProcessEventWithPartnerInitializationData(partnerInitializationDataJson, _instance.DidReceivePartnerInitializationData);
+                => EventProcessor.ProcessEventWithPartnerInitializationData(partnerInitializationDataJson, _instance.DidReceivePartnerInitializationData);
         }
 
-        public override event HeliumEvent DidStart;
-        public override event HeliumILRDEvent DidReceiveImpressionLevelRevenueData;
-        public override event HeliumPartnerInitializationEvent DidReceivePartnerInitializationData;
+        public override event ChartboostMediationEvent DidStart;
+        public override event ChartboostMediationILRDEvent DidReceiveImpressionLevelRevenueData;
+        public override event ChartboostMediationPartnerInitializationEvent DidReceivePartnerInitializationData;
         #endregion
 
         #region Interstitial Callbacks
@@ -146,30 +145,30 @@ namespace Helium.Platforms
 
             [Preserve]
             private void DidLoadInterstitial(string placementName, string loadId, string auctionId, string partnerId, double price, string error)
-                => HeliumEventProcessor.ProcessHeliumLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadInterstitial);
+                => EventProcessor.ProcessHeliumLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadInterstitial);
 
             [Preserve]
             private void DidShowInterstitial(string placementName, string error) 
-                => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidShowInterstitial);
+                => EventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidShowInterstitial);
 
             [Preserve]
             private void DidCloseInterstitial(string placementName, string error) 
-                => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidCloseInterstitial);
+                => EventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidCloseInterstitial);
             
             [Preserve]
             private void DidClickInterstitial(string placementName) 
-                => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidClickInterstitial);
+                => EventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidClickInterstitial);
 
             [Preserve]
             private void DidRecordImpression(string placementName) 
-                => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidRecordImpressionInterstitial);
+                => EventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidRecordImpressionInterstitial);
         }
 
-        public override event HeliumPlacementLoadEvent DidLoadInterstitial;
-        public override event HeliumPlacementEvent DidShowInterstitial;
-        public override event HeliumPlacementEvent DidCloseInterstitial; 
-        public override event HeliumPlacementEvent DidClickInterstitial;
-        public override event HeliumPlacementEvent DidRecordImpressionInterstitial;
+        public override event ChartboostMediationPlacementLoadEvent DidLoadInterstitial;
+        public override event ChartboostMediationPlacementEvent DidShowInterstitial;
+        public override event ChartboostMediationPlacementEvent DidCloseInterstitial; 
+        public override event ChartboostMediationPlacementEvent DidClickInterstitial;
+        public override event ChartboostMediationPlacementEvent DidRecordImpressionInterstitial;
         #endregion
 
         #region Rewarded Callbacks
@@ -181,35 +180,35 @@ namespace Helium.Platforms
 
             [Preserve]
             private void DidLoadRewarded(string placementName, string loadId, string auctionId, string partnerId, double price, string error) 
-                => HeliumEventProcessor.ProcessHeliumLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadRewarded);
+                => EventProcessor.ProcessHeliumLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadRewarded);
 
             [Preserve]
             private void DidShowRewarded(string placementName, string error) 
-                => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidShowRewarded);
+                => EventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidShowRewarded);
 
             [Preserve]
             private void DidCloseRewarded(string placementName, string error) 
-                => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidCloseRewarded);
+                => EventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidCloseRewarded);
 
             [Preserve]
             private void DidClickRewarded(string placementName) 
-                => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidClickRewarded);
+                => EventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidClickRewarded);
 
             [Preserve]
             private void DidRecordImpression(string placementName) 
-                => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidRecordImpressionRewarded);
+                => EventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidRecordImpressionRewarded);
 
             [Preserve]
             private void DidReceiveReward(string placementName) 
-                => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidReceiveReward);
+                => EventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidReceiveReward);
         }
 
-        public override event HeliumPlacementLoadEvent DidLoadRewarded;
-        public override event HeliumPlacementEvent DidShowRewarded;
-        public override event HeliumPlacementEvent DidCloseRewarded;
-        public override event HeliumPlacementEvent DidClickRewarded;
-        public override event HeliumPlacementEvent DidRecordImpressionRewarded;
-        public override event HeliumPlacementEvent DidReceiveReward;
+        public override event ChartboostMediationPlacementLoadEvent DidLoadRewarded;
+        public override event ChartboostMediationPlacementEvent DidShowRewarded;
+        public override event ChartboostMediationPlacementEvent DidCloseRewarded;
+        public override event ChartboostMediationPlacementEvent DidClickRewarded;
+        public override event ChartboostMediationPlacementEvent DidRecordImpressionRewarded;
+        public override event ChartboostMediationPlacementEvent DidReceiveReward;
         #endregion
 
         #region Banner Callbacks
@@ -221,20 +220,20 @@ namespace Helium.Platforms
 
             [Preserve]
             private void DidLoadBanner(string placementName, string loadId, string auctionId, string partnerId, double price, string error) 
-                => HeliumEventProcessor.ProcessHeliumLoadEvent(placementName,  loadId, auctionId, partnerId, price, error, _instance.DidLoadBanner);
+                => EventProcessor.ProcessHeliumLoadEvent(placementName,  loadId, auctionId, partnerId, price, error, _instance.DidLoadBanner);
 
             [Preserve]
             private void DidClickBanner(string placementName) 
-                => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidClickBanner);
+                => EventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidClickBanner);
 
             [Preserve]
             private void DidRecordImpression(string placementName) 
-                => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidRecordImpressionBanner);
+                => EventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidRecordImpressionBanner);
         }
 
-        public override event HeliumPlacementLoadEvent DidLoadBanner;
-        public override event HeliumPlacementEvent DidClickBanner;
-        public override event HeliumPlacementEvent DidRecordImpressionBanner;
+        public override event ChartboostMediationPlacementLoadEvent DidLoadBanner;
+        public override event ChartboostMediationPlacementEvent DidClickBanner;
+        public override event ChartboostMediationPlacementEvent DidRecordImpressionBanner;
         #endregion
     }
 }

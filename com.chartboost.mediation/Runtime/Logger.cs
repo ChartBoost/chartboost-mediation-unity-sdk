@@ -1,12 +1,12 @@
 using Chartboost;
 using UnityEngine;
 
-namespace Helium
+namespace Chartboost
 {
     /// <summary>
     /// Helium utility logger which accounts for ChartboostMediationSettings.
     /// </summary>
-    public static class HeliumLogger
+    public static class Logger
     {
         public static void Log(string tag, string message)
         {

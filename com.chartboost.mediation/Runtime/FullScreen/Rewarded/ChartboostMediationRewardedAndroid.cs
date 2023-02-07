@@ -1,75 +1,75 @@
 #if UNITY_ANDROID
-using Helium.Platforms;
+using Chartboost.Platforms;
 using UnityEngine;
 
-namespace Helium.FullScreen.Rewarded
+namespace Chartboost.FullScreen.Rewarded
 {
     /// <summary>
-    /// Helium rewarded ad object for Android.
+    /// Chartboost Mediation rewarded ad object for Android.
     /// </summary>
-    public class HeliumRewardedAndroid : HeliumRewardedBase
+    public class ChartboostMediationRewardedAndroid : ChartboostMediationRewardedBase
     {
         private readonly AndroidJavaObject _androidAd;
 
-        public HeliumRewardedAndroid(string placementName) : base(placementName)
+        public ChartboostMediationRewardedAndroid(string placementName) : base(placementName)
         {
-            LogTag = "HeliumRewarded (Android)";
-            _androidAd = HeliumAndroid.plugin().Call<AndroidJavaObject>("getRewardedAd", placementName);
+            LogTag = "ChartboostMediationRewarded (Android)";
+            _androidAd = ChartboostMediationAndroid.plugin().Call<AndroidJavaObject>("getRewardedAd", placementName);
         }
         
         // *NOTE* Implementation for Rewarded/FullScreen is very similar, and it could be simplified on a single file,
         // for now it will stay separated in case placement specific placement changes are required. This only applies for Android.
 
-        /// <inheritdoc cref="HeliumRewardedBase.SetKeyword"/>>
+        /// <inheritdoc cref="ChartboostMediationRewardedBase.SetKeyword"/>>
         public override bool SetKeyword(string keyword, string value)
         {
             base.SetKeyword(keyword, value);
             return _androidAd.Call<bool>("setKeyword", keyword, value);
         }
 
-        /// <inheritdoc cref="HeliumRewardedBase.RemoveKeyword"/>>
+        /// <inheritdoc cref="ChartboostMediationRewardedBase.RemoveKeyword"/>>
         public override string RemoveKeyword(string keyword)
         {
             base.RemoveKeyword(keyword);
             return _androidAd.Call<string>("removeKeyword", keyword);
         }
 
-        /// <inheritdoc cref="HeliumRewardedBase.Destroy"/>>
+        /// <inheritdoc cref="ChartboostMediationRewardedBase.Destroy"/>>
         public override void Destroy()
         {
             base.Destroy();
             _androidAd.Call("destroy");
         }
 
-        /// <inheritdoc cref="HeliumRewardedBase.Load"/>>
+        /// <inheritdoc cref="ChartboostMediationRewardedBase.Load"/>>
         public override void Load()
         {
             base.Load();
             _androidAd.Call("load");
         }
 
-        /// <inheritdoc cref="HeliumRewardedBase.Show"/>>
+        /// <inheritdoc cref="ChartboostMediationRewardedBase.Show"/>>
         public override void Show()
         {
             base.Show();
             _androidAd.Call("show");
         }
 
-        /// <inheritdoc cref="HeliumRewardedBase.ReadyToShow"/>>
+        /// <inheritdoc cref="ChartboostMediationRewardedBase.ReadyToShow"/>>
         public override bool ReadyToShow()
         {
             base.ReadyToShow();
             return _androidAd.Call<bool>("readyToShow");
         }
 
-        /// <inheritdoc cref="HeliumRewardedBase.ClearLoaded"/>>
+        /// <inheritdoc cref="ChartboostMediationRewardedBase.ClearLoaded"/>>
         public override void ClearLoaded()
         {
             base.ClearLoaded();
             _androidAd.Call<bool>("clearLoaded");
         }
 
-        /// <inheritdoc cref="HeliumRewardedBase.SetCustomData"/>>
+        /// <inheritdoc cref="ChartboostMediationRewardedBase.SetCustomData"/>>
         public override void SetCustomData(string customData)
         {
             base.SetCustomData(customData);

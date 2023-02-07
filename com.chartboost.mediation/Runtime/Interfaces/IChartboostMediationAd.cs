@@ -1,8 +1,9 @@
 using UnityEngine.Scripting;
 
-namespace Helium.Interfaces
+// ReSharper disable once CheckNamespace
+namespace Chartboost
 {
-    public interface IHeliumAd
+    public interface IChartboostMediationAd
     {
         /// <summary>
         /// Set a keyword/value pair on the advertisement. If the keyword has previously been

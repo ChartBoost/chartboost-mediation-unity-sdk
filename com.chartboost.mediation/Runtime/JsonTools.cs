@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Helium {
-    public static class HeliumJson
+namespace Chartboost {
+    public static class JsonTools
     {
         public static object Deserialize(string json)
         {
