@@ -10,7 +10,7 @@ using UnityEditor;
 namespace Chartboost
 {
     /// <summary>
-    /// List of officially supported Helium mediation partners and their identifiers
+    /// List of officially supported Chartboost Mediation mediation partners and their identifiers
     /// </summary>
     [Flags]
     public enum ChartboostMediationPartners
@@ -34,7 +34,7 @@ namespace Chartboost
     }
 
     /// <summary>
-    /// Helium Unity SDK Settings as an scriptable object with accessors
+    /// Chartboost Mediation Unity SDK Settings as an scriptable object with accessors
     /// </summary>
     public class ChartboostMediationSettings : ScriptableObject
     {
@@ -110,7 +110,7 @@ namespace Chartboost
         [MenuItem("Chartboost Mediation/Documentation")]
         public static void OpenDocumentation()
         {
-            const string url = "https://developers.chartboost.com/docs/unity-add-the-helium-sdk";
+            const string url = "https://developers.chartboost.com/docs/mediation-unity-get-started";
             Application.OpenURL(url);
         }
 #endif

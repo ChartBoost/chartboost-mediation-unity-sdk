@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 namespace Chartboost.FullScreen.Interstitial
 {
     /// <summary>
-    /// Helium interstitial object for iOS.
+    /// Chartboost Mediation interstitial object for iOS.
     /// </summary>
     public class ChartboostMediationInterstitialIOS : ChartboostMediationFullScreenBase
     {
@@ -13,7 +13,7 @@ namespace Chartboost.FullScreen.Interstitial
 
         public ChartboostMediationInterstitialIOS(string placementName) : base(placementName)
         {
-            LogTag = "HeliumInterstitial (iOS)";
+            LogTag = "ChartboostMediationInterstitial (iOS)";
             _uniqueId = _heliumSdkGetInterstitialAd(placementName);
         }
         

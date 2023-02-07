@@ -5,7 +5,7 @@ using UnityEngine.Scripting;
 namespace Chartboost
 {
     /// <summary>
-    /// All Helium SDK Lifecycle callbacks.
+    /// All Chartboost Mediation SDK Lifecycle callbacks.
     /// </summary>
     public interface IChartboostMediationLifeCycle
     {
@@ -23,7 +23,7 @@ namespace Chartboost
         public event ChartboostMediationILRDEvent DidReceiveImpressionLevelRevenueData;
         
         /// <summary>
-        /// Provides Helium initialization metrics data in a json format.
+        /// Provides Chartboost Mediation initialization metrics data in a json format.
         /// </summary>
         [Preserve]
         public event ChartboostMediationPartnerInitializationEvent DidReceivePartnerInitializationData;

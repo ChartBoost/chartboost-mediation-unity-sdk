@@ -7,7 +7,6 @@ using Chartboost;
 using Chartboost.Banner;
 using Chartboost.FullScreen.Interstitial;
 using Chartboost.FullScreen.Rewarded;
-using Helium;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
@@ -59,7 +58,7 @@ public class Demo : MonoBehaviour
     private void Awake()
     {
         Application.targetFrameRate = 60;
-        ChartboostMediation.DidStart += DidStartHelium;
+        ChartboostMediation.DidStart += DidStart;
         ChartboostMediation.DidReceivePartnerInitializationData += DidReceivePartnerInitializationData;
         ChartboostMediation.DidReceiveImpressionLevelRevenueData += DidReceiveImpressionLevelRevenueData;
         ChartboostMediation.UnexpectedSystemErrorDidOccur += UnexpectedSystemErrorDidOccur;
@@ -104,7 +103,7 @@ public class Demo : MonoBehaviour
         }
     }
 
-    private void DidStartHelium(string error)
+    private void DidStart(string error)
     {
         Log($"DidStart: {error}");
         ChartboostMediation.SetUserIdentifier(DefaultUserIdentifier);

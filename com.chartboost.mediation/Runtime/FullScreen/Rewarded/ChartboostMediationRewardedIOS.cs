@@ -10,7 +10,7 @@ namespace Chartboost.FullScreen.Rewarded
 
         public ChartboostMediationRewardedIOS(string placementName) : base(placementName)
         {
-            LogTag = "HeliumRewarded (iOS)";
+            LogTag = "ChartboostMediationRewarded (iOS)";
             _uniqueId = _heliumSdkGetRewardedAd(placementName);
         }
 

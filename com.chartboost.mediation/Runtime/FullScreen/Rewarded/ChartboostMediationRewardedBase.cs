@@ -5,7 +5,7 @@ namespace Chartboost.FullScreen.Rewarded
     /// </summary>
     public class ChartboostMediationRewardedBase : ChartboostMediationFullScreenBase, IChartBoostMediationRewardedAd
     {
-        public ChartboostMediationRewardedBase(string placementName) : base(placementName) => LogTag = "HeliumRewarded (Base)";
+        public ChartboostMediationRewardedBase(string placementName) : base(placementName) => LogTag = "ChartboostMediationRewarded (Base)";
 
         /// <inheritdoc cref="IChartBoostMediationRewardedAd.SetCustomData"/>>
         public virtual void SetCustomData(string customData) => Logger.Log(LogTag, $"rewarded: {PlacementName}, setting custom data: {customData}");
@@ -16,6 +16,6 @@ namespace Chartboost.FullScreen.Rewarded
     /// </summary>
     public class ChartboostMediationRewardedUnsupported : ChartboostMediationRewardedBase
     {
-        public ChartboostMediationRewardedUnsupported(string placementName) : base(placementName) => LogTag = "HeliumRewarded (Unsupported)";
+        public ChartboostMediationRewardedUnsupported(string placementName) : base(placementName) => LogTag = "ChartboostMediationRewarded (Unsupported)";
     }
 }

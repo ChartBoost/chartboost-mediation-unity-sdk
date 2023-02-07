@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Chartboost.Banner
 {
     /// <summary>
-    /// Helium banner object for Android.
+    /// Chartboost Mediation banner object for Android.
     /// </summary>
     public class ChartboostMediationBannerAndroid : ChartboostMediationBannerBase
     {

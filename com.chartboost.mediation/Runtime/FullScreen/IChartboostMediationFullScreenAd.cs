@@ -3,7 +3,7 @@ using UnityEngine.Scripting;
 namespace Chartboost.FullScreen
 {
     /// <summary>
-    /// Interface implemented by Helium fullscreen ads. 
+    /// Interface implemented by Chartboost Mediation fullscreen ads. 
     /// </summary>
     public interface IChartboostMediationFullScreenAd
     {

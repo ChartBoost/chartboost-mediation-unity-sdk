@@ -4,12 +4,12 @@ using UnityEngine.Scripting;
 namespace Chartboost.FullScreen.Rewarded
 {
     /// <summary>
-    /// Interface implemented by Helium rewarded ads. 
+    /// Interface implemented by Chartboost Mediation rewarded ads. 
     /// </summary>
     public interface IChartboostMediationRewardedEvents
     {
         /// <summary>
-        /// Called after a rewarded ad has been loaded from the Helium API
+        /// Called after a rewarded ad has been loaded from the Chartboost Mediation API
         /// servers and cached locally.
         /// </summary>
         [Preserve]

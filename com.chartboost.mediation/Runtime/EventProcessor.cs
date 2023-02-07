@@ -18,7 +18,7 @@ namespace Chartboost
         public static event ChartboostMediationEvent UnexpectedSystemErrorDidOccur;
 
         /// <summary>
-        /// Initializes Helium Event Processor, must be called from main thread.
+        /// Initializes Chartboost Mediation Event Processor, must be called from main thread.
         /// </summary>
         internal static void Initialize()
         {
@@ -65,7 +65,7 @@ namespace Chartboost
             }, null);
         }
 
-        public static void ProcessHeliumEvent(string error, ChartboostMediationEvent chartboostMediationEvent)
+        public static void ProcessChartboostMediationEvent(string error, ChartboostMediationEvent chartboostMediationEvent)
         {
             if (chartboostMediationEvent == null)
                 return;
@@ -82,7 +82,7 @@ namespace Chartboost
                 }
             }, null);
         }
-        public static void ProcessHeliumPlacementEvent(string placementName, string error, ChartboostMediationPlacementEvent placementEvent)
+        public static void ProcessChartboostMediationPlacementEvent(string placementName, string error, ChartboostMediationPlacementEvent placementEvent)
         {
             if (placementEvent == null)
                 return;
@@ -100,7 +100,7 @@ namespace Chartboost
             }, null);
         }
 
-        public static void ProcessHeliumLoadEvent(string placementName, string loadId, string auctionId, string partnerId, double price, string error, ChartboostMediationPlacementLoadEvent bidEvent)
+        public static void ProcessChartboostMediationLoadEvent(string placementName, string loadId, string auctionId, string partnerId, double price, string error, ChartboostMediationPlacementLoadEvent bidEvent)
         {
             if (bidEvent == null)
                 return;

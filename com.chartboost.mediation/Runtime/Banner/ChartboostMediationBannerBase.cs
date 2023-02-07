@@ -51,7 +51,7 @@ namespace Chartboost.Banner
     }
 
     /// <summary>
-    /// Helium banner object for unsupported platforms.
+    /// Chartboost Mediation banner object for unsupported platforms.
     /// </summary>
     public class ChartboostMediationBannerUnsupported : ChartboostMediationBannerBase
     {

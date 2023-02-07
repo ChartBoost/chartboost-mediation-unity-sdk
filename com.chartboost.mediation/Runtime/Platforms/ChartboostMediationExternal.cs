@@ -30,19 +30,19 @@ namespace Chartboost.Platforms
             if (IsInitialized)
                 return true;
 
-            Logger.LogError(LogTag, "The Helium SDK needs to be initialized before we can show any ads");
+            Logger.LogError(LogTag, "The Chartboost Mediation SDK needs to be initialized before we can show any ads");
             return false;
         }
         
-        /// Initializes the Helium plugin.
-        /// This must be called before using any other Helium features.
+        /// Initializes the Chartboost Mediation plugin.
+        /// This must be called before using any other Chartboost Mediation features.
         public virtual void Init()
         {
-            Logger.Log(LogTag, "Init - Attempting to Initialize Helium SDK from ChartboostMediationSettings.");
+            Logger.Log(LogTag, "Init - Attempting to Initialize Chartboost Mediation SDK from ChartboostMediationSettings.");
         }
 
-        /// Initialize the Helium plugin with a specific appId
-        /// Either one of the init() methods must be called before using any other Helium feature
+        /// Initialize the Chartboost Mediation plugin with a specific appId
+        /// Either one of the init() methods must be called before using any other Chartboost Mediation feature
         public virtual void InitWithAppIdAndSignature(string appId, string appSignature)
         {
             Logger.Log(LogTag, $"InitWithAppIdAndSignature {appId}, {appSignature} and version {Application.unityVersion}");

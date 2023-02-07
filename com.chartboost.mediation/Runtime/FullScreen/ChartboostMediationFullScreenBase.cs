@@ -1,11 +1,11 @@
 namespace Chartboost.FullScreen
 {
     /// <summary>
-    /// Helium fullscreen ad base structure.
+    /// Chartboost Mediation fullscreen ad base structure.
     /// </summary>
     public abstract class ChartboostMediationFullScreenBase : IChartboostMediationAd, IChartboostMediationFullScreenAd
     {
-        protected static string LogTag = "HeliumFullScreen (Base)";
+        protected static string LogTag = "ChartboostMediationFullScreen (Base)";
         protected readonly string PlacementName;
 
         protected ChartboostMediationFullScreenBase(string placementName)
@@ -52,13 +52,13 @@ namespace Chartboost.FullScreen
     }
     
     /// <summary>
-    /// Helium interstitial ad object for unsupported platforms.
+    /// Chartboost Mediation interstitial ad object for unsupported platforms.
     /// </summary>
     public class ChartboostMediationInterstitialUnsupported : ChartboostMediationFullScreenBase
     {
         public ChartboostMediationInterstitialUnsupported(string placementName) : base(placementName)
         {
-            LogTag = "HeliumInterstitial (Unsupported)";
+            LogTag = "ChartboostMediationInterstitial (Unsupported)";
         }
     }
 }

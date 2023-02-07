@@ -1,7 +1,7 @@
 namespace Chartboost.FullScreen.Rewarded
 {
     /// <summary>
-    /// Interface implemented by all Helium rewarded ads. 
+    /// Interface implemented by all Chartboost Mediation rewarded ads. 
     /// </summary>
     public interface IChartBoostMediationRewardedAd
     {

@@ -9,8 +9,8 @@ using UnityEngine;
 namespace Chartboost
 {
     /// <summary>
-    ///  Provide methods to display and control HeliumSDK native advertising types.
-    ///  For more information on integrating and using the HeliumSDK
+    ///  Provide methods to display and control Chartboost Mediation native advertising types.
+    ///  For more information on integrating and using Chartboost Mediation
     ///  please visit our help site documentation at https://help.chartboost.com
     /// </summary>
     public class ChartboostMediation
@@ -32,7 +32,7 @@ namespace Chartboost
         
         ~ChartboostMediation()
         {
-            // Shut down the HeliumSdk plugin
+            // Shut down the Chartboost Mediation plugin
             #if UNITY_ANDROID
             _chartboostMediationExternal.Destroy();
             #endif
@@ -179,7 +179,7 @@ namespace Chartboost
         /// <summary>
         /// Returns a new ad unit that can be used to load and display interstitial ads.
         /// </summary>
-        /// <param name="placementName">The placement ID for the HeliumSdk impression type.</param>
+        /// <param name="placementName">The placement ID for the Chartboost Mediation impression type.</param>
         public static ChartboostMediationInterstitialAd GetInterstitialAd(string placementName)
         {
             return _chartboostMediationExternal.GetInterstitialAd(placementName);
@@ -188,7 +188,7 @@ namespace Chartboost
         /// <summary>
         /// Returns a new ad unit that can be used to load and display rewarded video ads.
         /// </summary>
-        /// <param name="placementName">The placement ID for the HeliumSdk impression type.</param>
+        /// <param name="placementName">The placement ID for the Chartboost Mediation impression type.</param>
         public static ChartboostMediationRewardedAd GetRewardedAd(string placementName)
         {
             return _chartboostMediationExternal.GetRewardedAd(placementName);
@@ -197,7 +197,7 @@ namespace Chartboost
         /// <summary>
         /// Returns a new ad unit that can be used to load and display banner ads.
         /// </summary>
-        /// <param name="placementName">The placement ID for the HeliumSdk impression type.</param>
+        /// <param name="placementName">The placement ID for the Chartboost Mediation impression type.</param>
         /// <param name="size">The banner size</param>
         public static ChartboostMediationBannerAd GetBannerAd(string placementName, ChartboostMediationBannerAdSize size)
         {

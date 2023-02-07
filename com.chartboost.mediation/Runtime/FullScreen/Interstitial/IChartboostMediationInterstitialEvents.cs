@@ -9,7 +9,7 @@ namespace Chartboost.FullScreen.Interstitial
     public interface IChartboostMediationInterstitialEvents
     {
         /// <summary>
-        /// Called after an interstitial has been loaded from the Helium API
+        /// Called after an interstitial has been loaded from the Chartboost Mediation API
         /// servers and cached locally.
         /// </summary>
         [Preserve]

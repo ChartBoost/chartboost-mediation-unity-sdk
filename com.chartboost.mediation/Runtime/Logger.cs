@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Chartboost
 {
     /// <summary>
-    /// Helium utility logger which accounts for ChartboostMediationSettings.
+    /// Chartboost Mediation utility logger which accounts for ChartboostMediationSettings.
     /// </summary>
     public static class Logger
     {

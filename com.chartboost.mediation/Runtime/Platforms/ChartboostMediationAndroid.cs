@@ -8,7 +8,7 @@ namespace Chartboost.Platforms
 {
     public sealed class ChartboostMediationAndroid : ChartboostMediationExternal
     {
-        #region Helium
+        #region Chartboost Mediation
         private static ChartboostMediationAndroid _instance;
         private static AndroidJavaObject _plugin;
 
@@ -119,7 +119,7 @@ namespace Chartboost.Platforms
 
             [Preserve]
             private void DidStart(string error) 
-                => EventProcessor.ProcessHeliumEvent(error, _instance.DidStart);
+                => EventProcessor.ProcessChartboostMediationEvent(error, _instance.DidStart);
 
             [Preserve]
             private void DidReceiveILRD(string impressionDataJson) 
@@ -145,23 +145,23 @@ namespace Chartboost.Platforms
 
             [Preserve]
             private void DidLoadInterstitial(string placementName, string loadId, string auctionId, string partnerId, double price, string error)
-                => EventProcessor.ProcessHeliumLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadInterstitial);
+                => EventProcessor.ProcessChartboostMediationLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadInterstitial);
 
             [Preserve]
             private void DidShowInterstitial(string placementName, string error) 
-                => EventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidShowInterstitial);
+                => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidShowInterstitial);
 
             [Preserve]
             private void DidCloseInterstitial(string placementName, string error) 
-                => EventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidCloseInterstitial);
+                => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidCloseInterstitial);
             
             [Preserve]
             private void DidClickInterstitial(string placementName) 
-                => EventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidClickInterstitial);
+                => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, null, _instance.DidClickInterstitial);
 
             [Preserve]
             private void DidRecordImpression(string placementName) 
-                => EventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidRecordImpressionInterstitial);
+                => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, null, _instance.DidRecordImpressionInterstitial);
         }
 
         public override event ChartboostMediationPlacementLoadEvent DidLoadInterstitial;
@@ -180,27 +180,27 @@ namespace Chartboost.Platforms
 
             [Preserve]
             private void DidLoadRewarded(string placementName, string loadId, string auctionId, string partnerId, double price, string error) 
-                => EventProcessor.ProcessHeliumLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadRewarded);
+                => EventProcessor.ProcessChartboostMediationLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadRewarded);
 
             [Preserve]
             private void DidShowRewarded(string placementName, string error) 
-                => EventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidShowRewarded);
+                => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidShowRewarded);
 
             [Preserve]
             private void DidCloseRewarded(string placementName, string error) 
-                => EventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidCloseRewarded);
+                => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidCloseRewarded);
 
             [Preserve]
             private void DidClickRewarded(string placementName) 
-                => EventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidClickRewarded);
+                => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, null, _instance.DidClickRewarded);
 
             [Preserve]
             private void DidRecordImpression(string placementName) 
-                => EventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidRecordImpressionRewarded);
+                => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, null, _instance.DidRecordImpressionRewarded);
 
             [Preserve]
             private void DidReceiveReward(string placementName) 
-                => EventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidReceiveReward);
+                => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, null, _instance.DidReceiveReward);
         }
 
         public override event ChartboostMediationPlacementLoadEvent DidLoadRewarded;
@@ -220,15 +220,15 @@ namespace Chartboost.Platforms
 
             [Preserve]
             private void DidLoadBanner(string placementName, string loadId, string auctionId, string partnerId, double price, string error) 
-                => EventProcessor.ProcessHeliumLoadEvent(placementName,  loadId, auctionId, partnerId, price, error, _instance.DidLoadBanner);
+                => EventProcessor.ProcessChartboostMediationLoadEvent(placementName,  loadId, auctionId, partnerId, price, error, _instance.DidLoadBanner);
 
             [Preserve]
             private void DidClickBanner(string placementName) 
-                => EventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidClickBanner);
+                => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, null, _instance.DidClickBanner);
 
             [Preserve]
             private void DidRecordImpression(string placementName) 
-                => EventProcessor.ProcessHeliumPlacementEvent(placementName, null, _instance.DidRecordImpressionBanner);
+                => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, null, _instance.DidRecordImpressionBanner);
         }
 
         public override event ChartboostMediationPlacementLoadEvent DidLoadBanner;

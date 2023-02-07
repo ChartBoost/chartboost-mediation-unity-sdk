@@ -4,24 +4,24 @@ using UnityEngine;
 namespace Chartboost.Editor
 {
 	[CustomEditor(typeof(ChartboostMediationSettings))]
-	public class HeliumSettingEditor : UnityEditor.Editor
+	public class ChartboostMediationSettingEditor : UnityEditor.Editor
 	{
 		private const string AppIdLink = "https://dashboard.chartboost.com/all/publishing";
 
 		private readonly GUIContent _partnerKilLSwitchTitle = new GUIContent("Partner Kill Switch");
 		private readonly GUIContent _platformsIdsLabel = new GUIContent("Platform IDs");
-		private readonly GUIContent _iOSAppIdLabel = new GUIContent("App Id [?]:", "Helium App Ids can be found at " + AppIdLink);
-		private readonly GUIContent _androidAppIdLabel = new GUIContent("App Id [?]:", "Helium App Ids can be found at " + AppIdLink);
-		private readonly GUIContent _iOSAppSigLabel = new GUIContent("App Signature [?]:", "Helium App Signatures can be found at " + AppIdLink);
-		private readonly GUIContent _androidAppSigLabel = new GUIContent("App Signature [?]:", "Helium App Signatures can be found at " + AppIdLink);
+		private readonly GUIContent _iOSAppIdLabel = new GUIContent("App Id [?]:", "Chartboost Mediation App Ids can be found at " + AppIdLink);
+		private readonly GUIContent _androidAppIdLabel = new GUIContent("App Id [?]:", "Chartboost Mediation App Ids can be found at " + AppIdLink);
+		private readonly GUIContent _iOSAppSigLabel = new GUIContent("App Signature [?]:", "Chartboost Mediation App Signatures can be found at " + AppIdLink);
+		private readonly GUIContent _androidAppSigLabel = new GUIContent("App Signature [?]:", "Chartboost Mediation App Signatures can be found at " + AppIdLink);
 		private readonly GUIContent _iOSLabel = new GUIContent("iOS");
 		private readonly GUIContent _androidLabel = new GUIContent("Android");
 		private readonly GUIContent _debuggingTitle = new GUIContent("Debugging");
 		private readonly GUIContent _automaticInitLabel = new GUIContent("Automatic Initialization");
 		private readonly GUIContent _enableLoggingToggle = new GUIContent("Logging Enabled");
-		private readonly GUIContent _enableAutomaticInitToggle = new GUIContent("Initialize Helium Automatically");
+		private readonly GUIContent _enableAutomaticInitToggle = new GUIContent("Initialize Chartboost Mediation Automatically");
 		private readonly GUIContent _skAdNetworkLabel = new GUIContent("SKAdNetwork");
-		private readonly GUIContent _skAdNetworkToggle = new GUIContent("Use Helium SKAdNetwork Identifier Resolution");
+		private readonly GUIContent _skAdNetworkToggle = new GUIContent("Use Chartboost Mediation SKAdNetwork Identifier Resolution");
 
 		private ChartboostMediationSettings _instance;
 		private GUIStyle _title;
@@ -57,7 +57,7 @@ namespace Chartboost.Editor
 			
 			EditorGUILayout.LabelField(_platformsIdsLabel, _title);
 			
-			EditorGUILayout.HelpBox("Add the Helium App Id & App Signature associated with this game.", MessageType.Info);
+			EditorGUILayout.HelpBox("Add the Chartboost Mediation App Id & App Signature associated with this game.", MessageType.Info);
 			// iOS
 			EditorGUILayout.LabelField(_iOSLabel, _title);
 

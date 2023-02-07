@@ -3,7 +3,7 @@ using UnityEngine.Scripting;
 namespace Chartboost.Banner
 {
     /// <summary>
-    /// Interface implemented by all Helium banners. 
+    /// Interface implemented by all Chartboost Mediation banners. 
     /// </summary>
     public interface IChartboostMediationBannerAd
     {

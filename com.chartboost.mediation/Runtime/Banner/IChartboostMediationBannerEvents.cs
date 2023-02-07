@@ -9,7 +9,7 @@ namespace Chartboost.Banner
     public interface IChartboostMediationBannerEvents
     {
         /// <summary>
-        /// Called after a banner has been loaded from the Helium API
+        /// Called after a banner has been loaded from the Chartboost Mediation API
         /// servers and cached locally.
         /// </summary>
         [Preserve]
