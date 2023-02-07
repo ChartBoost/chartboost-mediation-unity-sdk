@@ -17,49 +17,26 @@ namespace Helium
     [Obsolete("HeliumSDK has been replaced by ChartboostMediation, and will be removed in future releases.")]
     public class HeliumSDK
     {
-        private static readonly ChartboostMediationExternal _chartboostMediationExternal;
-
-        static HeliumSDK() 
-        {
-            #if UNITY_EDITOR
-            _chartboostMediationExternal = new ChartboostMediationUnsupported();
-            #elif UNITY_ANDROID
-            _chartboostMediationExternal = new ChartboostMediationAndroid();
-            #elif UNITY_IPHONE
-            _chartboostMediationExternal = new ChartboostMediationIOS();
-            #else
-            _chartboostMediationExternal = new ChartboostMediationUnsupported();
-            #endif
-        }
-        
-        ~HeliumSDK()
-        {
-            // Shut down the Chartboost Mediation plugin
-            #if UNITY_ANDROID
-            _chartboostMediationExternal.Destroy();
-            #endif
-        }
-
         #region LifeCycle Callbacks
         /// <inheritdoc cref="IChartboostMediationLifeCycle.DidStart"/>>
         public static event ChartboostMediationEvent DidStart
         {
-            add => _chartboostMediationExternal.DidStart += value;
-            remove => _chartboostMediationExternal.DidStart -= value;
+            add => ChartboostMediation._chartboostMediationExternal.DidStart += value;
+            remove => ChartboostMediation._chartboostMediationExternal.DidStart -= value;
         }
         
         /// <inheritdoc cref="IChartboostMediationLifeCycle.DidReceiveImpressionLevelRevenueData"/>>
         public static event ChartboostMediationILRDEvent DidReceiveImpressionLevelRevenueData
         {
-            add => _chartboostMediationExternal.DidReceiveImpressionLevelRevenueData += value;
-            remove => _chartboostMediationExternal.DidReceiveImpressionLevelRevenueData -= value;
+            add => ChartboostMediation._chartboostMediationExternal.DidReceiveImpressionLevelRevenueData += value;
+            remove => ChartboostMediation._chartboostMediationExternal.DidReceiveImpressionLevelRevenueData -= value;
         }
         
         /// <inheritdoc cref="IChartboostMediationLifeCycle.DidReceivePartnerInitializationData"/>>
         public static event ChartboostMediationPartnerInitializationEvent DidReceivePartnerInitializationData
         {
-            add => _chartboostMediationExternal.DidReceivePartnerInitializationData += value;
-            remove => _chartboostMediationExternal.DidReceivePartnerInitializationData -= value;
+            add => ChartboostMediation._chartboostMediationExternal.DidReceivePartnerInitializationData += value;
+            remove => ChartboostMediation._chartboostMediationExternal.DidReceivePartnerInitializationData -= value;
         }
 
         /// <inheritdoc cref="EventProcessor.UnexpectedSystemErrorDidOccur"/>>
@@ -74,36 +51,36 @@ namespace Helium
         /// <inheritdoc cref="IChartboostMediationInterstitialEvents.DidLoadInterstitial"/>>
         public static event ChartboostMediationPlacementLoadEvent DidLoadInterstitial
         {
-            add => _chartboostMediationExternal.DidLoadInterstitial += value;
-            remove => _chartboostMediationExternal.DidLoadInterstitial -= value;
+            add => ChartboostMediation._chartboostMediationExternal.DidLoadInterstitial += value;
+            remove => ChartboostMediation._chartboostMediationExternal.DidLoadInterstitial -= value;
         }
 
         /// <inheritdoc cref="IChartboostMediationInterstitialEvents.DidShowInterstitial"/>>
         public static event ChartboostMediationPlacementEvent DidShowInterstitial
         {
-            add => _chartboostMediationExternal.DidShowInterstitial += value;
-            remove => _chartboostMediationExternal.DidShowInterstitial -= value;
+            add => ChartboostMediation._chartboostMediationExternal.DidShowInterstitial += value;
+            remove => ChartboostMediation._chartboostMediationExternal.DidShowInterstitial -= value;
         }
         
         /// <inheritdoc cref="IChartboostMediationInterstitialEvents.DidCloseInterstitial"/>>
         public static event ChartboostMediationPlacementEvent DidCloseInterstitial
         {
-            add => _chartboostMediationExternal.DidCloseInterstitial += value;
-            remove => _chartboostMediationExternal.DidCloseInterstitial -= value;
+            add => ChartboostMediation._chartboostMediationExternal.DidCloseInterstitial += value;
+            remove => ChartboostMediation._chartboostMediationExternal.DidCloseInterstitial -= value;
         }
 
         /// <inheritdoc cref="IChartboostMediationInterstitialEvents.DidClickInterstitial"/>>
         public static event ChartboostMediationPlacementEvent DidClickInterstitial
         {
-            add => _chartboostMediationExternal.DidClickInterstitial += value;
-            remove => _chartboostMediationExternal.DidClickInterstitial -= value;
+            add => ChartboostMediation._chartboostMediationExternal.DidClickInterstitial += value;
+            remove => ChartboostMediation._chartboostMediationExternal.DidClickInterstitial -= value;
         }
         
         /// <inheritdoc cref="IChartboostMediationInterstitialEvents.DidRecordImpressionInterstitial"/>>
         public static event ChartboostMediationPlacementEvent DidRecordImpressionInterstitial
         {
-            add => _chartboostMediationExternal.DidRecordImpressionInterstitial += value;
-            remove => _chartboostMediationExternal.DidRecordImpressionInterstitial -= value;
+            add => ChartboostMediation._chartboostMediationExternal.DidRecordImpressionInterstitial += value;
+            remove => ChartboostMediation._chartboostMediationExternal.DidRecordImpressionInterstitial -= value;
         }
         #endregion
 
@@ -111,43 +88,43 @@ namespace Helium
         /// <inheritdoc cref="IChartboostMediationRewardedEvents.DidLoadRewarded"/>>
         public static event ChartboostMediationPlacementLoadEvent DidLoadRewarded
         {
-            add => _chartboostMediationExternal.DidLoadRewarded += value;
-            remove => _chartboostMediationExternal.DidLoadRewarded -= value;
+            add => ChartboostMediation._chartboostMediationExternal.DidLoadRewarded += value;
+            remove => ChartboostMediation._chartboostMediationExternal.DidLoadRewarded -= value;
         }
         
         /// <inheritdoc cref="IChartboostMediationRewardedEvents.DidShowRewarded"/>>
         public static event ChartboostMediationPlacementEvent DidShowRewarded
         {
-            add => _chartboostMediationExternal.DidShowRewarded += value;
-            remove => _chartboostMediationExternal.DidShowRewarded -= value;
+            add => ChartboostMediation._chartboostMediationExternal.DidShowRewarded += value;
+            remove => ChartboostMediation._chartboostMediationExternal.DidShowRewarded -= value;
         }
 
         /// <inheritdoc cref="IChartboostMediationRewardedEvents.DidCloseRewarded"/>>
         public static event ChartboostMediationPlacementEvent DidCloseRewarded
         {
-            add => _chartboostMediationExternal.DidCloseRewarded += value;
-            remove => _chartboostMediationExternal.DidCloseRewarded -= value;
+            add => ChartboostMediation._chartboostMediationExternal.DidCloseRewarded += value;
+            remove => ChartboostMediation._chartboostMediationExternal.DidCloseRewarded -= value;
         }
 
         /// <inheritdoc cref="IChartboostMediationRewardedEvents.DidClickRewarded"/>>
         public static event ChartboostMediationPlacementEvent DidClickRewarded
         {
-            add => _chartboostMediationExternal.DidClickRewarded += value;
-            remove => _chartboostMediationExternal.DidClickRewarded -= value;
+            add => ChartboostMediation._chartboostMediationExternal.DidClickRewarded += value;
+            remove => ChartboostMediation._chartboostMediationExternal.DidClickRewarded -= value;
         }
         
         /// <inheritdoc cref="IChartboostMediationRewardedEvents.DidRecordImpressionRewarded"/>>
         public static event ChartboostMediationPlacementEvent DidRecordImpressionRewarded
         {
-            add => _chartboostMediationExternal.DidRecordImpressionRewarded += value;
-            remove => _chartboostMediationExternal.DidRecordImpressionRewarded -= value;
+            add => ChartboostMediation._chartboostMediationExternal.DidRecordImpressionRewarded += value;
+            remove => ChartboostMediation._chartboostMediationExternal.DidRecordImpressionRewarded -= value;
         }
         
         /// <inheritdoc cref="IChartboostMediationRewardedEvents.DidReceiveReward"/>>
         public static event ChartboostMediationPlacementEvent DidReceiveReward
         {
-            add => _chartboostMediationExternal.DidReceiveReward += value;
-            remove => _chartboostMediationExternal.DidReceiveReward -= value;
+            add => ChartboostMediation._chartboostMediationExternal.DidReceiveReward += value;
+            remove => ChartboostMediation._chartboostMediationExternal.DidReceiveReward -= value;
         }
         #endregion
 
@@ -155,22 +132,22 @@ namespace Helium
         /// <inheritdoc cref="IChartboostMediationBannerEvents.DidLoadBanner"/>>
         public static event ChartboostMediationPlacementLoadEvent DidLoadBanner
         {
-            add => _chartboostMediationExternal.DidLoadBanner += value;
-            remove => _chartboostMediationExternal.DidLoadBanner -= value;
+            add => ChartboostMediation._chartboostMediationExternal.DidLoadBanner += value;
+            remove => ChartboostMediation._chartboostMediationExternal.DidLoadBanner -= value;
         }
 
         /// <inheritdoc cref="IChartboostMediationBannerEvents.DidClickBanner"/>>
         public static event ChartboostMediationPlacementEvent DidClickBanner
         {
-            add => _chartboostMediationExternal.DidClickBanner += value;
-            remove => _chartboostMediationExternal.DidClickBanner -= value;
+            add => ChartboostMediation._chartboostMediationExternal.DidClickBanner += value;
+            remove => ChartboostMediation._chartboostMediationExternal.DidClickBanner -= value;
         }
         
         /// <inheritdoc cref="IChartboostMediationBannerEvents.DidRecordImpressionBanner"/>>
         public static event ChartboostMediationPlacementEvent DidRecordImpressionBanner
         {
-            add => _chartboostMediationExternal.DidRecordImpressionBanner += value;
-            remove => _chartboostMediationExternal.DidRecordImpressionBanner -= value;
+            add => ChartboostMediation._chartboostMediationExternal.DidRecordImpressionBanner += value;
+            remove => ChartboostMediation._chartboostMediationExternal.DidRecordImpressionBanner -= value;
         }
         #endregion
 
@@ -184,7 +161,7 @@ namespace Helium
         /// <param name="placementName">The placement ID for the Chartboost Mediation impression type.</param>
         public static ChartboostMediationInterstitialAd GetInterstitialAd(string placementName)
         {
-            return _chartboostMediationExternal.GetInterstitialAd(placementName);
+            return ChartboostMediation._chartboostMediationExternal.GetInterstitialAd(placementName);
         }
 
         /// <summary>
@@ -193,7 +170,7 @@ namespace Helium
         /// <param name="placementName">The placement ID for the Chartboost Mediation impression type.</param>
         public static ChartboostMediationRewardedAd GetRewardedAd(string placementName)
         {
-            return _chartboostMediationExternal.GetRewardedAd(placementName);
+            return ChartboostMediation._chartboostMediationExternal.GetRewardedAd(placementName);
         }
 
         /// <summary>
@@ -203,28 +180,28 @@ namespace Helium
         /// <param name="size">The banner size</param>
         public static ChartboostMediationBannerAd GetBannerAd(string placementName, ChartboostMediationBannerAdSize size)
         {
-            return _chartboostMediationExternal.GetBannerAd(placementName, size);
+            return ChartboostMediation._chartboostMediationExternal.GetBannerAd(placementName, size);
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Init()
         {
             if (ChartboostMediationSettings.IsAutomaticInitializationEnabled && !ChartboostMediationExternal.IsInitialized)
-                _chartboostMediationExternal.Init();
+                ChartboostMediation._chartboostMediationExternal.Init();
         }
 
         public static void StartWithAppIdAndAppSignature(string appId, string appSignature)
         {
             if (!ChartboostMediationExternal.IsInitialized)
-                _chartboostMediationExternal.InitWithAppIdAndSignature(appId, appSignature);
+                ChartboostMediation._chartboostMediationExternal.InitWithAppIdAndSignature(appId, appSignature);
         }
 
-        public static void SetSubjectToCoppa(bool isSubject) => _chartboostMediationExternal.SetSubjectToCoppa(isSubject);
-        public static void SetSubjectToGDPR(bool isSubject) => _chartboostMediationExternal.SetSubjectToGDPR(isSubject);
-        public static void SetUserHasGivenConsent(bool hasGivenConsent) => _chartboostMediationExternal.SetUserHasGivenConsent(hasGivenConsent);
+        public static void SetSubjectToCoppa(bool isSubject) => ChartboostMediation._chartboostMediationExternal.SetSubjectToCoppa(isSubject);
+        public static void SetSubjectToGDPR(bool isSubject) => ChartboostMediation._chartboostMediationExternal.SetSubjectToGDPR(isSubject);
+        public static void SetUserHasGivenConsent(bool hasGivenConsent) => ChartboostMediation._chartboostMediationExternal.SetUserHasGivenConsent(hasGivenConsent);
         // ReSharper disable once IdentifierTypo
-        public static void SetCCPAConsent(bool hasGivenConsent) => _chartboostMediationExternal.SetCCPAConsent(hasGivenConsent);
-        public static void SetUserIdentifier(string userIdentifier) => _chartboostMediationExternal.SetUserIdentifier(userIdentifier);
-        public static string GetUserIdentifier() => _chartboostMediationExternal.GetUserIdentifier();
+        public static void SetCCPAConsent(bool hasGivenConsent) => ChartboostMediation._chartboostMediationExternal.SetCCPAConsent(hasGivenConsent);
+        public static void SetUserIdentifier(string userIdentifier) => ChartboostMediation._chartboostMediationExternal.SetUserIdentifier(userIdentifier);
+        public static string GetUserIdentifier() => ChartboostMediation._chartboostMediationExternal.GetUserIdentifier();
     }
 }
