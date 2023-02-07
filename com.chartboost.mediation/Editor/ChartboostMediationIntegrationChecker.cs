@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Chartboost.Editor;
 using UnityEditor;
 using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 using ImportOptions = UnityEditor.PackageManager.UI.Sample.ImportOptions;
 
-namespace Editor
+namespace Chartboost.Editor
 {
-    public class HeliumIntegrationChecker
+    public class ChartboostMediationIntegrationChecker
     {
         private const string UnityAds = "UnityAds";
         private const string ChartboostMediation = "Chartboost Mediation";
@@ -56,7 +57,7 @@ namespace Editor
         /// </summary>
         /// <param name="existingSamples">Existing Samples to re-import regardless of the version. Name based</param>
         /// <param name="version">Chartboost Mediation package version to use, must coincide with the currently installed version.</param>
-        public static void ReimportExistingHeliumSamples(ICollection<string> existingSamples, string version)
+        public static void ReimportExistingSampleSet(ICollection<string> existingSamples, string version)
         {
             if (!Directory.Exists(ChartboostMediationSamplesInAssets))
             {
@@ -91,7 +92,7 @@ namespace Editor
         /// Used to attempt to update all existing Ad Adapters without extra input. Good for CI/CD usage and update of Adapters.
         /// </summary>
         /// <returns>Update attempt status</returns>
-        public static bool ReimportExistingAdapters()
+        public static bool ReimportAllExistingAdapters()
         {
             var chartboostMediation = FindPackage(ChartboostMediationPackageName);
 
@@ -111,7 +112,7 @@ namespace Editor
                 importedDependencies.Add(sampleName);
             }
 
-            ReimportExistingHeliumSamples(importedDependencies, chartboostMediation.version);
+            ReimportExistingSampleSet(importedDependencies, chartboostMediation.version);
             return true;
         }
 
@@ -212,7 +213,7 @@ namespace Editor
                 "Attempting to force reimport all existing adapters.\n\nIs this intentional?", "Yes", "No");
 
             if (confirmUpdate)
-                ReimportExistingAdapters();
+                ReimportAllExistingAdapters();
             CheckUnityAdsIntegration();
             AssetDatabase.Refresh();
         }
@@ -221,7 +222,7 @@ namespace Editor
         /// Used to detect and address general Chartboost Mediation Integration issues
         /// </summary>
         [MenuItem("Chartboost Mediation/Integration/Status Check", false, 0)]
-        public static void CheckHeliumIntegration()
+        public static void CheckIntegration()
         {
             var chartboostMediation = FindPackage(ChartboostMediationPackageName);
 
@@ -313,7 +314,7 @@ namespace Editor
                             "Yes", "No");
 
                         if (dialogInput)
-                            ReimportExistingHeliumSamples(importedDependencies, chartboostMediation.version);
+                            ReimportExistingSampleSet(importedDependencies, chartboostMediation.version);
                     }
                     else if (versionInAssets > versionInPackage)
                     {
@@ -323,7 +324,7 @@ namespace Editor
                             "Yes", "No");
 
                         if (dialogInput)
-                            ReimportExistingHeliumSamples(importedDependencies, chartboostMediation.version);
+                            ReimportExistingSampleSet(importedDependencies, chartboostMediation.version);
                     }
 
                     // check for Unity Ads integration
@@ -352,5 +353,25 @@ namespace Editor
         {
             Debug.LogFormat(LogType.Log, LogOption.NoStacktrace, null, $"<color='{color}'>{message}</color>");
         }
+    }
+}
+
+namespace Helium.Editor
+{
+    [Obsolete("HeliumIntegrationChecker has been replaced with ChartboostMediationIntegrationChecker, and will be removed in future releases.")]
+    public class HeliumIntegrationChecker
+    {
+        public static PackageInfo FindPackage(string packageName) => ChartboostMediationIntegrationChecker.FindPackage(packageName);
+        public static bool ImportSample(string sampleName, string version) => ChartboostMediationIntegrationChecker.ImportSample(sampleName, version);
+        
+        [Obsolete("ReimportExistingHeliumSamples has been deprecated, use ReimportExistingSamplesSet instead.")]
+        public static void ReimportExistingHeliumSamples(ICollection<string> existingSamples, string version) => ChartboostMediationIntegrationChecker.ReimportExistingSampleSet(existingSamples, version);
+        
+        [Obsolete("ReimportExistingAdapters has been deprecated, use ReimportAllExistingAdapters instead.")]
+        public static bool ReimportExistingAdapters() => ChartboostMediationIntegrationChecker.ReimportAllExistingAdapters();
+        public static void UncommentUnityAdsDependency(bool skipDialog = false) => ChartboostMediationIntegrationChecker.UncommentUnityAdsDependency(skipDialog);
+        public static void CheckUnityAdsIntegration() => ChartboostMediationIntegrationChecker.CheckUnityAdsIntegration();
+        public static void ForceReimportExistingAdapters() => ChartboostMediationIntegrationChecker.ForceReimportExistingAdapters();
+        public static void CheckIntegration() => ChartboostMediationIntegrationChecker.CheckIntegration();
     }
 }

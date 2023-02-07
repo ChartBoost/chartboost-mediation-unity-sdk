@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Chartboost;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEditor;
@@ -16,12 +15,13 @@ using UnityEngine.Networking;
 // ReSharper disable IdentifierTypo
 // ReSharper disable CommentTypo
 
-namespace Helium.Editor
+// ReSharper disable once CheckNamespace
+namespace Chartboost.Editor
 {
     /// <summary>
     /// Adds the SKAdNetwork Ids to the app's Info.plist
     /// </summary>
-    public class HeliumSKAdNetworkIds
+    public class ChartboostMediationSKAdNetworkIds
     {
         [PostProcessBuild]
         public static void PostProcess(BuildTarget buildTarget, string pathToBuiltProject)
