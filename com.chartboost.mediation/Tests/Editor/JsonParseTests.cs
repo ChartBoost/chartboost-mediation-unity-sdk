@@ -1,15 +1,14 @@
 using NUnit.Framework;
 using UnityEngine;
 using System.IO;
+using Chartboost;
 
-namespace Helium
+namespace Chartboost
 {
     /// <summary>
     /// This suite of tests is intended to directly validate the parsing of JSON
     /// (or alleged JSON) using whatever parser is provided by the SDK.
-    ///
-    /// Today, the parser is `JsonTools.HeliumJSON` in the file `JsonTools.cs`.
-    ///
+    /// 
     /// The suite uses the JSON text files in the directory Tests/TestJSON
     /// which were borrowed from this Github repository: https://github.com/nst/JSONTestSuite.
     /// Each file is prepended with single character, meaning:
@@ -83,7 +82,7 @@ namespace Helium
                 var json = reader.ReadToEnd();
                 reader.Close();
 
-                var rawResult = HeliumJson.Deserialize(json);
+                var rawResult = JsonTools.Deserialize(json);
                 switch (acceptance)
                 {
                     case Acceptance.Optional:

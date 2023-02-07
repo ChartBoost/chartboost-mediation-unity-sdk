@@ -3,10 +3,10 @@ using System.Collections;
 using System.IO;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using Helium;
-using Helium.Banner;
-using Helium.FullScreen.Interstitial;
-using Helium.FullScreen.Rewarded;
+using Chartboost;
+using Chartboost.Banner;
+using Chartboost.FullScreen.Interstitial;
+using Chartboost.FullScreen.Rewarded;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
@@ -35,17 +35,17 @@ public class Demo : MonoBehaviour
 
     // interstitial controls
     public InputField interstitialPlacementInputField;
-    private HeliumInterstitialAd _interstitialAd;
+    private ChartboostMediationInterstitialAd _interstitialAd;
 
     // rewarded controls
     public InputField rewardedPlacementInputField;
-    private HeliumRewardedAd _rewardedAd;
+    private ChartboostMediationRewardedAd _rewardedAd;
 
     // banner controls
     public InputField bannerPlacementInputField;
     public Dropdown bannerSizeDropdown;
     public Dropdown bannerLocationDropdown;
-    private HeliumBannerAd _bannerAd;
+    private ChartboostMediationBannerAd _bannerAd;
     private bool _bannerAdIsVisible;
 
     public ScrollRect outputTextScrollRect;
@@ -58,10 +58,10 @@ public class Demo : MonoBehaviour
     private void Awake()
     {
         Application.targetFrameRate = 60;
-        HeliumSDK.DidStart += DidStartHelium;
-        HeliumSDK.DidReceivePartnerInitializationData += DidReceivePartnerInitializationData;
-        HeliumSDK.DidReceiveImpressionLevelRevenueData += DidReceiveImpressionLevelRevenueData;
-        HeliumSDK.UnexpectedSystemErrorDidOccur += UnexpectedSystemErrorDidOccur;
+        ChartboostMediation.DidStart += DidStart;
+        ChartboostMediation.DidReceivePartnerInitializationData += DidReceivePartnerInitializationData;
+        ChartboostMediation.DidReceiveImpressionLevelRevenueData += DidReceiveImpressionLevelRevenueData;
+        ChartboostMediation.UnexpectedSystemErrorDidOccur += UnexpectedSystemErrorDidOccur;
         SetupInterstitialDelegates();
         SetupRewardedDelegates();
         SetupBannerDelegates();
@@ -78,7 +78,7 @@ public class Demo : MonoBehaviour
         rewardedPlacementInputField.SetTextWithoutNotify(DefaultPlacementRewarded);
         bannerPlacementInputField.SetTextWithoutNotify(DefaultPlacementBanner);
 
-        HeliumSDK.StartWithAppIdAndAppSignature(AppID, AppSIG);
+        ChartboostMediation.StartWithAppIdAndAppSignature(AppID, AppSIG);
     }
 
     private void OnDestroy()
@@ -103,20 +103,20 @@ public class Demo : MonoBehaviour
         }
     }
 
-    private void DidStartHelium(string error)
+    private void DidStart(string error)
     {
         Log($"DidStart: {error}");
-        HeliumSDK.SetUserIdentifier(DefaultUserIdentifier);
+        ChartboostMediation.SetUserIdentifier(DefaultUserIdentifier);
 
         if (error != null) return;
-        HeliumSDK.SetSubjectToGDPR(false);
-        HeliumSDK.SetSubjectToCoppa(false);
-        HeliumSDK.SetUserHasGivenConsent(true);
+        ChartboostMediation.SetSubjectToGDPR(false);
+        ChartboostMediation.SetSubjectToCoppa(false);
+        ChartboostMediation.SetUserHasGivenConsent(true);
     }
 
     private void DidReceiveImpressionLevelRevenueData(string placement, Hashtable impressionData)
     {
-        var json =  HeliumJson.Serialize(impressionData);
+        var json =  JsonTools.Serialize(impressionData);
         Log($"DidReceiveImpressionLevelRevenueData {placement}: {JsonPrettify(json)}");
     }
 
@@ -143,16 +143,16 @@ public class Demo : MonoBehaviour
 
     private void SetupInterstitialDelegates()
     {
-        HeliumSDK.DidLoadInterstitial += DidLoadInterstitial;
-        HeliumSDK.DidShowInterstitial += DidShowInterstitial;
-        HeliumSDK.DidCloseInterstitial += DidCloseInterstitial;
-        HeliumSDK.DidClickInterstitial += DidClickInterstitial;
-        HeliumSDK.DidRecordImpressionInterstitial += DidRecordImpressionInterstitial;
+        ChartboostMediation.DidLoadInterstitial += DidLoadInterstitial;
+        ChartboostMediation.DidShowInterstitial += DidShowInterstitial;
+        ChartboostMediation.DidCloseInterstitial += DidCloseInterstitial;
+        ChartboostMediation.DidClickInterstitial += DidClickInterstitial;
+        ChartboostMediation.DidRecordImpressionInterstitial += DidRecordImpressionInterstitial;
     }
 
     public void OnCacheInterstitialClick()
     {
-        _interstitialAd = HeliumSDK.GetInterstitialAd(interstitialPlacementInputField.text);
+        _interstitialAd = ChartboostMediation.GetInterstitialAd(interstitialPlacementInputField.text);
 
         if (_interstitialAd == null)
         {
@@ -193,7 +193,7 @@ public class Demo : MonoBehaviour
             _interstitialAd.Show();
     }
 
-    private void DidLoadInterstitial(string placementName, string loadId, HeliumBidInfo info, string error) 
+    private void DidLoadInterstitial(string placementName, string loadId, BidInfo info, string error) 
         => Log($"DidLoadInterstitial {placementName}: \nLoadId: ${loadId} \nPrice: ${info.Price:F4} \nAuction Id: {info.AuctionId} \nPartner Id: {info.PartnerId} \nError: {error}");
 
     private  void DidShowInterstitial(string placementName, string error) 
@@ -213,17 +213,17 @@ public class Demo : MonoBehaviour
 
     private void SetupRewardedDelegates()
     {
-        HeliumSDK.DidLoadRewarded += DidLoadRewarded;
-        HeliumSDK.DidShowRewarded += DidShowRewarded;
-        HeliumSDK.DidCloseRewarded += DidCloseRewarded;
-        HeliumSDK.DidReceiveReward += DidReceiveReward;
-        HeliumSDK.DidClickRewarded += DidClickRewarded;
-        HeliumSDK.DidRecordImpressionRewarded += DidRecordImpressionRewarded;
+        ChartboostMediation.DidLoadRewarded += DidLoadRewarded;
+        ChartboostMediation.DidShowRewarded += DidShowRewarded;
+        ChartboostMediation.DidCloseRewarded += DidCloseRewarded;
+        ChartboostMediation.DidReceiveReward += DidReceiveReward;
+        ChartboostMediation.DidClickRewarded += DidClickRewarded;
+        ChartboostMediation.DidRecordImpressionRewarded += DidRecordImpressionRewarded;
     }
 
     public void OnCacheRewardedClick()
     {
-        _rewardedAd = HeliumSDK.GetRewardedAd(rewardedPlacementInputField.text);
+        _rewardedAd = ChartboostMediation.GetRewardedAd(rewardedPlacementInputField.text);
         
         if (_rewardedAd == null)
         {
@@ -268,7 +268,7 @@ public class Demo : MonoBehaviour
             _rewardedAd.Show();
     }
 
-    private void DidLoadRewarded(string placementName, string loadId, HeliumBidInfo info, string error)
+    private void DidLoadRewarded(string placementName, string loadId, BidInfo info, string error)
         => Log($"DidLoadRewarded {placementName} \nLoadId: ${loadId} \nPrice: ${info.Price:F4} \nAuction Id: {info.AuctionId} \nPartner Id: {info.PartnerId} \nError: {error}");
 
     private void DidShowRewarded(string placementName, string error) 
@@ -290,24 +290,24 @@ public class Demo : MonoBehaviour
     #region Banners
     private void SetupBannerDelegates()
     {
-        HeliumSDK.DidLoadBanner += DidLoadBanner;
-        HeliumSDK.DidClickBanner += DidClickBanner;
-        HeliumSDK.DidRecordImpressionBanner += DidRecordImpressionBanner;
+        ChartboostMediation.DidLoadBanner += DidLoadBanner;
+        ChartboostMediation.DidClickBanner += DidClickBanner;
+        ChartboostMediation.DidRecordImpressionBanner += DidRecordImpressionBanner;
     }
 
     public void OnCreateBannerClick()
     {
         var size = bannerSizeDropdown.value switch
         {
-            2 => HeliumBannerAdSize.Leaderboard,
-            1 => HeliumBannerAdSize.MediumRect,
-            _ => HeliumBannerAdSize.Standard
+            2 => ChartboostMediationBannerAdSize.Leaderboard,
+            1 => ChartboostMediationBannerAdSize.MediumRect,
+            _ => ChartboostMediationBannerAdSize.Standard
         };
 
         _bannerAd?.Remove();
 
         Log("Creating banner on placement: " + bannerPlacementInputField.text + " with size: " + size);
-        _bannerAd = HeliumSDK.GetBannerAd(bannerPlacementInputField.text, size);
+        _bannerAd = ChartboostMediation.GetBannerAd(bannerPlacementInputField.text, size);
         
         if (_bannerAd == null)
         {
@@ -328,14 +328,14 @@ public class Demo : MonoBehaviour
         _bannerAd.SetKeyword("bnr_keyword6", "bnr_value6_replaced"); // accepted replace
         var screenPos = bannerLocationDropdown.value switch
         {
-            0 => HeliumBannerAdScreenLocation.TopLeft,
-            1 => HeliumBannerAdScreenLocation.TopCenter,
-            2 => HeliumBannerAdScreenLocation.TopRight,
-            3 => HeliumBannerAdScreenLocation.Center,
-            4 => HeliumBannerAdScreenLocation.BottomLeft,
-            5 => HeliumBannerAdScreenLocation.BottomCenter,
-            6 => HeliumBannerAdScreenLocation.BottomRight,
-            _ => HeliumBannerAdScreenLocation.TopCenter
+            0 => ChartboostMediationBannerAdScreenLocation.TopLeft,
+            1 => ChartboostMediationBannerAdScreenLocation.TopCenter,
+            2 => ChartboostMediationBannerAdScreenLocation.TopRight,
+            3 => ChartboostMediationBannerAdScreenLocation.Center,
+            4 => ChartboostMediationBannerAdScreenLocation.BottomLeft,
+            5 => ChartboostMediationBannerAdScreenLocation.BottomCenter,
+            6 => ChartboostMediationBannerAdScreenLocation.BottomRight,
+            _ => ChartboostMediationBannerAdScreenLocation.TopCenter
         };
         _bannerAd.Load(screenPos);
     }
@@ -368,7 +368,7 @@ public class Demo : MonoBehaviour
         Log("Banner Visibility Toggled");
     }
 
-    private void DidLoadBanner(string placementName, string loadId, HeliumBidInfo info, string error)
+    private void DidLoadBanner(string placementName, string loadId, BidInfo info, string error)
     {
         _bannerAdIsVisible = true;
         Log($"DidLoadBanner{placementName}: \nLoadId: ${loadId} \nPrice: ${info.Price:F4} \nAuction Id: {info.AuctionId} \nPartner Id: {info.PartnerId} \nError: {error}");

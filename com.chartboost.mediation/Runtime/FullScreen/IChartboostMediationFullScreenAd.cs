@@ -1,11 +1,11 @@
 using UnityEngine.Scripting;
 
-namespace Helium.FullScreen
+namespace Chartboost.FullScreen
 {
     /// <summary>
-    /// Interface implemented by Helium fullscreen ads. 
+    /// Interface implemented by Chartboost Mediation fullscreen ads. 
     /// </summary>
-    public interface IHeliumFullScreenAd
+    public interface IChartboostMediationFullScreenAd
     {
         /// <summary>
         /// Load the advertisement.

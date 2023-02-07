@@ -1,6 +1,6 @@
 {
     "name": "com.chartboost.mediation.Editor",
-    "rootNamespace": "",
+    "rootNamespace": "Chartboost",
     "references": [
         "GUID:1fa23cf67f36740369216fe6b6716e5a"
     ],

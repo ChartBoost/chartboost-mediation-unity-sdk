@@ -1,14 +1,13 @@
 #if UNITY_IPHONE
 using System.Runtime.InteropServices;
 using AOT;
-using Chartboost;
 using UnityEngine;
 // ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo
 
-namespace Helium.Platforms
+namespace Chartboost.Platforms
 {
-    public sealed class HeliumIOS : HeliumExternal
+    public sealed class ChartboostMediationIOS : ChartboostMediationExternal
     {
         #region Objective-C Extern Members
         // callback definitions for objective-c layer
@@ -57,13 +56,13 @@ namespace Helium.Platforms
         private static extern string _heliumGetUserIdentifier();
         #endregion
 
-        #region Helium
-        private static HeliumIOS _instance;
+        #region Chartboost Mediation
+        private static ChartboostMediationIOS _instance;
 
-        public HeliumIOS()
+        public ChartboostMediationIOS()
         {
             _instance = this;
-            LogTag = "Helium(iOS)";
+            LogTag = "ChartboostMediation(iOS)";
             _setLifeCycleCallbacks(ExternDidStart, 
                 ExternDidReceiveILRD, 
                 ExternDidReceivePartnerInitializationData);
@@ -142,97 +141,97 @@ namespace Helium.Platforms
         #region LifeCycle Callbacks
         [MonoPInvokeCallback(typeof(ExternHeliumEvent))]
         private static void ExternDidStart(string error) 
-            => HeliumEventProcessor.ProcessHeliumEvent(error, _instance.DidStart);
+            => EventProcessor.ProcessChartboostMediationEvent(error, _instance.DidStart);
 
         [MonoPInvokeCallback(typeof(ExternHeliumILRDEvent))]
         private static void ExternDidReceiveILRD(string impressionDataJson) 
-            => HeliumEventProcessor.ProcessEventWithILRD(impressionDataJson, _instance.DidReceiveImpressionLevelRevenueData);
+            => EventProcessor.ProcessEventWithILRD(impressionDataJson, _instance.DidReceiveImpressionLevelRevenueData);
 
         [MonoPInvokeCallback(typeof(ExternHeliumPartnerInitializationDataEvent))]
         private static void ExternDidReceivePartnerInitializationData(string partnerInitializationData) 
-            => HeliumEventProcessor.ProcessEventWithPartnerInitializationData(partnerInitializationData, _instance.DidReceivePartnerInitializationData);
+            => EventProcessor.ProcessEventWithPartnerInitializationData(partnerInitializationData, _instance.DidReceivePartnerInitializationData);
 
-        public override event HeliumEvent DidStart;
-        public override event HeliumILRDEvent DidReceiveImpressionLevelRevenueData;
-        public override event HeliumPartnerInitializationEvent DidReceivePartnerInitializationData;
+        public override event ChartboostMediationEvent DidStart;
+        public override event ChartboostMediationILRDEvent DidReceiveImpressionLevelRevenueData;
+        public override event ChartboostMediationPartnerInitializationEvent DidReceivePartnerInitializationData;
         #endregion
 
         #region Interstitial Callbacks
         [MonoPInvokeCallback(typeof(ExternHeliumPlacementLoadEvent))]
         private static void ExternDidLoadInterstitial(string placementName, string loadId, string auctionId, string partnerId, double price, string error)
-            => HeliumEventProcessor.ProcessHeliumLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadInterstitial);
+            => EventProcessor.ProcessChartboostMediationLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadInterstitial);
 
         [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
         private static void ExternDidShowInterstitial(string placementName, string error) 
-            => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidShowInterstitial);
+            => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidShowInterstitial);
 
         [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
         private static void ExternDidCloseInterstitial(string placementName, string error) 
-            => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidCloseInterstitial);
+            => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidCloseInterstitial);
 
         [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
         private static void ExternDidClickInterstitial(string placementName, string error) 
-            => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidClickInterstitial);
+            => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidClickInterstitial);
 
         [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
         private static void ExternDidRecordImpressionInterstitial(string placementName, string error)
-            => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidRecordImpressionInterstitial);
+            => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidRecordImpressionInterstitial);
         
-        public override event HeliumPlacementLoadEvent DidLoadInterstitial;
-        public override event HeliumPlacementEvent DidShowInterstitial;
-        public override event HeliumPlacementEvent DidCloseInterstitial;
-        public override event HeliumPlacementEvent DidClickInterstitial;
-        public override event HeliumPlacementEvent DidRecordImpressionInterstitial;
+        public override event ChartboostMediationPlacementLoadEvent DidLoadInterstitial;
+        public override event ChartboostMediationPlacementEvent DidShowInterstitial;
+        public override event ChartboostMediationPlacementEvent DidCloseInterstitial;
+        public override event ChartboostMediationPlacementEvent DidClickInterstitial;
+        public override event ChartboostMediationPlacementEvent DidRecordImpressionInterstitial;
         #endregion
 
         #region Rewarded Callbacks
         [MonoPInvokeCallback(typeof(ExternHeliumPlacementLoadEvent))]
         private static void ExternDidLoadRewarded(string placementName, string loadId, string auctionId, string partnerId, double price, string error) 
-            => HeliumEventProcessor.ProcessHeliumLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadRewarded);
+            => EventProcessor.ProcessChartboostMediationLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadRewarded);
 
         [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
         private static void ExternDidShowRewarded(string placementName, string error) 
-            => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidShowRewarded);
+            => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidShowRewarded);
 
         [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
         private static void ExternDidCloseRewarded(string placementName, string error) 
-            => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidCloseRewarded);
+            => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidCloseRewarded);
         
         [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
         private static void ExternDidClickRewarded(string placementName, string error) 
-            => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidClickRewarded);
+            => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidClickRewarded);
 
         [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
         private static void ExternDidRecordImpressionRewarded(string placementName, string error)
-            => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidRecordImpressionRewarded);
+            => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidRecordImpressionRewarded);
 
         [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
         private static void ExternDidReceiveReward(string placementName, string error) 
-            => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidReceiveReward);
-        public override event HeliumPlacementLoadEvent DidLoadRewarded;
-        public override event HeliumPlacementEvent DidShowRewarded;
-        public override event HeliumPlacementEvent DidCloseRewarded;
-        public override event HeliumPlacementEvent DidClickRewarded;
-        public override event HeliumPlacementEvent DidRecordImpressionRewarded;
-        public override event HeliumPlacementEvent DidReceiveReward;
+            => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidReceiveReward);
+        public override event ChartboostMediationPlacementLoadEvent DidLoadRewarded;
+        public override event ChartboostMediationPlacementEvent DidShowRewarded;
+        public override event ChartboostMediationPlacementEvent DidCloseRewarded;
+        public override event ChartboostMediationPlacementEvent DidClickRewarded;
+        public override event ChartboostMediationPlacementEvent DidRecordImpressionRewarded;
+        public override event ChartboostMediationPlacementEvent DidReceiveReward;
         #endregion
 
         #region Banner Callbacks
         [MonoPInvokeCallback(typeof(ExternHeliumPlacementLoadEvent))]
         private static void ExternDidLoadBanner(string placementName, string loadId, string auctionId, string partnerId, double price, string error) 
-            => HeliumEventProcessor.ProcessHeliumLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadBanner);
+            => EventProcessor.ProcessChartboostMediationLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadBanner);
 
         [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
         private static void ExternDidClickBanner(string placementName, string error) 
-            => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, error, _instance.DidClickBanner);
+            => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidClickBanner);
         
         [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
         private static void ExternDidRecordImpressionBanner(string placementName, string error) 
-            => HeliumEventProcessor.ProcessHeliumPlacementEvent(placementName, error,  _instance.DidRecordImpressionBanner);
+            => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error,  _instance.DidRecordImpressionBanner);
 
-        public override event HeliumPlacementLoadEvent DidLoadBanner;
-        public override event HeliumPlacementEvent DidClickBanner;
-        public override event HeliumPlacementEvent DidRecordImpressionBanner;
+        public override event ChartboostMediationPlacementLoadEvent DidLoadBanner;
+        public override event ChartboostMediationPlacementEvent DidClickBanner;
+        public override event ChartboostMediationPlacementEvent DidRecordImpressionBanner;
         #endregion
     }
 }

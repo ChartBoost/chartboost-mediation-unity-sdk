@@ -5,9 +5,9 @@ using System.Threading;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo
-namespace Helium
+namespace Chartboost
 {
-    public static class HeliumEventProcessor
+    public static class EventProcessor
     {
         private static SynchronizationContext _context;
         
@@ -15,17 +15,17 @@ namespace Helium
         /// Called when an unexpected system error occurred.
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        public static event HeliumEvent UnexpectedSystemErrorDidOccur;
+        public static event ChartboostMediationEvent UnexpectedSystemErrorDidOccur;
 
         /// <summary>
-        /// Initializes Helium Event Processor, must be called from main thread.
+        /// Initializes Chartboost Mediation Event Processor, must be called from main thread.
         /// </summary>
         internal static void Initialize()
         {
             _context = SynchronizationContext.Current;
         }
 
-        public static void ProcessEventWithILRD(string dataString, HeliumILRDEvent ilrdEvent)
+        public static void ProcessEventWithILRD(string dataString, ChartboostMediationILRDEvent ilrdEvent)
         {
             if (ilrdEvent == null)
                 return;
@@ -34,7 +34,7 @@ namespace Helium
             {
                 try
                 {
-                    if (!(HeliumJson.Deserialize(dataString) is Dictionary<object, object> data)) 
+                    if (!(JsonTools.Deserialize(dataString) is Dictionary<object, object> data)) 
                         return;
                     
                     data.TryGetValue("placementName", out var placementName);
@@ -47,7 +47,7 @@ namespace Helium
             }, null);
         }
 
-        public static void ProcessEventWithPartnerInitializationData(string dataString, HeliumPartnerInitializationEvent partnerInitializationEvent)
+        public static void ProcessEventWithPartnerInitializationData(string dataString, ChartboostMediationPartnerInitializationEvent partnerInitializationEvent)
         {
             if (partnerInitializationEvent == null)
                 return;
@@ -65,16 +65,16 @@ namespace Helium
             }, null);
         }
 
-        public static void ProcessHeliumEvent(string error, HeliumEvent heliumEvent)
+        public static void ProcessChartboostMediationEvent(string error, ChartboostMediationEvent chartboostMediationEvent)
         {
-            if (heliumEvent == null)
+            if (chartboostMediationEvent == null)
                 return;
             
             _context.Post(o =>
             {
                 try
                 {
-                    heliumEvent(error);
+                    chartboostMediationEvent(error);
                 }
                 catch (Exception e)
                 {
@@ -82,7 +82,7 @@ namespace Helium
                 }
             }, null);
         }
-        public static void ProcessHeliumPlacementEvent(string placementName, string error, HeliumPlacementEvent placementEvent)
+        public static void ProcessChartboostMediationPlacementEvent(string placementName, string error, ChartboostMediationPlacementEvent placementEvent)
         {
             if (placementEvent == null)
                 return;
@@ -100,7 +100,7 @@ namespace Helium
             }, null);
         }
 
-        public static void ProcessHeliumLoadEvent(string placementName, string loadId, string auctionId, string partnerId, double price, string error, HeliumPlacementLoadEvent bidEvent)
+        public static void ProcessChartboostMediationLoadEvent(string placementName, string loadId, string auctionId, string partnerId, double price, string error, ChartboostMediationPlacementLoadEvent bidEvent)
         {
             if (bidEvent == null)
                 return;
@@ -109,7 +109,7 @@ namespace Helium
             {
                 try
                 {
-                    var bidInfo = new HeliumBidInfo(auctionId, partnerId, price);
+                    var bidInfo = new BidInfo(auctionId, partnerId, price);
                     bidEvent(placementName, loadId, bidInfo, error);
                 }
                 catch (Exception e)

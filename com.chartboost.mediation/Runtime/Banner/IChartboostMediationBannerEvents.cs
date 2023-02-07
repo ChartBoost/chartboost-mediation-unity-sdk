@@ -1,32 +1,32 @@
 // ReSharper disable InconsistentNaming
 using UnityEngine.Scripting;
 
-namespace Helium.Banner
+namespace Chartboost.Banner
 {
     /// <summary>
     /// All Banner placement callbacks.
     /// </summary>
-    public interface IBannerEvents
+    public interface IChartboostMediationBannerEvents
     {
         /// <summary>
-        /// Called after a banner has been loaded from the Helium API
+        /// Called after a banner has been loaded from the Chartboost Mediation API
         /// servers and cached locally.
         /// </summary>
         [Preserve]
-        public event HeliumPlacementLoadEvent DidLoadBanner;
+        public event ChartboostMediationPlacementLoadEvent DidLoadBanner;
 
         /// <summary>
         /// Called after a banner ad has been clicked.
         /// Implement to be notified of when a banner ad has been clicked for a given placement
         /// </summary>
         [Preserve]
-        public event HeliumPlacementEvent DidClickBanner;
+        public event ChartboostMediationPlacementEvent DidClickBanner;
 
         /// <summary>
         /// Determines an ad visibility on the screen.
         /// Implement to be notified of when a banner ad has been become visible on the screen.
         /// </summary>
         [Preserve]
-        public event HeliumPlacementEvent DidRecordImpressionBanner;
+        public event ChartboostMediationPlacementEvent DidRecordImpressionBanner;
     }
 }

@@ -1,12 +1,12 @@
-namespace Helium.Platforms
+namespace Chartboost.Platforms
 {
-    public class HeliumUnsupported : HeliumExternal
+    public class ChartboostMediationUnsupported : ChartboostMediationExternal
     {
         private static string _userIdentifier;
         
-        public HeliumUnsupported()
+        public ChartboostMediationUnsupported()
         {
-            LogTag = "Helium(Unsupported)";
+            LogTag = "ChartboostMediation (Unsupported)";
         }
 
         public override void Init()

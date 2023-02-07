@@ -1,65 +1,65 @@
 #if UNITY_ANDROID
-using Helium.Platforms;
+using Chartboost.Platforms;
 using UnityEngine;
 
-namespace Helium.FullScreen.Interstitial
+namespace Chartboost.FullScreen.Interstitial
 {
     /// <summary>
-    /// Helium interstitial object for Android.
+    /// ChartboostMediation interstitial object for Android.
     /// </summary>
-    public class HeliumInterstitialAndroid : HeliumFullScreenBase
+    public class ChartboostMediationInterstitialAndroid : ChartboostMediationFullScreenBase
     {
         private readonly AndroidJavaObject _androidAd;
 
-        public HeliumInterstitialAndroid(string placementName) : base(placementName)
+        public ChartboostMediationInterstitialAndroid(string placementName) : base(placementName)
         {
-            LogTag = "HeliumInterstitial (Android)";
-            _androidAd = HeliumAndroid.plugin().Call<AndroidJavaObject>("getInterstitialAd", placementName);
+            LogTag = "ChartboostMediationInterstitial (Android)";
+            _androidAd = ChartboostMediationAndroid.plugin().Call<AndroidJavaObject>("getInterstitialAd", placementName);
         }
 
-        /// <inheritdoc cref="HeliumFullScreenBase.SetKeyword"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBase.SetKeyword"/>>
         public override bool SetKeyword(string keyword, string value)
         {
             base.SetKeyword(keyword, value);
             return _androidAd.Call<bool>("setKeyword", keyword, value);
         }
 
-        /// <inheritdoc cref="HeliumFullScreenBase.RemoveKeyword"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBase.RemoveKeyword"/>>
         public override string RemoveKeyword(string keyword)
         {
             base.RemoveKeyword(keyword);
             return _androidAd.Call<string>("removeKeyword", keyword);
         }
 
-        /// <inheritdoc cref="HeliumFullScreenBase.Destroy"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBase.Destroy"/>>
         public override void Destroy()
         {
             base.Destroy();
             _androidAd.Call("destroy");
         }
 
-        /// <inheritdoc cref="HeliumFullScreenBase.Load"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBase.Load"/>>
         public override void Load()
         {
             base.Load();
             _androidAd.Call("load");
         }
 
-        /// <inheritdoc cref="HeliumFullScreenBase.Show"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBase.Show"/>>
         public override void Show()
         {
             base.Show();
             _androidAd.Call("show");
         }
 
-        /// <inheritdoc cref="HeliumFullScreenBase.ReadyToShow"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBase.ReadyToShow"/>>
         public override bool ReadyToShow()
         {
             base.ReadyToShow();
             return _androidAd.Call<bool>("readyToShow");
         }
 
-        /// <inheritdoc cref="HeliumFullScreenBase.ClearLoaded"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBase.ClearLoaded"/>>
         public override void ClearLoaded()
         {
             base.ClearLoaded();
