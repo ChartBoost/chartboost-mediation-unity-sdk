@@ -2,7 +2,7 @@
 <dependencies>
     <androidPackages>
         <!-- Helium Tapjoy Adapter -->
-        <androidPackage spec="com.chartboost:helium-adapter-tapjoy:4.12.9.1+@aar" />
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-tapjoy:4.12.9.1+@aar" />
 
         <!-- Tapjoy Android SDK -->
         <repositories>

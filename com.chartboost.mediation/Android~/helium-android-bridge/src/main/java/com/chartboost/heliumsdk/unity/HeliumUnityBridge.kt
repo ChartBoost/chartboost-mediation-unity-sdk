@@ -4,7 +4,7 @@ import android.util.Log
 import com.chartboost.heliumsdk.*
 import com.chartboost.heliumsdk.ad.*
 import com.chartboost.heliumsdk.ad.HeliumBannerAd.HeliumBannerSize
-import com.chartboost.heliumsdk.domain.HeliumAdException
+import com.chartboost.heliumsdk.domain.ChartboostMediationAdException
 import com.chartboost.heliumsdk.unity.HeliumEventProcessor.HeliumLoadEventConsumer
 import com.chartboost.heliumsdk.unity.HeliumEventProcessor.HeliumEventConsumerWithError
 import com.chartboost.heliumsdk.unity.HeliumEventProcessor.HeliumEventConsumer
@@ -108,22 +108,22 @@ class HeliumUnityBridge {
 
     fun getInterstitialAd(placementName: String): HeliumUnityAdWrapper {
         val interstitialAd = HeliumInterstitialAd(UnityPlayer.currentActivity, placementName, object : HeliumFullscreenAdListener {
-            override fun onAdCached(placementName: String, loadId: String, bidInfo: Map<String, String>, error: HeliumAdException?) {
-                serializeHeliumLoadEvent(placementName, loadId, bidInfo, error,
+            override fun onAdCached(placementName: String, loadId: String, winningBidInfo: Map<String, String>, error: ChartboostMediationAdException?) {
+                serializeHeliumLoadEvent(placementName, loadId, winningBidInfo, error,
                     HeliumLoadEventConsumer { placementName: String, loadId: String, auctionId: String, partnerId: String, price: Double, error: String ->
                         interstitialEventsListener?.DidLoadInterstitial(placementName, loadId, auctionId, partnerId, price, error)
                     }
                 )
             }
 
-            override fun onAdShown(placementName: String, error: HeliumAdException?) {
+            override fun onAdShown(placementName: String, error: ChartboostMediationAdException?) {
                 serializeHeliumEventWithError(placementName, error,
                     HeliumEventConsumerWithError { placementName: String, error: String ->
                         interstitialEventsListener?.DidShowInterstitial(placementName, error)
                     })
             }
 
-            override fun onAdClosed(placementName: String, error: HeliumAdException?) {
+            override fun onAdClosed(placementName: String, error: ChartboostMediationAdException?) {
                 serializeHeliumEventWithError(placementName, error,
                     HeliumEventConsumerWithError { placementName: String, error: String ->
                         interstitialEventsListener?.DidCloseInterstitial(placementName, error)
@@ -153,22 +153,22 @@ class HeliumUnityBridge {
 
     fun getRewardedAd(placementName: String): HeliumUnityAdWrapper {
         val rewardedAd = HeliumRewardedAd(UnityPlayer.currentActivity, placementName, object : HeliumFullscreenAdListener {
-            override fun onAdCached(placementName: String, loadId: String, bidInfo: Map<String, String>, error: HeliumAdException?) {
-                serializeHeliumLoadEvent(placementName, loadId, bidInfo, error,
+            override fun onAdCached(placementName: String, loadId: String, winningBidInfo: Map<String, String>, error: ChartboostMediationAdException?) {
+                serializeHeliumLoadEvent(placementName, loadId, winningBidInfo, error,
                     HeliumLoadEventConsumer { placementName: String, loadId: String, auctionId: String, partnerId: String, price: Double, error: String ->
                         rewardedEventListener?.DidLoadRewarded(placementName, loadId, auctionId, partnerId, price, error)
                     }
                 )
             }
 
-            override fun onAdShown(placementName: String, error: HeliumAdException?) {
+            override fun onAdShown(placementName: String, error: ChartboostMediationAdException?) {
                 serializeHeliumEventWithError(placementName, error,
                     HeliumEventConsumerWithError { placementName: String, error: String ->
                         rewardedEventListener?.DidShowRewarded(placementName, error)
                     })
             }
 
-            override fun onAdClosed(placementName: String, error: HeliumAdException?) {
+            override fun onAdClosed(placementName: String, error: ChartboostMediationAdException?) {
                 serializeHeliumEventWithError(placementName, error,
                     HeliumEventConsumerWithError { placementName: String, error: String ->
                         rewardedEventListener?.DidCloseRewarded(placementName, error)
@@ -208,8 +208,8 @@ class HeliumUnityBridge {
             2 -> wantedSize = HeliumBannerSize.LEADERBOARD
         }
         val bannerAd = HeliumBannerAd(UnityPlayer.currentActivity, placementName, wantedSize, object : HeliumBannerAdListener {
-            override fun onAdCached(placementName: String, loadId: String, bidInfo: Map<String, String>, error: HeliumAdException?) {
-                serializeHeliumLoadEvent(placementName, loadId, bidInfo, error,
+            override fun onAdCached(placementName: String, loadId: String, winningBidInfo: Map<String, String>, error: ChartboostMediationAdException?) {
+                serializeHeliumLoadEvent(placementName, loadId, winningBidInfo, error,
                     HeliumLoadEventConsumer { placementName: String, loadId: String, auctionId: String, partnerId: String, price: Double, error: String ->
                         bannerEventsListener?.DidLoadBanner(placementName, loadId, auctionId, partnerId, price, error)
                     }
