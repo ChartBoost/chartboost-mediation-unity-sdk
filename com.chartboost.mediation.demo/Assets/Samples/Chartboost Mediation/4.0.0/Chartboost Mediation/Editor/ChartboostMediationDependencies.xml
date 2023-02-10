@@ -10,8 +10,7 @@
         <androidPackage spec="com.chartboost:chartboost-mediation-sdk:4.0+" />
         <androidPackage spec="androidx.legacy:legacy-support-v4:1.0.0" />
         <androidPackage spec="org.greenrobot:eventbus:3.3.1" />
-        <androidPackage spec="org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.10" />
-        <androidPackage spec="org.jetbrains.kotlin:kotlin-reflect:1.8.10" />
+        <androidPackage spec="org.jetbrains.kotlin:kotlin-reflect:1.7.20" />
         <androidPackage spec="org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4" />
         <androidPackage spec="org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1" />
         <androidPackage spec="androidx.appcompat:appcompat:1.5.1" />

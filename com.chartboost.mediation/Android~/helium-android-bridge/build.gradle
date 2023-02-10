@@ -61,6 +61,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.8.10")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
+    implementation 'androidx.core:core-ktx:+'
 }
 
 task assembleForPlugin(type: Jar, dependsOn: 'bundleLibRuntimeToJarRelease') {
