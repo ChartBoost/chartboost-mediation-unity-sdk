@@ -2,7 +2,7 @@
 <dependencies>
     <androidPackages>
         <!-- Helium Pangle Adapter -->
-        <androidPackage spec="com.chartboost:helium-adapter-pangle:4.4.3.0.4+@aar" />
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-pangle:4.4.3.0.4+@aar" />
 
         <!-- Pangle Android SDK -->
         <repositories>
@@ -10,7 +10,6 @@
         </repositories>
 
         <androidPackage spec="com.pangle.global:ads-sdk:4.3.0.4"/>
-
     </androidPackages>
     <iosPods>
         <!-- Helium Pangle Adapter -->

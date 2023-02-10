@@ -1,6 +1,6 @@
 plugins {
     id 'com.android.library'
-    id 'kotlin-android'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
@@ -31,10 +31,10 @@ repositories {
     google()
     mavenCentral()
     maven {
-        url "https://cboost.jfrog.io/artifactory/helium"
+        url "https://cboost.jfrog.io/artifactory/chartboost-mediation/"
     }
     maven {
-        url "https://cboost.jfrog.io/artifactory/private-helium/"
+        url "https://cboost.jfrog.io/artifactory/private-chartboost-mediation/"
         credentials {
             username privateUser
             password privatePass
@@ -43,7 +43,7 @@ repositories {
 }
 
 ext {
-    heliumDependency = "com.chartboost:helium:$heliumVersion"
+    heliumDependency = "com.chartboost:chartboost-mediation-sdk:$heliumVersion"
     androidPluginFolder = "$rootDir/../Runtime/Plugins/Android"
     print("Attempting to Compile Android Bridge with Helium SDK version: $heliumDependency")
 }
@@ -52,9 +52,16 @@ dependencies {
     //Make sure to bump the version on new releases.
     api fileTree(dir: 'libs', include: ['*.jar'])
     implementation heliumDependency
-    implementation 'androidx.annotation:annotation:1.4.0'
-    implementation 'org.greenrobot:eventbus:3.3.1'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation("org.greenrobot:eventbus:3.3.1")
+    implementation("com.google.android.gms:play-services-ads-identifier:18.0.1")
+    implementation("com.google.android.gms:play-services-base:18.1.0")
+    implementation("com.google.android.gms:play-services-appset:16.0.2")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.8.10")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
+    implementation 'androidx.core:core-ktx:+'
 }
 
 task assembleForPlugin(type: Jar, dependsOn: 'bundleLibRuntimeToJarRelease') {
@@ -69,5 +76,5 @@ task assembleForPlugin(type: Jar, dependsOn: 'bundleLibRuntimeToJarRelease') {
 task copyReleaseAndroidBridgeForPackaging(type: Copy, dependsOn: 'assembleForPlugin') {
     from ("$projectDir/build/intermediates/runtime_library_classes_jar/release/classes.jar")
     into (androidPluginFolder)
-    rename("classes.jar", "helium-android-bridge.jar")
+    rename("classes.jar", "chartboost-mediation-android-bridge.jar")
 }

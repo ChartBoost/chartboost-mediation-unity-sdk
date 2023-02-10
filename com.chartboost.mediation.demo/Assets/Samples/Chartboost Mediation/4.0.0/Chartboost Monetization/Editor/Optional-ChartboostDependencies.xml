@@ -2,15 +2,11 @@
 <dependencies>
     <androidPackages>
         <!-- Helium Chartboost Adapter -->
-        <androidPackage spec="com.chartboost:helium-adapter-chartboost:4.9.1.1+@aar" />
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-chartboost:4.9.2.0+@aar" />
 
         <!-- Helium Chartboost SDK -->
         <androidPackage spec="com.chartboost:chartboost-sdk:9.2.+@aar" />
-
-        <!-- Partner SDK Dependencies-->
-        <androidPackage spec="org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4" />
     </androidPackages>
-
     <iosPods>
         <!-- Helium Chartboost Adapter -->
         <iosPod name="ChartboostMediationAdapterChartboost" version="~> 4.9.2.0"/>

@@ -2,7 +2,7 @@
 <dependencies>
     <androidPackages>
         <!-- Helium Yahoo Adapter -->
-        <androidPackage spec="com.chartboost:helium-adapter-yahoo:4.1.3.0+@aar" />
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-yahoo:4.1.3.0+@aar" />
 
         <!-- Yahoo Android SDK -->
         <repositories>
@@ -11,7 +11,7 @@
 
         <!-- Yahoo Android SDK -->
         <androidPackage spec="com.yahoo.mobile.ads:android-yahoo-mobile-sdk:1.3.0"/>
-
+        <androidPackage spec="androidx.browser:browser:1.4.0"/>
     </androidPackages>\
     <iosPods>
         <!-- Helium Yahoo Adapter -->

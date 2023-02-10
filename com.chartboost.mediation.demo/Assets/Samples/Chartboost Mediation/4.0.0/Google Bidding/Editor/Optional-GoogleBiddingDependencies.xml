@@ -2,16 +2,12 @@
 <dependencies>
     <androidPackages>
         <!-- Helium Google Bidding Adapter -->
-        <androidPackage spec="com.chartboost:helium-adapter-google-bidding:4.21.3.0+@aar" />
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-google-bidding:4.21.3.0+@aar" />
 
         <!-- Google Bidding Android SDK -->
         <androidPackage spec="com.google.android.gms:play-services-ads:21.3.0"/>
 
         <!-- Other Adapter Dependencies -->
-        <androidPackage spec="org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0"/>
-        <androidPackage spec="org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.20"/>
-        <androidPackage spec="androidx.appcompat:appcompat:1.4.2"/>
-        <androidPackage spec="androidx.core:core-ktx:1.7.0"/>
         <androidPackage spec="com.google.guava:guava:31.1-android"/>
     </androidPackages>
     <iosPods>

@@ -1,7 +1,7 @@
 package com.chartboost.heliumsdk.unity
 
 import android.util.Log
-import com.chartboost.heliumsdk.domain.HeliumAdException
+import com.chartboost.heliumsdk.domain.ChartboostMediationAdException
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -13,11 +13,11 @@ object HeliumEventProcessor {
         = eventConsumer.accept(placementName)
 
     @JvmStatic
-    fun serializeHeliumEventWithError(placementName: String, error: HeliumAdException?, eventConsumer: HeliumEventConsumerWithError<String, String>)
+    fun serializeHeliumEventWithError(placementName: String, error: ChartboostMediationAdException?, eventConsumer: HeliumEventConsumerWithError<String, String>)
         = eventConsumer.accept(placementName,error?.toString() ?: "")
 
     @JvmStatic
-    fun serializeHeliumLoadEvent(placementName: String, loadId: String, data: Map<String, String>, error: HeliumAdException?,
+    fun serializeHeliumLoadEvent(placementName: String, loadId: String, data: Map<String, String>, error: ChartboostMediationAdException?,
         loadConsumer: HeliumLoadEventConsumer<String, String, String, String, Double, String>) {
         val errorMessage = error?.toString() ?: ""
 
