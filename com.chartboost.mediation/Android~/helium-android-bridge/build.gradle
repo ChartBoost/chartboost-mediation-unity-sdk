@@ -43,15 +43,15 @@ repositories {
 }
 
 ext {
-    heliumDependency = "com.chartboost:chartboost-mediation-sdk:$heliumVersion"
+    chartboostMediationDependency = "com.chartboost:chartboost-mediation-sdk:$chartboostMediationVersion"
     androidPluginFolder = "$rootDir/../Runtime/Plugins/Android"
-    print("Attempting to Compile Android Bridge with Helium SDK version: $heliumDependency")
+    print("Attempting to Compile Android Bridge with Chartboost Mediation SDK version: $chartboostMediationDependency")
 }
 
 dependencies {
     //Make sure to bump the version on new releases.
     api fileTree(dir: 'libs', include: ['*.jar'])
-    implementation heliumDependency
+    implementation chartboostMediationDependency
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("org.greenrobot:eventbus:3.3.1")
     implementation("com.google.android.gms:play-services-ads-identifier:18.0.1")

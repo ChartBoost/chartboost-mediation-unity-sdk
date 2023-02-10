@@ -15,17 +15,17 @@ buildscript {
 ext {
     gitHubTag = System.getenv("GITHUB_REF")
     gitHubCommit = System.getenv("GITHUB_SHA")
-    versionInput = System.getenv("HELIUM_VERSION")
+    versionInput = System.getenv("CHARTBOOST_MEDIATION_VERSION")
     onlyPublic = System.getenv("ONLY_PUBLIC") == 'true'
 
     privateUser = onlyPublic? "" : System.getenv("JFROG_USER")
     privatePass = onlyPublic? "" : System.getenv("JFROG_PASS")
 
     inputVersionIsHigher = true
-    heliumVersion = '4.+'
+    chartboostMediationVersion = '4.+'
     if (versionInput != null && versionInput != "") {
-        inputVersionIsHigher = mostRecentVersion([heliumVersion, versionInput]) == versionInput
-        heliumVersion = versionInput
+        inputVersionIsHigher = mostRecentVersion([chartboostMediationVersion, versionInput]) == versionInput
+        chartboostMediationVersion = versionInput
     }
 
     releaseCandidateRegex = /[a-zA-Z0-9]+\/[a-zA-Z0-9]+\/+\d+\.\d+\.\d+(\.?[A-Za-z0-9]+)*-rc\d+/
