@@ -58,3 +58,5 @@ In order to better understand the Chartboost Mediation Unity SDK, documentation 
 5. [Delegate Usage](com.chartboost.mediation/Documentation/integration/delegate-usage.md)
 6. [Error Codes](com.chartboost.mediation/Documentation/integration/error-codes.md)
 7. [Unit Testing](com.chartboost.mediation/Documentation/integration/unit-testing.md)
+
+### [FAQ](com.chartboost.mediation/Documentation/faq.md)
