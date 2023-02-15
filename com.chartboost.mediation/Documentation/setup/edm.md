@@ -45,7 +45,7 @@ Additionally, you can notice that if you leave auto resolution & resolution on b
 
 By selecting to patch the mainTemplate.gradle, your dependencies should look something like this:
 
-```gradle
+```groovy
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 // Android Resolver Dependencies Start

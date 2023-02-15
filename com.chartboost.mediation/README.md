@@ -60,3 +60,5 @@ In order to better understand the Chartboost Mediation Unity SDK, documentation 
 7. [Unit Testing](com.chartboost.mediation/Documentation/integration/unit-testing.md)
 
 ### [FAQ](com.chartboost.mediation/Documentation/faq.md)
+
+### [Migrating Helium 3.X to Chartboost Mediation 4.0.0](com.chartboost.mediation/Documentation/integration/helium-to-chartboost-mediation.md)
