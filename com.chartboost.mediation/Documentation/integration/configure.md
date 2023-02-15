@@ -1,15 +1,15 @@
 # Configure Helium
 
 ## Test Mode
-Helium 1.1.0 introduced a Test Mode method that will allow you to test your partner integrations and get their test ads. Please refer to the [Helium Android](https://developers.chartboost.com/docs/android-configure-helium#test-mode) and [Helium iOS](https://developers.chartboost.com/docs/ios-configure-helium-ad-settings#test-mode) integration documents on how to enable Test Mode.
+Chartboost Mediation 1.1.0, previously Helium, introduced a Test Mode method that will allow you to test your partner integrations and get their test ads. Please refer to the [Helium Android](https://developers.chartboost.com/docs/mediation-android-configure-helium#test-mode) and [Chartboost Mediation iOS](https://developers.chartboost.com/docs/mediation-ios-configure-helium#test-mode) integration documents on how to enable Test Mode.
 
 ## COPPA
 COPPA Settings can be configured utilizing the following method:
 
 ```csharp
-  HeliumSDK.SetSubjectToCoppa(true);
+  ChartboostMediation.SetSubjectToCoppa(true);
   // or
-  HeliumSDK.SetSubjectToCoppa(false);
+  ChartboostMediation.SetSubjectToCoppa(false);
 ```
 
 * By sending `SetSubjectToCoppa (true)`, you indicate that you want your content treated as child-directed for purposes of COPPA. We will take steps to disable interest-based advertising for such ad requests.
@@ -18,9 +18,9 @@ COPPA Settings can be configured utilizing the following method:
 
 ## GDPR
 ```csharp
-  HeliumSDK.SetSubjectToGDPR(true);
+  ChartboostMediation.SetSubjectToGDPR(true);
   // or
-  HeliumSDK.SetSubjectToGDPR(false);
+  ChartboostMediation.SetSubjectToGDPR(false);
 ```
 
 * By sending `SetSubjectToGDPR (true)`, you indicate that GDPR is applied to this user from your application.
@@ -28,9 +28,9 @@ COPPA Settings can be configured utilizing the following method:
 * By sending `SetSubjectToGDPR (false)`, you indicate that GDPR is not applied to this user from your application.
 
 ```csharp
-  HeliumSDK.SetUserHasGivenConsent(true);
+  ChartboostMediation.SetUserHasGivenConsent(true);
   // or
-  HeliumSDK.SetUserHasGivenConsent(false);
+  ChartboostMediation.SetUserHasGivenConsent(false);
 ```
 
 * By sending `SetUserHasGivenConsent (true)`, you indicate that this user from your application has given consent to share personal data for behavioral targeted advertising.
@@ -39,30 +39,30 @@ COPPA Settings can be configured utilizing the following method:
 
 ## CCPA
 ```csharp
-  HeliumSDK.SetCCPAConsent(true);
+  ChartboostMediation.SetCCPAConsent(true);
   // or
-  HeliumSDK.SetCCPAConsent(false);
+  ChartboostMediation.SetCCPAConsent(false);
 ```
 
 * By sending `SetCCPAConsent (true)`, you indicate that this user from your application has given consent to share personal data for behavioral targeted advertising under CCPA regulation.
 
 * By sending `SetCCPAConsent (false)`, you indicate that this user from your application has not given consent to allow sharing personal data for behavioral targeted advertising under CCPA regulation.
 
-> **_NOTE:_** Helium will send CCPA information to the bidding network and set the CCPA information for the adapters.
+> **_NOTE:_** Chartboost Mediation will send CCPA information to the bidding network and set the CCPA information for the adapters.
 
 ## Keywords
-As of Helium 2.9.0, the Helium SDKs introduces keywords: key-value pairs to enable real-time targeting on line items.
+As of Chartboost Mediation 2.9.0, the Chartboost Mediation SDKs introduces keywords: key-value pairs to enable real-time targeting on line items.
 
 ### Set Keywords
-To set keywords, you will need to first create a Helium ad object, then use the setKeyword method to add key-value keywords pair.
+To set keywords, you will need to first create a Chartboost Mediation ad object, then use the setKeyword method to add key-value keywords pair.
 
 ```csharp
 // Create a Helium Ad object.
-HeliumInterstitialAd interstitialAd = HeliumSdk.GetInterstitialAd(PLACEMENT_INTERSTITIAL);
+ChartboostMediationInterstitialAd interstitialAd = ChartboostMediation.GetInterstitialAd(PLACEMENT_INTERSTITIAL);
 
-HeliumRewardedAd rewardedAd = HeliumSdk.GetRewardedAd(PLACEMENT_REWARDED);
+ChartboostMediationRewardedAd rewardedAd = ChartboostMediation.GetRewardedAd(PLACEMENT_REWARDED);
 
-HeliumBannerAd bannerAd = HeliumSdk.GetBannerAd(PLACEMENT_BANNER, BANNER_SIZE);
+ChartboostMediationBannerAd bannerAd = ChartboostMediation.GetBannerAd(PLACEMENT_BANNER, BANNER_SIZE);
 
 // Set a Keyword
 this.interstitialAd.SetKeyword("i12_keyword1", "i12_value1");

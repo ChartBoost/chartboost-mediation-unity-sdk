@@ -49,28 +49,57 @@ By selecting to patch the mainTemplate.gradle, your dependencies should look som
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 // Android Resolver Dependencies Start
-    implementation 'androidx.appcompat:appcompat:1.3.0' // Assets/Samples/Helium SDK/3.0.0/Helium/Editor/HeliumDependencies.xml:29
-    implementation 'androidx.core:core:1.2.0' // Assets/Samples/Helium SDK/3.0.0/Vungle/Editor/Optional-HeliumVungleDependencies.xml:10
-    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0' // Assets/Samples/Helium SDK/3.0.0/Vungle/Editor/Optional-HeliumVungleDependencies.xml:9
-    implementation 'com.adcolony:sdk:4.7.0' // Assets/Samples/Helium SDK/3.0.0/AdColony/Editor/Optional-HeliumAdColonyDependencies.xml:8
-    implementation 'com.amazon.android:aps-sdk:9.4.3' // Assets/Samples/Helium SDK/3.0.0/Amazon/Editor/Optional-HeliumApsDependencies.xml:8
-    implementation 'com.applovin:applovin-sdk:11.3.1' // Assets/Samples/Helium SDK/3.0.0/AppLovin/Editor/Optional-HeliumAppLovinDependencies.xml:8
-    implementation 'com.chartboost:helium:2.10.+' // Assets/Samples/Helium SDK/3.0.0/Helium/Editor/HeliumDependencies.xml:10
-    implementation 'com.chartboost:helium-adcolony:2.10.+@aar' // Assets/Samples/Helium SDK/3.0.0/AdColony/Editor/Optional-HeliumAdColonyDependencies.xml:5
-    implementation 'com.chartboost:helium-admob:2.10.+@aar' // Assets/Samples/Helium SDK/3.0.0/AdMob/Editor/Optional-HeliumAdMobDependencies.xml:5
-    implementation 'com.chartboost:helium-applovin:2.10.+@aar' // Assets/Samples/Helium SDK/3.0.0/AppLovin/Editor/Optional-HeliumAppLovinDependencies.xml:5
-    implementation 'com.chartboost:helium-aps:2.10.+@aar' // Assets/Samples/Helium SDK/3.0.0/Amazon/Editor/Optional-HeliumApsDependencies.xml:5
-    implementation 'com.chartboost:helium-facebook:2.10.+@aar' // Assets/Samples/Helium SDK/3.0.0/Facebook/Editor/Optional-HeliumFacebookDependencies.xml:5
-    implementation 'com.chartboost:helium-fyber:2.10.+@aar' // Assets/Samples/Helium SDK/3.0.0/Fyber/Editor/Optional-HeliumFyberDependencies.xml:5
-    implementation 'com.chartboost:helium-inmobi:2.10.+@aar' // Assets/Samples/Helium SDK/3.0.0/InMobi/Editor/Optional-HeliumInMobiDependencies.xml:5
-    implementation 'com.chartboost:helium-ironsource:2.10.+@aar' // Assets/Samples/Helium SDK/3.0.0/IronSource/Editor/Optional-HeliumIronSourceDependencies.xml:5
-    implementation 'com.chartboost:helium-mintegral:2.10.+@aar' // Assets/Samples/Helium SDK/3.0.0/Mintegral/Editor/Optional-HeliumMintegralDependencies.xml:5
-    implementation 'com.chartboost:helium-pangle:2.10.+@aar' // Assets/Samples/Helium SDK/3.0.0/Pangle/Editor/Optional-HeliumPangleDependencies.xml:5
-    implementation 'com.chartboost:helium-tapjoy:2.10.+@aar' // Assets/Samples/Helium SDK/3.0.0/TapJoy/Editor/Optional-HeliumTapJoyDependencies.xml:5
-    implementation 'com.chartboost:helium-unityads:2.10.+@aar' // Assets/Samples/Helium SDK/3.0.0/UnityAds/Editor/Optional-HeliumUnityAdsDependencies.xml:5
-    implementation 'com.chartboost:helium-vungle:2.10.+@aar' // Assets/Samples/Helium SDK/3.0.0/Vungle/Editor/Optional-HeliumVungleDependencies.xml:5
-    implementation 'com.chartboost:helium-yahoo:2.10.+@aar' // Assets/Samples/Helium SDK/3.0.0/Yahoo/Editor/Optional-HeliumYahooDependencies.xml:5
-...
+    implementation 'androidx.browser:browser:1.4.0' // Assets/Samples/Chartboost Mediation/4.0.0/Yahoo/Editor/Optional-YahooDependencies.xml:14
+    implementation 'androidx.core:core:1.2.0' // Assets/Samples/Chartboost Mediation/4.0.0/UnityAds/Editor/Optional-UnityAdsDependencies.xml:9
+    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0' // Assets/Samples/Chartboost Mediation/4.0.0/Chartboost Mediation/Editor/ChartboostMediationDependencies.xml:11
+    implementation 'androidx.multidex:multidex:2.0.1' // Assets/Demo/Editor/MultidexDependencies.xml:4
+    implementation 'com.adcolony:sdk:4.8.0' // Assets/Samples/Chartboost Mediation/4.0.0/AdColony/Editor/Optional-AdColonyDependencies.xml:8
+    implementation 'com.amazon.android:aps-sdk:9.6.2' // Assets/Samples/Chartboost Mediation/4.0.0/Amazon Publisher Services/Editor/Optional-AmazonPublisherServicesDependencies.xml:8
+    implementation 'com.applovin:applovin-sdk:11.5.5' // Assets/Samples/Chartboost Mediation/4.0.0/AppLovin/Editor/Optional-AppLovinDependencies.xml:8
+    implementation 'com.chartboost:chartboost-mediation-adapter-adcolony:4.4.8.0+@aar' // Assets/Samples/Chartboost Mediation/4.0.0/AdColony/Editor/Optional-AdColonyDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-admob:4.21.3.0+@aar' // Assets/Samples/Chartboost Mediation/4.0.0/AdMob/Editor/Optional-AdMobDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-amazon-publisher-services:4.9.6.2+@aar' // Assets/Samples/Chartboost Mediation/4.0.0/Amazon Publisher Services/Editor/Optional-AmazonPublisherServicesDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-applovin:4.11.5.5+@aar' // Assets/Samples/Chartboost Mediation/4.0.0/AppLovin/Editor/Optional-AppLovinDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-chartboost:4.9.2.0+@aar' // Assets/Samples/Chartboost Mediation/4.0.0/Chartboost Monetization/Editor/Optional-ChartboostDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-digital-turbine-exchange:4.8.2.1+@aar' // Assets/Samples/Chartboost Mediation/4.0.0/Digital Turbine Exchange/Editor/Optional-DigitalTurbineExchangeDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-google-bidding:4.21.3.0+@aar' // Assets/Samples/Chartboost Mediation/4.0.0/Google Bidding/Editor/Optional-GoogleBiddingDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-inmobi:4.10.1.1+@aar' // Assets/Samples/Chartboost Mediation/4.0.0/InMobi/Editor/Optional-InMobiDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-ironsource:4.7.2.5+@aar' // Assets/Samples/Chartboost Mediation/4.0.0/IronSource/Editor/Optional-IronSourceDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-meta-audience-network:4.6.12.0+@aar' // Assets/Samples/Chartboost Mediation/4.0.0/Meta Audience Network/Editor/Optional-MetaAudienceNetworkDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-mintegral:4.16.0.31+@aar' // Assets/Samples/Chartboost Mediation/4.0.0/Mintegral/Editor/Optional-MintegralDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-pangle:4.4.3.0.4+@aar' // Assets/Samples/Chartboost Mediation/4.0.0/Pangle/Editor/Optional-PangleDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-tapjoy:4.12.9.1+@aar' // Assets/Samples/Chartboost Mediation/4.0.0/TapJoy/Editor/Optional-TapJoyDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-unity-ads:4.4.4.1+@aar' // Assets/Samples/Chartboost Mediation/4.0.0/UnityAds/Editor/Optional-UnityAdsDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-vungle:4.6.12+@aar' // Assets/Samples/Chartboost Mediation/4.0.0/Vungle/Editor/Optional-VungleDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-yahoo:4.1.3.0+@aar' // Assets/Samples/Chartboost Mediation/4.0.0/Yahoo/Editor/Optional-YahooDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-sdk:4.0+' // Assets/Samples/Chartboost Mediation/4.0.0/Chartboost Mediation/Editor/ChartboostMediationDependencies.xml:10
+    implementation 'com.chartboost:chartboost-sdk:9.2.+@aar' // Assets/Samples/Chartboost Mediation/4.0.0/Chartboost Monetization/Editor/Optional-ChartboostDependencies.xml:8
+    implementation 'com.facebook.android:audience-network-sdk:6.12.0' // Assets/Samples/Chartboost Mediation/4.0.0/Meta Audience Network/Editor/Optional-MetaAudienceNetworkDependencies.xml:8
+    implementation 'com.fyber:marketplace-sdk:8.2.1' // Assets/Samples/Chartboost Mediation/4.0.0/Digital Turbine Exchange/Editor/Optional-DigitalTurbineExchangeDependencies.xml:8
+    implementation 'com.google.android.gms:play-services-ads:21.3.0' // Assets/Samples/Chartboost Mediation/4.0.0/Google Bidding/Editor/Optional-GoogleBiddingDependencies.xml:8
+    implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1' // Assets/Samples/Chartboost Mediation/4.0.0/Chartboost Mediation/Editor/ChartboostMediationDependencies.xml:20
+    implementation 'com.google.android.gms:play-services-appset:16.0.2' // Assets/Samples/Chartboost Mediation/4.0.0/Chartboost Mediation/Editor/ChartboostMediationDependencies.xml:21
+    implementation 'com.google.android.gms:play-services-base:18.1.0' // Assets/Samples/Chartboost Mediation/4.0.0/Chartboost Mediation/Editor/ChartboostMediationDependencies.xml:19
+    implementation 'com.google.android.gms:play-services-basement:18.1.0' // Assets/Samples/Chartboost Mediation/4.0.0/Chartboost Mediation/Editor/ChartboostMediationDependencies.xml:22
+    implementation 'com.google.guava:guava:31.1-android' // Assets/Samples/Chartboost Mediation/4.0.0/Google Bidding/Editor/Optional-GoogleBiddingDependencies.xml:11
+    implementation 'com.inmobi.monetization:inmobi-ads:10.1.1' // Assets/Samples/Chartboost Mediation/4.0.0/InMobi/Editor/Optional-InMobiDependencies.xml:8
+    implementation 'com.ironsource.sdk:mediationsdk:7.2.5' // Assets/Samples/Chartboost Mediation/4.0.0/IronSource/Editor/Optional-IronSourceDependencies.xml:11
+    implementation 'com.mbridge.msdk.oversea:interstitialvideo:16.0.31' // Assets/Samples/Chartboost Mediation/4.0.0/Mintegral/Editor/Optional-MintegralDependencies.xml:18
+    implementation 'com.mbridge.msdk.oversea:mbbanner:16.0.31' // Assets/Samples/Chartboost Mediation/4.0.0/Mintegral/Editor/Optional-MintegralDependencies.xml:21
+    implementation 'com.mbridge.msdk.oversea:mbbid:16.0.31' // Assets/Samples/Chartboost Mediation/4.0.0/Mintegral/Editor/Optional-MintegralDependencies.xml:22
+    implementation 'com.mbridge.msdk.oversea:mbjscommon:16.0.31' // Assets/Samples/Chartboost Mediation/4.0.0/Mintegral/Editor/Optional-MintegralDependencies.xml:13
+    implementation 'com.mbridge.msdk.oversea:mbnative:16.0.31' // Assets/Samples/Chartboost Mediation/4.0.0/Mintegral/Editor/Optional-MintegralDependencies.xml:19
+    implementation 'com.mbridge.msdk.oversea:nativeex:16.0.31' // Assets/Samples/Chartboost Mediation/4.0.0/Mintegral/Editor/Optional-MintegralDependencies.xml:20
+    implementation 'com.mbridge.msdk.oversea:playercommon:16.0.31' // Assets/Samples/Chartboost Mediation/4.0.0/Mintegral/Editor/Optional-MintegralDependencies.xml:14
+    implementation 'com.mbridge.msdk.oversea:reward:16.0.31' // Assets/Samples/Chartboost Mediation/4.0.0/Mintegral/Editor/Optional-MintegralDependencies.xml:15
+    implementation 'com.mbridge.msdk.oversea:same:16.0.31' // Assets/Samples/Chartboost Mediation/4.0.0/Mintegral/Editor/Optional-MintegralDependencies.xml:17
+    implementation 'com.mbridge.msdk.oversea:videocommon:16.0.31' // Assets/Samples/Chartboost Mediation/4.0.0/Mintegral/Editor/Optional-MintegralDependencies.xml:16
+    implementation 'com.mbridge.msdk.oversea:videojs:16.0.31' // Assets/Samples/Chartboost Mediation/4.0.0/Mintegral/Editor/Optional-MintegralDependencies.xml:12
+    implementation 'com.pangle.global:ads-sdk:4.3.0.4' // Assets/Samples/Chartboost Mediation/4.0.0/Pangle/Editor/Optional-PangleDependencies.xml:12
+    implementation 'com.tapjoy:tapjoy-android-sdk:12.9.1' // Assets/Samples/Chartboost Mediation/4.0.0/TapJoy/Editor/Optional-TapJoyDependencies.xml:11
+    implementation 'com.unity3d.ads:unity-ads:4.4.1' // Assets/Samples/Chartboost Mediation/4.0.0/UnityAds/Editor/Optional-UnityAdsDependencies.xml:8
+    implementation 'com.vungle:publisher-sdk-android:6.12.0' // Assets/Samples/Chartboost Mediation/4.0.0/Vungle/Editor/Optional-VungleDependencies.xml:8
+    implementation 'com.yahoo.mobile.ads:android-yahoo-mobile-sdk:1.3.0' // Assets/Samples/Chartboost Mediation/4.0.0/Yahoo/Editor/Optional-YahooDependencies.xml:13
 // Android Resolver Dependencies End
 **DEPS**}
 ```

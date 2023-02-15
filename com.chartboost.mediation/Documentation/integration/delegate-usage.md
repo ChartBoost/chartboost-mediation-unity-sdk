@@ -16,46 +16,43 @@ The Helium SDK implements its delegate functionality using C# style delegates an
 ### Subscribing Delegates
 ```c#
 private void OnEnable() {
-    // Helium Start Delegate
-    HeliumSDK.DidStart += DidStart;
+    // Start Delegate
+    ChartboostMediationSDK.DidStart += DidStart;
 
-    // Helium ILRD Delegate
-    HeliumSDK.DidReceiveImpressionLevelRevenueData += DidReceiveImpressionLevelRevenueData;
+    // ILRD Delegate
+    ChartboostMediationSDK.DidReceiveImpressionLevelRevenueData += DidReceiveImpressionLevelRevenueData;
 
-    // Helium Partner Initialization Data Delegate
-    HeliumSDK.DidReceivePartnerInitializationData += DidReceivePartnerInitializationData;
+    // Partner Initialization Data Delegate
+    ChartboostMediation.DidReceivePartnerInitializationData += DidReceivePartnerInitializationData;
 
-    // Helium Error Handling Delegate
-    HeliumSDK.UnexpectedSystemErrorDidOccur += UnexpectedSystemErrorDidOccur;
+    // Error Handling Delegate
+    ChartboostMediation.UnexpectedSystemErrorDidOccur += UnexpectedSystemErrorDidOccur;
 
-    // Helium Interstitial Ad Delegates
-    HeliumSDK.DidLoadInterstitial += DidLoadInterstitial;
-    HeliumSDK.DidShowInterstitial += DidShowInterstitial;
-    HeliumSDK.DidCloseInterstitial += DidCloseInterstitial;
-    HeliumSDK.DidWinBidInterstitial += DidWinBidInterstitial;
-    HeliumSDK.DidClickInterstitial += DidClickInterstitial;
-    HeliumSDK.DidRecordImpressionInterstitial += DidRecordImpressionInterstitial;
+    // Interstitial Ad Delegates
+    ChartboostMediation.DidLoadInterstitial += DidLoadInterstitial;
+    ChartboostMediation.DidShowInterstitial += DidShowInterstitial;
+    ChartboostMediation.DidCloseInterstitial += DidCloseInterstitial;
+    ChartboostMediation.DidClickInterstitial += DidClickInterstitial;
+    ChartboostMediation.DidRecordImpressionInterstitial += DidRecordImpressionInterstitial;
 
-    // Helium Rewarded Ad Delegates
-    HeliumSDK.DidLoadRewarded += DidLoadRewarded;
-    HeliumSDK.DidShowRewarded += DidShowRewarded;
-    HeliumSDK.DidCloseRewarded += DidCloseRewarded;
-    HeliumSDK.DidReceiveReward += DidReceiveReward;
-    HeliumSDK.DidWinBidRewarded += DidWinBidRewarded;
-    HeliumSDK.DidClickRewarded += DidClickRewarded;
-    HeliumSDK.DidRecordImpressionRewarded += DidRecordImpressionRewarded;
+    // Rewarded Ad Delegates
+    ChartboostMediation.DidLoadRewarded += DidLoadRewarded;
+    ChartboostMediation.DidShowRewarded += DidShowRewarded;
+    ChartboostMediation.DidCloseRewarded += DidCloseRewarded;
+    ChartboostMediation.DidReceiveReward += DidReceiveReward;
+    ChartboostMediation.DidClickRewarded += DidClickRewarded;
+    ChartboostMediation.DidRecordImpressionRewarded += DidRecordImpressionRewarded;
 
-    // Helium Banner Ad Delegates
-    HeliumSDK.DidLoadBanner += DidLoadBanner;
-    HeliumSDK.DidClickBanner += DidClickBanner;
-    HeliumSDK.DidRecordImpressionBanner += DidRecordImpressionBanner;
-    HeliumSDK.DidWinBidBanner += DidWinBidBanner;
+    // Banner Ad Delegates
+    ChartboostMediation.DidLoadBanner += DidLoadBanner;
+    ChartboostMediation.DidClickBanner += DidClickBanner;
+    ChartboostMediation.DidRecordImpressionBanner += DidRecordImpressionBanner;
 }
 ```
 
 > **_NOTE 1:_** Do not make cache or show calls inside a delegate indicating that an ad has just failed to load.
 
-> **_NOTE 2:_** Notice that Helium banner ads do not have a DidCloseBanner delegate. Please keep that in mind when implementing Helium Banners.
+> **_NOTE 2:_** Notice that banner ads do not have a DidCloseBanner delegate. Please keep that in mind when implementing Banners.
 
 > **_NOTE 3:_** Not all of the partner SDKs have support for the DidClick delegate.
 
@@ -66,37 +63,36 @@ You should also make sure to unsubscribe to those same events when appropriate:
 ```c#
 private void OnDisable() {
     // Remove event handlers
-    HeliumSDK.DidStart -= DidStart;
+    ChartboostMediation.DidStart -= DidStart;
 
-    // Helium ILRD Delegate
-    HeliumSDK.DidReceiveImpressionLevelRevenueData -= DidReceiveImpressionLevelRevenueData;
+    // ILRD Delegate
+    ChartboostMediation.DidReceiveImpressionLevelRevenueData -= DidReceiveImpressionLevelRevenueData;
 
-    // Helium Partner Initialization Data Delegate
-    HeliumSDK.DidReceivePartnerInitializationData -= DidReceivePartnerInitializationData;
+    // Partner Initialization Data Delegate
+    ChartboostMediation.DidReceivePartnerInitializationData -= DidReceivePartnerInitializationData;
 
-    // Helium Error Handling Delegate
-    HeliumSDK.UnexpectedSystemErrorDidOccur -= UnexpectedSystemErrorDidOccur;
+    // Error Handling Delegate
+    ChartboostMediation.UnexpectedSystemErrorDidOccur -= UnexpectedSystemErrorDidOccur;
 
-    HeliumSDK.DidLoadInterstitial -= DidLoadInterstitial;
-    HeliumSDK.DidShowInterstitial -= DidShowInterstitial;
-    HeliumSDK.DidCloseInterstitial -= DidCloseInterstitial;
-    HeliumSDK.DidWinBidInterstitial -= DidWinBidInterstitial;
-    HeliumSDK.DidClickInterstitial -= DidClickInterstitial;
-    HeliumSDK.DidRecordImpressionInterstitial -= DidRecordImpressionInterstitial;
+    // Interstitial Ad Delegates
+    ChartboostMediation.DidLoadInterstitial -= DidLoadInterstitial;
+    ChartboostMediation.DidShowInterstitial -= DidShowInterstitial;
+    ChartboostMediation.DidCloseInterstitial -= DidCloseInterstitial;
+    ChartboostMediation.DidClickInterstitial -= DidClickInterstitial;
+    ChartboostMediation.DidRecordImpressionInterstitial -= DidRecordImpressionInterstitial;
 
-    HeliumSDK.DidLoadRewarded -= DidLoadRewarded;
-    HeliumSDK.DidShowRewarded -= DidShowRewarded;
-    HeliumSDK.DidCloseRewarded -= DidCloseRewarded;
-    HeliumSDK.DidReceiveReward -= DidReceiveReward;
-    HeliumSDK.DidWinBidRewarded -= DidWinBidRewarded;
-    HeliumSDK.DidClickRewarded -= DidClickRewarded;
-    HeliumSDK.DidRecordImpressionRewarded -= DidRecordImpressionRewarded;
+    // Rewarded Ad Delegates
+    ChartboostMediation.DidLoadRewarded -= DidLoadRewarded;
+    ChartboostMediation.DidShowRewarded -= DidShowRewarded;
+    ChartboostMediation.DidCloseRewarded -= DidCloseRewarded;
+    ChartboostMediation.DidReceiveReward -= DidReceiveReward;
+    ChartboostMediation.DidClickRewarded -= DidClickRewarded;
+    ChartboostMediation.DidRecordImpressionRewarded -= DidRecordImpressionRewarded;
 
-    //Helium Banner Ad Delegates
-    HeliumSDK.DidLoadBanner -= DidLoadBanner;
-    HeliumSDK.DidClickBanner -= DidClickBanner;
-    HeliumSDK.DidRecordImpressionBanner -= DidRecordImpressionBanner;
-    HeliumSDK.DidWinBidBanner -= DidWinBidBanner;
+    // Banner Ad Delegates
+    ChartboostMediation.DidLoadBanner -= DidLoadBanner;
+    ChartboostMediation.DidClickBanner -= DidClickBanner;
+    ChartboostMediation.DidRecordImpressionBanner -= DidRecordImpressionBanner;
 }
 ```
 
@@ -104,62 +100,56 @@ private void OnDisable() {
 
 ### Lifecycle Delegates
 ```c#
-// Helium Start Delegate
-private void DidStartHelium(HeliumError error)
+// Start Delegate
+private void DidStart(string error)
 {
     Debug.Log($"DidStart: {error}");
-    if (error != null) return;
     // Logic goes here
 }
 
-// Helium ILRD Delegate
+// ILRD Delegate
 private void DidReceiveImpressionLevelRevenueData(string placement, Hashtable impressionData)
 {
-    var json =  HeliumJSON.Serialize(impressionData);
+    var json =  JsonTools.Serialize(impressionData);
     Debug.Log($"DidReceiveImpressionLevelRevenueData {placement}: {json}");
 }
 
-// Helium Partner Initialization Data Delegate
+// Partner Initialization Data Delegate
 private void DidReceivePartnerInitializationData(string partnerInitializationData)
 {
     Debug.Log($"DidReceivePartnerInitializationData: ${partnerInitializationData}");
 }
 
-// Helium Error Handling Delegate
-private static void UnexpectedSystemErrorDidOccur(HeliumError error)
+// Error Handling Delegate
+private static void UnexpectedSystemErrorDidOccur(string error)
 {
-    Debug.LogErrorFormat(error.ErrorDescription);
+    Debug.LogErrorFormat(error);
 }
 ```
 
 ### Interstitial Ad Delegates
 ```c#
-private void DidLoadInterstitial(string placementName, HeliumError error)
+private void DidLoadInterstitial(string placementName, string loadId, BidInfo info, string error)
 {
-    Debug.Log($"DidLoadInterstitial {placementName}: {error}");
+    Debug.Log($"DidLoadInterstitial {placementName}, Price: ${info.Price:F4}, Auction Id: {info.AuctionId}, Partner Id: {info.PartnerId}. {error}");
 }
 
-private void DidShowInterstitial(string placementName, HeliumError error)
+private void DidShowInterstitial(string placementName, string error)
 {
     Debug.Log($"DidShowInterstitial {placementName}: {error}");
 }
 
-private void DidCloseInterstitial(string placementName, HeliumError error)
+private void DidCloseInterstitial(string placementName, string error)
 {
     Debug.Log($"DidCloseInterstitial {placementName}: {error}");
 }
 
-private void DidWinBidInterstitial(string placementName, HeliumBidInfo info)
-{
-    Debug.Log($"DidWinBidInterstitial {placementName}: ${info.Price:F4}, Auction Id: {info.AuctionId}, Partner Id: {info.PartnerId}");
-}
-
-private void DidClickInterstitial(string placementName, HeliumError error)
+private void DidClickInterstitial(string placementName, string error)
 {
     Debug.Log($"DidClickInterstitial {placementName}: {error}");
 }
 
-private void DidRecordImpressionInterstitial(string placementName, HeliumError error)
+private void DidRecordImpressionInterstitial(string placementName, string error)
 {
     Log($"DidRecordImpressionInterstitial {placementName}: {error}");
 }
@@ -167,22 +157,22 @@ private void DidRecordImpressionInterstitial(string placementName, HeliumError e
 
 ### Rewarded Ad Delegates
 ```c#
-private void DidLoadRewarded(string placementName, HeliumError error)
+private void DidLoadRewarded(string placementName, string loadId, BidInfo info, string error)
 {
-    Debug.Log($"DidLoadRewarded {placementName}: {error}");
+    Debug.Log($"DidLoadRewarded {placementName}, Price: ${info.Price:F4}, Auction Id: {info.AuctionId}, Partner Id: {info.PartnerId}. {error}");
 }
 
-private void DidShowRewarded(string placementName, HeliumError error)
+private void DidShowRewarded(string placementName, string error)
 {
     Debug.Log($"DidShowRewarded {placementName}: {error}");
 }
 
-private void DidCloseRewarded(string placementName, HeliumError error)
+private void DidCloseRewarded(string placementName, string error)
 {
     Debug.Log($"DidCloseRewarded {placementName}: {error}");
 }
 
-private void DidClickRewarded(string placementName, HeliumError error)
+private void DidClickRewarded(string placementName, string error)
 {
     Debug.Log($"DidClickRewarded {placementName}: {error}");
 }
@@ -192,40 +182,30 @@ private void DidReceiveReward(string placementName, int reward)
     Debug.Log($"DidReceiveReward {placementName}: {reward}");
 }
 
-private void DidRecordImpressionRewarded(string placementName, HeliumError error)
+private void DidRecordImpressionRewarded(string placementName, string error)
 {
     Log($"DidRecordImpressionRewarded {placementName}: {error}");
-}
-
-private void DidWinBidRewarded(string placementName, HeliumBidInfo info)
-{
-    Debug.Log($"DidWinBidRewarded {placementName}: {placementName}: ${info.Price:F4}, Auction Id: {info.AuctionId}, Partner Id: {info.PartnerId}");
 }
 ```
 
 ### Banner Ad delegates
 ```c#
-private void DidLoadBanner(string placementName, HeliumError error)
+private void DidLoadBanner(string placementName, string loadId, BidInfo info, string error)
 {
-    Debug.Log($"DidLoadBanner{placementName}: {error}");
+    Debug.Log($"DidLoadBanner{placementName}, {placementName}, Price: ${info.Price:F4}, Auction Id: {info.AuctionId}, Partner Id: {info.PartnerId}. {error}");
 }
 
-private void DidShowBanner(string placementName, HeliumError error)
+private void DidShowBanner(string placementName, string error)
 {
     Debug.Log($"DidShowBanner {placementName}: {error}");
 }
 
-private void DidWinBidBanner(string placementName, HeliumBidInfo info)
-{
-    Debug.Log($"DidWinBidBanner {placementName}: {placementName}: ${info.Price:F4}, Auction Id: {info.AuctionId}, Partner Id: {info.PartnerId}");
-}
-
-private void DidClickBanner(string placementName, HeliumError error)
+private void DidClickBanner(string placementName, string error)
 {
     Debug.Log($"DidClickBanner {placementName}: {error}");
 }
 
-private void DidRecordImpressionBanner(string placementName, HeliumError error)
+private void DidRecordImpressionBanner(string placementName, string error)
 {
     IsBannerVisible = true;
     Log($"DidRecordImpressionBanner {placementName}: {error}");

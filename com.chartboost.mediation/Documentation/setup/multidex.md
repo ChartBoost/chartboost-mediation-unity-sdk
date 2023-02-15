@@ -1,6 +1,6 @@
 # Multidex Support
 
-Since the Helium Unity SDK provides the option to include multiple Ad Adapters and their own SDKs, this means it is very likely for an Android Application to require multidex support for proper compilation.
+Since the Chartboost Mediation Unity SDK provides the option to include multiple Ad Adapters and their own SDKs, this means it is very likely for an Android Application to require multidex support for proper compilation.
 
 For more information about multidex please visit the [Official Android Documentation](https://developer.android.com/studio/build/multidex).
 
