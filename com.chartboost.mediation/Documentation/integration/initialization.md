@@ -10,7 +10,7 @@ using Chartboost;
 
 ## Initializing Chartboost Mediation Unity SDK
 
-In order to initialize the Chartboost Mediation UNity SDK, you will need your Chartboost Mediation App ID & App Signature. This can be obtained in your [Charboost Mediation Dashboard](https://helium.chartboost.com).
+In order to initialize the Chartboost Mediation Unity SDK, you will need your Chartboost Mediation App ID & App Signature. This can be obtained in your [Charboost Mediation Dashboard](https://helium.chartboost.com).
 There are 2 ways you can go about providing your App IDs to the SDK.
 
 ### Chartboost Mediation Settings & Automatic Initialization
@@ -49,7 +49,7 @@ ChartboostMediation.IsSkAdNetworkResolutionEnabled = false;
 
 The Chartboost Mediation Unity SDK automatically uses such parameters to make decisions, the APIs are exposed for ease of usage.
 
-### Default Chartboos Mediation Settings
+### Default Chartboost Mediation Settings
 
 ![Chartboost Mediation Settings](../images/chartboost-mediation-settings.png)
 
