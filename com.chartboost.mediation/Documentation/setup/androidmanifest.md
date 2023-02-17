@@ -7,7 +7,7 @@ Add the following required permissions to your Android Manifest .xml file:
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 ```
 
-> **_NOTE:_** For mediation, you will need to add the regular chartboost activity as well. This prevents any compilation errors when integrating with Helium SDK in which the Chartboost SDK is also used separately.
+> **_NOTE:_** For mediation, you will need to add the regular chartboost activity as well. This prevents any compilation errors when integrating with Chartboost Mediation Unity SDK in which the Chartboost SDK is also used separately.
 
 ```xml
 <activity android:name="com.chartboost_helium.sdk.CBImpressionActivity"

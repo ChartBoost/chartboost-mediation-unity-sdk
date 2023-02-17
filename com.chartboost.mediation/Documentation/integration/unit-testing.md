@@ -1,5 +1,5 @@
 # Unit Testing
-The Helium Unity SDK package contains a series of Unit tests to ensure functionality and callbacks behave as expected.
+The Charboost Mediation Unity SDK package contains a series of Unit tests to ensure functionality and callbacks behave as expected.
 
 In order to enable test from the Helium SDK package, the following setup is needed in your Unity's project `manifest.json`, as follows:
 
