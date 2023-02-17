@@ -7,7 +7,7 @@ When you are ready to show a Rewarded or Interstitial ad, you can check that it 
 ### Interstitial Ad
 
 ```c#
-// Showing a Interstitial Ad
+// Showing an Interstitial Ad
 if (_interstitialAd.ReadyToShow())
     _interstitialAd.Show();
 ```
