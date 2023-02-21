@@ -15,6 +15,7 @@ Chartboost Mediation Unity SDK provides support for Unity based games to easily 
 | [iOS](https://www.apple.com/ios)                                      | 10.0+                |
 | [Minimum Android API Level](https://developer.android.com/studio/releases/platforms#5.0) | 5.0+ (API level 21)  |
 | [Target Android API Level](https://developer.android.com/studio/releases/platforms#12) | 12.0+ (API level 31) |
+| [Minimum Unity Version](https://unity.com/releases/editor/whats-new/2020.3.27) | 2020.3.27f1 |
 
 ### CHANGELOG
 Visit the [CHANGELOG](com.chartboost.mediation/CHANGELOG.md) to reference changes to each version of the Chartboost Mediation Unity SDK.
