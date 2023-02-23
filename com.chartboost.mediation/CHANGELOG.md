@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file using the standards as defined at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0).
 
-## Version 4.0.0 *(2023-03-01)*
+## Version 4.0.0 *(2023-02-03)*
 As part of the Marketing team’s efforts to clearly articulate the use cases and customers we support by being more descriptive with our product branding, Helium is being rebranded as Chartboost Mediation.
 
 Starting in 4.0.0, the Chartboost Mediation brand will be used in place of Helium for new additions. In the coming 4.X releases, the old Helium branding will be deprecated and the new Chartboost Mediation branding will be used to give publishers a smoother transition.
