@@ -10,7 +10,7 @@ using Chartboost;
 
 ## Initializing Chartboost Mediation Unity SDK
 
-In order to initialize the Chartboost Mediation Unity SDK, you will need your Chartboost Mediation App ID & App Signature. This can be obtained in your [Charboost Mediation Dashboard](https://helium.chartboost.com).
+In order to initialize the Chartboost Mediation Unity SDK, you will need your Chartboost Mediation App ID & App Signature. This can be obtained in your [Chartboost Mediation Dashboard](https://helium.chartboost.com).
 There are 2 ways you can go about providing your App IDs to the SDK.
 
 ### Chartboost Mediation Settings & Automatic Initialization
@@ -87,19 +87,19 @@ Once the Chartboost Mediation SDK has successfully started, you can start reques
 
 From Chartboost Mediation 3.3.0 forward, the Chartboost Mediation Unity SDK initialization method has been expanded to take in optional initialization parameters. One of those parameters is a set of partner adapter identifiers to skip initialization for the session.
 
-In Unity, Chartboost Mediation partners are identified through the `CharboostMediationPartners` enum. `CharboostMediationPartners` implements enum flags, which means flags can be raised before initialization as needed.
+In Unity, Chartboost Mediation partners are identified through the `ChartboostMediationPartners` enum. `ChartboostMediationPartners` implements enum flags, which means flags can be raised before initialization as needed.
 
-By default, the Partner Kill Switch can be easily modified through the `CharboostMediationSettings` scriptable object. By doing so, you can only enable/disable partner before builds are compiled. However, if your game utilizes a remote config supported service such as Leanplum, Swrve, etc. you can utilize remote config variables to enable/disable partners in deployed builds.
+By default, the Partner Kill Switch can be easily modified through the `ChartboostMediationSettings` scriptable object. By doing so, you can only enable/disable partner before builds are compiled. However, if your game utilizes a remote config supported service such as Leanplum, Swrve, etc. you can utilize remote config variables to enable/disable partners in deployed builds.
 
-The following example disables AdMob, Facebook, and TapJoy before CharboostMediation initialization. As long as the `CharboostMediationSettings.PartnersKillSwitch` parameter is modified before initialization, the partner networks will be skipped during the initialization process.
+The following example disables AdMob, Facebook, and TapJoy before ChartboostMediation initialization. As long as the `ChartboostMediationSettings.PartnersKillSwitch` parameter is modified before initialization, the partner networks will be skipped during the initialization process.
 
 
 ```c#
-CharboostMediationSettings.PartnersKillSwitch = CharboostMediationPartners.AdMob | CharboostMediationPartners.MetaAdudienceNetwork | CharboostMediationPartners.TapJoy;
+ChartboostMediationSettings.PartnersKillSwitch = ChartboostMediationPartners.AdMob | ChartboostMediationPartners.MetaAdudienceNetwork | ChartboostMediationPartners.TapJoy;
 
 var appID = "SAMPLE_APP_ID";
 var appSignature = "SAMPLE_APP_SIGNATURE";
 
-CharboostMediation.StartWithAppIdAndAppSignature(appID, appSignature);
+ChartboostMediation.StartWithAppIdAndAppSignature(appID, appSignature);
 ```
 For more information on how to corroborate partner initialization data visit [Delegate Usage](delegate-usage.md)

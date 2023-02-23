@@ -2,18 +2,18 @@
 
 ## Creating Interstitial & Rewarded Ad Objects
 
-To show an Interstitial or Rewarded Ads, first declare a variable to hold a reference to either the Interstitial or Rewarded Charboost Mediation Ad. Supply the corresponding Placement Name you set up on your dashboard as the argument for each of these functions:
+To show an Interstitial or Rewarded Ads, first declare a variable to hold a reference to either the Interstitial or Rewarded Chartboost Mediation Ad. Supply the corresponding Placement Name you set up on your dashboard as the argument for each of these functions:
 
 ```c#
 // Interstitial Ad
-private CharboostMediationInterstitialAd _interstitialAd;
+private ChartboostMediationInterstitialAd _interstitialAd;
 
 // Rewarded Ad
-private CharboostMediationRewardedAd _rewardedAd;
+private ChartboostMediationRewardedAd _rewardedAd;
 
 ...
-_interstitialAd = CharboostMediation.GetInterstitialAd(PLACEMENT_INTERSTITIAL);
-_rewardedAd = CharboostMediation.GetRewardedAd(PLACEMENT_REWARDED);
+_interstitialAd = ChartboostMediation.GetInterstitialAd(PLACEMENT_INTERSTITIAL);
+_rewardedAd = ChartboostMediation.GetRewardedAd(PLACEMENT_REWARDED);
 ```
 
 ## Loading Interstitial & Rewarded Ads
@@ -40,35 +40,35 @@ To show a banner ad, first declare a variable to hold a reference to the Banner 
 | `Leaderboard` | 728 x 90                    |
 
 ```c#
-private HelliumBannerAd _bannerAd;
+private ChartboostMediationBannerAd _bannerAd;
 
 if (_bannerAd != null)
   return;
 
 /*
   The following Banner enum Sizes can be passed down:
-  CharboostMediationBannerAdSize.Standard
-  CharboostMediationBannerAdSize.MediumRect
-  CharboostMediationBannerAdSize.Leaderboard
+  ChartboostMediationBannerAdSize.Standard
+  ChartboostMediationBannerAdSize.MediumRect
+  ChartboostMediationBannerAdSize.Leaderboard
 */
-CharboostMediationBannerAdSize BANNER_SIZE = CharboostMediationBannerAdSize.Standard;
-_bannerAd = CharboostMediation.GetBannerAd(PLACEMENT_BANNER, BANNER_SIZE);
+ChartboostMediationBannerAdSize BANNER_SIZE = ChartboostMediationBannerAdSize.Standard;
+_bannerAd = ChartboostMediation.GetBannerAd(PLACEMENT_BANNER, BANNER_SIZE);
 ```
 
-Banners are now shown automatically after load, as such you will need to pass a `CharboostMediationBannerAdScreenLocation` position when calling the load method:
+Banners are now shown automatically after load, as such you will need to pass a `ChartboostMediationBannerAdScreenLocation` position when calling the load method:
 
 
-| Banner Ad Location Enum                     | Enum Value | Position                                                        |
-| :---                                        | :---       | :---                                                            |
-| `CharboostMediationBannerAdScreenLocation.TopLeft`      | 0          | Positions the banner to the top-left screen of the device.      |
-| `CharboostMediationBannerAdScreenLocation.TopCenter`    | 1          | Positions the banner to the top-center screen of the device.    |
-| `CharboostMediationBannerAdScreenLocation.TopRight`     | 2          | Positions the banner to the top-right screen of the device.     |
-| `CharboostMediationBannerAdScreenLocation.Center`       | 3          | Positions the banner to the center screen of the device.        |
-| `CharboostMediationBannerAdScreenLocation.BottomLeft`   | 4          | Positions the banner to the bottom-left screen of the device.   |
-| `CharboostMediationBannerAdScreenLocation.BottomCenter` | 5          | Positions the banner to the bottom-center screen of the device. |
-| `CharboostMediationBannerAdScreenLocation.BottomRight`  | 6          | Positions the banner to the bottom-right screen of the device.  |
+| Banner Ad Location Enum                                  | Enum Value | Position                                                        |
+|:---------------------------------------------------------| :---       | :---                                                            |
+| `ChartboostMediationBannerAdScreenLocation.TopLeft`      | 0          | Positions the banner to the top-left screen of the device.      |
+| `ChartboostMediationBannerAdScreenLocation.TopCenter`    | 1          | Positions the banner to the top-center screen of the device.    |
+| `ChartboostMediationBannerAdScreenLocation.TopRight`     | 2          | Positions the banner to the top-right screen of the device.     |
+| `ChartboostMediationBannerAdScreenLocation.Center`       | 3          | Positions the banner to the center screen of the device.        |
+| `ChartboostMediationBannerAdScreenLocation.BottomLeft`   | 4          | Positions the banner to the bottom-left screen of the device.   |
+| `ChartboostMediationBannerAdScreenLocation.BottomCenter` | 5          | Positions the banner to the bottom-center screen of the device. |
+| `ChartboostMediationBannerAdScreenLocation.BottomRight`  | 6          | Positions the banner to the bottom-right screen of the device.  |
 
-If you enable auto-refresh for a banner placement in the dashboard, then the Charboost Mediation Unity SDK will apply that setting when the placement is shown.
+If you enable auto-refresh for a banner placement in the dashboard, then the Chartboost Mediation Unity SDK will apply that setting when the placement is shown.
 
 > **_NOTE:_** Any auto refresh changes made on the dashboard will take approximately one hour to take effect and the SDK must be rebooted in order to pick up the changes once they are available.
 
@@ -77,18 +77,18 @@ You will need to create an instance for each Placement Name you want to use. Fin
 ```c#
 
 /* All possible banner locations
- * CharboostMediationBannerAdScreenLocation.TopLeft,
- * CharboostMediationBannerAdScreenLocation.TopCenter,
- * CharboostMediationBannerAdScreenLocation.TopRight,
- * CharboostMediationBannerAdScreenLocation.Center,
- * CharboostMediationBannerAdScreenLocation.BottomLeft,
- * CharboostMediationBannerAdScreenLocation.BottomCenter,
- * CharboostMediationBannerAdScreenLocation.BottomRight,
- * CharboostMediationBannerAdScreenLocation.TopCenter
+ * ChartboostMediationBannerAdScreenLocation.TopLeft,
+ * ChartboostMediationBannerAdScreenLocation.TopCenter,
+ * ChartboostMediationBannerAdScreenLocation.TopRight,
+ * ChartboostMediationBannerAdScreenLocation.Center,
+ * ChartboostMediationBannerAdScreenLocation.BottomLeft,
+ * ChartboostMediationBannerAdScreenLocation.BottomCenter,
+ * ChartboostMediationBannerAdScreenLocation.BottomRight,
+ * ChartboostMediationBannerAdScreenLocation.TopCenter
  */
 
 // Load a banner on the top center location
-_bannerAd.Load(CharboostMediationBannerAdScreenLocation.TopCenter);
+_bannerAd.Load(ChartboostMediationBannerAdScreenLocation.TopCenter);
 ```
 
 You can implement delegates in your class to receive notifications about the success or failure of the ad loading process for Banner formats. See section [Delegate Usage](delegate-usage.md) for more details.

@@ -1,4 +1,4 @@
-# Configure Helium
+# Configure Chartboost Mediation
 
 ## Test Mode
 Chartboost Mediation 1.1.0, previously Helium, introduced a Test Mode method that will allow you to test your partner integrations and get their test ads. Please refer to the [Chartboost Mediation Android](https://developers.chartboost.com/docs/mediation-android-configure-helium#test-mode) and [Chartboost Mediation iOS](https://developers.chartboost.com/docs/mediation-ios-configure-helium#test-mode) integration documents on how to enable Test Mode.
@@ -57,7 +57,7 @@ As of Chartboost Mediation 2.9.0, the Chartboost Mediation SDKs introduces keywo
 To set keywords, you will need to first create a Chartboost Mediation ad object, then use the setKeyword method to add key-value keywords pair.
 
 ```csharp
-// Create a Helium Ad object.
+// Create an Ad object.
 ChartboostMediationInterstitialAd interstitialAd = ChartboostMediation.GetInterstitialAd(PLACEMENT_INTERSTITIAL);
 
 ChartboostMediationRewardedAd rewardedAd = ChartboostMediation.GetRewardedAd(PLACEMENT_REWARDED);

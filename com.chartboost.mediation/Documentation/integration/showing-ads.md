@@ -23,9 +23,9 @@ if (_rewardedAd.ReadyToShow()){
 ## Showing Banner Ads
 Banners are now automatically shown after load, see section [Loading Ads](loading-ads.md) for more information.
 
-## Releasing Charboost Mediation Ads
+## Releasing Chartboost Mediation Ads
 
-To clear resources used by Charboost Mediation Ads, you can use the destroy method associated with the respective Ad you have used.
+To clear resources used by Chartboost Mediation Ads, you can use the destroy method associated with the respective Ad you have used.
 
 ```c#
 private void OnDestroy()
