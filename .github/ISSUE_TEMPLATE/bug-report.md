@@ -23,8 +23,8 @@ A clear and concise description of what you expected to happen.
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
-**Helium Integration (please complete the following information):**
- - Helium SDK version: [e.g. 3.0.0]
+**Chartboost Mediation Integration (please complete the following information):**
+ - Chartboost Mediation SDK version: [e.g. 3.0.0]
  - Platform(s): [e.g. iOS, Android]
  - Unity version(s): [e.g. 2022.1.10, 2022.1.6]
  - External Dependency Manager version (if applicable): [e.g. v1.2.172]

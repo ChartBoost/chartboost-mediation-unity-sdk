@@ -1,7 +1,7 @@
 # Configure Helium
 
 ## Test Mode
-Chartboost Mediation 1.1.0, previously Helium, introduced a Test Mode method that will allow you to test your partner integrations and get their test ads. Please refer to the [Helium Android](https://developers.chartboost.com/docs/mediation-android-configure-helium#test-mode) and [Chartboost Mediation iOS](https://developers.chartboost.com/docs/mediation-ios-configure-helium#test-mode) integration documents on how to enable Test Mode.
+Chartboost Mediation 1.1.0, previously Helium, introduced a Test Mode method that will allow you to test your partner integrations and get their test ads. Please refer to the [Chartboost Mediation Android](https://developers.chartboost.com/docs/mediation-android-configure-helium#test-mode) and [Chartboost Mediation iOS](https://developers.chartboost.com/docs/mediation-ios-configure-helium#test-mode) integration documents on how to enable Test Mode.
 
 ## COPPA
 COPPA Settings can be configured utilizing the following method:
@@ -14,7 +14,7 @@ COPPA Settings can be configured utilizing the following method:
 
 * By sending `SetSubjectToCoppa (true)`, you indicate that you want your content treated as child-directed for purposes of COPPA. We will take steps to disable interest-based advertising for such ad requests.
 
-* By sending `SetSubjectToCoppa (false)`, you indicate that you don't want your content treated as child-directed for purposes of COPPA. You represent and warrant that your applications and services are not directed towards children and that you will not provide any information to Helium from a user under the age of 13.
+* By sending `SetSubjectToCoppa (false)`, you indicate that you don't want your content treated as child-directed for purposes of COPPA. You represent and warrant that your applications and services are not directed towards children and that you will not provide any information to Chartboost Mediation from a user under the age of 13.
 
 ## GDPR
 ```csharp

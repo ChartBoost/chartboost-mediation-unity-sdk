@@ -41,7 +41,7 @@ ChartboostMediation.IsLoggingEnabled = false;
 ChartboostMediation.IsAutomaticInitializationEnabled = false;
 
 // Partner Kill Switch Accessor
-ChartboostMediation.PartnersKillSwitch = HeliumPartners.None;
+ChartboostMediation.PartnersKillSwitch = ChartboostMediationPartners.None;
 
 // SKAdNetwork Resolution by Chartboost Mediation
 ChartboostMediation.IsSkAdNetworkResolutionEnabled = false;
