@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
     <androidPackages>
-        <!-- Helium AdMob Adapter -->
+        <!-- Chartboost Mediation AdMob Adapter -->
         <androidPackage spec="com.chartboost:chartboost-mediation-adapter-admob:4.21.3.0+@aar" />
 
         <!-- Admob Android SDK -->
         <androidPackage spec="com.google.android.gms:play-services-ads:21.3.0" />
     </androidPackages>
     <iosPods>
-        <!-- Helium AdMob Adapter -->
+        <!-- Chartboost Mediation AdMob Adapter -->
         <iosPod name="ChartboostMediationAdapterAdMob" version="~> 4.9.12.0"/>
 
         <!-- Admob iOS SDK -->

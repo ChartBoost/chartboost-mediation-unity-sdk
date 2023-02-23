@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
     <androidPackages>
-        <!-- Helium Chartboost Adapter -->
+        <!-- Chartboost Mediation Chartboost Adapter -->
         <androidPackage spec="com.chartboost:chartboost-mediation-adapter-chartboost:4.9.2.0+@aar" />
 
-        <!-- Helium Chartboost SDK -->
+        <!-- Chartboost SDK -->
         <androidPackage spec="com.chartboost:chartboost-sdk:9.2.+@aar" />
     </androidPackages>
     <iosPods>
-        <!-- Helium Chartboost Adapter -->
+        <!-- Chartboost Mediation Chartboost Adapter -->
         <iosPod name="ChartboostMediationAdapterChartboost" version="~> 4.9.2.0"/>
 
         <!-- Chartboost iOS SDK -->

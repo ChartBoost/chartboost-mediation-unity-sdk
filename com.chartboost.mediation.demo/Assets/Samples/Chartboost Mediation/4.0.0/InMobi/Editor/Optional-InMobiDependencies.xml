@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
     <androidPackages>
-        <!-- Helium InMobi Adapter -->
+        <!-- Chartboost Mediation InMobi Adapter -->
         <androidPackage spec="com.chartboost:chartboost-mediation-adapter-inmobi:4.10.1.1+@aar" />
 
         <!-- InMobi Android SDK -->
         <androidPackage spec="com.inmobi.monetization:inmobi-ads:10.1.1"/>
     </androidPackages>
     <iosPods>
-        <!-- Helium InMobi Adapter -->
+        <!-- Chartboost Mediation InMobi Adapter -->
         <iosPod name="ChartboostMediationAdapterInMobi" version="~> 4.10.1.2"/>
 
         <!-- InMobi iOS SDK -->

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
     <androidPackages>
-        <!-- Helium Tapjoy Adapter -->
+        <!-- Chartboost Mediation Tapjoy Adapter -->
         <androidPackage spec="com.chartboost:chartboost-mediation-adapter-tapjoy:4.12.9.1+@aar" />
 
         <!-- Tapjoy Android SDK -->
@@ -11,7 +11,7 @@
         <androidPackage spec="com.tapjoy:tapjoy-android-sdk:12.9.1" />
     </androidPackages>
     <iosPods>
-        <!-- Helium Tapjoy Adapter -->
+        <!-- Chartboost Mediation Tapjoy Adapter -->
         <iosPod name="ChartboostMediationAdapterTapjoy" version="~> 4.12.10.0"/>
 
         <!-- Tapjoy iOS SDK -->

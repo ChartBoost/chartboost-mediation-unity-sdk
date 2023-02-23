@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
     <androidPackages>
-        <!-- Helium Vungle Adapter -->
+        <!-- Chartboost Mediation Vungle Adapter -->
         <androidPackage spec="com.chartboost:chartboost-mediation-adapter-vungle:4.6.12+@aar" />
 
         <!-- Vungle Android SDK -->
         <androidPackage spec="com.vungle:publisher-sdk-android:6.12.0"/>
     </androidPackages>
     <iosPods>
-        <!-- Helium Vungle Adapter -->
+        <!-- Chartboost Mediation Vungle Adapter -->
         <iosPod name="ChartboostMediationAdapterVungle" version="~> 4.6.12.1"/>
 
         <!-- Vungle iOS SDK -->

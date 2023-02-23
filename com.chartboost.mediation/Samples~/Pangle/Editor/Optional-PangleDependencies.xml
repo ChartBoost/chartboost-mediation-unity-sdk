@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
     <androidPackages>
-        <!-- Helium Pangle Adapter -->
+        <!-- Chartboost Mediation Pangle Adapter -->
         <androidPackage spec="com.chartboost:chartboost-mediation-adapter-pangle:4.4.3.0.4+@aar" />
 
         <!-- Pangle Android SDK -->
@@ -12,7 +12,7 @@
         <androidPackage spec="com.pangle.global:ads-sdk:4.3.0.4"/>
     </androidPackages>
     <iosPods>
-        <!-- Helium Pangle Adapter -->
+        <!-- Chartboost Mediation Pangle Adapter -->
         <iosPod name="ChartboostMediationAdapterPangle" version="~> 4.4.6.2"/>
 
         <!-- Pangle iOS SDK -->
