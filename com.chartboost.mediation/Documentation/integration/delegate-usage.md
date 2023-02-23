@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Chartboost Mediaiton delegate methods allow you to exercise a greater degree of control over your integration. For example, you can:
+Chartboost Mediation's delegate methods allow you to exercise a greater degree of control over your integration. For example, you can:
 
 * Log debug messages when your game attempts to load an interstitial
 * Prevent ads from showing the first time a user plays your game
@@ -11,7 +11,7 @@ The Chartboost Mediaiton delegate methods allow you to exercise a greater degree
 
 ## Delegates Setup
 
-The Chartboost Mediation SDK implements its delegate functionality using C# style delegates and events. Before using any of the delegate methods, you should first subscribe to the relevant SDK events in your MonoBehaviour as demonstrated:
+The Chartboost Mediation Unity SDK implements its delegate functionality using C# style delegates and events. Before using any of the delegate methods, you should first subscribe to the relevant SDK events in your MonoBehaviour as demonstrated:
 
 ### Subscribing Delegates
 ```c#
