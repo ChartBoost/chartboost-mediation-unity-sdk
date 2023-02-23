@@ -195,11 +195,6 @@ private void DidLoadBanner(string placementName, string loadId, BidInfo info, st
     Debug.Log($"DidLoadBanner{placementName}, {placementName}, Price: ${info.Price:F4}, Auction Id: {info.AuctionId}, Partner Id: {info.PartnerId}. {error}");
 }
 
-private void DidShowBanner(string placementName, string error)
-{
-    Debug.Log($"DidShowBanner {placementName}: {error}");
-}
-
 private void DidClickBanner(string placementName, string error)
 {
     Debug.Log($"DidClickBanner {placementName}: {error}");
@@ -207,7 +202,6 @@ private void DidClickBanner(string placementName, string error)
 
 private void DidRecordImpressionBanner(string placementName, string error)
 {
-    IsBannerVisible = true;
     Log($"DidRecordImpressionBanner {placementName}: {error}");
 }
 ```
