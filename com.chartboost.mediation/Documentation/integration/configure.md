@@ -81,3 +81,27 @@ this.bannerAd.RemoveKeyword("bnr_keyword1");
 ```
 
 > **_NOTE:_** Keywords has restrictions for setting keys and values. The maximum characters allowed for keys is 64 characters. The maximum characters for values is 256 characters.
+
+
+### Setting User Identifier
+
+The user identifier property is found on the ChartboostMediation class. This property may be set anytime after SDK initialization.
+
+```csharp
+ChartboostMediation.SetUserIdentifier("user");
+```
+
+### Setting Custom Data
+
+The custom data property is found on the `ChartboostMediationRewardedAd` instance, and has a maximum character limit of `1000` characters. In the event that the limit is exceeded, the customData property will be set to null.
+
+Custom data may be set at any time before calling `Show()`
+
+```csharp
+_rewardedAd = ChartboostMediation.GetRewardedAd(“placement”);
+var bytesToEncode = Encoding.UTF8.GetBytes("{\"testkey\":\"testvalue\"}");
+var encodedText = Convert.ToBase64String(bytesToEncode);
+_rewardedAd.SetCustomData(encodedText);
+
+_rewardedAd.Load();
+```
