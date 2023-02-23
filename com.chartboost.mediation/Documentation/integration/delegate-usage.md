@@ -177,9 +177,9 @@ private void DidClickRewarded(string placementName, string error)
     Debug.Log($"DidClickRewarded {placementName}: {error}");
 }
 
-private void DidReceiveReward(string placementName)
+private void DidReceiveReward(string placementName, string error)
 {
-    Debug.Log($"DidReceiveReward {placementName}");
+    Debug.Log($"DidReceiveReward {placementName}: {error}");
 }
 
 private void DidRecordImpressionRewarded(string placementName, string error)
