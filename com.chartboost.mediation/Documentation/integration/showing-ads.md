@@ -7,7 +7,7 @@ When you are ready to show a Rewarded or Interstitial ad, you can check that it 
 ### Interstitial Ad
 
 ```c#
-// Showing a Helium Interstitial Ad
+// Showing an Interstitial Ad
 if (_interstitialAd.ReadyToShow())
     _interstitialAd.Show();
 ```
@@ -15,7 +15,7 @@ if (_interstitialAd.ReadyToShow())
 ### Rewarded Ad
 
 ```c#
-//Showing a Helium Rewarded Ad
+//Showing a Rewarded Ad
 if (_rewardedAd.ReadyToShow()){
   _rewardedAd.show();
 ```
@@ -23,9 +23,9 @@ if (_rewardedAd.ReadyToShow()){
 ## Showing Banner Ads
 Banners are now automatically shown after load, see section [Loading Ads](loading-ads.md) for more information.
 
-## Releasing Helium Ads
+## Releasing Chartboost Mediation Ads
 
-To clear resources used by Helium Ads, you can use the destroy method associated with the respective Helium Ad you have used.
+To clear resources used by Chartboost Mediation Ads, you can use the destroy method associated with the respective Ad you have used.
 
 ```c#
 private void OnDestroy()

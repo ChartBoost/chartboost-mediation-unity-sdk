@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
     <androidPackages>
-        <!-- Helium Meta Audience Network Adapter -->
+        <!-- Chartboost Mediation Meta Audience Network Adapter -->
         <androidPackage spec="com.chartboost:chartboost-mediation-adapter-meta-audience-network:4.6.12.0+@aar" />
 
         <!-- FAN Android SDK -->
         <androidPackage spec="com.facebook.android:audience-network-sdk:6.12.0" />
     </androidPackages>
     <iosPods>
-        <!-- Helium Meta Audience Network Adapter -->
+        <!-- Chartboost Mediation Meta Audience Network Adapter -->
         <iosPod name="ChartboostMediationAdapterMetaAudienceNetwork" version="~> 4.6.12.0"/>
 
         <!-- FAN iOS SDK -->

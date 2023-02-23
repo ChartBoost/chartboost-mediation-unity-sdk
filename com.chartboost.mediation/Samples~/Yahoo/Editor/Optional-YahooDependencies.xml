@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
     <androidPackages>
-        <!-- Helium Yahoo Adapter -->
+        <!-- Chartboost Mediation Yahoo Adapter -->
         <androidPackage spec="com.chartboost:chartboost-mediation-adapter-yahoo:4.1.3.0+@aar" />
 
         <!-- Yahoo Android SDK -->
@@ -14,7 +14,7 @@
         <androidPackage spec="androidx.browser:browser:1.4.0"/>
     </androidPackages>\
     <iosPods>
-        <!-- Helium Yahoo Adapter -->
+        <!-- Chartboost Mediation Yahoo Adapter -->
         <iosPod name="ChartboostMediationAdapterYahoo" version="~> 4.1.3.0"/>
 
         <!-- Yahoo iOS SDK -->

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
     <androidPackages>
-        <!-- Helium Unity Ads Adapter -->
+        <!-- Chartboost Mediation Unity Ads Adapter -->
         <androidPackage spec="com.chartboost:chartboost-mediation-adapter-unity-ads:4.4.4.1+@aar" />
 
         <!-- Unity Ads Android SDK -->
@@ -9,7 +9,7 @@
         <androidPackage spec="androidx.core:core:1.2.0"/>
     </androidPackages>
     <iosPods>
-        <!-- Helium Unity Ads Adapter -->
+        <!-- Chartboost Mediation Unity Ads Adapter -->
         <iosPod name="ChartboostMediationAdapterUnityAds" version="~> 4.4.4.1"/>
 
         <!-- Unity Ads iOS SDK -->

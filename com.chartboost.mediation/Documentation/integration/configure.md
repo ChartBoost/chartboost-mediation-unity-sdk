@@ -1,26 +1,26 @@
-# Configure Helium
+# Configure Chartboost Mediation
 
 ## Test Mode
-Helium 1.1.0 introduced a Test Mode method that will allow you to test your partner integrations and get their test ads. Please refer to the [Helium Android](https://developers.chartboost.com/docs/android-configure-helium#test-mode) and [Helium iOS](https://developers.chartboost.com/docs/ios-configure-helium-ad-settings#test-mode) integration documents on how to enable Test Mode.
+Chartboost Mediation 1.1.0, previously Helium, introduced a Test Mode method that will allow you to test your partner integrations and get their test ads. Please refer to the [Chartboost Mediation Android](https://developers.chartboost.com/docs/mediation-android-configure-helium#test-mode) and [Chartboost Mediation iOS](https://developers.chartboost.com/docs/mediation-ios-configure-helium#test-mode) integration documents on how to enable Test Mode.
 
 ## COPPA
 COPPA Settings can be configured utilizing the following method:
 
 ```csharp
-  HeliumSDK.SetSubjectToCoppa(true);
+  ChartboostMediation.SetSubjectToCoppa(true);
   // or
-  HeliumSDK.SetSubjectToCoppa(false);
+  ChartboostMediation.SetSubjectToCoppa(false);
 ```
 
 * By sending `SetSubjectToCoppa (true)`, you indicate that you want your content treated as child-directed for purposes of COPPA. We will take steps to disable interest-based advertising for such ad requests.
 
-* By sending `SetSubjectToCoppa (false)`, you indicate that you don't want your content treated as child-directed for purposes of COPPA. You represent and warrant that your applications and services are not directed towards children and that you will not provide any information to Helium from a user under the age of 13.
+* By sending `SetSubjectToCoppa (false)`, you indicate that you don't want your content treated as child-directed for purposes of COPPA. You represent and warrant that your applications and services are not directed towards children and that you will not provide any information to Chartboost Mediation from a user under the age of 13.
 
 ## GDPR
 ```csharp
-  HeliumSDK.SetSubjectToGDPR(true);
+  ChartboostMediation.SetSubjectToGDPR(true);
   // or
-  HeliumSDK.SetSubjectToGDPR(false);
+  ChartboostMediation.SetSubjectToGDPR(false);
 ```
 
 * By sending `SetSubjectToGDPR (true)`, you indicate that GDPR is applied to this user from your application.
@@ -28,9 +28,9 @@ COPPA Settings can be configured utilizing the following method:
 * By sending `SetSubjectToGDPR (false)`, you indicate that GDPR is not applied to this user from your application.
 
 ```csharp
-  HeliumSDK.SetUserHasGivenConsent(true);
+  ChartboostMediation.SetUserHasGivenConsent(true);
   // or
-  HeliumSDK.SetUserHasGivenConsent(false);
+  ChartboostMediation.SetUserHasGivenConsent(false);
 ```
 
 * By sending `SetUserHasGivenConsent (true)`, you indicate that this user from your application has given consent to share personal data for behavioral targeted advertising.
@@ -39,30 +39,30 @@ COPPA Settings can be configured utilizing the following method:
 
 ## CCPA
 ```csharp
-  HeliumSDK.SetCCPAConsent(true);
+  ChartboostMediation.SetCCPAConsent(true);
   // or
-  HeliumSDK.SetCCPAConsent(false);
+  ChartboostMediation.SetCCPAConsent(false);
 ```
 
 * By sending `SetCCPAConsent (true)`, you indicate that this user from your application has given consent to share personal data for behavioral targeted advertising under CCPA regulation.
 
 * By sending `SetCCPAConsent (false)`, you indicate that this user from your application has not given consent to allow sharing personal data for behavioral targeted advertising under CCPA regulation.
 
-> **_NOTE:_** Helium will send CCPA information to the bidding network and set the CCPA information for the adapters.
+> **_NOTE:_** Chartboost Mediation will send CCPA information to the bidding network and set the CCPA information for the adapters.
 
 ## Keywords
-As of Helium 2.9.0, the Helium SDKs introduces keywords: key-value pairs to enable real-time targeting on line items.
+As of Chartboost Mediation 2.9.0, the Chartboost Mediation SDKs introduces keywords: key-value pairs to enable real-time targeting on line items.
 
 ### Set Keywords
-To set keywords, you will need to first create a Helium ad object, then use the setKeyword method to add key-value keywords pair.
+To set keywords, you will need to first create a Chartboost Mediation ad object, then use the setKeyword method to add key-value keywords pair.
 
 ```csharp
-// Create a Helium Ad object.
-HeliumInterstitialAd interstitialAd = HeliumSdk.GetInterstitialAd(PLACEMENT_INTERSTITIAL);
+// Create an Ad object.
+ChartboostMediationInterstitialAd interstitialAd = ChartboostMediation.GetInterstitialAd(PLACEMENT_INTERSTITIAL);
 
-HeliumRewardedAd rewardedAd = HeliumSdk.GetRewardedAd(PLACEMENT_REWARDED);
+ChartboostMediationRewardedAd rewardedAd = ChartboostMediation.GetRewardedAd(PLACEMENT_REWARDED);
 
-HeliumBannerAd bannerAd = HeliumSdk.GetBannerAd(PLACEMENT_BANNER, BANNER_SIZE);
+ChartboostMediationBannerAd bannerAd = ChartboostMediation.GetBannerAd(PLACEMENT_BANNER, BANNER_SIZE);
 
 // Set a Keyword
 this.interstitialAd.SetKeyword("i12_keyword1", "i12_value1");
@@ -81,3 +81,27 @@ this.bannerAd.RemoveKeyword("bnr_keyword1");
 ```
 
 > **_NOTE:_** Keywords has restrictions for setting keys and values. The maximum characters allowed for keys is 64 characters. The maximum characters for values is 256 characters.
+
+
+### Setting User Identifier
+
+The user identifier property is found on the ChartboostMediation class. This property may be set anytime after SDK initialization.
+
+```csharp
+ChartboostMediation.SetUserIdentifier("user");
+```
+
+### Setting Custom Data
+
+The custom data property is found on the `ChartboostMediationRewardedAd` instance, and has a maximum character limit of `1000` characters. In the event that the limit is exceeded, the customData property will be set to null.
+
+Custom data may be set at any time before calling `Show()`
+
+```csharp
+_rewardedAd = ChartboostMediation.GetRewardedAd(“placement”);
+var bytesToEncode = Encoding.UTF8.GetBytes("{\"testkey\":\"testvalue\"}");
+var encodedText = Convert.ToBase64String(bytesToEncode);
+_rewardedAd.SetCustomData(encodedText);
+
+_rewardedAd.Load();
+```

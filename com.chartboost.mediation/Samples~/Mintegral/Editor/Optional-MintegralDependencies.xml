@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
     <androidPackages>
-        <!-- Helium Mintegral Adapter -->
+        <!-- Chartboost Mediation Mintegral Adapter -->
         <androidPackage spec="com.chartboost:chartboost-mediation-adapter-mintegral:4.16.0.31+@aar" />
 
         <!-- Mintegral Android SDK -->
@@ -22,7 +22,7 @@
         <androidPackage spec="com.mbridge.msdk.oversea:mbbid:16.0.31"/>
     </androidPackages>
     <iosPods>
-        <!-- Helium Mintegral Adapter -->
+        <!-- Chartboost Mediation Mintegral Adapter -->
         <iosPod name="ChartboostMediationAdapterMintegral" version="~> 4.7.1.9"/>
 
         <!-- Mintegral iOS SDK -->

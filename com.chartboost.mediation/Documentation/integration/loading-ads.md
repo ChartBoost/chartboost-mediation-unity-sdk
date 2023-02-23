@@ -2,18 +2,18 @@
 
 ## Creating Interstitial & Rewarded Ad Objects
 
-To show an Interstitial or Rewarded Ads, first declare a variable to hold a reference to either the Interstitial or Rewarded Helium Ad. Supply the corresponding Placement Name you set up on your dashboard as the argument for each of these functions:
+To show an Interstitial or Rewarded Ads, first declare a variable to hold a reference to either the Interstitial or Rewarded Chartboost Mediation Ad. Supply the corresponding Placement Name you set up on your dashboard as the argument for each of these functions:
 
 ```c#
-//Helium Interstitial Ad
-private HeliumInterstitialAd _interstitialAd;
+// Interstitial Ad
+private ChartboostMediationInterstitialAd _interstitialAd;
 
-//Helium Rewarded Ad
-private HeliumRewardedAd _rewardedAd;
+// Rewarded Ad
+private ChartboostMediationRewardedAd _rewardedAd;
 
 ...
-_interstitialAd = HeliumSDK.GetInterstitialAd(PLACEMENT_INTERSTITIAL);
-_rewardedAd = HeliumSDK.GetRewardedAd(PLACEMENT_REWARDED);
+_interstitialAd = ChartboostMediation.GetInterstitialAd(PLACEMENT_INTERSTITIAL);
+_rewardedAd = ChartboostMediation.GetRewardedAd(PLACEMENT_REWARDED);
 ```
 
 ## Loading Interstitial & Rewarded Ads
@@ -29,7 +29,7 @@ You can implement delegates in your class to receive notifications about the suc
 
 ## Creating Banner Ad Objects
 
-To show a banner ad, first declare a variable to hold a reference to the Banner Helium Ad. Supply the corresponding Placement Name and the Banner Size.
+To show a banner ad, first declare a variable to hold a reference to the Banner Ad. Supply the corresponding Placement Name and the Banner Size.
 
 > **_NOTE:_** The following banner sizes can be passed down. Some partners may not fill for some banner sizes.
 
@@ -40,35 +40,35 @@ To show a banner ad, first declare a variable to hold a reference to the Banner 
 | `Leaderboard` | 728 x 90                    |
 
 ```c#
-private HelliumBannerAd _bannerAd;
+private ChartboostMediationBannerAd _bannerAd;
 
 if (_bannerAd != null)
   return;
 
 /*
   The following Banner enum Sizes can be passed down:
-  HeliumBannerAdSize.Standard
-  HeliumBannerAdSize.MediumRect
-  HeliumBannerAdSize.Leaderboard
+  ChartboostMediationBannerAdSize.Standard
+  ChartboostMediationBannerAdSize.MediumRect
+  ChartboostMediationBannerAdSize.Leaderboard
 */
-HeliumBannerAdSize BANNER_SIZE = HeliumBannerAdSize.Standard;
-_bannerAd = HeliumSDK.GetBannerAd(PLACEMENT_BANNER, BANNER_SIZE);
+ChartboostMediationBannerAdSize BANNER_SIZE = ChartboostMediationBannerAdSize.Standard;
+_bannerAd = ChartboostMediation.GetBannerAd(PLACEMENT_BANNER, BANNER_SIZE);
 ```
 
-Banners are now shown automatically after load, as such you will need to pass a `HeliumBannerAdScreenLocation` position when calling the load method:
+Banners are now shown automatically after load, as such you will need to pass a `ChartboostMediationBannerAdScreenLocation` position when calling the load method:
 
 
-| Banner Ad Location Enum                     | Enum Value | Position                                                        |
-| :---                                        | :---       | :---                                                            |
-| `HeliumBannerAdScreenLocation.TopLeft`      | 0          | Positions the banner to the top-left screen of the device.      |
-| `HeliumBannerAdScreenLocation.TopCenter`    | 1          | Positions the banner to the top-center screen of the device.    |
-| `HeliumBannerAdScreenLocation.TopRight`     | 2          | Positions the banner to the top-right screen of the device.     |
-| `HeliumBannerAdScreenLocation.Center`       | 3          | Positions the banner to the center screen of the device.        |
-| `HeliumBannerAdScreenLocation.BottomLeft`   | 4          | Positions the banner to the bottom-left screen of the device.   |
-| `HeliumBannerAdScreenLocation.BottomCenter` | 5          | Positions the banner to the bottom-center screen of the device. |
-| `HeliumBannerAdScreenLocation.BottomRight`  | 6          | Positions the banner to the bottom-right screen of the device.  |
+| Banner Ad Location Enum                                  | Enum Value | Position                                                        |
+|:---------------------------------------------------------| :---       | :---                                                            |
+| `ChartboostMediationBannerAdScreenLocation.TopLeft`      | 0          | Positions the banner to the top-left screen of the device.      |
+| `ChartboostMediationBannerAdScreenLocation.TopCenter`    | 1          | Positions the banner to the top-center screen of the device.    |
+| `ChartboostMediationBannerAdScreenLocation.TopRight`     | 2          | Positions the banner to the top-right screen of the device.     |
+| `ChartboostMediationBannerAdScreenLocation.Center`       | 3          | Positions the banner to the center screen of the device.        |
+| `ChartboostMediationBannerAdScreenLocation.BottomLeft`   | 4          | Positions the banner to the bottom-left screen of the device.   |
+| `ChartboostMediationBannerAdScreenLocation.BottomCenter` | 5          | Positions the banner to the bottom-center screen of the device. |
+| `ChartboostMediationBannerAdScreenLocation.BottomRight`  | 6          | Positions the banner to the bottom-right screen of the device.  |
 
-If you enable auto-refresh for a banner placement in the dashboard, then the Helium SDK will apply that setting when the placement is shown.
+If you enable auto-refresh for a banner placement in the dashboard, then the Chartboost Mediation Unity SDK will apply that setting when the placement is shown.
 
 > **_NOTE:_** Any auto refresh changes made on the dashboard will take approximately one hour to take effect and the SDK must be rebooted in order to pick up the changes once they are available.
 
@@ -77,18 +77,18 @@ You will need to create an instance for each Placement Name you want to use. Fin
 ```c#
 
 /* All possible banner locations
- * HeliumBannerAdScreenLocation.TopLeft,
- * HeliumBannerAdScreenLocation.TopCenter,
- * HeliumBannerAdScreenLocation.TopRight,
- * HeliumBannerAdScreenLocation.Center,
- * HeliumBannerAdScreenLocation.BottomLeft,
- * HeliumBannerAdScreenLocation.BottomCenter,
- * HeliumBannerAdScreenLocation.BottomRight,
- * HeliumBannerAdScreenLocation.TopCenter
+ * ChartboostMediationBannerAdScreenLocation.TopLeft,
+ * ChartboostMediationBannerAdScreenLocation.TopCenter,
+ * ChartboostMediationBannerAdScreenLocation.TopRight,
+ * ChartboostMediationBannerAdScreenLocation.Center,
+ * ChartboostMediationBannerAdScreenLocation.BottomLeft,
+ * ChartboostMediationBannerAdScreenLocation.BottomCenter,
+ * ChartboostMediationBannerAdScreenLocation.BottomRight,
+ * ChartboostMediationBannerAdScreenLocation.TopCenter
  */
 
 // Load a banner on the top center location
-_bannerAd.Load(HeliumBannerAdScreenLocation.TopCenter);
+_bannerAd.Load(ChartboostMediationBannerAdScreenLocation.TopCenter);
 ```
 
 You can implement delegates in your class to receive notifications about the success or failure of the ad loading process for Banner formats. See section [Delegate Usage](delegate-usage.md) for more details.

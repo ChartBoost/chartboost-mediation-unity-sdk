@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
     <androidPackages>
-        <!-- Helium IronSource Adapter -->
+        <!-- Chartboost Mediation IronSource Adapter -->
         <androidPackage spec="com.chartboost:chartboost-mediation-adapter-ironsource:4.7.2.5+@aar" />
 
         <!-- IronSource Android SDK -->
@@ -12,7 +12,7 @@
 
     </androidPackages>
     <iosPods>
-        <!-- Helium IronSource Adapter -->
+        <!-- Chartboost Mediation IronSource Adapter -->
         <iosPod name="ChartboostMediationAdapterIronSource" version="~> 4.7.2.5.1"/>
 
         <!-- IronSource iOS SDK -->

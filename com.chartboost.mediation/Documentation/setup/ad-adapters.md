@@ -2,63 +2,67 @@
 
 ## Dependency Resolution & Google External Dependency Manager (EDM)
 
-The Helium Unity SDK does not embed Google’s EDM plugin.
+The Chartboost Mediation Unity SDK does not embed Google’s EDM plugin.
 
 If you want to integrate ad networks with other supported SDKs as well, you will need [Google's External Dependency Manager](https://developers.google.com/unity/archive#external_dependency_manager_for_unity). For more information see our recommended setup in [Google External Dependency Manager (EDM)](edm.md).
 
-The Helium Unity SDK package contains samples with optional dependencies for ad adapters. Such samples can be found in the `Package Manager/Sample` sections.
+The Chartboost Mediation Unity SDK package contains samples with optional dependencies for ad adapters. Such samples can be found in the `Package Manager/Sample` sections.
 
-Each Helium Unity SDK sample contains a .xml file with dependencies for the adapter available platforms (Android/iOS). In order for such dependencies to be included into the final build the [Google's External Dependency Manager](https://github.com/googlesamples/unity-jar-resolver) is needed.
+Each Chartboost Mediation Unity SDK sample contains a .xml file with dependencies for the adapter available platforms (Android/iOS). In order for such dependencies to be included into the final build the [Google's External Dependency Manager](https://github.com/googlesamples/unity-jar-resolver) is needed.
 The `EDM` makes sure to download and package any dependencies with your build.
 
-## HeliumDependencies.xml
+## ChartboostMediationDependencies.xml
 
-The HeliumDependencies.xml can be found in the `Package Manager/Sample` as seen in the following screenshot.
+The `ChartboostMediationDependencies.xml` can be found in the `Package Manager/Sample` as seen in the following screenshot.
 
-> **_NOTE:_** This is a mandatory dependency and must be imported for proper utilization of the Helium SDK.
+> **_NOTE:_** This is a mandatory dependency and must be imported for proper utilization of the Chartboost Mediation Unity SDK.
 
-![HeliumDependencies.xml](../images/helium-dependencies.png)
+![ChartboostMediationDependencies.xml](../images/chartboost-mediation-dependencies.png)
 
 ## Ad Adapters as Optional Dependencies
-In addition to the `HeliumDependencies.xml` file, the Helium Unity SDK includes optional dependencies based on the supported Ad Networks and its adapters.
+In addition to the `ChartboostMediationDependencies.xml` file, the Chartboost Mediation Unity SDK includes optional dependencies based on the supported Ad Networks and its adapters.
 
 They and can be found in the `Package Manager/Sample` area, and are labeled as follow:
 
-`Optional-HeliumAdColonyDependencies.xml`
+`Optional-AdColonyDependencies.xml`
 
-`Optional-HeliumAdMobDependencies.xml`
+`Optional-AdMobDependencies.xml`
 
-`Optional-HeliumAppLovinDependencies.xml`
+`Optional-AmazonPublisherServicesDependencies.xml`
 
-`Optional-HeliumFacebookDependencies.xml`
+`Optional-AppLovinDependencies.xml`
 
-`Optional-HeliumTapjoyDependencies.xml`
+`Optional-GoogleBiddingDependencies.xml`
 
-`Optional-HeliumVungleDependencies.xml`
+`Optional-MetaAudienceNetworkDependencies.xml`
 
-`Optional-HeliumUnityAdsDependencies.xml`
+`Optional-TapjoyDependencies.xml`
 
-`Optional-HeliumIronSourceDependencies.xml`
+`Optional-VungleDependencies.xml`
 
-`Optional-HeliumFyberDependencies.xml`
+`Optional-UnityAdsDependencies.xml`
 
-`Optional-HeliumInMobiDependencies.xml`
+`Optional-IronSourceDependencies.xml`
 
-`Optional-HeliumMintegralDependencies.xml`
+`Optional-DigitalTurbineExchangeDependencies.xml`
 
-`Optional-HeliumYahooDependencies.xml`
+`Optional-InMobiDependencies.xml`
 
-They can be obtained by importing them as Samples with Unity's Package Manager. When updating the Helium SDK Package through UPM. It is important to reimport any samples as to update your local dependency files.
+`Optional-MintegralDependencies.xml`
 
-![Reimport](../images/reimport.png)
+`Optional-YahooDependencies.xml`
+
+They can be obtained by importing them as Samples with Unity's Package Manager. When updating the Chartboost Mediation Unity SDK Package through UPM. It is important to reimport any samples as to update your local dependency files.
+
+![Reimport](../images/chartboost-mediation-dependencies-reimport.png)
 
 > **_NOTE:_** When including 3rd-Party SDKs on Android, remember to update the manifest file according to the integrated SDK’s requirements as well.
 
 ### Adding Unity Ads SDK - Android
 
-Including the `Optional-HeliumUnityAdsDependencies.xml` file will NOT automatically import the Unity Ads SDK to your Unity Android build (unlike the other dependency files which will do that automatically). You should manually include the correct version of the Unity Ads SDK by either:
+Including the `Optional-UnityAdsDependencies.xml` file will NOT automatically import the Unity Ads SDK to your Unity Android build (unlike the other dependency files which will do that automatically). You should manually include the correct version of the Unity Ads SDK by either:
 
-* Uncommenting out the appropriate line in the `Optional-HeliumUnityAdsDependencies.xml` : `<!-- <androidPackage spec="com.unity3d.ads:unity-ads:4.2.1""/> -->`.
+* Uncommenting out the appropriate line in the `Optional-UnityAdsDependencies.xml` : `<!-- <androidPackage spec="com.unity3d.ads:unity-ads:4.4.1""/> -->`.
 
 * Importing the correct version of the Unity Ads SDK via the built-in Unity Package Manager.
 

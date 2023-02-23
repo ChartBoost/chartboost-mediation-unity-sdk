@@ -15,6 +15,7 @@ Chartboost Mediation Unity SDK provides support for Unity based games to easily 
 | [iOS](https://www.apple.com/ios)                                      | 10.0+                |
 | [Minimum Android API Level](https://developer.android.com/studio/releases/platforms#5.0) | 5.0+ (API level 21)  |
 | [Target Android API Level](https://developer.android.com/studio/releases/platforms#12) | 12.0+ (API level 31) |
+| [Minimum Unity Version](https://unity.com/releases/editor/whats-new/2020.3.27) | 2020.3.27f1 |
 
 ### CHANGELOG
 Visit the [CHANGELOG](com.chartboost.mediation/CHANGELOG.md) to reference changes to each version of the Chartboost Mediation Unity SDK.
@@ -25,7 +26,7 @@ Chartboost Mediation Unity SDK is distributed using the public [npm registry](ht
 
 ```json
   "dependencies": {
-    "com.chartboost.mediation": "3.3.0",
+    "com.chartboost.mediation": "4.0.0",
     ...
   },
   "scopedRegistries": [
@@ -58,3 +59,7 @@ In order to better understand the Chartboost Mediation Unity SDK, documentation 
 5. [Delegate Usage](com.chartboost.mediation/Documentation/integration/delegate-usage.md)
 6. [Error Codes](com.chartboost.mediation/Documentation/integration/error-codes.md)
 7. [Unit Testing](com.chartboost.mediation/Documentation/integration/unit-testing.md)
+
+### [FAQ](com.chartboost.mediation/Documentation/faq.md)
+
+### [Migrating Helium 3.X to Chartboost Mediation 4.0.0](com.chartboost.mediation/Documentation/integration/helium-to-chartboost-mediation.md)

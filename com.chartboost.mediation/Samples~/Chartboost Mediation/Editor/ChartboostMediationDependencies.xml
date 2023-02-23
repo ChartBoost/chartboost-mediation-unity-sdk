@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
     <androidPackages>
-        <!-- Helium SDK Maven Repo -->
+        <!-- Chartboost Mediation SDK Maven Repo -->
         <repositories>
             <repository>https://cboost.jfrog.io/artifactory/chartboost-mediation/</repository>
         </repositories>
 
-        <!-- Helium Android SDK -->
+        <!-- Chartboost Mediation Android SDK -->
         <androidPackage spec="com.chartboost:chartboost-mediation-sdk:4.0+" />
         <androidPackage spec="androidx.localbroadcastmanager:localbroadcastmanager:1.1.0" />
 
@@ -22,7 +22,7 @@
         <androidPackage spec="com.google.android.gms:play-services-basement:18.1.0"/> 
     </androidPackages>
     <iosPods>
-        <!-- Helium iOS SDK -->
+        <!-- Chartboost Mediation iOS SDK -->
         <iosPod name="ChartboostMediationSDK" version="~> 4.0">
             <sources>
                 <source>https://github.com/CocoaPods/Specs</source>

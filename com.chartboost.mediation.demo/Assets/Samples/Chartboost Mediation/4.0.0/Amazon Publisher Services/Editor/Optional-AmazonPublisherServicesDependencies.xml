@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
     <androidPackages>
-        <!-- Helium APS Adapter -->
+        <!-- Chartboost Mediation APS Adapter -->
         <androidPackage spec="com.chartboost:chartboost-mediation-adapter-amazon-publisher-services:4.9.6.2+@aar" />
 
         <!-- APS Android SDK -->
         <androidPackage spec="com.amazon.android:aps-sdk:9.6.2"/>
     </androidPackages>
     <iosPods>
-        <!-- Helium APS Adapter -->
+        <!-- Chartboost Mediation APS Adapter -->
         <iosPod name="ChartboostMediationAdapterAmazonPublisherServices" version="~> 4.4.5.6"/>
 
         <!-- APS iOS SDK -->
