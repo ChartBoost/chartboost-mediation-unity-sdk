@@ -15,13 +15,9 @@ using UnityEngine.UI;
 public class Demo : MonoBehaviour
 {
 #if UNITY_ANDROID
-    private const string AppID = "5a4e797538a5f00cf60738d6";
-    private const string AppSIG = "d29d75ce6213c746ba986f464e2b4a510be40399";
     private const string DefaultPlacementInterstitial = "CBInterstitial";
     private const string DefaultPlacementRewarded = "CBRewarded";
 #else
-    private const string AppID = "59c04299d989d60fc5d2c782";
-    private const string AppSIG = "6deb8e06616569af9306393f2ce1c9f8eefb405c";
     private const string DefaultPlacementInterstitial = "Startup";
     private const string DefaultPlacementRewarded = "Startup-Rewarded";
 #endif
@@ -78,7 +74,7 @@ public class Demo : MonoBehaviour
         rewardedPlacementInputField.SetTextWithoutNotify(DefaultPlacementRewarded);
         bannerPlacementInputField.SetTextWithoutNotify(DefaultPlacementBanner);
 
-        ChartboostMediation.StartWithAppIdAndAppSignature(AppID, AppSIG);
+        ChartboostMediation.StartWithAppIdAndAppSignature(ChartboostMediationSettings.AppId, ChartboostMediationSettings.AppSignature);
     }
 
     private void OnDestroy()
