@@ -1,7 +1,13 @@
 # Configure Chartboost Mediation
 
 ## Test Mode
-Chartboost Mediation 1.1.0, previously Helium, introduced a Test Mode method that will allow you to test your partner integrations and get their test ads. Please refer to the [Chartboost Mediation Android](https://developers.chartboost.com/docs/mediation-android-configure-helium#test-mode) and [Chartboost Mediation iOS](https://developers.chartboost.com/docs/mediation-ios-configure-helium#test-mode) integration documents on how to enable Test Mode.
+The Chartboost Mediation Unity SDK includes a Test Mode method that will allow you to test your partner integrations and get their test ads. To enable Test Mode, simply set the following method to true after starting the SDK. Remember to remove it or set the method to false before releasing your app.
+
+```csharp
+ChartboostMediation.SetTestMode(true);
+// or
+ChartboostMediation.SetTestMode(false);
+```
 
 ## COPPA
 COPPA Settings can be configured utilizing the following method:
