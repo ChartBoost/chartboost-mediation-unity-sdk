@@ -62,7 +62,11 @@ If you would like to have more control on when to initialize the Chartboost Medi
 You can call the following on your `Awake` method.
 
 ```c#
+// New Manual Initialization after 4.1.0
+ChartboostMediation.StartWithAppIdAndAppSignature(ChartboostMediationSettings.AppId, ChartboostMediationSettings.AppSignature);
 
+
+// Old Style of Manual Initialization Not Using ChartboostMediationSettings Scritable Object
 var appId = "";
 var appSignature = "";
 

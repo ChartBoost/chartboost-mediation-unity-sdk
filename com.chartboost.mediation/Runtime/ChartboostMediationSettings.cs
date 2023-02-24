@@ -50,13 +50,8 @@ namespace Chartboost
         private const string AndroidExampleAppSignatureLabel = "HE_ANDROID_APP_SIGNATURE";
         private const string AndroidExampleAppID = "4f7b433509b6025804000002";
         private const string AndroidExampleAppSignature = "";
-
-        private const string CredentialsWarningDefaultFormat =
-            "You are using the Chartboost Mediation SDK {0} example {1}! Go to the Chartboost Mediation dashboard and replace these with an App ID & App Signature from your account! If you need help, check out answers.chartboost.com";
-
-        private const string CredentialsWarningEmptyFormat =
-            "You are using an empty string for the {0} {1}! Go to the Chartboost Mediation dashboard and replace these with an App ID & App Signature from your account! If you need help, check out answers.chartboost.com";
-
+        private const string CredentialsWarningDefaultFormat = "You are using the Chartboost Mediation SDK {0} example {1}! Go to the Chartboost Mediation dashboard and replace these with an App ID & App Signature from your account! If you need help, check out answers.chartboost.com";
+        private const string CredentialsWarningEmptyFormat = "You are using an empty string for the {0} {1}! Go to the Chartboost Mediation dashboard and replace these with an App ID & App Signature from your account! If you need help, check out answers.chartboost.com";
         private const string CredentialsWarningIOS = "IOS";
         private const string CredentialsWarningAndroid = "Android";
         private const string CredentialsWarningAppID = "App ID";
@@ -133,6 +128,62 @@ namespace Chartboost
         {
             get => Instance.partnerKillSwitch;
             set => Instance.partnerKillSwitch = value;
+        }
+
+        /// <summary>
+        /// Accessor for AppIds regardless of platform
+        /// </summary>
+        public static string AppId
+        {
+            get
+            {
+                #if UNITY_ANDROID
+                return AndroidAppId;
+                #elif UNITY_IOS
+                return IOSAppId;
+                #else
+                return string.Empty;
+                #endif
+            }
+
+            set
+            {
+                #if UNITY_ANDROID
+                AndroidAppId = value;
+                #elif UNITY_IOS
+                IOSAppId = value;
+                #else
+                Logger.Log("ChartboostMediationSettings",$"(Unsupported Platform) Cannot Set AppId Value: {value}");
+                #endif
+            }
+        }
+        
+        /// <summary>
+        /// Accessor for AppSignatures regardless of platform
+        /// </summary>
+        public static string AppSignature
+        {
+            get
+            {
+                #if UNITY_ANDROID
+                return AndroidAppSignature;
+                #elif UNITY_IOS
+                return IOSAppSignature;
+                #else
+                return string.Empty;
+                #endif
+            }
+
+            set
+            {
+                #if UNITY_ANDROID
+                AndroidAppSignature = value;
+                #elif UNITY_IOS
+                IOSAppSignature = value;
+                #else
+                Logger.Log("ChartboostMediationSettings",$"(Unsupported Platform) Cannot Set AppSignature Value: {value}");
+                #endif
+            }
         }
 
         /// <summary>
