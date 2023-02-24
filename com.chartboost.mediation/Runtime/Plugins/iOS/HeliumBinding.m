@@ -85,6 +85,11 @@ char * _heliumGetUserIdentifier()
     return ConvertNSStringToCString([[HeliumSdkManager sharedManager] getUserIdentifier]);
 }
 
+void _chartboostMediationSetTestMode(BOOL isTestModeEnabled)
+{
+    [[HeliumSdkManager sharedManager] setTestMode:isTestModeEnabled];
+}
+
 void * _heliumSdkGetInterstitialAd(const char *placementName)
 {
     return (__bridge void*) [[HeliumSdkManager sharedManager] getInterstitialAd:GetStringParam(placementName)];

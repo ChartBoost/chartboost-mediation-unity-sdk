@@ -26,6 +26,7 @@ typedef void (*HeliumPlacementLoadEvent)(const char* placementName, const char* 
 - (void)setUserHasGivenConsent:(BOOL)hasGivenConsent;
 - (void)setCCPAConsent:(BOOL)hasGivenConsent;
 - (void)setUserIdentifier:(NSString*)userIdentifier;
+- (void)setTestMode:(BOOL)isTestModeEnabled;
 - (NSString*)getUserIdentifier;
 - (id<HeliumInterstitialAd>)getInterstitialAd:(NSString*)placementId;
 - (id<HeliumRewardedAd>)getRewardedAd:(NSString*)placementId;

@@ -54,6 +54,9 @@ namespace Chartboost.Platforms
 
         [DllImport("__Internal")]
         private static extern string _heliumGetUserIdentifier();
+
+        [DllImport("__Internal")]
+        private static extern string _chartboostMediationSetTestMode(bool isTestMode);
         #endregion
 
         #region Chartboost Mediation
@@ -135,6 +138,12 @@ namespace Chartboost.Platforms
         {
             base.GetUserIdentifier();
             return _heliumGetUserIdentifier();
+        }
+
+        public override void SetTestMode(bool testModeEnabled)
+        {
+            base.SetTestMode(testModeEnabled);
+            _chartboostMediationSetTestMode(testModeEnabled);
         }
         #endregion
 
