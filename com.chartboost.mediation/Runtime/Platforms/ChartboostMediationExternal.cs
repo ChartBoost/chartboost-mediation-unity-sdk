@@ -36,10 +36,8 @@ namespace Chartboost.Platforms
         
         /// Initializes the Chartboost Mediation plugin.
         /// This must be called before using any other Chartboost Mediation features.
-        public virtual void Init()
-        {
-            Logger.Log(LogTag, "Init - Attempting to Initialize Chartboost Mediation SDK from ChartboostMediationSettings.");
-        }
+        public virtual void Init() 
+            => Logger.Log(LogTag, "Init - Attempting to Initialize Chartboost Mediation SDK from ChartboostMediationSettings.");
 
         /// Initialize the Chartboost Mediation plugin with a specific appId
         /// Either one of the init() methods must be called before using any other Chartboost Mediation feature
@@ -49,54 +47,34 @@ namespace Chartboost.Platforms
             EventProcessor.Initialize();
         }
         
-        public virtual void SetSubjectToCoppa(bool isSubject)
-        {
-            Logger.Log(LogTag, $"SetSubjectToCoppa {isSubject}");
-        }
-        
-        // ReSharper disable once InconsistentNaming
-        public virtual void SetSubjectToGDPR(bool isSubject)
-        {
-            Logger.Log(LogTag, $"SetSubjectToGDPR {isSubject}");
-        }
-
-        public virtual void SetUserHasGivenConsent(bool hasGivenConsent)
-        {
-            Logger.Log(LogTag, $"SetUserHasGivenConsent {hasGivenConsent}");
-        }
+        public virtual void SetSubjectToCoppa(bool isSubject) 
+            => Logger.Log(LogTag, $"SetSubjectToCoppa {isSubject}");
 
         // ReSharper disable once InconsistentNaming
-        public virtual void SetCCPAConsent(bool hasGivenConsent)
-        {
-            Logger.Log(LogTag, $"SetCCPAConsent {hasGivenConsent}");
-        }
+        public virtual void SetSubjectToGDPR(bool isSubject) 
+            => Logger.Log(LogTag, $"SetSubjectToGDPR {isSubject}");
 
-        public virtual void SetUserIdentifier(string userIdentifier)
-        {
-            Logger.Log(LogTag, $"SetUserIdentifier {userIdentifier}");
-        }
+        public virtual void SetUserHasGivenConsent(bool hasGivenConsent) 
+            => Logger.Log(LogTag, $"SetUserHasGivenConsent {hasGivenConsent}");
+
+        // ReSharper disable once InconsistentNaming
+        public virtual void SetCCPAConsent(bool hasGivenConsent) 
+            => Logger.Log(LogTag, $"SetCCPAConsent {hasGivenConsent}");
+
+        public virtual void SetUserIdentifier(string userIdentifier) 
+            => Logger.Log(LogTag, $"SetUserIdentifier {userIdentifier}");
 
         public virtual string GetUserIdentifier()
         {
             Logger.Log(LogTag, "GetUserIdentifier");
             return string.Empty;
         }
+        
+        public virtual void SetTestMode(bool testModeEnabled) 
+            => Logger.Log(LogTag, $"SetTestMode {testModeEnabled}");
 
-        public virtual void Destroy()
-        {
-            Logger.Log(LogTag, "Destroy");
-        }
-
-        public virtual void Pause(bool paused)
-        {
-            Logger.Log(LogTag, "pause");
-        }
-
-        public virtual bool OnBackPressed()
-        {
-            Logger.Log(LogTag, "OnBackPressed");
-            return CheckInitialized();
-        }
+        public virtual void Destroy() 
+            => Logger.Log(LogTag, "Destroy");
 
         public ChartboostMediationInterstitialAd GetInterstitialAd(string placementName)
         {

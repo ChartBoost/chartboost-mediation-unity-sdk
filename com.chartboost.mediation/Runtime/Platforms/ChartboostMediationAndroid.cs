@@ -82,15 +82,13 @@ namespace Chartboost.Platforms
         public override string GetUserIdentifier()
         {
             base.GetUserIdentifier();
-            return _plugin.Call<string>("getUserIdentifier");
+            return plugin().Call<string>("getUserIdentifier");
         }
-
-        public override void Pause(bool paused)
+        
+        public override void SetTestMode(bool testModeEnabled)
         {
-            if (!CheckInitialized())
-                return;
-            base.Pause(paused);
-            _plugin.Call("pause", paused);
+            base.SetTestMode(testModeEnabled);
+            plugin().Call("setTestMode", testModeEnabled);
         }
 
         public override void Destroy()
@@ -100,12 +98,6 @@ namespace Chartboost.Platforms
             base.Destroy();
             _plugin.Call("destroy");
             IsInitialized = false;
-        }
-
-        public override bool OnBackPressed()
-        {
-            var handled = base.OnBackPressed() && _plugin.Call<bool>("onBackPressed");
-            return handled;
         }
         #endregion
 
