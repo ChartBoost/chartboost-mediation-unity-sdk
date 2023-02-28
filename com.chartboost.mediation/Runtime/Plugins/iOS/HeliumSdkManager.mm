@@ -9,8 +9,8 @@
 #import <ChartboostMediationSDK/HeliumInitResultsEvent.h>
 
 struct Implementation {
-SEL selector;
-IMP imp;
+    SEL selector;
+    IMP imp;
 };
 
 // interstitial ad objects
