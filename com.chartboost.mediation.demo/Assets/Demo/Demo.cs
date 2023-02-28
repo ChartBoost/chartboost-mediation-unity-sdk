@@ -104,6 +104,8 @@ public class Demo : MonoBehaviour
         Log($"DidStart: {error}");
         ChartboostMediation.SetUserIdentifier(DefaultUserIdentifier);
 
+        Log($"User Identifier Set: {ChartboostMediation.GetUserIdentifier()}");
+
         if (error != null) return;
         ChartboostMediation.SetSubjectToGDPR(false);
         ChartboostMediation.SetSubjectToCoppa(false);

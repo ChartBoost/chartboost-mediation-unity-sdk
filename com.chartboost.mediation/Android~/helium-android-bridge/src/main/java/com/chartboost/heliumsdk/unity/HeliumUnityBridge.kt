@@ -14,7 +14,6 @@ import com.chartboost.heliumsdk.unity.HeliumEventProcessor.serializeHeliumLoadEv
 import com.chartboost.heliumsdk.unity.HeliumEventProcessor.serializePlacementIlrdData
 import com.chartboost.heliumsdk.unity.HeliumUnityAdWrapper.Companion.wrap
 import com.unity3d.player.UnityPlayer
-
 @Suppress("NAME_SHADOWING")
 class HeliumUnityBridge {
     private var lifeCycleEventListener: ILifeCycleEventListener? = null
@@ -23,7 +22,6 @@ class HeliumUnityBridge {
     private var rewardedEventListener: IRewardedEventListener? = null
     private var ilrdObserver: HeliumIlrdObserver? = null
     private var initResultsObserver: PartnerInitializationResultsObserver? = null
-
     fun setupEventListeners(
         lifeCycleListener: ILifeCycleEventListener,
         interstitialListener: IInterstitialEventListener,
@@ -35,11 +33,9 @@ class HeliumUnityBridge {
         rewardedEventListener = rewardedListener
         bannerEventsListener = bannerListener
     }
-
     fun setSubjectToCoppa(isSubject: Boolean) {
         HeliumSdk.setSubjectToCoppa(isSubject)
     }
-
     fun setSubjectToGDPR(isSubject: Boolean) {
         HeliumSdk.setSubjectToGDPR(isSubject)
     }
@@ -47,7 +43,6 @@ class HeliumUnityBridge {
     fun setCCPAConsent(hasGivenConsent: Boolean) {
         HeliumSdk.setCCPAConsent(hasGivenConsent)
     }
-
     fun setUserHasGivenConsent(hasGivenConsent: Boolean) {
         HeliumSdk.setUserHasGivenConsent(hasGivenConsent)
     }
@@ -58,6 +53,16 @@ class HeliumUnityBridge {
             HeliumSdk.setUserIdentifier(userIdentifier)
         }
 
+    fun setTestMode(mode: Boolean) {
+        HeliumSdk.setTestMode(mode)
+    }
+
+    fun destroy() {
+        ilrdObserver?.let {
+            HeliumSdk.unsubscribeIlrd(it)
+            ilrdObserver = null
+        }
+    }
     fun start(appId: String, appSignature: String, unityVersion: String, initializationOptions: Array<String>) {
         ilrdObserver = object : HeliumIlrdObserver {
             override fun onImpression(impData: HeliumImpressionData) {
@@ -94,18 +99,6 @@ class HeliumUnityBridge {
             }
         }
     }
-
-    fun setTestMode(mode: Boolean) {
-        HeliumSdk.setTestMode(mode)
-    }
-
-    fun destroy() {
-        ilrdObserver?.let {
-            HeliumSdk.unsubscribeIlrd(it)
-            ilrdObserver = null
-        }
-    }
-
     fun getInterstitialAd(placementName: String): HeliumUnityAdWrapper {
         val interstitialAd = HeliumInterstitialAd(UnityPlayer.currentActivity, placementName, object : HeliumFullscreenAdListener {
             override fun onAdCached(placementName: String, loadId: String, winningBidInfo: Map<String, String>, error: ChartboostMediationAdException?) {
@@ -150,7 +143,6 @@ class HeliumUnityBridge {
         })
         return wrap(interstitialAd)
     }
-
     fun getRewardedAd(placementName: String): HeliumUnityAdWrapper {
         val rewardedAd = HeliumRewardedAd(UnityPlayer.currentActivity, placementName, object : HeliumFullscreenAdListener {
             override fun onAdCached(placementName: String, loadId: String, winningBidInfo: Map<String, String>, error: ChartboostMediationAdException?) {
@@ -198,7 +190,6 @@ class HeliumUnityBridge {
         })
         return wrap(rewardedAd)
     }
-
     fun getBannerAd(placementName: String, size: Int): HeliumUnityAdWrapper {
         // default to standard
         var wantedSize = HeliumBannerSize.STANDARD
@@ -234,12 +225,10 @@ class HeliumUnityBridge {
         })
         return wrap(bannerAd)
     }
-
     companion object {
         private val TAG = HeliumUnityBridge::class.java.simpleName
 
-        // Stores a static instance of the HeliumPlugin class for easy access
-        // from Unity
+        // Stores a static instance of the HeliumPlugin class for easy access  from Unity
         @JvmStatic
         fun instance(): HeliumUnityBridge {
             return HeliumUnityBridge()
