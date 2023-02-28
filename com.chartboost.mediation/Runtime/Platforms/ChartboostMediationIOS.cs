@@ -56,7 +56,7 @@ namespace Chartboost.Platforms
         private static extern string _heliumGetUserIdentifier();
 
         [DllImport("__Internal")]
-        private static extern string _chartboostMediationSetTestMode(bool isTestMode);
+        private static extern void _chartboostMediationSetTestMode(bool isTestMode);
         #endregion
 
         #region Chartboost Mediation
