@@ -51,17 +51,38 @@ const char* serializeDictionary(NSDictionary *data)
     return json.UTF8String;
 }
 
-const void serializeError(ChartboostMediationError *error, HeliumEvent event)
+const char* formatError(ChartboostMediationError *error)
+{
+    if (error == nil)
+        return "";
+    
+    NSInteger code = error.code;
+    
+    NSString* localizedDescription = @"";
+    if (localizedDescription != nil)
+        localizedDescription = error.localizedDescription;
+    
+    NSString* localizedFailureReason = @"";
+    if (localizedFailureReason != nil)
+        localizedFailureReason = error.localizedFailureReason;
+    
+    NSString* localizedRecoverySuggestion = @"";
+    if (localizedRecoverySuggestion != nil)
+        localizedRecoverySuggestion = error.localizedRecoverySuggestion;
+    
+    NSString* formattedError = @"";
+    
+    formattedError = [formattedError stringByAppendingFormat:@"(CM_%ld) Message: %@ Cause: %@ Resolution: %@", code, localizedDescription, localizedFailureReason, localizedRecoverySuggestion];
+    
+    return formattedError.UTF8String;
+}
+
+const void serializeHeliumEvent(ChartboostMediationError *error, HeliumEvent event)
 {
     if (event == nil)
         return;
     
-    const char* errorMessage = "";
-    
-    if (error != nil)
-        errorMessage = error.description.UTF8String;
-    
-    event(errorMessage);
+    event(formatError(error));
 }
 
 const void serializePlacementWithError(NSString *placementName, ChartboostMediationError *error, HeliumPlacementEvent placementEvent)
@@ -69,20 +90,13 @@ const void serializePlacementWithError(NSString *placementName, ChartboostMediat
     if (placementEvent == nil)
         return;
     
-    const char* errorMessage = "";
-    
-    if (error != nil)
-        errorMessage = error.description.UTF8String;
-    
-    placementEvent(placementName.UTF8String, errorMessage);
+    placementEvent(placementName.UTF8String, formatError(error));
 }
 
 const void serializePlacementLoadWithError(NSString *placementName, NSString *requestIdentifier, NSDictionary *winningBidInfo, ChartboostMediationError *error, HeliumPlacementLoadEvent placementLoadEvent)
 {
     if (placementLoadEvent == nil)
         return;
-    
-    const char* errorMessage = "";
     
     NSString* partnerId = [winningBidInfo objectForKey:@"partner-id"];
     NSString* auctionId = [winningBidInfo objectForKey:@"auction-id"];
@@ -97,10 +111,7 @@ const void serializePlacementLoadWithError(NSString *placementName, NSString *re
     if (price == nil)
         price = 0;
     
-    if (error != nil)
-        errorMessage = error.description.UTF8String;
-    
-    placementLoadEvent(placementName.UTF8String, requestIdentifier.UTF8String, auctionId.UTF8String, partnerId.UTF8String, [price doubleValue], errorMessage);
+    placementLoadEvent(placementName.UTF8String, requestIdentifier.UTF8String, auctionId.UTF8String, partnerId.UTF8String, [price doubleValue], formatError(error));
 }
 
 static void heliumSubscribeToILRDNotifications()
@@ -327,7 +338,7 @@ static void heliumSubscribeToPartnerInitializationNotifications()
 
 - (void)heliumDidStartWithError:(ChartboostMediationError *)error;
 {
-    serializeError(error, _didStartCallback);
+    serializeHeliumEvent(error, _didStartCallback);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
