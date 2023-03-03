@@ -11,80 +11,80 @@ namespace Chartboost.FullScreen.Rewarded
         public ChartboostMediationRewardedIOS(string placementName) : base(placementName)
         {
             LogTag = "ChartboostMediationRewarded (iOS)";
-            _uniqueId = _heliumSdkGetRewardedAd(placementName);
+            _uniqueId = _chartboostMediationGetRewardedAd(placementName);
         }
 
         /// <inheritdoc cref="ChartboostMediationRewardedBase.SetKeyword"/>>
         public override bool SetKeyword(string keyword, string value)
         {
             base.SetKeyword(keyword, value);
-            return _heliumSdkRewardedSetKeyword(_uniqueId, keyword, value);
+            return _chartboostMediationRewardedSetKeyword(_uniqueId, keyword, value);
         }
 
         /// <inheritdoc cref="ChartboostMediationRewardedBase.RemoveKeyword"/>>
         public override string RemoveKeyword(string keyword)
         {
             base.RemoveKeyword(keyword);
-            return _heliumSdkRewardedRemoveKeyword(_uniqueId, keyword);
+            return _chartboostMediationRewardedRemoveKeyword(_uniqueId, keyword);
         }
 
         /// <inheritdoc cref="ChartboostMediationRewardedBase.Load"/>>
         public override void Load()
         {
             base.Load();
-            _heliumSdkRewardedAdLoad(_uniqueId);
+            _chartboostMediationRewardedAdLoad(_uniqueId);
         }
 
         /// <inheritdoc cref="ChartboostMediationRewardedBase.Show"/>>
         public override void Show()
         {
             base.Show();
-            _heliumSdkRewardedAdShow(_uniqueId);
+            _chartboostMediationRewardedAdShow(_uniqueId);
         }
 
         /// <inheritdoc cref="ChartboostMediationRewardedBase.ReadyToShow"/>>
         public override bool ReadyToShow()
         {
             base.ReadyToShow();
-            return _heliumSdkRewardedAdReadyToShow(_uniqueId);
+            return _chartboostMediationRewardedAdReadyToShow(_uniqueId);
         }
 
         /// <inheritdoc cref="ChartboostMediationRewardedBase.ClearLoaded"/>>
         public override void ClearLoaded()
         {
             base.ClearLoaded();
-            _heliumSdkRewardedClearLoaded(_uniqueId);
+            _chartboostMediationRewardedClearLoaded(_uniqueId);
         }
 
         /// <inheritdoc cref="ChartboostMediationRewardedBase.SetCustomData"/>>
         public override void SetCustomData(string customData)
         {
             base.SetCustomData(customData);
-            _heliumSdkRewardedAdSetCustomData(_uniqueId, customData);
+            _chartboostMediationRewardedAdSetCustomData(_uniqueId, customData);
         }
 
         ~ChartboostMediationRewardedIOS()
-            => _heliumSdkFreeRewardedAdObject(_uniqueId);
+            => _chartboostMediationFreeRewardedAdObject(_uniqueId);
 
         #region External Methods
         [DllImport("__Internal")]
-        private static extern IntPtr _heliumSdkGetRewardedAd(string placementName);
+        private static extern IntPtr _chartboostMediationGetRewardedAd(string placementName);
         [DllImport("__Internal")]
-        private static extern bool _heliumSdkRewardedSetKeyword(IntPtr uniqueID, string keyword, string value);
+        private static extern bool _chartboostMediationRewardedSetKeyword(IntPtr uniqueID, string keyword, string value);
         [DllImport("__Internal")]
-        private static extern string _heliumSdkRewardedRemoveKeyword(IntPtr uniqueID, string keyword);
+        private static extern string _chartboostMediationRewardedRemoveKeyword(IntPtr uniqueID, string keyword);
         [DllImport("__Internal")]
-        private static extern void _heliumSdkRewardedAdLoad(IntPtr uniqueID);
+        private static extern void _chartboostMediationRewardedAdLoad(IntPtr uniqueID);
         [DllImport("__Internal")]
-        private static extern bool _heliumSdkRewardedClearLoaded(IntPtr uniqueID);
+        private static extern bool _chartboostMediationRewardedClearLoaded(IntPtr uniqueID);
         [DllImport("__Internal")]
-        private static extern void _heliumSdkRewardedAdShow(IntPtr uniqueID);
+        private static extern void _chartboostMediationRewardedAdShow(IntPtr uniqueID);
         [DllImport("__Internal")]
-        private static extern bool _heliumSdkRewardedAdReadyToShow(IntPtr uniqueID);
+        private static extern bool _chartboostMediationRewardedAdReadyToShow(IntPtr uniqueID);
         [DllImport("__Internal")]
-        private static extern void _heliumSdkRewardedAdSetCustomData(IntPtr uniqueID, string customData);
+        private static extern void _chartboostMediationRewardedAdSetCustomData(IntPtr uniqueID, string customData);
         [DllImport("__Internal")]
-        private static extern void _heliumSdkFreeRewardedAdObject(IntPtr uniqueID);
+        private static extern void _chartboostMediationFreeRewardedAdObject(IntPtr uniqueID);
         #endregion
     }
 }
