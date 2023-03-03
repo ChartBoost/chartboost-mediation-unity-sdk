@@ -29,7 +29,7 @@ namespace Chartboost.Platforms
             if (_plugin != null)
                 return _plugin;
             // find the plugin instance
-            using var pluginClass = new AndroidJavaClass("com.chartboost.heliumsdk.unity.HeliumUnityBridge");
+            using var pluginClass = new AndroidJavaClass("com.chartboost.mediation.unity.UnityBridge");
             _plugin = pluginClass.CallStatic<AndroidJavaObject>("instance");
             return _plugin;
         }
@@ -105,7 +105,7 @@ namespace Chartboost.Platforms
         [Preserve]
         internal class LifeCycleEventListener : AndroidJavaProxy
         {
-            private LifeCycleEventListener() : base("com.chartboost.heliumsdk.unity.ILifeCycleEventListener") { }
+            private LifeCycleEventListener() : base("com.chartboost.mediation.unity.ILifeCycleEventListener") { }
 
             public static readonly LifeCycleEventListener Instance = new LifeCycleEventListener();
 
@@ -131,7 +131,7 @@ namespace Chartboost.Platforms
         [Preserve]
         internal class InterstitialEventListener : AndroidJavaProxy
         {
-            private InterstitialEventListener() : base("com.chartboost.heliumsdk.unity.IInterstitialEventListener") { }
+            private InterstitialEventListener() : base("com.chartboost.mediation.unity.IInterstitialEventListener") { }
 
             public static readonly InterstitialEventListener Instance = new InterstitialEventListener();
 
@@ -166,7 +166,7 @@ namespace Chartboost.Platforms
         #region Rewarded Callbacks
         internal class RewardedVideoEventListener : AndroidJavaProxy
         {
-            private RewardedVideoEventListener() : base("com.chartboost.heliumsdk.unity.IRewardedEventListener") { }
+            private RewardedVideoEventListener() : base("com.chartboost.mediation.unity.IRewardedEventListener") { }
 
             public static readonly RewardedVideoEventListener Instance = new RewardedVideoEventListener();
 
@@ -206,7 +206,7 @@ namespace Chartboost.Platforms
         #region Banner Callbacks
         internal class BannerEventListener : AndroidJavaProxy
         {
-            private BannerEventListener() : base("com.chartboost.heliumsdk.unity.IBannerEventListener") { }
+            private BannerEventListener() : base("com.chartboost.mediation.unity.IBannerEventListener") { }
 
             public static readonly BannerEventListener Instance = new BannerEventListener();
 
