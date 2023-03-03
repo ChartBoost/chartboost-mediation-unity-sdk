@@ -1,4 +1,4 @@
-package com.chartboost.heliumsdk.unity
+package com.chartboost.mediation.unity
 
 import android.util.Log
 import com.chartboost.heliumsdk.domain.ChartboostMediationAdException

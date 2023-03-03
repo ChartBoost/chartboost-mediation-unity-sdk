@@ -1,4 +1,4 @@
-package com.chartboost.heliumsdk.unity
+package com.chartboost.mediation.unity
 
 import android.app.Activity
 import android.graphics.Color

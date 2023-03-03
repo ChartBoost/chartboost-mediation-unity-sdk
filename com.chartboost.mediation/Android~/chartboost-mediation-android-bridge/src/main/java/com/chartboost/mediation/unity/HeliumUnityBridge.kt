@@ -1,18 +1,18 @@
-package com.chartboost.heliumsdk.unity
+package com.chartboost.mediation.unity
 
 import android.util.Log
 import com.chartboost.heliumsdk.*
 import com.chartboost.heliumsdk.ad.*
 import com.chartboost.heliumsdk.ad.HeliumBannerAd.HeliumBannerSize
 import com.chartboost.heliumsdk.domain.ChartboostMediationAdException
-import com.chartboost.heliumsdk.unity.HeliumEventProcessor.HeliumLoadEventConsumer
-import com.chartboost.heliumsdk.unity.HeliumEventProcessor.HeliumEventConsumerWithError
-import com.chartboost.heliumsdk.unity.HeliumEventProcessor.HeliumEventConsumer
-import com.chartboost.heliumsdk.unity.HeliumEventProcessor.serializeHeliumEvent
-import com.chartboost.heliumsdk.unity.HeliumEventProcessor.serializeHeliumEventWithError
-import com.chartboost.heliumsdk.unity.HeliumEventProcessor.serializeHeliumLoadEvent
-import com.chartboost.heliumsdk.unity.HeliumEventProcessor.serializePlacementIlrdData
-import com.chartboost.heliumsdk.unity.HeliumUnityAdWrapper.Companion.wrap
+import com.chartboost.mediation.unity.HeliumEventProcessor.HeliumLoadEventConsumer
+import com.chartboost.mediation.unity.HeliumEventProcessor.HeliumEventConsumerWithError
+import com.chartboost.mediation.unity.HeliumEventProcessor.HeliumEventConsumer
+import com.chartboost.mediation.unity.HeliumEventProcessor.serializeHeliumEvent
+import com.chartboost.mediation.unity.HeliumEventProcessor.serializeHeliumEventWithError
+import com.chartboost.mediation.unity.HeliumEventProcessor.serializeHeliumLoadEvent
+import com.chartboost.mediation.unity.HeliumEventProcessor.serializePlacementIlrdData
+import com.chartboost.mediation.unity.HeliumUnityAdWrapper.Companion.wrap
 import com.unity3d.player.UnityPlayer
 @Suppress("NAME_SHADOWING")
 class HeliumUnityBridge {
