@@ -70,12 +70,12 @@ void _chartboostMediationSetUserHasGivenConsent(BOOL hasGivenConsent)
     [[ChartboostMediationManager sharedManager] setUserHasGivenConsent:hasGivenConsent];
 }
 
-void _chartboostMediationCCPAConsent(BOOL hasGivenConsent)
+void _chartboostMediationSetCCPAConsent(BOOL hasGivenConsent)
 {
     [[ChartboostMediationManager sharedManager] setCCPAConsent:hasGivenConsent];
 }
 
-void _chartboostMediationUserIdentifier(const char * userIdentifier)
+void _chartboostMediationSetUserIdentifier(const char * userIdentifier)
 {
     [[ChartboostMediationManager sharedManager] setUserIdentifier:GetStringParam(userIdentifier)];
 }
