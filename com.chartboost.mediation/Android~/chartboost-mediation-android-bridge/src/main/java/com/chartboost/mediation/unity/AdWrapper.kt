@@ -15,30 +15,30 @@ import com.chartboost.heliumsdk.ad.HeliumFullscreenAd
 import com.chartboost.heliumsdk.ad.HeliumRewardedAd
 import com.unity3d.player.UnityPlayer
 
-class HeliumUnityAdWrapper(private val ad: HeliumAd) {
+class AdWrapper(private val ad: HeliumAd) {
     /**
      * This is the container for the banner.
      * We need a relative layout to position the banner in one of the 7 possible positions.
-     * HeliumBannerAd is just a ViewGroup.
+     * ChartboostMediationBannerAd is just a ViewGroup.
      * */
     private var bannerLayout: RelativeLayout? = null
     private val activity: Activity? = UnityPlayer.currentActivity
 
     fun load() {
-        HeliumUnityBridge.runTaskOnUiThread {
+        UnityBridge.runTaskOnUiThread {
             ad.load()
         }
     }
 
     fun load(screenLocation: Int) {
-        HeliumUnityBridge.runTaskOnUiThread {
+        UnityBridge.runTaskOnUiThread {
             createBannerLayout(screenLocation)
             load()
         }
     }
 
     fun show() {
-        HeliumUnityBridge.runTaskOnUiThread {
+        UnityBridge.runTaskOnUiThread {
             if (ad is HeliumFullscreenAd) {
                 ad.show()
             }
@@ -62,7 +62,7 @@ class HeliumUnityAdWrapper(private val ad: HeliumAd) {
     }
 
     fun setBannerVisibility(isVisible: Boolean) {
-        HeliumUnityBridge.runTaskOnUiThread {
+        UnityBridge.runTaskOnUiThread {
             if (ad is HeliumBannerAd && bannerLayout != null) {
                 val visibility = if (isVisible) View.VISIBLE else View.INVISIBLE
                 bannerLayout?.visibility = visibility
@@ -75,7 +75,7 @@ class HeliumUnityAdWrapper(private val ad: HeliumAd) {
         when(ad) {
             is HeliumFullscreenAd -> { ad.clearLoaded() }
             is HeliumBannerAd -> {
-                HeliumUnityBridge.runTaskOnUiThread { ad.clearAd() }
+                UnityBridge.runTaskOnUiThread { ad.clearAd() }
             }
         }
     }
@@ -97,7 +97,7 @@ class HeliumUnityAdWrapper(private val ad: HeliumAd) {
     }
 
     fun destroy() {
-        HeliumUnityBridge.runTaskOnUiThread {
+        UnityBridge.runTaskOnUiThread {
             destroyBannerLayout()
             ad.destroy()
         }
@@ -196,14 +196,14 @@ class HeliumUnityAdWrapper(private val ad: HeliumAd) {
         }
 
     companion object {
-        private val TAG = HeliumUnityAdWrapper::class.java.simpleName
+        private val TAG = AdWrapper::class.java.simpleName
         private val STANDARD = Pair(320, 50)
         private val MEDIUM = Pair(300, 250)
         private val LEADERBOARD = Pair(728, 90)
 
         @JvmStatic
-        fun wrap(ad: HeliumAd): HeliumUnityAdWrapper {
-            return HeliumUnityAdWrapper(ad)
+        fun wrap(ad: HeliumAd): AdWrapper {
+            return AdWrapper(ad)
         }
     }
 }

@@ -56,7 +56,7 @@ dependencies {
 
 task assembleForPlugin(type: Jar, dependsOn: 'bundleLibRuntimeToJarRelease') {
     dependsOn 'androidDependencies'
-    // We are only interested in the HeliumUnityBridge classes only.
+    // We are only interested in the classes only.
     from zipTree("$projectDir/build/intermediates/runtime_library_classes_jar/release/classes.jar")
     include '**/*.class'
     exclude 'META-INF/'
