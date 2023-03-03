@@ -1,10 +1,9 @@
 /*
- * HeliumBinding.m
- * Helium SDK
- */
-
+* ChartboostMediationBinding.mm
+* Chartboost Mediation SDK iOS/Unity
+*/
 #import <ChartboostMediationSDK/ChartboostMediationSDK-Swift.h>
-#import "HeliumSdkManager.h"
+#import "ChartboostMediationManager.h"
 #import "UnityAppController.h"
 
 // Converts C style string to NSString
@@ -22,6 +21,7 @@ static char* ConvertNSStringToCString(const NSString* nsString) {
 }
 
 typedef void (^block)(void);
+
 static void sendToMain(block block) {
     dispatch_async(dispatch_get_main_queue(), block);
 }
@@ -30,72 +30,72 @@ static void sendToBackground(block block) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), block);
 }
 
-void _setLifeCycleCallbacks(HeliumEvent didStartCallback, HeliumILRDEvent didReceiveILRDCallback, HeliumPartnerInitializationDataEvent didReceivePartnerInitializationDataCallback)
+void _setLifeCycleCallbacks(ChartboostMediationEvent didStartCallback, ChartboostMediationILRDEvent didReceiveILRDCallback, ChartboostMediationPartnerInitializationDataEvent didReceivePartnerInitializationDataCallback)
 {
-    [[HeliumSdkManager sharedManager] setLifeCycleCallbacks:didStartCallback didReceiveILRDCallback:didReceiveILRDCallback didReceivePartnerInitializationData:didReceivePartnerInitializationDataCallback];
+    [[ChartboostMediationManager sharedManager] setLifeCycleCallbacks:didStartCallback didReceiveILRDCallback:didReceiveILRDCallback didReceivePartnerInitializationData:didReceivePartnerInitializationDataCallback];
 }
 
-void _setInterstitialCallbacks(HeliumPlacementLoadEvent didLoadCallback, HeliumPlacementEvent didShowCallback, HeliumPlacementEvent didCloseCallback, HeliumPlacementEvent didClickCallback, HeliumPlacementEvent didRecordImpression)
+void _setInterstitialCallbacks(ChartboostMediationPlacementLoadEvent didLoadCallback, ChartboostMediationPlacementEvent didShowCallback, ChartboostMediationPlacementEvent didCloseCallback, ChartboostMediationPlacementEvent didClickCallback, ChartboostMediationPlacementEvent didRecordImpression)
 {
-    [[HeliumSdkManager sharedManager] setInterstitialCallbacks:didLoadCallback didShowCallback:didShowCallback didCloseCallback:didCloseCallback didClickCallback:didClickCallback didRecordImpression:didRecordImpression];
+    [[ChartboostMediationManager sharedManager] setInterstitialCallbacks:didLoadCallback didShowCallback:didShowCallback didCloseCallback:didCloseCallback didClickCallback:didClickCallback didRecordImpression:didRecordImpression];
 }
 
-void _setRewardedCallbacks(HeliumPlacementLoadEvent didLoadCallback, HeliumPlacementEvent didShowCallback, HeliumPlacementEvent didCloseCallback, HeliumPlacementEvent didClickCallback, HeliumPlacementEvent didRecordImpression, HeliumPlacementEvent didReceiveRewardCallback){
+void _setRewardedCallbacks(ChartboostMediationPlacementLoadEvent didLoadCallback, ChartboostMediationPlacementEvent didShowCallback, ChartboostMediationPlacementEvent didCloseCallback, ChartboostMediationPlacementEvent didClickCallback, ChartboostMediationPlacementEvent didRecordImpression, ChartboostMediationPlacementEvent didReceiveRewardCallback){
         
-    [[HeliumSdkManager sharedManager] setRewardedCallbacks:didLoadCallback didShowCallback:didShowCallback didCloseCallback:didCloseCallback didClickCallback:didClickCallback didRecordImpression:didRecordImpression didReceiveRewardCallback:didReceiveRewardCallback];
+    [[ChartboostMediationManager sharedManager] setRewardedCallbacks:didLoadCallback didShowCallback:didShowCallback didCloseCallback:didCloseCallback didClickCallback:didClickCallback didRecordImpression:didRecordImpression didReceiveRewardCallback:didReceiveRewardCallback];
 }
 
-void _setBannerCallbacks(HeliumPlacementLoadEvent didLoadCallback, HeliumPlacementEvent didRecordImpression, HeliumPlacementEvent didClickCallback)
+void _setBannerCallbacks(ChartboostMediationPlacementLoadEvent didLoadCallback, ChartboostMediationPlacementEvent didRecordImpression, ChartboostMediationPlacementEvent didClickCallback)
 {
-    [[HeliumSdkManager sharedManager] setBannerCallbacks:didLoadCallback didRecordImpression:didRecordImpression didClickCallback:didClickCallback];
+    [[ChartboostMediationManager sharedManager] setBannerCallbacks:didLoadCallback didRecordImpression:didRecordImpression didClickCallback:didClickCallback];
 }
 
-void _heliumSdkInit(const char *appId, const char *appSignature, const char *unityVersion, const char** initOptions, int optionsSize)
+void _chartboostMediationInit(const char *appId, const char *appSignature, const char *unityVersion, const char** initOptions, int optionsSize)
 {
-    [[HeliumSdkManager sharedManager] startHeliumWithAppId:GetStringParam(appId) andAppSignature:GetStringParam(appSignature) unityVersion:GetStringParam(unityVersion) initializationOptions:initOptions initializationOptionsSize:optionsSize];
+    [[ChartboostMediationManager sharedManager] startHeliumWithAppId:GetStringParam(appId) andAppSignature:GetStringParam(appSignature) unityVersion:GetStringParam(unityVersion) initializationOptions:initOptions initializationOptionsSize:optionsSize];
 }
 
-void _heliumSdkSetSubjectToCoppa(BOOL isSubject)
+void _chartboostMediationSetSubjectToCoppa(BOOL isSubject)
 {
-    [[HeliumSdkManager sharedManager] setSubjectToCoppa:isSubject];
+    [[ChartboostMediationManager sharedManager] setSubjectToCoppa:isSubject];
 }
 
-void _heliumSdkSetSubjectToGDPR(BOOL isSubject)
+void _chartboostMediationSetSubjectToGDPR(BOOL isSubject)
 {
-    [[HeliumSdkManager sharedManager] setSubjectToGDPR:isSubject];
+    [[ChartboostMediationManager sharedManager] setSubjectToGDPR:isSubject];
 }
 
-void _heliumSdkSetUserHasGivenConsent(BOOL hasGivenConsent)
+void _chartboostMediationSetUserHasGivenConsent(BOOL hasGivenConsent)
 {
-    [[HeliumSdkManager sharedManager] setUserHasGivenConsent:hasGivenConsent];
+    [[ChartboostMediationManager sharedManager] setUserHasGivenConsent:hasGivenConsent];
 }
 
-void _heliumSetCCPAConsent(BOOL hasGivenConsent)
+void _chartboostMediationCCPAConsent(BOOL hasGivenConsent)
 {
-    [[HeliumSdkManager sharedManager] setCCPAConsent:hasGivenConsent];
+    [[ChartboostMediationManager sharedManager] setCCPAConsent:hasGivenConsent];
 }
 
-void _heliumSetUserIdentifier(const char * userIdentifier)
+void _chartboostMediationUserIdentifier(const char * userIdentifier)
 {
-    [[HeliumSdkManager sharedManager] setUserIdentifier:GetStringParam(userIdentifier)];
+    [[ChartboostMediationManager sharedManager] setUserIdentifier:GetStringParam(userIdentifier)];
 }
 
-char * _heliumGetUserIdentifier()
+char * _chartboostMediationGetUserIdentifier()
 {
-    return ConvertNSStringToCString([[HeliumSdkManager sharedManager] getUserIdentifier]);
+    return ConvertNSStringToCString([[ChartboostMediationManager sharedManager] getUserIdentifier]);
 }
 
 void _chartboostMediationSetTestMode(BOOL isTestModeEnabled)
 {
-    [[HeliumSdkManager sharedManager] setTestMode:isTestModeEnabled];
+    [[ChartboostMediationManager sharedManager] setTestMode:isTestModeEnabled];
 }
 
-void * _heliumSdkGetInterstitialAd(const char *placementName)
+void * _chartboostMediationGetInterstitialAd(const char *placementName)
 {
-    return (__bridge void*) [[HeliumSdkManager sharedManager] getInterstitialAd:GetStringParam(placementName)];
+    return (__bridge void*) [[ChartboostMediationManager sharedManager] getInterstitialAd:GetStringParam(placementName)];
 }
 
-BOOL _heliumSdkInterstitialSetKeyword(const void *uniqueId, const char *keyword, const char *value)
+BOOL _chartboostMediationInterstitialSetKeyword(const void *uniqueId, const char *keyword, const char *value)
 {
     id<HeliumInterstitialAd> ad = (__bridge id<HeliumInterstitialAd>)uniqueId;
     if (ad.keywords == nil)
@@ -103,13 +103,13 @@ BOOL _heliumSdkInterstitialSetKeyword(const void *uniqueId, const char *keyword,
     return [ad.keywords setKeyword:GetStringParam(keyword) value:GetStringParam(value)];
 }
 
-char * _heliumSdkInterstitialRemoveKeyword(const void *uniqueId, const char *keyword)
+char * _chartboostMediationInterstitialRemoveKeyword(const void *uniqueId, const char *keyword)
 {
     id<HeliumInterstitialAd> ad = (__bridge id<HeliumInterstitialAd>)uniqueId;
     return ConvertNSStringToCString([ad.keywords removeKeyword:GetStringParam(keyword)]);
 }
 
-void _heliumSdkInterstitialAdLoad(const void * uniqueId)
+void _chartboostMediationInterstitialAdLoad(const void * uniqueId)
 {
     sendToBackground(^{
         id<HeliumInterstitialAd> ad = (__bridge id<HeliumInterstitialAd>)uniqueId;
@@ -117,13 +117,13 @@ void _heliumSdkInterstitialAdLoad(const void * uniqueId)
     });
 }
 
-void _heliumSdkInterstitialClearLoaded(const void * uniqueId)
+void _chartboostMediationInterstitialClearLoaded(const void * uniqueId)
 {
     id<HeliumInterstitialAd> ad = (__bridge id<HeliumInterstitialAd>)uniqueId;
     [ad clearLoadedAd];
 }
 
-void _heliumSdkInterstitialAdShow(const void * uniqueId)
+void _chartboostMediationInterstitialAdShow(const void * uniqueId)
 {
     sendToBackground(^{
         id<HeliumInterstitialAd> ad = (__bridge id<HeliumInterstitialAd>)uniqueId;
@@ -131,25 +131,25 @@ void _heliumSdkInterstitialAdShow(const void * uniqueId)
     });
 }
 
-BOOL _heliumSdkInterstitialAdReadyToShow(const void * uniqueId)
+BOOL _chartboostMediationInterstitialAdReadyToShow(const void * uniqueId)
 {
     id<HeliumInterstitialAd> ad = (__bridge id<HeliumInterstitialAd>)uniqueId;
     return [ad readyToShow];
 }
 
-void _heliumSdkFreeInterstitialAdObject(const void * uniqueId)
+void _chartboostMediationFreeInterstitialAdObject(const void * uniqueId)
 {
     sendToBackground(^{
-        [[HeliumSdkManager sharedManager] freeInterstitialAd: [NSNumber numberWithLong:(long)uniqueId]];
+        [[ChartboostMediationManager sharedManager] freeInterstitialAd: [NSNumber numberWithLong:(long)uniqueId]];
     });
 }
 
-void * _heliumSdkGetRewardedAd(const char *placementName)
+void * _chartboostMediationGetRewardedAd(const char *placementName)
 {
-    return (__bridge void*) [[HeliumSdkManager sharedManager] getRewardedAd:GetStringParam(placementName)];
+    return (__bridge void*) [[ChartboostMediationManager sharedManager] getRewardedAd:GetStringParam(placementName)];
 }
 
-BOOL _heliumSdkRewardedSetKeyword(const void *uniqueId, const char *keyword, const char *value)
+BOOL _chartboostMediationRewardedSetKeyword(const void *uniqueId, const char *keyword, const char *value)
 {
     id<HeliumRewardedAd> ad = (__bridge id<HeliumRewardedAd>)uniqueId;
     if (ad.keywords == nil)
@@ -157,13 +157,13 @@ BOOL _heliumSdkRewardedSetKeyword(const void *uniqueId, const char *keyword, con
     return [ad.keywords setKeyword:GetStringParam(keyword) value:GetStringParam(value)];
 }
 
-char * _heliumSdkRewardedRemoveKeyword(const void *uniqueId, const char *keyword)
+char * _chartboostMediationRewardedRemoveKeyword(const void *uniqueId, const char *keyword)
 {
     id<HeliumRewardedAd> ad = (__bridge id<HeliumRewardedAd>)uniqueId;
     return ConvertNSStringToCString([ad.keywords removeKeyword:GetStringParam(keyword)]);
 }
 
-void _heliumSdkRewardedAdLoad(const void * uniqueId)
+void _chartboostMediationRewardedAdLoad(const void * uniqueId)
 {
     sendToBackground(^{
         id<HeliumRewardedAd> ad = (__bridge id<HeliumRewardedAd>)uniqueId;
@@ -171,13 +171,13 @@ void _heliumSdkRewardedAdLoad(const void * uniqueId)
     });
 }
 
-void _heliumSdkRewardedClearLoaded(const void * uniqueId)
+void _chartboostMediationRewardedClearLoaded(const void * uniqueId)
 {
     id<HeliumRewardedAd> ad = (__bridge id<HeliumRewardedAd>)uniqueId;
     [ad clearLoadedAd];
 }
 
-void _heliumSdkRewardedAdShow(const void * uniqueId)
+void _chartboostMediationRewardedAdShow(const void * uniqueId)
 {
     sendToBackground(^{
         id<HeliumRewardedAd> ad = (__bridge id<HeliumRewardedAd>)uniqueId;
@@ -185,26 +185,26 @@ void _heliumSdkRewardedAdShow(const void * uniqueId)
     });
 }
 
-BOOL _heliumSdkRewardedAdReadyToShow(const void * uniqueId)
+BOOL _chartboostMediationRewardedAdReadyToShow(const void * uniqueId)
 {
     id<HeliumRewardedAd> ad = (__bridge id<HeliumRewardedAd>)uniqueId;
     return [ad readyToShow];
 }
 
-void _heliumSdkRewardedAdSetCustomData(const void * uniqueId, const char * customData)
+void _chartboostMediationRewardedAdSetCustomData(const void * uniqueId, const char * customData)
 {
     id<HeliumRewardedAd> ad = (__bridge id<HeliumRewardedAd>)uniqueId;
     ad.customData = GetStringParam(customData);
 }
 
-void _heliumSdkFreeRewardedAdObject(const void * uniqueId)
+void _chartboostMediationFreeRewardedAdObject(const void * uniqueId)
 {
     sendToBackground(^{
-        [[HeliumSdkManager sharedManager] freeRewardedAd: [NSNumber numberWithLong:(long)uniqueId]];
+        [[ChartboostMediationManager sharedManager] freeRewardedAd: [NSNumber numberWithLong:(long)uniqueId]];
     });
 }
 
-void * _heliumSdkGetBannerAd(const char *placementName, long size)
+void * _chartboostMediationGetBannerAd(const char *placementName, long size)
 {
     CHBHBannerSize cbSize;
     switch (size) {
@@ -219,10 +219,10 @@ void * _heliumSdkGetBannerAd(const char *placementName, long size)
             cbSize = CHBHBannerSize_Standard;
             break;
     }
-    return (__bridge void*) [[HeliumSdkManager sharedManager] getBannerAd:GetStringParam(placementName) andSize:cbSize];
+    return (__bridge void*) [[ChartboostMediationManager sharedManager] getBannerAd:GetStringParam(placementName) andSize:cbSize];
 }
 
-BOOL _heliumSdkBannerSetKeyword(const void *uniqueId, const char *keyword, const char *value)
+BOOL _chartboostMediationBannerSetKeyword(const void *uniqueId, const char *keyword, const char *value)
 {
     id<HeliumBannerAd> ad = (__bridge id<HeliumBannerAd>)uniqueId;
     if (ad.keywords == nil)
@@ -230,13 +230,13 @@ BOOL _heliumSdkBannerSetKeyword(const void *uniqueId, const char *keyword, const
     return [ad.keywords setKeyword:GetStringParam(keyword) value:GetStringParam(value)];
 }
 
-char * _heliumSdkBannerRemoveKeyword(const void *uniqueId, const char *keyword)
+char * _chartboostMediationBannerRemoveKeyword(const void *uniqueId, const char *keyword)
 {
     id<HeliumBannerAd> ad = (__bridge id<HeliumBannerAd>)uniqueId;
     return ConvertNSStringToCString([ad.keywords removeKeyword:GetStringParam(keyword)]);
 }
 
-void _heliumSdkBannerAdLoad(const void * uniqueId, long screenLocation)
+void _chartboostMediationBannerAdLoad(const void * uniqueId, long screenLocation)
 {
     sendToMain(^{
         //     TopLeft = 0,
@@ -303,22 +303,22 @@ void _heliumSdkBannerAdLoad(const void * uniqueId, long screenLocation)
     });
 }
 
-void _heliumSdkBannerClearLoaded(const void * uniqueId)
+void _chartboostMediationBannerClearLoaded(const void * uniqueId)
 {
     id<HeliumBannerAd> ad = (__bridge id<HeliumBannerAd>)uniqueId;
     [ad clearAd];
 }
 
-void _heliumSdkBannerRemove(const void * uniqueId)
+void _chartboostMediationBannerRemove(const void * uniqueId)
 {
     sendToMain(^{
         HeliumBannerView* bannerView = (__bridge HeliumBannerView*)uniqueId;
         [bannerView removeFromSuperview];
-        [[HeliumSdkManager sharedManager] freeBannerAd: [NSNumber numberWithLong:(long)uniqueId]];
+        [[ChartboostMediationManager sharedManager] freeBannerAd: [NSNumber numberWithLong:(long)uniqueId]];
     });
 }
 
-void _heliumSdkBannerSetVisibility(const void * uniqueId, BOOL isVisible)
+void _chartboostMediationBannerSetVisibility(const void * uniqueId, BOOL isVisible)
 {
     sendToMain(^{
         HeliumBannerView* bannerView = (__bridge HeliumBannerView*)uniqueId;
@@ -326,9 +326,9 @@ void _heliumSdkBannerSetVisibility(const void * uniqueId, BOOL isVisible)
     });
 }
 
-void _heliumSdkFreeBannerAdObject(const void * uniqueId)
+void _chartboostMediationFreeBannerAdObject(const void * uniqueId)
 {
     sendToBackground(^{
-        [[HeliumSdkManager sharedManager] freeBannerAd: [NSNumber numberWithLong:(long)uniqueId]];
+        [[ChartboostMediationManager sharedManager] freeBannerAd: [NSNumber numberWithLong:(long)uniqueId]];
     });
 }
