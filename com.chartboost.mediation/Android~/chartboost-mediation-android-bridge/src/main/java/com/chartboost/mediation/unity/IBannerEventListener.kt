@@ -1,4 +1,4 @@
-package com.chartboost.heliumsdk.unity
+package com.chartboost.mediation.unity
 
 /**
  * Interface for sending real-time Banner events

@@ -1,10 +1,10 @@
 /*
-* HeliumSdkManager.mm
-* Helium SDK
+* ChartboostMediationManager.mm
+* Chartboost Mediation SDK iOS/Unity
 */
 
 #import <objc/runtime.h>
-#import "HeliumSdkManager.h"
+#import "ChartboostMediationManager.h"
 #import <ChartboostMediationSDK/ChartboostMediationSDK-Swift.h>
 #import <ChartboostMediationSDK/HeliumInitResultsEvent.h>
 
@@ -17,29 +17,29 @@ struct Implementation {
 NSMutableDictionary * storedAds = nil;
 
 // lifecycle callbacks
-static HeliumEvent _didStartCallback;
-static HeliumILRDEvent _didReceiveILRDCallback;
-static HeliumPartnerInitializationDataEvent _didReceivePartnerInitializationDataCallback;
+static ChartboostMediationEvent _didStartCallback;
+static ChartboostMediationILRDEvent _didReceiveILRDCallback;
+static ChartboostMediationPartnerInitializationDataEvent _didReceivePartnerInitializationDataCallback;
 
 // interstitial callbacks
-static HeliumPlacementLoadEvent _interstitialDidLoadCallback;
-static HeliumPlacementEvent _interstitialDidClickCallback;
-static HeliumPlacementEvent _interstitialDidCloseCallback;
-static HeliumPlacementEvent _interstitialDidShowCallback;
-static HeliumPlacementEvent _interstitialDidRecordImpressionCallback;
+static ChartboostMediationPlacementLoadEvent _interstitialDidLoadCallback;
+static ChartboostMediationPlacementEvent _interstitialDidClickCallback;
+static ChartboostMediationPlacementEvent _interstitialDidCloseCallback;
+static ChartboostMediationPlacementEvent _interstitialDidShowCallback;
+static ChartboostMediationPlacementEvent _interstitialDidRecordImpressionCallback;
 
 // rewarded callbacks
-static HeliumPlacementLoadEvent _rewardedDidLoadCallback;
-static HeliumPlacementEvent _rewardedDidClickCallback;
-static HeliumPlacementEvent _rewardedDidCloseCallback;
-static HeliumPlacementEvent _rewardedDidShowCallback;
-static HeliumPlacementEvent _rewardedDidRecordImpressionCallback;
-static HeliumPlacementEvent _rewardedDidReceiveRewardCallback;
+static ChartboostMediationPlacementLoadEvent _rewardedDidLoadCallback;
+static ChartboostMediationPlacementEvent _rewardedDidClickCallback;
+static ChartboostMediationPlacementEvent _rewardedDidCloseCallback;
+static ChartboostMediationPlacementEvent _rewardedDidShowCallback;
+static ChartboostMediationPlacementEvent _rewardedDidRecordImpressionCallback;
+static ChartboostMediationPlacementEvent _rewardedDidReceiveRewardCallback;
 
 // banner callbacks
-static HeliumPlacementLoadEvent _bannerDidLoadCallback;
-static HeliumPlacementEvent _bannerDidRecordImpressionCallback;
-static HeliumPlacementEvent _bannerDidClickCallback;
+static ChartboostMediationPlacementLoadEvent _bannerDidLoadCallback;
+static ChartboostMediationPlacementEvent _bannerDidRecordImpressionCallback;
+static ChartboostMediationPlacementEvent _bannerDidClickCallback;
 
 void UnityPause(int pause);
 
@@ -77,7 +77,7 @@ const char* formatError(ChartboostMediationError *error)
     return formattedError.UTF8String;
 }
 
-const void serializeHeliumEvent(ChartboostMediationError *error, HeliumEvent event)
+const void serializeEvent(ChartboostMediationError *error, ChartboostMediationEvent event)
 {
     if (event == nil)
         return;
@@ -85,7 +85,7 @@ const void serializeHeliumEvent(ChartboostMediationError *error, HeliumEvent eve
     event(formatError(error));
 }
 
-const void serializePlacementWithError(NSString *placementName, ChartboostMediationError *error, HeliumPlacementEvent placementEvent)
+const void serializePlacementWithError(NSString *placementName, ChartboostMediationError *error, ChartboostMediationPlacementEvent placementEvent)
 {
     if (placementEvent == nil)
         return;
@@ -93,7 +93,7 @@ const void serializePlacementWithError(NSString *placementName, ChartboostMediat
     placementEvent(placementName.UTF8String, formatError(error));
 }
 
-const void serializePlacementLoadWithError(NSString *placementName, NSString *requestIdentifier, NSDictionary *winningBidInfo, ChartboostMediationError *error, HeliumPlacementLoadEvent placementLoadEvent)
+const void serializePlacementLoadWithError(NSString *placementName, NSString *requestIdentifier, NSDictionary *winningBidInfo, ChartboostMediationError *error, ChartboostMediationPlacementLoadEvent placementLoadEvent)
 {
     if (placementLoadEvent == nil)
         return;
@@ -114,7 +114,7 @@ const void serializePlacementLoadWithError(NSString *placementName, NSString *re
     placementLoadEvent(placementName.UTF8String, requestIdentifier.UTF8String, auctionId.UTF8String, partnerId.UTF8String, [price doubleValue], formatError(error));
 }
 
-static void heliumSubscribeToILRDNotifications()
+static void subscribeToILRDNotifications()
 {
     static id ilrdObserverId = nil;
 
@@ -136,7 +136,7 @@ static void heliumSubscribeToILRDNotifications()
     }];
 }
 
-static void heliumSubscribeToPartnerInitializationNotifications()
+static void subscribeToPartnerInitializationNotifications()
 {
     static id partnerInitializationObserver = nil;
     
@@ -152,11 +152,11 @@ static void heliumSubscribeToPartnerInitializationNotifications()
     }];
 }
 
-@interface HeliumSdkManager() <HeliumSdkDelegate, CHBHeliumInterstitialAdDelegate, CHBHeliumRewardedAdDelegate, CHBHeliumBannerAdDelegate>
+@interface ChartboostMediationManager() <HeliumSdkDelegate, CHBHeliumInterstitialAdDelegate, CHBHeliumRewardedAdDelegate, CHBHeliumBannerAdDelegate>
 
 @end
 
-@implementation HeliumSdkManager
+@implementation ChartboostMediationManager
 
 -(Implementation)getImplementationFromClassNamed:(NSString*)className selectorName:(NSString*)selectorName
 {
@@ -173,12 +173,12 @@ static void heliumSubscribeToPartnerInitializationNotifications()
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark NSObject
 
-+ (HeliumSdkManager*)sharedManager
++ (ChartboostMediationManager*)sharedManager
 {
-    static HeliumSdkManager *sharedSingleton;
+    static ChartboostMediationManager *sharedSingleton;
 
     if (!sharedSingleton)
-        sharedSingleton = [[HeliumSdkManager alloc] init];
+        sharedSingleton = [[ChartboostMediationManager alloc] init];
 
     return sharedSingleton;
 }
@@ -186,14 +186,14 @@ static void heliumSubscribeToPartnerInitializationNotifications()
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Public
 
-- (void)setLifeCycleCallbacks:(HeliumEvent)didStartCallback didReceiveILRDCallback:(HeliumILRDEvent)didReceiveILRDCallback didReceivePartnerInitializationData:(HeliumPartnerInitializationDataEvent)didReceivePartnerInitializationDataCallback
+- (void)setLifeCycleCallbacks:(ChartboostMediationEvent)didStartCallback didReceiveILRDCallback:(ChartboostMediationILRDEvent)didReceiveILRDCallback didReceivePartnerInitializationData:(ChartboostMediationPartnerInitializationDataEvent)didReceivePartnerInitializationDataCallback
 {
     _didStartCallback = didStartCallback;
     _didReceiveILRDCallback = didReceiveILRDCallback;
     _didReceivePartnerInitializationDataCallback = didReceivePartnerInitializationDataCallback;
 }
 
-- (void)setInterstitialCallbacks:(HeliumPlacementLoadEvent)didLoadCallback didShowCallback:(HeliumPlacementEvent)didShowCallback  didCloseCallback:(HeliumPlacementEvent)didCloseCallback didClickCallback:(HeliumPlacementEvent)didClickCallback didRecordImpression:(HeliumPlacementEvent)didRecordImpression
+- (void)setInterstitialCallbacks:(ChartboostMediationPlacementLoadEvent)didLoadCallback didShowCallback:(ChartboostMediationPlacementEvent)didShowCallback  didCloseCallback:(ChartboostMediationPlacementEvent)didCloseCallback didClickCallback:(ChartboostMediationPlacementEvent)didClickCallback didRecordImpression:(ChartboostMediationPlacementEvent)didRecordImpression
 {
     _interstitialDidLoadCallback = didLoadCallback;
     _interstitialDidShowCallback = didShowCallback;
@@ -202,7 +202,7 @@ static void heliumSubscribeToPartnerInitializationNotifications()
     _interstitialDidRecordImpressionCallback = didRecordImpression;
 }
 
-- (void)setRewardedCallbacks:(HeliumPlacementLoadEvent)didLoadCallback didShowCallback:(HeliumPlacementEvent)didShowCallback didCloseCallback:(HeliumPlacementEvent)didCloseCallback didClickCallback:(HeliumPlacementEvent)didClickCallback didRecordImpression:(HeliumPlacementEvent)didRecordImpression didReceiveRewardCallback:(HeliumPlacementEvent)didReceiveRewardCallback
+- (void)setRewardedCallbacks:(ChartboostMediationPlacementLoadEvent)didLoadCallback didShowCallback:(ChartboostMediationPlacementEvent)didShowCallback didCloseCallback:(ChartboostMediationPlacementEvent)didCloseCallback didClickCallback:(ChartboostMediationPlacementEvent)didClickCallback didRecordImpression:(ChartboostMediationPlacementEvent)didRecordImpression didReceiveRewardCallback:(ChartboostMediationPlacementEvent)didReceiveRewardCallback
 {
     _rewardedDidLoadCallback = didLoadCallback;
     _rewardedDidShowCallback = didShowCallback;
@@ -212,7 +212,7 @@ static void heliumSubscribeToPartnerInitializationNotifications()
     _rewardedDidReceiveRewardCallback = didReceiveRewardCallback;
 }
 
-- (void)setBannerCallbacks:(HeliumPlacementLoadEvent)didLoadCallback didRecordImpression:(HeliumPlacementEvent)didRecordImpression didClickCallback:(HeliumPlacementEvent)didClickCallback
+- (void)setBannerCallbacks:(ChartboostMediationPlacementLoadEvent)didLoadCallback didRecordImpression:(ChartboostMediationPlacementEvent)didRecordImpression didClickCallback:(ChartboostMediationPlacementEvent)didClickCallback
 {
     _bannerDidLoadCallback = didLoadCallback;
     _bannerDidRecordImpressionCallback = didRecordImpression;
@@ -221,8 +221,8 @@ static void heliumSubscribeToPartnerInitializationNotifications()
 
 - (void)startHeliumWithAppId:(NSString*)appId andAppSignature:(NSString*)appSignature unityVersion:(NSString *)unityVersion initializationOptions:(const char**)initializationOptions initializationOptionsSize:(int)initializationOptionsSize
 {
-    heliumSubscribeToILRDNotifications();
-    heliumSubscribeToPartnerInitializationNotifications();
+    subscribeToILRDNotifications();
+    subscribeToPartnerInitializationNotifications();
     HeliumInitializationOptions* heliumInitializationOptions = nil;
     
     if (initializationOptionsSize > 0) {
@@ -338,7 +338,7 @@ static void heliumSubscribeToPartnerInitializationNotifications()
 
 - (void)heliumDidStartWithError:(ChartboostMediationError *)error;
 {
-    serializeHeliumEvent(error, _didStartCallback);
+    serializeEvent(error, _didStartCallback);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

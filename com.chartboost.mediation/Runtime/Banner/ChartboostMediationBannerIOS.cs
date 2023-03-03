@@ -14,71 +14,71 @@ namespace Chartboost.Banner
         public ChartboostMediationBannerIOS(string placement, ChartboostMediationBannerAdSize size) : base(placement, size)
         {
             LogTag = "ChartboostMediation Banner (iOS)";
-            _uniqueId = _heliumSdkGetBannerAd(placement, (int)size);
+            _uniqueId = _chartboostMediationGetBannerAd(placement, (int)size);
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerBase.SetKeyword"/>>
         public override bool SetKeyword(string keyword, string value)
         {
             base.SetKeyword(keyword, value);
-            return _heliumSdkBannerSetKeyword(_uniqueId, keyword, value);
+            return _chartboostMediationBannerSetKeyword(_uniqueId, keyword, value);
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerBase.RemoveKeyword"/>>
         public override string RemoveKeyword(string keyword)
         {
             base.RemoveKeyword(keyword);
-            return _heliumSdkBannerRemoveKeyword(_uniqueId, keyword);
+            return _chartboostMediationBannerRemoveKeyword(_uniqueId, keyword);
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerBase.Load"/>>
         public override void Load(ChartboostMediationBannerAdScreenLocation location)
         {
             base.Load(location);
-            _heliumSdkBannerAdLoad(_uniqueId, (int)location);
+            _chartboostMediationBannerAdLoad(_uniqueId, (int)location);
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerBase.SetVisibility"/>>
         public override void SetVisibility(bool isVisible)
         {
             base.SetVisibility(isVisible);
-            _heliumSdkBannerSetVisibility(_uniqueId, isVisible);
+            _chartboostMediationBannerSetVisibility(_uniqueId, isVisible);
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerBase.ClearLoaded"/>>
         public override void ClearLoaded()
         {
             base.ClearLoaded();
-            _heliumSdkBannerClearLoaded(_uniqueId);
+            _chartboostMediationBannerClearLoaded(_uniqueId);
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerBase.Remove"/>>
         public override void Remove()
         {
             base.Remove();
-            _heliumSdkBannerRemove(_uniqueId);
+            _chartboostMediationBannerRemove(_uniqueId);
         }
 
         ~ChartboostMediationBannerIOS()
-            => _heliumSdkFreeBannerAdObject(_uniqueId);
+            => _chartboostMediationFreeBannerAdObject(_uniqueId);
 
         #region External Methods
         [DllImport("__Internal")]
-        private static extern IntPtr _heliumSdkGetBannerAd(string placementName, int size);
+        private static extern IntPtr _chartboostMediationGetBannerAd(string placementName, int size);
         [DllImport("__Internal")]
-        private static extern bool _heliumSdkBannerSetKeyword(IntPtr uniqueId, string keyword, string value);
+        private static extern bool _chartboostMediationBannerSetKeyword(IntPtr uniqueId, string keyword, string value);
         [DllImport("__Internal")]
-        private static extern string _heliumSdkBannerRemoveKeyword(IntPtr uniqueID, string keyword);
+        private static extern string _chartboostMediationBannerRemoveKeyword(IntPtr uniqueID, string keyword);
         [DllImport("__Internal")]
-        private static extern void _heliumSdkBannerAdLoad(IntPtr uniqueID, int screenLocation);
+        private static extern void _chartboostMediationBannerAdLoad(IntPtr uniqueID, int screenLocation);
         [DllImport("__Internal")]
-        private static extern void _heliumSdkBannerClearLoaded(IntPtr uniqueID);
+        private static extern void _chartboostMediationBannerClearLoaded(IntPtr uniqueID);
         [DllImport("__Internal")]
-        private static extern bool _heliumSdkBannerRemove(IntPtr uniqueID);
+        private static extern bool _chartboostMediationBannerRemove(IntPtr uniqueID);
         [DllImport("__Internal")]
-        private static extern bool _heliumSdkBannerSetVisibility(IntPtr uniqueID, bool isVisible);
+        private static extern bool _chartboostMediationBannerSetVisibility(IntPtr uniqueID, bool isVisible);
         [DllImport("__Internal")]
-        private static extern void _heliumSdkFreeBannerAdObject(IntPtr uniqueID);
+        private static extern void _chartboostMediationFreeBannerAdObject(IntPtr uniqueID);
         #endregion
     }
 }

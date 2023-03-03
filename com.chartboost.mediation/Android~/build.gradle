@@ -51,11 +51,11 @@ task githubScript {
 }
 
 task buildBridge {
-    dependsOn ':helium-android-bridge:clean'
-    dependsOn ':helium-android-bridge:lint'
-    dependsOn ':helium-android-bridge:build'
+    dependsOn ':chartboost-mediation-android-bridge:clean'
+    dependsOn ':chartboost-mediation-android-bridge:lint'
+    dependsOn ':chartboost-mediation-android-bridge:build'
     if (isNotRelease && inputVersionIsHigher)
-        dependsOn ':helium-android-bridge:copyReleaseAndroidBridgeForPackaging'
+        dependsOn ':chartboost-mediation-android-bridge:copyReleaseAndroidBridgeForPackaging'
 }
 
 String mostRecentVersion(List versions) {

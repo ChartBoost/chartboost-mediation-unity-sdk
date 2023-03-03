@@ -11,49 +11,49 @@ namespace Chartboost.Platforms
     {
         #region Objective-C Extern Members
         // callback definitions for objective-c layer
-        private delegate void ExternHeliumEvent(string error);
-        private delegate void ExternHeliumILRDEvent(string impressionDataJson);
-        private delegate void ExternHeliumPartnerInitializationDataEvent(string partnerInitializationData);
-        private delegate void ExternHeliumPlacementEvent(string placementName, string error);
-        private delegate void ExternHeliumPlacementLoadEvent(string placementName, string loadId, string auctionId, string partnerId, double price, string error);
+        private delegate void ExternChartboostMediationEvent(string error);
+        private delegate void ExternChartboostMediationILRDEvent(string impressionDataJson);
+        private delegate void ExternChartboostMediationPartnerInitializationDataEvent(string partnerInitializationData);
+        private delegate void ExternChartboostMediationPlacementEvent(string placementName, string error);
+        private delegate void ExternChartboostMediationPlacementLoadEvent(string placementName, string loadId, string auctionId, string partnerId, double price, string error);
         
         [DllImport("__Internal")]
-        private static extern void _setLifeCycleCallbacks(ExternHeliumEvent DidStartCallback,
-            ExternHeliumILRDEvent DidReceiveILRDCallback, ExternHeliumPartnerInitializationDataEvent DidReceivePartnerInitializationDataCallback);
+        private static extern void _setLifeCycleCallbacks(ExternChartboostMediationEvent DidStartCallback,
+            ExternChartboostMediationILRDEvent DidReceiveILRDCallback, ExternChartboostMediationPartnerInitializationDataEvent DidReceivePartnerInitializationDataCallback);
 
         [DllImport("__Internal")]
-        private static extern void _setInterstitialCallbacks(ExternHeliumPlacementLoadEvent DidLoadCallback,
-            ExternHeliumPlacementEvent DidShowCallback, ExternHeliumPlacementEvent DidCloseCallback,
-            ExternHeliumPlacementEvent DidClickCallback, ExternHeliumPlacementEvent DidRecordImpression);
+        private static extern void _setInterstitialCallbacks(ExternChartboostMediationPlacementLoadEvent DidLoadCallback,
+            ExternChartboostMediationPlacementEvent DidShowCallback, ExternChartboostMediationPlacementEvent DidCloseCallback,
+            ExternChartboostMediationPlacementEvent DidClickCallback, ExternChartboostMediationPlacementEvent DidRecordImpression);
 
         [DllImport("__Internal")]
-        private static extern void _setRewardedCallbacks(ExternHeliumPlacementLoadEvent DidLoadCallback,
-            ExternHeliumPlacementEvent DidShowCallback, ExternHeliumPlacementEvent DidCloseCallback, ExternHeliumPlacementEvent DidClickCallback,
-            ExternHeliumPlacementEvent DidRecordImpression, ExternHeliumPlacementEvent DidReceiveReward);
+        private static extern void _setRewardedCallbacks(ExternChartboostMediationPlacementLoadEvent DidLoadCallback,
+            ExternChartboostMediationPlacementEvent DidShowCallback, ExternChartboostMediationPlacementEvent DidCloseCallback, ExternChartboostMediationPlacementEvent DidClickCallback,
+            ExternChartboostMediationPlacementEvent DidRecordImpression, ExternChartboostMediationPlacementEvent DidReceiveReward);
 
         [DllImport("__Internal")]
-        private static extern void _setBannerCallbacks(ExternHeliumPlacementLoadEvent DidLoadCallback, ExternHeliumPlacementEvent DidRecordImpression, ExternHeliumPlacementEvent DidClickCallback);
+        private static extern void _setBannerCallbacks(ExternChartboostMediationPlacementLoadEvent DidLoadCallback, ExternChartboostMediationPlacementEvent DidRecordImpression, ExternChartboostMediationPlacementEvent DidClickCallback);
 
         [DllImport("__Internal")]
-        private static extern void _heliumSdkInit(string appId, string appSignature, string unityVersion, string[] initializationOptions, int initializationOptionsSize);
+        private static extern void _chartboostMediationInit(string appId, string appSignature, string unityVersion, string[] initializationOptions, int initializationOptionsSize);
 
         [DllImport("__Internal")]
-        private static extern void _heliumSdkSetSubjectToCoppa(bool isSubject);
+        private static extern void _chartboostMediationSetSubjectToCoppa(bool isSubject);
 
         [DllImport("__Internal")]
-        private static extern void _heliumSdkSetSubjectToGDPR(bool isSubject);
+        private static extern void _chartboostMediationSetSubjectToGDPR(bool isSubject);
 
         [DllImport("__Internal")]
-        private static extern void _heliumSdkSetUserHasGivenConsent(bool hasGivenConsent);
+        private static extern void _chartboostMediationSetUserHasGivenConsent(bool hasGivenConsent);
 
         [DllImport("__Internal")]
-        private static extern void _heliumSetCCPAConsent(bool hasGivenConsent);
+        private static extern void _chartboostMediationSetCCPAConsent(bool hasGivenConsent);
 
         [DllImport("__Internal")]
-        private static extern void _heliumSetUserIdentifier(string userIdentifier);
+        private static extern void _chartboostMediationSetUserIdentifier(string userIdentifier);
 
         [DllImport("__Internal")]
-        private static extern string _heliumGetUserIdentifier();
+        private static extern string _chartboostMediationGetUserIdentifier();
 
         [DllImport("__Internal")]
         private static extern void _chartboostMediationSetTestMode(bool isTestMode);
@@ -100,44 +100,44 @@ namespace Chartboost.Platforms
             ChartboostMediationSettings.IOSAppId = appId;
             ChartboostMediationSettings.IOSAppSignature = appSignature;
             var initializationOptions = GetInitializationOptions();
-            _heliumSdkInit(appId, appSignature, Application.unityVersion, initializationOptions, initializationOptions.Length);
+            _chartboostMediationInit(appId, appSignature, Application.unityVersion, initializationOptions, initializationOptions.Length);
             IsInitialized = true;
         }
 
         public override void SetSubjectToCoppa(bool isSubject)
         {
             base.SetSubjectToCoppa(isSubject);
-            _heliumSdkSetSubjectToCoppa(isSubject);
+            _chartboostMediationSetSubjectToCoppa(isSubject);
         }
 
         public override void SetSubjectToGDPR(bool isSubject)
         {
             base.SetSubjectToGDPR(isSubject);
-            _heliumSdkSetSubjectToGDPR(isSubject);
+            _chartboostMediationSetSubjectToGDPR(isSubject);
         }
 
         public override void SetUserHasGivenConsent(bool hasGivenConsent)
         {
             base.SetUserHasGivenConsent(hasGivenConsent);
-            _heliumSdkSetUserHasGivenConsent(hasGivenConsent);
+            _chartboostMediationSetUserHasGivenConsent(hasGivenConsent);
         }
 
         public override void SetCCPAConsent(bool hasGivenConsent)
         {
             base.SetCCPAConsent(hasGivenConsent);
-            _heliumSetCCPAConsent(hasGivenConsent);
+            _chartboostMediationSetCCPAConsent(hasGivenConsent);
         }
 
         public override void SetUserIdentifier(string userIdentifier)
         {
             base.SetUserIdentifier(userIdentifier);
-            _heliumSetUserIdentifier(userIdentifier);
+            _chartboostMediationSetUserIdentifier(userIdentifier);
         }
 
         public override string GetUserIdentifier()
         {
             base.GetUserIdentifier();
-            return _heliumGetUserIdentifier();
+            return _chartboostMediationGetUserIdentifier();
         }
 
         public override void SetTestMode(bool testModeEnabled)
@@ -148,15 +148,15 @@ namespace Chartboost.Platforms
         #endregion
 
         #region LifeCycle Callbacks
-        [MonoPInvokeCallback(typeof(ExternHeliumEvent))]
+        [MonoPInvokeCallback(typeof(ExternChartboostMediationEvent))]
         private static void ExternDidStart(string error) 
             => EventProcessor.ProcessChartboostMediationEvent(error, _instance.DidStart);
 
-        [MonoPInvokeCallback(typeof(ExternHeliumILRDEvent))]
+        [MonoPInvokeCallback(typeof(ExternChartboostMediationILRDEvent))]
         private static void ExternDidReceiveILRD(string impressionDataJson) 
             => EventProcessor.ProcessEventWithILRD(impressionDataJson, _instance.DidReceiveImpressionLevelRevenueData);
 
-        [MonoPInvokeCallback(typeof(ExternHeliumPartnerInitializationDataEvent))]
+        [MonoPInvokeCallback(typeof(ExternChartboostMediationPartnerInitializationDataEvent))]
         private static void ExternDidReceivePartnerInitializationData(string partnerInitializationData) 
             => EventProcessor.ProcessEventWithPartnerInitializationData(partnerInitializationData, _instance.DidReceivePartnerInitializationData);
 
@@ -166,23 +166,23 @@ namespace Chartboost.Platforms
         #endregion
 
         #region Interstitial Callbacks
-        [MonoPInvokeCallback(typeof(ExternHeliumPlacementLoadEvent))]
+        [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementLoadEvent))]
         private static void ExternDidLoadInterstitial(string placementName, string loadId, string auctionId, string partnerId, double price, string error)
             => EventProcessor.ProcessChartboostMediationLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadInterstitial);
 
-        [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
+        [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementEvent))]
         private static void ExternDidShowInterstitial(string placementName, string error) 
             => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidShowInterstitial);
 
-        [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
+        [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementEvent))]
         private static void ExternDidCloseInterstitial(string placementName, string error) 
             => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidCloseInterstitial);
 
-        [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
+        [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementEvent))]
         private static void ExternDidClickInterstitial(string placementName, string error) 
             => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidClickInterstitial);
 
-        [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
+        [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementEvent))]
         private static void ExternDidRecordImpressionInterstitial(string placementName, string error)
             => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidRecordImpressionInterstitial);
         
@@ -194,27 +194,27 @@ namespace Chartboost.Platforms
         #endregion
 
         #region Rewarded Callbacks
-        [MonoPInvokeCallback(typeof(ExternHeliumPlacementLoadEvent))]
+        [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementLoadEvent))]
         private static void ExternDidLoadRewarded(string placementName, string loadId, string auctionId, string partnerId, double price, string error) 
             => EventProcessor.ProcessChartboostMediationLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadRewarded);
 
-        [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
+        [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementEvent))]
         private static void ExternDidShowRewarded(string placementName, string error) 
             => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidShowRewarded);
 
-        [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
+        [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementEvent))]
         private static void ExternDidCloseRewarded(string placementName, string error) 
             => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidCloseRewarded);
         
-        [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
+        [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementEvent))]
         private static void ExternDidClickRewarded(string placementName, string error) 
             => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidClickRewarded);
 
-        [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
+        [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementEvent))]
         private static void ExternDidRecordImpressionRewarded(string placementName, string error)
             => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidRecordImpressionRewarded);
 
-        [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
+        [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementEvent))]
         private static void ExternDidReceiveReward(string placementName, string error) 
             => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidReceiveReward);
         public override event ChartboostMediationPlacementLoadEvent DidLoadRewarded;
@@ -226,15 +226,15 @@ namespace Chartboost.Platforms
         #endregion
 
         #region Banner Callbacks
-        [MonoPInvokeCallback(typeof(ExternHeliumPlacementLoadEvent))]
+        [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementLoadEvent))]
         private static void ExternDidLoadBanner(string placementName, string loadId, string auctionId, string partnerId, double price, string error) 
             => EventProcessor.ProcessChartboostMediationLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadBanner);
 
-        [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
+        [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementEvent))]
         private static void ExternDidClickBanner(string placementName, string error) 
             => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidClickBanner);
         
-        [MonoPInvokeCallback(typeof(ExternHeliumPlacementEvent))]
+        [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementEvent))]
         private static void ExternDidRecordImpressionBanner(string placementName, string error) 
             => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error,  _instance.DidRecordImpressionBanner);
 

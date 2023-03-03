@@ -1,24 +1,24 @@
-package com.chartboost.heliumsdk.unity
+package com.chartboost.mediation.unity
 
 import android.util.Log
 import com.chartboost.heliumsdk.domain.ChartboostMediationAdException
 import org.json.JSONException
 import org.json.JSONObject
 
-object HeliumEventProcessor {
-    private val TAG = HeliumEventProcessor::class.java.simpleName
+object EventProcessor {
+    private val TAG = EventProcessor::class.java.simpleName
 
     @JvmStatic
-    fun serializeHeliumEvent(placementName: String, eventConsumer: HeliumEventConsumer<String>)
+    fun serializeEvent(placementName: String, eventConsumer: EventConsumer<String>)
         = eventConsumer.accept(placementName)
 
     @JvmStatic
-    fun serializeHeliumEventWithError(placementName: String, error: ChartboostMediationAdException?, eventConsumer: HeliumEventConsumerWithError<String, String>)
+    fun serializeEventWithError(placementName: String, error: ChartboostMediationAdException?, eventConsumer: EventWithErrorConsumer<String, String>)
         = eventConsumer.accept(placementName,error?.toString() ?: "")
 
     @JvmStatic
-    fun serializeHeliumLoadEvent(placementName: String, loadId: String, data: Map<String, String>, error: ChartboostMediationAdException?,
-        loadConsumer: HeliumLoadEventConsumer<String, String, String, String, Double, String>) {
+    fun serializeLoadEvent(placementName: String, loadId: String, data: Map<String, String>, error: ChartboostMediationAdException?,
+                           loadConsumer: LoadEventConsumer<String, String, String, String, Double, String>) {
         val errorMessage = error?.toString() ?: ""
 
         val partnerId = data["partner_id"] ?: ""
@@ -46,19 +46,15 @@ object HeliumEventProcessor {
         }
     }
 
-    fun interface HeliumEventConsumer<PlacementName>{
+    fun interface EventConsumer<PlacementName>{
         fun accept(placementName: PlacementName)
     }
 
-    fun interface HeliumEventConsumerWithError<PlacementName, ErrorMessage> {
+    fun interface EventWithErrorConsumer<PlacementName, ErrorMessage> {
         fun accept(placementName: PlacementName, errorMessage: ErrorMessage)
     }
 
-    fun interface HeliumLoadEventConsumer<PlacementName, LoadId, AuctionId, PartnerId, Price, Error> {
+    fun interface LoadEventConsumer<PlacementName, LoadId, AuctionId, PartnerId, Price, Error> {
         fun accept(placementName: PlacementName, loadId: LoadId, auctionId: AuctionId, partnerId: PartnerId, price: Price, error: Error)
-    }
-
-    fun interface HeliumRewardEventConsumer<PlacementName, Reward> {
-        fun accept(placementName: PlacementName, reward: Reward)
     }
 }
