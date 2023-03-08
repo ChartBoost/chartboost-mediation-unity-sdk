@@ -1,6 +1,6 @@
 {
     "name": "com.chartboost.mediation.tests.editor",
-    "rootNamespace": "Helium",
+    "rootNamespace": "Chartboost",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",

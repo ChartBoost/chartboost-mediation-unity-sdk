@@ -355,23 +355,3 @@ namespace Chartboost.Editor
         }
     }
 }
-
-namespace Helium.Editor
-{
-    [Obsolete("HeliumIntegrationChecker has been replaced with ChartboostMediationIntegrationChecker, and will be removed in future releases.")]
-    public class HeliumIntegrationChecker
-    {
-        public static PackageInfo FindPackage(string packageName) => ChartboostMediationIntegrationChecker.FindPackage(packageName);
-        public static bool ImportSample(string sampleName, string version) => ChartboostMediationIntegrationChecker.ImportSample(sampleName, version);
-        
-        [Obsolete("ReimportExistingHeliumSamples has been deprecated, use ReimportExistingSamplesSet instead.")]
-        public static void ReimportExistingHeliumSamples(ICollection<string> existingSamples, string version) => ChartboostMediationIntegrationChecker.ReimportExistingSampleSet(existingSamples, version);
-        
-        [Obsolete("ReimportExistingAdapters has been deprecated, use ReimportAllExistingAdapters instead.")]
-        public static bool ReimportExistingAdapters() => ChartboostMediationIntegrationChecker.ReimportAllExistingAdapters();
-        public static void UncommentUnityAdsDependency(bool skipDialog = false) => ChartboostMediationIntegrationChecker.UncommentUnityAdsDependency(skipDialog);
-        public static void CheckUnityAdsIntegration() => ChartboostMediationIntegrationChecker.CheckUnityAdsIntegration();
-        public static void ForceReimportExistingAdapters() => ChartboostMediationIntegrationChecker.ForceReimportExistingAdapters();
-        public static void CheckIntegration() => ChartboostMediationIntegrationChecker.CheckIntegration();
-    }
-}
