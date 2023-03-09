@@ -36,7 +36,9 @@ namespace Chartboost.Banner
 
         public ChartboostMediationBannerAd(string placementName, ChartboostMediationBannerAdSize size) : base(placementName, size)
         {
-            #if UNITY_ANDROID
+            #if UNITY_EDITOR
+            _platformBanner = new ChartboostMediationBannerUnsupported(placementName, size);
+            #elif UNITY_ANDROID
             _platformBanner = new ChartboostMediationBannerAndroid(placementName, size);
             #elif UNITY_IOS
             _platformBanner = new ChartboostMediationBannerIOS(placementName, size);
