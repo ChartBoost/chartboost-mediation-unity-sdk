@@ -8,7 +8,9 @@ namespace Chartboost.FullScreen.Rewarded
 		
 		public ChartboostMediationRewardedAd(string placementName) : base(placementName)
 		{
-			#if UNITY_ANDROID
+			#if UNITY_EDITOR
+			_platformRewarded = new ChartboostMediationRewardedUnsupported(placementName);
+			#elif UNITY_ANDROID
 			_platformRewarded = new ChartboostMediationRewardedAndroid(placementName);
 			#elif UNITY_IOS
 			_platformRewarded = new ChartboostMediationRewardedIOS(placementName);

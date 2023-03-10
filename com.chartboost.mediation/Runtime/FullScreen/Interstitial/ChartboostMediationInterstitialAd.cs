@@ -9,7 +9,9 @@ namespace Chartboost.FullScreen.Interstitial
 
         public ChartboostMediationInterstitialAd(string placementName) : base(placementName)
         {
-            #if UNITY_ANDROID
+            #if UNITY_EDITOR
+            _platformInterstitial = new ChartboostMediationInterstitialUnsupported(placementName);
+            #elif UNITY_ANDROID
             _platformInterstitial = new ChartboostMediationInterstitialAndroid(placementName);
             #elif UNITY_IOS
             _platformInterstitial = new ChartboostMediationInterstitialIOS(placementName);
