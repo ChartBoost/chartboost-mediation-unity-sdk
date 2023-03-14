@@ -270,7 +270,7 @@ static void subscribeToPartnerInitializationNotifications()
 
 -(void)setTestMode:(BOOL)isTestModeEnabled
 {
-    Implementation implementation = [self getImplementationFromClassNamed:@"CHBHTestModeHelper" selectorName:@"setTestModeIsEnabledForced:"];
+    Implementation implementation = [self getImplementationFromClassNamed:@"CHBHTestModeHelper" selectorName:@"setIsTestModeEnabled_isForcedOn:"];
     typedef void (*Signature)(id, SEL, BOOL);
     Signature function = (Signature)implementation.imp;
     function(self, implementation.selector, isTestModeEnabled);
