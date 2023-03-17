@@ -27,9 +27,5 @@
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>
         </iosPod>
-
-        <sources>
-            <source>https://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@github.com/ChartBoost/chartboost-pods.git</source>
-        </sources>
     </iosPods>
 </dependencies>
