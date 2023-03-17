@@ -2,10 +2,10 @@
 <dependencies>
     <androidPackages>
         <!-- Chartboost Mediation APS Adapter -->
-        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-amazon-publisher-services:4.9.6.2+@aar" />
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-amazon-publisher-services:4.9.7.0+@aar" />
 
         <!-- APS Android SDK -->
-        <androidPackage spec="com.amazon.android:aps-sdk:9.6.2"/>
+        <androidPackage spec="com.amazon.android:aps-sdk:9.7.0"/>
     </androidPackages>
     <iosPods>
         <!-- Chartboost Mediation APS Adapter -->

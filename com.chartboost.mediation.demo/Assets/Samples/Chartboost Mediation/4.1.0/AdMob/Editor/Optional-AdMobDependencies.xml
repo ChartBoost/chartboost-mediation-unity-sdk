@@ -2,16 +2,16 @@
 <dependencies>
     <androidPackages>
         <!-- Chartboost Mediation AdMob Adapter -->
-        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-admob:4.21.3.0+@aar" />
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-admob:4.21.4.0+@aar" />
 
         <!-- Admob Android SDK -->
-        <androidPackage spec="com.google.android.gms:play-services-ads:21.3.0" />
+        <androidPackage spec="com.google.android.gms:play-services-ads:21.4.0" />
     </androidPackages>
     <iosPods>
         <!-- Chartboost Mediation AdMob Adapter -->
-        <iosPod name="ChartboostMediationAdapterAdMob" version="~> 4.9.12.0"/>
+        <iosPod name="ChartboostMediationAdapterAdMob" version="~> 4.9.13.0"/>
 
         <!-- Admob iOS SDK -->
-        <iosPod name="Google-Mobile-Ads-SDK" version="~> 9.12.0"/>
+        <iosPod name="Google-Mobile-Ads-SDK" version="~> 9.13.0"/>
     </iosPods>
 </dependencies>

@@ -2,30 +2,30 @@
 <dependencies>
     <androidPackages>
         <!-- Chartboost Mediation Mintegral Adapter -->
-        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-mintegral:4.16.0.31+@aar" />
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-mintegral:4.16.3.91+@aar" />
 
         <!-- Mintegral Android SDK -->
         <repositories>
           <repository>https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea</repository>
         </repositories>
 
-        <androidPackage spec="com.mbridge.msdk.oversea:videojs:16.0.31"/>
-        <androidPackage spec="com.mbridge.msdk.oversea:mbjscommon:16.0.31"/>
-        <androidPackage spec="com.mbridge.msdk.oversea:playercommon:16.0.31"/>
-        <androidPackage spec="com.mbridge.msdk.oversea:reward:16.0.31"/>
-        <androidPackage spec="com.mbridge.msdk.oversea:videocommon:16.0.31"/>
-        <androidPackage spec="com.mbridge.msdk.oversea:same:16.0.31"/>
-        <androidPackage spec="com.mbridge.msdk.oversea:interstitialvideo:16.0.31"/>
-        <androidPackage spec="com.mbridge.msdk.oversea:mbnative:16.0.31"/>
-        <androidPackage spec="com.mbridge.msdk.oversea:nativeex:16.0.31"/>
-        <androidPackage spec="com.mbridge.msdk.oversea:mbbanner:16.0.31"/>
-        <androidPackage spec="com.mbridge.msdk.oversea:mbbid:16.0.31"/>
+        <androidPackage spec="com.mbridge.msdk.oversea:videojs:16.3.91"/>
+        <androidPackage spec="com.mbridge.msdk.oversea:mbjscommon:16.3.91"/>
+        <androidPackage spec="com.mbridge.msdk.oversea:playercommon:16.3.91"/>
+        <androidPackage spec="com.mbridge.msdk.oversea:reward:16.3.91"/>
+        <androidPackage spec="com.mbridge.msdk.oversea:videocommon:16.3.91"/>
+        <androidPackage spec="com.mbridge.msdk.oversea:same:16.3.91"/>
+        <androidPackage spec="com.mbridge.msdk.oversea:interstitialvideo:16.3.91"/>
+        <androidPackage spec="com.mbridge.msdk.oversea:mbnative:16.3.91"/>
+        <androidPackage spec="com.mbridge.msdk.oversea:nativeex:16.3.91"/>
+        <androidPackage spec="com.mbridge.msdk.oversea:mbbanner:16.3.91"/>
+        <androidPackage spec="com.mbridge.msdk.oversea:mbbid:16.3.91"/>
     </androidPackages>
     <iosPods>
         <!-- Chartboost Mediation Mintegral Adapter -->
-        <iosPod name="ChartboostMediationAdapterMintegral" version="~> 4.7.1.9"/>
+        <iosPod name="ChartboostMediationAdapterMintegral" version="~> 4.7.2.0"/>
 
         <!-- Mintegral iOS SDK -->
-        <iosPod name="MintegralAdSDK" version="~> 7.1.9"/>
+        <iosPod name="MintegralAdSDK" version="~> 7.2.0"/>
     </iosPods>
 </dependencies>

@@ -2,17 +2,17 @@
 <dependencies>
     <androidPackages>
         <!-- Chartboost Mediation Unity Ads Adapter -->
-        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-unity-ads:4.4.4.1+@aar" />
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-unity-ads:4.4.6.0+@aar" />
 
         <!-- Unity Ads Android SDK -->
-        <androidPackage spec="com.unity3d.ads:unity-ads:4.4.1"/>
+        <androidPackage spec="com.unity3d.ads:unity-ads:4.6.0"/>
         <androidPackage spec="androidx.core:core:1.2.0"/>
     </androidPackages>
     <iosPods>
         <!-- Chartboost Mediation Unity Ads Adapter -->
-        <iosPod name="ChartboostMediationAdapterUnityAds" version="~> 4.4.4.1"/>
+        <iosPod name="ChartboostMediationAdapterUnityAds" version="~> 4.4.5.0"/>
 
         <!-- Unity Ads iOS SDK -->
-        <iosPod name="UnityAds" version="~> 4.4.1"/>
+        <iosPod name="UnityAds" version="~> 4.5.0"/>
     </iosPods>
 </dependencies>
