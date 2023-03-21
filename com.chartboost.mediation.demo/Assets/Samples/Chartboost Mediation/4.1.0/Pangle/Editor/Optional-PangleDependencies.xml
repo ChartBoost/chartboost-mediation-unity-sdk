@@ -13,9 +13,9 @@
     </androidPackages>
     <iosPods>
         <!-- Chartboost Mediation Pangle Adapter -->
-        <iosPod name="ChartboostMediationAdapterPangle" version="~> 4.4.9.0.6"/>
+        <iosPod name="ChartboostMediationAdapterPangle" version="~> 4.4.9.1.0"/>
 
         <!-- Pangle iOS SDK -->
-        <iosPod name="Ads-Global" version="~> 4.9.0.6"/>
+        <iosPod name="Ads-Global" version="~> 4.9.1.0"/>
     </iosPods>
 </dependencies>

@@ -9,9 +9,9 @@
     </androidPackages>
     <iosPods>
         <!-- Chartboost Mediation Fyber Adapter -->
-        <iosPod name="ChartboostMediationAdapterDigitalTurbineExchange" version="~> 4.8.1.7"/>
+        <iosPod name="ChartboostMediationAdapterDigitalTurbineExchange" version="~> 4.8.1.9"/>
 
         <!-- Fyber iOS SDK -->
-        <iosPod name="Fyber_Marketplace_SDK" version="~> 8.1.7"/>
+        <iosPod name="Fyber_Marketplace_SDK" version="~> 8.1.9"/>
     </iosPods>
 </dependencies>

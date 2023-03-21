@@ -9,9 +9,9 @@
     </androidPackages>
     <iosPods>
         <!-- Chartboost Mediation APS Adapter -->
-        <iosPod name="ChartboostMediationAdapterAmazonPublisherServices" version="~> 4.4.5.6"/>
+        <iosPod name="ChartboostMediationAdapterAmazonPublisherServices" version="~> 4.4.6.0"/>
 
         <!-- APS iOS SDK -->
-        <iosPod name="AmazonPublisherServicesSDK" version="~> 4.5.6" addToAllTargets="true"/>
+        <iosPod name="AmazonPublisherServicesSDK" version="~> 4.6.0" addToAllTargets="true"/>
     </iosPods>
 </dependencies>
