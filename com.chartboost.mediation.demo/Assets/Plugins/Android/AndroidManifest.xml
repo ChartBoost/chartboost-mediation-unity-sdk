@@ -16,12 +16,5 @@
             <meta-data android:name="unityplayer.ForwardNativeEventsToDalvik" android:value="true" />
         </activity>
         <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-6548817822928201~9780573322" />
-
-        <activity android:name="com.chartboost_helium.sdk.CBImpressionActivity"
-                  android:excludeFromRecents="true"
-                  android:hardwareAccelerated="true"
-                  android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
-                  android:configChanges="keyboardHidden|orientation|screenSize"/>
-
     </application>
 </manifest>
