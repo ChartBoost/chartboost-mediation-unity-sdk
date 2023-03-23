@@ -76,7 +76,7 @@ namespace Chartboost.FullScreen.Rewarded
         [DllImport("__Internal")]
         private static extern void _chartboostMediationRewardedAdLoad(IntPtr uniqueID);
         [DllImport("__Internal")]
-        private static extern bool _chartboostMediationRewardedClearLoaded(IntPtr uniqueID);
+        private static extern void _chartboostMediationRewardedClearLoaded(IntPtr uniqueID);
         [DllImport("__Internal")]
         private static extern void _chartboostMediationRewardedAdShow(IntPtr uniqueID);
         [DllImport("__Internal")]

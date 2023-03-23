@@ -63,7 +63,7 @@ namespace Chartboost.FullScreen.Interstitial
         public override void ClearLoaded()
         {
             base.ClearLoaded();
-            _androidAd.Call<bool>("clearLoaded");
+            _androidAd.Call("clearLoaded");
         }
     }
 }

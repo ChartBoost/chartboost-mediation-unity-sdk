@@ -66,7 +66,7 @@ namespace Chartboost.FullScreen.Rewarded
         public override void ClearLoaded()
         {
             base.ClearLoaded();
-            _androidAd.Call<bool>("clearLoaded");
+            _androidAd.Call("clearLoaded");
         }
 
         /// <inheritdoc cref="ChartboostMediationRewardedBase.SetCustomData"/>>
