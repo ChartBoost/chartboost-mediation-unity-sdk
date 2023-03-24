@@ -74,7 +74,7 @@ namespace Chartboost.Banner
         [DllImport("__Internal")]
         private static extern void _chartboostMediationBannerClearLoaded(IntPtr uniqueID);
         [DllImport("__Internal")]
-        private static extern bool _chartboostMediationBannerRemove(IntPtr uniqueID);
+        private static extern void _chartboostMediationBannerRemove(IntPtr uniqueID);
         [DllImport("__Internal")]
         private static extern bool _chartboostMediationBannerSetVisibility(IntPtr uniqueID, bool isVisible);
         [DllImport("__Internal")]
