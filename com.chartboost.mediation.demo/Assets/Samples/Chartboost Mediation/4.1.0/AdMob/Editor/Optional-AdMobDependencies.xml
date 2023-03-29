@@ -2,10 +2,10 @@
 <dependencies>
     <androidPackages>
         <!-- Chartboost Mediation AdMob Adapter -->
-        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-admob:4.21.4.0+@aar" />
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-admob:4.21.5.0+@aar" />
 
         <!-- Admob Android SDK -->
-        <androidPackage spec="com.google.android.gms:play-services-ads:21.4.0" />
+        <androidPackage spec="com.google.android.gms:play-services-ads:21.5.0" />
     </androidPackages>
     <iosPods>
         <!-- Chartboost Mediation AdMob Adapter -->
