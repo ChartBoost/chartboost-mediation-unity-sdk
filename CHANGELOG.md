@@ -1,6 +1,20 @@
 # Changelog
 All notable changes to this project will be documented in this file using the standards as defined at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0).
 
+## Version 4.1.0 *(2023-03-30)*
+ 
+Improvements:
+- Simplified AppId & AppSignature accessors in `ChartboostMediationSettings`.
+- Added TestMode call to `ChartboostMediation.cs`.
+- Made Chartboost Mediation errors readable from iOS native layer to Unity.
+- Refactored native bridge projects to follow rebranding & newer APIs.
+- Fixed usage of placements for unsupported platforms.
+- Updated documentation with AdMob & AppLovin AndroidManifest special cases.
+ 
+Bug Fixes:
+- Fixed placements `clearLoaded` in native implementations to return void instead of boolean.
+- Fixed an issue for iOS banners crashing on removal.
+
 ## Version 4.0.0 *(2023-02-03)*
 As part of the Marketing team’s efforts to clearly articulate the use cases and customers we support by being more descriptive with our product branding, Helium is being rebranded as Chartboost Mediation.
 
