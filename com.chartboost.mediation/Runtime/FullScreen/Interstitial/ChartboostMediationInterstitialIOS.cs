@@ -73,7 +73,7 @@ namespace Chartboost.FullScreen.Interstitial
         [DllImport("__Internal")]
         private static extern void _chartboostMediationInterstitialAdLoad(IntPtr uniqueID);
         [DllImport("__Internal")]
-        private static extern bool _chartboostMediationInterstitialClearLoaded(IntPtr uniqueID);
+        private static extern void _chartboostMediationInterstitialClearLoaded(IntPtr uniqueID);
         [DllImport("__Internal")]
         private static extern void _chartboostMediationInterstitialAdShow(IntPtr uniqueID);
         [DllImport("__Internal")]
