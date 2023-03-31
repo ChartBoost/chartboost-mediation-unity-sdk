@@ -146,7 +146,7 @@ jobs:
       uses: EnricoMi/publish-unit-test-result-action/composite@v2
       with:
         files: |
-          test-results/results.xml    
+          com.chartboost.mediation.demo/test-results/results.xml    
 
     - name: Cleanup Unity Generated Files
       if: always()
