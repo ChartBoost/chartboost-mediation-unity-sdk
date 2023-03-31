@@ -141,6 +141,13 @@ jobs:
         test-platform: EditMode
         quit: false
 
+    - name: Publish Test Results
+      id: publish-test-results
+      uses: EnricoMi/publish-unit-test-result-action/composite@v2
+      with:
+        files: |
+          test-results/results.xml    
+
     - name: Cleanup Unity Generated Files
       if: always()
       id: unity-cleanup
