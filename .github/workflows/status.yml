@@ -143,10 +143,10 @@ jobs:
 
     - name: Publish Test Results
       id: publish-test-results
-      uses: EnricoMi/publish-unit-test-result-action/composite@v2
+      uses: EnricoMi/publish-unit-test-result-action@v2
       with:
         files: |
-          com.chartboost.mediation.demo/test-results/results.xml    
+          ${{ env.PROJECT_PATH }}/test-results/results.xml    
 
     - name: Cleanup Unity Generated Files
       if: always()
