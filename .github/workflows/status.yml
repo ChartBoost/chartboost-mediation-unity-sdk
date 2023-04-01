@@ -143,7 +143,7 @@ jobs:
 
     - name: Publish Test Results
       id: publish-test-results
-      uses: EnricoMi/publish-unit-test-result-action@v2
+      uses: EnricoMi/publish-unit-test-result-action/composite@v2
       with:
         files: |
           ${{ env.PROJECT_PATH }}/test-results/results.xml    
