@@ -146,7 +146,7 @@ jobs:
       uses: EnricoMi/publish-unit-test-result-action/composite@v2
       with:
         files: |
-          ${{ env.PROJECT_PATH }}/test-results/results.xml    
+          ./${{ env.PROJECT_PATH }}/test-results/results.xml    
 
     - name: Cleanup Unity Generated Files
       if: always()
