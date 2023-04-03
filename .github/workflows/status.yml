@@ -142,7 +142,7 @@ jobs:
         quit: false
 
     - name: Check Test results 
-      run: (ls com.chartboost.mediation.demo/test-results/results.xml && echo exists ) || echo doesnt_exist      
+      run: (ls com.chartboost.mediation.demo/test-results/results.xml && echo exists ) || echo doesnt exist      
       shell: bash
 
     - name: Publish Test Results
@@ -150,7 +150,7 @@ jobs:
       uses: EnricoMi/publish-unit-test-result-action/composite@v2
       with:
         files: |
-          ./${{ env.PROJECT_PATH }}/test-results/results.xml    
+          com.chartboost.mediation.demo/test-results/results.xml    
 
     - name: Cleanup Unity Generated Files
       if: always()
