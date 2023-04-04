@@ -18,12 +18,12 @@ namespace Chartboost.Adapters
                 return;
             
             InitialCache = false;
-            FetchCacheAndLoad();
+            Update();
         }
 
-        public static Partners LoadedAdapters;
+        public static Partners LoadedAdapters { get; private set; }
         
-        private const string Endpoint = "https://chauduyphanvu.s3.us-east-2.amazonaws.com/mit/partners.json";
+        private const string Endpoint = "https://chartboost.s3.amazonaws.com/chartboost-mediation/mediation-integration/partners.json";
 
         private static readonly string LibraryPath = Path.Combine(Directory.GetCurrentDirectory(), "Library");
         
@@ -34,22 +34,31 @@ namespace Chartboost.Adapters
         private static readonly bool InitialCache;
 
         /// <summary>
+        /// Call to Update Cache and Loaded Adapters
+        /// </summary>
+        public static async void Update()
+        {
+            var result = await FetchCacheAndLoad();
+            LoadedAdapters = result;
+        }
+
+        /// <summary>
         /// Fetched Adapter Config from JSON, caches if newer or new, and Loads into Unity Memory.
         /// </summary>
-        public static async void FetchCacheAndLoad()
+        private static Task<Partners> FetchCacheAndLoad()
         {
             if (!Directory.Exists(LibraryPath))
-                return;
+                return null;
 
             if (!Directory.Exists(CacheDirectory))
                 Directory.CreateDirectory(CacheDirectory);
             
-            var newConfigJson = await FetchAdapters();
-            if (newConfigJson == null)
-                return;
-            
-            var newAdapterConfig = JsonConvert.DeserializeObject<Partners>(newConfigJson);
+            var newConfigJson = FetchAdapters();
 
+            Task.WaitAll(newConfigJson);
+
+            var newAdapters = newConfigJson.Result;
+            var newAdapterConfig = JsonConvert.DeserializeObject<Partners>(newAdapters);
             if (File.Exists(AdaptersCache))
             {
                 var cachedJson = File.ReadAllText(AdaptersCache);
@@ -58,18 +67,14 @@ namespace Chartboost.Adapters
                 var newVersion = DateTime.Parse(newAdapterConfig.lastUpdated);
                 var oldVersion = DateTime.Parse(cacheAdapterConfig.lastUpdated);
 
-                if (newVersion > oldVersion)
-                {
-                    LoadedAdapters = newAdapterConfig;
-                    File.WriteAllText(AdaptersCache, newConfigJson);
-                }
-                else
-                {
-                    LoadedAdapters = cacheAdapterConfig;
-                }
+                if (newVersion <= oldVersion)
+                    return Task.FromResult(cacheAdapterConfig);
+                
+                File.WriteAllText(AdaptersCache, newAdapters);
+                return Task.FromResult(newAdapterConfig);
             }
-            else
-                File.WriteAllText(AdaptersCache, newConfigJson);
+            File.WriteAllText(AdaptersCache, newAdapters);
+            return Task.FromResult(newAdapterConfig);
         }
 
         /// <summary>
