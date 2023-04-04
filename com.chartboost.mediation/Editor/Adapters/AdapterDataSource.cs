@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -17,19 +16,20 @@ namespace Chartboost.Adapters
             FetchCacheAndLoad();
         }
 
-        public static UnityAdapters LoadedAdapters;
+        public static Partners LoadedAdapters;
         
-        private const string Endpoint = "https://raw.githubusercontent.com/ChartBoost/chartboost-mediation-unity-sdk/develop/AdapterConfig.json";
+        private const string Endpoint = "https://chauduyphanvu.s3.us-east-2.amazonaws.com/mit/partners.json";
 
         private static readonly string LibraryPath = Path.Combine(Directory.GetCurrentDirectory(), "Library");
         
         private static readonly string CacheDirectory = Path.Combine(LibraryPath, "com.chartboost.mediation");
 
-        private static readonly string AdaptersCache = Path.Combine(CacheDirectory, "AdapterConfig.json");
+        private static readonly string AdaptersCache = Path.Combine(CacheDirectory, "partners.json");
 
         /// <summary>
         /// Fetched Adapter Config from JSON, caches if newer or new, and Loads into Unity Memory.
         /// </summary>
+        [MenuItem("Chartboost Mediation/Test")]
         public static async void FetchCacheAndLoad()
         {
             if (!Directory.Exists(LibraryPath))
@@ -42,25 +42,27 @@ namespace Chartboost.Adapters
             if (newConfigJson == null)
                 return;
             
-            var newAdapterConfig = JsonConvert.DeserializeObject<UnityAdapters>(newConfigJson);
+            var newAdapterConfig = JsonConvert.DeserializeObject<Partners>(newConfigJson);
 
             if (File.Exists(AdaptersCache))
             {
                 var cachedJson = File.ReadAllText(AdaptersCache);
-                var cacheAdapterConfig = JsonConvert.DeserializeObject<UnityAdapters>(cachedJson);
+                var cacheAdapterConfig = JsonConvert.DeserializeObject<Partners>(cachedJson);
 
-                var newVersion = new Version(newAdapterConfig.version ?? string.Empty);
-                var oldVersion = new Version(cacheAdapterConfig.version ?? string.Empty);
-
-                if (newVersion > oldVersion)
-                {
-                    LoadedAdapters = newAdapterConfig;
-                    File.WriteAllText(AdaptersCache, newConfigJson);
-                }
-                else
-                {
-                    LoadedAdapters = cacheAdapterConfig;
-                }
+                // TODO - Fix when the field is actually populated
+                // var newVersion = new Version(newAdapterConfig.lastUpdated ?? string.Empty);
+                // var oldVersion = new Version(cacheAdapterConfig.lastUpdated ?? string.Empty);
+                //
+                // if (newVersion > oldVersion)
+                // {
+                //     LoadedAdapters = newAdapterConfig;
+                File.WriteAllText(AdaptersCache, newConfigJson);
+                // }
+                // else
+                // {
+                //     LoadedAdapters = cacheAdapterConfig;
+                // }
+                LoadedAdapters = newAdapterConfig;
             }
             else
                 File.WriteAllText(AdaptersCache, newConfigJson);
