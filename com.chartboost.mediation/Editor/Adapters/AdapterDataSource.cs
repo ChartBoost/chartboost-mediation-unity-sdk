@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -13,6 +14,10 @@ namespace Chartboost.Adapters
         static AdapterDataSource()
         {
             // This runs on startup.
+            if (InitialCache) 
+                return;
+            
+            InitialCache = false;
             FetchCacheAndLoad();
         }
 
@@ -26,10 +31,11 @@ namespace Chartboost.Adapters
 
         private static readonly string AdaptersCache = Path.Combine(CacheDirectory, "partners.json");
 
+        private static readonly bool InitialCache;
+
         /// <summary>
         /// Fetched Adapter Config from JSON, caches if newer or new, and Loads into Unity Memory.
         /// </summary>
-        [MenuItem("Chartboost Mediation/Test")]
         public static async void FetchCacheAndLoad()
         {
             if (!Directory.Exists(LibraryPath))
@@ -49,20 +55,18 @@ namespace Chartboost.Adapters
                 var cachedJson = File.ReadAllText(AdaptersCache);
                 var cacheAdapterConfig = JsonConvert.DeserializeObject<Partners>(cachedJson);
 
-                // TODO - Fix when the field is actually populated
-                // var newVersion = new Version(newAdapterConfig.lastUpdated ?? string.Empty);
-                // var oldVersion = new Version(cacheAdapterConfig.lastUpdated ?? string.Empty);
-                //
-                // if (newVersion > oldVersion)
-                // {
-                //     LoadedAdapters = newAdapterConfig;
-                File.WriteAllText(AdaptersCache, newConfigJson);
-                // }
-                // else
-                // {
-                //     LoadedAdapters = cacheAdapterConfig;
-                // }
-                LoadedAdapters = newAdapterConfig;
+                var newVersion = DateTime.Parse(newAdapterConfig.lastUpdated);
+                var oldVersion = DateTime.Parse(cacheAdapterConfig.lastUpdated);
+
+                if (newVersion > oldVersion)
+                {
+                    LoadedAdapters = newAdapterConfig;
+                    File.WriteAllText(AdaptersCache, newConfigJson);
+                }
+                else
+                {
+                    LoadedAdapters = cacheAdapterConfig;
+                }
             }
             else
                 File.WriteAllText(AdaptersCache, newConfigJson);
