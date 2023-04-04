@@ -141,16 +141,11 @@ jobs:
         test-platform: EditMode
         quit: false
 
-    - name: Check Test results 
-      run: (ls com.chartboost.mediation.demo/test-results/results.xml && echo exists ) || echo doesnt exist      
-      shell: bash
-
     - name: Publish Test Results
       id: publish-test-results
       uses: EnricoMi/publish-unit-test-result-action/composite@v2
       with:
         files: |
-          **/results.xml
           ${{ env.PROJECT_PATH }}/test-results/*.xml    
 
     - name: Cleanup Unity Generated Files
