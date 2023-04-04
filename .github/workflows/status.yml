@@ -150,8 +150,8 @@ jobs:
       uses: EnricoMi/publish-unit-test-result-action/composite@v2
       with:
         files: |
-          "com.chartboost.mediation.demo/test-results/results.xml"
-          ${{ env.PROJECT_PATH }}/test-results/%.xml    
+          **/results.xml
+          ${{ env.PROJECT_PATH }}/test-results/*.xml    
 
     - name: Cleanup Unity Generated Files
       if: always()
