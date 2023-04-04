@@ -33,16 +33,10 @@ namespace Chartboost.Adapters
         public static async void FetchCacheAndLoad()
         {
             if (!Directory.Exists(LibraryPath))
-            {
-                Debug.Log("Library Does Not Exists!");
                 return;
-            }
 
             if (!Directory.Exists(CacheDirectory))
-            {
                 Directory.CreateDirectory(CacheDirectory);
-                Debug.Log("CB Mediation Cache Not Found, Creating Directory");
-            }
             
             var newConfigJson = await FetchAdapters();
             if (newConfigJson == null)
