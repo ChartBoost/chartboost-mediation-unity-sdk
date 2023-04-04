@@ -2,13 +2,21 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Chartboost.Adapters
 {
+    [InitializeOnLoad]
     public class AdapterDataSource
     {
+        static AdapterDataSource()
+        {
+            // This runs on startup.
+            FetchCacheAndLoad();
+        }
+
         public static UnityAdapters LoadedAdapters;
         
         private const string Endpoint = "https://raw.githubusercontent.com/ChartBoost/chartboost-mediation-unity-sdk/develop/AdapterConfig.json";
