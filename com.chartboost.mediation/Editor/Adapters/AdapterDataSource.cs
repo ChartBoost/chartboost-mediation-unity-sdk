@@ -34,7 +34,7 @@ namespace Chartboost.Adapters
         private static readonly bool InitialCache;
 
         /// <summary>
-        /// Call to Update Cache and Loaded Adapters
+        /// Call to Refresh Cache
         /// </summary>
         public static async void Update()
         {
@@ -43,7 +43,7 @@ namespace Chartboost.Adapters
         }
 
         /// <summary>
-        /// Fetched Adapter Config from JSON, caches if newer or new, and Loads into Unity Memory.
+        /// Fetched Adapter Config from JSON, caches if newer or new, returns most update Adapters.
         /// </summary>
         private static Task<Partners> FetchCacheAndLoad()
         {
