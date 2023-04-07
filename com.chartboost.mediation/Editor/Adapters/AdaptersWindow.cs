@@ -14,7 +14,9 @@ namespace Chartboost.Adapters
         {
             AdaptersWindow wnd = GetWindow<AdaptersWindow>();
             wnd.titleContent = new GUIContent("Chartboost Mediation Adapters");
-            wnd.minSize = new Vector2(410, 500);
+            var windowSize =new Vector2(410, 520);
+            wnd.minSize = windowSize;
+            wnd.maxSize = windowSize;
         }
 
         private readonly Dictionary<string, PartnerVersions> _partnerSDKVersions = new Dictionary<string, PartnerVersions>();
