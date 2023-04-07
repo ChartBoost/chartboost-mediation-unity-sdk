@@ -1,0 +1,74 @@
+#body {
+    padding: 10px;
+}
+#mediation_logo {
+    max-height: 90px;
+    min-height: 90px;
+    align-self: center;
+    margin-bottom: 10px;
+}
+
+#save_icon {
+    border-radius: 2px;
+    padding: 2px;
+}
+
+#save_button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    max-height: 30px;
+    min-height: 30px;
+    max-width: 30px;
+    min-width: 30px;
+    border-radius: 2px;
+    padding: 2px;
+    margin: 0;
+    border-width: 0;
+    background-color: lightskyblue;
+}
+
+#flex-grid {
+    flex-direction: row;
+    display: flex;
+}
+
+#version-col {
+    font-size: 14px;
+    flex: 1;
+    min-width: 100px;
+    border-width: 1px;
+    border-color: lightgray;
+}
+
+#adapter-col {
+    font-size: 14px;
+    min-width: 185px;
+    flex: 1;
+    border-width: 1px;
+    border-color: lightgray;
+}
+
+#header-network {
+    font-size: 14px;
+    flex: 1;
+    min-width: 185px;
+    border-width: 1px;
+    border-color: lightgray;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+
+#header-version {
+    font-size: 14px;
+    flex: 1;
+    min-width: 100px;
+    border-width: 1px;
+    border-color: lightgray;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+
+Label {
+    padding: 2px;
+}
