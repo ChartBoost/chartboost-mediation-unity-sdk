@@ -23,13 +23,13 @@ namespace Chartboost.Adapters
         /// Contains selected versions in the project, used to update, modify, existing selections. 
         /// </summary>
         [Serializable]
-        private class ProjectSelectedVersions
+        public class SelectedVersions
         {
             public string id;
-            public string android = UNSELECTED;
-            public string ios = UNSELECTED;
+            public string android = Unselected;
+            public string ios = Unselected;
 
-            public ProjectSelectedVersions(string id)
+            public SelectedVersions(string id)
             {
                 this.id = id;
             }
@@ -38,20 +38,20 @@ namespace Chartboost.Adapters
         /// <summary>
         /// Provides platform specific partner SDK versions from the Chartboost Mediation Adapter versions.
         /// </summary>
-        private class PartnerVersions
+        public class PartnerVersions
         {
-            public readonly string[] Android;
-            public readonly string[] IOS;
+            public readonly string[] android;
+            public readonly string[] ios;
 
             public PartnerVersions(string[] androidAdapters, string[] iosAdapters)
             {
-                Android = GetSupportedVersions(androidAdapters);
-                IOS = GetSupportedVersions(iosAdapters);
+                android = GetSupportedVersions(androidAdapters);
+                ios = GetSupportedVersions(iosAdapters);
             }
 
             private static string[] GetSupportedVersions(string[] adapters)
             {
-                var temp = new List<string> { UNSELECTED };
+                var temp = new List<string> { Unselected };
 
                 foreach (var platformVersion in adapters)
                 {
@@ -71,7 +71,7 @@ namespace Chartboost.Adapters
             }
         }
 
-        private static void LoadSelection()
+        public static void LoadSelections()
         {
             const string selectionsJson = "Assets/com.chartboost.mediation/Editor/selections.json";
             
@@ -80,15 +80,25 @@ namespace Chartboost.Adapters
 
             var jsonContents = File.ReadAllText(selectionsJson);
 
-            var selections = JsonConvert.DeserializeObject<ProjectSelectedVersions[]>(jsonContents);
+            var selections = JsonConvert.DeserializeObject<SelectedVersions[]>(jsonContents);
 
             foreach (var versionSelection in selections)
-                Instance._selectedVersions[versionSelection.id] = versionSelection;
+                UserSelectedVersions[versionSelection.id] = versionSelection;
+
+            SavedVersions = UserSelectedVersions.ToDictionary(k => k.Key, v =>
+            {
+                var newSelection = new SelectedVersions(v.Key.ToString())
+                {
+                    android = v.Value.android,
+                    ios = v.Value.ios
+                };
+                return newSelection;
+            });
         }
 
-        private static void SaveSelection()
+        public static void SaveSelections()
         {
-            var allSelections = Instance._selectedVersions.Values.Where(x => x.android != UNSELECTED || x.ios != UNSELECTED);
+            var allSelections = UserSelectedVersions.Values.Where(x => x.android != Unselected || x.ios != Unselected);
             
             var selectionsJson = JsonConvert.SerializeObject(allSelections);
 
@@ -107,6 +117,58 @@ namespace Chartboost.Adapters
             File.WriteAllText(selectionsFile, selectionsJson);
             AssetDatabase.Refresh();
             _saveButton.RemoveFromHierarchy();
+        }
+        
+        public class DictionaryComparer<TKey, TValue> : IEqualityComparer<Dictionary<TKey, TValue>>
+        {
+            private readonly IEqualityComparer<TValue> _valueComparer;
+
+            public DictionaryComparer(IEqualityComparer<TValue> valueComparer) 
+                => _valueComparer = valueComparer ?? EqualityComparer<TValue>.Default;
+
+            public bool Equals(Dictionary<TKey, TValue> x, Dictionary<TKey, TValue> y)
+            {
+                if (x.Count != y.Count)
+                    return false;
+                if (x.Keys.Except(y.Keys).Any())
+                    return false;
+                if (y.Keys.Except(x.Keys).Any())
+                    return false;
+                foreach (var pair in x)
+                    if (!_valueComparer.Equals(pair.Value, y[pair.Key]))
+                        return false;
+                return true;
+            }
+
+            public int GetHashCode(Dictionary<TKey, TValue> obj)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public class SelectedVersionsComparer : IEqualityComparer<SelectedVersions>
+        {
+            public bool Equals(SelectedVersions x, SelectedVersions y)
+            {
+                if (x.id != y.id)
+                    return false;
+                if (x.android != y.android)
+                    return false;
+                if (x.ios != y.ios)
+                    return false;
+                return true;
+            }
+
+            public int GetHashCode(SelectedVersions obj)
+            {
+                unchecked
+                {
+                    var hashCode = (obj.id != null ? obj.id.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (obj.android != null ? obj.android.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (obj.ios != null ? obj.ios.GetHashCode() : 0);
+                    return hashCode;
+                }
+            }
         }
     }
 }

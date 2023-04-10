@@ -10,7 +10,7 @@ namespace Chartboost.Adapters
     public partial class AdaptersWindow : EditorWindow
     {
         [MenuItem("Chartboost Mediation/Adapters")]
-        public static void ShowExample()
+        public static void ShowAdapterWindow()
         {
             AdaptersWindow wnd = GetWindow<AdaptersWindow>();
             wnd.titleContent = new GUIContent("Chartboost Mediation Adapters");
@@ -19,19 +19,22 @@ namespace Chartboost.Adapters
             wnd.maxSize = windowSize;
         }
 
-        private readonly Dictionary<string, PartnerVersions> _partnerSDKVersions = new Dictionary<string, PartnerVersions>();
-
-        private readonly Dictionary<string, ProjectSelectedVersions> _selectedVersions = new Dictionary<string, ProjectSelectedVersions>();
-
+        public static Dictionary<string, PartnerVersions> PartnerSDKVersions { get; set; } = new Dictionary<string, PartnerVersions>();
+        public static Dictionary<string, SelectedVersions> UserSelectedVersions { get; set; } = new Dictionary<string, SelectedVersions>();
+        public static Dictionary<string, SelectedVersions> SavedVersions { get; set; } = new Dictionary<string, SelectedVersions>();
+       
         private static Button _saveButton;
 
-        private const string UNSELECTED = "Unselected";
+        private const string Unselected = "Unselected";
 
-        public static AdaptersWindow Instance { get; private set; }
+        private static AdaptersWindow Instance { get; set; }
 
         public void CreateGUI()
         {
             Instance = this;
+            PartnerSDKVersions.Clear();
+            UserSelectedVersions.Clear();
+            SavedVersions.Clear();
             _saveButton = CreateSaveIcon();
             LoadSelection();
 
@@ -85,13 +88,9 @@ namespace Chartboost.Adapters
 
             if (adapters == null)
                 return;
-
-            var partnerSDKVersions = Instance._partnerSDKVersions;
-            var selectedVersions = Instance._selectedVersions;
-        
             
             foreach (var partnerAdapter in adapters)
-                partnerSDKVersions[partnerAdapter.id] = new PartnerVersions(partnerAdapter.android.versions, partnerAdapter.ios.versions);
+                PartnerSDKVersions[partnerAdapter.id] = new PartnerVersions(partnerAdapter.android.versions, partnerAdapter.ios.versions);
 
             foreach (var adapter in adapters)
             {
@@ -102,27 +101,27 @@ namespace Chartboost.Adapters
                 adapterLabel.name = "adapter-col";
                 container.Add(adapterLabel);
             
-                var androidVersions = partnerSDKVersions[adapter.id].Android;
-                var iosVersions = partnerSDKVersions[adapter.id].IOS;
+                var androidVersions = PartnerSDKVersions[adapter.id].Android;
+                var iosVersions = PartnerSDKVersions[adapter.id].IOS;
                 
-                var androidSelection = selectedVersions.ContainsKey(adapter.id) && selectedVersions[adapter.id] != null
-                    ? selectedVersions[adapter.id].android : UNSELECTED;
+                var androidStartValue = UserSelectedVersions.ContainsKey(adapter.id) && UserSelectedVersions[adapter.id] != null
+                    ? UserSelectedVersions[adapter.id].android : Unselected;
             
-                var iosSelection = selectedVersions.ContainsKey(adapter.id) && selectedVersions[adapter.id] != null
-                    ? selectedVersions[adapter.id].ios : UNSELECTED;
+                var iosStartValue = UserSelectedVersions.ContainsKey(adapter.id) && UserSelectedVersions[adapter.id] != null
+                    ? UserSelectedVersions[adapter.id].ios : Unselected;
 
-                container.Add(CreateAdapterVersionDropdown(root, adapter, androidVersions, Platform.Android, androidSelection));
-                container.Add(CreateAdapterVersionDropdown(root, adapter, iosVersions, Platform.IOS, iosSelection));
+                container.Add(CreateAdapterVersionDropdown(root, adapter, androidVersions, Platform.Android, androidStartValue));
+                container.Add(CreateAdapterVersionDropdown(root, adapter, iosVersions, Platform.IOS, iosStartValue));
  
                 root.Add(container);
             }
         }
         
-        private static ToolbarMenu CreateAdapterVersionDropdown(VisualElement root, Adapter adapter, IEnumerable<string> versions, Platform platform, string selectedVersion)
+        private static ToolbarMenu CreateAdapterVersionDropdown(VisualElement root, Adapter adapter, IEnumerable<string> versions, Platform platform, string startValue)
         {
             var toolbar = new ToolbarMenu {
                 name = "version-col",
-                text = selectedVersion,
+                text = startValue,
                 tooltip = $"{adapter.name} {platform} SDK Version."
             };
                 
@@ -131,29 +130,44 @@ namespace Chartboost.Adapters
                 toolbar.menu.AppendAction(version, (dropdownEvent) =>
                 {
                     var selection = dropdownEvent.name;
-
+                    
+                    // User selected the currently set value
                     if (selection.Equals(toolbar.text))
                         return;
 
                     toolbar.text = selection;
-                        
-                    if (!Instance._selectedVersions.ContainsKey(adapter.id))
-                        Instance._selectedVersions[adapter.id] = new ProjectSelectedVersions(adapter.id); 
-
+                    
+                    if (!UserSelectedVersions.ContainsKey(adapter.id))
+                        UserSelectedVersions[adapter.id] = new SelectedVersions(adapter.id);
+                    
                     switch (platform)
                     {
                         case Platform.Android:
-                            Instance._selectedVersions[adapter.id].android = selection;
+                            UserSelectedVersions[adapter.id].android = selection;
                             break;
                         case Platform.IOS:
-                            Instance._selectedVersions[adapter.id].ios = selection;
+                            UserSelectedVersions[adapter.id].ios = selection;
                             break;
                         default:
                             throw new ArgumentOutOfRangeException(nameof(platform), platform, null);
                     }
 
-                    if (!root.Contains(_saveButton))
-                        root.Add(_saveButton);
+                    if (selection.Equals(Unselected) && UserSelectedVersions.ContainsKey(adapter.id))
+                    {
+                        if (UserSelectedVersions[adapter.id].android == Unselected && UserSelectedVersions[adapter.id].ios == Unselected)
+                            UserSelectedVersions.Remove(adapter.id);
+                    }
+
+                    var same = new DictionaryComparer<string, SelectedVersions>(new SelectedVersionsComparer()).Equals(UserSelectedVersions, SavedVersions);
+                    switch (same)
+                    {
+                        case false when !root.Contains(_saveButton):
+                            root.Add(_saveButton);
+                            break;
+                        case true:
+                            _saveButton.RemoveFromHierarchy();
+                            break;
+                    }
                 });
                 
                 toolbar.menu.AppendSeparator();

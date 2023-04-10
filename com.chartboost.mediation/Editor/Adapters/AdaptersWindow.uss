@@ -25,7 +25,7 @@
     padding: 2px;
     margin: 0;
     border-width: 0;
-    background-color: lightskyblue;
+    background-color: lightyellow;
 }
 
 #flex-grid {
