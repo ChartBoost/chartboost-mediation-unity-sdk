@@ -111,7 +111,7 @@ namespace Chartboost.Adapters
         {
             var allSelections = UserSelectedVersions.Values.Where(x => x.android != Unselected || x.ios != Unselected);
             
-            var selectionsJson = JsonConvert.SerializeObject(allSelections);
+            var selectionsJson = JsonConvert.SerializeObject(allSelections, Formatting.Indented);
 
             var packageAssetsInAssets = Path.Combine(Application.dataPath, "com.chartboost.mediation");
 
