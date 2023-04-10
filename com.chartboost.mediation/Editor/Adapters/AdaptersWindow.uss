@@ -1,19 +1,49 @@
 #body {
     padding: 10px;
 }
-#mediation_logo {
+#mediation-logo {
     max-height: 90px;
     min-height: 90px;
     align-self: center;
     margin-bottom: 10px;
 }
 
-#save_icon {
+#icon {
     border-radius: 2px;
     padding: 2px;
 }
 
-#save_button {
+#upgrade-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    max-height: 30px;
+    min-height: 30px;
+    max-width: 30px;
+    min-width: 30px;
+    border-radius: 2px;
+    padding: 2px;
+    margin: 0;
+    border-width: 0;
+    background-color: orangered;
+}
+
+#update-button {
+    position: absolute;
+    top: 65px;
+    right: 10px;
+    max-height: 30px;
+    min-height: 30px;
+    max-width: 30px;
+    min-width: 30px;
+    border-radius: 2px;
+    padding: 2px;
+    margin: 0;
+    border-width: 0;
+    background-color: lawngreen;
+}
+
+#save-button {
     position: absolute;
     top: 10px;
     right: 10px;

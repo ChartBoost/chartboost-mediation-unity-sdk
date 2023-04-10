@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 
 namespace Chartboost.Adapters
@@ -28,6 +29,11 @@ namespace Chartboost.Adapters
             public string id;
             public string android = Unselected;
             public string ios = Unselected;
+            
+            [NonSerialized]
+            public ToolbarMenu androidDropdown;
+            [NonSerialized]
+            public ToolbarMenu iosDropdown;
 
             public SelectedVersions(string id)
             {
@@ -85,6 +91,11 @@ namespace Chartboost.Adapters
             foreach (var versionSelection in selections)
                 UserSelectedVersions[versionSelection.id] = versionSelection;
 
+            UpdateSavedVersions();
+        }
+
+        private static void UpdateSavedVersions()
+        {
             SavedVersions = UserSelectedVersions.ToDictionary(k => k.Key, v =>
             {
                 var newSelection = new SelectedVersions(v.Key.ToString())
@@ -117,58 +128,7 @@ namespace Chartboost.Adapters
             File.WriteAllText(selectionsFile, selectionsJson);
             AssetDatabase.Refresh();
             _saveButton.RemoveFromHierarchy();
-        }
-        
-        public class DictionaryComparer<TKey, TValue> : IEqualityComparer<Dictionary<TKey, TValue>>
-        {
-            private readonly IEqualityComparer<TValue> _valueComparer;
-
-            public DictionaryComparer(IEqualityComparer<TValue> valueComparer) 
-                => _valueComparer = valueComparer ?? EqualityComparer<TValue>.Default;
-
-            public bool Equals(Dictionary<TKey, TValue> x, Dictionary<TKey, TValue> y)
-            {
-                if (x.Count != y.Count)
-                    return false;
-                if (x.Keys.Except(y.Keys).Any())
-                    return false;
-                if (y.Keys.Except(x.Keys).Any())
-                    return false;
-                foreach (var pair in x)
-                    if (!_valueComparer.Equals(pair.Value, y[pair.Key]))
-                        return false;
-                return true;
-            }
-
-            public int GetHashCode(Dictionary<TKey, TValue> obj)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public class SelectedVersionsComparer : IEqualityComparer<SelectedVersions>
-        {
-            public bool Equals(SelectedVersions x, SelectedVersions y)
-            {
-                if (x.id != y.id)
-                    return false;
-                if (x.android != y.android)
-                    return false;
-                if (x.ios != y.ios)
-                    return false;
-                return true;
-            }
-
-            public int GetHashCode(SelectedVersions obj)
-            {
-                unchecked
-                {
-                    var hashCode = (obj.id != null ? obj.id.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ (obj.android != null ? obj.android.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ (obj.ios != null ? obj.ios.GetHashCode() : 0);
-                    return hashCode;
-                }
-            }
+            UpdateSavedVersions();
         }
     }
 }

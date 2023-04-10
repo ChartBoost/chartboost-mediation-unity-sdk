@@ -31,12 +31,17 @@ namespace Chartboost.Adapters
 
         public void CreateGUI()
         {
+            Initialize();
+        }
+
+        private void Initialize()
+        {
             Instance = this;
             PartnerSDKVersions.Clear();
             UserSelectedVersions.Clear();
             SavedVersions.Clear();
             _saveButton = CreateSaveIcon();
-            LoadSelection();
+            LoadSelections();
 
             // Each editor window contains a root VisualElement object
             var root = rootVisualElement;
@@ -54,12 +59,41 @@ namespace Chartboost.Adapters
             var mediationLogo = AssetDatabase.LoadAssetAtPath<Texture>("Packages/com.chartboost.mediation/Editor/Adapters/Logo.png");
             var logo = new Image
             {
-                name = "mediation_logo",
+                name = "mediation-logo",
                 image = mediationLogo,
                 scaleMode = ScaleMode.ScaleToFit
             };
+            
+            var upgradeIcon = AssetDatabase.LoadAssetAtPath<Texture>("Packages/com.chartboost.mediation/Editor/Adapters/Upgrade.png");
+            var upgradeImage = new Image
+            {
+                name = "icon",
+                image = upgradeIcon,
+                scaleMode = ScaleMode.ScaleToFit
+            };
 
+            var upgradeButton = new Button(UpgradeSelectionsToLatest);
+            upgradeButton.name = "upgrade-button";
+            upgradeButton.tooltip = "Upgrade all adapter selections to their latest version!";
+            upgradeButton.Add(upgradeImage);
+            
+                  
+            var updateIcon = AssetDatabase.LoadAssetAtPath<Texture>("Packages/com.chartboost.mediation/Editor/Adapters/Update.png");
+            var updateImage = new Image
+            {
+                name = "icon",
+                image = updateIcon,
+                scaleMode = ScaleMode.ScaleToFit
+            };
+
+            var updateButton = new Button(Refresh);
+            updateButton.name = "update-button";
+            updateButton.tooltip = "Fetch adapter updates!";
+            updateButton.Add(updateImage);
+            
             root.Add(logo);
+            root.Add(upgradeButton);
+            root.Add(updateButton);
             
             var headers = new TemplateContainer("headers");
             headers.name = "flex-grid";
@@ -100,18 +134,26 @@ namespace Chartboost.Adapters
                 var adapterLabel = new Label(adapter.name);
                 adapterLabel.name = "adapter-col";
                 container.Add(adapterLabel);
-            
-                var androidVersions = PartnerSDKVersions[adapter.id].Android;
-                var iosVersions = PartnerSDKVersions[adapter.id].IOS;
-                
-                var androidStartValue = UserSelectedVersions.ContainsKey(adapter.id) && UserSelectedVersions[adapter.id] != null
-                    ? UserSelectedVersions[adapter.id].android : Unselected;
-            
-                var iosStartValue = UserSelectedVersions.ContainsKey(adapter.id) && UserSelectedVersions[adapter.id] != null
-                    ? UserSelectedVersions[adapter.id].ios : Unselected;
 
-                container.Add(CreateAdapterVersionDropdown(root, adapter, androidVersions, Platform.Android, androidStartValue));
-                container.Add(CreateAdapterVersionDropdown(root, adapter, iosVersions, Platform.IOS, iosStartValue));
+                var adapterId = adapter.id;
+                var androidVersions = PartnerSDKVersions[adapterId].android;
+                var iosVersions = PartnerSDKVersions[adapterId].ios;
+
+                var hasSelection = UserSelectedVersions.ContainsKey(adapterId);
+                var androidStartValue = hasSelection && UserSelectedVersions[adapterId] != null ? UserSelectedVersions[adapterId].android : Unselected;
+                var iosStartValue = hasSelection && UserSelectedVersions[adapterId] != null ? UserSelectedVersions[adapterId].ios : Unselected;
+
+                var androidDropdown = CreateAdapterVersionDropdown(root, adapter, androidVersions, Platform.Android, androidStartValue);
+                var iosDropdown = CreateAdapterVersionDropdown(root, adapter, iosVersions, Platform.IOS, iosStartValue);
+
+                if (hasSelection)
+                {
+                    UserSelectedVersions[adapterId].androidDropdown = androidDropdown;
+                    UserSelectedVersions[adapterId].iosDropdown = iosDropdown;
+                }
+
+                container.Add(androidDropdown);
+                container.Add(iosDropdown);
  
                 root.Add(container);
             }
@@ -144,9 +186,11 @@ namespace Chartboost.Adapters
                     {
                         case Platform.Android:
                             UserSelectedVersions[adapter.id].android = selection;
+                            UserSelectedVersions[adapter.id].androidDropdown = toolbar;
                             break;
                         case Platform.IOS:
                             UserSelectedVersions[adapter.id].ios = selection;
+                            UserSelectedVersions[adapter.id].iosDropdown = toolbar;
                             break;
                         default:
                             throw new ArgumentOutOfRangeException(nameof(platform), platform, null);
@@ -157,17 +201,8 @@ namespace Chartboost.Adapters
                         if (UserSelectedVersions[adapter.id].android == Unselected && UserSelectedVersions[adapter.id].ios == Unselected)
                             UserSelectedVersions.Remove(adapter.id);
                     }
-
-                    var same = new DictionaryComparer<string, SelectedVersions>(new SelectedVersionsComparer()).Equals(UserSelectedVersions, SavedVersions);
-                    switch (same)
-                    {
-                        case false when !root.Contains(_saveButton):
-                            root.Add(_saveButton);
-                            break;
-                        case true:
-                            _saveButton.RemoveFromHierarchy();
-                            break;
-                    }
+                    
+                    CheckForChanges();
                 });
                 
                 toolbar.menu.AppendSeparator();
@@ -180,21 +215,16 @@ namespace Chartboost.Adapters
             var saveIcon = AssetDatabase.LoadAssetAtPath<Texture>("Packages/com.chartboost.mediation/Editor/Adapters/Save.png");
             var saveIconImage = new Image
             {
-                name = "save_icon",
+                name = "icon",
                 image = saveIcon,
                 scaleMode = ScaleMode.ScaleToFit
             };
 
-            var saveButton = new Button(SaveSelection);
-            saveButton.name = "save_button";
+            var saveButton = new Button(SaveSelections);
+            saveButton.name = "save-button";
             saveButton.tooltip = "You have unsaved changes!";
             saveButton.Add(saveIconImage);
             return saveButton;
-        }
-
-        private void OnDestroy()
-        {
-            Debug.Log("Closing Window");
         }
     }
 }
