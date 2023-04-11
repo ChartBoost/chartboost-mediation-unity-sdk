@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependencies>
+    <androidPackages>
+        <!-- Android Adapter -->
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-applovin:4.11.8.1+@aar"/>
+    </androidPackages>
+    <iosPods>
+        <!-- iOS Adapter -->
+        <iosPod name="ChartboostMediationAdapterAppLovin" version="~> 4.11.8.0"/>
+
+        <!-- Partner iOS SDK-->
+        <iosPod name="AppLovinSDK" version="~> 11.8.0" addToAllTargets="false"/>
+    </iosPods>
+</dependencies>

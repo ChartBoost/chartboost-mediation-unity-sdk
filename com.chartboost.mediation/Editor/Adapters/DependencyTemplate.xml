@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependencies>
+    <androidPackages>
+        <!-- Android Adapter -->
+        <androidPackage spec="%ANDROID_ADAPTER%"/>
+    </androidPackages>
+    <iosPods>
+        <!-- iOS Adapter -->
+        <iosPod name="%IOS_ADAPTER%" version="~> %IOS_CBMA_VERSION%"/>
+
+        <!-- Partner iOS SDK-->
+        <iosPod name="%IOS_SDK%" version="~> %IOS_SDK_VERSION%" addToAllTargets="%ALL_TARGETS%"/>
+    </iosPods>
+</dependencies>

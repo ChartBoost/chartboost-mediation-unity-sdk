@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependencies>
+    <androidPackages>
+        <!-- Android Adapter -->
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-unity-ads:4.4.6.0+@aar"/>
+    </androidPackages>
+    <iosPods>
+        <!-- iOS Adapter -->
+        <iosPod name="ChartboostMediationAdapterUnityAds" version="~> 4.4.5.0"/>
+
+        <!-- Partner iOS SDK-->
+        <iosPod name="UnityAds" version="~> 4.5.0" addToAllTargets="false"/>
+    </iosPods>
+</dependencies>

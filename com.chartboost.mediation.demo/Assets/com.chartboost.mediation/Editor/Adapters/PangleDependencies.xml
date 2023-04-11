@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependencies>
+    <androidPackages>
+        <!-- Android Adapter -->
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-pangle:4.4.9.1.3+@aar"/>
+    </androidPackages>
+    <iosPods>
+        <!-- iOS Adapter -->
+        <iosPod name="ChartboostMediationAdapterPangle" version="~> 4.4.9.1.0"/>
+
+        <!-- Partner iOS SDK-->
+        <iosPod name="Ads-Global" version="~> 4.9.1.0" addToAllTargets="false"/>
+    </iosPods>
+</dependencies>

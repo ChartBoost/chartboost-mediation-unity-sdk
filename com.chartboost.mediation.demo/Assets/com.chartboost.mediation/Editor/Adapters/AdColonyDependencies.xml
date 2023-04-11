@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependencies>
+    <androidPackages>
+        <!-- Android Adapter -->
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-adcolony:4.4.8.0+@aar"/>
+    </androidPackages>
+    <iosPods>
+        <!-- iOS Adapter -->
+        <iosPod name="ChartboostMediationAdapterAdColony" version="~> 4.4.9.0"/>
+
+        <!-- Partner iOS SDK-->
+        <iosPod name="AdColony" version="~> 4.9.0" addToAllTargets="false"/>
+    </iosPods>
+</dependencies>

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -77,6 +78,10 @@ namespace Chartboost.Adapters
             }
         }
 
+        private static string PathToPackageGeneratedFiles => Path.Combine(Application.dataPath, "com.chartboost.mediation");
+        private static string PathToEditorInGeneratedFiles => Path.Combine(PathToPackageGeneratedFiles, "Editor");
+        private static string PathToAdaptersDirectory => Path.Combine(PathToEditorInGeneratedFiles, "Adapters");
+
         public static void LoadSelections()
         {
             const string selectionsJson = "Assets/com.chartboost.mediation/Editor/selections.json";
@@ -93,7 +98,139 @@ namespace Chartboost.Adapters
 
             UpdateSavedVersions();
         }
+        
+        public static void SaveSelections()
+        {
+            var selectionsFile = Path.Combine(PathToEditorInGeneratedFiles, "selections.json");
 
+            var allSelections = UserSelectedVersions.Values.Where(x => x.android != Unselected || x.ios != Unselected);
+            
+            var selectionsJson = JsonConvert.SerializeObject(allSelections, Formatting.Indented);
+
+            if (!Directory.Exists(PathToPackageGeneratedFiles))
+                Directory.CreateDirectory(PathToPackageGeneratedFiles);
+
+            if (!Directory.Exists(PathToEditorInGeneratedFiles))
+                Directory.CreateDirectory(PathToEditorInGeneratedFiles);
+            
+            if (UserSelectedVersions.Count <= 0)
+                DeleteFileWithMeta(selectionsFile);
+            else
+                File.WriteAllText(selectionsFile, selectionsJson);
+            
+            if (!Application.isBatchMode)
+                _saveButton.RemoveFromHierarchy();
+            GenerateDependenciesFromSelections();
+            AssetDatabase.Refresh();
+            UpdateSavedVersions();
+        }
+
+        [MenuItem("Chartboost Mediation/Generate Dependencies")]
+        public static void GenerateDependenciesFromSelections()
+        {
+            const string templatePath = "Packages/com.chartboost.mediation/Editor/Adapters/DependencyTemplate.xml";
+
+            if (!File.Exists(templatePath))
+            {
+                Debug.LogError("[Chartboost Mediation] Unable to create dependencies from selection, DependencyTemplate.xml could not be found.");
+                return;
+            }
+
+            var defaultTemplateContents = File.ReadAllLines(templatePath).ToList();
+
+            var adapters = AdapterDataSource.LoadedAdapters.adapters;
+
+            if (adapters == null)
+            {
+                Debug.LogError("[Chartboost Mediation] Unable to Load Adapters information, make sure you have an active internet connection");
+                return;
+            }
+
+            const string androidAdapterInTemplate = "%ANDROID_ADAPTER%";
+            const string iosAdapterInTemplate = "%IOS_ADAPTER%";
+            const string iosSDKInTemplate = "%IOS_SDK%";
+            const string iosAdapterVersionInTemplate = "%IOS_CBMA_VERSION%";
+            const string iosSDKVersionInTemplate = "%IOS_SDK_VERSION%";
+            const string iosAllTargetsInTemplate = "%ALL_TARGETS%";
+            
+
+            foreach (var adapter in adapters)
+            {
+                if (UserSelectedVersions.ContainsKey(adapter.id)) 
+                    continue;
+                
+                var pathToAdapter = Path.Combine(PathToAdaptersDirectory, $"{RemoveWhitespace(adapter.name)}Dependencies.xml");
+                DeleteFileWithMeta(pathToAdapter);
+            }
+
+            if (UserSelectedVersions.Count <= 0)
+            {
+                DeleteDirectoryWithMeta(PathToAdaptersDirectory);
+                DeleteDirectoryWithMeta(PathToEditorInGeneratedFiles);
+            }
+
+            foreach (var selection in UserSelectedVersions)
+            {
+                var template = new List<string>(defaultTemplateContents);
+                var adapter = adapters.First(x => x.id == selection.Key);
+                var pathToAdapter = Path.Combine(PathToAdaptersDirectory, $"{RemoveWhitespace(adapter.name)}Dependencies.xml");
+                
+                var androidAdapterIndexInTemplate = template.FindIndex(x => x.Contains(androidAdapterInTemplate));
+
+                if (selection.Value.android != Unselected)
+                {
+                    var androidDependency = $"{adapter.android.adapter}:4.{selection.Value.android}+@aar";
+                    template[androidAdapterIndexInTemplate] = template[androidAdapterIndexInTemplate].Replace(androidAdapterInTemplate, androidDependency);
+                }
+                else
+                    template[androidAdapterIndexInTemplate] = $"        <!-- Android Adapter for {adapter.name} has not been selected -->";
+
+                var iosAdapterIndexInTemplate = template.FindIndex(x => x.Contains(iosAdapterInTemplate));
+                var iosSDKIndexInTemplate = template.FindIndex(x => x.Contains(iosSDKInTemplate));
+
+                if (selection.Value.ios != Unselected)
+                {
+                    var iosVersion = selection.Value.ios;
+                    var iosDependency = $"4.{iosVersion}";
+                    template[iosAdapterIndexInTemplate] = template[iosAdapterIndexInTemplate].Replace(iosAdapterInTemplate, adapter.ios.adapter).Replace(iosAdapterVersionInTemplate, iosDependency);
+                    template[iosSDKIndexInTemplate] = template[iosSDKIndexInTemplate].Replace(iosSDKInTemplate, adapter.ios.sdk).Replace(iosSDKVersionInTemplate, iosVersion).Replace(iosAllTargetsInTemplate, adapter.ios.allTargets.ToString().ToLower());
+                }
+                else
+                {
+                    var message = $"        <!-- IOS {adapter.name} Adapter has not been selected. Choose a version to fill this field -->";
+                    template[iosAdapterIndexInTemplate] = message;
+                    template[iosSDKIndexInTemplate] = message;
+                }
+
+                if (!Directory.Exists(PathToPackageGeneratedFiles))
+                    Directory.CreateDirectory(PathToPackageGeneratedFiles);
+                
+                if (!Directory.Exists(PathToEditorInGeneratedFiles))
+                    Directory.CreateDirectory(PathToEditorInGeneratedFiles);
+                
+                if (!Directory.Exists(PathToAdaptersDirectory))
+                    Directory.CreateDirectory(PathToAdaptersDirectory);
+                
+                File.WriteAllLines(pathToAdapter, template);
+            }
+            
+            AssetDatabase.Refresh();
+        }
+
+        private static void DeleteFileWithMeta(string path) => DeleteWithFunc(File.Exists, File.Delete, path);
+
+        private static void DeleteDirectoryWithMeta(string path) => DeleteWithFunc(Directory.Exists, Directory.Delete, path);
+
+        private static void DeleteWithFunc(Func<string, bool> exist, Action<string> delete, string path)
+        {
+            if (exist(path))
+                delete(path);
+            var metaPath = $"{path}.meta";
+            if (File.Exists(metaPath))
+                File.Delete(metaPath);
+            AssetDatabase.Refresh();
+        }
+        
         private static void UpdateSavedVersions()
         {
             SavedVersions = UserSelectedVersions.ToDictionary(k => k.Key, v =>
@@ -106,29 +243,11 @@ namespace Chartboost.Adapters
                 return newSelection;
             });
         }
-
-        public static void SaveSelections()
+        
+        private static readonly Regex SWhitespace = new Regex(@"\s+");
+        public static string RemoveWhitespace(string input) 
         {
-            var allSelections = UserSelectedVersions.Values.Where(x => x.android != Unselected || x.ios != Unselected);
-            
-            var selectionsJson = JsonConvert.SerializeObject(allSelections, Formatting.Indented);
-
-            var packageAssetsInAssets = Path.Combine(Application.dataPath, "com.chartboost.mediation");
-
-            if (!Directory.Exists(packageAssetsInAssets))
-                Directory.CreateDirectory(packageAssetsInAssets);
-
-            var editorFolder = Path.Combine(packageAssetsInAssets, "Editor");
-
-            if (!Directory.Exists(editorFolder))
-                Directory.CreateDirectory(editorFolder);
-
-            var selectionsFile = Path.Combine(editorFolder, "selections.json");
-            
-            File.WriteAllText(selectionsFile, selectionsJson);
-            AssetDatabase.Refresh();
-            _saveButton.RemoveFromHierarchy();
-            UpdateSavedVersions();
+            return SWhitespace.Replace(input, "");
         }
     }
 }

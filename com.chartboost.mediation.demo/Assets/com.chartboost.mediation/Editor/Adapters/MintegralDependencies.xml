@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependencies>
+    <androidPackages>
+        <!-- Android Adapter -->
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-mintegral:4.16.3.91+@aar"/>
+    </androidPackages>
+    <iosPods>
+        <!-- iOS Adapter -->
+        <iosPod name="ChartboostMediationAdapterMintegral" version="~> 4.7.3.0"/>
+
+        <!-- Partner iOS SDK-->
+        <iosPod name="MintegralAdSDK" version="~> 7.3.0" addToAllTargets="false"/>
+    </iosPods>
+</dependencies>

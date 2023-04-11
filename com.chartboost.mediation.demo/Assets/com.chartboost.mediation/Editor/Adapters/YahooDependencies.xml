@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependencies>
+    <androidPackages>
+        <!-- Android Adapter -->
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-yahoo:4.1.4.0+@aar"/>
+    </androidPackages>
+    <iosPods>
+        <!-- iOS Adapter -->
+        <iosPod name="ChartboostMediationAdapterYahoo" version="~> 4.1.4.0"/>
+
+        <!-- Partner iOS SDK-->
+        <iosPod name="Yahoo-Mobile-SDK" version="~> 1.4.0" addToAllTargets="false"/>
+    </iosPods>
+</dependencies>

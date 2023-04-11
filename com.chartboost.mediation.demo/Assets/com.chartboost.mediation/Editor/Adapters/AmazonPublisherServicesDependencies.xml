@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependencies>
+    <androidPackages>
+        <!-- Android Adapter -->
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-amazon-publisher-services:4.9.7.0+@aar"/>
+    </androidPackages>
+    <iosPods>
+        <!-- iOS Adapter -->
+        <iosPod name="ChartboostMediationAdapterAmazonPublisherServices" version="~> 4.4.6.0"/>
+
+        <!-- Partner iOS SDK-->
+        <iosPod name="AmazonPublisherServicesSDK" version="~> 4.6.0" addToAllTargets="true"/>
+    </iosPods>
+</dependencies>
