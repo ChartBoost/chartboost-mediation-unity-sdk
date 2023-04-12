@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
     <androidPackages>
+        
         <!-- Android Adapter -->
         <androidPackage spec="com.chartboost:chartboost-mediation-adapter-chartboost:4.9.2.1+@aar"/>
+
+        <!-- Partner Android SDK-->
+        <androidPackage spec="com.chartboost:chartboost-sdk:9.2.1"/>
+        
     </androidPackages>
     <iosPods>
+        
         <!-- iOS Adapter -->
         <iosPod name="ChartboostMediationAdapterChartboost" version="~> 4.9.2.0"/>
 
         <!-- Partner iOS SDK-->
         <iosPod name="ChartboostSDK" version="~> 9.2.0" addToAllTargets="false"/>
+        
     </iosPods>
 </dependencies>

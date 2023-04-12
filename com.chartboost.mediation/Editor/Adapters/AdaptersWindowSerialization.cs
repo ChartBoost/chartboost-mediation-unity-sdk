@@ -92,6 +92,8 @@ namespace Chartboost.Adapters
         private static string PathToEditorInGeneratedFiles => Path.Combine(PathToPackageGeneratedFiles, "Editor");
         private static string PathToAdaptersDirectory => Path.Combine(PathToEditorInGeneratedFiles, "Adapters");
 
+        private static string PathToMainDependency => Path.Combine(PathToEditorInGeneratedFiles, "ChartboostMediationDependencies.xml");
+        
         public static void LoadSelections()
         {
             const string selectionsJson = "Assets/com.chartboost.mediation/Editor/selections.json";
@@ -165,6 +167,9 @@ namespace Chartboost.Adapters
 
             const string androidAdapterInTemplate = "%ANDROID_ADAPTER%";
             const string iosAdapterInTemplate = "%IOS_ADAPTER%";
+            const string androidSDKInTemplate = "%ANDROID_SDK%";
+            const string androidRepositoriesInTemplate = "%REPOSITORIES%";
+            const string androidDependenciesInTemplate = "%DEPENDENCIES%";
             const string iosSDKInTemplate = "%IOS_SDK%";
             const string iosAdapterVersionInTemplate = "%IOS_CBMA_VERSION%";
             const string iosSDKVersionInTemplate = "%IOS_SDK_VERSION%";
@@ -192,14 +197,68 @@ namespace Chartboost.Adapters
                 var pathToAdapter = Path.Combine(PathToAdaptersDirectory, $"{RemoveWhitespace(adapter.name)}Dependencies.xml");
                 
                 var androidAdapterIndexInTemplate = template.FindIndex(x => x.Contains(androidAdapterInTemplate));
+                var androidSDKIndexInTemplate = template.FindIndex(x => x.Contains(androidSDKInTemplate));
 
-                if (selection.Value.android != Unselected)
+                var androidSelected = selection.Value.android != Unselected;
+                
+                // Android SDK Adapter Version
+                if (androidSelected)
                 {
-                    var androidDependency = $"{adapter.android.adapter}:4.{selection.Value.android}+@aar";
+                    var androidVersion = selection.Value.android;
+                    var sdk = adapter.android.sdk;
+                    var androidDependency = $"{adapter.android.adapter}:4.{androidVersion}+@aar";
+                    var androidSDKDependency = $"{sdk}:{androidVersion}";
                     template[androidAdapterIndexInTemplate] = template[androidAdapterIndexInTemplate].Replace(androidAdapterInTemplate, androidDependency);
+                    if (!string.IsNullOrEmpty(sdk))
+                        template[androidSDKIndexInTemplate] = template[androidSDKIndexInTemplate].Replace(androidSDKInTemplate, androidSDKDependency);
+                    else
+                        template[androidSDKIndexInTemplate] = $"        <!-- {adapter.name} does not provide a single SDK. -->";
                 }
                 else
-                    template[androidAdapterIndexInTemplate] = $"        <!-- Android Adapter for {adapter.name} has not been selected -->";
+                {
+                    var message = $"        <!-- Android {adapter.name} Adapter has not been selected. Choose a version to fill this field -->";
+                    template[androidAdapterIndexInTemplate] = message;
+                    template[androidSDKIndexInTemplate] = message;
+                }
+
+                // Android Extra Repos
+                var androidRepos = adapter.android.repositories;
+                var repositoriesIndexStartPoint = template.FindIndex(x => x.Contains(androidRepositoriesInTemplate));
+
+                if (androidSelected && androidRepos != null && androidRepos.Length > 0)
+                {
+                    var repos = new List<string>();
+                    repos.Add($"        <!-- {adapter.name} Android Repositories -->");
+                    repos.Add("        <repositories>");
+                    repos.AddRange(androidRepos.Select(repo => $"          <repository>{repo}</repository>"));
+                    repos.Add("        </repositories>");
+                    repos.Add("");
+                    template.InsertRange(repositoriesIndexStartPoint, repos);
+                    repositoriesIndexStartPoint += repos.Count;
+                }
+                
+                if (repositoriesIndexStartPoint >= 0)
+                    template.RemoveRange(repositoriesIndexStartPoint, 2);
+
+                // Android Extra Dependencies
+                var extraDependencies = adapter.android.dependencies;
+                var extraDependenciesStartPoint = template.FindIndex(x => x.Contains(androidDependenciesInTemplate));
+
+                if (androidSelected && extraDependencies != null && extraDependencies.Length > 0)
+                {
+                    var extra = new List<string>();
+                    foreach (var dependency in extraDependencies)
+                    {
+                        var formatted = adapter.id == "mintegral" ? $"{dependency}:{selection.Value.android}" : dependency;
+                        extra.Add($"        <androidPackage spec=\"{formatted}\"/>");
+                    }
+                    extra.Add("");
+                    template.InsertRange(extraDependenciesStartPoint, extra);
+                    extraDependenciesStartPoint += extra.Count;
+                }
+                
+                if (extraDependenciesStartPoint >= 0)
+                    template.RemoveAt(extraDependenciesStartPoint);
 
                 var iosAdapterIndexInTemplate = template.FindIndex(x => x.Contains(iosAdapterInTemplate));
                 var iosSDKIndexInTemplate = template.FindIndex(x => x.Contains(iosSDKInTemplate));
@@ -255,9 +314,7 @@ namespace Chartboost.Adapters
             defaultTemplateContents[androidVersionIndex] = defaultTemplateContents[androidVersionIndex].Replace(androidVersionInTemplate, optimisticVersion);
             defaultTemplateContents[iosVersionIndex] = defaultTemplateContents[iosVersionIndex].Replace(iosVersionInTemplate, optimisticVersion);
 
-            var pathToDependency = Path.Combine(PathToEditorInGeneratedFiles, "ChartboostMediationDependencies.xml");
-            
-            File.WriteAllLines(pathToDependency, defaultTemplateContents);
+            File.WriteAllLines(PathToMainDependency, defaultTemplateContents);
             SaveSelections();
         }
 

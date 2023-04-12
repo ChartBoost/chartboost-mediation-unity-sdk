@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -42,9 +43,9 @@ namespace Chartboost.Adapters
             PartnerSDKVersions.Clear();
             UserSelectedVersions.Clear();
             SavedVersions.Clear();
-            _saveButton = CreateSaveIcon();
+            _saveButton = CreateSaveButton();
             LoadSelections();
-
+            
             // Each editor window contains a root VisualElement object
             var root = rootVisualElement;
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Packages/com.chartboost.mediation/Editor/Adapters/AdaptersWindow.uss");
@@ -74,19 +75,19 @@ namespace Chartboost.Adapters
             warningFixButton.Add(logo);
             warningFixButton.clicked += FixWarning;
             
-            if (string.IsNullOrEmpty(MediationSelection))
+            if (string.IsNullOrEmpty(MediationSelection) || !File.Exists(PathToMainDependency))
             {
-                warningFixButton.tooltip = "Dependencies for Chartboost Mediation have not been added. Press to fix.";
+                warningFixButton.tooltip = $"Dependencies for Chartboost Mediation {package.version} have not been found. Press to add.";
                 rootVisualElement.Add(warningFixButton);
                 return;
             }
             
             var version = new Version(MediationSelection);
             var packageVersion = new Version(package.version);
-
+            
             if (version != packageVersion)
             {
-                warningFixButton.tooltip = "Your selected dependencies for Chartboost Mediation do not match your current package version. Press to fix.";
+                warningFixButton.tooltip = $"Your selected dependencies for Chartboost Mediation {version} do not match your current package version {packageVersion}. Press to fix.";
                 rootVisualElement.Add(warningFixButton);
             }
 
@@ -255,7 +256,7 @@ namespace Chartboost.Adapters
             return toolbar;
         }
 
-        private static Button CreateSaveIcon()
+        private static Button CreateSaveButton()
         {
             var saveIcon = AssetDatabase.LoadAssetAtPath<Texture>("Packages/com.chartboost.mediation/Editor/Adapters/Save.png");
             var saveIconImage = new Image

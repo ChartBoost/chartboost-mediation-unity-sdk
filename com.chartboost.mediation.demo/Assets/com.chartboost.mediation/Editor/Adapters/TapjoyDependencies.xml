@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
     <androidPackages>
+        
         <!-- Android Adapter -->
         <androidPackage spec="com.chartboost:chartboost-mediation-adapter-tapjoy:4.12.11.1+@aar"/>
+
+        <!-- Partner Android SDK-->
+        <androidPackage spec="com.tapjoy:tapjoy-android-sdk:12.11.1"/>
+        
+        <!-- Tapjoy Android Repositories -->
+        <repositories>
+          <repository>https://sdk.tapjoy.com/</repository>
+        </repositories>
+
     </androidPackages>
     <iosPods>
+        
         <!-- iOS Adapter -->
         <iosPod name="ChartboostMediationAdapterTapjoy" version="~> 4.12.11.0"/>
 
         <!-- Partner iOS SDK-->
         <iosPod name="TapjoySDK" version="~> 12.11.0" addToAllTargets="false"/>
+        
     </iosPods>
 </dependencies>
