@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 namespace Chartboost.Adapters
 {
@@ -21,7 +22,7 @@ namespace Chartboost.Adapters
         {
             var root = Instance.rootVisualElement;
             var same =
-                new DictionaryComparer<string, SelectedVersions>(new SelectedVersionsComparer()).Equals(UserSelectedVersions, SavedVersions);
+                new DictionaryComparer<string, AdapterSelection>(new SelectedVersionsComparer()).Equals(UserSelectedVersions, SavedVersions);
             switch (same)
             {
                 case false when !root.Contains(_saveButton):
@@ -49,7 +50,7 @@ namespace Chartboost.Adapters
 
             var currentSelections = UserSelectedVersions.ToDictionary(k => k.Key, v =>
             {
-                var newSelection = new SelectedVersions(v.Key.ToString())
+                var newSelection = new AdapterSelection(v.Key.ToString())
                 {
                     android = v.Value.android,
                     ios = v.Value.ios
@@ -100,6 +101,15 @@ namespace Chartboost.Adapters
                 }
             }
         }
+        
+        public static PackageInfo FindPackage(string packageName)
+        {
+            var packageJsons = AssetDatabase.FindAssets("package")
+                .Select(AssetDatabase.GUIDToAssetPath).Where(x => AssetDatabase.LoadAssetAtPath<TextAsset>(x) != null)
+                .Select(PackageInfo.FindForAssetPath).ToList();
+
+            return packageJsons.Find(x => x.name == packageName);
+        }
 
         public class DictionaryComparer<TKey, TValue> : IEqualityComparer<Dictionary<TKey, TValue>>
         {
@@ -128,9 +138,9 @@ namespace Chartboost.Adapters
             }
         }
 
-        public class SelectedVersionsComparer : IEqualityComparer<AdaptersWindow.SelectedVersions>
+        public class SelectedVersionsComparer : IEqualityComparer<AdaptersWindow.AdapterSelection>
         {
-            public bool Equals(AdaptersWindow.SelectedVersions x, AdaptersWindow.SelectedVersions y)
+            public bool Equals(AdaptersWindow.AdapterSelection x, AdaptersWindow.AdapterSelection y)
             {
                 if (x.id != y.id)
                     return false;
@@ -141,7 +151,7 @@ namespace Chartboost.Adapters
                 return true;
             }
 
-            public int GetHashCode(AdaptersWindow.SelectedVersions obj)
+            public int GetHashCode(AdaptersWindow.AdapterSelection obj)
             {
                 unchecked
                 {

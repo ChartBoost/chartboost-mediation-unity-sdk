@@ -20,12 +20,22 @@ namespace Chartboost.Adapters
             Android,
             IOS
         }
+        
+        #nullable enable
+        [Serializable]
+        public struct SDKSelections
+        {
+            public string? mediationVersion;
+
+            public AdapterSelection[]? adapterSelections;
+        }
+        #nullable disable
 
         /// <summary>
-        /// Contains selected versions in the project, used to update, modify, existing selections. 
+        /// Contains adapter selected versions in the project, used to update, modify, existing selections. 
         /// </summary>
         [Serializable]
-        public class SelectedVersions
+        public class AdapterSelection
         {
             public string id;
             public string android = Unselected;
@@ -36,7 +46,7 @@ namespace Chartboost.Adapters
             [NonSerialized]
             public ToolbarMenu iosDropdown;
 
-            public SelectedVersions(string id)
+            public AdapterSelection(string id)
             {
                 this.id = id;
             }
@@ -91,9 +101,11 @@ namespace Chartboost.Adapters
 
             var jsonContents = File.ReadAllText(selectionsJson);
 
-            var selections = JsonConvert.DeserializeObject<SelectedVersions[]>(jsonContents);
+            var selections = JsonConvert.DeserializeObject<SDKSelections>(jsonContents);
 
-            foreach (var versionSelection in selections)
+            MediationSelection = selections.mediationVersion;
+
+            foreach (var versionSelection in selections.adapterSelections)
                 UserSelectedVersions[versionSelection.id] = versionSelection;
 
             UpdateSavedVersions();
@@ -103,9 +115,15 @@ namespace Chartboost.Adapters
         {
             var selectionsFile = Path.Combine(PathToEditorInGeneratedFiles, "selections.json");
 
-            var allSelections = UserSelectedVersions.Values.Where(x => x.android != Unselected || x.ios != Unselected);
-            
-            var selectionsJson = JsonConvert.SerializeObject(allSelections, Formatting.Indented);
+            var allSelections = UserSelectedVersions.Values.Where(x => x.android != Unselected || x.ios != Unselected).ToArray();
+
+            var sdkSelections = new SDKSelections
+            {
+                adapterSelections = allSelections,
+                mediationVersion = MediationSelection
+            };
+
+            var selectionsJson = JsonConvert.SerializeObject(sdkSelections, Formatting.Indented);
 
             if (!Directory.Exists(PathToPackageGeneratedFiles))
                 Directory.CreateDirectory(PathToPackageGeneratedFiles);
@@ -113,7 +131,7 @@ namespace Chartboost.Adapters
             if (!Directory.Exists(PathToEditorInGeneratedFiles))
                 Directory.CreateDirectory(PathToEditorInGeneratedFiles);
             
-            if (UserSelectedVersions.Count <= 0)
+            if (UserSelectedVersions.Count <= 0 && string.IsNullOrEmpty(MediationSelection))
                 DeleteFileWithMeta(selectionsFile);
             else
                 File.WriteAllText(selectionsFile, selectionsJson);
@@ -125,7 +143,6 @@ namespace Chartboost.Adapters
             UpdateSavedVersions();
         }
 
-        [MenuItem("Chartboost Mediation/Generate Dependencies")]
         public static void GenerateDependenciesFromSelections()
         {
             const string templatePath = "Packages/com.chartboost.mediation/Editor/Adapters/DependencyTemplate.xml";
@@ -153,7 +170,6 @@ namespace Chartboost.Adapters
             const string iosSDKVersionInTemplate = "%IOS_SDK_VERSION%";
             const string iosAllTargetsInTemplate = "%ALL_TARGETS%";
             
-
             foreach (var adapter in adapters)
             {
                 if (UserSelectedVersions.ContainsKey(adapter.id)) 
@@ -217,6 +233,34 @@ namespace Chartboost.Adapters
             AssetDatabase.Refresh();
         }
 
+        public static void GenerateChartboostMediationDependency()
+        {
+            const string templatePath = "Packages/com.chartboost.mediation/Editor/Adapters/MediationTemplate.xml";
+            const string androidVersionInTemplate = "%ANDROID_VERSION%";
+            const string iosVersionInTemplate = "%IOS_VERSION%";
+            
+            if (!File.Exists(templatePath))
+            {
+                Debug.LogError("[Chartboost Mediation] Unable to create dependencies for Chartboost Mediation, MediationTemplate.xml could not be found.");
+                return;
+            }
+            
+            var defaultTemplateContents = File.ReadAllLines(templatePath).ToList();
+
+            var androidVersionIndex = defaultTemplateContents.FindIndex(x => x.Contains(androidVersionInTemplate));
+            var iosVersionIndex = defaultTemplateContents.FindIndex(x => x.Contains(iosVersionInTemplate));
+
+            var optimisticVersion = MediationSelection.Remove(MediationSelection.Length - 2);
+
+            defaultTemplateContents[androidVersionIndex] = defaultTemplateContents[androidVersionIndex].Replace(androidVersionInTemplate, optimisticVersion);
+            defaultTemplateContents[iosVersionIndex] = defaultTemplateContents[iosVersionIndex].Replace(iosVersionInTemplate, optimisticVersion);
+
+            var pathToDependency = Path.Combine(PathToEditorInGeneratedFiles, "ChartboostMediationDependencies.xml");
+            
+            File.WriteAllLines(pathToDependency, defaultTemplateContents);
+            SaveSelections();
+        }
+
         private static void DeleteFileWithMeta(string path) => DeleteWithFunc(File.Exists, File.Delete, path);
 
         private static void DeleteDirectoryWithMeta(string path) => DeleteWithFunc(Directory.Exists, Directory.Delete, path);
@@ -235,7 +279,7 @@ namespace Chartboost.Adapters
         {
             SavedVersions = UserSelectedVersions.ToDictionary(k => k.Key, v =>
             {
-                var newSelection = new SelectedVersions(v.Key.ToString())
+                var newSelection = new AdapterSelection(v.Key.ToString())
                 {
                     android = v.Value.android,
                     ios = v.Value.ios

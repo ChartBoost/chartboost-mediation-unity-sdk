@@ -20,12 +20,14 @@ namespace Chartboost.Adapters
         }
 
         public static Dictionary<string, PartnerVersions> PartnerSDKVersions { get; set; } = new Dictionary<string, PartnerVersions>();
-        public static Dictionary<string, SelectedVersions> UserSelectedVersions { get; set; } = new Dictionary<string, SelectedVersions>();
-        public static Dictionary<string, SelectedVersions> SavedVersions { get; set; } = new Dictionary<string, SelectedVersions>();
+        public static Dictionary<string, AdapterSelection> UserSelectedVersions { get; set; } = new Dictionary<string, AdapterSelection>();
+        public static Dictionary<string, AdapterSelection> SavedVersions { get; set; } = new Dictionary<string, AdapterSelection>();
+        private static string MediationSelection { get; set; }
        
         private static Button _saveButton;
 
         private const string Unselected = "Unselected";
+        private const string ChartboostMediationPackageName = "com.chartboost.mediation";
 
         private static AdaptersWindow Instance { get; set; }
 
@@ -52,6 +54,49 @@ namespace Chartboost.Adapters
 
             CreateTableHeaders(root);
             CreateAdapterTable(root);
+            CheckMediationVersion();
+        }
+
+        private void CheckMediationVersion()
+        {
+            var warningLogo = AssetDatabase.LoadAssetAtPath<Texture>("Packages/com.chartboost.mediation/Editor/Adapters/Warning.png");
+            var logo = new Image
+            {
+                name = "icon",
+                image = warningLogo,
+                scaleMode = ScaleMode.ScaleToFit
+            };
+            
+            var package = FindPackage(ChartboostMediationPackageName);
+            
+            var warningFixButton = new Button();
+            warningFixButton.name = "warning-button";
+            warningFixButton.Add(logo);
+            warningFixButton.clicked += FixWarning;
+            
+            if (string.IsNullOrEmpty(MediationSelection))
+            {
+                warningFixButton.tooltip = "Dependencies for Chartboost Mediation have not been added. Press to fix.";
+                rootVisualElement.Add(warningFixButton);
+                return;
+            }
+            
+            var version = new Version(MediationSelection);
+            var packageVersion = new Version(package.version);
+
+            if (version != packageVersion)
+            {
+                warningFixButton.tooltip = "Your selected dependencies for Chartboost Mediation do not match your current package version. Press to fix.";
+                rootVisualElement.Add(warningFixButton);
+            }
+
+            void FixWarning()
+            {
+                warningFixButton.clicked -= FixWarning;
+                warningFixButton.RemoveFromHierarchy();
+                MediationSelection = package.version;
+                GenerateChartboostMediationDependency();
+            }
         }
 
         private static void CreateTableHeaders(VisualElement root)
@@ -180,7 +225,7 @@ namespace Chartboost.Adapters
                     toolbar.text = selection;
                     
                     if (!UserSelectedVersions.ContainsKey(adapter.id))
-                        UserSelectedVersions[adapter.id] = new SelectedVersions(adapter.id);
+                        UserSelectedVersions[adapter.id] = new AdapterSelection(adapter.id);
                     
                     switch (platform)
                     {

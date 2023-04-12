@@ -7,6 +7,9 @@
         maven {
             url "https://maven.google.com"
         }
+        maven {
+            url "https://cboost.jfrog.io/artifactory/chartboost-mediation/" // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:7
+        }
         mavenLocal()
         mavenCentral()
     }
@@ -35,6 +38,7 @@ dependencies {
     implementation 'com.chartboost:chartboost-mediation-adapter-unity-ads:4.4.6.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/UnityAdsDependencies.xml:5
     implementation 'com.chartboost:chartboost-mediation-adapter-vungle:4.6.12.1+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/VungleDependencies.xml:5
     implementation 'com.chartboost:chartboost-mediation-adapter-yahoo:4.1.4.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/YahooDependencies.xml:5
+//     implementation 'com.chartboost:chartboost-mediation-sdk:4.1+' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:10
 // Android Resolver Dependencies End
 **DEPS**}
 
