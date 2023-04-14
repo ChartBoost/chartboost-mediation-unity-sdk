@@ -12,10 +12,10 @@
     <iosPods>
         
         <!-- iOS Adapter -->
-        <iosPod name="ChartboostMediationAdapterDigitalTurbineExchange" version="~> 4.8.1.9"/>
+        <iosPod name="ChartboostMediationAdapterDigitalTurbineExchange" version="~> 4.8.2.0"/>
 
         <!-- Partner iOS SDK-->
-        <iosPod name="Fyber_Marketplace_SDK" version="~> 8.1.9" addToAllTargets="false"/>
+        <iosPod name="Fyber_Marketplace_SDK" version="~> 8.2.0" addToAllTargets="true"/>
         
     </iosPods>
 </dependencies>

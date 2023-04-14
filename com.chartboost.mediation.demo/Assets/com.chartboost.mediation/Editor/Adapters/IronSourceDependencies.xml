@@ -6,7 +6,7 @@
         <androidPackage spec="com.chartboost:chartboost-mediation-adapter-ironsource:4.7.2.7.0+@aar"/>
 
         <!-- Partner Android SDK-->
-        <androidPackage spec="com.ironsource.sdk:mediationsdk:7.2.7.0"/>
+        <androidPackage spec="com.ironsource.sdk:mediationsdk:7.2.7"/>
         
         <!-- IronSource Android Repositories -->
         <repositories>

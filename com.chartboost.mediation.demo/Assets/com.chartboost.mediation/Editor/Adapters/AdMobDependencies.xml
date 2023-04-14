@@ -15,7 +15,7 @@
         <iosPod name="ChartboostMediationAdapterAdMob" version="~> 4.9.14.0"/>
 
         <!-- Partner iOS SDK-->
-        <iosPod name="AdColony" version="~> 9.14.0" addToAllTargets="false"/>
+        <iosPod name="Google-Mobile-Ads-SDK" version="~> 9.14.0" addToAllTargets="false"/>
         
     </iosPods>
 </dependencies>

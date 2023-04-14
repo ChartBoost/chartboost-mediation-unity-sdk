@@ -66,7 +66,7 @@ namespace Chartboost.Adapters
                 ios = GetSupportedVersions(iosAdapters);
             }
 
-            private static string[] GetSupportedVersions(string[] adapters)
+            private string[] GetSupportedVersions(IEnumerable<string> adapters)
             {
                 var temp = new List<string> { Unselected };
 
@@ -80,10 +80,11 @@ namespace Chartboost.Adapters
                 return temp.ToArray();
             }
 
-            private static string GetPartnerSDKVersion(string adapterVersion)
+            private string GetPartnerSDKVersion(string adapterVersion)
             {
-                adapterVersion = adapterVersion.Remove(0, 2);
-                adapterVersion = adapterVersion.Remove(adapterVersion.Length - 2, 2);
+                const int removalIndex = 2;
+                adapterVersion = adapterVersion.Remove(0, removalIndex);
+                adapterVersion =  adapterVersion.Remove(adapterVersion.Length - removalIndex, removalIndex);
                 return adapterVersion;
             }
         }
@@ -91,8 +92,12 @@ namespace Chartboost.Adapters
         private static string PathToPackageGeneratedFiles => Path.Combine(Application.dataPath, "com.chartboost.mediation");
         private static string PathToEditorInGeneratedFiles => Path.Combine(PathToPackageGeneratedFiles, "Editor");
         private static string PathToAdaptersDirectory => Path.Combine(PathToEditorInGeneratedFiles, "Adapters");
-
         private static string PathToMainDependency => Path.Combine(PathToEditorInGeneratedFiles, "ChartboostMediationDependencies.xml");
+        
+        // Quirky networks
+        private const string InMobi = "inmobi";
+        private const string IronSource = "ironsource";
+        private const string Mintegral = "mintegral";
         
         public static void LoadSelections()
         {
@@ -127,11 +132,8 @@ namespace Chartboost.Adapters
 
             var selectionsJson = JsonConvert.SerializeObject(sdkSelections, Formatting.Indented);
 
-            if (!Directory.Exists(PathToPackageGeneratedFiles))
-                Directory.CreateDirectory(PathToPackageGeneratedFiles);
-
-            if (!Directory.Exists(PathToEditorInGeneratedFiles))
-                Directory.CreateDirectory(PathToEditorInGeneratedFiles);
+            DirectoryCreate(PathToPackageGeneratedFiles);
+            DirectoryCreate(PathToEditorInGeneratedFiles);
             
             if (UserSelectedVersions.Count <= 0 && string.IsNullOrEmpty(MediationSelection))
                 DeleteFileWithMeta(selectionsFile);
@@ -156,7 +158,7 @@ namespace Chartboost.Adapters
             }
 
             var defaultTemplateContents = File.ReadAllLines(templatePath).ToList();
-
+            
             var adapters = AdapterDataSource.LoadedAdapters.adapters;
 
             if (adapters == null)
@@ -194,6 +196,7 @@ namespace Chartboost.Adapters
             {
                 var template = new List<string>(defaultTemplateContents);
                 var adapter = adapters.First(x => x.id == selection.Key);
+                var adapterId = adapter.id;
                 var pathToAdapter = Path.Combine(PathToAdaptersDirectory, $"{RemoveWhitespace(adapter.name)}Dependencies.xml");
                 
                 var androidAdapterIndexInTemplate = template.FindIndex(x => x.Contains(androidAdapterInTemplate));
@@ -204,11 +207,19 @@ namespace Chartboost.Adapters
                 // Android SDK Adapter Version
                 if (androidSelected)
                 {
-                    var androidVersion = selection.Value.android;
+                    string sdkVersion;
+                    var adapterVersion = sdkVersion = selection.Value.android;
                     var sdk = adapter.android.sdk;
-                    var androidDependency = $"{adapter.android.adapter}:4.{androidVersion}+@aar";
-                    var androidSDKDependency = $"{sdk}:{androidVersion}";
+                  
+                    // handling IronSource SDK versioning quirk
+                    if (adapterId.Equals(IronSource) && sdkVersion[sdkVersion.Length - 1] == '0')
+                        sdkVersion = sdkVersion.Remove(sdkVersion.Length - 2, 2);
+                    
+                    var androidDependency = $"{adapter.android.adapter}:4.{adapterVersion}+@aar";
+                    var androidSDKDependency = $"{sdk}:{sdkVersion}";
+                    
                     template[androidAdapterIndexInTemplate] = template[androidAdapterIndexInTemplate].Replace(androidAdapterInTemplate, androidDependency);
+                    
                     if (!string.IsNullOrEmpty(sdk))
                         template[androidSDKIndexInTemplate] = template[androidSDKIndexInTemplate].Replace(androidSDKInTemplate, androidSDKDependency);
                     else
@@ -249,7 +260,8 @@ namespace Chartboost.Adapters
                     var extra = new List<string>();
                     foreach (var dependency in extraDependencies)
                     {
-                        var formatted = adapter.id == "mintegral" ? $"{dependency}:{selection.Value.android}" : dependency;
+                        // handling Mintegral quirk
+                        var formatted = adapterId.Equals(Mintegral) ? $"{dependency}:{selection.Value.android}" : dependency;
                         extra.Add($"        <androidPackage spec=\"{formatted}\"/>");
                     }
                     extra.Add("");
@@ -263,12 +275,17 @@ namespace Chartboost.Adapters
                 var iosAdapterIndexInTemplate = template.FindIndex(x => x.Contains(iosAdapterInTemplate));
                 var iosSDKIndexInTemplate = template.FindIndex(x => x.Contains(iosSDKInTemplate));
 
-                if (selection.Value.ios != Unselected)
+                var iosSelection = selection.Value.ios;
+                if (iosSelection != Unselected)
                 {
-                    var iosVersion = selection.Value.ios;
-                    var iosDependency = $"4.{iosVersion}";
+                    var iosDependency = $"4.{iosSelection}";
                     template[iosAdapterIndexInTemplate] = template[iosAdapterIndexInTemplate].Replace(iosAdapterInTemplate, adapter.ios.adapter).Replace(iosAdapterVersionInTemplate, iosDependency);
-                    template[iosSDKIndexInTemplate] = template[iosSDKIndexInTemplate].Replace(iosSDKInTemplate, adapter.ios.sdk).Replace(iosSDKVersionInTemplate, iosVersion).Replace(iosAllTargetsInTemplate, adapter.ios.allTargets.ToString().ToLower());
+                    
+                    // Handling InMobi quirk
+                    if (adapterId != InMobi)
+                        template[iosSDKIndexInTemplate] = template[iosSDKIndexInTemplate].Replace(iosSDKInTemplate, adapter.ios.sdk).Replace(iosSDKVersionInTemplate, iosSelection).Replace(iosAllTargetsInTemplate, adapter.ios.allTargets.ToString().ToLower());
+                    else
+                        template[iosSDKIndexInTemplate] = $"        <!-- {adapter.name} species different SDKs based on version. Ignoring. -->";
                 }
                 else
                 {
@@ -277,15 +294,9 @@ namespace Chartboost.Adapters
                     template[iosSDKIndexInTemplate] = message;
                 }
 
-                if (!Directory.Exists(PathToPackageGeneratedFiles))
-                    Directory.CreateDirectory(PathToPackageGeneratedFiles);
-                
-                if (!Directory.Exists(PathToEditorInGeneratedFiles))
-                    Directory.CreateDirectory(PathToEditorInGeneratedFiles);
-                
-                if (!Directory.Exists(PathToAdaptersDirectory))
-                    Directory.CreateDirectory(PathToAdaptersDirectory);
-                
+                DirectoryCreate(PathToPackageGeneratedFiles);
+                DirectoryCreate(PathToEditorInGeneratedFiles);
+                DirectoryCreate(PathToAdaptersDirectory);
                 File.WriteAllLines(pathToAdapter, template);
             }
             
@@ -314,13 +325,22 @@ namespace Chartboost.Adapters
             defaultTemplateContents[androidVersionIndex] = defaultTemplateContents[androidVersionIndex].Replace(androidVersionInTemplate, optimisticVersion);
             defaultTemplateContents[iosVersionIndex] = defaultTemplateContents[iosVersionIndex].Replace(iosVersionInTemplate, optimisticVersion);
 
+            DirectoryCreate(PathToPackageGeneratedFiles);
+            DirectoryCreate(PathToEditorInGeneratedFiles);
             File.WriteAllLines(PathToMainDependency, defaultTemplateContents);
+            AssetDatabase.Refresh();
             SaveSelections();
+        }
+
+        private static void DirectoryCreate(string path)
+        {
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
         }
 
         private static void DeleteFileWithMeta(string path) => DeleteWithFunc(File.Exists, File.Delete, path);
 
-        private static void DeleteDirectoryWithMeta(string path) => DeleteWithFunc(Directory.Exists, Directory.Delete, path);
+        private static void DeleteDirectoryWithMeta(string path) => DeleteWithFunc(Directory.Exists, location => Directory.Delete(location, true), path);
 
         private static void DeleteWithFunc(Func<string, bool> exist, Action<string> delete, string path)
         {

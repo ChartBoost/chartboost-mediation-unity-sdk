@@ -15,7 +15,7 @@
         <iosPod name="ChartboostMediationAdapterInMobi" version="~> 4.10.1.3"/>
 
         <!-- Partner iOS SDK-->
-        <iosPod name="InMobiSDK" version="~> 10.1.3" addToAllTargets="false"/>
+        <!-- InMobi species different SDKs based on version. Ignoring. -->
         
     </iosPods>
 </dependencies>
