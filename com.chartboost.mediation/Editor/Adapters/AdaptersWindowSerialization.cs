@@ -228,6 +228,7 @@ namespace Chartboost.Editor.Adapters
             Constants.PathToPackageGeneratedFiles.DirectoryCreate();
             Constants.PathToEditorInGeneratedFiles.DirectoryCreate();
             Constants.PathToMainDependency.FileCreate(defaultTemplateContents);
+            SaveSelections();
             AssetDatabase.Refresh();
         }
 
