@@ -28,7 +28,7 @@
     background-color: orangered;
 }
 
-#update-button {
+#refresh-button {
     position: absolute;
     top: 65px;
     right: 10px;

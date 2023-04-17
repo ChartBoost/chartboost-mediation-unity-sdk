@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
     <androidPackages>
-        
         <!-- Android Adapter -->
         <androidPackage spec="com.chartboost:chartboost-mediation-adapter-vungle:4.6.12.1+@aar"/>
 
@@ -9,15 +8,12 @@
         <androidPackage spec="com.vungle:publisher-sdk-android:6.12.1"/>
         
         <androidPackage spec="androidx.core:core:1.2.0"/>
-
     </androidPackages>
     <iosPods>
-        
         <!-- iOS Adapter -->
         <iosPod name="ChartboostMediationAdapterVungle" version="~> 4.6.12.1"/>
 
         <!-- Partner iOS SDK-->
         <iosPod name="VungleSDK-iOS" version="~> 6.12.1" addToAllTargets="false"/>
-        
     </iosPods>
 </dependencies>

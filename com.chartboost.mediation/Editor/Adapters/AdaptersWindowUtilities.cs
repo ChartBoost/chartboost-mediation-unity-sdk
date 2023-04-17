@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using PackageInfo = UnityEditor.PackageManager.PackageInfo;
+using Chartboost.Editor.Adapters.Comparers;
+using Chartboost.Editor.Adapters.Serialization;
 
-namespace Chartboost.Adapters
+namespace Chartboost.Editor.Adapters
 {
     public partial class AdaptersWindow
     {
@@ -74,11 +75,10 @@ namespace Chartboost.Adapters
                     "No adapters updated, everything is already up to date!\n\n Do you think this is incorrect? Try using the refresh button.",
                     "Ok");
             }
-
-
+            
             void UpdateSelection(IReadOnlyList<string> versions, string id, string startValue, Platform platform)
             {
-                if (startValue.Equals(Unselected))
+                if (startValue.Equals(Constants.Unselected))
                     return;
 
                 var latest = versions[1];
@@ -98,67 +98,6 @@ namespace Chartboost.Adapters
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(platform), platform, null);
-                }
-            }
-        }
-        
-        public static PackageInfo FindPackage(string packageName)
-        {
-            var packageJsons = AssetDatabase.FindAssets("package")
-                .Select(AssetDatabase.GUIDToAssetPath).Where(x => AssetDatabase.LoadAssetAtPath<TextAsset>(x) != null)
-                .Select(PackageInfo.FindForAssetPath).ToList();
-
-            return packageJsons.Find(x => x.name == packageName);
-        }
-
-        public class DictionaryComparer<TKey, TValue> : IEqualityComparer<Dictionary<TKey, TValue>>
-        {
-            private readonly IEqualityComparer<TValue> _valueComparer;
-
-            public DictionaryComparer(IEqualityComparer<TValue> valueComparer)
-                => _valueComparer = valueComparer ?? EqualityComparer<TValue>.Default;
-
-            public bool Equals(Dictionary<TKey, TValue> x, Dictionary<TKey, TValue> y)
-            {
-                if (x.Count != y.Count)
-                    return false;
-                if (x.Keys.Except(y.Keys).Any())
-                    return false;
-                if (y.Keys.Except(x.Keys).Any())
-                    return false;
-                foreach (var pair in x)
-                    if (!_valueComparer.Equals(pair.Value, y[pair.Key]))
-                        return false;
-                return true;
-            }
-
-            public int GetHashCode(Dictionary<TKey, TValue> obj)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public class SelectedVersionsComparer : IEqualityComparer<AdaptersWindow.AdapterSelection>
-        {
-            public bool Equals(AdaptersWindow.AdapterSelection x, AdaptersWindow.AdapterSelection y)
-            {
-                if (x.id != y.id)
-                    return false;
-                if (x.android != y.android)
-                    return false;
-                if (x.ios != y.ios)
-                    return false;
-                return true;
-            }
-
-            public int GetHashCode(AdaptersWindow.AdapterSelection obj)
-            {
-                unchecked
-                {
-                    var hashCode = (obj.id != null ? obj.id.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ (obj.android != null ? obj.android.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ (obj.ios != null ? obj.ios.GetHashCode() : 0);
-                    return hashCode;
                 }
             }
         }

@@ -1,12 +1,13 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Chartboost.Editor.Adapters.Serialization;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Chartboost.Adapters
+namespace Chartboost.Editor.Adapters
 {
     [InitializeOnLoad]
     public class AdapterDataSource
