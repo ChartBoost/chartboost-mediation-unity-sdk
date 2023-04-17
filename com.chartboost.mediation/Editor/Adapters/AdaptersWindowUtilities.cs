@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using Chartboost.Editor.Adapters.Comparers;
+using Chartboost.Editor.Adapters.Serialization;
 
-namespace Chartboost.Adapters
+namespace Chartboost.Editor.Adapters
 {
     public partial class AdaptersWindow
     {
@@ -21,7 +23,7 @@ namespace Chartboost.Adapters
         {
             var root = Instance.rootVisualElement;
             var same =
-                new DictionaryComparer<string, SelectedVersions>(new SelectedVersionsComparer()).Equals(UserSelectedVersions, SavedVersions);
+                new DictionaryComparer<string, AdapterSelection>(new SelectedVersionsComparer()).Equals(UserSelectedVersions, SavedVersions);
             switch (same)
             {
                 case false when !root.Contains(_saveButton):
@@ -49,7 +51,7 @@ namespace Chartboost.Adapters
 
             var currentSelections = UserSelectedVersions.ToDictionary(k => k.Key, v =>
             {
-                var newSelection = new SelectedVersions(v.Key.ToString())
+                var newSelection = new AdapterSelection(v.Key.ToString())
                 {
                     android = v.Value.android,
                     ios = v.Value.ios
@@ -73,11 +75,10 @@ namespace Chartboost.Adapters
                     "No adapters updated, everything is already up to date!\n\n Do you think this is incorrect? Try using the refresh button.",
                     "Ok");
             }
-
-
+            
             void UpdateSelection(IReadOnlyList<string> versions, string id, string startValue, Platform platform)
             {
-                if (startValue.Equals(Unselected))
+                if (startValue.Equals(Constants.Unselected))
                     return;
 
                 var latest = versions[1];
@@ -97,58 +98,6 @@ namespace Chartboost.Adapters
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(platform), platform, null);
-                }
-            }
-        }
-
-        public class DictionaryComparer<TKey, TValue> : IEqualityComparer<Dictionary<TKey, TValue>>
-        {
-            private readonly IEqualityComparer<TValue> _valueComparer;
-
-            public DictionaryComparer(IEqualityComparer<TValue> valueComparer)
-                => _valueComparer = valueComparer ?? EqualityComparer<TValue>.Default;
-
-            public bool Equals(Dictionary<TKey, TValue> x, Dictionary<TKey, TValue> y)
-            {
-                if (x.Count != y.Count)
-                    return false;
-                if (x.Keys.Except(y.Keys).Any())
-                    return false;
-                if (y.Keys.Except(x.Keys).Any())
-                    return false;
-                foreach (var pair in x)
-                    if (!_valueComparer.Equals(pair.Value, y[pair.Key]))
-                        return false;
-                return true;
-            }
-
-            public int GetHashCode(Dictionary<TKey, TValue> obj)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public class SelectedVersionsComparer : IEqualityComparer<AdaptersWindow.SelectedVersions>
-        {
-            public bool Equals(AdaptersWindow.SelectedVersions x, AdaptersWindow.SelectedVersions y)
-            {
-                if (x.id != y.id)
-                    return false;
-                if (x.android != y.android)
-                    return false;
-                if (x.ios != y.ios)
-                    return false;
-                return true;
-            }
-
-            public int GetHashCode(AdaptersWindow.SelectedVersions obj)
-            {
-                unchecked
-                {
-                    var hashCode = (obj.id != null ? obj.id.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ (obj.android != null ? obj.android.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ (obj.ios != null ? obj.ios.GetHashCode() : 0);
-                    return hashCode;
                 }
             }
         }

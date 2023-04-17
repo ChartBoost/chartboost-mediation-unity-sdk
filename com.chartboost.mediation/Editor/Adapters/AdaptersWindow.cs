@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Chartboost.Editor.Adapters.Serialization;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Chartboost.Adapters
+namespace Chartboost.Editor.Adapters
 {
     public partial class AdaptersWindow : EditorWindow
     {
@@ -20,12 +21,11 @@ namespace Chartboost.Adapters
         }
 
         public static Dictionary<string, PartnerVersions> PartnerSDKVersions { get; set; } = new Dictionary<string, PartnerVersions>();
-        public static Dictionary<string, SelectedVersions> UserSelectedVersions { get; set; } = new Dictionary<string, SelectedVersions>();
-        public static Dictionary<string, SelectedVersions> SavedVersions { get; set; } = new Dictionary<string, SelectedVersions>();
+        public static Dictionary<string, AdapterSelection> UserSelectedVersions { get; set; } = new Dictionary<string, AdapterSelection>();
+        public static Dictionary<string, AdapterSelection> SavedVersions { get; set; } = new Dictionary<string, AdapterSelection>();
+        private static string MediationSelection { get; set; }
        
         private static Button _saveButton;
-
-        private const string Unselected = "Unselected";
 
         private static AdaptersWindow Instance { get; set; }
 
@@ -40,35 +40,73 @@ namespace Chartboost.Adapters
             PartnerSDKVersions.Clear();
             UserSelectedVersions.Clear();
             SavedVersions.Clear();
-            _saveButton = CreateSaveIcon();
+            _saveButton = CreateSaveButton();
             LoadSelections();
-
+            
             // Each editor window contains a root VisualElement object
             var root = rootVisualElement;
-            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Packages/com.chartboost.mediation/Editor/Adapters/AdaptersWindow.uss");
-        
-            root.styleSheets.Add(styleSheet);
+            root.styleSheets.Add(Constants.StyleSheet.LoadAsset<StyleSheet>());
             root.name = "body";
 
             CreateTableHeaders(root);
             CreateAdapterTable(root);
+            CheckMediationVersion();
+        }
+
+        private void CheckMediationVersion()
+        {
+            var logo = new Image
+            {
+                name = "icon",
+                image = Constants.WarningPNG.LoadAsset<Texture>(),
+                scaleMode = ScaleMode.ScaleToFit
+            };
+            
+            var package = Utilities.FindPackage(Constants.ChartboostMediationPackageName);
+            
+            var warningFixButton = new Button();
+            warningFixButton.name = "warning-button";
+            warningFixButton.Add(logo);
+            warningFixButton.clicked += FixWarning;
+            
+            if (string.IsNullOrEmpty(MediationSelection) || !Constants.PathToMainDependency.FileExist())
+            {
+                warningFixButton.tooltip = $"Dependencies for Chartboost Mediation {package.version} have not been found. Press to add.";
+                rootVisualElement.Add(warningFixButton);
+                return;
+            }
+            
+            var version = new Version(MediationSelection);
+            var packageVersion = new Version(package.version);
+            
+            if (version != packageVersion)
+            {
+                warningFixButton.tooltip = $"Your selected dependencies for Chartboost Mediation {version} do not match your current package version {packageVersion}. Press to fix.";
+                rootVisualElement.Add(warningFixButton);
+            }
+
+            void FixWarning()
+            {
+                warningFixButton.clicked -= FixWarning;
+                warningFixButton.RemoveFromHierarchy();
+                MediationSelection = package.version;
+                GenerateChartboostMediationDependency();
+            }
         }
 
         private static void CreateTableHeaders(VisualElement root)
         {
-            var mediationLogo = AssetDatabase.LoadAssetAtPath<Texture>("Packages/com.chartboost.mediation/Editor/Adapters/Logo.png");
             var logo = new Image
             {
                 name = "mediation-logo",
-                image = mediationLogo,
+                image = Constants.LogoPNG.LoadAsset<Texture>(),
                 scaleMode = ScaleMode.ScaleToFit
             };
             
-            var upgradeIcon = AssetDatabase.LoadAssetAtPath<Texture>("Packages/com.chartboost.mediation/Editor/Adapters/Upgrade.png");
             var upgradeImage = new Image
             {
                 name = "icon",
-                image = upgradeIcon,
+                image = Constants.UpgradePNG.LoadAsset<Texture>(),
                 scaleMode = ScaleMode.ScaleToFit
             };
 
@@ -77,23 +115,21 @@ namespace Chartboost.Adapters
             upgradeButton.tooltip = "Upgrade all adapter selections to their latest version!";
             upgradeButton.Add(upgradeImage);
             
-                  
-            var updateIcon = AssetDatabase.LoadAssetAtPath<Texture>("Packages/com.chartboost.mediation/Editor/Adapters/Update.png");
-            var updateImage = new Image
+            var refreshImage = new Image
             {
                 name = "icon",
-                image = updateIcon,
+                image = Constants.RefreshPNG.LoadAsset<Texture>(),
                 scaleMode = ScaleMode.ScaleToFit
             };
 
-            var updateButton = new Button(Refresh);
-            updateButton.name = "update-button";
-            updateButton.tooltip = "Fetch adapter updates!";
-            updateButton.Add(updateImage);
+            var refreshButton = new Button(Refresh);
+            refreshButton.name = "refresh-button";
+            refreshButton.tooltip = "Fetch adapter updates!";
+            refreshButton.Add(refreshImage);
             
             root.Add(logo);
             root.Add(upgradeButton);
-            root.Add(updateButton);
+            root.Add(refreshButton);
             
             var headers = new TemplateContainer("headers");
             headers.name = "flex-grid";
@@ -140,8 +176,8 @@ namespace Chartboost.Adapters
                 var iosVersions = PartnerSDKVersions[adapterId].ios;
 
                 var hasSelection = UserSelectedVersions.ContainsKey(adapterId);
-                var androidStartValue = hasSelection && UserSelectedVersions[adapterId] != null ? UserSelectedVersions[adapterId].android : Unselected;
-                var iosStartValue = hasSelection && UserSelectedVersions[adapterId] != null ? UserSelectedVersions[adapterId].ios : Unselected;
+                var androidStartValue = hasSelection && UserSelectedVersions[adapterId] != null ? UserSelectedVersions[adapterId].android : Constants.Unselected;
+                var iosStartValue = hasSelection && UserSelectedVersions[adapterId] != null ? UserSelectedVersions[adapterId].ios : Constants.Unselected;
 
                 var androidDropdown = CreateAdapterVersionDropdown(root, adapter, androidVersions, Platform.Android, androidStartValue);
                 var iosDropdown = CreateAdapterVersionDropdown(root, adapter, iosVersions, Platform.IOS, iosStartValue);
@@ -180,7 +216,7 @@ namespace Chartboost.Adapters
                     toolbar.text = selection;
                     
                     if (!UserSelectedVersions.ContainsKey(adapter.id))
-                        UserSelectedVersions[adapter.id] = new SelectedVersions(adapter.id);
+                        UserSelectedVersions[adapter.id] = new AdapterSelection(adapter.id);
                     
                     switch (platform)
                     {
@@ -196,9 +232,9 @@ namespace Chartboost.Adapters
                             throw new ArgumentOutOfRangeException(nameof(platform), platform, null);
                     }
 
-                    if (selection.Equals(Unselected) && UserSelectedVersions.ContainsKey(adapter.id))
+                    if (selection.Equals(Constants.Unselected) && UserSelectedVersions.ContainsKey(adapter.id))
                     {
-                        if (UserSelectedVersions[adapter.id].android == Unselected && UserSelectedVersions[adapter.id].ios == Unselected)
+                        if (UserSelectedVersions[adapter.id].android == Constants.Unselected && UserSelectedVersions[adapter.id].ios == Constants.Unselected)
                             UserSelectedVersions.Remove(adapter.id);
                     }
                     
@@ -210,13 +246,12 @@ namespace Chartboost.Adapters
             return toolbar;
         }
 
-        private static Button CreateSaveIcon()
+        private static Button CreateSaveButton()
         {
-            var saveIcon = AssetDatabase.LoadAssetAtPath<Texture>("Packages/com.chartboost.mediation/Editor/Adapters/Save.png");
             var saveIconImage = new Image
             {
                 name = "icon",
-                image = saveIcon,
+                image = Constants.SavePNG.LoadAsset<Texture>(),
                 scaleMode = ScaleMode.ScaleToFit
             };
 
