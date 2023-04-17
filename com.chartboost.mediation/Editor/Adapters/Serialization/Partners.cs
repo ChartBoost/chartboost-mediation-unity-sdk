@@ -5,7 +5,7 @@ namespace Chartboost.Editor.Adapters.Serialization
 {
     #nullable enable
     [Serializable]
-    public class Partners
+    public struct Partners
     {
         /// <summary>
         /// Timestamp of last update

@@ -4,7 +4,7 @@ namespace Chartboost.Editor.Adapters.Serialization
 {
     #nullable enable
     [Serializable]
-    public class NativeAdapter
+    public struct NativeAdapter
     {
         /// <summary>
         /// Chartboost mediation naming convention for Native Ad Adapter.

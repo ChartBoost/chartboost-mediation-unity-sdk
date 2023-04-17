@@ -50,7 +50,6 @@ namespace Chartboost.Editor.Adapters
             if (!Application.isBatchMode)
                 _saveButton.RemoveFromHierarchy();
             GenerateDependenciesFromSelections();
-            AssetDatabase.Refresh();
             UpdateSavedVersions();
         }
 
@@ -93,7 +92,9 @@ namespace Chartboost.Editor.Adapters
             if (UserSelectedVersions.Count <= 0)
             {
                 Constants.PathToAdaptersDirectory.DeleteDirectoryWithMeta();
-                Constants.PathToEditorInGeneratedFiles.DeleteDirectoryWithMeta();
+                
+                if (!Constants.PathToSelectionsFile.FileExist() && !Constants.PathToMainDependency.FileExist())
+                    Constants.PathToEditorInGeneratedFiles.DeleteDirectoryWithMeta();
             }
 
             foreach (var selection in UserSelectedVersions)
@@ -228,7 +229,6 @@ namespace Chartboost.Editor.Adapters
             Constants.PathToEditorInGeneratedFiles.DirectoryCreate();
             Constants.PathToMainDependency.FileCreate(defaultTemplateContents);
             AssetDatabase.Refresh();
-            SaveSelections();
         }
 
         private static void UpdateSavedVersions()

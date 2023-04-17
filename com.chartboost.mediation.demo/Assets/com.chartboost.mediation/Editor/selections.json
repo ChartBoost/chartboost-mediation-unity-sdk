@@ -2,14 +2,14 @@
   "mediationVersion": "4.1.0",
   "adapterSelections": [
     {
-      "id": "ironsource",
-      "android": "7.2.7.0",
-      "ios": "7.2.6.0"
-    },
-    {
       "id": "adcolony",
       "android": "4.8.0",
       "ios": "4.9.0"
+    },
+    {
+      "id": "applovin",
+      "android": "11.8.1",
+      "ios": "11.8.0"
     },
     {
       "id": "admob",
@@ -20,11 +20,6 @@
       "id": "aps",
       "android": "9.7.0",
       "ios": "4.6.0"
-    },
-    {
-      "id": "applovin",
-      "android": "11.8.1",
-      "ios": "11.8.0"
     },
     {
       "id": "chartboost",
@@ -55,6 +50,11 @@
       "id": "mintegral",
       "android": "16.3.91",
       "ios": "7.3.0"
+    },
+    {
+      "id": "ironsource",
+      "android": "7.2.7.0",
+      "ios": "7.2.6.0"
     },
     {
       "id": "pangle",

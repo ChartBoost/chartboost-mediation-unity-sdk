@@ -3,7 +3,7 @@ using System;
 namespace Chartboost.Editor.Adapters.Serialization
 {
     [Serializable]
-    public class Adapter
+    public struct Adapter
     {
         /// <summary>
         /// The string that defines the adapter name.
