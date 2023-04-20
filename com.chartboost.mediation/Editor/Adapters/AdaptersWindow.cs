@@ -15,9 +15,8 @@ namespace Chartboost.Editor.Adapters
         {
             AdaptersWindow wnd = GetWindow<AdaptersWindow>();
             wnd.titleContent = new GUIContent("Chartboost Mediation Adapters");
-            var windowSize =new Vector2(410, 520);
+            var windowSize =new Vector2(420, 520);
             wnd.minSize = windowSize;
-            wnd.maxSize = windowSize;
         }
 
         public static Dictionary<string, PartnerVersions> PartnerSDKVersions { get; set; } = new Dictionary<string, PartnerVersions>();
@@ -47,7 +46,7 @@ namespace Chartboost.Editor.Adapters
             var root = rootVisualElement;
             root.styleSheets.Add(Constants.StyleSheet.LoadAsset<StyleSheet>());
             root.name = "body";
-
+            
             CreateTableHeaders(root);
             CreateAdapterTable(root);
             CheckMediationVersion();
@@ -130,6 +129,18 @@ namespace Chartboost.Editor.Adapters
             root.Add(logo);
             root.Add(upgradeButton);
             root.Add(refreshButton);
+        }
+
+        private static void CreateAdapterTable(VisualElement root)
+        {
+            var adapters = AdapterDataSource.LoadedAdapters.adapters;
+
+            if (adapters == null)
+                return;
+            
+            var scrollView = new ScrollView();
+            scrollView.contentContainer.style.flexDirection = FlexDirection.Column;
+            scrollView.contentContainer.style.flexWrap = Wrap.NoWrap;
             
             var headers = new TemplateContainer("headers");
             headers.name = "flex-grid";
@@ -149,15 +160,7 @@ namespace Chartboost.Editor.Adapters
             iosVersionLabel.tooltip = "iOS Version of Ad Adapters.";
             headers.Add(iosVersionLabel);
         
-            root.Add(headers);
-        }
-
-        private static void CreateAdapterTable(VisualElement root)
-        {
-            var adapters = AdapterDataSource.LoadedAdapters.adapters;
-
-            if (adapters == null)
-                return;
+            scrollView.Add(headers);
             
             foreach (var partnerAdapter in adapters)
                 PartnerSDKVersions[partnerAdapter.id] = new PartnerVersions(partnerAdapter.android.versions, partnerAdapter.ios.versions);
@@ -191,8 +194,10 @@ namespace Chartboost.Editor.Adapters
                 container.Add(androidDropdown);
                 container.Add(iosDropdown);
  
-                root.Add(container);
+                scrollView.Add(container);
             }
+            
+            root.Add(scrollView);
         }
         
         private static ToolbarMenu CreateAdapterVersionDropdown(VisualElement root, Adapter adapter, IEnumerable<string> versions, Platform platform, string startValue)
