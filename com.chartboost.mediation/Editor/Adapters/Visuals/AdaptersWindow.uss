@@ -84,6 +84,7 @@
     min-width: 100px;
     border-width: 1px;
     border-color: lightgray;
+    white-space: normal;
 }
 
 #adapter-col {
@@ -92,6 +93,7 @@
     flex: 1;
     border-width: 1px;
     border-color: lightgray;
+    white-space: normal;
 }
 
 #header-network {
@@ -102,6 +104,7 @@
     border-color: lightgray;
     -unity-font-style: bold;
     -unity-text-align: middle-center;
+    white-space: normal;
 }
 
 #header-version {
@@ -112,6 +115,7 @@
     border-color: lightgray;
     -unity-font-style: bold;
     -unity-text-align: middle-center;
+    white-space: normal;
 }
 
 Label {
