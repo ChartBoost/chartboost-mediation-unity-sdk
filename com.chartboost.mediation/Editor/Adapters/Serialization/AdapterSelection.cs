@@ -13,14 +13,13 @@ namespace Chartboost.Editor.Adapters.Serialization
         public string android = Constants.Unselected;
         public string ios = Constants.Unselected;
             
+        #nullable enable
         [NonSerialized]
-        public ToolbarMenu androidDropdown;
+        public ToolbarMenu? androidDropdown;
         [NonSerialized]
-        public ToolbarMenu iosDropdown;
+        public ToolbarMenu? iosDropdown;
+        #nullable disable
 
-        public AdapterSelection(string id)
-        {
-            this.id = id;
-        }
+        public AdapterSelection(string id) => this.id = id;
     }
 }
