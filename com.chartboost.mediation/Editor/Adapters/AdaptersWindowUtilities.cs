@@ -57,6 +57,9 @@ namespace Chartboost.Editor.Adapters
                 UserSelectedVersions.Add(id, selection);
             }
             
+            var package = Utilities.FindPackage(Constants.ChartboostMediationPackageName);
+            MediationSelection = package.version;
+            GenerateChartboostMediationDependency();
             GenerateDependenciesFromSelections();
         }
 
