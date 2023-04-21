@@ -127,7 +127,10 @@ namespace Chartboost.Editor.Adapters
         {
             if (startValue.Equals(Constants.Unselected))
                 return;
-
+            
+            if (versions.Count <= 0)
+                return;
+            
             var latest = versions[1];
 
             if (latest == startValue)
