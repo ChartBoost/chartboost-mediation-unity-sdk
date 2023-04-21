@@ -10,11 +10,11 @@ namespace Chartboost.Editor.Adapters
 {
     public partial class AdaptersWindow
     {
-        private static void Refresh()
+        public static void Refresh()
         {
             Instance.rootVisualElement.Clear();
             AdapterDataSource.Update();
-            Instance.Initialize();
+            Initialize();
             if (!Application.isBatchMode)
                 EditorUtility.DisplayDialog("Chartboost Mediation", "Adapter update completed.", "ok");
         }
@@ -36,69 +36,124 @@ namespace Chartboost.Editor.Adapters
             return false;
         }
 
-        public static void UpgradeSelectionsToLatest()
+        public static void AddNewNetworks()
+        {
+            foreach (var network in PartnerSDKVersions)
+            {
+                var id = network.Key;
+                if (UserSelectedVersions.ContainsKey(id)) 
+                    continue;
+                
+                const int latestVersion = 1;
+                const int unselected = 0;
+                
+                var selection = new AdapterSelection(id);
+                var androidVersions = network.Value.android;
+                if (androidVersions.Length > unselected)
+                    selection.android = androidVersions[latestVersion];
+                var iosVersions = network.Value.ios;
+                if (iosVersions.Length > unselected)
+                    selection.ios = iosVersions[latestVersion];
+                UserSelectedVersions.Add(id, selection);
+            }
+            
+            GenerateDependenciesFromSelections();
+        }
+
+        public static List<AdapterChange> UpgradeAndroidSelectionsToLatest() => UpgradePlatformToLatest(Platform.Android);
+
+        public static List<AdapterChange> UpgradeIOSSelectionsToLatest() => UpgradePlatformToLatest(Platform.IOS);
+
+        public static List<AdapterChange> UpgradeSelectionsToLatest() => UpgradePlatformToLatest(Platform.Android | Platform.IOS);
+
+        private static List<AdapterChange> UpgradePlatformToLatest(Platform platform)
+        {
+            var selectionChanges = new List<AdapterChange>();
+            if (!WarningDialog())
+                return selectionChanges;
+
+            var currentSelections = UserSelectedVersions.ToDictionary(kv => kv.Key, kv => kv.Value);
+            
+            foreach (var selection in currentSelections)
+            {
+                var adapterId = selection.Key;
+                
+                var updateAndroid = new Action(() => UpdateSelection(PartnerSDKVersions[adapterId].android, selectionChanges,  adapterId, selection.Value.android, Platform.Android));;
+                var updateIOS = new Action(() => UpdateSelection(PartnerSDKVersions[adapterId].ios, selectionChanges, adapterId, selection.Value.ios, Platform.IOS));
+
+                switch (platform)
+                {
+                    case Platform.Android | Platform.IOS:
+                        updateAndroid();
+                        updateIOS();
+                        break;
+                    case Platform.Android:
+                        updateAndroid();
+                        break;
+                    default:
+                        updateIOS();
+                        break;
+                }
+            }
+
+            NoChangesDialog();
+            return selectionChanges;
+        }
+
+        private static bool WarningDialog()
         {
             var cancel = false;
-            
             if (!Application.isBatchMode) { 
                 cancel = EditorUtility.DisplayDialog(
                     "Chartboost Mediation", 
                     "Doing this will update all of your selected adapters to their latest version, do you wish to continue?", "Yes", "No");
             }
-            
-            if (!cancel)
-                return;
 
-            var currentSelections = UserSelectedVersions.ToDictionary(k => k.Key, v =>
-            {
-                var newSelection = new AdapterSelection(v.Key.ToString())
-                {
-                    android = v.Value.android,
-                    ios = v.Value.ios
-                };
-                return newSelection;
-            });
-            
-            foreach (var selection in currentSelections)
-            {
-                var adapterId = selection.Key;
-                UpdateSelection(PartnerSDKVersions[adapterId].android, adapterId, selection.Value.android, Platform.Android);
-                UpdateSelection(PartnerSDKVersions[adapterId].ios,  adapterId, selection.Value.ios, Platform.IOS);
-            }
-            
-            var changes = CheckForChanges();
+            return cancel;
+        }
 
-            if (!changes && !Application.isBatchMode)
+        private static void NoChangesDialog()
+        {
+            if (!CheckForChanges() && !Application.isBatchMode)
             {
                 EditorUtility.DisplayDialog(
                     "Chartboost Mediation", 
                     "No adapters updated, everything is already up to date!\n\n Do you think this is incorrect? Try using the refresh button.",
                     "Ok");
             }
+        }
+
+        private static void UpdateSelection(IReadOnlyList<string> versions, List<AdapterChange> selectionChanges,  string id, string startValue, Platform platform)
+        {
+            if (startValue.Equals(Constants.Unselected))
+                return;
             
-            void UpdateSelection(IReadOnlyList<string> versions, string id, string startValue, Platform platform)
-            {
-                if (startValue.Equals(Constants.Unselected))
-                    return;
+            if (versions.Count <= 0)
+                return;
+            
+            var latest = versions[1];
 
-                var latest = versions[1];
-
-                if (latest == startValue)
-                    return;
+            if (latest == startValue)
+                return;
                 
-                switch (platform)
-                {
-                    case Platform.Android:
-                        UserSelectedVersions[id].android = latest;
-                        UserSelectedVersions[id].androidDropdown.text = latest;
-                        break;
-                    case Platform.IOS:
-                        UserSelectedVersions[id].ios = latest;
-                        UserSelectedVersions[id].iosDropdown.text = latest;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(platform), platform, null);
-                }
+            switch (platform)
+            {
+                case Platform.Android:
+                    selectionChanges.Add(new AdapterChange(id, Platform.Android, startValue, latest));
+                    UserSelectedVersions[id].android = latest;
+                    var androidDropdown = UserSelectedVersions[id].androidDropdown;
+                    if (androidDropdown != null)
+                        androidDropdown.text = latest;
+                    break;
+                case Platform.IOS:
+                    selectionChanges.Add(new AdapterChange(id, Platform.IOS, startValue, latest));
+                    UserSelectedVersions[id].ios = latest;
+                    var iosDropdown = UserSelectedVersions[id].iosDropdown;
+                    if (iosDropdown != null)
+                        iosDropdown.text = latest;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(platform), platform, null);
             }
         }
     }
