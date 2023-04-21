@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Chartboost.Editor;
 using UnityEditor;
 using UnityEditor.PackageManager.UI;
 using UnityEngine;
@@ -12,6 +11,7 @@ using ImportOptions = UnityEditor.PackageManager.UI.Sample.ImportOptions;
 
 namespace Chartboost.Editor
 {
+    [Obsolete("ChartboostMediationIntegrationChecker has been deprecated and will be removed in future versions, please utilize the new Adapter Window.")]
     public class ChartboostMediationIntegrationChecker
     {
         private const string UnityAds = "UnityAds";
