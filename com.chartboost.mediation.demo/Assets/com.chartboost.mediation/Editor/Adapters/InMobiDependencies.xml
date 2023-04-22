@@ -10,7 +10,7 @@
     </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->
-        <iosPod name="ChartboostMediationAdapterInMobi" version="~> 4.10.1.3"/>
+        <iosPod name="ChartboostMediationAdapterInMobi" version="~> 4.10.5.0"/>
 
         <!-- Partner iOS SDK-->
         <!-- InMobi species different SDKs based on version. Ignoring. -->
