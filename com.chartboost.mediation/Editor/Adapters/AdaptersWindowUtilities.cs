@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using Chartboost.Editor.Adapters.Comparers;
 using Chartboost.Editor.Adapters.Serialization;
+using Newtonsoft.Json;
 
 namespace Chartboost.Editor.Adapters
 {
@@ -133,6 +134,8 @@ namespace Chartboost.Editor.Adapters
             
             if (versions.Count <= 0)
                 return;
+            
+            Debug.Log($"[SCM] Testing: {JsonConvert.SerializeObject(versions)}");
             
             var latest = versions[1];
 
