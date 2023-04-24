@@ -12,7 +12,8 @@ namespace Chartboost.Editor.Adapters
     {
         private static void Refresh(bool ignore = true)
         {
-            Instance.rootVisualElement.Clear();
+            if (!Application.isBatchMode)
+                Instance.rootVisualElement.Clear();
             AdapterDataSource.Update();
             Initialize();
             if (!Application.isBatchMode|| !ignore)
@@ -73,15 +74,7 @@ namespace Chartboost.Editor.Adapters
             if (!WarningDialog())
                 return selectionChanges;
 
-            var currentSelections = UserSelectedVersions.ToDictionary(kv => kv.Key, kv =>
-            {
-                var selection = new AdapterSelection(kv.Key)
-                {
-                    android = kv.Value.android,
-                    ios = kv.Value.ios
-                };
-                return selection;
-            });
+            var currentSelections = UserSelectedVersions.ToDictionary(kv => kv.Key, kv => kv.Value);
             
             foreach (var selection in currentSelections)
             {
