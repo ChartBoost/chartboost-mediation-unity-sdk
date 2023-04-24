@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using Chartboost.Editor.Adapters.Comparers;
 using Chartboost.Editor.Adapters.Serialization;
+using Newtonsoft.Json;
 
 namespace Chartboost.Editor.Adapters
 {
@@ -133,6 +134,8 @@ namespace Chartboost.Editor.Adapters
             if (versions.Count <= 0)
                 return;
             var latest = versions[1];
+            
+            Debug.Log($"[Adapters] Current: {startValue} {JsonConvert.SerializeObject(versions)}");
 
             if (latest == startValue)
                 return;
@@ -142,7 +145,7 @@ namespace Chartboost.Editor.Adapters
                 case Platform.Android:
                     selectionChanges.Add(new AdapterChange(id, Platform.Android, startValue, latest));
                     UserSelectedVersions[id].android = latest;
-                    Debug.Log($"[Adapters] Setting {id} to {UserSelectedVersions[id].android}");
+                    Console.WriteLine($"[Adapters] Setting {id} to {UserSelectedVersions[id].android}");
                     var androidDropdown = UserSelectedVersions[id].androidDropdown;
                     if (androidDropdown != null)
                         androidDropdown.text = latest;
@@ -150,7 +153,7 @@ namespace Chartboost.Editor.Adapters
                 case Platform.IOS:
                     selectionChanges.Add(new AdapterChange(id, Platform.IOS, startValue, latest));
                     UserSelectedVersions[id].ios = latest;
-                    Debug.Log($"[Adapters] Setting {id} to {UserSelectedVersions[id].ios}");
+                    Console.WriteLine($"[Adapters] Setting {id} to {UserSelectedVersions[id].ios}");
                     var iosDropdown = UserSelectedVersions[id].iosDropdown;
                     if (iosDropdown != null)
                         iosDropdown.text = latest;
