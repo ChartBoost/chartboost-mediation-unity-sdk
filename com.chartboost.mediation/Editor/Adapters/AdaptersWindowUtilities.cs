@@ -72,7 +72,7 @@ namespace Chartboost.Editor.Adapters
         private static List<AdapterChange> UpgradePlatformToLatest(Platform platform)
         {
             var selectionChanges = new List<AdapterChange>();
-            if (WarningDialog())
+            if (!WarningDialog())
                 return selectionChanges;
 
             var currentSelections = UserSelectedVersions.ToDictionary(kv => kv.Key, kv => kv.Value);
@@ -105,6 +105,9 @@ namespace Chartboost.Editor.Adapters
 
         private static bool WarningDialog()
         {
+            if (Application.isBatchMode)
+                return true;
+            
             var cancel = false;
             if (!Application.isBatchMode) { 
                 cancel = EditorUtility.DisplayDialog(
