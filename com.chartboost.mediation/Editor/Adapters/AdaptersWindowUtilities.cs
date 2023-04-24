@@ -142,6 +142,7 @@ namespace Chartboost.Editor.Adapters
                 case Platform.Android:
                     selectionChanges.Add(new AdapterChange(id, Platform.Android, startValue, latest));
                     UserSelectedVersions[id].android = latest;
+                    Debug.Log($"[Adapters] Setting {id} to {UserSelectedVersions[id].android}");
                     var androidDropdown = UserSelectedVersions[id].androidDropdown;
                     if (androidDropdown != null)
                         androidDropdown.text = latest;
@@ -149,6 +150,7 @@ namespace Chartboost.Editor.Adapters
                 case Platform.IOS:
                     selectionChanges.Add(new AdapterChange(id, Platform.IOS, startValue, latest));
                     UserSelectedVersions[id].ios = latest;
+                    Debug.Log($"[Adapters] Setting {id} to {UserSelectedVersions[id].ios}");
                     var iosDropdown = UserSelectedVersions[id].iosDropdown;
                     if (iosDropdown != null)
                         iosDropdown.text = latest;
