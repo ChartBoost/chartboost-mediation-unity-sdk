@@ -72,7 +72,7 @@ namespace Chartboost.Editor.Adapters
         private static List<AdapterChange> UpgradePlatformToLatest(Platform platform)
         {
             var selectionChanges = new List<AdapterChange>();
-            if (!WarningDialog())
+            if (WarningDialog())
                 return selectionChanges;
 
             var currentSelections = UserSelectedVersions.ToDictionary(kv => kv.Key, kv => kv.Value);
@@ -111,7 +111,6 @@ namespace Chartboost.Editor.Adapters
                     "Chartboost Mediation", 
                     "Doing this will update all of your selected adapters to their latest version, do you wish to continue?", "Yes", "No");
             }
-
             return cancel;
         }
 
