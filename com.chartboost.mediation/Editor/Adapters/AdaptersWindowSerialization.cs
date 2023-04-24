@@ -51,7 +51,7 @@ namespace Chartboost.Editor.Adapters
             else
                 Constants.PathToSelectionsFile.FileCreate(selectionsJson);
             
-            if (!Application.isBatchMode)
+            if (!Application.isBatchMode && _saveButton != null)
                 _saveButton.RemoveFromHierarchy();
             GenerateDependenciesFromSelections();
             UpdateSavedVersions();
