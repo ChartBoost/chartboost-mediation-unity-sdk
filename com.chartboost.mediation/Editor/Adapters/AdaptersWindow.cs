@@ -41,7 +41,7 @@ namespace Chartboost.Editor.Adapters
             Initialize();
         }
 
-        public static void Initialize()
+        private static void Initialize()
         {
             PartnerSDKVersions.Clear();
             UserSelectedVersions.Clear();
@@ -128,7 +128,7 @@ namespace Chartboost.Editor.Adapters
                 scaleMode = ScaleMode.ScaleToFit
             };
 
-            var refreshButton = new Button(Refresh);
+            var refreshButton = new Button(() => Refresh(false));
             refreshButton.name = "refresh-button";
             refreshButton.tooltip = "Fetch adapter updates!";
             refreshButton.Add(refreshImage);

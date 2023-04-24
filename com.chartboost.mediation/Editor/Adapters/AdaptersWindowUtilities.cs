@@ -10,12 +10,12 @@ namespace Chartboost.Editor.Adapters
 {
     public partial class AdaptersWindow
     {
-        public static void Refresh()
+        private static void Refresh(bool ignore = true)
         {
             Instance.rootVisualElement.Clear();
             AdapterDataSource.Update();
             Initialize();
-            if (!Application.isBatchMode)
+            if (!Application.isBatchMode|| !ignore)
                 EditorUtility.DisplayDialog("Chartboost Mediation", "Adapter update completed.", "ok");
         }
         
