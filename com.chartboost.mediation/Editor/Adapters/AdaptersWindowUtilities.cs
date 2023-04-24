@@ -5,7 +5,6 @@ using UnityEditor;
 using UnityEngine;
 using Chartboost.Editor.Adapters.Comparers;
 using Chartboost.Editor.Adapters.Serialization;
-using Newtonsoft.Json;
 
 namespace Chartboost.Editor.Adapters
 {
@@ -22,19 +21,17 @@ namespace Chartboost.Editor.Adapters
         
         public static bool CheckForChanges()
         {
+            var same = new DictionaryComparer<string, AdapterSelection>(new SelectedVersionsComparer()).Equals(UserSelectedVersions, SavedVersions);
+
+            if (Application.isBatchMode)
+                return same;
+
             var root = Instance.rootVisualElement;
-            var same =
-                new DictionaryComparer<string, AdapterSelection>(new SelectedVersionsComparer()).Equals(UserSelectedVersions, SavedVersions);
-            switch (same)
-            {
-                case false when !root.Contains(_saveButton):
-                    root.Add(_saveButton);
-                    return true;
-                case true:
-                    _saveButton.RemoveFromHierarchy();
-                    break;
-            }
-            return false;
+            if (!same && _saveButton != null && !root.Contains(_saveButton))
+                root.Add(_saveButton);
+            else
+                _saveButton?.RemoveFromHierarchy();
+            return same;
         }
 
         public static void AddNewNetworks()
@@ -76,7 +73,15 @@ namespace Chartboost.Editor.Adapters
             if (!WarningDialog())
                 return selectionChanges;
 
-            var currentSelections = UserSelectedVersions.ToDictionary(kv => kv.Key, kv => kv.Value);
+            var currentSelections = UserSelectedVersions.ToDictionary(kv => kv.Key, kv =>
+            {
+                var selection = new AdapterSelection(kv.Key)
+                {
+                    android = kv.Value.android,
+                    ios = kv.Value.ios
+                };
+                return selection;
+            });
             
             foreach (var selection in currentSelections)
             {
@@ -118,7 +123,7 @@ namespace Chartboost.Editor.Adapters
 
         private static void NoChangesDialog()
         {
-            if (!CheckForChanges() && !Application.isBatchMode)
+            if (CheckForChanges() && !Application.isBatchMode)
             {
                 EditorUtility.DisplayDialog(
                     "Chartboost Mediation", 
@@ -134,12 +139,7 @@ namespace Chartboost.Editor.Adapters
             
             if (versions.Count <= 0)
                 return;
-            
-            
             var latest = versions[1];
-            
-            Debug.Log($"[SCM] Latest: {latest}, Currently: {startValue} same? {(latest == startValue)} Testing: {JsonConvert.SerializeObject(versions)}");
-
 
             if (latest == startValue)
                 return;
