@@ -135,9 +135,11 @@ namespace Chartboost.Editor.Adapters
             if (versions.Count <= 0)
                 return;
             
-            Debug.Log($"[SCM] Testing: {JsonConvert.SerializeObject(versions)}");
             
             var latest = versions[1];
+            
+            Debug.Log($"[SCM] Latest: {latest}, Currently: {startValue} same? {(latest == startValue)} Testing: {JsonConvert.SerializeObject(versions)}");
+
 
             if (latest == startValue)
                 return;

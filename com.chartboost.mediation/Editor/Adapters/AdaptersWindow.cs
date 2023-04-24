@@ -168,9 +168,6 @@ namespace Chartboost.Editor.Adapters
             headers.Add(iosVersionLabel);
         
             scrollView.Add(headers);
-            
-            foreach (var partnerAdapter in adapters)
-                PartnerSDKVersions[partnerAdapter.id] = new PartnerVersions(partnerAdapter.android.versions, partnerAdapter.ios.versions);
 
             foreach (var adapter in adapters)
             {
