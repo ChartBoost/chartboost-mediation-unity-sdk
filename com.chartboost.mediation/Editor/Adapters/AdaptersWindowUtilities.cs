@@ -5,35 +5,35 @@ using UnityEditor;
 using UnityEngine;
 using Chartboost.Editor.Adapters.Comparers;
 using Chartboost.Editor.Adapters.Serialization;
+using Newtonsoft.Json;
 
 namespace Chartboost.Editor.Adapters
 {
     public partial class AdaptersWindow
     {
-        public static void Refresh()
+        private static void Refresh(bool ignore = true)
         {
-            Instance.rootVisualElement.Clear();
+            if (!Application.isBatchMode)
+                Instance.rootVisualElement.Clear();
             AdapterDataSource.Update();
             Initialize();
-            if (!Application.isBatchMode)
+            if (!Application.isBatchMode|| !ignore)
                 EditorUtility.DisplayDialog("Chartboost Mediation", "Adapter update completed.", "ok");
         }
         
         public static bool CheckForChanges()
         {
+            var same = new DictionaryComparer<string, AdapterSelection>(new SelectedVersionsComparer()).Equals(UserSelectedVersions, SavedVersions);
+
+            if (Application.isBatchMode)
+                return same;
+
             var root = Instance.rootVisualElement;
-            var same =
-                new DictionaryComparer<string, AdapterSelection>(new SelectedVersionsComparer()).Equals(UserSelectedVersions, SavedVersions);
-            switch (same)
-            {
-                case false when !root.Contains(_saveButton):
-                    root.Add(_saveButton);
-                    return true;
-                case true:
-                    _saveButton.RemoveFromHierarchy();
-                    break;
-            }
-            return false;
+            if (!same && _saveButton != null && !root.Contains(_saveButton))
+                root.Add(_saveButton);
+            else
+                _saveButton?.RemoveFromHierarchy();
+            return same;
         }
 
         public static void AddNewNetworks()
@@ -105,19 +105,21 @@ namespace Chartboost.Editor.Adapters
 
         private static bool WarningDialog()
         {
+            if (Application.isBatchMode)
+                return true;
+            
             var cancel = false;
             if (!Application.isBatchMode) { 
                 cancel = EditorUtility.DisplayDialog(
                     "Chartboost Mediation", 
                     "Doing this will update all of your selected adapters to their latest version, do you wish to continue?", "Yes", "No");
             }
-
             return cancel;
         }
 
         private static void NoChangesDialog()
         {
-            if (!CheckForChanges() && !Application.isBatchMode)
+            if (CheckForChanges() && !Application.isBatchMode)
             {
                 EditorUtility.DisplayDialog(
                     "Chartboost Mediation", 
@@ -133,9 +135,8 @@ namespace Chartboost.Editor.Adapters
             
             if (versions.Count <= 0)
                 return;
-            
             var latest = versions[1];
-
+            
             if (latest == startValue)
                 return;
                 

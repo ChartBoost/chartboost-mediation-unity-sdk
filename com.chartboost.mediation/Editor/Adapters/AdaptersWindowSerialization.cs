@@ -12,6 +12,10 @@ namespace Chartboost.Editor.Adapters
     {
         public static void LoadSelections()
         {
+            if (AdapterDataSource.LoadedAdapters.adapters != null)
+                foreach (var partnerAdapter in AdapterDataSource.LoadedAdapters.adapters)
+                    PartnerSDKVersions[partnerAdapter.id] = new PartnerVersions(partnerAdapter.android.versions, partnerAdapter.ios.versions);
+            
             if (!Constants.PathToSelectionsFile.FileExist())
                 return;
 
@@ -47,7 +51,7 @@ namespace Chartboost.Editor.Adapters
             else
                 Constants.PathToSelectionsFile.FileCreate(selectionsJson);
             
-            if (!Application.isBatchMode)
+            if (!Application.isBatchMode && _saveButton != null)
                 _saveButton.RemoveFromHierarchy();
             GenerateDependenciesFromSelections();
             UpdateSavedVersions();
