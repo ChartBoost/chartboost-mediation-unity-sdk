@@ -5,7 +5,6 @@ using UnityEditor;
 using UnityEngine;
 using Chartboost.Editor.Adapters.Comparers;
 using Chartboost.Editor.Adapters.Serialization;
-using Newtonsoft.Json;
 
 namespace Chartboost.Editor.Adapters
 {
@@ -54,7 +53,8 @@ namespace Chartboost.Editor.Adapters
                 const int latestVersion = 1;
                 const int unselected = 0;
 
-                var selection = new AdapterSelection(id);
+                var selection = !UserSelectedVersions.ContainsKey(id) ? new AdapterSelection(id) : UserSelectedVersions[id];
+                 
                 var addAndroid = new Action(() => {
                     var androidVersions = network.Value.android;
                     if (androidVersions.Length > unselected)
@@ -82,7 +82,7 @@ namespace Chartboost.Editor.Adapters
                 }
 
                 newNetworks.Add(selection);
-                UserSelectedVersions.Add(id, selection);
+                UserSelectedVersions[id] = selection;
             }
             
             var package = Utilities.FindPackage(Constants.ChartboostMediationPackageName);
