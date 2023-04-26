@@ -116,7 +116,7 @@ namespace Chartboost.Editor.Adapters
                 scaleMode = ScaleMode.ScaleToFit
             };
 
-            var upgradeButton = new Button(() => UpgradeSelectionsToLatest());
+            var upgradeButton = new Button(() => UpgradePlatformToLatest(Platform.Android | Platform.IOS));
             upgradeButton.name = "upgrade-button";
             upgradeButton.tooltip = "Upgrade all adapter selections to their latest version!";
             upgradeButton.Add(upgradeImage);

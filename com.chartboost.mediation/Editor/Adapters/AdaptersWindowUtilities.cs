@@ -21,7 +21,7 @@ namespace Chartboost.Editor.Adapters
                 EditorUtility.DisplayDialog("Chartboost Mediation", "Adapter update completed.", "ok");
         }
         
-        public static bool CheckForChanges()
+        private static bool CheckForChanges()
         {
             var same = new DictionaryComparer<string, AdapterSelection>(new SelectedVersionsComparer()).Equals(UserSelectedVersions, SavedVersions);
 
@@ -40,11 +40,8 @@ namespace Chartboost.Editor.Adapters
             }
             return same;
         }
-
-        public static List<AdapterSelection> AddNewAndroidNetworks(Func<string, Dictionary<string, AdapterSelection>, bool> condition) => AddNewNetworks(Platform.Android, condition);
-        public static List<AdapterSelection> AddNewIOSNetworks(Func<string, Dictionary<string, AdapterSelection>, bool> condition) => AddNewNetworks(Platform.IOS, condition);
-        public static List<AdapterSelection> AddAllNewNetworks(Func<string, Dictionary<string, AdapterSelection>, bool>  condition) => AddNewNetworks(Platform.Android | Platform.IOS, condition);
-        private static List<AdapterSelection> AddNewNetworks(Platform platform, Func<string, Dictionary<string, AdapterSelection>, bool> condition)
+        
+        public static List<AdapterSelection> AddNewNetworks(Platform platform, Func<string, Dictionary<string, AdapterSelection>, bool> condition)
         {
             var newNetworks = new List<AdapterSelection>();
 
@@ -94,11 +91,8 @@ namespace Chartboost.Editor.Adapters
             GenerateDependenciesFromSelections();
             return newNetworks;
         }
-
-        public static List<AdapterChange> UpgradeAndroidSelectionsToLatest() => UpgradePlatformToLatest(Platform.Android);
-        public static List<AdapterChange> UpgradeIOSSelectionsToLatest() => UpgradePlatformToLatest(Platform.IOS);
-        public static List<AdapterChange> UpgradeSelectionsToLatest() => UpgradePlatformToLatest(Platform.Android | Platform.IOS);
-        private static List<AdapterChange> UpgradePlatformToLatest(Platform platform)
+        
+        public static List<AdapterChange> UpgradePlatformToLatest(Platform platform)
         {
             var selectionChanges = new List<AdapterChange>();
             if (!WarningDialog())
