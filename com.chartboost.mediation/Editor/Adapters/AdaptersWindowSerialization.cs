@@ -57,7 +57,7 @@ namespace Chartboost.Editor.Adapters
             UpdateSavedVersions();
         }
 
-        public static void GenerateDependenciesFromSelections()
+        private static void GenerateDependenciesFromSelections()
         {
             if (!Constants.PathToAdapterTemplate.FileExist())
             {
@@ -213,7 +213,7 @@ namespace Chartboost.Editor.Adapters
             AssetDatabase.Refresh();
         }
 
-        public static void GenerateChartboostMediationDependency()
+        private static void GenerateChartboostMediationDependency()
         {
             if (!Constants.PathToMainTemplate.FileExist())
             {
