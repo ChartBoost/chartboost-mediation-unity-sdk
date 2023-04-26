@@ -36,8 +36,10 @@ namespace Chartboost.Editor.Adapters
             return same;
         }
 
-        public static void AddNewNetworks()
+        public static List<AdapterSelection> AddNewNetworks()
         {
+            var newNetworks = new List<AdapterSelection>();
+
             foreach (var network in PartnerSDKVersions)
             {
                 var id = network.Key;
@@ -54,6 +56,7 @@ namespace Chartboost.Editor.Adapters
                 var iosVersions = network.Value.ios;
                 if (iosVersions.Length > unselected)
                     selection.ios = iosVersions[latestVersion];
+                newNetworks.Add(selection);
                 UserSelectedVersions.Add(id, selection);
             }
             
@@ -61,6 +64,7 @@ namespace Chartboost.Editor.Adapters
             MediationSelection = package.version;
             GenerateChartboostMediationDependency();
             GenerateDependenciesFromSelections();
+            return newNetworks;
         }
 
         public static List<AdapterChange> UpgradeAndroidSelectionsToLatest() => UpgradePlatformToLatest(Platform.Android);
