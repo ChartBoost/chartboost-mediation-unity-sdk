@@ -29,14 +29,22 @@ namespace Chartboost.Editor.Adapters
                 return same;
 
             var root = Instance.rootVisualElement;
-            if (!same && _saveButton != null && !root.Contains(_saveButton))
-                root.Add(_saveButton);
-            else
-                _saveButton?.RemoveFromHierarchy();
+            switch (same)
+            {
+                case false when _saveButton != null && !root.Contains(_saveButton):
+                    root.Add(_saveButton);
+                    break;
+                case true:
+                    _saveButton?.RemoveFromHierarchy();
+                    break;
+            }
             return same;
         }
 
-        public static List<AdapterSelection> AddNewNetworks()
+        public static List<AdapterSelection> AddNewAndroidNetworks() => AddNewNetworks(Platform.Android);
+        public static List<AdapterSelection> AddNewIOSNetworks() => AddNewNetworks(Platform.IOS);
+        public static List<AdapterSelection> AddAllNewNetworks() => AddNewNetworks(Platform.Android | Platform.IOS);
+        private static List<AdapterSelection> AddNewNetworks(Platform platform)
         {
             var newNetworks = new List<AdapterSelection>();
 
@@ -50,12 +58,33 @@ namespace Chartboost.Editor.Adapters
                 const int unselected = 0;
                 
                 var selection = new AdapterSelection(id);
-                var androidVersions = network.Value.android;
-                if (androidVersions.Length > unselected)
-                    selection.android = androidVersions[latestVersion];
-                var iosVersions = network.Value.ios;
-                if (iosVersions.Length > unselected)
-                    selection.ios = iosVersions[latestVersion];
+
+                var addAndroid = new Action(() => {
+                    var androidVersions = network.Value.android;
+                    if (androidVersions.Length > unselected)
+                        selection.android = androidVersions[latestVersion];
+                });
+
+                var addIOS = new Action(() => {
+                    var iosVersions = network.Value.ios;
+                    if (iosVersions.Length > unselected)
+                        selection.ios = iosVersions[latestVersion];
+                });
+
+                switch (platform)
+                {
+                    case Platform.Android | Platform.IOS:
+                        addAndroid();
+                        addIOS();
+                        break;
+                    case Platform.Android:
+                        addAndroid();
+                        break;
+                    default:
+                        addIOS();
+                        break;
+                }
+
                 newNetworks.Add(selection);
                 UserSelectedVersions.Add(id, selection);
             }
@@ -68,11 +97,8 @@ namespace Chartboost.Editor.Adapters
         }
 
         public static List<AdapterChange> UpgradeAndroidSelectionsToLatest() => UpgradePlatformToLatest(Platform.Android);
-
         public static List<AdapterChange> UpgradeIOSSelectionsToLatest() => UpgradePlatformToLatest(Platform.IOS);
-
         public static List<AdapterChange> UpgradeSelectionsToLatest() => UpgradePlatformToLatest(Platform.Android | Platform.IOS);
-
         private static List<AdapterChange> UpgradePlatformToLatest(Platform platform)
         {
             var selectionChanges = new List<AdapterChange>();
