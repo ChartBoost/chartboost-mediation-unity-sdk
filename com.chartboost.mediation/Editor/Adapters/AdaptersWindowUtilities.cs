@@ -41,24 +41,23 @@ namespace Chartboost.Editor.Adapters
             return same;
         }
 
-        public static List<AdapterSelection> AddNewAndroidNetworks() => AddNewNetworks(Platform.Android);
-        public static List<AdapterSelection> AddNewIOSNetworks() => AddNewNetworks(Platform.IOS);
-        public static List<AdapterSelection> AddAllNewNetworks() => AddNewNetworks(Platform.Android | Platform.IOS);
-        private static List<AdapterSelection> AddNewNetworks(Platform platform)
+        public static List<AdapterSelection> AddNewAndroidNetworks(Func<string, Dictionary<string, AdapterSelection>, bool> condition) => AddNewNetworks(Platform.Android, condition);
+        public static List<AdapterSelection> AddNewIOSNetworks(Func<string, Dictionary<string, AdapterSelection>, bool> condition) => AddNewNetworks(Platform.IOS, condition);
+        public static List<AdapterSelection> AddAllNewNetworks(Func<string, Dictionary<string, AdapterSelection>, bool>  condition) => AddNewNetworks(Platform.Android | Platform.IOS, condition);
+        private static List<AdapterSelection> AddNewNetworks(Platform platform, Func<string, Dictionary<string, AdapterSelection>, bool> condition)
         {
             var newNetworks = new List<AdapterSelection>();
 
             foreach (var network in PartnerSDKVersions)
             {
                 var id = network.Key;
-                if (UserSelectedVersions.ContainsKey(id)) 
+                if (condition(id, UserSelectedVersions))
                     continue;
                 
                 const int latestVersion = 1;
                 const int unselected = 0;
-                
-                var selection = new AdapterSelection(id);
 
+                var selection = new AdapterSelection(id);
                 var addAndroid = new Action(() => {
                     var androidVersions = network.Value.android;
                     if (androidVersions.Length > unselected)
