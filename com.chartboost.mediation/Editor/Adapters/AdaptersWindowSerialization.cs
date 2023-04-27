@@ -11,7 +11,7 @@ namespace Chartboost.Editor.Adapters
     public partial class AdaptersWindow
     {
         /// <summary>
-        /// Loads partner versions & current adapter selections.
+        /// Loads partner versions and current adapter selections.
         /// </summary>
         public static void LoadSelections()
         {
