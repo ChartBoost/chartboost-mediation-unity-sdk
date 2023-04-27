@@ -10,9 +10,9 @@
     </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->
-        <iosPod name="ChartboostMediationAdapterAdMob" version="~> 4.9.14.0"/>
+        <iosPod name="ChartboostMediationAdapterAdMob" version="~> 4.10.3.0"/>
 
         <!-- Partner iOS SDK-->
-        <iosPod name="Google-Mobile-Ads-SDK" version="~> 9.14.0" addToAllTargets="false"/>
+        <iosPod name="Google-Mobile-Ads-SDK" version="~> 10.3.0" addToAllTargets="false"/>
     </iosPods>
 </dependencies>

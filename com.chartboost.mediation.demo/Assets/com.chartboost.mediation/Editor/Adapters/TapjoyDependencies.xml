@@ -14,9 +14,9 @@
     </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->
-        <iosPod name="ChartboostMediationAdapterTapjoy" version="~> 4.12.11.0"/>
+        <iosPod name="ChartboostMediationAdapterTapjoy" version="~> 4.13.0.0"/>
 
         <!-- Partner iOS SDK-->
-        <iosPod name="TapjoySDK" version="~> 12.11.0" addToAllTargets="false"/>
+        <iosPod name="TapjoySDK" version="~> 13.0.0" addToAllTargets="false"/>
     </iosPods>
 </dependencies>

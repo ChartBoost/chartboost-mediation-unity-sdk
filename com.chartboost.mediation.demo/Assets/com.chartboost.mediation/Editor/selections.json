@@ -9,7 +9,7 @@
     {
       "id": "admob",
       "android": "21.5.0",
-      "ios": "9.14.0"
+      "ios": "10.3.0"
     },
     {
       "id": "aps",
@@ -34,7 +34,7 @@
     {
       "id": "googlebidding",
       "android": "21.5.0",
-      "ios": "9.14.0"
+      "ios": "10.3.0"
     },
     {
       "id": "inmobi",
@@ -64,17 +64,17 @@
     {
       "id": "tapjoy",
       "android": "12.11.1",
-      "ios": "12.11.0"
+      "ios": "13.0.0"
     },
     {
       "id": "unityads",
       "android": "4.6.0",
-      "ios": "4.5.0"
+      "ios": "4.6.0"
     },
     {
       "id": "vungle",
       "android": "6.12.1",
-      "ios": "6.12.1"
+      "ios": "6.12.2"
     },
     {
       "id": "yahoo",
