@@ -62,7 +62,11 @@ namespace Chartboost.Banner
         /// <inheritdoc cref="ChartboostMediationBannerBase.Load"/>>
         public override void Load(ChartboostMediationBannerAdScreenLocation location) 
             => _platformBanner.Load(location);
-        
+
+        /// <inheritdoc cref="ChartboostMediationBannerBase.Load(float, float, int, int)"/>>
+        public override void Load(float x, float y, int width, int height)
+            => _platformBanner.Load(x, y, width, height);
+
         /// <inheritdoc cref="ChartboostMediationBannerBase.SetVisibility"/>>
         public override void SetVisibility(bool isVisible) 
             =>_platformBanner.SetVisibility(isVisible);
@@ -74,5 +78,9 @@ namespace Chartboost.Banner
         /// <inheritdoc cref="ChartboostMediationBannerBase.Remove"/>>
         public override void Remove()
             =>_platformBanner.Remove();
+
+        /// <inheritdoc cref="ChartboostMediationBannerBase.SetParams(float, float, int, int)"/>>
+        public override void SetParams(float x, float y, int width, int height)
+            => _platformBanner.SetParams(x, y, width, height);
     }
 }

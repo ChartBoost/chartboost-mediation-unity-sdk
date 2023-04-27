@@ -31,5 +31,26 @@ namespace Chartboost.Banner
         /// </summary>
         [Preserve]
         void Remove();
+
+        /// <summary>
+        /// Loads the banner ad at specidied position and size
+        /// </summary>
+        /// <param name="x"> Distance from left of screen in pixels </param>
+        /// <param name="y"> Distance from bottom of screen in pixels </param>
+        /// <param name="width"> width in pixels </param>
+        /// <param name="height"> height in pixels </param>
+        [Preserve]
+        void Load(float x, float y, int width, int height); // use 2 Vector2 instead ?
+
+        /// <summary>
+        /// Sets the banner ad's position and size
+        /// </summary>
+        /// <param name="x"> Distance from left of screen in pixels </param>
+        /// <param name="y"> Distance from bottom of screen in pixels </param>
+        /// <param name="width"> width in pixels </param>
+        /// <param name="height"> height in pixels </param>
+        [Preserve]
+        void SetParams(float x, float y, int width, int height);
+        
     }
 }

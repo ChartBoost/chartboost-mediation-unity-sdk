@@ -2,11 +2,13 @@ package com.chartboost.mediation.unity
 
 import android.app.Activity
 import android.graphics.Color
+import android.opengl.Visibility
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import com.chartboost.heliumsdk.ad.HeliumAd
 import com.chartboost.heliumsdk.ad.HeliumBannerAd
@@ -37,10 +39,31 @@ class AdWrapper(private val ad: HeliumAd) {
         }
     }
 
+    /**
+     * Loads banner at provided location and size on screen
+     * top-left corner (x -> left, y -> top)
+     */
+    fun load(x: Float, y: Float, width: Int, height: Int) {
+        UnityBridge.runTaskOnUiThread {
+            createBannerLayout(x,y,width,height)
+            load()
+        }
+    }
+
     fun show() {
         UnityBridge.runTaskOnUiThread {
             if (ad is HeliumFullscreenAd) {
                 ad.show()
+            }
+        }
+    }
+
+    fun setParams(x: Float, y: Float, width: Int, height: Int){
+        UnityBridge.runTaskOnUiThread {
+            if(ad is HeliumBannerAd){
+                ad.layoutParams = ViewGroup.LayoutParams(width, height)
+                ad.x = x;
+                ad.y = y;
             }
         }
     }
@@ -101,6 +124,54 @@ class AdWrapper(private val ad: HeliumAd) {
             destroyBannerLayout()
             ad.destroy()
         }
+    }
+
+    private fun createBannerLayout(x: Float, y: Float, width: Int, height: Int) {
+        if (ad !is HeliumBannerAd) {
+            Log.w(TAG, "createBannerLayout should only be called on Banner Ads")
+            return
+        }
+
+        if (activity == null) {
+            Log.w(TAG, "Activity not found")
+            return
+        }
+
+        var layout = bannerLayout
+
+        // Create the banner layout on the given position.
+        // Check if there is an already existing banner layout. If so, remove it. Otherwise,
+        // create a new one.
+
+        layout?.let {
+            it.removeAllViews()
+            val bannerParent = it.parent as ViewGroup
+            bannerParent.removeView(it)
+        }
+
+        layout = RelativeLayout(activity)
+        layout.setBackgroundColor(Color.TRANSPARENT)
+
+        ad.layoutParams = ViewGroup.LayoutParams(width, height)
+//        ad.layoutParams = getBannerLayoutParams(displayDensity, STANDARD.first, STANDARD.second)
+        ad.x = x;
+        ad.y = y;
+
+        try {
+            layout.addView(ad);
+
+            activity.addContentView(layout, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+            layout.visibility = View.VISIBLE;
+
+            layout.visibility = View.VISIBLE;
+        }catch (ex: Exception) {
+            Log.w(TAG, "Helium encountered an error calling banner load() - ${ex.message}")
+        }
+
+
+        bannerLayout = layout;
+
     }
 
     private fun createBannerLayout(screenLocation: Int) {

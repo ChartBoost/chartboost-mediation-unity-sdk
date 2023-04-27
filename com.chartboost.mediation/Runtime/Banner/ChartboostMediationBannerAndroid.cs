@@ -45,6 +45,13 @@ namespace Chartboost.Banner
             _androidAd.Call("load", (int)location);
         }
 
+        /// <inheritdoc cref="IChartboostMediationBannerAd.Load(float, float, int, int)"/>>
+        public override void Load(float x, float y, int width, int height)
+        {
+            base.Load(x, y, width, height);
+            _androidAd.Call("load",x, Screen.height - y, width, height);    // Android measures pixels from top whereas Unity provides measurement from bottom of screen
+        }
+
         /// <inheritdoc cref="IChartboostMediationBannerAd.SetVisibility"/>>
         public override void SetVisibility(bool isVisible)
         {
@@ -64,6 +71,12 @@ namespace Chartboost.Banner
         {
             //android doesn't have a remove method. Instead, calling destroy
             Destroy();
+        }
+
+        public override void SetParams(float x, float y, int width, int height)
+        {
+            base.SetParams(x, y, width, height);
+            _androidAd.Call("setParams", x, Screen.height - y, width, height);  // Android measures pixels from top whereas Unity provides measurement from bottom of screen
         }
     }
 }

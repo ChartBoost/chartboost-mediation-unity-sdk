@@ -37,6 +37,10 @@ namespace Chartboost.Banner
         public virtual void Load(ChartboostMediationBannerAdScreenLocation location)
             => Logger.Log(LogTag, $"loading banner: {_placementName} with size: {_size} at {location}");
 
+        /// <inheritdoc cref="IChartboostMediationBannerAd.Load(float, float, int, int)"/>
+        public virtual void Load(float x, float y, int width, int height)
+            => Logger.Log(LogTag, $"loading banner: {_placementName} at position :{x},{y} and size : {width},{height}");
+
         /// <inheritdoc cref="IChartboostMediationBannerAd.SetVisibility"/>>
         public virtual void SetVisibility(bool isVisible)
             => Logger.Log(LogTag, $"setting visibility: {isVisible} for banner: {_placementName}");
@@ -47,7 +51,12 @@ namespace Chartboost.Banner
 
         /// <inheritdoc cref="IChartboostMediationBannerAd.Remove"/>>
         public virtual void Remove()
-            => Logger.Log(LogTag, $"removing banner: {_placementName}");
+            => Logger.Log(LogTag, $"removing banner: {_placementName}");        
+
+        /// <inheritdoc cref="IChartboostMediationBannerAd.SetParams(float, float, int, int)"/>
+        public virtual void SetParams(float x, float y, int width, int height)
+            => Logger.Log(LogTag, $"setting banner: {_placementName} layout to position :{x},{y} and size : {width},{height}"); 
+
     }
 
     /// <summary>
