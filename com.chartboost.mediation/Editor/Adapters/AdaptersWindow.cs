@@ -19,6 +19,7 @@ namespace Chartboost.Editor.Adapters
         private static string MediationSelection { get; set; }
        
         private static Button _saveButton;
+        private static Button _warningButton;
 
         public static AdaptersWindow Instance {
             get
@@ -70,15 +71,14 @@ namespace Chartboost.Editor.Adapters
             
             var package = Utilities.FindPackage(Constants.ChartboostMediationPackageName);
             
-            var warningFixButton = new Button();
-            warningFixButton.name = "warning-button";
-            warningFixButton.Add(logo);
-            warningFixButton.clicked += FixWarning;
+            _warningButton = new Button(() => CheckChartboostMediationVersion());
+            _warningButton.name = "warning-button";
+            _warningButton.Add(logo);
             
             if (string.IsNullOrEmpty(MediationSelection) || !Constants.PathToMainDependency.FileExist())
             {
-                warningFixButton.tooltip = $"Dependencies for Chartboost Mediation {package.version} have not been found. Press to add.";
-                root.Add(warningFixButton);
+                _warningButton.tooltip = $"Dependencies for Chartboost Mediation {package.version} have not been found. Press to add.";
+                root.Add(_warningButton);
                 return;
             }
             
@@ -87,16 +87,8 @@ namespace Chartboost.Editor.Adapters
             
             if (version != packageVersion)
             {
-                warningFixButton.tooltip = $"Your selected dependencies for Chartboost Mediation {version} do not match your current package version {packageVersion}. Press to fix.";
-                root.Add(warningFixButton);
-            }
-
-            void FixWarning()
-            {
-                warningFixButton.clicked -= FixWarning;
-                warningFixButton.RemoveFromHierarchy();
-                MediationSelection = package.version;
-                GenerateChartboostMediationDependency();
+                _warningButton.tooltip = $"Your selected dependencies for Chartboost Mediation {version} do not match your current package version {packageVersion}. Press to fix.";
+                root.Add(_warningButton);
             }
         }
 
@@ -116,7 +108,7 @@ namespace Chartboost.Editor.Adapters
                 scaleMode = ScaleMode.ScaleToFit
             };
 
-            var upgradeButton = new Button(() => UpgradeSelectionsToLatest());
+            var upgradeButton = new Button(() => UpgradePlatformToLatest(Platform.Android | Platform.IOS));
             upgradeButton.name = "upgrade-button";
             upgradeButton.tooltip = "Upgrade all adapter selections to their latest version!";
             upgradeButton.Add(upgradeImage);
