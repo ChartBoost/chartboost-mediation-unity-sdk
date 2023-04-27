@@ -2,6 +2,9 @@ using System;
 
 namespace Chartboost.Editor.Adapters.Serialization
 {
+    /// <summary>
+    /// Base structure for native adapters. 
+    /// </summary>
     #nullable enable
     [Serializable]
     public struct NativeAdapter

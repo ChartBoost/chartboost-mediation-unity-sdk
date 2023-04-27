@@ -19,6 +19,10 @@ namespace Chartboost.Editor.Adapters
         public static readonly string PathToMainDependency = Path.Combine(PathToEditorInGeneratedFiles, "ChartboostMediationDependencies.xml");
         public static readonly string PathToSelectionsFile = Path.Combine(PathToEditorInGeneratedFiles, "selections.json");
         
+        public static readonly string PathToLibrary = Path.Combine(Directory.GetCurrentDirectory(), "Library");
+        public static readonly string PathToLibraryCacheDirectory = Path.Combine(PathToLibrary, "com.chartboost.mediation");
+        public static readonly string PathToAdaptersCachedJson = Path.Combine(PathToLibraryCacheDirectory, "partners.json");
+        
         // Networks with special handling due to different versioning, dependencies, or multiple sdks
         public const string InMobi = "inmobi";
         public const string IronSource = "ironsource";

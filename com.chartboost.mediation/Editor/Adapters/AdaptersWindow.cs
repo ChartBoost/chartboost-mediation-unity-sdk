@@ -11,17 +11,32 @@ namespace Chartboost.Editor.Adapters
     public partial class AdaptersWindow : EditorWindow
     {
         [MenuItem("Chartboost Mediation/Adapters")]
-        public static void ShowAdapterWindow() => Instance.Focus();
+        private static void MenuWindow() => Instance.Focus();
 
+        /// <summary>
+        /// Currently loaded partner networks versions.
+        /// </summary>
         public static Dictionary<string, PartnerVersions> PartnerSDKVersions { get; set; } = new Dictionary<string, PartnerVersions>();
+        
+        /// <summary>
+        /// Currently loaded user selections.
+        /// </summary>
         public static Dictionary<string, AdapterSelection> UserSelectedVersions { get; set; } = new Dictionary<string, AdapterSelection>();
+        
+        /// <summary>
+        /// Currently saved user selections.
+        /// </summary>
         public static Dictionary<string, AdapterSelection> SavedVersions { get; set; } = new Dictionary<string, AdapterSelection>();
+        
+        /// <summary>
+        /// Currently selected Chartboost Mediation version.
+        /// </summary>
         private static string MediationSelection { get; set; }
        
         private static Button _saveButton;
         private static Button _warningButton;
-
-        public static AdaptersWindow Instance {
+        
+        private static AdaptersWindow Instance {
             get
             {
                 if (_instance != null) return _instance;
@@ -37,11 +52,11 @@ namespace Chartboost.Editor.Adapters
 
         private static AdaptersWindow _instance;
 
-        public void CreateGUI()
-        {
-            Initialize();
-        }
+        public void CreateGUI() => Initialize();
 
+        /// <summary>
+        /// Initializes GUIComponents
+        /// </summary>
         private static void Initialize()
         {
             PartnerSDKVersions.Clear();
@@ -59,7 +74,7 @@ namespace Chartboost.Editor.Adapters
             CreateAdapterTable(root);
             CheckMediationVersion(root);
         }
-
+        
         private static void CheckMediationVersion(VisualElement root)
         {
             var logo = new Image
