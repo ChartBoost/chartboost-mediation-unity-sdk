@@ -10,14 +10,20 @@ namespace Chartboost.Editor.Adapters
 {
     public partial class AdaptersWindow
     {
-        public static List<AdapterSelection> AddNewNetworks(Platform platform, Func<string, Dictionary<string, AdapterSelection>, bool> condition)
+        /// <summary>
+        /// Adds adapter networks to user selections.
+        /// </summary>
+        /// <param name="platform">Platform flag to add networks.</param>
+        /// <param name="ignoreCondition">Networks will be ignoredBased on this condition.</param>
+        /// <returns>Newly added networks.</returns>
+        public static List<AdapterSelection> AddNewNetworks(Platform platform, Func<string, Dictionary<string, AdapterSelection>, bool> ignoreCondition)
         {
             var newNetworks = new List<AdapterSelection>();
 
             foreach (var network in PartnerSDKVersions)
             {
                 var id = network.Key;
-                if (condition(id, UserSelectedVersions))
+                if (ignoreCondition(id, UserSelectedVersions))
                     continue;
                 
                 const int latestVersion = 1;
@@ -59,6 +65,11 @@ namespace Chartboost.Editor.Adapters
             return newNetworks;
         }
         
+        /// <summary>
+        /// Upgrades Ad Adapter selections based on platform.
+        /// </summary>
+        /// <param name="platform">Platform flag to upgrade selections.</param>
+        /// <returns>Upgraded networks.</returns>
         public static List<AdapterChange> UpgradePlatformToLatest(Platform platform)
         {
             var selectionChanges = new List<AdapterChange>();
@@ -93,6 +104,10 @@ namespace Chartboost.Editor.Adapters
             return selectionChanges;
         }
         
+        /// <summary>
+        /// Makes sure Chartboost Mediation dependencies stays up to date with package information.
+        /// </summary>
+        /// <returns>Indicates if version was changed.</returns>
         public static bool CheckChartboostMediationVersion()
         {
             if (!Application.isBatchMode && _warningButton != null)
@@ -155,7 +170,7 @@ namespace Chartboost.Editor.Adapters
         
         private static bool CheckForChanges()
         {
-            var same = new DictionaryComparer<string, AdapterSelection>(new SelectedVersionsComparer()).Equals(UserSelectedVersions, SavedVersions);
+            var same = new DictionaryComparer<string, AdapterSelection>(new AdapterSelectionComparer()).Equals(UserSelectedVersions, SavedVersions);
 
             if (Application.isBatchMode)
                 return same;

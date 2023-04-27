@@ -7,16 +7,28 @@ namespace Chartboost.Editor.Adapters.Serialization
     /// </summary>
     public class PartnerVersions
     {
+        /// <summary>
+        /// Android versions from newest to older. [Unselected, Newest, Older, ...]
+        /// </summary>
         public readonly string[] android;
+        
+        /// <summary>
+        /// IOS versions from newest to older. [Unselected, Newest, Older, ...]
+        /// </summary> 
         public readonly string[] ios;
 
-        public PartnerVersions(IEnumerable<string> androidAdapters, string[] iosAdapters)
+        /// <summary>
+        /// Generates partner network user readable versions
+        /// </summary>
+        /// <param name="androidAdapters">Partner Adapter Android versions.</param>
+        /// <param name="iosAdapters">Partner Adapter IOS versions.</param>
+        public PartnerVersions(IEnumerable<string> androidAdapters, IEnumerable<string> iosAdapters)
         {
             android = GetSupportedVersions(androidAdapters);
             ios = GetSupportedVersions(iosAdapters);
         }
 
-        private string[] GetSupportedVersions(IEnumerable<string> adapters)
+        private static string[] GetSupportedVersions(IEnumerable<string> adapters)
         {
             var temp = new List<string> { Constants.Unselected };
 
@@ -30,7 +42,7 @@ namespace Chartboost.Editor.Adapters.Serialization
             return temp.ToArray();
         }
 
-        private string GetPartnerSDKVersion(string adapterVersion)
+        private static string GetPartnerSDKVersion(string adapterVersion)
         {
             const int removalIndex = 2;
             adapterVersion = adapterVersion.Remove(0, removalIndex);

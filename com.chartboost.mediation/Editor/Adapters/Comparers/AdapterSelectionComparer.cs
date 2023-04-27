@@ -3,8 +3,17 @@ using Chartboost.Editor.Adapters.Serialization;
 
 namespace Chartboost.Editor.Adapters.Comparers
 {
-    public class SelectedVersionsComparer : IEqualityComparer<AdapterSelection>
+    /// <summary>
+    /// Comparer for AdapterSelection 
+    /// </summary>
+    public class AdapterSelectionComparer : IEqualityComparer<AdapterSelection>
     {
+        /// <summary>
+        /// Indicates equality between both Dictionaries. For them to be equal, id, android, an ios, must match.
+        /// </summary>
+        /// <param name="x">First AdapterSelection.</param>
+        /// <param name="y">Second AdapterSelection.</param>
+        /// <returns></returns>
         public bool Equals(AdapterSelection x, AdapterSelection y)
         {
             if (x != null && x.id != y.id)

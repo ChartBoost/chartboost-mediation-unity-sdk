@@ -10,6 +10,9 @@ namespace Chartboost.Editor.Adapters
 {
     public partial class AdaptersWindow
     {
+        /// <summary>
+        /// Loads partner versions and current adapter selections.
+        /// </summary>
         public static void LoadSelections()
         {
             if (AdapterDataSource.LoadedAdapters.adapters != null)
@@ -31,6 +34,9 @@ namespace Chartboost.Editor.Adapters
             UpdateSavedVersions();
         }
         
+        /// <summary>
+        /// Saves current user selections.
+        /// </summary>
         public static void SaveSelections()
         {
             var allSelections = UserSelectedVersions.Values.Where(x => x.android != Constants.Unselected || x.ios != Constants.Unselected).ToArray();

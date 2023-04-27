@@ -9,13 +9,31 @@ namespace Chartboost.Editor.Adapters.Serialization
     [Serializable]
     public class AdapterSelection
     {
+        /// <summary>
+        /// string defining adapter id.
+        /// </summary>
         public string id;
+        
+        /// <summary>
+        /// Current Android adapter version selection.
+        /// </summary>
         public string android = Constants.Unselected;
+        
+        /// <summary>
+        /// Current IOS adapter version selection.
+        /// </summary>
         public string ios = Constants.Unselected;
             
         #nullable enable
+        /// <summary>
+        /// AndroidDropdown for Android Versions.
+        /// </summary>
         [NonSerialized]
         public ToolbarMenu? androidDropdown;
+        
+        /// <summary>
+        /// IOSDropdown for IOS Versions.
+        /// </summary>
         [NonSerialized]
         public ToolbarMenu? iosDropdown;
         #nullable disable
