@@ -11,7 +11,7 @@ namespace Chartboost.Editor.Adapters
     public partial class AdaptersWindow
     {
         /// <summary>
-        /// Default network ignore condition. This will add any entirely missing or partially implemented networks
+        /// Default network add condition. This will add any entirely missing or partially implemented networks
         /// </summary>
         /// <param name="id">network id</param>
         /// <param name="selections">current selections</param>

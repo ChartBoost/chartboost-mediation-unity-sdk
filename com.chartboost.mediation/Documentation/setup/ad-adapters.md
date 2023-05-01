@@ -86,11 +86,11 @@ var upgrades = AdaptersWindow.UpgradePlatformToLatest(Platform.Android | Platfor
 // Depending on upgrade results, information can be logged.
 Console.WriteLine(upgrades.Count > 0 ? $"[Adapters] Upgraded: \n {JsonConvert.SerializeObject(upgrades, Formatting.Indented)}" : "[Adapters] No Upgrades.");
 
-// Manually save selections
-AdaptersWindow.SaveSelections();
-
 // Ad newly found Ad Adapter networks, by default any partially implemented or newly found networks will be added, but such behavior can be customized.
 var newNetworks = AdaptersWindow.AddNewNetworks(Platform.Android | Platform.IOS);
+
+// Manually save selections
+AdaptersWindow.SaveSelections();
 
 // Depending on new networks result, information can be logged.
 Console.WriteLine(newNetworks.Count > 0 ? $"[Adapters] New Networks: \n {JsonConvert.SerializeObject(newNetworks, Formatting.Indented)}" :  "[Adapters] No New Networks");
