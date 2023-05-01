@@ -11,19 +11,29 @@ namespace Chartboost.Editor.Adapters
     public partial class AdaptersWindow
     {
         /// <summary>
+        /// Default network ignore condition. This will add any entirely missing or partially implemented networks
+        /// </summary>
+        /// <param name="id">network id</param>
+        /// <param name="selections">current selections</param>
+        /// <returns></returns>
+        private static bool DefaultAddCondition(string id, Dictionary<string, AdapterSelection> selections) => !selections.ContainsKey(id) || selections[id].android == Constants.Unselected || selections[id].ios == Constants.Unselected;
+
+        /// <summary>
         /// Adds adapter networks to user selections.
         /// </summary>
         /// <param name="platform">Platform flag to add networks.</param>
-        /// <param name="ignoreCondition">Networks will be ignoredBased on this condition.</param>
+        /// <param name="addCondition">Networks will be added based on this condition. (network id, current selections)</param>
         /// <returns>Newly added networks.</returns>
-        public static List<AdapterSelection> AddNewNetworks(Platform platform, Func<string, Dictionary<string, AdapterSelection>, bool> ignoreCondition)
+        public static List<AdapterSelection> AddNewNetworks(Platform platform, Func<string, Dictionary<string, AdapterSelection>, bool> addCondition = null)
         {
             var newNetworks = new List<AdapterSelection>();
 
             foreach (var network in PartnerSDKVersions)
             {
                 var id = network.Key;
-                if (ignoreCondition(id, UserSelectedVersions))
+
+                addCondition ??= DefaultAddCondition;
+                if (!addCondition(id, UserSelectedVersions))
                     continue;
                 
                 const int latestVersion = 1;
