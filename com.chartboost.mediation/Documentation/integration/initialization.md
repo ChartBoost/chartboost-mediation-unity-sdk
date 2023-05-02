@@ -53,7 +53,7 @@ The Chartboost Mediation Unity SDK automatically uses such parameters to make de
 
 ![Chartboost Mediation Settings](../images/chartboost-mediation-settings.png)
 
-> **Note** \ 
+> **Note** \
 > Make sure that these are the AppId and App Signature values that you obtain directly from your Chartboost Mediation Dashboard for your app as opposed to credentials from Chartboost or any other Ad Network.
 
 ### Manual Initialization
