@@ -36,7 +36,8 @@ If you wish to know more details, you can always hover over the warning to see m
 After resolving the warnings, the `ChartboostMediationDependencies.xml` dependency file can be found in the following path 
 `Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml`
 
-> **_NOTE:_** In the past, dependencies used to live under the `Assets/Samples/Chartboost Mediation/ 4.X` path. However, they will now be under the `Assets/com.chartboost.mediation/Editor` directory.
+> **Note** \
+> In the past, dependencies used to live under the `Assets/Samples/Chartboost Mediation/4.X` path. However, they will now be under the `Assets/com.chartboost.mediation/Editor` directory.
 
 ### Adding Ad Adapters
 
@@ -46,9 +47,11 @@ In order to add adapters, you only need to select a version from the platform sp
 
 As seen in the screenshot above, whenever changes are pending to be saved, the save button will be displayed. In order to save your adapter selections you must click on the save button. After saving, the corresponding dependencies for the Ad Adapter selections will be saved in the following path `Assets/com.chartboost.mediation/Editor/Adapters`.
 
-> **_NOTE:_** If you wish to see all of your Ad Adapter selections in your project, they can be found in the following file `Assets/com.chartboost.mediation/Editor/selections.json`. If you ever need to provide support with information regarding your Ad Adapter selections, you can use this file.
+> **Note** \
+> If you wish to see all of your Ad Adapter selections in your project, they can be found in the following file `Assets/com.chartboost.mediation/Editor/selections.json`. If you ever need to provide support with information regarding your Ad Adapter selections, you can use this file.
 
-> **_NOTE:_** Ad Networks can be implemented entirely (Android, IOS) or partially, only one platform. 
+> **Note** \
+> Ad Networks can be implemented entirely (Android, IOS) or partially, only one platform. 
 
 ### Window Utilities
 

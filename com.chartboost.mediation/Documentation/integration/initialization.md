@@ -53,7 +53,8 @@ The Chartboost Mediation Unity SDK automatically uses such parameters to make de
 
 ![Chartboost Mediation Settings](../images/chartboost-mediation-settings.png)
 
-> **_NOTE:_** Make sure that these are the AppId and App Signature values that you obtain directly from your Chartboost Mediation Dashboard for your app as opposed to credentials from Chartboost or any other Ad Network.
+> **Note** \
+> Make sure that these are the AppId and App Signature values that you obtain directly from your Chartboost Mediation Dashboard for your app as opposed to credentials from Chartboost or any other Ad Network.
 
 ### Manual Initialization
 
@@ -83,7 +84,8 @@ ChartboostMediation.StartWithAppIdAndAppSignature(appID, appSignature);
 
 This will start the Chartboost Mediation Unity SDK. For delegate information see section [Delegate Usage](delegate-usage.md)
 
-> **_NOTE:_** Failing to remove default values will result in an error.
+> **Warning** \
+> Failing to remove default values will result in an error.
 
 Once the Chartboost Mediation SDK has successfully started, you can start requesting ads.
 

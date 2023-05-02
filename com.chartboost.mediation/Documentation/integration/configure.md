@@ -54,7 +54,8 @@ COPPA Settings can be configured utilizing the following method:
 
 * By sending `SetCCPAConsent (false)`, you indicate that this user from your application has not given consent to allow sharing personal data for behavioral targeted advertising under CCPA regulation.
 
-> **_NOTE:_** Chartboost Mediation will send CCPA information to the bidding network and set the CCPA information for the adapters.
+> **Note** \
+> Chartboost Mediation will send CCPA information to the bidding network and set the CCPA information for the adapters.
 
 ## Keywords
 As of Chartboost Mediation 2.9.0, the Chartboost Mediation SDKs introduces keywords: key-value pairs to enable real-time targeting on line items.
@@ -86,8 +87,8 @@ this.rewardedAd.RemoveKeyword("rwd_keyword1");
 this.bannerAd.RemoveKeyword("bnr_keyword1");
 ```
 
-> **_NOTE:_** Keywords has restrictions for setting keys and values. The maximum characters allowed for keys is 64 characters. The maximum characters for values is 256 characters.
-
+> **Warning** \
+> Keywords has restrictions for setting keys and values. The maximum characters allowed for keys is 64 characters. The maximum characters for values is 256 characters.
 
 ### Setting User Identifier
 
