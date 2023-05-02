@@ -6,4 +6,5 @@ If you wish to enable Chartboost Mediation's automatic SKAdNetwork resolution, a
 
 ![Chartboost Mediation Settings](../images/skadnetwork-toggle.png)
 
-> **_NOTE:_** SKAdNetwork resolution is disabled by default.
+> **Warning** \
+> SKAdNetwork resolution is disabled by default.
