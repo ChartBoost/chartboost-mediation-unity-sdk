@@ -6,24 +6,50 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System;
+using System.Threading.Tasks;
+using Chartboost.Platforms;
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-public class UnityBannerAd : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
+public class UnityBannerAd : MonoBehaviour, IEndDragHandler
 {
-    public ChartboostMediationBannerAdSize size;
-    public Text bannerPlacementName;
 
+    public string bannerPlacementName;
+    public ChartboostMediationBannerAdSize size;
+    
+#if UNITY_ANDROID
+    public EditorDPi referenceDpi = EditorDPi.dpi420;
+#elif UNITY_IOS
+    public EditorRetinaScale referenceRetinaScale = EditorRetinaScale.Three;
+#endif
+
+    private RectTransform _rectTransform;
     private ChartboostMediationBannerAd _bannerAd;
+
+
+    private void Awake()
+    {
+        _rectTransform = GetComponent<RectTransform>();
+    }
+
+    private void Start()
+    {
+        AdjustSize();
+    }
+
+    private void OnValidate()
+    {
+        AdjustSize();
+    }
 
     public void LoadBanner()
     {
         _bannerAd?.Remove();
 
-        Debug.Log("Creating banner on placement: " + bannerPlacementName.text);
-        _bannerAd = ChartboostMediation.GetBannerAd(bannerPlacementName.text, size);
+        Debug.Log("Creating banner on placement: " + bannerPlacementName);
+        _bannerAd = ChartboostMediation.GetBannerAd(bannerPlacementName, size);
 
         if (_bannerAd == null)
         {
@@ -31,118 +57,110 @@ public class UnityBannerAd : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
             return;
         }
 
-        LayoutParams layoutParams = GetComponent<RectTransform>().LayoutParams();
+        LayoutParams layoutParams = _rectTransform.LayoutParams();
         _bannerAd.Load(layoutParams.x, layoutParams.y, layoutParams.width, layoutParams.height);
-    }        
-
-    public void OnBeginDrag(PointerEventData eventData)
-    {        
-        
-    }
-
-    public void OnDrag(PointerEventData eventData)
-    {
 
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        LayoutParams layoutParams = GetComponent<RectTransform>().LayoutParams();
+        _bannerAd?.SetVisibility(true);
+
+        LayoutParams layoutParams = _rectTransform.LayoutParams();
         _bannerAd.SetParams(layoutParams.x, layoutParams.y, layoutParams.width, layoutParams.height);
-    }   
-}
+    }
+ 
 
-#if UNITY_EDITOR
-
-[CustomEditor(typeof(UnityBannerAd))]
-public class UnityBannerEditor : Editor
-{
-    private float _scalingFactor = 2.65f;
-    private ChartboostMediationBannerAdSize _size;
-
-    public override void OnInspectorGUI()
+    private void AdjustSize()
     {
-        base.OnInspectorGUI();
+        var rt = _rectTransform == null ? GetComponent<RectTransform>() : _rectTransform;
 
-        var banner = target as UnityBannerAd;
-
-        _size = banner.size;
-
-        var rt = banner.GetComponent<RectTransform>();
-        switch (_size)
+        switch (size)
         {
             case ChartboostMediationBannerAdSize.Standard:
-                rt.sizeDelta = new Vector2(320f * ScalingFactor, 50f * _scalingFactor);
+                rt.sizeDelta = new Vector2(320f * ScalingFactor, 50f * ScalingFactor);
                 break;
 
             case ChartboostMediationBannerAdSize.MediumRect:
-                rt.sizeDelta = new Vector2(300f * ScalingFactor, 250f * _scalingFactor);
+                rt.sizeDelta = new Vector2(300f * ScalingFactor, 250f * ScalingFactor);
                 break;
 
             case ChartboostMediationBannerAdSize.Leaderboard:
-                rt.sizeDelta = new Vector2(728f * ScalingFactor, 90f * _scalingFactor);
+                rt.sizeDelta = new Vector2(728f * ScalingFactor, 90f * ScalingFactor);
                 break;
 
         }
     }
 
-
     // Note : This is a temporary hack/workaround until we have adaptive banners
-    // Banner sizes are usually in `dp` but Unity works with pixels so there is no way of determining the
+    // Banner sizes are usually in `dp` or `points` but Unity works with pixels so there is no way of determining the
     // exact size of banner in pixels. This is why the hack
     private float ScalingFactor
     {
         get
         {
-            var banner = target as UnityBannerAd;            
             float scaleFactor = 2.5f;
-
-            var canvasScaler = banner.GetComponentInParent<CanvasScaler>();
-
+            var canvasScaler = GetComponentInParent<CanvasScaler>();
             if (canvasScaler == null)
                 return scaleFactor;
 
+#if UNITY_EDITOR
 
-            Vector2 resolution;
+    #if UNITY_IOS
+            scaleFactor = (float)referenceRetinaScale;
+    #elif UNITY_ANDROID
+            scaleFactor = (float)referenceDpi / 160f; 
+    #endif
 
-            switch (canvasScaler.uiScaleMode)
-            {
-                case CanvasScaler.ScaleMode.ConstantPixelSize:
-                    resolution = new Vector2(Screen.width, Screen.height);
-                    break;
-                case CanvasScaler.ScaleMode.ScaleWithScreenSize:
-                    resolution = canvasScaler.referenceResolution;
-                    break;
-                default:
-                    resolution = new Vector2(1920, 1080);    
-                    break;
-            }
+#else
+            scaleFactor = ChartboostMediation.GetUIScaleFactor();
+#endif
 
-            if (resolution.x <= 680)
+            if (canvasScaler.uiScaleMode == CanvasScaler.ScaleMode.ScaleWithScreenSize)
             {
-                scaleFactor = 1f;
+                scaleFactor /= canvasScaler.transform.localScale.x;
             }
-            else if (resolution.x > 680 && resolution.x <= 1344)
-            {
-                scaleFactor = 2f;
-            }
-            else if (resolution.x > 1344 && resolution.x <= 1920)
-            {
-                scaleFactor = 2.5f;
-            }
-            else if (resolution.x > 1920 && resolution.x <= 2400)
-            {
-                scaleFactor = 2.625f;
-            }
-            else if (resolution.x > 2400)
-            {
-                scaleFactor = 2.65f;
-            }
-
 
             return scaleFactor;
 
         }
     }
+
+
+}
+
+#if UNITY_ANDROID
+public enum EditorDPi
+{
+    ldpi = 120,
+    mdpi = 160,
+    xdpi = 320,
+    dpi420 = 420,
+    xxdpi = 480,
 }
 #endif
+
+#if UNITY_IOS
+public enum EditorRetinaScale
+{
+    One = 1,
+    Two = 2,
+    Three = 3
+}
+#endif
+
+//#if UNITY_EDITOR
+
+//[CustomEditor(typeof(UnityBannerAd))]
+//[CanEditMultipleObjects]
+//public class UnityBannerEditor : Editor
+//{
+//    override on
+
+//    public void OnEnable()
+//    {
+//        var banner = target as UnityBannerAd;
+//        banner.AdjustSize();
+//    }
+//}
+//#endif

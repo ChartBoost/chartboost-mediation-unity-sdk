@@ -1,6 +1,7 @@
 #if UNITY_IOS
 using System;
 using System.Runtime.InteropServices;
+using UnityEngine;
 
 namespace Chartboost.Banner
 {
@@ -38,6 +39,14 @@ namespace Chartboost.Banner
             _chartboostMediationBannerAdLoad(_uniqueId, (int)location);
         }
 
+        /// <inheritdoc cref="ChartboostMediationBannerBase.Load(float, float, int, int)"/>>
+        public override void Load(float x, float y, int width, int height)
+        {
+            base.Load(x, y, width, height);
+            _chartboostMediationBannerAdLoadWithParams(_uniqueId, x, Screen.height - y, width, height);
+        }
+
+
         /// <inheritdoc cref="ChartboostMediationBannerBase.SetVisibility"/>>
         public override void SetVisibility(bool isVisible)
         {
@@ -59,10 +68,17 @@ namespace Chartboost.Banner
             _chartboostMediationBannerRemove(_uniqueId);
         }
 
+        /// <inheritdoc cref="IChartboostMediationBannerAd.SetParams(float, float, int, int)"/>>
+        public override void SetParams(float x, float y, int width, int height)
+        {
+            base.SetParams(x, y, width, height);
+            _chartboostMediationBannerAdSetlayoutParams(_uniqueId, x, Screen.height - y, width, height);  // Android measures pixels from top whereas Unity provides measurement from bottom of screen
+        }
+
         ~ChartboostMediationBannerIOS()
             => _chartboostMediationFreeBannerAdObject(_uniqueId);
 
-        #region External Methods
+#region External Methods
         [DllImport("__Internal")]
         private static extern IntPtr _chartboostMediationGetBannerAd(string placementName, int size);
         [DllImport("__Internal")]
@@ -72,6 +88,8 @@ namespace Chartboost.Banner
         [DllImport("__Internal")]
         private static extern void _chartboostMediationBannerAdLoad(IntPtr uniqueID, int screenLocation);
         [DllImport("__Internal")]
+        private static extern void _chartboostMediationBannerAdLoadWithParams(IntPtr uniqueID, float x, float y, int width, int height);
+        [DllImport("__Internal")]
         private static extern void _chartboostMediationBannerClearLoaded(IntPtr uniqueID);
         [DllImport("__Internal")]
         private static extern void _chartboostMediationBannerRemove(IntPtr uniqueID);
@@ -79,7 +97,9 @@ namespace Chartboost.Banner
         private static extern bool _chartboostMediationBannerSetVisibility(IntPtr uniqueID, bool isVisible);
         [DllImport("__Internal")]
         private static extern void _chartboostMediationFreeBannerAdObject(IntPtr uniqueID);
-        #endregion
+        [DllImport("__Internal")]
+        private static extern void _chartboostMediationBannerAdSetlayoutParams(IntPtr uniqueID, float x, float y, int width, int height);
+#endregion
     }
 }
 #endif

@@ -55,7 +55,10 @@ namespace Chartboost.Banner
 
         /// <inheritdoc cref="IChartboostMediationBannerAd.SetParams(float, float, int, int)"/>
         public virtual void SetParams(float x, float y, int width, int height)
-            => Logger.Log(LogTag, $"setting banner: {_placementName} layout to position :{x},{y} and size : {width},{height}"); 
+            => Logger.Log(LogTag, $"setting banner: {_placementName} layout to position :{x},{y} and size : {width},{height}");
+
+        public virtual void SetIntractable(bool intractable)
+            => Logger.Log(LogTag, $"setting intractable: {intractable}");
 
     }
 

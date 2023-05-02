@@ -32,5 +32,10 @@ namespace Chartboost.Platforms
             base.GetUserIdentifier();
             return _userIdentifier;
         }
+
+        public override float GetUIScaleFactor()
+        {
+            return base.GetUIScaleFactor();
+        }
     }
 }

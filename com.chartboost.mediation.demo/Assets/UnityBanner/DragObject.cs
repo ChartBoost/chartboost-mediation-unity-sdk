@@ -10,8 +10,7 @@ public class DragObject : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
     [SerializeField][Tooltip("Optional range to limit drag area. If null, entire screen is drag range")]
     private RectTransform DragRange;
 
-    [SerializeField]
-    private bool _isDragging;
+    public bool IsDragging;
 
     private Rect _boundingBox;
 
@@ -27,7 +26,7 @@ public class DragObject : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        _isDragging = true;
+        IsDragging = true;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -40,7 +39,7 @@ public class DragObject : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDr
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        _isDragging = false;
+        IsDragging = false;
     }
 
     private bool IsWithinBounds(Vector2 position)

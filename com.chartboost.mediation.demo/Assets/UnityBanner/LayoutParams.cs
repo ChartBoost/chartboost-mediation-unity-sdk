@@ -1,4 +1,7 @@
-﻿public class LayoutParams
+﻿using System;
+
+[Serializable]
+public class LayoutParams
 {
     public float x;
     public float y;

@@ -51,6 +51,8 @@ namespace Chartboost.Banner
         /// <param name="height"> height in pixels </param>
         [Preserve]
         void SetParams(float x, float y, int width, int height);
+
+        void SetIntractable(bool intractable);
         
     }
 }

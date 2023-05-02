@@ -12,7 +12,7 @@ namespace Chartboost.Platforms
     public abstract class ChartboostMediationExternal : IChartboostMediationLifeCycle, IChartboostMediationInterstitialEvents, IChartboostMediationRewardedEvents, IChartboostMediationBannerEvents
     {
         public static bool IsInitialized { get; protected set; }
-        
+
         protected static string LogTag = "ChartboostMediation (External)";
 
         protected static bool CanFetchAd(string placementName)
@@ -72,6 +72,12 @@ namespace Chartboost.Platforms
         
         public virtual void SetTestMode(bool testModeEnabled) 
             => Logger.Log(LogTag, $"SetTestMode {testModeEnabled}");
+
+        public virtual float GetUIScaleFactor()
+        { 
+            Logger.Log(LogTag, $"GetUIScaleFactor");
+            return 1f;
+        }
 
         public virtual void Destroy() 
             => Logger.Log(LogTag, "Destroy");

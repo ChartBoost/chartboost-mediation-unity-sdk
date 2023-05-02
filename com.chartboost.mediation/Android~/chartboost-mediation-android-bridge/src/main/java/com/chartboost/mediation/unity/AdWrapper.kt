@@ -2,13 +2,12 @@ package com.chartboost.mediation.unity
 
 import android.app.Activity
 import android.graphics.Color
-import android.opengl.Visibility
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import com.chartboost.heliumsdk.ad.HeliumAd
 import com.chartboost.heliumsdk.ad.HeliumBannerAd

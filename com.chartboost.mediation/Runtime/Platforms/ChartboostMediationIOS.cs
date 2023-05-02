@@ -57,6 +57,9 @@ namespace Chartboost.Platforms
 
         [DllImport("__Internal")]
         private static extern void _chartboostMediationSetTestMode(bool isTestMode);
+
+        [DllImport("__Internal")]
+        private static extern float _chartboostMediationGetRetinaScaleFactor();
         #endregion
 
         #region Chartboost Mediation
@@ -144,6 +147,12 @@ namespace Chartboost.Platforms
         {
             base.SetTestMode(testModeEnabled);
             _chartboostMediationSetTestMode(testModeEnabled);
+        }
+
+        public override float GetUIScaleFactor()
+        {
+            base.GetUIScaleFactor();
+            return _chartboostMediationGetRetinaScaleFactor();
         }
         #endregion
 

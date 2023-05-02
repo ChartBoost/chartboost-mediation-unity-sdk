@@ -8,7 +8,7 @@ namespace Chartboost.Platforms
 {
     public sealed class ChartboostMediationAndroid : ChartboostMediationExternal
     {
-        #region Chartboost Mediation
+#region Chartboost Mediation
         private static ChartboostMediationAndroid _instance;
         private static AndroidJavaObject _plugin;
 
@@ -91,6 +91,12 @@ namespace Chartboost.Platforms
             plugin().Call("setTestMode", testModeEnabled);
         }
 
+        public override float GetUIScaleFactor()
+        {
+            base.GetUIScaleFactor();
+            return (float)Screen.dpi/160f;
+        }
+
         public override void Destroy()
         {
             if (!CheckInitialized())
@@ -99,9 +105,9 @@ namespace Chartboost.Platforms
             _plugin.Call("destroy");
             IsInitialized = false;
         }
-        #endregion
+#endregion
 
-        #region LifeCycle Callbacks
+#region LifeCycle Callbacks
         [Preserve]
         internal class LifeCycleEventListener : AndroidJavaProxy
         {
@@ -125,9 +131,9 @@ namespace Chartboost.Platforms
         public override event ChartboostMediationEvent DidStart;
         public override event ChartboostMediationILRDEvent DidReceiveImpressionLevelRevenueData;
         public override event ChartboostMediationPartnerInitializationEvent DidReceivePartnerInitializationData;
-        #endregion
+#endregion
 
-        #region Interstitial Callbacks
+#region Interstitial Callbacks
         [Preserve]
         internal class InterstitialEventListener : AndroidJavaProxy
         {
@@ -161,9 +167,9 @@ namespace Chartboost.Platforms
         public override event ChartboostMediationPlacementEvent DidCloseInterstitial; 
         public override event ChartboostMediationPlacementEvent DidClickInterstitial;
         public override event ChartboostMediationPlacementEvent DidRecordImpressionInterstitial;
-        #endregion
+#endregion
 
-        #region Rewarded Callbacks
+#region Rewarded Callbacks
         internal class RewardedVideoEventListener : AndroidJavaProxy
         {
             private RewardedVideoEventListener() : base("com.chartboost.mediation.unity.IRewardedEventListener") { }
@@ -201,9 +207,9 @@ namespace Chartboost.Platforms
         public override event ChartboostMediationPlacementEvent DidClickRewarded;
         public override event ChartboostMediationPlacementEvent DidRecordImpressionRewarded;
         public override event ChartboostMediationPlacementEvent DidReceiveReward;
-        #endregion
+#endregion
 
-        #region Banner Callbacks
+#region Banner Callbacks
         internal class BannerEventListener : AndroidJavaProxy
         {
             private BannerEventListener() : base("com.chartboost.mediation.unity.IBannerEventListener") { }
@@ -226,7 +232,7 @@ namespace Chartboost.Platforms
         public override event ChartboostMediationPlacementLoadEvent DidLoadBanner;
         public override event ChartboostMediationPlacementEvent DidClickBanner;
         public override event ChartboostMediationPlacementEvent DidRecordImpressionBanner;
-        #endregion
+#endregion
     }
 }
 #endif

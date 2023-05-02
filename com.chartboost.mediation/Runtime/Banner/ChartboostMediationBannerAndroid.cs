@@ -73,10 +73,18 @@ namespace Chartboost.Banner
             Destroy();
         }
 
+        /// <inheritdoc cref="IChartboostMediationBannerAd.SetParams(float, float, int, int)"/>>
         public override void SetParams(float x, float y, int width, int height)
         {
             base.SetParams(x, y, width, height);
             _androidAd.Call("setParams", x, Screen.height - y, width, height);  // Android measures pixels from top whereas Unity provides measurement from bottom of screen
+        }
+
+        public override void SetIntractable(bool intractable)
+        {
+            base.SetIntractable(intractable);
+
+            _androidAd.Call("setIntractable", intractable);
         }
     }
 }

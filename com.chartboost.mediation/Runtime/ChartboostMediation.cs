@@ -225,5 +225,6 @@ namespace Chartboost
         public static void SetUserIdentifier(string userIdentifier) => _chartboostMediationExternal.SetUserIdentifier(userIdentifier);
         public static string GetUserIdentifier() => _chartboostMediationExternal.GetUserIdentifier();
         public static void SetTestMode(bool testModeEnabled) => _chartboostMediationExternal.SetTestMode(testModeEnabled);
+        public static float GetUIScaleFactor() => _chartboostMediationExternal.GetUIScaleFactor();
     }
 }
