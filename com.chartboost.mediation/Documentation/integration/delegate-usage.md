@@ -54,7 +54,7 @@ private void OnEnable() {
 > Do not make cache or show calls inside a delegate indicating that an ad has just failed to load.
 
 > **Note** \
-> Notice that banner ads do not have a DidCloseBanner delegate. Please keep that in mind when implementing Banners.
+> Notice that banner ads do not have a `DidCloseBanner` delegate. Please keep that in mind when implementing Banners.
 
 > **Note** \
 > Not all of the partner SDKs have support for the DidClick delegate.
