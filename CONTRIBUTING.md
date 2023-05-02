@@ -17,7 +17,8 @@ There are two ways to contribute:
 ### Reporting Bugs
 Bugs are tracked as a type of [GitHub issues](https://guides.github.com/features/issues/). To submit a report, create an issue and provide the information instructed in the template.
 
-> **Note:** If you find a **Closed** issue that seems similar to what you're experiencing, open a new issue and include a link to the closed issue.
+> **Note** 
+> If you find a **Closed** issue that seems similar to what you're experiencing, open a new issue and include a link to the closed issue.
 
 Follow these guides to create a detailed and effective report for us to understand and resolve issues faster: 
 
