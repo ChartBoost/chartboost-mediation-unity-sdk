@@ -15,7 +15,7 @@ The `EDM` makes sure to download and package any dependencies with your build.
 
 Since Chartboost Mediation 4.X Adapters are no longer released at the cadence as the Chartboost Mediation SDK, it is now possible to receive adapter updates in between SDK releases. 
 
-As of Chartboost Mediation Unity SDK 4.1.0, adapters were added through the UPM Samples capability; however, this limited the ability to provide adapter updates in between SDK releases. As such, from Chartboost Mediation Unity SDK 4.2.0, we have created a brand new Editor Window. This will allow users to fetch Ad Adapter updates on demand. *see screenshot below*
+Until Chartboost Mediation Unity SDK 4.1.0, adapters were added through the UPM Samples capability; however, this limited the ability to provide adapter updates in between SDK releases. As such, from Chartboost Mediation Unity SDK 4.2.0, we have created a brand new Editor Window. This will allow users to fetch Ad Adapter updates on demand. *see screenshot below*
 
 ### ***Adapters Window Default State***
 
