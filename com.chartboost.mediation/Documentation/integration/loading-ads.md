@@ -31,7 +31,8 @@ You can implement delegates in your class to receive notifications about the suc
 
 To show a banner ad, first declare a variable to hold a reference to the Banner Ad. Supply the corresponding Placement Name and the Banner Size.
 
-> **_NOTE:_** The following banner sizes can be passed down. Some partners may not fill for some banner sizes.
+> **Note** \
+> The following banner sizes can be passed down. Some partners may not fill for some banner sizes.
 
 | Banner Enum   | Dimensions (Width x Height) |
 | :---          | :---                        |
@@ -70,7 +71,8 @@ Banners are now shown automatically after load, as such you will need to pass a 
 
 If you enable auto-refresh for a banner placement in the dashboard, then the Chartboost Mediation Unity SDK will apply that setting when the placement is shown.
 
-> **_NOTE:_** Any auto refresh changes made on the dashboard will take approximately one hour to take effect and the SDK must be rebooted in order to pick up the changes once they are available.
+> **Note** \
+> Any auto refresh changes made on the dashboard will take approximately one hour to take effect and the SDK must be rebooted in order to pick up the changes once they are available.
 
 You will need to create an instance for each Placement Name you want to use. Finally, make the call to load the ad:
 

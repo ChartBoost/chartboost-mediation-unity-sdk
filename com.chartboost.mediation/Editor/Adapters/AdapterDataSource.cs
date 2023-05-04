@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using Chartboost.Editor.Adapters.Serialization;
 using Newtonsoft.Json;
@@ -9,12 +8,18 @@ using UnityEngine.Networking;
 
 namespace Chartboost.Editor.Adapters
 {
+    /// <summary>
+    /// Automatically fetches and caches Adapters Data from S3. 
+    /// </summary>
     [InitializeOnLoad]
     public class AdapterDataSource
     {
+        /// <summary>
+        /// Static constructor automatically created by Unity Editor.
+        /// </summary>
         static AdapterDataSource()
         {
-            // This runs on startup.
+            // This runs on startup. Only once
             if (InitialCache) 
                 return;
             
@@ -22,15 +27,16 @@ namespace Chartboost.Editor.Adapters
             Update();
         }
 
-        public static Partners LoadedAdapters { get; private set; }
+        /// <summary>
+        /// Currently Fetched and Loaded Adapter Data.
+        /// </summary>
+        public static AdapterData LoadedAdapters { get; private set; }
         
+        /// <summary>
+        /// Endpoint where Adapter Data is stored.
+        /// </summary>
         private const string Endpoint = "https://chartboost.s3.amazonaws.com/chartboost-mediation/mediation-integration/partners.json";
 
-        private static readonly string LibraryPath = Path.Combine(Directory.GetCurrentDirectory(), "Library");
-        
-        private static readonly string CacheDirectory = Path.Combine(LibraryPath, "com.chartboost.mediation");
-
-        private static readonly string AdaptersCache = Path.Combine(CacheDirectory, "partners.json");
 
         private static readonly bool InitialCache;
 
@@ -46,24 +52,23 @@ namespace Chartboost.Editor.Adapters
         /// <summary>
         /// Fetched Adapter Config from JSON, caches if newer or new, returns most update Adapters.
         /// </summary>
-        private static Task<Partners> FetchCacheAndLoad()
+        private static Task<AdapterData> FetchCacheAndLoad()
         {
-            if (!Directory.Exists(LibraryPath))
+            if (!Constants.PathToLibrary.DirectoryExists())
                 return null;
 
-            if (!Directory.Exists(CacheDirectory))
-                Directory.CreateDirectory(CacheDirectory);
+            Constants.PathToLibraryCacheDirectory.DirectoryCreate();
             
             var newConfigJson = FetchAdapters();
 
             Task.WaitAll(newConfigJson);
 
             var newAdapters = newConfigJson.Result;
-            var newAdapterConfig = JsonConvert.DeserializeObject<Partners>(newAdapters);
-            if (File.Exists(AdaptersCache))
+            var newAdapterConfig = JsonConvert.DeserializeObject<AdapterData>(newAdapters);
+            if (Constants.PathToAdaptersCachedJson.FileExist())
             {
-                var cachedJson = File.ReadAllText(AdaptersCache);
-                var cacheAdapterConfig = JsonConvert.DeserializeObject<Partners>(cachedJson);
+                var cachedJson = Constants.PathToAdaptersCachedJson.ReadAllText();
+                var cacheAdapterConfig = JsonConvert.DeserializeObject<AdapterData>(cachedJson);
 
                 var newVersion = DateTime.Parse(newAdapterConfig.lastUpdated);
                 var oldVersion = DateTime.Parse(cacheAdapterConfig.lastUpdated);
@@ -71,10 +76,11 @@ namespace Chartboost.Editor.Adapters
                 if (newVersion <= oldVersion)
                     return Task.FromResult(cacheAdapterConfig);
                 
-                File.WriteAllText(AdaptersCache, newAdapters);
+                Constants.PathToAdaptersCachedJson.FileCreate(newAdapters);
                 return Task.FromResult(newAdapterConfig);
             }
-            File.WriteAllText(AdaptersCache, newAdapters);
+            
+            Constants.PathToAdaptersCachedJson.FileCreate(newAdapters);
             return Task.FromResult(newAdapterConfig);
         }
 
@@ -92,7 +98,7 @@ namespace Chartboost.Editor.Adapters
         
             if (request.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogError($"Error while sending {Endpoint}, with error: {request.error}");
+                Debug.LogError($"[Adapter Data Source] Error while sending {Endpoint}, with error: {request.error}");
                 return Task.FromResult<string>(null);
             }
 

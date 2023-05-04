@@ -8,7 +8,8 @@ Add the following required permissions to your Android Manifest .xml file:
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 ```
 
-> **_NOTE:_** It is important to notice that permissions might increase depending on your Ad adapter integrations. Always refer to such ad adapter's SDK integration guides for complete details. 
+> **Warning** \
+> It is important to notice that permissions might increase depending on your Ad adapter integrations. Always refer to such ad adapter's SDK integration guides for complete details. 
 
 ## Special Cases
 

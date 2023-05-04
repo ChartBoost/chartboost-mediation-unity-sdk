@@ -10,8 +10,15 @@ namespace Chartboost.Editor.Adapters
 {
     public partial class AdaptersWindow
     {
+        /// <summary>
+        /// Loads partner versions and current adapter selections.
+        /// </summary>
         public static void LoadSelections()
         {
+            if (AdapterDataSource.LoadedAdapters.adapters != null)
+                foreach (var partnerAdapter in AdapterDataSource.LoadedAdapters.adapters)
+                    PartnerSDKVersions[partnerAdapter.id] = new PartnerVersions(partnerAdapter.android.versions, partnerAdapter.ios.versions);
+            
             if (!Constants.PathToSelectionsFile.FileExist())
                 return;
 
@@ -27,6 +34,9 @@ namespace Chartboost.Editor.Adapters
             UpdateSavedVersions();
         }
         
+        /// <summary>
+        /// Saves current user selections.
+        /// </summary>
         public static void SaveSelections()
         {
             var allSelections = UserSelectedVersions.Values.Where(x => x.android != Constants.Unselected || x.ios != Constants.Unselected).ToArray();
@@ -47,13 +57,13 @@ namespace Chartboost.Editor.Adapters
             else
                 Constants.PathToSelectionsFile.FileCreate(selectionsJson);
             
-            if (!Application.isBatchMode)
+            if (!Application.isBatchMode && _saveButton != null)
                 _saveButton.RemoveFromHierarchy();
             GenerateDependenciesFromSelections();
             UpdateSavedVersions();
         }
 
-        public static void GenerateDependenciesFromSelections()
+        private static void GenerateDependenciesFromSelections()
         {
             if (!Constants.PathToAdapterTemplate.FileExist())
             {
@@ -209,7 +219,7 @@ namespace Chartboost.Editor.Adapters
             AssetDatabase.Refresh();
         }
 
-        public static void GenerateChartboostMediationDependency()
+        private static void GenerateChartboostMediationDependency()
         {
             if (!Constants.PathToMainTemplate.FileExist())
             {
@@ -228,6 +238,7 @@ namespace Chartboost.Editor.Adapters
             Constants.PathToPackageGeneratedFiles.DirectoryCreate();
             Constants.PathToEditorInGeneratedFiles.DirectoryCreate();
             Constants.PathToMainDependency.FileCreate(defaultTemplateContents);
+            SaveSelections();
             AssetDatabase.Refresh();
         }
 

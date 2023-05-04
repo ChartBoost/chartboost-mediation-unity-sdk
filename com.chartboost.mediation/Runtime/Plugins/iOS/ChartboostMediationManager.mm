@@ -51,38 +51,12 @@ const char* serializeDictionary(NSDictionary *data)
     return json.UTF8String;
 }
 
-const char* formatError(ChartboostMediationError *error)
-{
-    if (error == nil)
-        return "";
-    
-    NSInteger code = error.code;
-    
-    NSString* localizedDescription = @"";
-    if (localizedDescription != nil)
-        localizedDescription = error.localizedDescription;
-    
-    NSString* localizedFailureReason = @"";
-    if (localizedFailureReason != nil)
-        localizedFailureReason = error.localizedFailureReason;
-    
-    NSString* localizedRecoverySuggestion = @"";
-    if (localizedRecoverySuggestion != nil)
-        localizedRecoverySuggestion = error.localizedRecoverySuggestion;
-    
-    NSString* formattedError = @"";
-    
-    formattedError = [formattedError stringByAppendingFormat:@"(CM_%ld) Message: %@ Cause: %@ Resolution: %@", code, localizedDescription, localizedFailureReason, localizedRecoverySuggestion];
-    
-    return formattedError.UTF8String;
-}
-
 const void serializeEvent(ChartboostMediationError *error, ChartboostMediationEvent event)
 {
     if (event == nil)
         return;
     
-    event(formatError(error));
+    event(error.localizedDescription.UTF8String);
 }
 
 const void serializePlacementWithError(NSString *placementName, ChartboostMediationError *error, ChartboostMediationPlacementEvent placementEvent)
@@ -90,7 +64,7 @@ const void serializePlacementWithError(NSString *placementName, ChartboostMediat
     if (placementEvent == nil)
         return;
     
-    placementEvent(placementName.UTF8String, formatError(error));
+    placementEvent(placementName.UTF8String, error.localizedDescription.UTF8String);
 }
 
 const void serializePlacementLoadWithError(NSString *placementName, NSString *requestIdentifier, NSDictionary *winningBidInfo, ChartboostMediationError *error, ChartboostMediationPlacementLoadEvent placementLoadEvent)
@@ -111,7 +85,7 @@ const void serializePlacementLoadWithError(NSString *placementName, NSString *re
     if (price == nil)
         price = 0;
     
-    placementLoadEvent(placementName.UTF8String, requestIdentifier.UTF8String, auctionId.UTF8String, partnerId.UTF8String, [price doubleValue], formatError(error));
+    placementLoadEvent(placementName.UTF8String, requestIdentifier.UTF8String, auctionId.UTF8String, partnerId.UTF8String, [price doubleValue], error.localizedDescription.UTF8String);
 }
 
 static void subscribeToILRDNotifications()

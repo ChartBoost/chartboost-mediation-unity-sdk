@@ -11,32 +11,54 @@ namespace Chartboost.Editor.Adapters
     public partial class AdaptersWindow : EditorWindow
     {
         [MenuItem("Chartboost Mediation/Adapters")]
-        public static void ShowAdapterWindow()
-        {
-            AdaptersWindow wnd = GetWindow<AdaptersWindow>();
-            wnd.titleContent = new GUIContent("Chartboost Mediation Adapters");
-            var windowSize =new Vector2(410, 520);
-            wnd.minSize = windowSize;
-            wnd.maxSize = windowSize;
-        }
+        private static void MenuWindow() => Instance.Focus();
 
+        /// <summary>
+        /// Currently loaded partner networks versions.
+        /// </summary>
         public static Dictionary<string, PartnerVersions> PartnerSDKVersions { get; set; } = new Dictionary<string, PartnerVersions>();
+        
+        /// <summary>
+        /// Currently loaded user selections.
+        /// </summary>
         public static Dictionary<string, AdapterSelection> UserSelectedVersions { get; set; } = new Dictionary<string, AdapterSelection>();
+        
+        /// <summary>
+        /// Currently saved user selections.
+        /// </summary>
         public static Dictionary<string, AdapterSelection> SavedVersions { get; set; } = new Dictionary<string, AdapterSelection>();
+        
+        /// <summary>
+        /// Currently selected Chartboost Mediation version.
+        /// </summary>
         private static string MediationSelection { get; set; }
        
         private static Button _saveButton;
-
-        private static AdaptersWindow Instance { get; set; }
-
-        public void CreateGUI()
-        {
-            Initialize();
+        private static Button _warningButton;
+        
+        private static AdaptersWindow Instance {
+            get
+            {
+                if (_instance != null) return _instance;
+                
+                var wnd = GetWindow<AdaptersWindow>();
+                wnd.titleContent = new GUIContent("Chartboost Mediation Adapters");
+                var windowSize = new Vector2(420, 520);
+                wnd.minSize = windowSize;
+                _instance = wnd;
+                return _instance;
+            }
         }
 
-        private void Initialize()
+        private static AdaptersWindow _instance;
+
+        public void CreateGUI() => Initialize();
+
+        /// <summary>
+        /// Initializes GUIComponents
+        /// </summary>
+        private static void Initialize()
         {
-            Instance = this;
             PartnerSDKVersions.Clear();
             UserSelectedVersions.Clear();
             SavedVersions.Clear();
@@ -44,16 +66,16 @@ namespace Chartboost.Editor.Adapters
             LoadSelections();
             
             // Each editor window contains a root VisualElement object
-            var root = rootVisualElement;
+            var root = Instance.rootVisualElement;
             root.styleSheets.Add(Constants.StyleSheet.LoadAsset<StyleSheet>());
             root.name = "body";
-
+            
             CreateTableHeaders(root);
             CreateAdapterTable(root);
-            CheckMediationVersion();
+            CheckMediationVersion(root);
         }
-
-        private void CheckMediationVersion()
+        
+        private static void CheckMediationVersion(VisualElement root)
         {
             var logo = new Image
             {
@@ -64,15 +86,14 @@ namespace Chartboost.Editor.Adapters
             
             var package = Utilities.FindPackage(Constants.ChartboostMediationPackageName);
             
-            var warningFixButton = new Button();
-            warningFixButton.name = "warning-button";
-            warningFixButton.Add(logo);
-            warningFixButton.clicked += FixWarning;
+            _warningButton = new Button(() => CheckChartboostMediationVersion());
+            _warningButton.name = "warning-button";
+            _warningButton.Add(logo);
             
             if (string.IsNullOrEmpty(MediationSelection) || !Constants.PathToMainDependency.FileExist())
             {
-                warningFixButton.tooltip = $"Dependencies for Chartboost Mediation {package.version} have not been found. Press to add.";
-                rootVisualElement.Add(warningFixButton);
+                _warningButton.tooltip = $"Dependencies for Chartboost Mediation {package.version} have not been found. Press to add.";
+                root.Add(_warningButton);
                 return;
             }
             
@@ -81,16 +102,8 @@ namespace Chartboost.Editor.Adapters
             
             if (version != packageVersion)
             {
-                warningFixButton.tooltip = $"Your selected dependencies for Chartboost Mediation {version} do not match your current package version {packageVersion}. Press to fix.";
-                rootVisualElement.Add(warningFixButton);
-            }
-
-            void FixWarning()
-            {
-                warningFixButton.clicked -= FixWarning;
-                warningFixButton.RemoveFromHierarchy();
-                MediationSelection = package.version;
-                GenerateChartboostMediationDependency();
+                _warningButton.tooltip = $"Your selected dependencies for Chartboost Mediation {version} do not match your current package version {packageVersion}. Press to fix.";
+                root.Add(_warningButton);
             }
         }
 
@@ -110,7 +123,7 @@ namespace Chartboost.Editor.Adapters
                 scaleMode = ScaleMode.ScaleToFit
             };
 
-            var upgradeButton = new Button(UpgradeSelectionsToLatest);
+            var upgradeButton = new Button(() => UpgradePlatformToLatest(Platform.Android | Platform.IOS));
             upgradeButton.name = "upgrade-button";
             upgradeButton.tooltip = "Upgrade all adapter selections to their latest version!";
             upgradeButton.Add(upgradeImage);
@@ -122,7 +135,7 @@ namespace Chartboost.Editor.Adapters
                 scaleMode = ScaleMode.ScaleToFit
             };
 
-            var refreshButton = new Button(Refresh);
+            var refreshButton = new Button(() => Refresh(false));
             refreshButton.name = "refresh-button";
             refreshButton.tooltip = "Fetch adapter updates!";
             refreshButton.Add(refreshImage);
@@ -130,6 +143,18 @@ namespace Chartboost.Editor.Adapters
             root.Add(logo);
             root.Add(upgradeButton);
             root.Add(refreshButton);
+        }
+
+        private static void CreateAdapterTable(VisualElement root)
+        {
+            var adapters = AdapterDataSource.LoadedAdapters.adapters;
+
+            if (adapters == null)
+                return;
+            
+            var scrollView = new ScrollView();
+            scrollView.contentContainer.style.flexDirection = FlexDirection.Column;
+            scrollView.contentContainer.style.flexWrap = Wrap.NoWrap;
             
             var headers = new TemplateContainer("headers");
             headers.name = "flex-grid";
@@ -149,18 +174,7 @@ namespace Chartboost.Editor.Adapters
             iosVersionLabel.tooltip = "iOS Version of Ad Adapters.";
             headers.Add(iosVersionLabel);
         
-            root.Add(headers);
-        }
-
-        private static void CreateAdapterTable(VisualElement root)
-        {
-            var adapters = AdapterDataSource.LoadedAdapters.adapters;
-
-            if (adapters == null)
-                return;
-            
-            foreach (var partnerAdapter in adapters)
-                PartnerSDKVersions[partnerAdapter.id] = new PartnerVersions(partnerAdapter.android.versions, partnerAdapter.ios.versions);
+            scrollView.Add(headers);
 
             foreach (var adapter in adapters)
             {
@@ -191,8 +205,10 @@ namespace Chartboost.Editor.Adapters
                 container.Add(androidDropdown);
                 container.Add(iosDropdown);
  
-                root.Add(container);
+                scrollView.Add(container);
             }
+            
+            root.Add(scrollView);
         }
         
         private static ToolbarMenu CreateAdapterVersionDropdown(VisualElement root, Adapter adapter, IEnumerable<string> versions, Platform platform, string startValue)
