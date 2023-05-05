@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEditor;
-using UnityEngine;
+using UnityEditor.PackageManager;
 using Object = UnityEngine.Object;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
@@ -14,11 +14,11 @@ namespace Chartboost.Editor
     {
         public static PackageInfo FindPackage(string packageName)
         {
-            var packageJsons = AssetDatabase.FindAssets("package")
-                .Select(AssetDatabase.GUIDToAssetPath).Where(x => AssetDatabase.LoadAssetAtPath<TextAsset>(x) != null)
-                .Select(PackageInfo.FindForAssetPath).ToList();
-
-            return packageJsons.Find(x => x.name == packageName);
+            var packages = Client.List(false, false);
+            while (!packages.IsCompleted) { }
+            var packageInfos = packages.Result.ToList();
+            var desiredPackage = packageInfos.Find(x => x.name == packageName);
+            return desiredPackage;
         }
 
         private static readonly Regex SWhitespace = new Regex(@"\s+");

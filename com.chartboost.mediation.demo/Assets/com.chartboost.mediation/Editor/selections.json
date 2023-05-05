@@ -1,5 +1,5 @@
 {
-  "mediationVersion": "4.2.0",
+  "mediationVersion": "4.2.1",
   "adapterSelections": [
     {
       "id": "adcolony",
@@ -13,12 +13,12 @@
     },
     {
       "id": "aps",
-      "android": "9.7.0",
+      "android": "9.7.1",
       "ios": "4.6.0"
     },
     {
       "id": "applovin",
-      "android": "11.8.1",
+      "android": "11.8.2",
       "ios": "11.8.0"
     },
     {
@@ -29,7 +29,7 @@
     {
       "id": "digitalturbine",
       "android": "8.2.2",
-      "ios": "8.1.9"
+      "ios": "8.2.1"
     },
     {
       "id": "googlebidding",
@@ -43,12 +43,12 @@
     },
     {
       "id": "ironsource",
-      "android": "7.2.7.0",
-      "ios": "7.2.6.0"
+      "android": "7.3.0.0",
+      "ios": "7.2.7.0"
     },
     {
       "id": "meta",
-      "android": "6.12.0",
+      "android": "6.13.7",
       "ios": "6.12.0"
     },
     {
@@ -68,13 +68,13 @@
     },
     {
       "id": "unityads",
-      "android": "4.6.0",
+      "android": "4.6.1",
       "ios": "4.6.0"
     },
     {
       "id": "vungle",
       "android": "6.12.1",
-      "ios": "6.12.2"
+      "ios": "6.12.3"
     },
     {
       "id": "yahoo",
