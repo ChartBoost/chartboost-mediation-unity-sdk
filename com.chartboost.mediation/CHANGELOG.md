@@ -1,8 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file using the standards as defined at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0).
 
-## Version 4.2.0 *(2023-05-04)*
+## Version 4.2.1 *(2023-05-05)*
+Bug Fixes:
+- Fixed an issue where package information failed to load if projects had a large amount of packages.
+- Fixed an issue where main SDK dependency could not be generated through UPM implementation.
 
+## Version 4.2.0 *(2023-05-04)*
 Added:
 - Editor Window, `AdaptersWindow.cs`, for Chartboost Mediation adapters handling. For capabilities, see below:
   * Ad Adapters are now decoupled from the Chartboost Mediation UPM package.

@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 namespace Chartboost.Editor.Adapters
 {
@@ -35,6 +36,9 @@ namespace Chartboost.Editor.Adapters
        
         private static Button _saveButton;
         private static Button _warningButton;
+        
+        private static PackageInfo ChartboostMediationPackage => _mediationPackage ??= Utilities.FindPackage(Constants.ChartboostMediationPackageName);
+        private static PackageInfo _mediationPackage;
         
         private static AdaptersWindow Instance {
             get
@@ -84,21 +88,19 @@ namespace Chartboost.Editor.Adapters
                 scaleMode = ScaleMode.ScaleToFit
             };
             
-            var package = Utilities.FindPackage(Constants.ChartboostMediationPackageName);
-            
             _warningButton = new Button(() => CheckChartboostMediationVersion());
             _warningButton.name = "warning-button";
             _warningButton.Add(logo);
             
             if (string.IsNullOrEmpty(MediationSelection) || !Constants.PathToMainDependency.FileExist())
             {
-                _warningButton.tooltip = $"Dependencies for Chartboost Mediation {package.version} have not been found. Press to add.";
+                _warningButton.tooltip = $"Dependencies for Chartboost Mediation {ChartboostMediationPackage.version} have not been found. Press to add.";
                 root.Add(_warningButton);
                 return;
             }
             
             var version = new Version(MediationSelection);
-            var packageVersion = new Version(package.version);
+            var packageVersion = new Version(ChartboostMediationPackage.version);
             
             if (version != packageVersion)
             {

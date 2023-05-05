@@ -2,10 +2,10 @@
 <dependencies>
     <androidPackages>
         <!-- Android Adapter -->
-        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-applovin:4.11.8.1+@aar"/>
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-applovin:4.11.8.2+@aar"/>
 
         <!-- Partner Android SDK-->
-        <androidPackage spec="com.applovin:applovin-sdk:11.8.1"/>
+        <androidPackage spec="com.applovin:applovin-sdk:11.8.2"/>
         
     </androidPackages>
     <iosPods>

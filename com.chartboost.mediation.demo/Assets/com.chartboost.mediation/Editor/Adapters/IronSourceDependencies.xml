@@ -2,10 +2,10 @@
 <dependencies>
     <androidPackages>
         <!-- Android Adapter -->
-        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-ironsource:4.7.2.7.0+@aar"/>
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-ironsource:4.7.3.0.0+@aar"/>
 
         <!-- Partner Android SDK-->
-        <androidPackage spec="com.ironsource.sdk:mediationsdk:7.2.7"/>
+        <androidPackage spec="com.ironsource.sdk:mediationsdk:7.3.0"/>
         
         <!-- IronSource Android Repositories -->
         <repositories>
@@ -14,9 +14,9 @@
     </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->
-        <iosPod name="ChartboostMediationAdapterIronSource" version="~> 4.7.2.6.0"/>
+        <iosPod name="ChartboostMediationAdapterIronSource" version="~> 4.7.2.7.0"/>
 
         <!-- Partner iOS SDK-->
-        <iosPod name="IronSourceSDK" version="~> 7.2.6.0" addToAllTargets="false"/>
+        <iosPod name="IronSourceSDK" version="~> 7.2.7.0" addToAllTargets="false"/>
     </iosPods>
 </dependencies>
