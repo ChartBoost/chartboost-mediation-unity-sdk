@@ -122,15 +122,18 @@ namespace Chartboost.Editor.Adapters
         {
             if (!Application.isBatchMode && _warningButton != null)
                 _warningButton.RemoveFromHierarchy();
-            var package = Utilities.FindPackage(Constants.ChartboostMediationPackageName);
 
-            var version = new Version(MediationSelection);
-            var packageVersion = new Version(package.version);
+            if (!string.IsNullOrEmpty(MediationSelection) && ChartboostMediationPackage != null)
+            {
+                var version = new Version(MediationSelection);
+                var packageVersion = new Version(ChartboostMediationPackage.version);
+                
+                if (Constants.PathToMainDependency.FileExist() && version == packageVersion)
+                    return false;
+            }
 
-            if (!string.IsNullOrEmpty(MediationSelection) && Constants.PathToMainDependency.FileExist() &&
-                version == packageVersion) return false;
-            
-            MediationSelection = package.version;
+            if (ChartboostMediationPackage != null)
+                MediationSelection = ChartboostMediationPackage.version;
             GenerateChartboostMediationDependency();
             return true;
         }
@@ -172,6 +175,7 @@ namespace Chartboost.Editor.Adapters
         {
             if (!Application.isBatchMode)
                 Instance.rootVisualElement.Clear();
+            _mediationPackage = Utilities.FindPackage(Constants.ChartboostMediationPackageName);
             AdapterDataSource.Update();
             Initialize();
             if (!Application.isBatchMode|| !ignore)
