@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependencies>
+    <androidPackages>
+        <!-- Android Adapter -->
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-hyprmx:4.6.0.3+@aar"/>
+
+        <!-- Partner Android SDK-->
+        <androidPackage spec="com.hyprmx.android:HyprMX-SDK:6.0.3"/>
+        
+    </androidPackages>
+    <iosPods>
+        <!-- iOS Adapter -->
+        <iosPod name="ChartboostMediationAdapterHyprMX" version="~> 4.6.0.0"/>
+
+        <!-- Partner iOS SDK-->
+        <iosPod name="HyprMX" version="~> 6.0.0" addToAllTargets="false"/>
+    </iosPods>
+</dependencies>

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -131,6 +132,14 @@ namespace Chartboost.Editor.Adapters
                         sdkVersion = sdkVersion.Remove(sdkVersion.Length - 2, 2);
                     
                     var androidDependency = $"{adapter.android.adapter}:4.{adapterVersion}+@aar";
+                    
+                    if (adapterId.Equals(Constants.InMobi))
+                    {
+                        var version = new Version(sdkVersion);
+                        if (version >= Constants.InMobiNewSDK)
+                            sdk = $"{sdk}-kotlin";
+                    }
+
                     var androidSDKDependency = $"{sdk}:{sdkVersion}";
                     
                     template[androidAdapterIndexInTemplate] = template[androidAdapterIndexInTemplate].Replace(androidAdapterInTemplate, androidDependency);
@@ -191,17 +200,22 @@ namespace Chartboost.Editor.Adapters
                 var iosAdapterIndexInTemplate = template.FindIndex(x => x.Contains(iosAdapterInTemplate));
                 var iosSDKIndexInTemplate = template.FindIndex(x => x.Contains(iosSDKInTemplate));
 
-                var iosSelection = selection.Value.ios;
-                if (iosSelection != Constants.Unselected)
+                var iosSDKVersion = selection.Value.ios;
+                if (iosSDKVersion != Constants.Unselected)
                 {
-                    var iosDependency = $"4.{iosSelection}";
-                    template[iosAdapterIndexInTemplate] = template[iosAdapterIndexInTemplate].Replace(iosAdapterInTemplate, adapter.ios.adapter).Replace(iosAdapterVersionInTemplate, iosDependency);
+                    var iosAdapterVersion = $"4.{iosSDKVersion}";
+                    template[iosAdapterIndexInTemplate] = template[iosAdapterIndexInTemplate].Replace(iosAdapterInTemplate, adapter.ios.adapter).Replace(iosAdapterVersionInTemplate, iosAdapterVersion);
+
+                    var sdkNaming = adapter.ios.sdk;
                     
-                    // Handling InMobi quirk
-                    if (adapterId != Constants.InMobi)
-                        template[iosSDKIndexInTemplate] = template[iosSDKIndexInTemplate].Replace(iosSDKInTemplate, adapter.ios.sdk).Replace(iosSDKVersionInTemplate, iosSelection).Replace(iosAllTargetsInTemplate, adapter.ios.allTargets.ToString().ToLower());
-                    else
-                        template[iosSDKIndexInTemplate] = $"        <!-- {adapter.name} species different SDKs based on version. Ignoring. -->";
+                    if (adapterId.Equals(Constants.InMobi))
+                    {
+                        var version = new Version(iosSDKVersion);
+                        if (version >= Constants.InMobiNewSDK)
+                            sdkNaming = $"{sdkNaming}-Swift";
+                    }
+                    
+                    template[iosSDKIndexInTemplate] = template[iosSDKIndexInTemplate].Replace(iosSDKInTemplate, sdkNaming).Replace(iosSDKVersionInTemplate, iosSDKVersion).Replace(iosAllTargetsInTemplate, adapter.ios.allTargets.ToString().ToLower());
                 }
                 else
                 {

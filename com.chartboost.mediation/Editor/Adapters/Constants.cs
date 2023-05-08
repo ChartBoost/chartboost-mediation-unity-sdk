@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using UnityEngine;
 
@@ -27,6 +28,7 @@ namespace Chartboost.Editor.Adapters
         public const string InMobi = "inmobi";
         public const string IronSource = "ironsource";
         public const string Mintegral = "mintegral";
+        public static readonly Version InMobiNewSDK = new Version("10.5.0");
 
         public const string StyleSheet = "Packages/com.chartboost.mediation/Editor/Adapters/Visuals/AdaptersWindow.uss";
         public const string LogoPNG = "Packages/com.chartboost.mediation/Editor/Adapters/Visuals/Logo.png";
