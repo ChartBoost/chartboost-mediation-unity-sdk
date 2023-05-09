@@ -101,8 +101,8 @@ namespace Chartboost.Editor.Adapters
             
             var version = new Version(MediationSelection);
             var packageVersion = new Version(ChartboostMediationPackage.version);
-            
-            if (version != packageVersion)
+
+            if (version.Minor != packageVersion.Minor)
             {
                 _warningButton.tooltip = $"Your selected dependencies for Chartboost Mediation {version} do not match your current package version {packageVersion}. Press to fix.";
                 root.Add(_warningButton);
