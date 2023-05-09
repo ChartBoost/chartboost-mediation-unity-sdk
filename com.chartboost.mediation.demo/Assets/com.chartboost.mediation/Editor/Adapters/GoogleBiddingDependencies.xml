@@ -4,9 +4,8 @@
         <!-- Android Adapter -->
         <androidPackage spec="com.chartboost:chartboost-mediation-adapter-google-bidding:4.21.5.0+@aar"/>
 
-        <!-- Partner Android SDK-->
+        <!-- Partner Android SDK Dependencies-->
         <androidPackage spec="com.google.android.gms:play-services-ads:21.5.0"/>
-        
         <androidPackage spec="com.google.guava:guava:31.1-android"/>
     </androidPackages>
     <iosPods>

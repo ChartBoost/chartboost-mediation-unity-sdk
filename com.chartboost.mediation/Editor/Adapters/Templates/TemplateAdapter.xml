@@ -2,20 +2,18 @@
 <dependencies>
     <androidPackages>
         <!-- Android Adapter -->
-        <androidPackage spec="%ANDROID_ADAPTER%"/>
+        %ANDROID_ADAPTER%
 
-        <!-- Partner Android SDK-->
-        <androidPackage spec="%ANDROID_SDK%"/>
-        
+        <!-- Partner Android SDK Dependencies-->
+        %ANDROID_DEPENDENCIES%
+
         %REPOSITORIES%
-
-        %DEPENDENCIES%
     </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->
-        <iosPod name="%IOS_ADAPTER%" version="~> %IOS_CBMA_VERSION%"/>
+        %IOS_ADAPTER%
 
         <!-- Partner iOS SDK-->
-        <iosPod name="%IOS_SDK%" version="~> %IOS_SDK_VERSION%" addToAllTargets="%ALL_TARGETS%"/>
+        %IOS_DEPENDENCIES%
     </iosPods>
 </dependencies>

@@ -4,9 +4,8 @@
         <!-- Android Adapter -->
         <androidPackage spec="com.chartboost:chartboost-mediation-adapter-chartboost:4.9.2.1+@aar"/>
 
-        <!-- Partner Android SDK-->
+        <!-- Partner Android SDK Dependencies-->
         <androidPackage spec="com.chartboost:chartboost-sdk:9.2.1"/>
-        
     </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->

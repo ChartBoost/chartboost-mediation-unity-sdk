@@ -11,6 +11,11 @@ namespace Chartboost.Editor.Adapters.Serialization
     public struct AdapterData
     {
         /// <summary>
+        /// Timestamp of last cron job
+        /// </summary>
+        public string? lastChecked;
+        
+        /// <summary>
         /// Timestamp of last update
         /// </summary>
         public string? lastUpdated;
