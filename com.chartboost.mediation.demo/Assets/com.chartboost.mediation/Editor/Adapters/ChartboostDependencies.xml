@@ -6,6 +6,11 @@
 
         <!-- Partner Android SDK Dependencies-->
         <androidPackage spec="com.chartboost:chartboost-sdk:9.3.0"/>
+
+        <!-- Chartboost Android Repositories -->
+        <repositories>
+          <repository>https://cboost.jfrog.io/artifactory/chartboost-ads/</repository>
+        </repositories>
     </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->

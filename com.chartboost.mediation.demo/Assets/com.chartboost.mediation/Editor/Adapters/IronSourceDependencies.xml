@@ -11,6 +11,7 @@
         <repositories>
           <repository>https://android-sdk.is.com/</repository>
         </repositories>
+    </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->
         <iosPod name="ChartboostMediationAdapterIronSource" version="~> 4.7.3.0.0"/>

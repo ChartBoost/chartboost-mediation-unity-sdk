@@ -11,6 +11,7 @@
         <repositories>
           <repository>https://artifactory.yahooinc.com/artifactory/maven/</repository>
         </repositories>
+    </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->
         <iosPod name="ChartboostMediationAdapterYahoo" version="~> 4.1.4.0"/>

@@ -8,10 +8,13 @@
             url "https://maven.google.com"
         }
         maven {
+            url "https://cboost.jfrog.io/artifactory/chartboost-ads/" // Assets/com.chartboost.mediation/Editor/Adapters/ChartboostDependencies.xml:13
+        }
+        maven {
             url "https://android-sdk.is.com/" // Assets/com.chartboost.mediation/Editor/Adapters/IronSourceDependencies.xml:13
         }
         maven {
-            url "https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea" // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:13
+            url "https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea" // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:23
         }
         maven {
             url "https://artifact.bytedance.com/repository/pangle" // Assets/com.chartboost.mediation/Editor/Adapters/PangleDependencies.xml:13
@@ -36,54 +39,56 @@ apply plugin: 'com.android.library'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 // Android Resolver Dependencies Start
-    implementation 'androidx.core:core:1.2.0' // Assets/com.chartboost.mediation/Editor/Adapters/VungleDependencies.xml:10
+    implementation 'androidx.core:core:1.2.0' // Assets/com.chartboost.mediation/Editor/Adapters/VungleDependencies.xml:9
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:11
     implementation 'androidx.multidex:multidex:2.0.1' // Assets/Demo/Editor/MultidexDependencies.xml:4
     implementation 'com.adcolony:sdk:4.8.0' // Assets/com.chartboost.mediation/Editor/Adapters/AdColonyDependencies.xml:8
-    implementation 'com.amazon.android:aps-sdk:9.7.0' // Assets/com.chartboost.mediation/Editor/Adapters/AmazonPublisherServicesDependencies.xml:8
-    implementation 'com.applovin:applovin-sdk:11.8.1' // Assets/com.chartboost.mediation/Editor/Adapters/AppLovinDependencies.xml:8
+    implementation 'com.amazon.android:aps-sdk:9.7.1' // Assets/com.chartboost.mediation/Editor/Adapters/AmazonPublisherServicesDependencies.xml:8
+    implementation 'com.applovin:applovin-sdk:11.8.2' // Assets/com.chartboost.mediation/Editor/Adapters/AppLovinDependencies.xml:8
     implementation 'com.chartboost:chartboost-mediation-adapter-adcolony:4.4.8.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/AdColonyDependencies.xml:5
     implementation 'com.chartboost:chartboost-mediation-adapter-admob:4.21.5.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/AdMobDependencies.xml:5
-    implementation 'com.chartboost:chartboost-mediation-adapter-amazon-publisher-services:4.9.7.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/AmazonPublisherServicesDependencies.xml:5
-    implementation 'com.chartboost:chartboost-mediation-adapter-applovin:4.11.8.1+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/AppLovinDependencies.xml:5
-    implementation 'com.chartboost:chartboost-mediation-adapter-chartboost:4.9.2.1+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/ChartboostDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-amazon-publisher-services:4.9.7.1+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/AmazonPublisherServicesDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-applovin:4.11.8.2+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/AppLovinDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-chartboost:4.9.3.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/ChartboostDependencies.xml:5
     implementation 'com.chartboost:chartboost-mediation-adapter-digital-turbine-exchange:4.8.2.2+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/DigitalTurbineExchangeDependencies.xml:5
     implementation 'com.chartboost:chartboost-mediation-adapter-google-bidding:4.21.5.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/GoogleBiddingDependencies.xml:5
-    implementation 'com.chartboost:chartboost-mediation-adapter-inmobi:4.10.1.3+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/InMobiDependencies.xml:5
-    implementation 'com.chartboost:chartboost-mediation-adapter-ironsource:4.7.2.7.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/IronSourceDependencies.xml:5
-    implementation 'com.chartboost:chartboost-mediation-adapter-meta-audience-network:4.6.12.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/MetaAudienceNetworkDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-hyprmx:4.6.0.3+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/HyprMXDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-inmobi:4.10.5.4+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/InMobiDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-ironsource:4.7.3.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/IronSourceDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-meta-audience-network:4.6.13.7+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/MetaAudienceNetworkDependencies.xml:5
     implementation 'com.chartboost:chartboost-mediation-adapter-mintegral:4.16.3.91+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:5
     implementation 'com.chartboost:chartboost-mediation-adapter-pangle:4.4.9.1.3+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/PangleDependencies.xml:5
     implementation 'com.chartboost:chartboost-mediation-adapter-tapjoy:4.12.11.1+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/TapjoyDependencies.xml:5
-    implementation 'com.chartboost:chartboost-mediation-adapter-unity-ads:4.4.6.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/UnityAdsDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-unity-ads:4.4.6.1+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/UnityAdsDependencies.xml:5
     implementation 'com.chartboost:chartboost-mediation-adapter-vungle:4.6.12.1+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/VungleDependencies.xml:5
     implementation 'com.chartboost:chartboost-mediation-adapter-yahoo:4.1.4.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/YahooDependencies.xml:5
     implementation 'com.chartboost:chartboost-mediation-sdk:4.2+' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:10
-    implementation 'com.chartboost:chartboost-sdk:9.2.1' // Assets/com.chartboost.mediation/Editor/Adapters/ChartboostDependencies.xml:8
-    implementation 'com.facebook.android:audience-network-sdk:6.12.0' // Assets/com.chartboost.mediation/Editor/Adapters/MetaAudienceNetworkDependencies.xml:8
+    implementation 'com.chartboost:chartboost-sdk:9.3.0' // Assets/com.chartboost.mediation/Editor/Adapters/ChartboostDependencies.xml:8
+    implementation 'com.facebook.android:audience-network-sdk:6.13.7' // Assets/com.chartboost.mediation/Editor/Adapters/MetaAudienceNetworkDependencies.xml:8
     implementation 'com.fyber:marketplace-sdk:8.2.2' // Assets/com.chartboost.mediation/Editor/Adapters/DigitalTurbineExchangeDependencies.xml:8
     implementation 'com.google.android.gms:play-services-ads:21.5.0' // Assets/com.chartboost.mediation/Editor/Adapters/GoogleBiddingDependencies.xml:8
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:15
     implementation 'com.google.android.gms:play-services-appset:16.0.2' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:16
     implementation 'com.google.android.gms:play-services-base:18.1.0' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:14
     implementation 'com.google.android.gms:play-services-basement:18.1.0' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:17
-    implementation 'com.google.guava:guava:31.1-android' // Assets/com.chartboost.mediation/Editor/Adapters/GoogleBiddingDependencies.xml:10
-    implementation 'com.inmobi.monetization:inmobi-ads:10.1.3' // Assets/com.chartboost.mediation/Editor/Adapters/InMobiDependencies.xml:8
-    implementation 'com.ironsource.sdk:mediationsdk:7.2.7' // Assets/com.chartboost.mediation/Editor/Adapters/IronSourceDependencies.xml:8
-    implementation 'com.mbridge.msdk.oversea:interstitialvideo:16.3.91' // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:21
-    implementation 'com.mbridge.msdk.oversea:mbbanner:16.3.91' // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:24
-    implementation 'com.mbridge.msdk.oversea:mbbid:16.3.91' // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:25
-    implementation 'com.mbridge.msdk.oversea:mbjscommon:16.3.91' // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:16
-    implementation 'com.mbridge.msdk.oversea:mbnative:16.3.91' // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:22
-    implementation 'com.mbridge.msdk.oversea:nativeex:16.3.91' // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:23
-    implementation 'com.mbridge.msdk.oversea:playercommon:16.3.91' // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:17
-    implementation 'com.mbridge.msdk.oversea:reward:16.3.91' // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:18
-    implementation 'com.mbridge.msdk.oversea:same:16.3.91' // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:20
-    implementation 'com.mbridge.msdk.oversea:videocommon:16.3.91' // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:19
-    implementation 'com.mbridge.msdk.oversea:videojs:16.3.91' // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:15
+    implementation 'com.google.guava:guava:31.1-android' // Assets/com.chartboost.mediation/Editor/Adapters/GoogleBiddingDependencies.xml:9
+    implementation 'com.hyprmx.android:HyprMX-SDK:6.0.3' // Assets/com.chartboost.mediation/Editor/Adapters/HyprMXDependencies.xml:8
+    implementation 'com.inmobi.monetization:inmobi-ads-kotlin:10.5.4' // Assets/com.chartboost.mediation/Editor/Adapters/InMobiDependencies.xml:8
+    implementation 'com.ironsource.sdk:mediationsdk:7.3.0' // Assets/com.chartboost.mediation/Editor/Adapters/IronSourceDependencies.xml:8
+    implementation 'com.mbridge.msdk.oversea:interstitialvideo:16.3.91' // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:14
+    implementation 'com.mbridge.msdk.oversea:mbbanner:16.3.91' // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:17
+    implementation 'com.mbridge.msdk.oversea:mbbid:16.3.91' // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:18
+    implementation 'com.mbridge.msdk.oversea:mbjscommon:16.3.91' // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:9
+    implementation 'com.mbridge.msdk.oversea:mbnative:16.3.91' // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:15
+    implementation 'com.mbridge.msdk.oversea:nativeex:16.3.91' // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:16
+    implementation 'com.mbridge.msdk.oversea:playercommon:16.3.91' // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:10
+    implementation 'com.mbridge.msdk.oversea:reward:16.3.91' // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:11
+    implementation 'com.mbridge.msdk.oversea:same:16.3.91' // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:13
+    implementation 'com.mbridge.msdk.oversea:videocommon:16.3.91' // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:12
+    implementation 'com.mbridge.msdk.oversea:videojs:16.3.91' // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:8
     implementation 'com.pangle.global:ads-sdk:4.9.1.3' // Assets/com.chartboost.mediation/Editor/Adapters/PangleDependencies.xml:8
     implementation 'com.tapjoy:tapjoy-android-sdk:12.11.1' // Assets/com.chartboost.mediation/Editor/Adapters/TapjoyDependencies.xml:8
-    implementation 'com.unity3d.ads:unity-ads:4.6.0' // Assets/com.chartboost.mediation/Editor/Adapters/UnityAdsDependencies.xml:8
+    implementation 'com.unity3d.ads:unity-ads:4.6.1' // Assets/com.chartboost.mediation/Editor/Adapters/UnityAdsDependencies.xml:8
     implementation 'com.vungle:publisher-sdk-android:6.12.1' // Assets/com.chartboost.mediation/Editor/Adapters/VungleDependencies.xml:8
     implementation 'com.yahoo.mobile.ads:android-yahoo-mobile-sdk:1.4.0' // Assets/com.chartboost.mediation/Editor/Adapters/YahooDependencies.xml:8
 // Android Resolver Dependencies End
