@@ -1,3 +1,4 @@
+#if UNITY_IOS
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
@@ -36,3 +37,4 @@ namespace Editor
         }
     }
 }
+#endif

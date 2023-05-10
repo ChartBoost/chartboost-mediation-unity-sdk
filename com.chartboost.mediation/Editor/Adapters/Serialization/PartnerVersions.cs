@@ -22,21 +22,24 @@ namespace Chartboost.Editor.Adapters.Serialization
         /// </summary>
         /// <param name="androidAdapters">Partner Adapter Android versions.</param>
         /// <param name="iosAdapters">Partner Adapter IOS versions.</param>
-        public PartnerVersions(IEnumerable<string> androidAdapters, IEnumerable<string> iosAdapters)
+        public PartnerVersions(AdapterVersion[] androidAdapters, AdapterVersion[] iosAdapters)
         {
             android = GetSupportedVersions(androidAdapters);
             ios = GetSupportedVersions(iosAdapters);
         }
 
-        private static string[] GetSupportedVersions(IEnumerable<string> adapters)
+        private static string[] GetSupportedVersions(AdapterVersion[] adapters)
         {
             var temp = new List<string> { Constants.Unselected };
 
-            foreach (var platformVersion in adapters)
+            foreach (var adapterVersion in adapters)
             {
-                var partnerVersion = GetPartnerSDKVersion(platformVersion);
-                if (!temp.Contains(partnerVersion))
-                    temp.Add(partnerVersion);
+                foreach (var version in adapterVersion.versions)
+                {
+                    var partnerVersion = GetPartnerSDKVersion(version);
+                    if (!temp.Contains(partnerVersion))
+                        temp.Add(partnerVersion);
+                }
             }
 
             return temp.ToArray();
