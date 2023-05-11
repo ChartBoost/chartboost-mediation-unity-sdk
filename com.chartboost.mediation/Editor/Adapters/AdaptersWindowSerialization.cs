@@ -175,10 +175,11 @@ namespace Chartboost.Editor.Adapters
                     repos.AddRange(androidRepos.Select(repo => $"          <repository>{repo}</repository>"));
                     repos.Add("        </repositories>");
                     template.InsertRange(repositoriesIndexStartPoint, repos);
-                    repositoriesIndexStartPoint += repos.Count + 1;
+                    repositoriesIndexStartPoint += repos.Count;
+                    
+                    template.RemoveAt(repositoriesIndexStartPoint);
                 }
-                
-                if (repositoriesIndexStartPoint >= 0)
+                else
                     template.RemoveRange(repositoriesIndexStartPoint - 1, 2);
                 
                 var iosAdapterIndexInTemplate = template.FindIndex(x => x.Contains(iosAdapterInTemplate));

@@ -11,6 +11,7 @@
         <repositories>
           <repository>https://sdk.tapjoy.com/</repository>
         </repositories>
+    </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->
         <iosPod name="ChartboostMediationAdapterTapjoy" version="~> 4.13.0.0"/>

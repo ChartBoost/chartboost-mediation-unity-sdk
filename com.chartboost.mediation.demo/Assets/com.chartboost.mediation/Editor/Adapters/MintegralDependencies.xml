@@ -21,6 +21,7 @@
         <repositories>
           <repository>https://dl-maven-android.mintegral.com/repository/mbridge_android_sdk_oversea</repository>
         </repositories>
+    </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->
         <iosPod name="ChartboostMediationAdapterMintegral" version="~> 4.7.3.0"/>
