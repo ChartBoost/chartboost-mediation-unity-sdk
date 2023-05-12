@@ -4,9 +4,9 @@
         <!-- Android Adapter -->
         <androidPackage spec="com.chartboost:chartboost-mediation-adapter-yahoo:4.1.4.0+@aar"/>
 
-        <!-- Partner Android SDK-->
+        <!-- Partner Android SDK Dependencies-->
         <androidPackage spec="com.yahoo.mobile.ads:android-yahoo-mobile-sdk:1.4.0"/>
-        
+
         <!-- Yahoo Android Repositories -->
         <repositories>
           <repository>https://artifactory.yahooinc.com/artifactory/maven/</repository>

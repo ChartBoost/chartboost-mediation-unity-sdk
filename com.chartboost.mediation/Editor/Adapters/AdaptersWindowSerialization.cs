@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
@@ -24,6 +25,13 @@ namespace Chartboost.Editor.Adapters
 
             var jsonContents = Constants.PathToSelectionsFile.ReadAllText();
             var selections = JsonConvert.DeserializeObject<SDKSelections>(jsonContents);
+
+            if (selections == null)
+            {
+                MediationSelection = ChartboostMediationPackage.version;
+                UpdateSavedVersions();
+                return;
+            }
 
             MediationSelection = selections.mediationVersion;
 
@@ -81,14 +89,12 @@ namespace Chartboost.Editor.Adapters
             }
 
             const string androidAdapterInTemplate = "%ANDROID_ADAPTER%";
-            const string iosAdapterInTemplate = "%IOS_ADAPTER%";
-            const string androidSDKInTemplate = "%ANDROID_SDK%";
             const string androidRepositoriesInTemplate = "%REPOSITORIES%";
-            const string androidDependenciesInTemplate = "%DEPENDENCIES%";
-            const string iosSDKInTemplate = "%IOS_SDK%";
+            const string androidDependenciesInTemplate = "%ANDROID_DEPENDENCIES%";
+            
+            const string iosAdapterInTemplate = "%IOS_ADAPTER%";
             const string iosAdapterVersionInTemplate = "%IOS_CBMA_VERSION%";
-            const string iosSDKVersionInTemplate = "%IOS_SDK_VERSION%";
-            const string iosAllTargetsInTemplate = "%ALL_TARGETS%";
+            const string iosDependenciesInTemplate = "%IOS_DEPENDENCIES%";
             
             foreach (var adapter in adapters)
             {
@@ -106,7 +112,7 @@ namespace Chartboost.Editor.Adapters
                 if (!Constants.PathToSelectionsFile.FileExist() && !Constants.PathToMainDependency.FileExist())
                     Constants.PathToEditorInGeneratedFiles.DeleteDirectoryWithMeta();
             }
-
+            
             foreach (var selection in UserSelectedVersions)
             {
                 var template = new List<string>(defaultTemplateContents);
@@ -115,44 +121,52 @@ namespace Chartboost.Editor.Adapters
                 var pathToAdapter = Path.Combine(Constants.PathToAdaptersDirectory, $"{adapter.name.RemoveWhitespace()}Dependencies.xml");
                 
                 var androidAdapterIndexInTemplate = template.FindIndex(x => x.Contains(androidAdapterInTemplate));
-                var androidSDKIndexInTemplate = template.FindIndex(x => x.Contains(androidSDKInTemplate));
-
-                var androidSelected = selection.Value.android != Constants.Unselected;
+                var extraDependenciesStartPoint = template.FindIndex(x => x.Contains(androidDependenciesInTemplate));
+                var androidSDKVersion = selection.Value.android;
+                var androidSelected = androidSDKVersion != Constants.Unselected;
                 
                 // Android SDK Adapter Version
                 if (androidSelected)
                 {
-                    string sdkVersion;
-                    var adapterVersion = sdkVersion = selection.Value.android;
-                    var sdk = adapter.android.sdk;
-                  
                     // handling IronSource SDK versioning quirk
-                    if (adapterId.Equals(Constants.IronSource) && sdkVersion[sdkVersion.Length - 1] == '0')
-                        sdkVersion = sdkVersion.Remove(sdkVersion.Length - 2, 2);
+                    if (adapterId.Equals(Constants.IronSource) && androidSDKVersion[androidSDKVersion.Length - 1] == '0')
+                        androidSDKVersion = androidSDKVersion.Remove(androidSDKVersion.Length - 2, 2);
                     
-                    var androidDependency = $"{adapter.android.adapter}:4.{adapterVersion}+@aar";
-                    var androidSDKDependency = $"{sdk}:{sdkVersion}";
+                    // Set Adapter versioning
+                    template[androidAdapterIndexInTemplate] =  $"        <androidPackage spec=\"{adapter.android.adapter}:4.{androidSDKVersion}+@aar\"/>";
                     
-                    template[androidAdapterIndexInTemplate] = template[androidAdapterIndexInTemplate].Replace(androidAdapterInTemplate, androidDependency);
-                    
-                    if (!string.IsNullOrEmpty(sdk))
-                        template[androidSDKIndexInTemplate] = template[androidSDKIndexInTemplate].Replace(androidSDKInTemplate, androidSDKDependency);
-                    else
-                        template[androidSDKIndexInTemplate] = $"        <!-- {adapter.name} does not provide a single SDK. -->";
+                    // Set all remaining dependencies
+                    var versionSet = GetAdapterVersionSet(androidSDKVersion, adapter.android.versions);
+                    if (versionSet.dependencies != null && versionSet.dependencies.Count > 0)
+                    {
+                        var dependenciesToAdd = new List<string>();
+                        
+                        foreach (var dependency in versionSet.dependencies)
+                        {
+                            var hasVersionNumber = Constants.NeedsVersionNumber.IsMatch(dependency);
+
+                            var toInsert = dependency;
+                            if (!hasVersionNumber)
+                                toInsert = $"{dependency}:{androidSDKVersion}";
+                            dependenciesToAdd.Add($"        <androidPackage spec=\"{toInsert}\"/>");
+                        }
+
+                        // Android Extra Dependencies
+                        template.RemoveAt(extraDependenciesStartPoint);
+                        template.InsertRange(extraDependenciesStartPoint, dependenciesToAdd);
+                    }
                 }
                 else
                 {
                     var message = $"        <!-- Android {adapter.name} Adapter has not been selected. Choose a version to fill this field -->";
                     template[androidAdapterIndexInTemplate] = message;
-                    template[androidSDKIndexInTemplate] = message;
+                    template[extraDependenciesStartPoint] = message;
                 }
-
+            
                 // Android Extra Repos
                 var androidRepos = adapter.android.repositories;
-                var extraDependencies = adapter.android.dependencies;
-
                 var repositoriesIndexStartPoint = template.FindIndex(x => x.Contains(androidRepositoriesInTemplate));
-
+                
                 if (androidSelected && androidRepos != null && androidRepos.Length > 0)
                 {
                     var repos = new List<string>();
@@ -160,48 +174,32 @@ namespace Chartboost.Editor.Adapters
                     repos.Add("        <repositories>");
                     repos.AddRange(androidRepos.Select(repo => $"          <repository>{repo}</repository>"));
                     repos.Add("        </repositories>");
-                    if (extraDependencies != null && extraDependencies.Length > 0)
-                        repos.Add("");
                     template.InsertRange(repositoriesIndexStartPoint, repos);
                     repositoriesIndexStartPoint += repos.Count;
-                }
-                
-                if (repositoriesIndexStartPoint >= 0)
-                    template.RemoveRange(repositoriesIndexStartPoint, 2);
-
-                // Android Extra Dependencies
-                var extraDependenciesStartPoint = template.FindIndex(x => x.Contains(androidDependenciesInTemplate));
-
-                if (androidSelected && extraDependencies != null && extraDependencies.Length > 0)
-                {
-                    var extra = new List<string>();
-                    foreach (var dependency in extraDependencies)
-                    {
-                        // handling Mintegral quirk
-                        var formatted = adapterId.Equals(Constants.Mintegral) ? $"{dependency}:{selection.Value.android}" : dependency;
-                        extra.Add($"        <androidPackage spec=\"{formatted}\"/>");
-                    }
-                    template.InsertRange(extraDependenciesStartPoint, extra);
-                    extraDependenciesStartPoint += extra.Count;
-                }
-                
-                if (extraDependenciesStartPoint >= 0)
-                    template.RemoveAt(extraDependenciesStartPoint);
-
-                var iosAdapterIndexInTemplate = template.FindIndex(x => x.Contains(iosAdapterInTemplate));
-                var iosSDKIndexInTemplate = template.FindIndex(x => x.Contains(iosSDKInTemplate));
-
-                var iosSelection = selection.Value.ios;
-                if (iosSelection != Constants.Unselected)
-                {
-                    var iosDependency = $"4.{iosSelection}";
-                    template[iosAdapterIndexInTemplate] = template[iosAdapterIndexInTemplate].Replace(iosAdapterInTemplate, adapter.ios.adapter).Replace(iosAdapterVersionInTemplate, iosDependency);
                     
-                    // Handling InMobi quirk
-                    if (adapterId != Constants.InMobi)
-                        template[iosSDKIndexInTemplate] = template[iosSDKIndexInTemplate].Replace(iosSDKInTemplate, adapter.ios.sdk).Replace(iosSDKVersionInTemplate, iosSelection).Replace(iosAllTargetsInTemplate, adapter.ios.allTargets.ToString().ToLower());
-                    else
-                        template[iosSDKIndexInTemplate] = $"        <!-- {adapter.name} species different SDKs based on version. Ignoring. -->";
+                    template.RemoveAt(repositoriesIndexStartPoint);
+                }
+                else
+                    template.RemoveRange(repositoriesIndexStartPoint - 1, 2);
+                
+                var iosAdapterIndexInTemplate = template.FindIndex(x => x.Contains(iosAdapterInTemplate));
+                var iosSDKIndexInTemplate = template.FindIndex(x => x.Contains(iosDependenciesInTemplate));
+                
+                var iosSDKVersion = selection.Value.ios;
+                if (iosSDKVersion != Constants.Unselected)
+                {
+                    var versionSet = GetAdapterVersionSet(iosSDKVersion, adapter.ios.versions);
+                    template[iosAdapterIndexInTemplate] = $"        <iosPod name=\"{adapter.ios.adapter}\" version=\"~> 4.{iosSDKVersion}\"/>";
+                    
+                    if (versionSet.dependencies != null && versionSet.dependencies.Count > 0)
+                    {
+                        var dependenciesToAdd = new List<string>();
+                        foreach (var dependency in versionSet.dependencies)
+                            dependenciesToAdd.Add($"        <iosPod name=\"{dependency}\" version=\"~> {iosSDKVersion}\" addToAllTargets=\"{versionSet.allTargets.ToString().ToLower()}\"/>");
+
+                        template.RemoveAt(iosSDKIndexInTemplate);
+                        template.InsertRange(iosSDKIndexInTemplate, dependenciesToAdd);
+                    }
                 }
                 else
                 {
@@ -209,7 +207,7 @@ namespace Chartboost.Editor.Adapters
                     template[iosAdapterIndexInTemplate] = message;
                     template[iosSDKIndexInTemplate] = message;
                 }
-
+            
                 Constants.PathToPackageGeneratedFiles.DirectoryCreate();
                 Constants.PathToEditorInGeneratedFiles.DirectoryCreate();
                 Constants.PathToAdaptersDirectory.DirectoryCreate();
@@ -217,6 +215,18 @@ namespace Chartboost.Editor.Adapters
             }
             
             AssetDatabase.Refresh();
+
+            AdapterVersion GetAdapterVersionSet(string sdkVersion, AdapterVersion[] allVersions)
+            {
+                var versionSet = new AdapterVersion();
+                foreach (var version in allVersions)
+                {
+                    versionSet = version;
+                    if (versionSet.versions.Find(x => x.Contains(sdkVersion)) != null)
+                        return versionSet;
+                }
+                return versionSet;
+            }
         }
 
         private static void GenerateChartboostMediationDependency()

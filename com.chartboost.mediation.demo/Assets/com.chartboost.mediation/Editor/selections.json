@@ -23,8 +23,8 @@
     },
     {
       "id": "chartboost",
-      "android": "9.2.1",
-      "ios": "9.2.0"
+      "android": "9.3.0",
+      "ios": "9.3.0"
     },
     {
       "id": "digitalturbine",
@@ -38,13 +38,13 @@
     },
     {
       "id": "inmobi",
-      "android": "10.1.3",
+      "android": "10.5.4",
       "ios": "10.5.0"
     },
     {
       "id": "ironsource",
       "android": "7.3.0.0",
-      "ios": "7.2.7.0"
+      "ios": "7.3.0.0"
     },
     {
       "id": "meta",
@@ -80,6 +80,11 @@
       "id": "yahoo",
       "android": "1.4.0",
       "ios": "1.4.0"
+    },
+    {
+      "id": "hyprmx",
+      "android": "6.0.3",
+      "ios": "6.0.0"
     }
   ]
 }

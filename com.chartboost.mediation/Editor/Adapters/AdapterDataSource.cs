@@ -35,8 +35,7 @@ namespace Chartboost.Editor.Adapters
         /// <summary>
         /// Endpoint where Adapter Data is stored.
         /// </summary>
-        private const string Endpoint = "https://chartboost.s3.amazonaws.com/chartboost-mediation/mediation-integration/partners.json";
-
+        private const string Endpoint = "https://chartboost.s3.amazonaws.com/chartboost-mediation/mediation-integration/v2/partners.json";
 
         private static readonly bool InitialCache;
 
@@ -75,7 +74,6 @@ namespace Chartboost.Editor.Adapters
 
                 if (newVersion <= oldVersion)
                     return Task.FromResult(cacheAdapterConfig);
-                
                 Constants.PathToAdaptersCachedJson.FileCreate(newAdapters);
                 return Task.FromResult(newAdapterConfig);
             }

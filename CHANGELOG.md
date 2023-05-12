@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file using the standards as defined at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0).
 
+## Version 4.2.2 *(2023-05-10)*
+Improvements:
+- Updated `AdaptersWindow.cs` to utilize a more comprehensive JSON schema for better handling of network dependency changes.
+
+Bug Fixes:
+- Fixed an issue with InMobi SDK dependencies not being properly defined due to versioning differences.
+
 ## Version 4.2.1 *(2023-05-05)*
 Bug Fixes:
 - Fixed an issue where package information failed to load if projects had a large amount of packages.
