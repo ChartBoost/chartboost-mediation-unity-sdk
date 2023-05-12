@@ -1799,12 +1799,36 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3852305274594992823, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
+      propertyPath: m_Color.a
+      value: 0.39215687
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852305274594992823, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
+      propertyPath: m_Color.b
+      value: 0.01966786
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852305274594992823, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
+      propertyPath: m_Color.g
+      value: 0.9622642
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852305274594992823, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852305274594992823, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852305274594992823, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: m_FillCenter
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810594, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: m_Name
       value: UnityBannerAd (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5800358431324810594, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810597, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: m_Pivot.x
@@ -1836,11 +1860,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810597, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 381.53293
+      value: 410.2588
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810597, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 317.94412
+      value: 341.88232
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810597, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1872,11 +1896,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810597, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -24
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810597, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 503
+      value: 281
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810597, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1895,18 +1919,23 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810599, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
+      propertyPath: _draggable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5800358431324810599, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: referenceDpi
       value: 420
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810599, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: bannerPlacementName
-      value: AllNetworkBanner
+      value: AllProBanner
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810599, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: referenceRetinaScale
       value: 3
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5800358431324810596, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
 --- !u!224 &516408710 stripped
 RectTransform:
@@ -4678,7 +4707,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1132835359}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.14343786
+  m_Size: 0.12335536
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -6001,12 +6030,36 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3852305274594992823, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
+      propertyPath: m_Color.a
+      value: 0.39215687
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852305274594992823, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852305274594992823, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
+      propertyPath: m_Color.g
+      value: 0.1510973
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852305274594992823, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852305274594992823, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852305274594992823, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: m_FillCenter
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810594, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: m_Name
       value: UnityBannerAd (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5800358431324810594, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810597, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: m_Pivot.x
@@ -6038,11 +6091,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810597, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 925.8533
+      value: 995.56134
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810597, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 114.45988
+      value: 123.07764
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810597, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6078,7 +6131,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810597, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -507
+      value: -572.2
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810597, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -6097,18 +6150,23 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810599, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
+      propertyPath: _draggable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5800358431324810599, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: referenceDpi
       value: 420
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810599, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: bannerPlacementName
-      value: AllNetworkBanner
+      value: AllNonProBanner
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810599, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: referenceRetinaScale
       value: 3
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5800358431324810596, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
 --- !u!224 &1604882083 stripped
 RectTransform:
@@ -7874,6 +7932,26 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3852305274594992823, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
+      propertyPath: m_Color.a
+      value: 0.39215687
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852305274594992823, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852305274594992823, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852305274594992823, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
+      propertyPath: m_Color.r
+      value: 0.990566
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852305274594992823, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852305274594992823, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: m_FillCenter
       value: 1
       objectReference: {fileID: 0}
@@ -7911,11 +7989,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810597, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 406.96844
+      value: 437.60938
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810597, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 63.58882
+      value: 68.376465
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810597, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7947,11 +8025,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810597, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 8.600006
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810597, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 283.34
+      value: -148
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810597, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -7970,6 +8048,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5800358431324810599, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
+      propertyPath: _draggable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5800358431324810599, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
       propertyPath: referenceDpi
       value: 420
       objectReference: {fileID: 0}
@@ -7981,5 +8063,6 @@ PrefabInstance:
       propertyPath: referenceRetinaScale
       value: 3
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5800358431324810596, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 9ed2bc6cc137944a7862fba6e3f6dc23, type: 3}

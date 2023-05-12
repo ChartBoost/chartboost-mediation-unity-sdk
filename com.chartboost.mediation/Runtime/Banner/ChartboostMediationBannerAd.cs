@@ -1,3 +1,5 @@
+using System;
+
 namespace Chartboost.Banner
 {
     /// <summary>
@@ -82,5 +84,11 @@ namespace Chartboost.Banner
         /// <inheritdoc cref="ChartboostMediationBannerBase.SetParams(float, float, int, int)"/>>
         public override void SetParams(float x, float y, int width, int height)
             => _platformBanner.SetParams(x, y, width, height);
+
+        public override void EnableDrag(Action<float, float> didDrag = null)
+            => _platformBanner.EnableDrag(didDrag);
+
+        public override void DisableDrag()
+            => _platformBanner.DisableDrag();
     }
 }

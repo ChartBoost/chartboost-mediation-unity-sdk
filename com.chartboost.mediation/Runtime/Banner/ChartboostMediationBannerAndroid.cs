@@ -1,6 +1,8 @@
 #if UNITY_ANDROID
+using System;
 using Chartboost.Platforms;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Chartboost.Banner
 {
@@ -78,14 +80,46 @@ namespace Chartboost.Banner
         {
             base.SetParams(x, y, width, height);
             _androidAd.Call("setParams", x, Screen.height - y, width, height);  // Android measures pixels from top whereas Unity provides measurement from bottom of screen
-        }
+        }        
 
-        public override void SetIntractable(bool intractable)
+        public override void EnableDrag(Action<float, float> didDrag = null)
         {
-            base.SetIntractable(intractable);
+            base.EnableDrag(didDrag);
 
-            _androidAd.Call("setIntractable", intractable);
+            var dragListener = new BannerDragEventListener();
+            dragListener.Init(didDrag);
+
+            _androidAd.Call("enableDrag", dragListener);
         }
+
+        public override void DisableDrag()
+        {
+            base.DisableDrag();
+
+            _androidAd.Call("disableDrag");
+        }
+    }
+}
+
+
+[Preserve]
+public class BannerDragEventListener : AndroidJavaProxy
+{
+    public BannerDragEventListener() : base("com.chartboost.mediation.unity.IBannerDragEventListener") { }
+
+    //public static readonly BannerDragEventListener Instance = new BannerDragEventListener();
+
+
+    private Action<float, float> _didDrag;
+    public void Init(Action<float, float> didDrag)
+    {
+        _didDrag = didDrag;
+    }
+
+    [Preserve]
+    private void DidDrag(float x, float y)
+    {
+        _didDrag?.Invoke(x, Screen.height - y);
     }
 }
 #endif

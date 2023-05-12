@@ -1,3 +1,5 @@
+using System;
+
 namespace Chartboost.Banner
 {
     /// <summary>
@@ -57,9 +59,11 @@ namespace Chartboost.Banner
         public virtual void SetParams(float x, float y, int width, int height)
             => Logger.Log(LogTag, $"setting banner: {_placementName} layout to position :{x},{y} and size : {width},{height}");
 
-        public virtual void SetIntractable(bool intractable)
-            => Logger.Log(LogTag, $"setting intractable: {intractable}");
+        public virtual void EnableDrag(Action<float, float> didDrag = null)
+            => Logger.Log(LogTag, $"Dragging enabled");
 
+        public virtual void DisableDrag()
+            => Logger.Log(LogTag, $"Dragging disabled");
     }
 
     /// <summary>

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine.Scripting;
 
 namespace Chartboost.Banner
@@ -52,7 +53,13 @@ namespace Chartboost.Banner
         [Preserve]
         void SetParams(float x, float y, int width, int height);
 
-        void SetIntractable(bool intractable);
-        
+        [Preserve]
+        void EnableDrag(Action<float, float> didDrag = null);
+
+        [Preserve]
+        void DisableDrag();
     }
+
+    public delegate void ChartbooostMediationBannerDragEvent(float x, float y);
+
 }
