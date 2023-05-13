@@ -26,10 +26,6 @@ static void sendToMain(block block) {
     dispatch_async(dispatch_get_main_queue(), block);
 }
 
-static void sendToBackground(block block) {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), block);
-}
-
 void _setLifeCycleCallbacks(ChartboostMediationEvent didStartCallback, ChartboostMediationILRDEvent didReceiveILRDCallback, ChartboostMediationPartnerInitializationDataEvent didReceivePartnerInitializationDataCallback)
 {
     [[ChartboostMediationManager sharedManager] setLifeCycleCallbacks:didStartCallback didReceiveILRDCallback:didReceiveILRDCallback didReceivePartnerInitializationData:didReceivePartnerInitializationDataCallback];
@@ -111,7 +107,7 @@ char * _chartboostMediationInterstitialRemoveKeyword(const void *uniqueId, const
 
 void _chartboostMediationInterstitialAdLoad(const void * uniqueId)
 {
-    sendToBackground(^{
+    sendToMain(^{
         id<HeliumInterstitialAd> ad = (__bridge id<HeliumInterstitialAd>)uniqueId;
         [ad loadAd];
     });
@@ -125,7 +121,7 @@ void _chartboostMediationInterstitialClearLoaded(const void * uniqueId)
 
 void _chartboostMediationInterstitialAdShow(const void * uniqueId)
 {
-    sendToBackground(^{
+    sendToMain(^{
         id<HeliumInterstitialAd> ad = (__bridge id<HeliumInterstitialAd>)uniqueId;
         [ad showAdWithViewController: UnityGetGLViewController()];
     });
@@ -135,13 +131,6 @@ BOOL _chartboostMediationInterstitialAdReadyToShow(const void * uniqueId)
 {
     id<HeliumInterstitialAd> ad = (__bridge id<HeliumInterstitialAd>)uniqueId;
     return [ad readyToShow];
-}
-
-void _chartboostMediationFreeInterstitialAdObject(const void * uniqueId)
-{
-    sendToBackground(^{
-        [[ChartboostMediationManager sharedManager] freeInterstitialAd: [NSNumber numberWithLong:(long)uniqueId]];
-    });
 }
 
 void * _chartboostMediationGetRewardedAd(const char *placementName)
@@ -165,7 +154,7 @@ char * _chartboostMediationRewardedRemoveKeyword(const void *uniqueId, const cha
 
 void _chartboostMediationRewardedAdLoad(const void * uniqueId)
 {
-    sendToBackground(^{
+    sendToMain(^{
         id<HeliumRewardedAd> ad = (__bridge id<HeliumRewardedAd>)uniqueId;
         [ad loadAd];
     });
@@ -179,7 +168,7 @@ void _chartboostMediationRewardedClearLoaded(const void * uniqueId)
 
 void _chartboostMediationRewardedAdShow(const void * uniqueId)
 {
-    sendToBackground(^{
+    sendToMain(^{
         id<HeliumRewardedAd> ad = (__bridge id<HeliumRewardedAd>)uniqueId;
         [ad showAdWithViewController: UnityGetGLViewController()];
     });
@@ -195,13 +184,6 @@ void _chartboostMediationRewardedAdSetCustomData(const void * uniqueId, const ch
 {
     id<HeliumRewardedAd> ad = (__bridge id<HeliumRewardedAd>)uniqueId;
     ad.customData = GetStringParam(customData);
-}
-
-void _chartboostMediationFreeRewardedAdObject(const void * uniqueId)
-{
-    sendToBackground(^{
-        [[ChartboostMediationManager sharedManager] freeRewardedAd: [NSNumber numberWithLong:(long)uniqueId]];
-    });
 }
 
 void * _chartboostMediationGetBannerAd(const char *placementName, long size)
@@ -305,16 +287,18 @@ void _chartboostMediationBannerAdLoad(const void * uniqueId, long screenLocation
 
 void _chartboostMediationBannerClearLoaded(const void * uniqueId)
 {
-    id<HeliumBannerAd> ad = (__bridge id<HeliumBannerAd>)uniqueId;
-    [ad clearAd];
+    sendToMain(^(){
+        id<HeliumBannerAd> ad = (__bridge id<HeliumBannerAd>)uniqueId;
+        [ad clearAd];
+    });
 }
 
 void _chartboostMediationBannerRemove(const void * uniqueId)
 {
-    sendToMain(^{
+    sendToMain(^(){
         HeliumBannerView* bannerView = (__bridge HeliumBannerView*)uniqueId;
         [bannerView removeFromSuperview];
-        [[ChartboostMediationManager sharedManager] freeBannerAd: [NSNumber numberWithLong:(long)uniqueId]];
+        [[ChartboostMediationManager sharedManager] freeAd: [NSNumber numberWithLong:(long)uniqueId] placementName:nil multiPlacementSupport:true];
     });
 }
 
@@ -326,9 +310,9 @@ void _chartboostMediationBannerSetVisibility(const void * uniqueId, BOOL isVisib
     });
 }
 
-void _chartboostMediationFreeBannerAdObject(const void * uniqueId)
+void _chartboostMediationFreeAdObject(const void * uniqueId, const char * placementName, bool multiPlacementSupport)
 {
-    sendToBackground(^{
-        [[ChartboostMediationManager sharedManager] freeBannerAd: [NSNumber numberWithLong:(long)uniqueId]];
+    sendToMain(^(){
+        [[ChartboostMediationManager sharedManager] freeAd: [NSNumber numberWithLong:(long)uniqueId] placementName:GetStringParam(placementName) multiPlacementSupport:multiPlacementSupport];
     });
-}
+}               

@@ -51,6 +51,19 @@ const char* serializeDictionary(NSDictionary *data)
     return json.UTF8String;
 }
 
+const void addToStore(id ad, NSString *placement, BOOL multiplePlacementSupport){
+    if (storedAds == nil)
+        storedAds = [[NSMutableDictionary alloc] init];
+    
+    if (multiplePlacementSupport)
+    {
+        NSNumber *key = [NSNumber numberWithLong:(long)ad];
+        [storedAds setObject:ad forKey:key];
+    }
+    else
+        [storedAds setObject:ad forKey:placement];
+}
+
 const void serializeEvent(ChartboostMediationError *error, ChartboostMediationEvent event)
 {
     if (event == nil)
@@ -113,10 +126,10 @@ static void subscribeToILRDNotifications()
 static void subscribeToPartnerInitializationNotifications()
 {
     static id partnerInitializationObserver = nil;
-    
+
     if (partnerInitializationObserver != nil)
         [[NSNotificationCenter defaultCenter] removeObserver:partnerInitializationObserver];
-    
+
     partnerInitializationObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kHeliumDidReceiveInitResultsNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         // Extract the results payload.
         NSDictionary *results = (NSDictionary *)notification.object;
@@ -208,7 +221,7 @@ static void subscribeToPartnerInitializationNotifications()
         }
         heliumInitializationOptions = [[HeliumInitializationOptions alloc] initWithSkippedPartnerIdentifiers:initializationPartners];
     }
-    
+
     [[Helium sharedHelium] startWithAppId:appId andAppSignature:appSignature options:heliumInitializationOptions delegate:self];
 }
 
@@ -255,12 +268,8 @@ static void subscribeToPartnerInitializationNotifications()
     id<HeliumInterstitialAd> ad = [[Helium sharedHelium] interstitialAdProviderWithDelegate: self andPlacementName: placementName];
     if (ad == NULL)
         return NULL;
-
-    // Else return the address of the ad as an int, which can be used as a unique id
-    // Also store the object in a dictionary so that it can later be deleted
-    if (storedAds == nil)
-        storedAds = [[NSMutableDictionary alloc] init];
-    [storedAds setObject:ad forKey:[NSNumber numberWithLong:(long)ad]];
+    
+    addToStore(ad, placementName, FALSE);
     return ad;
 }
 
@@ -269,42 +278,29 @@ static void subscribeToPartnerInitializationNotifications()
     id<HeliumRewardedAd> ad = [[Helium sharedHelium] rewardedAdProviderWithDelegate: self andPlacementName: placementName];
     if (ad == NULL)
         return NULL;
-
-    // Else return the address of the ad as an int, which can be used as a unique id
-    // Also store the object in a dictionary so that it can later be deleted
-    if (storedAds == nil)
-        storedAds = [[NSMutableDictionary alloc] init];
-    [storedAds setObject:ad forKey:[NSNumber numberWithLong:(long)ad]];
+    
+    addToStore(ad, placementName, FALSE);
     return ad;
 }
 
 - (HeliumBannerView*)getBannerAd:(NSString*)placementName andSize:(CHBHBannerSize)size
 {
-    HeliumBannerView* ad = [[Helium sharedHelium] bannerProviderWithDelegate:self andPlacementName:placementName andSize:size];
+    HeliumBannerView *ad = [[Helium sharedHelium] bannerProviderWithDelegate:self andPlacementName:placementName andSize:size];
     if (ad == NULL)
         return NULL;
-
-    // Else return the address of the ad as an int, which can be used as a unique id
-    // Also store the object in a dictionary so that it can later be deleted
-    if (storedAds == nil)
-        storedAds = [[NSMutableDictionary alloc] init];
-    [storedAds setObject:ad forKey:[NSNumber numberWithLong:(long)ad]];
+    addToStore(ad, placementName, TRUE);
     return ad;
 }
 
-- (void)freeInterstitialAd:(NSNumber*)adId
+- (void)freeAd:(NSNumber*)adId placementName:(NSString *)placementName multiPlacementSupport:(BOOL)multiPlacementSupport
 {
-    [storedAds removeObjectForKey:adId];
-}
-
-- (void)freeRewardedAd:(NSNumber*)adId
-{
-    [storedAds removeObjectForKey:adId];
-}
-
-- (void)freeBannerAd:(NSNumber*)adId
-{
-    [storedAds removeObjectForKey:adId];
+    if (multiPlacementSupport)
+        [storedAds removeObjectForKey:adId];
+    else
+    {
+        if (placementName != nil)
+            [storedAds removeObjectForKey:placementName];
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -346,9 +342,9 @@ static void subscribeToPartnerInitializationNotifications()
 {
     serializePlacementWithError(placementName, nil, _interstitialDidRecordImpressionCallback);
 }
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark CHBHeliumRewardedVideoAdDelegate
-
 - (void)heliumRewardedAdWithPlacementName:(NSString*)placementName requestIdentifier:(NSString *) requestIdentifier winningBidInfo:(NSDictionary<NSString *, id> *)winningBidInfo didLoadWithError:(ChartboostMediationError *)error
 {
     serializePlacementLoadWithError(placementName, requestIdentifier, winningBidInfo, error, _rewardedDidLoadCallback);

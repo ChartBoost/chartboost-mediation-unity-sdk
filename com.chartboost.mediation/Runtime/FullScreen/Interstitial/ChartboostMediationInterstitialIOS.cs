@@ -13,7 +13,7 @@ namespace Chartboost.FullScreen.Interstitial
 
         public ChartboostMediationInterstitialIOS(string placementName) : base(placementName)
         {
-            LogTag = "ChartboostMediationInterstitial (iOS)";
+            logTag = "ChartboostMediationInterstitial (iOS)";
             _uniqueId = _chartboostMediationGetInterstitialAd(placementName);
         }
         
@@ -60,8 +60,14 @@ namespace Chartboost.FullScreen.Interstitial
             _chartboostMediationInterstitialClearLoaded(_uniqueId);
         }
 
+        public override void Destroy()
+        {
+            base.Destroy();
+            _chartboostMediationFreeAdObject(_uniqueId, placementName, false);
+        }
+
         ~ChartboostMediationInterstitialIOS() 
-            => _chartboostMediationFreeInterstitialAdObject(_uniqueId);
+            => _chartboostMediationFreeAdObject(_uniqueId, placementName, false);
 
         #region External Methods
         [DllImport("__Internal")]
@@ -79,7 +85,7 @@ namespace Chartboost.FullScreen.Interstitial
         [DllImport("__Internal")]
         private static extern bool _chartboostMediationInterstitialAdReadyToShow(IntPtr uniqueID);
         [DllImport("__Internal")]
-        private static extern void _chartboostMediationFreeInterstitialAdObject(IntPtr uniqueID);
+        private static extern void _chartboostMediationFreeAdObject(IntPtr uniqueID, string placementName, bool multiPlacementSupport);
         #endregion
     }
 }

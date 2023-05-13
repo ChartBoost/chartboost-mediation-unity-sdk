@@ -10,7 +10,7 @@ namespace Chartboost.FullScreen.Rewarded
 
         public ChartboostMediationRewardedIOS(string placementName) : base(placementName)
         {
-            LogTag = "ChartboostMediationRewarded (iOS)";
+            logTag = "ChartboostMediationRewarded (iOS)";
             _uniqueId = _chartboostMediationGetRewardedAd(placementName);
         }
 
@@ -56,6 +56,12 @@ namespace Chartboost.FullScreen.Rewarded
             _chartboostMediationRewardedClearLoaded(_uniqueId);
         }
 
+        public override void Destroy()
+        {
+            base.Destroy();
+            _chartboostMediationFreeAdObject(_uniqueId, placementName, false);
+        }
+
         /// <inheritdoc cref="ChartboostMediationRewardedBase.SetCustomData"/>>
         public override void SetCustomData(string customData)
         {
@@ -64,7 +70,7 @@ namespace Chartboost.FullScreen.Rewarded
         }
 
         ~ChartboostMediationRewardedIOS()
-            => _chartboostMediationFreeRewardedAdObject(_uniqueId);
+            => _chartboostMediationFreeAdObject(_uniqueId, placementName, false);
 
         #region External Methods
         [DllImport("__Internal")]
@@ -84,7 +90,7 @@ namespace Chartboost.FullScreen.Rewarded
         [DllImport("__Internal")]
         private static extern void _chartboostMediationRewardedAdSetCustomData(IntPtr uniqueID, string customData);
         [DllImport("__Internal")]
-        private static extern void _chartboostMediationFreeRewardedAdObject(IntPtr uniqueID);
+        private static extern void _chartboostMediationFreeAdObject(IntPtr uniqueID, string placementName, bool multiPlacementSupport);
         #endregion
     }
 }
