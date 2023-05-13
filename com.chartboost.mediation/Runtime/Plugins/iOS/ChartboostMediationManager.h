@@ -31,8 +31,6 @@ typedef void (*ChartboostMediationPlacementLoadEvent)(const char* placementName,
 - (id<HeliumInterstitialAd>)getInterstitialAd:(NSString*)placementId;
 - (id<HeliumRewardedAd>)getRewardedAd:(NSString*)placementId;
 - (HeliumBannerView*)getBannerAd:(NSString*)placementName andSize:(CHBHBannerSize)size;
-- (void)freeInterstitialAd:(NSNumber*)adId;
-- (void)freeRewardedAd:(NSNumber*)adId;
-- (void)freeBannerAd:(NSNumber*)adId;
+- (void)freeAd:(NSNumber*)adId placementName:(NSString*)placementName multiPlacementSupport:(BOOL) multiPlacementSupport;
 
 @end
