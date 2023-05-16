@@ -327,6 +327,10 @@ void _chartboostMediationBannerAdLoadWithParams(const void * uniqueId, float x, 
         float scale = UIScreen.mainScreen.scale;
         bannerView.frame = CGRectMake(x/scale, y/scale, width/scale, height/scale);
 //        bannerView.layer.contentsScale = UIScreen.mainScreen.scale;
+                
+                        
+        NSLog(@"Dragging added");
+
         
         NSLog(@"scale: %f", scale);
         
@@ -344,6 +348,14 @@ void _chartboostMediationBannerAdLoadWithParams(const void * uniqueId, float x, 
         id<HeliumBannerAd> ad = (__bridge id<HeliumBannerAd>)uniqueId;
         [ad loadAdWithViewController:unityVC];
     });
+}
+
+void _chartboostMediationBannerEnableDrag(const void * uniqueId, ChartboostMediationBannerDragEvent dragListener){
+    [[ChartboostMediationManager sharedManager] enableBannerDrag:uniqueId listener:dragListener];
+}
+
+void _chartboostMediationBannerDisableDrag(const void * uniqueId){
+    [[ChartboostMediationManager sharedManager] disableBannerDrag:uniqueId];
 }
 
 void _chartboostMediationBannerAdSetlayoutParams(const void * uniqueId, float x, float y, long width, long height)

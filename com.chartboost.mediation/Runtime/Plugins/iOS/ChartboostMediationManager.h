@@ -12,6 +12,8 @@ typedef void (*ChartboostMediationPartnerInitializationDataEvent)(const char* pa
 typedef void (*ChartboostMediationPlacementEvent)(const char* placementName, const char* error);
 typedef void (*ChartboostMediationPlacementLoadEvent)(const char* placementName, const char* loadId, const char* auctionId, const char* partnerId, double price, const char* error);
 
+typedef void (*ChartboostMediationBannerDragEvent)(void* uniqueId, float x, float y);
+
 @interface ChartboostMediationManager : NSObject
 
 + (ChartboostMediationManager*)sharedManager;
@@ -34,5 +36,6 @@ typedef void (*ChartboostMediationPlacementLoadEvent)(const char* placementName,
 - (void)freeInterstitialAd:(NSNumber*)adId;
 - (void)freeRewardedAd:(NSNumber*)adId;
 - (void)freeBannerAd:(NSNumber*)adId;
-
+- (void) enableBannerDrag:(const void*) uniqueId listener:(ChartboostMediationBannerDragEvent) draglistener;
+- (void) disableBannerDrag : (const void*) uniqueId;
 @end

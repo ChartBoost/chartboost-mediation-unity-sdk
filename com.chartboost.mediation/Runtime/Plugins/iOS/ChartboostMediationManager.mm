@@ -5,8 +5,10 @@
 
 #import <objc/runtime.h>
 #import "ChartboostMediationManager.h"
+#import "ChaertboostMediationBannerAdDragger.h"
 #import <ChartboostMediationSDK/ChartboostMediationSDK-Swift.h>
 #import <ChartboostMediationSDK/HeliumInitResultsEvent.h>
+
 
 struct Implementation {
     SEL selector;
@@ -15,6 +17,7 @@ struct Implementation {
 
 // interstitial ad objects
 NSMutableDictionary * storedAds = nil;
+NSMutableDictionary * bannerDraggers = nil;
 
 // lifecycle callbacks
 static ChartboostMediationEvent _didStartCallback;
@@ -331,6 +334,45 @@ static void subscribeToPartnerInitializationNotifications()
 - (void)freeBannerAd:(NSNumber*)adId
 {
     [storedAds removeObjectForKey:adId];
+    [bannerDraggers removeObjectForKey:adId];
+}
+
+
+
+- (void) enableBannerDrag:(const void*) uniqueId listener:(ChartboostMediationBannerDragEvent) draglistener
+{
+    NSLog(@"Enabling dragging on banner");
+    
+    HeliumBannerView* bannerView = (__bridge HeliumBannerView*)uniqueId;
+            
+    ChartboostMediationBannerAdDragger* dragger = [[ChartboostMediationBannerAdDragger alloc] init];
+    dragger.dragListener = draglistener;
+    
+    // create pan gesture recognizer for bannerView
+    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:dragger action:@selector(handlePan:)];
+    [bannerView addGestureRecognizer:panGesture];
+
+
+    
+    // add to dragger dictionary
+    if(bannerDraggers == nil)
+        bannerDraggers = [[NSMutableDictionary alloc] init];
+    // associate dragger to banner object uniqueId (each bannerAd should have it's own drag listener)
+    [bannerDraggers setObject:dragger forKey:[NSNumber numberWithLong:(long)uniqueId]];
+
+    NSLog(@"Draggers count : %lu", bannerDraggers.count);
+    
+}
+
+- (void) disableBannerDrag : (const void*) uniqueId
+{
+    // Obtain wrapper object asscociated with this banner and destroy it
+    ChartboostMediationBannerAdDragger* wrapper = [bannerDraggers objectForKey:[NSNumber numberWithLong:(long)uniqueId]];
+    wrapper.dragListener = nil;
+    wrapper = nil;
+    
+    // also remove the dictionary entry
+    [bannerDraggers removeObjectForKey:[NSNumber numberWithLong:(long)uniqueId]];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -426,4 +468,5 @@ static void subscribeToPartnerInitializationNotifications()
 {
     serializePlacementWithError(placementName, nil, _bannerDidRecordImpressionCallback);
 }
+
 @end
