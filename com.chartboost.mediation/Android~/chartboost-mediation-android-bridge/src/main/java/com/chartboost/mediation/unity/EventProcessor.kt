@@ -2,6 +2,7 @@ package com.chartboost.mediation.unity
 
 import android.util.Log
 import com.chartboost.heliumsdk.domain.ChartboostMediationAdException
+import com.chartboost.heliumsdk.domain.ChartboostMediationError
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -13,7 +14,35 @@ object EventProcessor {
         = eventConsumer.accept(placementName)
 
     @JvmStatic
-    fun serializeEventWithError(placementName: String, error: ChartboostMediationAdException?, eventConsumer: EventWithErrorConsumer<String, String>)
+    fun serializeLoadEvent(
+        placementName: String, loadId: String?, data: Map<String, String>?, error: ChartboostMediationError?,
+        loadConsumer: LoadEventConsumer<String, String, String, String, Double, String>) {
+        val errorMessage = error?.toString() ?: ""
+        var partnerId = ""
+        var auctionId = ""
+        var price =  0.0
+        val adLoadId = loadId ?: ""
+
+        data?.let { winningBidInfo ->
+            partnerId = winningBidInfo["partner_id"] ?: ""
+            auctionId = winningBidInfo["auction-id"] ?: ""
+            price = try {
+                winningBidInfo["price"]?.toDouble() ?: 0.0
+            } catch (e: NumberFormatException) {
+                Log.d(TAG, "HeliumBidEvent failed to serialize price, defaulting to 0.0", e)
+                0.0
+            }
+        }
+
+        loadConsumer.accept(placementName, adLoadId, auctionId, partnerId, price, errorMessage)
+    }
+
+    @JvmStatic
+    fun serializeEventWithError(placementName: String, error: ChartboostMediationError?, eventConsumer: EventWithErrorConsumer<String, String>)
+        = eventConsumer.accept(placementName,error?.toString() ?: "")
+
+    @JvmStatic
+    fun serializeEventWithException(placementName: String, error: ChartboostMediationAdException?, eventConsumer: EventWithErrorConsumer<String, String>)
         = eventConsumer.accept(placementName,error?.toString() ?: "")
 
     @JvmStatic

@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Chartboost.Banner;
 using Chartboost.FullScreen.Interstitial;
 using Chartboost.FullScreen.Rewarded;
+using Chartboost.Placements;
 using UnityEngine;
 
 namespace Chartboost.Platforms
@@ -76,6 +78,8 @@ namespace Chartboost.Platforms
         public virtual void Destroy() 
             => Logger.Log(LogTag, "Destroy");
 
+        public abstract Task<ChartboostMediationFullscreenAdLoadResult> GetFullscreenAd(ChartboostMediationFullscreenAdLoadRequest request);
+      
         public ChartboostMediationInterstitialAd GetInterstitialAd(string placementName)
         {
             Logger.Log(LogTag, $"GetInterstitialAd at placement: {placementName}");

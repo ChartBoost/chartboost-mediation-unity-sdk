@@ -1,4 +1,5 @@
 using System.Collections;
+using Chartboost.Placements;
 
 namespace Chartboost
 {
@@ -28,4 +29,8 @@ namespace Chartboost
     /// <param name="error">The error encountered, if any.</param>
     /// </summary>
     public delegate void ChartboostMediationPlacementLoadEvent(string placement, string loadId, BidInfo bidInfo, string error);
+
+    public delegate void ChartboostMediationFullscreenAdEvent(IChartboostMediationFullscreenAd ad);
+
+    public delegate void ChartboostMediationFullscreenAdEventWithError(IChartboostMediationFullscreenAd ad, ChartboostMediationError? error);
 }

@@ -1,5 +1,8 @@
-﻿namespace Chartboost
+﻿using System;
+
+namespace Chartboost
 {
+    [Serializable]
     public struct BidInfo
     {
         public readonly string AuctionId;

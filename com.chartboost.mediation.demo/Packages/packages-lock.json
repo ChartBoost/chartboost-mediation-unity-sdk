@@ -5,7 +5,7 @@
       "depth": 0,
       "source": "local",
       "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "3.0.2"
+        "com.unity.nuget.newtonsoft-json": "3.2.1"
       }
     },
     "com.google.external-dependency-manager": {
@@ -47,7 +47,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.nuget.newtonsoft-json": {
-      "version": "3.0.2",
+      "version": "3.2.1",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
