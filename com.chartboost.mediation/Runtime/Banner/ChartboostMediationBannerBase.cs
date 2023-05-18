@@ -6,48 +6,48 @@ namespace Chartboost.Banner
     public abstract class ChartboostMediationBannerBase : IChartboostMediationAd, IChartboostMediationBannerAd
     {
         protected static string LogTag = "ChartboostMediationBanner (Base)";
-        private readonly string _placementName;
+        protected readonly string placementName;
         private readonly ChartboostMediationBannerAdSize _size;
 
         protected ChartboostMediationBannerBase(string placementName, ChartboostMediationBannerAdSize size)
         {
-            _placementName = placementName;
+            this.placementName = placementName;
             _size = size;
         }
 
         /// <inheritdoc cref="IChartboostMediationAd.SetKeyword"/>>
         public virtual bool SetKeyword(string keyword, string value)
         {
-            Logger.Log(LogTag, $"banner: {_placementName}, setting keyword {keyword} with value: {value}");
+            Logger.Log(LogTag, $"banner: {placementName}, setting keyword {keyword} with value: {value}");
             return false;
         }
 
         /// <inheritdoc cref="IChartboostMediationAd.RemoveKeyword"/>>
         public virtual string RemoveKeyword(string keyword)
         {
-            Logger.Log(LogTag, $"banner: {_placementName}, removing keyword {keyword}");
+            Logger.Log(LogTag, $"banner: {placementName}, removing keyword {keyword}");
             return keyword;
         }
 
         /// <inheritdoc cref="IChartboostMediationAd.Destroy"/>>
         public virtual void Destroy()
-            => Logger.Log(LogTag, $"destroying banner: {_placementName}");
+            => Logger.Log(LogTag, $"destroying banner: {placementName}");
 
         /// <inheritdoc cref="IChartboostMediationBannerAd.Load"/>>
         public virtual void Load(ChartboostMediationBannerAdScreenLocation location)
-            => Logger.Log(LogTag, $"loading banner: {_placementName} with size: {_size} at {location}");
+            => Logger.Log(LogTag, $"loading banner: {placementName} with size: {_size} at {location}");
 
         /// <inheritdoc cref="IChartboostMediationBannerAd.SetVisibility"/>>
         public virtual void SetVisibility(bool isVisible)
-            => Logger.Log(LogTag, $"setting visibility: {isVisible} for banner: {_placementName}");
+            => Logger.Log(LogTag, $"setting visibility: {isVisible} for banner: {placementName}");
 
         /// <inheritdoc cref="IChartboostMediationBannerAd.ClearLoaded"/>>
         public virtual void ClearLoaded()
-            => Logger.Log(LogTag, $"clearing banner: {_placementName}");
+            => Logger.Log(LogTag, $"clearing banner: {placementName}");
 
         /// <inheritdoc cref="IChartboostMediationBannerAd.Remove"/>>
         public virtual void Remove()
-            => Logger.Log(LogTag, $"removing banner: {_placementName}");
+            => Logger.Log(LogTag, $"removing banner: {placementName}");
     }
 
     /// <summary>
