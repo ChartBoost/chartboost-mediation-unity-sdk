@@ -1,3 +1,7 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Chartboost.Placements;
+
 namespace Chartboost.Platforms
 {
     public class ChartboostMediationUnsupported : ChartboostMediationExternal
@@ -32,5 +36,8 @@ namespace Chartboost.Platforms
             base.GetUserIdentifier();
             return _userIdentifier;
         }
+
+        public override Task<ChartboostMediationFullscreenAdLoadResult> GetFullscreenAd(ChartboostMediationFullscreenAdLoadRequest loadRequest) 
+            => Task.FromResult(new ChartboostMediationFullscreenAdLoadResult(new ChartboostMediationError("Unsupported Platform")));
     }
 }

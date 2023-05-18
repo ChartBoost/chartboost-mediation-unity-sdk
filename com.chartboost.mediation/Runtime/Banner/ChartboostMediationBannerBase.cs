@@ -1,3 +1,5 @@
+using Chartboost.Interfaces;
+
 namespace Chartboost.Banner
 {
     /// <summary>

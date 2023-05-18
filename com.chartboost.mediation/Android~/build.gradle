@@ -22,7 +22,7 @@ ext {
     privatePass = onlyPublic? "" : System.getenv("JFROG_PASS")
 
     inputVersionIsHigher = true
-    chartboostMediationVersion = '4.+'
+    chartboostMediationVersion = '+'
     if (versionInput != null && versionInput != "") {
         inputVersionIsHigher = mostRecentVersion([chartboostMediationVersion, versionInput]) == versionInput
         chartboostMediationVersion = versionInput

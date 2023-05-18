@@ -1,8 +1,6 @@
-using UnityEngine.Scripting;
-
-// ReSharper disable once CheckNamespace
-namespace Chartboost
+namespace Chartboost.Interfaces
 {
+    #nullable enable
     public interface IChartboostMediationAd
     {
         /// <summary>
@@ -13,7 +11,6 @@ namespace Chartboost
         /// <param name="keyword">The keyword (maximum of 64 characters)</param>
         /// <param name="value">The value (maximum of 256 characters)</param>
         /// <returns>true if the keyword was successfully set, else false</returns>
-        [Preserve] 
         bool SetKeyword(string keyword, string value);
 
         /// <summary>
@@ -21,13 +18,12 @@ namespace Chartboost
         /// </summary>
         /// <param name="keyword">The keyword to remove.</param>
         /// <returns>The currently set value, else null</returns>
-        [Preserve]
         string RemoveKeyword(string keyword);
         
         /// <summary>
         /// Destroy the advertisement to free up memory resources.
         /// </summary>
-        [Preserve]
         void Destroy();
     }
+    #nullable disable
 }

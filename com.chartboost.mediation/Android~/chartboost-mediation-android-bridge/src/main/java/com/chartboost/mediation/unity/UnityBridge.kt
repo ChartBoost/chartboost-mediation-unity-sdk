@@ -5,15 +5,20 @@ import com.chartboost.heliumsdk.*
 import com.chartboost.heliumsdk.ad.*
 import com.chartboost.heliumsdk.ad.HeliumBannerAd.HeliumBannerSize
 import com.chartboost.heliumsdk.domain.ChartboostMediationAdException
+import com.chartboost.heliumsdk.network.model.MetricsRequestBody
 import com.chartboost.mediation.unity.EventProcessor.LoadEventConsumer
 import com.chartboost.mediation.unity.EventProcessor.EventWithErrorConsumer
 import com.chartboost.mediation.unity.EventProcessor.EventConsumer
 import com.chartboost.mediation.unity.EventProcessor.serializeEvent
-import com.chartboost.mediation.unity.EventProcessor.serializeEventWithError
 import com.chartboost.mediation.unity.EventProcessor.serializeLoadEvent
 import com.chartboost.mediation.unity.EventProcessor.serializePlacementIlrdData
 import com.chartboost.mediation.unity.AdWrapper.Companion.wrap
+import com.chartboost.mediation.unity.EventProcessor.serializeEventWithException
 import com.unity3d.player.UnityPlayer
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 @Suppress("NAME_SHADOWING")
 class UnityBridge {
     private var lifeCycleEventListener: ILifeCycleEventListener? = null
@@ -63,42 +68,60 @@ class UnityBridge {
             ilrdObserver = null
         }
     }
+
     fun start(appId: String, appSignature: String, unityVersion: String, initializationOptions: Array<String>) {
-        ilrdObserver = object : HeliumIlrdObserver {
-            override fun onImpression(impData: HeliumImpressionData) {
-                val json = serializePlacementIlrdData(impData.placementId, impData.ilrdInfo)
-                lifeCycleEventListener?.DidReceiveILRD(json)
-            }
-        }
-
-        initResultsObserver = object : PartnerInitializationResultsObserver {
-            override fun onPartnerInitializationResultsReady(data : PartnerInitializationResultsData) {
-                val json = data.data.toString()
-                lifeCycleEventListener?.DidReceivePartnerInitializationData(json)
-            }
-        }
-
         runTaskOnUiThread {
             UnityPlayer.currentActivity.let { activity ->
-                HeliumSdk.start(activity, appId, appSignature,  HeliumInitializationOptions(initializationOptions.toSet()))  { error ->
-                    error?.let {
-                        Log.d("Unity", "HeliumUnityBridge: Plugin failed to initialize: $it.")
-                    } ?: run {
-                        HeliumSdk.setGameEngine("unity", unityVersion)
-                        ilrdObserver?.let { observer ->
-                            HeliumSdk.subscribeIlrd(observer)
+                HeliumSdk.start(
+                    activity,
+                    appId,
+                    appSignature,
+                    HeliumInitializationOptions(initializationOptions.toSet()),
+                    object : HeliumSdk.HeliumSdkListener {
+                        override fun didInitialize(error: Error?) {
+                            ilrdObserver = object : HeliumIlrdObserver {
+                                override fun onImpression(impData: HeliumImpressionData) {
+                                    val json = serializePlacementIlrdData(impData.placementId, impData.ilrdInfo)
+                                    lifeCycleEventListener?.DidReceiveILRD(json)
+                                }
+                            }
+                            ilrdObserver?.let { observer -> HeliumSdk.subscribeIlrd(observer) }
+
+                            initResultsObserver = object : PartnerInitializationResultsObserver {
+                                override fun onPartnerInitializationResultsReady(data : PartnerInitializationResultsData) {
+                                    val json = data.data.toString()
+                                    lifeCycleEventListener?.DidReceivePartnerInitializationData(json)
+                                }
+                            }
+                            initResultsObserver?.let { observer -> HeliumSdk.subscribeInitializationResults(observer) }
+
+                            HeliumSdk.setGameEngine("unity", unityVersion)
+
+                            error?.let { Log.d("Unity", "HeliumUnityBridge: Plugin failed to initialize: $it.") } ?:
+                            run { Log.d("Unity", "HeliumUnityBridge: Plugin initialized.") }
+
+                            lifeCycleEventListener?.DidStart(error?.toString() ?: "")
                         }
-                        initResultsObserver?.let {
-                                observer ->
-                            HeliumSdk.subscribeInitializationResults(observer)
-                        }
-                        Log.d("Unity", "HeliumUnityBridge: Plugin initialized.")
                     }
-                    lifeCycleEventListener?.DidStart(error?.toString() ?: "")
-                }
+                )
             }
         }
     }
+
+    fun getFullscreenAd(adRequest: ChartboostMediationAdLoadRequest, fullscreenListener: ChartboostMediationFullscreenAdListener, adLoadResultHandler: CMFullscreenAdLoadResultHandler) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val adLoadResult = HeliumSdk.loadFullscreenAd(UnityPlayer.currentActivity, adRequest, fullscreenListener)
+            adLoadResultHandler.onAdLoadResult(adLoadResult);
+        }
+    }
+
+    fun showFullscreenAd(fullscreenAd: ChartboostMediationFullscreenAd, adShowResultHandler: CMAdShowResultHandler) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val adShowResult =  fullscreenAd.show(UnityPlayer.currentActivity);
+            adShowResultHandler.onAdShowResult(adShowResult);
+        }
+    }
+
     fun getInterstitialAd(placementName: String): AdWrapper {
         val interstitialAd = HeliumInterstitialAd(UnityPlayer.currentActivity, placementName, object : HeliumFullscreenAdListener {
             override fun onAdCached(placementName: String, loadId: String, winningBidInfo: Map<String, String>, error: ChartboostMediationAdException?) {
@@ -110,14 +133,14 @@ class UnityBridge {
             }
 
             override fun onAdShown(placementName: String, error: ChartboostMediationAdException?) {
-                serializeEventWithError(placementName, error,
+                serializeEventWithException(placementName, error,
                     EventWithErrorConsumer { placementName: String, error: String ->
                         interstitialEventsListener?.DidShowInterstitial(placementName, error)
                     })
             }
 
             override fun onAdClosed(placementName: String, error: ChartboostMediationAdException?) {
-                serializeEventWithError(placementName, error,
+                serializeEventWithException(placementName, error,
                     EventWithErrorConsumer { placementName: String, error: String ->
                         interstitialEventsListener?.DidCloseInterstitial(placementName, error)
                     })
@@ -154,14 +177,14 @@ class UnityBridge {
             }
 
             override fun onAdShown(placementName: String, error: ChartboostMediationAdException?) {
-                serializeEventWithError(placementName, error,
+                serializeEventWithException(placementName, error,
                     EventWithErrorConsumer { placementName: String, error: String ->
                         rewardedEventListener?.DidShowRewarded(placementName, error)
                     })
             }
 
             override fun onAdClosed(placementName: String, error: ChartboostMediationAdException?) {
-                serializeEventWithError(placementName, error,
+                serializeEventWithException(placementName, error,
                     EventWithErrorConsumer { placementName: String, error: String ->
                         rewardedEventListener?.DidCloseRewarded(placementName, error)
                     })

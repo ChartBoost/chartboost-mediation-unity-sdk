@@ -3,9 +3,9 @@ namespace Chartboost.FullScreen.Interstitial
     /// <summary>
     /// Chartboost Mediation interstitial ad object.
     /// </summary>
-    public class ChartboostMediationInterstitialAd : ChartboostMediationFullScreenBase
+    public class ChartboostMediationInterstitialAd : ChartboostMediationFullScreenBaseOLD
     {
-        private readonly ChartboostMediationFullScreenBase _platformInterstitial;
+        private readonly ChartboostMediationFullScreenBaseOLD _platformInterstitial;
 
         public ChartboostMediationInterstitialAd(string placementName) : base(placementName)
         {
@@ -20,31 +20,31 @@ namespace Chartboost.FullScreen.Interstitial
             #endif
         }
 
-        /// <inheritdoc cref="ChartboostMediationFullScreenBase.SetKeyword"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBaseOLD.SetKeyword"/>>
         public override bool SetKeyword(string keyword, string value)
             => _platformInterstitial.SetKeyword(keyword, value);
 
-        /// <inheritdoc cref="ChartboostMediationFullScreenBase.RemoveKeyword"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBaseOLD.RemoveKeyword"/>>
         public override string RemoveKeyword(string keyword)
             => _platformInterstitial.RemoveKeyword(keyword);
 
-        /// <inheritdoc cref="ChartboostMediationFullScreenBase.Destroy"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBaseOLD.Destroy"/>>
         public override void Destroy()
             => _platformInterstitial.Destroy();
 
-        /// <inheritdoc cref="ChartboostMediationFullScreenBase.Load"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBaseOLD.Load"/>>
         public override void Load()
             => _platformInterstitial.Load();
 
-        /// <inheritdoc cref="ChartboostMediationFullScreenBase.Show"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBaseOLD.Show"/>>
         public override void Show()
             => _platformInterstitial.Show();
 
-        /// <inheritdoc cref="ChartboostMediationFullScreenBase.ReadyToShow"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBaseOLD.ReadyToShow"/>>
         public override bool ReadyToShow()
             => _platformInterstitial.ReadyToShow();
 
-        /// <inheritdoc cref="ChartboostMediationFullScreenBase.ClearLoaded"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBaseOLD.ClearLoaded"/>>
         public override void ClearLoaded()
             => _platformInterstitial.ClearLoaded();
     }

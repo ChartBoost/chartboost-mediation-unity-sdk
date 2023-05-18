@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
@@ -7,8 +8,10 @@ using Chartboost;
 using Chartboost.Banner;
 using Chartboost.FullScreen.Interstitial;
 using Chartboost.FullScreen.Rewarded;
+using Chartboost.Placements;
 using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.Scripting;
 using UnityEngine.UI;
 
 [SuppressMessage("ReSharper", "InconsistentNaming")]
@@ -32,6 +35,7 @@ public class Demo : MonoBehaviour
     // interstitial controls
     public InputField interstitialPlacementInputField;
     private ChartboostMediationInterstitialAd _interstitialAd;
+    private IChartboostMediationFullscreenAd _fullscreenAd;
 
     // rewarded controls
     public InputField rewardedPlacementInputField;
@@ -148,41 +152,83 @@ public class Demo : MonoBehaviour
         ChartboostMediation.DidRecordImpressionInterstitial += DidRecordImpressionInterstitial;
     }
 
-    public void OnCacheInterstitialClick()
+    public async void OnCacheInterstitialClick()
     {
-        _interstitialAd = ChartboostMediation.GetInterstitialAd(interstitialPlacementInputField.text);
-
-        if (_interstitialAd == null)
+        var keywords = new Dictionary<string, string>()
         {
-            Log("Interstitial Ad not found");
+            { "i12_keyword1", "i12_value1" },
+            { "i12_keyword2", "i12_value2" }
+        };
+
+        var loadRequest = new ChartboostMediationFullscreenAdLoadRequest(interstitialPlacementInputField.text, keywords);
+
+        loadRequest.DidClick += fullscreenAd => {
+            Log($"DidClick Name: {fullscreenAd.Request.PlacementName}");
+        };
+        
+        loadRequest.DidClose += (fullscreenAd, error) =>
+        {
+            if (!error.HasValue)
+                Log($"DidClose Name: {fullscreenAd.Request.PlacementName}");
+            else
+            {
+                Log($"DidClose Name: {fullscreenAd.Request.PlacementName}, Code: {error?.code}, Message: {error?.message}");
+            }
+        };
+        
+        loadRequest.DidReward += fullscreenAd =>
+        {
+            Log($"DidReward Name: {fullscreenAd.Request.PlacementName}");
+        };
+        
+        loadRequest.DidRecordImpression += fullscreenAd =>
+        {
+            Log($"DidImpressionRecorded Name: {fullscreenAd.Request.PlacementName}");
+        };
+        
+        loadRequest.DidExpire += fullscreenAd =>
+        {
+            Log($"DidExpire Name: {fullscreenAd.Request.PlacementName}");
+        };
+
+        var loadResult = await ChartboostMediation.GetFullscreenAd(loadRequest);
+        
+        // Failed to Load
+        if (loadResult.error.HasValue)
+        {
+            var error = loadResult.error.Value;
+            Log($"Fullscreen Failed to Load: {error.code}, message: {error.message}");
             return;
         }
 
-        // example keywords usage
-        _interstitialAd.SetKeyword("i12_keyword1", "i12_value1"); // accepted set
-        _interstitialAd.SetKeyword("i12_keyword2", "i12_value2"); // accepted set
-        _interstitialAd.SetKeyword(GenerateRandomString(65), "i12_value2"); // rejected set
-        _interstitialAd.SetKeyword("i12_keyword3", GenerateRandomString(257)); // rejected set
-        _interstitialAd.SetKeyword("i12_keyword4", "i12_value4"); // accepted set
-        var keyword4 = this._interstitialAd.RemoveKeyword("i12_keyword4"); // removal of existing
-        _interstitialAd.RemoveKeyword("i12_keyword4"); // removal of non-existing
-        _interstitialAd.SetKeyword("i12_keyword5", keyword4); // accepted set using prior value
-        _interstitialAd.SetKeyword("i12_keyword6", "i12_value6"); // accepted set
-        _interstitialAd.SetKeyword("i12_keyword6", "i12_value6_replaced"); // accepted replace
+        // Loaded but AD is null?
+        _fullscreenAd = loadResult.ad;
+        if (_fullscreenAd == null)
+        {
+            Log("Fullscreen Ad is null but no error was found???");
+            return;
+        }
 
-        _interstitialAd.Load();
+        // DidLoad
+        var adRequestId = _fullscreenAd.RequestId;
+        var customData = _fullscreenAd.CustomData;
+        var bidInfo = _fullscreenAd.WinningBidInfo;
+        var requestId = loadResult.requestId;
+        var metrics = loadResult.metrics;
+        Log($"Fullscreen Loaded with: \nAdRequestId {adRequestId} \nRequestID {requestId} \nBidInfo: {JsonConvert.SerializeObject(bidInfo, Formatting.Indented)} \n Metrics:{JsonConvert.SerializeObject(metrics, Formatting.Indented)}");
     }
 
     public void OnClearInterstitialClick()
     {
-        if (_interstitialAd == null)
-        {
-            Log("interstitial ad does not exist");
-            return;
-        }
-
-        _interstitialAd.ClearLoaded();
-        Log("interstitial ad has been cleared");
+        GC.Collect();
+        // if (_interstitialAd == null)
+        // {
+        //     Log("interstitial ad does not exist");
+        //     return;
+        // }
+        //
+        // _interstitialAd.ClearLoaded();
+        // Log("interstitial ad has been cleared");
     }
 
     public void OnDestroyInterstitial()
@@ -198,10 +244,22 @@ public class Demo : MonoBehaviour
         Log("interstitial ad has been destroyed");
     }
 
-    public void OnShowInterstitialClick()
+    public async void OnShowInterstitialClick()
     {
-        if (_interstitialAd != null && _interstitialAd.ReadyToShow())
-            _interstitialAd.Show();
+        if (_fullscreenAd == null)
+            return;
+
+        var adShowResult = await _fullscreenAd.Show();
+        var error = adShowResult.error;
+        
+        if (adShowResult.error.HasValue)
+        {
+            Log($"Fullscreen Failed to Show with Value: {error.Value.code}, {error.Value.message}");
+            return;
+        }
+
+        var metrics = adShowResult.metrics;
+        Log($"Fullscreen Ad Did Show: {JsonConvert.SerializeObject(metrics, Formatting.Indented)}");
     }
 
     private void DidLoadInterstitial(string placementName, string loadId, BidInfo info, string error) 

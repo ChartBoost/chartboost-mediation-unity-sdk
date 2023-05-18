@@ -62,7 +62,7 @@ dependencies {
     implementation 'com.chartboost:chartboost-mediation-adapter-unity-ads:4.4.6.1+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/UnityAdsDependencies.xml:5
     implementation 'com.chartboost:chartboost-mediation-adapter-vungle:4.6.12.1+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/VungleDependencies.xml:5
     implementation 'com.chartboost:chartboost-mediation-adapter-yahoo:4.1.4.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/YahooDependencies.xml:5
-    implementation 'com.chartboost:chartboost-mediation-sdk:4.2+' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:10
+    implementation 'com.chartboost:chartboost-mediation-sdk:+' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:10
     implementation 'com.chartboost:chartboost-sdk:9.3.0' // Assets/com.chartboost.mediation/Editor/Adapters/ChartboostDependencies.xml:8
     implementation 'com.facebook.android:audience-network-sdk:6.13.7' // Assets/com.chartboost.mediation/Editor/Adapters/MetaAudienceNetworkDependencies.xml:8
     implementation 'com.fyber:marketplace-sdk:8.2.2' // Assets/com.chartboost.mediation/Editor/Adapters/DigitalTurbineExchangeDependencies.xml:8

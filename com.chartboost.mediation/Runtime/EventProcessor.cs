@@ -119,7 +119,7 @@ namespace Chartboost
             }, null);
         }
 
-        private static void ReportUnexpectedSystemError(string message)
+        internal static void ReportUnexpectedSystemError(string message)
         {
             UnexpectedSystemErrorDidOccur?.Invoke(message);
         }
