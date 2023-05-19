@@ -1,5 +1,4 @@
 #if UNITY_ANDROID
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Chartboost.Placements;
 using Chartboost.Utilities;
@@ -16,13 +15,13 @@ namespace Chartboost.Platforms.Android
         private static string GetQualifiedClassName(string nativeClass)=> $"{ChartboostMediationSDK}.unity.{nativeClass}";
 
         private static ChartboostMediationAndroid _instance;
-        private static AndroidJavaObject _plugin;
+        private static AndroidJavaObject _unityBridge;
 
         public ChartboostMediationAndroid()
         {
             _instance = this;
             LogTag = "ChartboostMediation (Android)";
-            plugin().Call("setupEventListeners",
+            UnityBridge.Call("setupEventListeners",
                 LifeCycleEventListener.Instance,
                 InterstitialEventListener.Instance,
                 RewardedVideoEventListener.Instance,
@@ -30,14 +29,17 @@ namespace Chartboost.Platforms.Android
         }
 
         // Initialize the android bridge
-        internal static AndroidJavaObject plugin()
+        internal static AndroidJavaObject UnityBridge 
         {
-            if (_plugin != null)
-                return _plugin;
-            // find the plugin instance
-            using var pluginClass = new AndroidJavaClass(GetQualifiedClassName("UnityBridge"));
-            _plugin = pluginClass.CallStatic<AndroidJavaObject>("instance");
-            return _plugin;
+            get
+            {
+                if (_unityBridge != null)
+                    return _unityBridge;
+                // find the plugin instance
+                using var pluginClass = new AndroidJavaClass(GetQualifiedClassName("UnityBridge"));
+                _unityBridge = pluginClass.CallStatic<AndroidJavaObject>("instance");
+                return _unityBridge;
+            }
         }
 
         public override void Init()
@@ -51,50 +53,50 @@ namespace Chartboost.Platforms.Android
             base.InitWithAppIdAndSignature(appId, appSignature);
             ChartboostMediationSettings.AndroidAppId = appId;
             ChartboostMediationSettings.AndroidAppSignature = appSignature;
-            plugin().Call("start", appId, appSignature, Application.unityVersion, GetInitializationOptions());
+            UnityBridge.Call("start", appId, appSignature, Application.unityVersion, GetInitializationOptions());
             IsInitialized = true;
         }
 
         public override void SetSubjectToCoppa(bool isSubject)
         {
             base.SetSubjectToCoppa(isSubject);
-            plugin().Call("setSubjectToCoppa", isSubject);
+            UnityBridge.CallStatic("setSubjectToCoppa", isSubject);
         }
 
         public override void SetSubjectToGDPR(bool isSubject)
         {
             base.SetSubjectToGDPR(isSubject);
-            plugin().Call("setSubjectToGDPR", isSubject);
+            UnityBridge.Call("setSubjectToGDPR", isSubject);
         }
 
         public override void SetUserHasGivenConsent(bool hasGivenConsent)
         {
             base.SetUserHasGivenConsent(hasGivenConsent);
-            plugin().Call("setUserHasGivenConsent", hasGivenConsent);
+            UnityBridge.Call("setUserHasGivenConsent", hasGivenConsent);
         }
 
         public override void SetCCPAConsent(bool hasGivenConsent)
         {
             base.SetCCPAConsent(hasGivenConsent);
-            plugin().Call("setCCPAConsent", hasGivenConsent);
+            UnityBridge.Call("setCCPAConsent", hasGivenConsent);
         }
 
         public override void SetUserIdentifier(string userIdentifier)
         {
             base.SetUserIdentifier(userIdentifier);
-            plugin().Call("setUserIdentifier", userIdentifier);
+            UnityBridge.Call("setUserIdentifier", userIdentifier);
         }
 
         public override string GetUserIdentifier()
         {
             base.GetUserIdentifier();
-            return plugin().Call<string>("getUserIdentifier");
+            return UnityBridge.Call<string>("getUserIdentifier");
         }
         
         public override void SetTestMode(bool testModeEnabled)
         {
             base.SetTestMode(testModeEnabled);
-            plugin().Call("setTestMode", testModeEnabled);
+            UnityBridge.Call("setTestMode", testModeEnabled);
         }
 
         public override void Destroy()
@@ -102,7 +104,7 @@ namespace Chartboost.Platforms.Android
             if (!CheckInitialized())
                 return;
             base.Destroy();
-            _plugin.Call("destroy");
+            UnityBridge.Call("destroy");
             IsInitialized = false;
         }
 
@@ -111,7 +113,7 @@ namespace Chartboost.Platforms.Android
             var awaitableProxy = new CMFullscreenAdLoadResultHandler(request);
             var nativeAdListener = new CMFullscreenAdListener(request);
             var nativeAdRequest = new AndroidJavaObject("com.chartboost.heliumsdk.ad.ChartboostMediationAdLoadRequest", request.PlacementName, request.Keywords.ToKeywords());
-            _plugin.Call("getFullscreenAd", nativeAdRequest, nativeAdListener, awaitableProxy);
+            UnityBridge.Call("getFullscreenAd", nativeAdRequest, nativeAdListener, awaitableProxy);
             return await awaitableProxy;
         }
         #endregion

@@ -5,7 +5,6 @@ import com.chartboost.heliumsdk.*
 import com.chartboost.heliumsdk.ad.*
 import com.chartboost.heliumsdk.ad.HeliumBannerAd.HeliumBannerSize
 import com.chartboost.heliumsdk.domain.ChartboostMediationAdException
-import com.chartboost.heliumsdk.network.model.MetricsRequestBody
 import com.chartboost.mediation.unity.EventProcessor.LoadEventConsumer
 import com.chartboost.mediation.unity.EventProcessor.EventWithErrorConsumer
 import com.chartboost.mediation.unity.EventProcessor.EventConsumer
@@ -18,6 +17,7 @@ import com.unity3d.player.UnityPlayer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.function.BinaryOperator
 
 @Suppress("NAME_SHADOWING")
 class UnityBridge {
@@ -27,6 +27,7 @@ class UnityBridge {
     private var rewardedEventListener: IRewardedEventListener? = null
     private var ilrdObserver: HeliumIlrdObserver? = null
     private var initResultsObserver: PartnerInitializationResultsObserver? = null
+
     fun setupEventListeners(
         lifeCycleListener: ILifeCycleEventListener,
         interstitialListener: IInterstitialEventListener,
@@ -38,38 +39,10 @@ class UnityBridge {
         rewardedEventListener = rewardedListener
         bannerEventsListener = bannerListener
     }
-    fun setSubjectToCoppa(isSubject: Boolean) {
-        HeliumSdk.setSubjectToCoppa(isSubject)
-    }
-    fun setSubjectToGDPR(isSubject: Boolean) {
-        HeliumSdk.setSubjectToGDPR(isSubject)
-    }
-
-    fun setCCPAConsent(hasGivenConsent: Boolean) {
-        HeliumSdk.setCCPAConsent(hasGivenConsent)
-    }
-    fun setUserHasGivenConsent(hasGivenConsent: Boolean) {
-        HeliumSdk.setUserHasGivenConsent(hasGivenConsent)
-    }
-
-    var userIdentifier: String?
-        get() = HeliumSdk.getUserIdentifier()
-        set(userIdentifier) {
-            HeliumSdk.setUserIdentifier(userIdentifier)
-        }
-
-    fun setTestMode(mode: Boolean) {
-        HeliumSdk.setTestMode(mode)
-    }
-
-    fun destroy() {
-        ilrdObserver?.let {
-            HeliumSdk.unsubscribeIlrd(it)
-            ilrdObserver = null
-        }
-    }
 
     fun start(appId: String, appSignature: String, unityVersion: String, initializationOptions: Array<String>) {
+
+
         runTaskOnUiThread {
             UnityPlayer.currentActivity.let { activity ->
                 HeliumSdk.start(
@@ -108,6 +81,27 @@ class UnityBridge {
         }
     }
 
+    fun setSubjectToCoppa(isSubject: Boolean) = HeliumSdk.setSubjectToCoppa(isSubject)
+
+    fun setSubjectToGDPR(isSubject: Boolean) = HeliumSdk.setSubjectToGDPR(isSubject)
+
+    fun setUserHasGivenConsent(hasGivenConsent: Boolean) = HeliumSdk.setUserHasGivenConsent(hasGivenConsent)
+
+    fun setCCPAConsent(hasGivenConsent: Boolean) = HeliumSdk.setCCPAConsent(hasGivenConsent)
+
+    fun setUserIdentifier(userIdentifier: String) = HeliumSdk.setUserIdentifier(userIdentifier)
+
+    fun getUserIdentifier(): String? = HeliumSdk.getUserIdentifier()
+
+    fun setTestMode(testModeEnabled: Boolean) = HeliumSdk.setTestMode(testModeEnabled)
+
+    fun destroy() {
+        ilrdObserver?.let {
+            HeliumSdk.unsubscribeIlrd(it)
+            ilrdObserver = null
+        }
+    }
+
     fun getFullscreenAd(adRequest: ChartboostMediationAdLoadRequest, fullscreenListener: ChartboostMediationFullscreenAdListener, adLoadResultHandler: CMFullscreenAdLoadResultHandler) {
         CoroutineScope(Dispatchers.Main).launch {
             val adLoadResult = HeliumSdk.loadFullscreenAd(UnityPlayer.currentActivity, adRequest, fullscreenListener)
@@ -122,6 +116,7 @@ class UnityBridge {
         }
     }
 
+    @Deprecated("getInterstitialAd has been deprecated, utilize getFullscreenAd instead.")
     fun getInterstitialAd(placementName: String): AdWrapper {
         val interstitialAd = HeliumInterstitialAd(UnityPlayer.currentActivity, placementName, object : HeliumFullscreenAdListener {
             override fun onAdCached(placementName: String, loadId: String, winningBidInfo: Map<String, String>, error: ChartboostMediationAdException?) {
@@ -166,6 +161,8 @@ class UnityBridge {
         })
         return wrap(interstitialAd)
     }
+
+    @Deprecated("getInterstitialAd has been deprecated, utilize getFullscreenAd instead.")
     fun getRewardedAd(placementName: String): AdWrapper {
         val rewardedAd = HeliumRewardedAd(UnityPlayer.currentActivity, placementName, object : HeliumFullscreenAdListener {
             override fun onAdCached(placementName: String, loadId: String, winningBidInfo: Map<String, String>, error: ChartboostMediationAdException?) {
@@ -213,6 +210,7 @@ class UnityBridge {
         })
         return wrap(rewardedAd)
     }
+
     fun getBannerAd(placementName: String, size: Int): AdWrapper {
         // default to standard
         var wantedSize = HeliumBannerSize.STANDARD

@@ -16,7 +16,7 @@ namespace Chartboost.Banner
         public ChartboostMediationBannerAndroid(string placementName, ChartboostMediationBannerAdSize size) : base(placementName, size)
         {
             LogTag = "ChartboostMediationBanner (Android)";
-            _androidAd = ChartboostMediationAndroid.plugin().Call<AndroidJavaObject>("getBannerAd", placementName, (int)size);
+            _androidAd = ChartboostMediationAndroid.UnityBridge.Call<AndroidJavaObject>("getBannerAd", placementName, (int)size);
         }
 
         /// <inheritdoc cref="IChartboostMediationAd.SetKeyword"/>>

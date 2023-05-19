@@ -14,7 +14,7 @@ namespace Chartboost.FullScreen.Rewarded
         public ChartboostMediationRewardedAndroid(string placementName) : base(placementName)
         {
             logTag = "ChartboostMediationRewarded (Android)";
-            _androidAd = ChartboostMediationAndroid.plugin().Call<AndroidJavaObject>("getRewardedAd", placementName);
+            _androidAd = ChartboostMediationAndroid.UnityBridge.Call<AndroidJavaObject>("getRewardedAd", placementName);
         }
         
         // *NOTE* Implementation for Rewarded/FullScreen is very similar, and it could be simplified on a single file,

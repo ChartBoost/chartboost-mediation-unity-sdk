@@ -194,15 +194,15 @@ public class Demo : MonoBehaviour
         var loadResult = await ChartboostMediation.GetFullscreenAd(loadRequest);
         
         // Failed to Load
-        if (loadResult.error.HasValue)
+        if (loadResult.Error.HasValue)
         {
-            var error = loadResult.error.Value;
+            var error = loadResult.Error.Value;
             Log($"Fullscreen Failed to Load: {error.code}, message: {error.message}");
             return;
         }
 
         // Loaded but AD is null?
-        _fullscreenAd = loadResult.ad;
+        _fullscreenAd = loadResult.AD;
         if (_fullscreenAd == null)
         {
             Log("Fullscreen Ad is null but no error was found???");
@@ -213,8 +213,8 @@ public class Demo : MonoBehaviour
         var adRequestId = _fullscreenAd.RequestId;
         var customData = _fullscreenAd.CustomData;
         var bidInfo = _fullscreenAd.WinningBidInfo;
-        var requestId = loadResult.requestId;
-        var metrics = loadResult.metrics;
+        var requestId = loadResult.RequestId;
+        var metrics = loadResult.Metrics;
         Log($"Fullscreen Loaded with: \nAdRequestId {adRequestId} \nRequestID {requestId} \nBidInfo: {JsonConvert.SerializeObject(bidInfo, Formatting.Indented)} \n Metrics:{JsonConvert.SerializeObject(metrics, Formatting.Indented)}");
     }
 

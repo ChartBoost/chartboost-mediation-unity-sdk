@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Chartboost.Placements
 {
-    public class ChartboostMediationFullscreenAdAndroid : IChartboostMediationFullscreenAd
+    public sealed class ChartboostMediationFullscreenAdAndroid : IChartboostMediationFullscreenAd
     {
         public ChartboostMediationFullscreenAdAndroid(AndroidJavaObject fullscreenAd, ChartboostMediationFullscreenAdLoadRequest request)
         {
@@ -33,7 +33,7 @@ namespace Chartboost.Placements
         public async Task<ChartboostMediationAdShowResult> Show()
         {
             var awaitableProxy = new ChartboostMediationAndroid.CMAdShowResultHandler();
-            ChartboostMediationAndroid.plugin().Call("showFullscreenAd", _chartboostMediationFullscreenAd, awaitableProxy);
+            ChartboostMediationAndroid.UnityBridge.Call("showFullscreenAd", _chartboostMediationFullscreenAd, awaitableProxy);
             return await awaitableProxy;
         }
 
