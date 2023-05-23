@@ -14,9 +14,6 @@
 
 @property ChartboostMediationBannerDragEvent dragListener;
 
-
-//- (void) load : (long) screenLocation;
-//- (void) load : (float) x y:(float) y width: (float) width height:(float) height;
 - (void) handlePan:(UIPanGestureRecognizer*) gr;
 
 

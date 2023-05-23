@@ -74,20 +74,13 @@ namespace Chartboost.Banner
             //android doesn't have a remove method. Instead, calling destroy
             Destroy();
         }
-
-        /// <inheritdoc cref="IChartboostMediationBannerAd.SetParams(float, float, int, int)"/>>
-        public override void SetParams(float x, float y, int width, int height)
+        
+        public override void EnableDrag(Action<float, float> onDrag = null)
         {
-            base.SetParams(x, y, width, height);
-            _androidAd.Call("setParams", x, Screen.height - y, width, height);  // Android measures pixels from top whereas Unity provides measurement from bottom of screen
-        }        
-
-        public override void EnableDrag(Action<float, float> didDrag = null)
-        {
-            base.EnableDrag(didDrag);
+            base.EnableDrag(onDrag);
 
             var dragListener = new BannerDragEventListener();
-            dragListener.Init(didDrag);
+            dragListener.Init(onDrag);
 
             _androidAd.Call("enableDrag", dragListener);
         }
@@ -95,7 +88,6 @@ namespace Chartboost.Banner
         public override void DisableDrag()
         {
             base.DisableDrag();
-
             _androidAd.Call("disableDrag");
         }
     }

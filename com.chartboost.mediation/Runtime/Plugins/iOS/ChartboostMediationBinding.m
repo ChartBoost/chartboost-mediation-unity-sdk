@@ -320,30 +320,12 @@ void _chartboostMediationBannerAdLoadWithParams(const void * uniqueId, float x, 
             safeGuide = unityVC.view.safeAreaLayoutGuide;
         else
             safeGuide = unityVC.view.layoutMarginsGuide;
-//        bannerView.translatesAutoresizingMaskIntoConstraints=NO;
+
         [bannerView removeFromSuperview];
         [unityVC.view  addSubview:bannerView];
         
         float scale = UIScreen.mainScreen.scale;
         bannerView.frame = CGRectMake(x/scale, y/scale, width/scale, height/scale);
-//        bannerView.layer.contentsScale = UIScreen.mainScreen.scale;
-                
-                        
-        NSLog(@"Dragging added");
-
-        
-        NSLog(@"scale: %f", scale);
-        
-        NSLog(@"Unity input: %f, %f, %li, %li", x,y,width,height);
-        
-        
-        NSLog(@"BannerView bounds: %f, %f, %f, %f", bannerView.bounds.origin.x, bannerView.bounds.origin.y, bannerView.bounds.size.width, bannerView.bounds.size.height );
-        
-        NSLog(@"BannerView frame: %f, %f, %f, %f", bannerView.frame.origin.x, bannerView.frame.origin.y, bannerView.frame.size.width, bannerView.frame.size.height );
-        
-        NSLog(@"SuperView bounds: %f, %f, %f, %f", [bannerView superview].bounds.origin.x, [bannerView superview].bounds.origin.y, [bannerView superview].bounds.size.width, [bannerView superview].bounds.size.height);
-        
-        NSLog(@"SuperView frame: %f, %f, %f, %f", [bannerView superview].frame.origin.x, [bannerView superview].frame.origin.y, [bannerView superview].frame.size.width, [bannerView superview].frame.size.height);
 
         id<HeliumBannerAd> ad = (__bridge id<HeliumBannerAd>)uniqueId;
         [ad loadAdWithViewController:unityVC];
@@ -356,15 +338,6 @@ void _chartboostMediationBannerEnableDrag(const void * uniqueId, ChartboostMedia
 
 void _chartboostMediationBannerDisableDrag(const void * uniqueId){
     [[ChartboostMediationManager sharedManager] disableBannerDrag:uniqueId];
-}
-
-void _chartboostMediationBannerAdSetlayoutParams(const void * uniqueId, float x, float y, long width, long height)
-{
-    sendToMain(^{
-        HeliumBannerView* bannerView = (__bridge HeliumBannerView*)uniqueId;
-        bannerView.frame = CGRectMake(x, y, width, height);
-        bannerView.layer.contentsScale = UIScreen.mainScreen.scale;
-    });
 }
 
 void _chartboostMediationBannerClearLoaded(const void * uniqueId)

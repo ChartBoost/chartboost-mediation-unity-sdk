@@ -14,6 +14,16 @@ namespace Chartboost.Banner
         /// <param name="location"></param>
         [Preserve]
         void Load(ChartboostMediationBannerAdScreenLocation location);
+        
+        /// <summary>
+        /// Loads the banner ad at specified position and size
+        /// </summary>
+        /// <param name="x"> Distance from left of screen in pixels </param>
+        /// <param name="y"> Distance from bottom of screen in pixels </param>
+        /// <param name="width"> width in pixels </param>
+        /// <param name="height"> height in pixels </param>
+        [Preserve]
+        void Load(float x, float y, int width, int height); // use 2 Vector2(position and size) instead ?
 
         /// <summary>This method changes the visibility of the banner ad.</summary>
         /// <param name="isVisible">Specify if the banner should be visible.</param>
@@ -33,33 +43,10 @@ namespace Chartboost.Banner
         [Preserve]
         void Remove();
 
-        /// <summary>
-        /// Loads the banner ad at specidied position and size
-        /// </summary>
-        /// <param name="x"> Distance from left of screen in pixels </param>
-        /// <param name="y"> Distance from bottom of screen in pixels </param>
-        /// <param name="width"> width in pixels </param>
-        /// <param name="height"> height in pixels </param>
         [Preserve]
-        void Load(float x, float y, int width, int height); // use 2 Vector2 instead ?
-
-        /// <summary>
-        /// Sets the banner ad's position and size
-        /// </summary>
-        /// <param name="x"> Distance from left of screen in pixels </param>
-        /// <param name="y"> Distance from bottom of screen in pixels </param>
-        /// <param name="width"> width in pixels </param>
-        /// <param name="height"> height in pixels </param>
-        [Preserve]
-        void SetParams(float x, float y, int width, int height);
-
-        [Preserve]
-        void EnableDrag(Action<float, float> didDrag = null);
+        void EnableDrag(Action<float, float> onDrag = null);
 
         [Preserve]
         void DisableDrag();
     }
-
-    public delegate void ChartbooostMediationBannerDragEvent(float x, float y);
-
 }

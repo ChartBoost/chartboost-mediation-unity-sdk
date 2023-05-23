@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Chartboost;
 using Chartboost.Banner;
+using Chartboost.Banner.Unity;
 using Chartboost.FullScreen.Interstitial;
 using Chartboost.FullScreen.Rewarded;
 using Newtonsoft.Json;
@@ -41,9 +42,10 @@ public class Demo : MonoBehaviour
     public InputField bannerPlacementInputField;
     public Dropdown bannerSizeDropdown;
     public Dropdown bannerLocationDropdown;
-    private ChartboostMediationBannerAd _bannerAd;
+    private UnityBannerAd _unityBannerAd;
     private bool _bannerAdIsVisible;
 
+    // Logger
     public ScrollRect outputTextScrollRect;
     public Text outputText;
 
@@ -73,7 +75,9 @@ public class Demo : MonoBehaviour
         interstitialPlacementInputField.SetTextWithoutNotify(DefaultPlacementInterstitial);
         rewardedPlacementInputField.SetTextWithoutNotify(DefaultPlacementRewarded);
         bannerPlacementInputField.SetTextWithoutNotify(DefaultPlacementBanner);
-
+        
+        CreateUnityBannerAd();
+        
         ChartboostMediation.StartWithAppIdAndAppSignature(ChartboostMediationSettings.AppId, ChartboostMediationSettings.AppSignature);
     }
 
@@ -91,10 +95,10 @@ public class Demo : MonoBehaviour
             _rewardedAd.Destroy();
             Log("destroyed an existing rewarded");
         }
-        if (_bannerAd != null)
+        if (_unityBannerAd != null)
         {
-            _bannerAd.ClearLoaded();
-            _bannerAd.Destroy();
+            _unityBannerAd.ClearLoaded();
+            _unityBannerAd.Destroy();
             Log("destroyed an existing banner");
         }
     }
@@ -295,75 +299,118 @@ public class Demo : MonoBehaviour
 
     public void OnCreateBannerClick()
     {
+        if (_unityBannerAd == null)
+        {
+            Log("Unity Banner Ad is not created");
+            return;
+        }
+        
         var size = bannerSizeDropdown.value switch
         {
             2 => ChartboostMediationBannerAdSize.Leaderboard,
             1 => ChartboostMediationBannerAdSize.MediumRect,
             _ => ChartboostMediationBannerAdSize.Standard
         };
-
-        _bannerAd?.Remove();
-
-        Log("Creating banner on placement: " + bannerPlacementInputField.text + " with size: " + size);
-        _bannerAd = ChartboostMediation.GetBannerAd(bannerPlacementInputField.text, size);
         
-        if (_bannerAd == null)
-        {
-            Log("Banner not found");
-            return;
-        }
+        Log("Creating banner on placement: " + bannerPlacementInputField.text + " with size: " + size);
+        var banner = ChartboostMediation.GetBannerAd(bannerPlacementInputField.text, _unityBannerAd.Size);
+        _unityBannerAd.bannerPlacementName = bannerPlacementInputField.text;
+        _unityBannerAd.Init(banner);
 
         // example keywords usage
-        _bannerAd.SetKeyword("bnr_keyword1", "bnr_value1"); // accepted set
-        _bannerAd.SetKeyword("bnr_keyword2", "bnr_value2"); // accepted set
-        _bannerAd.SetKeyword(GenerateRandomString(65), "bnr_value2"); // rejected set
-        _bannerAd.SetKeyword("bnr_keyword3", GenerateRandomString(257)); // rejected set
-        _bannerAd.SetKeyword("bnr_keyword4", "bnr_value4"); // accepted set
-        var keyword4 = this._bannerAd.RemoveKeyword("bnr_keyword4"); // removal of existing
-        _bannerAd.RemoveKeyword("bnr_keyword4"); // removal of non-existing
-        _bannerAd.SetKeyword("bnr_keyword5", keyword4); // accepted set using prior value
-        _bannerAd.SetKeyword("bnr_keyword6", "bnr_value6"); // accepted set
-        _bannerAd.SetKeyword("bnr_keyword6", "bnr_value6_replaced"); // accepted replace
-        var screenPos = bannerLocationDropdown.value switch
-        {
-            0 => ChartboostMediationBannerAdScreenLocation.TopLeft,
-            1 => ChartboostMediationBannerAdScreenLocation.TopCenter,
-            2 => ChartboostMediationBannerAdScreenLocation.TopRight,
-            3 => ChartboostMediationBannerAdScreenLocation.Center,
-            4 => ChartboostMediationBannerAdScreenLocation.BottomLeft,
-            5 => ChartboostMediationBannerAdScreenLocation.BottomCenter,
-            6 => ChartboostMediationBannerAdScreenLocation.BottomRight,
-            _ => ChartboostMediationBannerAdScreenLocation.TopCenter
-        };
-        _bannerAd.Load(screenPos);
+        _unityBannerAd.SetKeyword("bnr_keyword1", "bnr_value1"); // accepted set
+        _unityBannerAd.SetKeyword("bnr_keyword2", "bnr_value2"); // accepted set
+        _unityBannerAd.SetKeyword(GenerateRandomString(65), "bnr_value2"); // rejected set
+        _unityBannerAd.SetKeyword("bnr_keyword3", GenerateRandomString(257)); // rejected set
+        _unityBannerAd.SetKeyword("bnr_keyword4", "bnr_value4"); // accepted set
+        var keyword4 = _unityBannerAd.RemoveKeyword("bnr_keyword4"); // removal of existing
+        _unityBannerAd.RemoveKeyword("bnr_keyword4"); // removal of non-existing
+        _unityBannerAd.SetKeyword("bnr_keyword5", keyword4); // accepted set using prior value
+        _unityBannerAd.SetKeyword("bnr_keyword6", "bnr_value6"); // accepted set
+        _unityBannerAd.SetKeyword("bnr_keyword6", "bnr_value6_replaced"); // accepted replace
+        
+        _unityBannerAd.Load();
+
     }
 
     public void OnRemoveBannerClick()
     {
-        _bannerAd?.Remove();
-        _bannerAd = null;
+        _unityBannerAd?.Remove();
+        _unityBannerAd = null;
         Log("Banner Removed");
     }
 
     public void OnClearBannerClick()
     {
-        if (_bannerAd == null)
+        if (_unityBannerAd == null)
         {
             Log("banner ad does not exist");
             return;
         }
-        _bannerAd.ClearLoaded();
+        _unityBannerAd.ClearLoaded();
         Log("banner ad has been cleared");
     }
 
     public void OnToggleBannerVisibilityClick()
     {
-        if (_bannerAd != null)
+        if (_unityBannerAd != null)
         {
             _bannerAdIsVisible = !_bannerAdIsVisible;
-            _bannerAd.SetVisibility(_bannerAdIsVisible);
+            _unityBannerAd.SetVisibility(_bannerAdIsVisible);
         }
         Log("Banner Visibility Toggled");
+    }
+
+    public void OnToggleDragClick(bool isOn)
+    {
+        if (_unityBannerAd != null)
+        {
+            _unityBannerAd.Draggable = isOn;
+            
+            Log("Banner Drag Toggled");
+        }
+    }
+
+    public void OnBannerLocationDropdownChange()
+    {
+        CreateUnityBannerAd();
+    }
+
+    private void CreateUnityBannerAd()
+    {
+        if (_unityBannerAd != null)
+        {
+            _unityBannerAd.Remove();
+            Destroy(_unityBannerAd.gameObject);    
+        }
+        
+        var size = bannerSizeDropdown.value switch
+        {
+            2 => ChartboostMediationBannerAdSize.Leaderboard,
+            1 => ChartboostMediationBannerAdSize.MediumRect,
+            _ => ChartboostMediationBannerAdSize.Standard
+        };
+        
+        if (bannerLocationDropdown.value == 7)  // Draggable
+        {
+            _unityBannerAd = UnityBannerAd.Instantiate(size);
+            _unityBannerAd.Visualize = true;
+        }
+        else
+        {
+            var screenLoc = bannerLocationDropdown.value switch
+            {
+                0 => ChartboostMediationBannerAdScreenLocation.TopLeft,
+                1 => ChartboostMediationBannerAdScreenLocation.TopCenter,
+                2 => ChartboostMediationBannerAdScreenLocation.TopRight,
+                3 => ChartboostMediationBannerAdScreenLocation.Center,
+                4 => ChartboostMediationBannerAdScreenLocation.BottomLeft,
+                5 => ChartboostMediationBannerAdScreenLocation.BottomCenter,
+                6 => ChartboostMediationBannerAdScreenLocation.BottomRight,
+                _ => ChartboostMediationBannerAdScreenLocation.TopCenter
+            };
+            _unityBannerAd = UnityBannerAd.Instantiate(size, screenLoc);
+        }
     }
 
     private void DidLoadBanner(string placementName, string loadId, BidInfo info, string error)

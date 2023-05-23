@@ -74,16 +74,6 @@ class AdWrapper(private val ad: HeliumAd) {
         }
     }
 
-    fun setParams(x: Float, y: Float, width: Int, height: Int){
-        UnityBridge.runTaskOnUiThread {
-            if(ad is HeliumBannerAd){
-                ad.layoutParams = ViewGroup.LayoutParams(width, height)
-                ad.x = x;
-                ad.y = y;
-            }
-        }
-    }
-
     fun setKeyword(keyword: String, value: String): Boolean {
         return ad.keywords.set(keyword, value)
     }

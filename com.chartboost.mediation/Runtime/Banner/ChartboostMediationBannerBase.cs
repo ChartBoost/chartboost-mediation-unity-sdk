@@ -53,13 +53,9 @@ namespace Chartboost.Banner
 
         /// <inheritdoc cref="IChartboostMediationBannerAd.Remove"/>>
         public virtual void Remove()
-            => Logger.Log(LogTag, $"removing banner: {_placementName}");        
+            => Logger.Log(LogTag, $"removing banner: {_placementName}");
 
-        /// <inheritdoc cref="IChartboostMediationBannerAd.SetParams(float, float, int, int)"/>
-        public virtual void SetParams(float x, float y, int width, int height)
-            => Logger.Log(LogTag, $"setting banner: {_placementName} layout to position :{x},{y} and size : {width},{height}");
-
-        public virtual void EnableDrag(Action<float, float> didDrag = null)
+        public virtual void EnableDrag(Action<float, float> onDrag = null)
             => Logger.Log(LogTag, $"Dragging enabled");
 
         public virtual void DisableDrag()

@@ -5,7 +5,7 @@
 
 #import <objc/runtime.h>
 #import "ChartboostMediationManager.h"
-#import "ChaertboostMediationBannerAdDragger.h"
+#import "ChartboostMediationBannerAdDragger.h"
 #import <ChartboostMediationSDK/ChartboostMediationSDK-Swift.h>
 #import <ChartboostMediationSDK/HeliumInitResultsEvent.h>
 
@@ -339,37 +339,31 @@ static void subscribeToPartnerInitializationNotifications()
 
 
 
-- (void) enableBannerDrag:(const void*) uniqueId listener:(ChartboostMediationBannerDragEvent) draglistener
-{
-    NSLog(@"Enabling dragging on banner");
-    
+- (void) enableBannerDrag:(const void*) uniqueId listener:(ChartboostMediationBannerDragEvent) dragListener
+{    
     HeliumBannerView* bannerView = (__bridge HeliumBannerView*)uniqueId;
             
     ChartboostMediationBannerAdDragger* dragger = [[ChartboostMediationBannerAdDragger alloc] init];
-    dragger.dragListener = draglistener;
+    dragger.dragListener = dragListener;
     
     // create pan gesture recognizer for bannerView
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:dragger action:@selector(handlePan:)];
     [bannerView addGestureRecognizer:panGesture];
-
-
     
     // add to dragger dictionary
     if(bannerDraggers == nil)
         bannerDraggers = [[NSMutableDictionary alloc] init];
+        
     // associate dragger to banner object uniqueId (each bannerAd should have it's own drag listener)
     [bannerDraggers setObject:dragger forKey:[NSNumber numberWithLong:(long)uniqueId]];
-
-    NSLog(@"Draggers count : %lu", bannerDraggers.count);
-    
 }
 
 - (void) disableBannerDrag : (const void*) uniqueId
 {
-    // Obtain wrapper object asscociated with this banner and destroy it
+    // Obtain wrapper object associated with this banner and destroy it
     ChartboostMediationBannerAdDragger* wrapper = [bannerDraggers objectForKey:[NSNumber numberWithLong:(long)uniqueId]];
-    wrapper.dragListener = nil;
-    wrapper = nil;
+    wrapper.dragListener = NULL;
+    wrapper = NULL;
     
     // also remove the dictionary entry
     [bannerDraggers removeObjectForKey:[NSNumber numberWithLong:(long)uniqueId]];
