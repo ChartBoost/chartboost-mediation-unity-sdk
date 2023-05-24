@@ -1,4 +1,5 @@
 using System.IO;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace Chartboost.Editor.Adapters
@@ -19,10 +20,17 @@ namespace Chartboost.Editor.Adapters
         public static readonly string PathToMainDependency = Path.Combine(PathToEditorInGeneratedFiles, "ChartboostMediationDependencies.xml");
         public static readonly string PathToSelectionsFile = Path.Combine(PathToEditorInGeneratedFiles, "selections.json");
         
+        public static readonly string PathToLibrary = Path.Combine(Directory.GetCurrentDirectory(), "Library");
+        public static readonly string PathToLibraryCacheDirectory = Path.Combine(PathToLibrary, "com.chartboost.mediation");
+        public static readonly string PathToAdaptersCachedJson = Path.Combine(PathToLibraryCacheDirectory, "partnersv2.json");
+        
         // Networks with special handling due to different versioning, dependencies, or multiple sdks
         public const string InMobi = "inmobi";
         public const string IronSource = "ironsource";
         public const string Mintegral = "mintegral";
+        
+        const string VersionNumberIsPresent = @"(?<=:)(?<major>\d+)\.(?<minor>\d+)(\.(?<build>\d+))?(-(?<suffix>\w+(\.\w+)*))?(?=[^.\d]|$)";
+        public static readonly Regex NeedsVersionNumber = new Regex(VersionNumberIsPresent);
 
         public const string StyleSheet = "Packages/com.chartboost.mediation/Editor/Adapters/Visuals/AdaptersWindow.uss";
         public const string LogoPNG = "Packages/com.chartboost.mediation/Editor/Adapters/Visuals/Logo.png";

@@ -112,9 +112,9 @@ namespace Chartboost.Banner
 
 
         ~ChartboostMediationBannerIOS()
-            => _chartboostMediationFreeBannerAdObject(_uniqueId);
+            => _chartboostMediationFreeAdObject(_uniqueId, placementName, true);
 
-#region External Methods
+        #region External Methods
         [DllImport("__Internal")]
         private static extern IntPtr _chartboostMediationGetBannerAd(string placementName, int size);
         [DllImport("__Internal")]
@@ -132,7 +132,7 @@ namespace Chartboost.Banner
         [DllImport("__Internal")]
         private static extern bool _chartboostMediationBannerSetVisibility(IntPtr uniqueID, bool isVisible);
         [DllImport("__Internal")]
-        private static extern void _chartboostMediationFreeBannerAdObject(IntPtr uniqueID);
+        private static extern void _chartboostMediationFreeAdObject(IntPtr uniqueID, string placementName, bool multiPlacementSupport);
         [DllImport("__Internal")]
         private static extern void _chartboostMediationBannerEnableDrag(IntPtr uniqueID, ExternChartboostMediationBannerDragEvent draglistener);
         [DllImport("__Internal")]

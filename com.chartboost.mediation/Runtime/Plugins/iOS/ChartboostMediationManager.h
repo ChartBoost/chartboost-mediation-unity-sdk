@@ -33,9 +33,8 @@ typedef void (*ChartboostMediationBannerDragEvent)(void* uniqueId, float x, floa
 - (id<HeliumInterstitialAd>)getInterstitialAd:(NSString*)placementId;
 - (id<HeliumRewardedAd>)getRewardedAd:(NSString*)placementId;
 - (HeliumBannerView*)getBannerAd:(NSString*)placementName andSize:(CHBHBannerSize)size;
-- (void)freeInterstitialAd:(NSNumber*)adId;
-- (void)freeRewardedAd:(NSNumber*)adId;
-- (void)freeBannerAd:(NSNumber*)adId;
 - (void) enableBannerDrag:(const void*) uniqueId listener:(ChartboostMediationBannerDragEvent) draglistener;
 - (void) disableBannerDrag : (const void*) uniqueId;
+- (void)freeAd:(NSNumber*)adId placementName:(NSString*)placementName multiPlacementSupport:(BOOL) multiPlacementSupport;
+
 @end

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Chartboost.Editor;
 using UnityEditor;
 using UnityEditor.PackageManager.UI;
 using UnityEngine;
@@ -12,6 +11,7 @@ using ImportOptions = UnityEditor.PackageManager.UI.Sample.ImportOptions;
 
 namespace Chartboost.Editor
 {
+    [Obsolete("ChartboostMediationIntegrationChecker has been deprecated and will be removed in future versions, please utilize the new Adapter Window.")]
     public class ChartboostMediationIntegrationChecker
     {
         private const string UnityAds = "UnityAds";
@@ -162,7 +162,6 @@ namespace Chartboost.Editor
             File.WriteAllLines(unityAdsDependencyPath, unityAdsDependencyLines);
         }
 
-        [MenuItem("Chartboost Mediation/Integration/UnityAds Check", false, 1)]
         public static void CheckUnityAdsIntegration()
         {
             var chartboostMediation = FindPackage(ChartboostMediationPackageName);
@@ -206,7 +205,6 @@ namespace Chartboost.Editor
         /// <summary>
         /// Used to update all existing adapters by Devs choice. This will utilize current's Chartboost Mediation Package version to override all adapters with such version.
         /// </summary>
-        [MenuItem("Chartboost Mediation/Integration/Force Reimport Adapters", false, 2)]
         public static void ForceReimportExistingAdapters()
         {
             var confirmUpdate = EditorUtility.DisplayDialog(WindowTitle,
@@ -221,7 +219,6 @@ namespace Chartboost.Editor
         /// <summary>
         /// Used to detect and address general Chartboost Mediation Integration issues
         /// </summary>
-        [MenuItem("Chartboost Mediation/Integration/Status Check", false, 0)]
         public static void CheckIntegration()
         {
             var chartboostMediation = FindPackage(ChartboostMediationPackageName);

@@ -1,8 +1,38 @@
 # Changelog
 All notable changes to this project will be documented in this file using the standards as defined at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0).
 
+## Version 4.2.3 *(2023-05-18)*
+Bug Fixes:
+- Fixed an issue with Unity-iOS Rewarded Ads hanging onto the ad instances for too long, potentially causing duplicate callback events.
+
+## Version 4.2.2 *(2023-05-10)*
+Improvements:
+- Updated `AdaptersWindow.cs` to utilize a more comprehensive JSON schema for better handling of network dependency changes.
+
+Bug Fixes:
+- Fixed an issue with InMobi SDK dependencies not being properly defined due to versioning differences.
+
+## Version 4.2.1 *(2023-05-05)*
+Bug Fixes:
+- Fixed an issue where package information failed to load if projects had a large amount of packages.
+- Fixed an issue where main SDK dependency could not be generated through UPM implementation.
+
+## Version 4.2.0 *(2023-05-04)*
+Added:
+- Editor Window, `AdaptersWindow.cs`, for Chartboost Mediation adapters handling. For capabilities, see below:
+  * Ad Adapters are now decoupled from the Chartboost Mediation UPM package.
+  * Ad Adapters can be fetched, selected, and upgraded through the new Adapters Window.
+  * `Adapters Window` can be accessed through the `Chartboost Mediation/Adapters` menu.
+  * Public C# API is available to automate tasks such as upgrading, adding, loading, and saving Ad Adapter selections.
+    *Adapters information is automatically fetched on startup and manually through the `Adapters Window`.
+
+Improvements:
+- Fixed standardized error reporting of `ChartboostMediationError` components in iOS.
+
+API Changes:
+- Marked `ChartboostMediationIntegrationChecker.cs` as deprecated. Please utilize `AdaptersWindow.cs` instead.
+
 ## Version 4.1.0 *(2023-03-30)*
- 
 Improvements:
 - Simplified AppId & AppSignature accessors in `ChartboostMediationSettings`.
 - Added TestMode call to `ChartboostMediation.cs`.
@@ -98,15 +128,15 @@ Improvements:
 - Helium impression events are now separate from partner network impression events.
 - Sequential waterfall ad loading for all ad formats.
 - Removal of UnitySendMessage callbacks for proper Native callbacks on Android & iOS
-- `HeliumBannerAd`
+- `HeliumBannerAd`   
   - `Show` removed. Banners are ready to show upon successful load.
   - `ReadyToShow` removed since it is no longer necessary.
-- `HeliumSDK`
+- `HeliumSDK`   
   - `DidShowBanner` callback removed since it is no longer necessary.
   - Added the following callbacks for when Helium determines an ad to be visible on screen.
     - `DidRecordImpressionInterstitial`
     - `DidRecordImpressionRewarded`
-    - `DidRecordImpressionBanner`
+    - `DidRecordImpressionBanner`   
 
 Bug Fixes:
 - Ad load requests to the native Helium SDKs are dispatched to a background thread.

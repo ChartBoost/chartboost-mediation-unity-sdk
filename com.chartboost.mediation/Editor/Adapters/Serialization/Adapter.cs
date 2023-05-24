@@ -2,16 +2,19 @@ using System;
 
 namespace Chartboost.Editor.Adapters.Serialization
 {
+    /// <summary>
+    /// Base Unity friendly Adapter structure. Contains native platforms adapter specific information. 
+    /// </summary>
     [Serializable]
     public struct Adapter
     {
         /// <summary>
-        /// The string that defines the adapter name.
+        /// string defining adapter name.
         /// </summary>
         public string name;
         
         /// <summary>
-        /// The string that defines the adapter id.
+        /// string defining adapter id.
         /// </summary>
         public string id;
         

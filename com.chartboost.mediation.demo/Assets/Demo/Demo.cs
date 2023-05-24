@@ -189,9 +189,22 @@ public class Demo : MonoBehaviour
         Log("interstitial ad has been cleared");
     }
 
+    public void OnDestroyInterstitial()
+    {
+        if (_interstitialAd == null)
+        {
+            Log("interstitial ad does not exist");
+            return;
+        }
+        
+        _interstitialAd.Destroy();
+        _interstitialAd = null;
+        Log("interstitial ad has been destroyed");
+    }
+
     public void OnShowInterstitialClick()
     {
-        if (_interstitialAd.ReadyToShow())
+        if (_interstitialAd != null && _interstitialAd.ReadyToShow())
             _interstitialAd.Show();
     }
 
@@ -263,10 +276,23 @@ public class Demo : MonoBehaviour
         _rewardedAd.ClearLoaded();
         Log("rewarded ad has been cleared");
     }
+    
+    public void OnDestroyRewarded()
+    {
+        if (_rewardedAd == null)
+        {
+            Log("rewarded ad does not exist");
+            return;
+        }
+        
+        _rewardedAd.Destroy();
+        _rewardedAd = null;
+        Log("rewarded ad has been destroyed");
+    }
 
     public void OnShowRewardedClick()
     {
-        if (_rewardedAd.ReadyToShow())
+        if (_rewardedAd != null && _rewardedAd.ReadyToShow())
             _rewardedAd.Show();
     }
 

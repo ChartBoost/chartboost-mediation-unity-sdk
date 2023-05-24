@@ -13,7 +13,7 @@ namespace Chartboost.FullScreen.Interstitial
 
         public ChartboostMediationInterstitialAndroid(string placementName) : base(placementName)
         {
-            LogTag = "ChartboostMediationInterstitial (Android)";
+            logTag = "ChartboostMediationInterstitial (Android)";
             _androidAd = ChartboostMediationAndroid.plugin().Call<AndroidJavaObject>("getInterstitialAd", placementName);
         }
 

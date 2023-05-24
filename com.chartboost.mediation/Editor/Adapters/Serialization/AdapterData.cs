@@ -3,10 +3,18 @@ using Newtonsoft.Json;
 
 namespace Chartboost.Editor.Adapters.Serialization
 {
+    /// <summary>
+    /// Root level structure for S3 json file containing adapter information.
+    /// </summary>
     #nullable enable
     [Serializable]
-    public struct Partners
+    public struct AdapterData
     {
+        /// <summary>
+        /// Timestamp of last cron job
+        /// </summary>
+        public string? lastChecked;
+        
         /// <summary>
         /// Timestamp of last update
         /// </summary>

@@ -4,9 +4,8 @@
         <!-- Android Adapter -->
         <androidPackage spec="com.chartboost:chartboost-mediation-adapter-adcolony:4.4.8.0+@aar"/>
 
-        <!-- Partner Android SDK-->
+        <!-- Partner Android SDK Dependencies-->
         <androidPackage spec="com.adcolony:sdk:4.8.0"/>
-        
     </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->

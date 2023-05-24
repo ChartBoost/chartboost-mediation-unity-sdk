@@ -2,17 +2,21 @@
 <dependencies>
     <androidPackages>
         <!-- Android Adapter -->
-        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-chartboost:4.9.2.1+@aar"/>
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-chartboost:4.9.3.0+@aar"/>
 
-        <!-- Partner Android SDK-->
-        <androidPackage spec="com.chartboost:chartboost-sdk:9.2.1"/>
-        
+        <!-- Partner Android SDK Dependencies-->
+        <androidPackage spec="com.chartboost:chartboost-sdk:9.3.0"/>
+
+        <!-- Chartboost Android Repositories -->
+        <repositories>
+          <repository>https://cboost.jfrog.io/artifactory/chartboost-ads/</repository>
+        </repositories>
     </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->
-        <iosPod name="ChartboostMediationAdapterChartboost" version="~> 4.9.2.0"/>
+        <iosPod name="ChartboostMediationAdapterChartboost" version="~> 4.9.3.0"/>
 
         <!-- Partner iOS SDK-->
-        <iosPod name="ChartboostSDK" version="~> 9.2.0" addToAllTargets="false"/>
+        <iosPod name="ChartboostSDK" version="~> 9.3.0" addToAllTargets="false"/>
     </iosPods>
 </dependencies>

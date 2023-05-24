@@ -13,7 +13,7 @@ namespace Chartboost.FullScreen.Rewarded
 
         public ChartboostMediationRewardedAndroid(string placementName) : base(placementName)
         {
-            LogTag = "ChartboostMediationRewarded (Android)";
+            logTag = "ChartboostMediationRewarded (Android)";
             _androidAd = ChartboostMediationAndroid.plugin().Call<AndroidJavaObject>("getRewardedAd", placementName);
         }
         

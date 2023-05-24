@@ -29,9 +29,11 @@ In order to enable multidex, the default config section inside the gradle file n
   }
 ```
 
-> **_NOTE 1:_** Notice that (...) merely represents continuation of contents and not the actual contents inside the gradle file
+> **Note** \
+> Notice that (...) merely represents continuation of contents and not the actual contents inside the gradle file
 
-> **_NOTE 2:_** Updating your Unity project will require to regenerate this launcherTemplate.gradle file as its contents tend to variate from Unity version to Unity version. This is because newer Unity versions tend to support higher Gradle versions.
+> **Warning** \
+> Updating your Unity project will require to regenerate this launcherTemplate.gradle file as its contents tend to variate from Unity version to Unity version. This is because newer Unity versions tend to support higher Gradle versions.
 
 ## Adding Multidex Dependency to Project
 

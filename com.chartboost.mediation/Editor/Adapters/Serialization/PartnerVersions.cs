@@ -7,30 +7,45 @@ namespace Chartboost.Editor.Adapters.Serialization
     /// </summary>
     public class PartnerVersions
     {
+        /// <summary>
+        /// Android versions from newest to older. [Unselected, Newest, Older, ...]
+        /// </summary>
         public readonly string[] android;
+        
+        /// <summary>
+        /// IOS versions from newest to older. [Unselected, Newest, Older, ...]
+        /// </summary> 
         public readonly string[] ios;
 
-        public PartnerVersions(IEnumerable<string> androidAdapters, string[] iosAdapters)
+        /// <summary>
+        /// Generates partner network user readable versions
+        /// </summary>
+        /// <param name="androidAdapters">Partner Adapter Android versions.</param>
+        /// <param name="iosAdapters">Partner Adapter IOS versions.</param>
+        public PartnerVersions(AdapterVersion[] androidAdapters, AdapterVersion[] iosAdapters)
         {
             android = GetSupportedVersions(androidAdapters);
             ios = GetSupportedVersions(iosAdapters);
         }
 
-        private string[] GetSupportedVersions(IEnumerable<string> adapters)
+        private static string[] GetSupportedVersions(AdapterVersion[] adapters)
         {
             var temp = new List<string> { Constants.Unselected };
 
-            foreach (var platformVersion in adapters)
+            foreach (var adapterVersion in adapters)
             {
-                var partnerVersion = GetPartnerSDKVersion(platformVersion);
-                if (!temp.Contains(partnerVersion))
-                    temp.Add(partnerVersion);
+                foreach (var version in adapterVersion.versions)
+                {
+                    var partnerVersion = GetPartnerSDKVersion(version);
+                    if (!temp.Contains(partnerVersion))
+                        temp.Add(partnerVersion);
+                }
             }
 
             return temp.ToArray();
         }
 
-        private string GetPartnerSDKVersion(string adapterVersion)
+        private static string GetPartnerSDKVersion(string adapterVersion)
         {
             const int removalIndex = 2;
             adapterVersion = adapterVersion.Remove(0, removalIndex);

@@ -11,59 +11,123 @@ The Chartboost Mediation Unity SDK package contains samples with optional depend
 Each Chartboost Mediation Unity SDK sample contains a .xml file with dependencies for the adapter available platforms (Android/iOS). In order for such dependencies to be included into the final build the [Google's External Dependency Manager](https://github.com/googlesamples/unity-jar-resolver) is needed.
 The `EDM` makes sure to download and package any dependencies with your build.
 
-## ChartboostMediationDependencies.xml
+## Chartboost Mediation Adapters Window
 
-The `ChartboostMediationDependencies.xml` can be found in the `Package Manager/Sample` as seen in the following screenshot.
+Since Chartboost Mediation 4.X Adapters are no longer released at the cadence as the Chartboost Mediation SDK, it is now possible to receive adapter updates in between SDK releases. 
 
-> **_NOTE:_** This is a mandatory dependency and must be imported for proper utilization of the Chartboost Mediation Unity SDK.
+Until Chartboost Mediation Unity SDK 4.1.0, adapters were added through the UPM Samples capability; however, this limited the ability to provide adapter updates in between SDK releases. As such, from Chartboost Mediation Unity SDK 4.2.0, we have created a brand new Editor Window. This will allow users to fetch Ad Adapter updates on demand. *see screenshot below*
 
-![ChartboostMediationDependencies.xml](../images/chartboost-mediation-dependencies.png)
+### ***Adapters Window Default State***
 
-## Ad Adapters as Optional Dependencies
-In addition to the `ChartboostMediationDependencies.xml` file, the Chartboost Mediation Unity SDK includes optional dependencies based on the supported Ad Networks and its adapters.
+The Adapters window can be accessed through the following unity menu: ***Chartboost Mediation/Adapters***
 
-They and can be found in the `Package Manager/Sample` area, and are labeled as follow:
+![Chartboost Mediation Settings](../images/adapters-window-default.png)
 
-`Optional-AdColonyDependencies.xml`
+As seen, in the screenshot above, in its default state, the Adapters Window does not select any adapters, and there are multiple elements grabbing your attention. For a detailed step-by-step intruction on how to use the window see below:
 
-`Optional-AdMobDependencies.xml`
+### ChartboostMediationDependencies.xml
 
-`Optional-AmazonPublisherServicesDependencies.xml`
+Although Chartboost Mediation Unity SDK can be initialized without adapters. You still need to have a reference to the Chartboost Mediation Native libraries. Whenever such dependencies are missing or miss-matching with your currently implemented version, the following warning button will show up. ***see below***
 
-`Optional-AppLovinDependencies.xml`
+![Chartboost Mediation Settings](../images/adapters-window-warning.png)
 
-`Optional-GoogleBiddingDependencies.xml`
+If you wish to know more details, you can always hover over the warning to see more details. In order to resolve the warnings, you just need to press the warning button itself. In most scenarios, this will add or update your `ChartboostMediationDependencies.xml` dependency file. 
 
-`Optional-MetaAudienceNetworkDependencies.xml`
+After resolving the warnings, the `ChartboostMediationDependencies.xml` dependency file can be found in the following path 
+`Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml`
 
-`Optional-TapjoyDependencies.xml`
+> **Note** \
+> In the past, dependencies used to live under the `Assets/Samples/Chartboost Mediation/4.X` path. However, they will now be under the `Assets/com.chartboost.mediation/Editor` directory.
 
-`Optional-VungleDependencies.xml`
+### Adding Ad Adapters
 
-`Optional-UnityAdsDependencies.xml`
+In order to add adapters, you only need to select a version from the platform specific dropdowns. ***see below*** 
 
-`Optional-IronSourceDependencies.xml`
+![Chartboost Mediation Settings](../images/adapters-window-save.png)
 
-`Optional-DigitalTurbineExchangeDependencies.xml`
+As seen in the screenshot above, whenever changes are pending to be saved, the save button will be displayed. In order to save your adapter selections you must click on the save button. After saving, the corresponding dependencies for the Ad Adapter selections will be saved in the following path `Assets/com.chartboost.mediation/Editor/Adapters`.
 
-`Optional-InMobiDependencies.xml`
+> **Note** \
+> If you wish to see all of your Ad Adapter selections in your project, they can be found in the following file `Assets/com.chartboost.mediation/Editor/selections.json`. If you ever need to provide support with information regarding your Ad Adapter selections, you can use this file.
 
-`Optional-MintegralDependencies.xml`
+> **Note** \
+> Ad Networks can be implemented entirely (Android, IOS) or partially, only one platform. 
 
-`Optional-YahooDependencies.xml`
+### Window Utilities
 
-They can be obtained by importing them as Samples with Unity's Package Manager. When updating the Chartboost Mediation Unity SDK Package through UPM. It is important to reimport any samples as to update your local dependency files.
+#### **Upgrade All Selections**
 
-![Reimport](../images/chartboost-mediation-dependencies-reimport.png)
+Once you have all of your selections, you can always manually check for updates by pressing the upgrades button. Found in the top right corner. Using the upgrade button will compare your current selections with the most up to date adapter releases. If any changes are found, you will be notified and asked to save such changes.
 
-> **_NOTE:_** When including 3rd-Party SDKs on Android, remember to update the manifest file according to the integrated SDK’s requirements as well.
+![Chartboost Mediation Settings](../images/adapters-window-upgrade.png)
 
-### Adding Unity Ads SDK - Android
+#### **Refresh**
 
-Including the `Optional-UnityAdsDependencies.xml` file will NOT automatically import the Unity Ads SDK to your Unity Android build (unlike the other dependency files which will do that automatically). You should manually include the correct version of the Unity Ads SDK by either:
+Adapter information is fetched automatically on Unity Editor's startup. If you wish you check for updates on demand, you can use the refresh button. ***see below*** 
 
-* Uncommenting out the appropriate line in the `Optional-UnityAdsDependencies.xml` : `<!-- <androidPackage spec="com.unity3d.ads:unity-ads:4.4.1""/> -->`.
+![Chartboost Mediation Settings](../images/adapters-window-refresh.png)
 
-* Importing the correct version of the Unity Ads SDK via the built-in Unity Package Manager.
+Using the refresh button will check for new adapter releases, update your cached adapter info, and repaint the Adapters Window if necessary.
 
-> **_NOTE:_** Only one of this solutions should be utilized, as utilizing both will create gradle compilation errors.
+## C# Utility API
+
+Along with the Editor Window, we have exposed a few C# methods that can be utilized in a CI/CD environment to keep your adapters up to date.
+
+Below is a demonstration on how to use such API:
+
+```csharp
+
+// AdapterDataSource is in charge of fetching adapter updates, runs once on Editor startup, but you will need to call it manually if running in batchmode
+AdapterDataSource.Update();
+
+// Loads current project adapter selections
+AdaptersWindow.LoadSelections();
+
+// Perform Ad Adapter upgrades, platform flags available for customization
+var upgrades = AdaptersWindow.UpgradePlatformToLatest(Platform.Android | Platform.IOS);
+
+// Depending on upgrade results, information can be logged.
+Console.WriteLine(upgrades.Count > 0 ? $"[Adapters] Upgraded: \n {JsonConvert.SerializeObject(upgrades, Formatting.Indented)}" : "[Adapters] No Upgrades.");
+
+// Ad newly found Ad Adapter networks, by default any partially implemented or newly found networks will be added, but such behavior can be customized.
+var newNetworks = AdaptersWindow.AddNewNetworks(Platform.Android | Platform.IOS);
+
+// Manually save selections
+AdaptersWindow.SaveSelections();
+
+// Depending on new networks result, information can be logged.
+Console.WriteLine(newNetworks.Count > 0 ? $"[Adapters] New Networks: \n {JsonConvert.SerializeObject(newNetworks, Formatting.Indented)}" :  "[Adapters] No New Networks");
+
+// This will resolve any issues with your Chartboost Mediation dependency, e.g if your package does not match your current dependency file, this method makes sure to update the file as needed.
+var changed = AdaptersWindow.CheckChartboostMediationVersion();
+Console.WriteLine(changed ? "[Adapters] Chartboost Mediation Version Has Been Updated" :  "[Adapters] Chartboost Mediation Version is Up to Date");
+```
+
+### Adding Networks through the C# API
+
+As mentioned in the previous section, networks can be added based on specific conditions.
+
+#### Default Network Addition Condition
+
+```csharp
+/// <summary>
+/// Default network add condition. This will add any entirely missing or partially implemented networks
+/// </summary>
+/// <param name="id">network id</param>
+/// <param name="currentSelections">current selections</param>
+/// <returns></returns>
+private static bool DefaultAddCondition(string id, Dictionary<string, AdapterSelection> currentSelections) => !selections.ContainsKey(id) || selections[id].android == Constants.Unselected || selections[id].ios == Constants.Unselected;
+```
+Such condition is checked automatically when running `AdaptersWindow.AddNewNetworks`. However, it can be customized to fit your own needs. ***see below*** 
+
+```csharp
+
+// The method below will only add brand new networks and implemented them as needed.
+private bool CustomCondition(string id, Dictionary<string, AdapterSelection> currentSelections) => !selections.ContainsKey(id);
+
+// Addding networks only if they are entirely new
+AdaptersWindow.AddNewNetworks(Platform.Android | Platform.IOS, CustomCondition);
+
+// Another example, adding only brand new networks for Android
+AdaptersWindow.AddNewNetworks(Platform.Android, CustomCondition);
+```
