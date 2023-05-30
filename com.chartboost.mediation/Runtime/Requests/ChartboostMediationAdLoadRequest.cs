@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace Chartboost.Placements
@@ -12,8 +11,14 @@ namespace Chartboost.Placements
         }
 
         public string PlacementName { get; }
-
         public Dictionary<string, string> Keywords { get;  }
+
+        internal int AssociatedProxy { get; set; }
+        ~ChartboostMediationAdLoadRequest()
+        {
+            // In case that the request never finishes, and no response ever happens, if disposed by GC remove from Cached requests.
+            CacheManager.ReleaseFullscreenAdLoadRequest(AssociatedProxy);
+        }
     }
 
     public class ChartboostMediationFullscreenAdLoadRequest : ChartboostMediationAdLoadRequest

@@ -11,7 +11,6 @@ using Chartboost.FullScreen.Rewarded;
 using Chartboost.Placements;
 using Newtonsoft.Json;
 using UnityEngine;
-using UnityEngine.Scripting;
 using UnityEngine.UI;
 
 [SuppressMessage("ReSharper", "InconsistentNaming")]
@@ -66,7 +65,7 @@ public class Demo : MonoBehaviour
         SetupRewardedDelegates();
         SetupBannerDelegates();
     }
-
+    
     private void Start()
     {
         if (outputText != null)
@@ -210,16 +209,18 @@ public class Demo : MonoBehaviour
         }
 
         // DidLoad
-        var adRequestId = _fullscreenAd.RequestId;
+        var adRequestId = _fullscreenAd.LoadId;
         var customData = _fullscreenAd.CustomData;
         var bidInfo = _fullscreenAd.WinningBidInfo;
+        var placementName = _fullscreenAd?.Request?.PlacementName;
         var requestId = loadResult.RequestId;
         var metrics = loadResult.Metrics;
-        Log($"Fullscreen Loaded with: \nAdRequestId {adRequestId} \nRequestID {requestId} \nBidInfo: {JsonConvert.SerializeObject(bidInfo, Formatting.Indented)} \n Metrics:{JsonConvert.SerializeObject(metrics, Formatting.Indented)}");
+        Log($"Fullscreen: {placementName} Loaded with: \nAdRequestId {adRequestId} \nRequestID {requestId} \nBidInfo: {JsonConvert.SerializeObject(bidInfo, Formatting.Indented)} \n Metrics:{JsonConvert.SerializeObject(metrics, Formatting.Indented)}");
     }
 
     public void OnClearInterstitialClick()
     {
+        _fullscreenAd?.Invalidate();
         GC.Collect();
         // if (_interstitialAd == null)
         // {
@@ -259,6 +260,7 @@ public class Demo : MonoBehaviour
         }
 
         var metrics = adShowResult.metrics;
+        Console.WriteLine("Callback - Unity AdShowResult");
         Log($"Fullscreen Ad Did Show: {JsonConvert.SerializeObject(metrics, Formatting.Indented)}");
     }
 

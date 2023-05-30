@@ -6,6 +6,7 @@ import com.chartboost.heliumsdk.domain.ChartboostMediationError
 import org.json.JSONException
 import org.json.JSONObject
 
+@Deprecated("EventProcessor utilizes deprecated APIs and will be removed in the future")
 object EventProcessor {
     private val TAG = EventProcessor::class.java.simpleName
 
@@ -60,19 +61,6 @@ object EventProcessor {
         }
 
         loadConsumer.accept(placementName, loadId, auctionId, partnerId, price, errorMessage)
-    }
-
-    @JvmStatic
-    fun serializePlacementIlrdData(placementName: String, ilrdInfo: JSONObject?): String {
-        return try {
-            JSONObject().apply {
-                put("placementName", placementName)
-                put("ilrd", ilrdInfo)
-            }.toString()
-        } catch (e: JSONException) {
-            Log.d(TAG, "serializeError", e)
-            ""
-        }
     }
 
     fun interface EventConsumer<PlacementName>{

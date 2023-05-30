@@ -1,6 +1,5 @@
 #if UNITY_ANDROID
 using Chartboost.Interfaces;
-using Chartboost.Platforms;
 using Chartboost.Platforms.Android;
 using UnityEngine;
 

@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Chartboost.Placements;
+using UnityEditor;
+using UnityEngine;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo
@@ -9,6 +12,15 @@ namespace Chartboost
 {
     public static class EventProcessor
     {
+        internal enum FullscreenAdEvents
+        {
+            RecordImpression = 0,
+            Click = 1,
+            Reward = 2,
+            Close = 3,
+            Expire = 4
+        }
+
         private static SynchronizationContext _context;
         
         /// <summary>
@@ -20,10 +32,11 @@ namespace Chartboost
         /// <summary>
         /// Initializes Chartboost Mediation Event Processor, must be called from main thread.
         /// </summary>
-        internal static void Initialize()
-        {
-            _context = SynchronizationContext.Current;
-        }
+        #if UNITY_EDITOR
+        [InitializeOnLoadMethod]
+        #endif
+        [RuntimeInitializeOnLoadMethod]
+        private static void Initialize()=> _context ??= SynchronizationContext.Current;
 
         public static void ProcessEventWithILRD(string dataString, ChartboostMediationILRDEvent ilrdEvent)
         {
@@ -115,6 +128,55 @@ namespace Chartboost
                 catch (Exception e)
                 {
                     ReportUnexpectedSystemError(e.ToString());
+                }
+            }, null);
+        }
+        
+        public static void ProcessEvent(Action customEvent)
+        {
+            _context.Post(o =>
+            {
+                customEvent?.Invoke();
+            }, null);   
+        }
+        
+        public static void ProcessFullscreenEvent(long adHashCode, int eventType, string code, string message)
+        {
+            _context.Post(o =>
+            {
+                var ad = CacheManager.GetFullscreenAd((int)adHashCode);
+
+                // Ad event was fired but no reference for it exists. Developer did not set strong reference to it so it was gc.
+                if (ad == null)
+                    return;
+
+                var type = (FullscreenAdEvents)eventType;
+                
+                ChartboostMediationError? error = null;
+                if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(message))
+                    error = new ChartboostMediationError(code, message);
+                
+                switch (type)
+                {
+                    case FullscreenAdEvents.RecordImpression:
+                        ad.Request?.OnRecordImpression(ad);
+                        break;
+                    case FullscreenAdEvents.Click:
+                        ad.Request?.OnClick(ad);
+                        break;
+                    case FullscreenAdEvents.Reward:
+                        ad.Request?.OnReward(ad);
+                        break;
+                    case FullscreenAdEvents.Expire:
+                        ad.Request?.OnExpire(ad);
+                        CacheManager.ReleaseFullscreenAd((int)adHashCode);
+                        break;
+                    case FullscreenAdEvents.Close:
+                        ad.Request?.OnClose(ad, error);
+                        CacheManager.ReleaseFullscreenAd((int)adHashCode);
+                        break;
+                    default:
+                        return;
                 }
             }, null);
         }

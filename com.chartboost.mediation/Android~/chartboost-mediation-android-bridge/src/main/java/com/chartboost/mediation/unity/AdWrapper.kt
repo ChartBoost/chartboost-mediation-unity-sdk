@@ -15,6 +15,7 @@ import com.chartboost.heliumsdk.ad.HeliumFullscreenAd
 import com.chartboost.heliumsdk.ad.HeliumRewardedAd
 import com.unity3d.player.UnityPlayer
 
+@Deprecated("AdWrapper utilizes Deprecated APIs and will be removed in the future.")
 class AdWrapper(private val ad: HeliumAd) {
     /**
      * This is the container for the banner.

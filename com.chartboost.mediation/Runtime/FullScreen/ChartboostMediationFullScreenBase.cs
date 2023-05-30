@@ -5,12 +5,12 @@ namespace Chartboost.FullScreen
     /// <summary>
     /// Chartboost Mediation fullscreen ad base structure.
     /// </summary>
-    public abstract class ChartboostMediationFullScreenBaseOLD : IChartboostMediationAd, IChartboostMediationFullScreenAdOLD
+    public abstract class ChartboostMediationFullScreenBase : IChartboostMediationAd, IChartboostMediationFullScreenAdOld
     {
         protected static string logTag = "ChartboostMediationFullScreen (Base)";
         protected readonly string placementName;
 
-        protected ChartboostMediationFullScreenBaseOLD(string placementName)
+        protected ChartboostMediationFullScreenBase(string placementName)
             => this.placementName = placementName;
 
         /// <inheritdoc cref="IChartboostMediationAd.SetKeyword"/>>
@@ -31,22 +31,22 @@ namespace Chartboost.FullScreen
         public virtual void Destroy()
             => Logger.Log(logTag, $"destroying fullscreen: {placementName}");
 
-        /// <inheritdoc cref="IChartboostMediationFullScreenAdOLD.Load"/>>
+        /// <inheritdoc cref="IChartboostMediationFullScreenAdOld.Load"/>>
         public virtual void Load()
             => Logger.Log(logTag, $"loading fullscreen: {placementName}");
 
-        /// <inheritdoc cref="IChartboostMediationFullScreenAdOLD.Show"/>>
+        /// <inheritdoc cref="IChartboostMediationFullScreenAdOld.Show"/>>
         public virtual void Show()
             => Logger.Log(logTag, $"showing fullscreen: {placementName}");
 
-        /// <inheritdoc cref="IChartboostMediationFullScreenAdOLD.ReadyToShow"/>>
+        /// <inheritdoc cref="IChartboostMediationFullScreenAdOld.ReadyToShow"/>>
         public virtual bool ReadyToShow()
         {
             Logger.Log(logTag, $"checking fullscreen: {placementName} availability");
             return false;
         }
 
-        /// <inheritdoc cref="IChartboostMediationFullScreenAdOLD.ClearLoaded"/>>
+        /// <inheritdoc cref="IChartboostMediationFullScreenAdOld.ClearLoaded"/>>
         public virtual void ClearLoaded()
         {
             Logger.Log(logTag, $"clearing fullscreen: {placementName}");
@@ -56,7 +56,7 @@ namespace Chartboost.FullScreen
     /// <summary>
     /// Chartboost Mediation interstitial ad object for unsupported platforms.
     /// </summary>
-    public class ChartboostMediationInterstitialUnsupported : ChartboostMediationFullScreenBaseOLD
+    public class ChartboostMediationInterstitialUnsupported : ChartboostMediationFullScreenBase
     {
         public ChartboostMediationInterstitialUnsupported(string placementName) : base(placementName)
         {

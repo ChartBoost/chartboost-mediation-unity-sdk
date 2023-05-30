@@ -1,3 +1,4 @@
+#if UNITY_ANDROID
 using System.Collections.Generic;
 using Chartboost.Placements;
 using Newtonsoft.Json;
@@ -7,15 +8,7 @@ namespace Chartboost.Utilities
 {
     internal static class AndroidExtensions
     {
-        
-        public static IChartboostMediationFullscreenAd FullscreenFromAdResult(this AndroidJavaObject androidJavaObject, ChartboostMediationFullscreenAdLoadRequest request)
-        {
-            var nativeFullScreenAd = androidJavaObject.Get<AndroidJavaObject>("ad");
-            return nativeFullScreenAd == null ? null : new ChartboostMediationFullscreenAdAndroid(nativeFullScreenAd, request);
-        }
-        
         #nullable enable
-
         public static ChartboostMediationError? ToChartboostMediationError(this AndroidJavaObject objectWithErrorField, string field = "error")
         {
             var error = objectWithErrorField.Get<AndroidJavaObject>(field);
@@ -28,7 +21,7 @@ namespace Chartboost.Utilities
         }
         #nullable  disable
         
-        public static BidInfo ToWinningBidInfo(this AndroidJavaObject map)
+        public static BidInfo MapToWinningBidInfo(this AndroidJavaObject map)
         {
             var partnerId = map.Call<string>("get","partner_id");
             var auctionId = map.Call<string>("get", "auction-id");
@@ -39,8 +32,18 @@ namespace Chartboost.Utilities
             var biddingInfo = new BidInfo(partnerId, auctionId, priceAsDouble);
             return biddingInfo;
         }
-        
-        #nullable enable
+
+        public static string ImpressionDataToJsonString(this AndroidJavaObject impressionData)
+        {
+            var placementName = impressionData.Get<string>("placementId");
+            var ilrdJson = impressionData.Get<AndroidJavaObject>("ilrdInfo").Call<string>("toString");
+            return $"\"placementName\" : {placementName}, \"ilrd\" : {ilrdJson}";
+        }
+
+        public static string PartnerInitializationDataToJsonString(this AndroidJavaObject partnerInitializationData) 
+            => partnerInitializationData.Get<AndroidJavaObject>("data").Call<string>("toString");
+
+#nullable enable
         public static Metrics? JsonObjectToMetrics(this AndroidJavaObject source)
         {
             var jsonString = source.Call<string>("toString");
@@ -61,8 +64,11 @@ namespace Chartboost.Utilities
                if (!isSet)
                    EventProcessor.ReportUnexpectedSystemError($"[Keywords] failed to set the following keyword: {kvp.Key}, with value: {kvp.Value}");
             }
-
+            
             return keywords;
         }
+
+        public static int HashCode(this AndroidJavaObject source) => source.Call<int>("hashCode");
     }
 }
+#endif

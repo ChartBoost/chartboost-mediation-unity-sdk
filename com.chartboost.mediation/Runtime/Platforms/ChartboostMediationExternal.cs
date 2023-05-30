@@ -46,7 +46,6 @@ namespace Chartboost.Platforms
         public virtual void InitWithAppIdAndSignature(string appId, string appSignature)
         {
             Logger.Log(LogTag, $"InitWithAppIdAndSignature {appId}, {appSignature} and version {Application.unityVersion}");
-            EventProcessor.Initialize();
         }
         
         public virtual void SetSubjectToCoppa(bool isSubject) 
