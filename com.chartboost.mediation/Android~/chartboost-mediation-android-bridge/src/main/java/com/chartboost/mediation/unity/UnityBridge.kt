@@ -10,39 +10,30 @@ import com.chartboost.mediation.unity.EventProcessor.EventWithErrorConsumer
 import com.chartboost.mediation.unity.EventProcessor.EventConsumer
 import com.chartboost.mediation.unity.EventProcessor.serializeEvent
 import com.chartboost.mediation.unity.EventProcessor.serializeLoadEvent
-import com.chartboost.mediation.unity.EventProcessor.serializePlacementIlrdData
 import com.chartboost.mediation.unity.AdWrapper.Companion.wrap
 import com.chartboost.mediation.unity.EventProcessor.serializeEventWithException
 import com.unity3d.player.UnityPlayer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.function.BinaryOperator
 
 @Suppress("NAME_SHADOWING")
 class UnityBridge {
-    private var lifeCycleEventListener: ILifeCycleEventListener? = null
     private var bannerEventsListener: IBannerEventListener? = null
     private var interstitialEventsListener: IInterstitialEventListener? = null
     private var rewardedEventListener: IRewardedEventListener? = null
-    private var ilrdObserver: HeliumIlrdObserver? = null
-    private var initResultsObserver: PartnerInitializationResultsObserver? = null
 
     fun setupEventListeners(
-        lifeCycleListener: ILifeCycleEventListener,
         interstitialListener: IInterstitialEventListener,
         rewardedListener: IRewardedEventListener,
-        bannerListener: IBannerEventListener
+        bannerListener: IBannerEventListener,
     ) {
-        lifeCycleEventListener = lifeCycleListener
         interstitialEventsListener = interstitialListener
         rewardedEventListener = rewardedListener
         bannerEventsListener = bannerListener
     }
 
-    fun start(appId: String, appSignature: String, unityVersion: String, initializationOptions: Array<String>) {
-
-
+    fun start(appId: String, appSignature: String, initializationOptions: Array<String>, initListener: HeliumSdk.HeliumSdkListener) {
         runTaskOnUiThread {
             UnityPlayer.currentActivity.let { activity ->
                 HeliumSdk.start(
@@ -50,35 +41,25 @@ class UnityBridge {
                     appId,
                     appSignature,
                     HeliumInitializationOptions(initializationOptions.toSet()),
-                    object : HeliumSdk.HeliumSdkListener {
-                        override fun didInitialize(error: Error?) {
-                            ilrdObserver = object : HeliumIlrdObserver {
-                                override fun onImpression(impData: HeliumImpressionData) {
-                                    val json = serializePlacementIlrdData(impData.placementId, impData.ilrdInfo)
-                                    lifeCycleEventListener?.DidReceiveILRD(json)
-                                }
-                            }
-                            ilrdObserver?.let { observer -> HeliumSdk.subscribeIlrd(observer) }
-
-                            initResultsObserver = object : PartnerInitializationResultsObserver {
-                                override fun onPartnerInitializationResultsReady(data : PartnerInitializationResultsData) {
-                                    val json = data.data.toString()
-                                    lifeCycleEventListener?.DidReceivePartnerInitializationData(json)
-                                }
-                            }
-                            initResultsObserver?.let { observer -> HeliumSdk.subscribeInitializationResults(observer) }
-
-                            HeliumSdk.setGameEngine("unity", unityVersion)
-
-                            error?.let { Log.d("Unity", "HeliumUnityBridge: Plugin failed to initialize: $it.") } ?:
-                            run { Log.d("Unity", "HeliumUnityBridge: Plugin initialized.") }
-
-                            lifeCycleEventListener?.DidStart(error?.toString() ?: "")
-                        }
-                    }
+                    initListener
                 )
             }
         }
+    }
+
+    fun subscribeILRDObserver(ilrdObserver: HeliumIlrdObserver)
+    {
+        HeliumSdk.subscribeIlrd(ilrdObserver)
+    }
+
+    fun unsubscribeILRDObserver(ilrdObserver: HeliumIlrdObserver)
+    {
+        HeliumSdk.unsubscribeIlrd(ilrdObserver)
+    }
+
+    fun subscribePartnerInitializationResultsObserver(partnerInitializationResultsObserver: PartnerInitializationResultsObserver)
+    {
+        HeliumSdk.subscribeInitializationResults(partnerInitializationResultsObserver);
     }
 
     fun setSubjectToCoppa(isSubject: Boolean) = HeliumSdk.setSubjectToCoppa(isSubject)
@@ -95,24 +76,22 @@ class UnityBridge {
 
     fun setTestMode(testModeEnabled: Boolean) = HeliumSdk.setTestMode(testModeEnabled)
 
-    fun destroy() {
-        ilrdObserver?.let {
-            HeliumSdk.unsubscribeIlrd(it)
-            ilrdObserver = null
-        }
+    fun setGameEngine(version: String)
+    {
+        HeliumSdk.setGameEngine("unity", version)
     }
 
-    fun getFullscreenAd(adRequest: ChartboostMediationAdLoadRequest, fullscreenListener: ChartboostMediationFullscreenAdListener, adLoadResultHandler: CMFullscreenAdLoadResultHandler) {
+    fun getFullscreenAd(adRequest: ChartboostMediationAdLoadRequest, adLoadResultHandler: ChartboostMediationFullscreenAdLoadListener, fullscreenAdListener: ChartboostMediationFullscreenAdListener) {
         CoroutineScope(Dispatchers.Main).launch {
-            val adLoadResult = HeliumSdk.loadFullscreenAd(UnityPlayer.currentActivity, adRequest, fullscreenListener)
-            adLoadResultHandler.onAdLoadResult(adLoadResult);
+            val adLoadResult = HeliumSdk.loadFullscreenAd(UnityPlayer.currentActivity, adRequest, fullscreenAdListener)
+            adLoadResultHandler.onAdLoaded(adLoadResult);
         }
     }
 
-    fun showFullscreenAd(fullscreenAd: ChartboostMediationFullscreenAd, adShowResultHandler: CMAdShowResultHandler) {
+    fun showFullscreenAd(fullscreenAd: ChartboostMediationFullscreenAd, adShowResultHandler: ChartboostMediationFullscreenAdShowListener) {
         CoroutineScope(Dispatchers.Main).launch {
             val adShowResult =  fullscreenAd.show(UnityPlayer.currentActivity);
-            adShowResultHandler.onAdShowResult(adShowResult);
+            adShowResultHandler.onAdShown(adShowResult);
         }
     }
 

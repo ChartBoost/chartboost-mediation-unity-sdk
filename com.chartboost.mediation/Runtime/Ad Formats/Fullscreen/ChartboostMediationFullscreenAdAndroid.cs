@@ -1,3 +1,4 @@
+#if UNITY_ANDROID
 using System.Threading.Tasks;
 using Chartboost.Platforms.Android;
 using Chartboost.Utilities;
@@ -7,20 +8,23 @@ namespace Chartboost.Placements
 {
     public sealed class ChartboostMediationFullscreenAdAndroid : IChartboostMediationFullscreenAd
     {
+        private readonly int _hashCode;
+        private bool _isValid = true;
+        private readonly AndroidJavaObject _chartboostMediationFullscreenAd;
+        
         public ChartboostMediationFullscreenAdAndroid(AndroidJavaObject fullscreenAd, ChartboostMediationFullscreenAdLoadRequest request)
         {
+            _hashCode = fullscreenAd.HashCode();
             _chartboostMediationFullscreenAd = fullscreenAd;
             var bidInfoMap = _chartboostMediationFullscreenAd.Get<AndroidJavaObject>("winningBidInfo");
             if (bidInfoMap != null)
-                WinningBidInfo = bidInfoMap.ToWinningBidInfo();
+                WinningBidInfo = bidInfoMap.MapToWinningBidInfo();
             Request = request;
+            LoadId = _chartboostMediationFullscreenAd.Get<string>("loadId");
+            CacheManager.TrackFullscreenAd(_hashCode, this);
         }
 
-        private readonly AndroidJavaObject _chartboostMediationFullscreenAd;
-
         public ChartboostMediationFullscreenAdLoadRequest Request { get; }
-
-        public string AuctionId => _chartboostMediationFullscreenAd.Get<AndroidJavaObject>("cachedAd").Get<string>("auctionId");
 
         public string CustomData
         {
@@ -28,18 +32,32 @@ namespace Chartboost.Placements
             set => _chartboostMediationFullscreenAd.Set("customData", value);
         }
         
-        public string RequestId => _chartboostMediationFullscreenAd.Get<string>("requestId");
+        public string LoadId { get ;}
+
         public BidInfo WinningBidInfo { get; }
+
         public async Task<ChartboostMediationAdShowResult> Show()
         {
-            var awaitableProxy = new ChartboostMediationAndroid.CMAdShowResultHandler();
-            ChartboostMediationAndroid.UnityBridge.Call("showFullscreenAd", _chartboostMediationFullscreenAd, awaitableProxy);
-            return await awaitableProxy;
+            var adShowListenerAwaitableProxy = new ChartboostMediationAndroid.ChartboostMediationFullscreenAdShowListener();
+            ChartboostMediationAndroid.UnityBridge.Call("showFullscreenAd", _chartboostMediationFullscreenAd, adShowListenerAwaitableProxy);
+            return await adShowListenerAwaitableProxy;
         }
 
         public void Invalidate()
         {
+            if (!_isValid)
+                return;
+
+            _isValid = true;
             _chartboostMediationFullscreenAd.Call("invalidate");
+            _chartboostMediationFullscreenAd.Dispose();
+            CacheManager.ReleaseFullscreenAd(_hashCode);
+        }
+
+        ~ChartboostMediationFullscreenAdAndroid()
+        {
+            Invalidate();
         }
     }
 }
+#endif

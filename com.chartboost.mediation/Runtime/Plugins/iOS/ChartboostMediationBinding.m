@@ -20,6 +20,14 @@ static char* ConvertNSStringToCString(const NSString* nsString) {
     return cString;
 }
 
+const char* jsonStringFromDictionary(NSDictionary *dictionary) {
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dictionary options:0 error:&error];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    return [jsonString UTF8String];
+}
+
+
 typedef void (^block)(void);
 
 static void sendToMain(block block) {
@@ -37,8 +45,12 @@ void _setInterstitialCallbacks(ChartboostMediationPlacementLoadEvent didLoadCall
 }
 
 void _setRewardedCallbacks(ChartboostMediationPlacementLoadEvent didLoadCallback, ChartboostMediationPlacementEvent didShowCallback, ChartboostMediationPlacementEvent didCloseCallback, ChartboostMediationPlacementEvent didClickCallback, ChartboostMediationPlacementEvent didRecordImpression, ChartboostMediationPlacementEvent didReceiveRewardCallback){
-        
+    
     [[ChartboostMediationManager sharedManager] setRewardedCallbacks:didLoadCallback didShowCallback:didShowCallback didCloseCallback:didCloseCallback didClickCallback:didClickCallback didRecordImpression:didRecordImpression didReceiveRewardCallback:didReceiveRewardCallback];
+}
+
+void _setFullscreenCallbacks(ChartboostMediationFullscreenAdEvent fullscreenAdEvents){
+    [[ChartboostMediationManager sharedManager]  setFullscreenCallbacks:fullscreenAdEvents];
 }
 
 void _setBannerCallbacks(ChartboostMediationPlacementLoadEvent didLoadCallback, ChartboostMediationPlacementEvent didRecordImpression, ChartboostMediationPlacementEvent didClickCallback)
@@ -174,6 +186,51 @@ void _chartboostMediationRewardedAdShow(const void * uniqueId)
     });
 }
 
+void _chartboostMediationGetFullscreenAd(const char *placementName, const char *keywords, int hashCode, ChartboostMediationFullscreenAdLoadResultEvent callback)
+{
+    [[ChartboostMediationManager sharedManager] getFullscreenAd:GetStringParam(placementName) keywords:keywords hashCode:hashCode callback:callback];
+}
+
+void _chartboostMediationShowFullscreenAd(const void *uniqueId, int hashCode, ChartboostMediationFullscreenAdShowResultEvent callback)
+{
+    sendToMain(^{
+        id<ChartboostMediationFullscreenAd> ad = (__bridge id<ChartboostMediationFullscreenAd>)uniqueId;
+        [ad showWith:UnityGetGLViewController() completion:^(ChartboostMediationAdShowResult *adShowResult) {
+            ChartboostMediationError *error = [adShowResult error];
+            if (error != nil)
+            {
+                ChartboostMediationErrorCode codeInt = [error chartboostMediationCode];
+                const char *code = [[NSString stringWithFormat:@"CM_%ld", codeInt] UTF8String];
+                const char *message = [[error localizedDescription] UTF8String];
+                callback(hashCode, "", code, message);
+                return;
+            }
+        
+            const char *metricsJson = jsonStringFromDictionary([adShowResult metrics]);
+            callback(hashCode, metricsJson, "", "");
+        }];
+    });
+}
+
+void _chartboostMediationInvalidateFullscreenAd(const void *uniqueId)
+{
+    sendToMain(^() {
+        id<ChartboostMediationFullscreenAd> ad = (__bridge id<ChartboostMediationFullscreenAd>)uniqueId;
+        [ad invalidate];
+        sendToMain(^(){
+            [[ChartboostMediationManager sharedManager] freeAd: [NSNumber numberWithLong:(long)uniqueId] placementName:nil multiPlacementSupport:true];
+        });
+    });
+}
+
+void _chartboostMediationFullscreenSetCustomData(const void *uniqueId, const char *customData)
+{
+    sendToMain(^() {
+        id<ChartboostMediationFullscreenAd> ad = (__bridge id<ChartboostMediationFullscreenAd>)uniqueId;
+        [ad setCustomData:GetStringParam(customData)];
+    });
+}
+
 BOOL _chartboostMediationRewardedAdReadyToShow(const void * uniqueId)
 {
     id<HeliumRewardedAd> ad = (__bridge id<HeliumRewardedAd>)uniqueId;
@@ -196,7 +253,7 @@ void * _chartboostMediationGetBannerAd(const char *placementName, long size)
         case 1:
             cbSize = CHBHBannerSize_Medium;
             break;
-
+            
         default:
             cbSize = CHBHBannerSize_Standard;
             break;
@@ -240,7 +297,7 @@ void _chartboostMediationBannerAdLoad(const void * uniqueId, long screenLocation
         [bannerView removeFromSuperview];
         [unityVC.view  addSubview:bannerView];
         NSLayoutConstraint *xConstraint;
-
+        
         switch (screenLocation) // X Constraints
         {
             case 1: // Top Center
@@ -255,7 +312,7 @@ void _chartboostMediationBannerAdLoad(const void * uniqueId, long screenLocation
             default:
                 xConstraint = [bannerView.leadingAnchor constraintEqualToAnchor:safeGuide.leadingAnchor];
         }
-
+        
         NSLayoutConstraint *yConstraint;
         switch (screenLocation) // Y Constraints
         {
@@ -272,14 +329,14 @@ void _chartboostMediationBannerAdLoad(const void * uniqueId, long screenLocation
             default:
                 yConstraint = [bannerView.centerYAnchor constraintEqualToAnchor:safeGuide.centerYAnchor];
         }
-
+        
         [NSLayoutConstraint activateConstraints:@[
             [bannerView.widthAnchor constraintEqualToConstant:bannerView.frame.size.width],
             [bannerView.heightAnchor constraintEqualToConstant:bannerView.frame.size.height],
             xConstraint,
             yConstraint
         ]];
-
+        
         id<HeliumBannerAd> ad = (__bridge id<HeliumBannerAd>)uniqueId;
         [ad loadAdWithViewController:unityVC];
     });
@@ -315,4 +372,4 @@ void _chartboostMediationFreeAdObject(const void * uniqueId, const char * placem
     sendToMain(^(){
         [[ChartboostMediationManager sharedManager] freeAd: [NSNumber numberWithLong:(long)uniqueId] placementName:GetStringParam(placementName) multiPlacementSupport:multiPlacementSupport];
     });
-}               
+}

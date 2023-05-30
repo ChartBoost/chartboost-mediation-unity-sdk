@@ -4,13 +4,11 @@ namespace Chartboost.Placements
 {
     public interface IChartboostMediationFullscreenAd
     {
-        public abstract ChartboostMediationFullscreenAdLoadRequest Request { get;  }
-        
-        public abstract string AuctionId { get; }
+        public abstract ChartboostMediationFullscreenAdLoadRequest Request { get; }
 
         public abstract string CustomData { get; set; }
         
-        public abstract string RequestId { get; }
+        public abstract string LoadId { get; }
 
         public abstract BidInfo WinningBidInfo { get; }
 

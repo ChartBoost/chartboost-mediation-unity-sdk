@@ -13,6 +13,18 @@ struct Implementation {
     IMP imp;
 };
 
+template <typename TObj>
+TObj objFromJsonString(const char* jsonString) {
+    NSData* jsonData = [[NSString stringWithUTF8String:jsonString] dataUsingEncoding:NSUTF8StringEncoding];
+    NSError* error = nil;
+    TObj arr = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
+
+    if (error != nil)
+        return nil;
+
+    return arr;
+}
+
 // interstitial ad objects
 NSMutableDictionary * storedAds = nil;
 
@@ -36,6 +48,10 @@ static ChartboostMediationPlacementEvent _rewardedDidShowCallback;
 static ChartboostMediationPlacementEvent _rewardedDidRecordImpressionCallback;
 static ChartboostMediationPlacementEvent _rewardedDidReceiveRewardCallback;
 
+// fullscreen callbacks
+static ChartboostMediationFullscreenAdEvent _fullscreenAdEvents;
+enum fullscreenEvents {RecordImpression = 0, Click = 1, Reward = 2, Close = 3, Expire = 4};
+
 // banner callbacks
 static ChartboostMediationPlacementLoadEvent _bannerDidLoadCallback;
 static ChartboostMediationPlacementEvent _bannerDidRecordImpressionCallback;
@@ -43,12 +59,16 @@ static ChartboostMediationPlacementEvent _bannerDidClickCallback;
 
 void UnityPause(int pause);
 
-const char* serializeDictionary(NSDictionary *data)
+const char* dictionaryToJSON(NSDictionary *data)
 {
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:NULL];
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:&error];
+    if (! jsonData) {
+        NSLog(@"%s: error: %@", __func__, error.localizedDescription);
+        return "";
+     }
     NSString *json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    NSLog(@"event: %@", json);
-    return json.UTF8String;
+    return [json UTF8String];
 }
 
 const void addToStore(id ad, NSString *placement, BOOL multiplePlacementSupport){
@@ -70,6 +90,21 @@ const void serializeEvent(ChartboostMediationError *error, ChartboostMediationEv
         return;
     
     event(error.localizedDescription.UTF8String);
+}
+
+const void serializeFullscreenEvent(id<ChartboostMediationFullscreenAd> ad, fullscreenEvents event, ChartboostMediationError *error)
+{
+    const char *code = "";
+    const char *message = "";
+    
+    if (error != nil)
+    {
+        ChartboostMediationErrorCode codeInt = [error chartboostMediationCode];
+        code = [[NSString stringWithFormat:@"CM_%ld", codeInt] UTF8String];
+        message = [[error localizedDescription] UTF8String];
+    }
+    
+    _fullscreenAdEvents((long)ad, (int)event, code, message);
 }
 
 const void serializePlacementWithError(NSString *placementName, ChartboostMediationError *error, ChartboostMediationPlacementEvent placementEvent)
@@ -108,7 +143,7 @@ static void subscribeToILRDNotifications()
     if (ilrdObserverId != nil)
         [[NSNotificationCenter defaultCenter] removeObserver:ilrdObserverId];
 
-    ilrdObserverId = [[NSNotificationCenter defaultCenter] addObserverForName:kHeliumDidReceiveILRDNotification object:nil queue:nil usingBlock:^(NSNotification* _Nonnull note) {
+    ilrdObserverId = [[NSNotificationCenter defaultCenter] addObserverForName:NSNotification.heliumDidReceiveILRD object:nil queue:nil usingBlock:^(NSNotification* _Nonnull note) {
         HeliumImpressionData *ilrd = note.object;
         NSString *placement = ilrd.placement;
         NSDictionary *json = ilrd.jsonData;
@@ -116,7 +151,7 @@ static void subscribeToILRDNotifications()
                               placement, @"placementName",
                               json ? json : [NSNull null], @"ilrd",
                               nil];
-        const char* jsonToUnity = serializeDictionary(data);
+        const char* jsonToUnity = dictionaryToJSON(data);
 
         if (_didReceiveILRDCallback != nil)
             _didReceiveILRDCallback(jsonToUnity);
@@ -130,16 +165,16 @@ static void subscribeToPartnerInitializationNotifications()
     if (partnerInitializationObserver != nil)
         [[NSNotificationCenter defaultCenter] removeObserver:partnerInitializationObserver];
 
-    partnerInitializationObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kHeliumDidReceiveInitResultsNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
+    partnerInitializationObserver = [[NSNotificationCenter defaultCenter] addObserverForName:NSNotification.heliumDidReceiveInitResults object:nil queue:nil usingBlock:^(NSNotification * _Nonnull notification) {
         // Extract the results payload.
         NSDictionary *results = (NSDictionary *)notification.object;
-        const char* jsonToUnity = serializeDictionary(results);
+        const char* jsonToUnity = dictionaryToJSON(results);
         if (_didReceivePartnerInitializationDataCallback != nil)
             _didReceivePartnerInitializationDataCallback(jsonToUnity);
     }];
 }
 
-@interface ChartboostMediationManager() <HeliumSdkDelegate, CHBHeliumInterstitialAdDelegate, CHBHeliumRewardedAdDelegate, CHBHeliumBannerAdDelegate>
+@interface ChartboostMediationManager() <HeliumSdkDelegate, ChartboostMediationFullscreenAdDelegate, CHBHeliumInterstitialAdDelegate, CHBHeliumRewardedAdDelegate, CHBHeliumBannerAdDelegate>
 
 @end
 
@@ -163,10 +198,10 @@ static void subscribeToPartnerInitializationNotifications()
 + (ChartboostMediationManager*)sharedManager
 {
     static ChartboostMediationManager *sharedSingleton;
-
+    
     if (!sharedSingleton)
         sharedSingleton = [[ChartboostMediationManager alloc] init];
-
+    
     return sharedSingleton;
 }
 
@@ -199,6 +234,10 @@ static void subscribeToPartnerInitializationNotifications()
     _rewardedDidReceiveRewardCallback = didReceiveRewardCallback;
 }
 
+- (void)setFullscreenCallbacks:(ChartboostMediationFullscreenAdEvent)fullscreenAdEvents {
+    _fullscreenAdEvents = fullscreenAdEvents;
+}
+
 - (void)setBannerCallbacks:(ChartboostMediationPlacementLoadEvent)didLoadCallback didRecordImpression:(ChartboostMediationPlacementEvent)didRecordImpression didClickCallback:(ChartboostMediationPlacementEvent)didClickCallback
 {
     _bannerDidLoadCallback = didLoadCallback;
@@ -221,7 +260,7 @@ static void subscribeToPartnerInitializationNotifications()
         }
         heliumInitializationOptions = [[HeliumInitializationOptions alloc] initWithSkippedPartnerIdentifiers:initializationPartners];
     }
-
+    
     [[Helium sharedHelium] startWithAppId:appId andAppSignature:appSignature options:heliumInitializationOptions delegate:self];
 }
 
@@ -283,6 +322,33 @@ static void subscribeToPartnerInitializationNotifications()
     return ad;
 }
 
+- (void) getFullscreenAd:(NSString *)placementId keywords:(const char *)keywords hashCode:(int)hashCode callback:(ChartboostMediationFullscreenAdLoadResultEvent)callback  {
+    
+    NSDictionary *formattedKeywords = objFromJsonString<NSDictionary *>(keywords);
+    
+    auto *loadRequest = [[ChartboostMediationAdLoadRequest alloc] initWithPlacement:placementId keywords:formattedKeywords];
+    
+    [[Helium sharedHelium] loadFullscreenAdWithRequest:loadRequest completion:^(ChartboostMediationFullscreenAdLoadResult * adLoadResult) {
+        ChartboostMediationError *error = [adLoadResult error];
+        if (error != nil)
+        {
+            ChartboostMediationErrorCode codeInt = [error chartboostMediationCode];
+            const char *code = [[NSString stringWithFormat:@"CM_%ld", codeInt] UTF8String];
+            const char *message = [[error localizedDescription] UTF8String];
+            callback(hashCode, NULL, "", "", "", code, message);
+            return;
+        }
+        
+        id<ChartboostMediationFullscreenAd> ad = [adLoadResult ad];
+        [ad setDelegate:self];
+        addToStore(ad, placementId, true);
+        const char *loadId = [[adLoadResult loadID] UTF8String];
+        const char *winningBidJson = dictionaryToJSON([ad winningBidInfo]);
+        const char *metricsJson = dictionaryToJSON([adLoadResult metrics]);
+        callback(hashCode, (__bridge void*)ad, loadId, winningBidJson, metricsJson, "", "");
+    }];
+}
+
 - (HeliumBannerView*)getBannerAd:(NSString*)placementName andSize:(CHBHBannerSize)size
 {
     HeliumBannerView *ad = [[Helium sharedHelium] bannerProviderWithDelegate:self andPlacementName:placementName andSize:size];
@@ -303,7 +369,6 @@ static void subscribeToPartnerInitializationNotifications()
     }
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark HeliumSdkDelegate
 
 - (void)heliumDidStartWithError:(ChartboostMediationError *)error;
@@ -311,7 +376,6 @@ static void subscribeToPartnerInitializationNotifications()
     serializeEvent(error, _didStartCallback);
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark CHBHeliumInterstitialAdDelegate
 
 - (void)heliumInterstitialAdWithPlacementName:(NSString*)placementName requestIdentifier:(NSString *) requestIdentifier winningBidInfo:(NSDictionary<NSString *, id> *)winningBidInfo didLoadWithError:(ChartboostMediationError *)error
@@ -343,7 +407,6 @@ static void subscribeToPartnerInitializationNotifications()
     serializePlacementWithError(placementName, nil, _interstitialDidRecordImpressionCallback);
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark CHBHeliumRewardedVideoAdDelegate
 - (void)heliumRewardedAdWithPlacementName:(NSString*)placementName requestIdentifier:(NSString *) requestIdentifier winningBidInfo:(NSDictionary<NSString *, id> *)winningBidInfo didLoadWithError:(ChartboostMediationError *)error
 {
@@ -379,7 +442,6 @@ static void subscribeToPartnerInitializationNotifications()
     serializePlacementWithError(placementName, nil, _rewardedDidReceiveRewardCallback);
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark CHBHeliumBannerAdDelegate
 
 - (void)heliumBannerAdWithPlacementName:(NSString*)placementName requestIdentifier:(NSString *) requestIdentifier winningBidInfo:(NSDictionary<NSString *, id> *)winningBidInfo didLoadWithError:(ChartboostMediationError *)error
@@ -395,5 +457,25 @@ static void subscribeToPartnerInitializationNotifications()
 - (void)heliumBannerAdDidRecordImpressionWithPlacementName: (NSString*)placementName
 {
     serializePlacementWithError(placementName, nil, _bannerDidRecordImpressionCallback);
+}
+
+#pragma mark ChartboostMediationFullscreenAdDelegate
+- (void)didRecordImpressionWithAd:(id <ChartboostMediationFullscreenAd> _Nonnull)ad {
+    serializeFullscreenEvent(ad, RecordImpression, nil);
+}
+
+- (void)didClickWithAd:(id <ChartboostMediationFullscreenAd> _Nonnull)ad {
+    serializeFullscreenEvent(ad, Click, nil);
+}
+- (void)didRewardWithAd:(id <ChartboostMediationFullscreenAd> _Nonnull)ad {
+    serializeFullscreenEvent(ad, Reward, nil);
+}
+
+- (void)didCloseWithAd:(id <ChartboostMediationFullscreenAd> _Nonnull)ad error:(ChartboostMediationError * _Nullable)error {
+    serializeFullscreenEvent(ad, Close, error);
+}
+
+- (void)didExpireWithAd:(id <ChartboostMediationFullscreenAd> _Nonnull)ad {
+    serializeFullscreenEvent(ad, Expire, nil);
 }
 @end

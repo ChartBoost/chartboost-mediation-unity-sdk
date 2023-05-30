@@ -3,8 +3,8 @@ namespace Chartboost.FullScreen.Rewarded
 	/// <summary>
 	/// Chartboost Mediation rewarded ad object.
 	/// </summary>
-	public class ChartboostMediationRewardedAd : ChartboostMediationRewardedBaseOld {
-		private readonly ChartboostMediationRewardedBaseOld _platformRewarded;
+	public class ChartboostMediationRewardedAd : ChartboostMediationRewardedBase {
+		private readonly ChartboostMediationRewardedBase _platformRewarded;
 		
 		public ChartboostMediationRewardedAd(string placementName) : base(placementName)
 		{
@@ -19,35 +19,35 @@ namespace Chartboost.FullScreen.Rewarded
 			#endif
 		}
 
-		/// <inheritdoc cref="ChartboostMediationRewardedBaseOld.SetKeyword"/>>
+		/// <inheritdoc cref="ChartboostMediationRewardedBase.SetKeyword"/>>
 		public override bool SetKeyword(string keyword, string value)
 			=> _platformRewarded.SetKeyword(keyword, value);
 
-		/// <inheritdoc cref="ChartboostMediationRewardedBaseOld.RemoveKeyword"/>>
+		/// <inheritdoc cref="ChartboostMediationRewardedBase.RemoveKeyword"/>>
 		public override string RemoveKeyword(string keyword)
 			=> _platformRewarded.RemoveKeyword(keyword);
 
-		/// <inheritdoc cref="ChartboostMediationRewardedBaseOld.Destroy"/>>
+		/// <inheritdoc cref="ChartboostMediationRewardedBase.Destroy"/>>
 		public override void Destroy()
 			=> _platformRewarded.Destroy();
 		
-		/// <inheritdoc cref="ChartboostMediationRewardedBaseOld.Load"/>>
+		/// <inheritdoc cref="ChartboostMediationRewardedBase.Load"/>>
 		public override void Load()
 			=> _platformRewarded.Load();
 
-		/// <inheritdoc cref="ChartboostMediationRewardedBaseOld.Show"/>>
+		/// <inheritdoc cref="ChartboostMediationRewardedBase.Show"/>>
 		public override void Show()
 			=> _platformRewarded.Show();
 
-		/// <inheritdoc cref="ChartboostMediationRewardedBaseOld.ReadyToShow"/>>
+		/// <inheritdoc cref="ChartboostMediationRewardedBase.ReadyToShow"/>>
 		public override bool ReadyToShow()
 			=> _platformRewarded.ReadyToShow();
 		
-		/// <inheritdoc cref="ChartboostMediationRewardedBaseOld.ClearLoaded"/>>
+		/// <inheritdoc cref="ChartboostMediationRewardedBase.ClearLoaded"/>>
 		public override void ClearLoaded()
 			=> _platformRewarded.ClearLoaded();
 
-		/// <inheritdoc cref="ChartboostMediationRewardedBaseOld.SetCustomData"/>>
+		/// <inheritdoc cref="ChartboostMediationRewardedBase.SetCustomData"/>>
 		public override void SetCustomData(string customData)
 			=> _platformRewarded.SetCustomData(customData);
 	}

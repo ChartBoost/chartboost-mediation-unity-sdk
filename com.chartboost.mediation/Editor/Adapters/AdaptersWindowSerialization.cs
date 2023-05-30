@@ -93,7 +93,6 @@ namespace Chartboost.Editor.Adapters
             const string androidDependenciesInTemplate = "%ANDROID_DEPENDENCIES%";
             
             const string iosAdapterInTemplate = "%IOS_ADAPTER%";
-            const string iosAdapterVersionInTemplate = "%IOS_CBMA_VERSION%";
             const string iosDependenciesInTemplate = "%IOS_DEPENDENCIES%";
             
             foreach (var adapter in adapters)

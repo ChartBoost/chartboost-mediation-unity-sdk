@@ -1,4 +1,5 @@
 // ReSharper disable once CheckNamespace
+// ReSharper disable EventNeverSubscribedTo.Global
 namespace Chartboost
 {
     /// <summary>

@@ -3,7 +3,7 @@ namespace Chartboost.FullScreen
     /// <summary>
     /// Interface implemented by Chartboost Mediation fullscreen ads. 
     /// </summary>
-    public interface IChartboostMediationFullScreenAdOLD
+    public interface IChartboostMediationFullScreenAdOld
     {
         /// <summary>
         /// Load the advertisement.

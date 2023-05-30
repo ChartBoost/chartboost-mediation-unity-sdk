@@ -9,56 +9,38 @@ namespace Chartboost.Utilities
     {
         public TaskAwaiter<TResult> GetAwaiter() 
         {
-            if (_completionSource != null)
-                return _completionSource.Task.GetAwaiter();
+            if (_taskCompletionSource != null)
+                return _taskCompletionSource.Task.GetAwaiter();
                 
-            _completionSource = new TaskCompletionSource<TResult>();
+            _taskCompletionSource = new TaskCompletionSource<TResult>();
             
-            if (isComplete)
+            if (_isComplete)
                 _setResult();
             else
                 DidComplete += result => _setResult();
 
-            return _completionSource.Task.GetAwaiter();
+            return _taskCompletionSource.Task.GetAwaiter();
         }
-
-        protected bool isComplete = false;
-
+        
         protected AwaitableAndroidJavaProxy(string nativeInterface) : base(nativeInterface) { }
-        protected AwaitableAndroidJavaProxy(AndroidJavaClass nativeInterface) : base(nativeInterface) { }
 
         protected void _complete(TResult result)
         {
-            if (isComplete)
+            if (_isComplete)
                 return;
 
             _result = result;
             var toComplete = DidComplete;
             DidComplete = null;
-            isComplete = true;
+            _isComplete = true;
             toComplete?.Invoke(_result);
         }
-
-        protected void _fail(string error, bool except = false)
-        {
-            if (except)
-            {
-                var exception = new Exception(error);
-                Debug.LogException(exception);
-                _completionSource.TrySetException(exception);
-            }
-            else
-            {
-                Debug.LogError(error);
-                _completionSource.TrySetCanceled();
-            }
-        }
-
+        
         private void _setResult()
         {
             try
             {
-                _completionSource.TrySetResult(_result);
+                _taskCompletionSource.TrySetResult(_result);
             }
             catch (ObjectDisposedException e)
             {
@@ -66,8 +48,9 @@ namespace Chartboost.Utilities
             }
         }
 
-        private TaskCompletionSource<TResult> _completionSource;
+        private TaskCompletionSource<TResult> _taskCompletionSource;
         private event Action<TResult> DidComplete;
         private TResult _result;
+        private bool _isComplete;
     }
 }
