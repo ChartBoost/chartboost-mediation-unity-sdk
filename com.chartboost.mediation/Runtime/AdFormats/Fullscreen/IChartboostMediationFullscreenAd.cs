@@ -1,6 +1,8 @@
 using System.Threading.Tasks;
+using Chartboost.Placements;
+using Chartboost.Requests;
 
-namespace Chartboost.Placements
+namespace Chartboost.AdFormats.Fullscreen
 {
     public interface IChartboostMediationFullscreenAd
     {

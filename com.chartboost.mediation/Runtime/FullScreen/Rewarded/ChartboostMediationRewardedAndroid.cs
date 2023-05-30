@@ -14,62 +14,63 @@ namespace Chartboost.FullScreen.Rewarded
         public ChartboostMediationRewardedAndroid(string placementName) : base(placementName)
         {
             logTag = "ChartboostMediationRewarded (Android)";
-            _androidAd = ChartboostMediationAndroid.UnityBridge.Call<AndroidJavaObject>("getRewardedAd", placementName);
+            using var unityBridge = ChartboostMediationAndroid.GetUnityBridge();
+            _androidAd = unityBridge.CallStatic<AndroidJavaObject>("getRewardedAd", placementName);
         }
         
         // *NOTE* Implementation for Rewarded/FullScreen is very similar, and it could be simplified on a single file,
         // for now it will stay separated in case placement specific placement changes are required. This only applies for Android.
 
-        /// <inheritdoc cref="ChartboostMediationRewardedBaseOld.SetKeyword"/>>
+        /// <inheritdoc cref="ChartboostMediationRewardedBase.SetKeyword"/>>
         public override bool SetKeyword(string keyword, string value)
         {
             base.SetKeyword(keyword, value);
             return _androidAd.Call<bool>("setKeyword", keyword, value);
         }
 
-        /// <inheritdoc cref="ChartboostMediationRewardedBaseOld.RemoveKeyword"/>>
+        /// <inheritdoc cref="ChartboostMediationRewardedBase.RemoveKeyword"/>>
         public override string RemoveKeyword(string keyword)
         {
             base.RemoveKeyword(keyword);
             return _androidAd.Call<string>("removeKeyword", keyword);
         }
 
-        /// <inheritdoc cref="ChartboostMediationRewardedBaseOld.Destroy"/>>
+        /// <inheritdoc cref="ChartboostMediationRewardedBase.Destroy"/>>
         public override void Destroy()
         {
             base.Destroy();
             _androidAd.Call("destroy");
         }
 
-        /// <inheritdoc cref="ChartboostMediationRewardedBaseOld.Load"/>>
+        /// <inheritdoc cref="ChartboostMediationRewardedBase.Load"/>>
         public override void Load()
         {
             base.Load();
             _androidAd.Call("load");
         }
 
-        /// <inheritdoc cref="ChartboostMediationRewardedBaseOld.Show"/>>
+        /// <inheritdoc cref="ChartboostMediationRewardedBase.Show"/>>
         public override void Show()
         {
             base.Show();
             _androidAd.Call("show");
         }
 
-        /// <inheritdoc cref="ChartboostMediationRewardedBaseOld.ReadyToShow"/>>
+        /// <inheritdoc cref="ChartboostMediationRewardedBase.ReadyToShow"/>>
         public override bool ReadyToShow()
         {
             base.ReadyToShow();
             return _androidAd.Call<bool>("readyToShow");
         }
 
-        /// <inheritdoc cref="ChartboostMediationRewardedBaseOld.ClearLoaded"/>>
+        /// <inheritdoc cref="ChartboostMediationRewardedBase.ClearLoaded"/>>
         public override void ClearLoaded()
         {
             base.ClearLoaded();
             _androidAd.Call("clearLoaded");
         }
 
-        /// <inheritdoc cref="ChartboostMediationRewardedBaseOld.SetCustomData"/>>
+        /// <inheritdoc cref="ChartboostMediationRewardedBase.SetCustomData"/>>
         public override void SetCustomData(string customData)
         {
             base.SetCustomData(customData);

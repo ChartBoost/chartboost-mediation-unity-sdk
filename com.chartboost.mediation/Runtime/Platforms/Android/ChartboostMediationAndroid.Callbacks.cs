@@ -1,4 +1,5 @@
 #if UNITY_ANDROID
+using Chartboost.AdFormats.Fullscreen;
 using Chartboost.Placements;
 using Chartboost.Utilities;
 using UnityEngine;
@@ -12,7 +13,7 @@ namespace Chartboost.Platforms.Android
         #region LifeCycle Callbacks
         internal class ChartboostMediationSDKListener : AndroidJavaProxy
         {
-            public ChartboostMediationSDKListener() : base(GetQualifiedNativeClassName("HeliumSdkListener")) { }
+            public ChartboostMediationSDKListener() : base(GetQualifiedNativeClassName("HeliumSdk$HeliumSdkListener")) { }
 
             private void didInitialize(AndroidJavaObject error)
             {
@@ -23,10 +24,11 @@ namespace Chartboost.Platforms.Android
                         EventProcessor.ProcessChartboostMediationEvent(message, _instance.DidStart);
                         return;
                     }
-
-                    UnityBridge.Call("setGameEngine", Application.unityVersion);
-                    UnityBridge.Call("subscribeILRDObserver", ILRDObserver.Instance);
-                    UnityBridge.Call("subscribePartnerInitializationResultsObserver", new PartnerInitializationResultsObserver());
+                    
+                    using var nativeSDK = GetNativeSDK();
+                    nativeSDK.CallStatic("setGameEngine", "unity", Application.unityVersion);
+                    nativeSDK.CallStatic("subscribeIlrd", ILRDObserver.Instance);
+                    nativeSDK.CallStatic("subscribeInitializationResults", new PartnerInitializationResultsObserver());
                     EventProcessor.ProcessChartboostMediationEvent(null, _instance.DidStart);
                 });
             }
@@ -37,8 +39,11 @@ namespace Chartboost.Platforms.Android
             private ILRDObserver() : base(GetQualifiedNativeClassName("HeliumIlrdObserver")) { }
             public static readonly ILRDObserver Instance = new ILRDObserver();
 
-            private void onImpression(AndroidJavaObject impressionData) 
-                => EventProcessor.ProcessEventWithILRD(impressionData.ImpressionDataToJsonString(), _instance.DidReceiveImpressionLevelRevenueData);
+            private void onImpression(AndroidJavaObject impressionData)
+            {
+                Debug.LogError($"SCM - {impressionData.ImpressionDataToJsonString()}");
+                EventProcessor.ProcessEventWithILRD(impressionData.ImpressionDataToJsonString(), _instance.DidReceiveImpressionLevelRevenueData);
+            }
         }
 
         internal class PartnerInitializationResultsObserver : AndroidJavaProxy

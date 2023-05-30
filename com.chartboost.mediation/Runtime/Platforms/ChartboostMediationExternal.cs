@@ -7,6 +7,7 @@ using Chartboost.Banner;
 using Chartboost.FullScreen.Interstitial;
 using Chartboost.FullScreen.Rewarded;
 using Chartboost.Placements;
+using Chartboost.Requests;
 using UnityEngine;
 
 namespace Chartboost.Platforms

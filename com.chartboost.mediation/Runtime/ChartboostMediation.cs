@@ -5,6 +5,7 @@ using Chartboost.FullScreen.Interstitial;
 using Chartboost.FullScreen.Rewarded;
 using Chartboost.Placements;
 using Chartboost.Platforms;
+using Chartboost.Requests;
 #if UNITY_ANDROID
 using Chartboost.Platforms.Android;
 #elif UNITY_IOS
