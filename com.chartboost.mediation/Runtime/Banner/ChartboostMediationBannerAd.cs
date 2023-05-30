@@ -81,9 +81,11 @@ namespace Chartboost.Banner
         public override void Remove()
             =>_platformBanner.Remove();
 
+        /// <inheritdoc cref="ChartboostMediationBannerBase.EnableDrag"/>>
         public override void EnableDrag(Action<float, float> onDrag = null)
             => _platformBanner.EnableDrag(onDrag);
 
+        /// <inheritdoc cref="ChartboostMediationBannerBase.DisableDrag"/>>
         public override void DisableDrag()
             => _platformBanner.DisableDrag();
     }

@@ -9,7 +9,9 @@ using Image = UnityEngine.UI.Image;
 
 namespace Chartboost.Banner.Unity
 {
-#if UNITY_ANDROID
+    #region Editor Mode Only
+
+    #if UNITY_ANDROID
     public enum EditorDPi
     {
         ldpi = 120,
@@ -18,31 +20,38 @@ namespace Chartboost.Banner.Unity
         dpi420 = 420,
         xxdpi = 480,
     }
-#endif
+    #endif
 
-#if UNITY_IOS
+    #if UNITY_IOS
     public enum EditorRetinaScale
     {
         One = 1,
         Two = 2,
         Three = 3
     }
-#endif
+    #endif
     
+    #endregion
+    
+    
+    /// <summary>
+    /// A Wrapper MonoBehaviour for <see cref="ChartboostMediationBannerAd"/> with Drag and Visualization capabilities
+    /// </summary>
     [RequireComponent(typeof(DragObject))]
     [RequireComponent(typeof(Image))]
     public partial class UnityBannerAd : MonoBehaviour
     {
+        [Header("Config")]
         [Tooltip("Placement identifier for banner")]
         public string bannerPlacementName;
 
         [SerializeField] [Tooltip("Size of the banner")]
         private ChartboostMediationBannerAdSize _size;
         
-        [SerializeField] [Tooltip("If enabled, this gameobject can be dragged on screen")]
+        [SerializeField] [Tooltip("If enabled, this Gameobject can be dragged on screen")]
         private bool _draggable = true;
 
-        [SerializeField][Tooltip("If enabled, this gameobject will be visible on screen")]
+        [SerializeField][Tooltip("If enabled, the rect of this Gameobject's RectTransform will be visible on screen")]
         private bool _visualize = false;
         
         [Tooltip("Auto loads this ad after Chartboost Mediation SDK is initialized")]
@@ -55,7 +64,7 @@ namespace Chartboost.Banner.Unity
     public EditorRetinaScale referenceRetinaScale = EditorRetinaScale.Three;
 #endif
 
-        private string TAG = "UnityBannerAd";
+        private const string LogTag = "UnityBannerAd";
 
         private Canvas _canvas;
         private Image _visualizer;
@@ -64,6 +73,8 @@ namespace Chartboost.Banner.Unity
         private ChartboostMediationBannerAd _bannerAd;
         
         private bool _initialized = false;
+
+        #region Unity Lifecycle Events
 
         private void Awake()
         {
@@ -92,8 +103,13 @@ namespace Chartboost.Banner.Unity
             ChartboostMediation.DidLoadBanner -= DidLoadBanner;
         }
 
+        #endregion
+
         # region Public API
 
+        /// <summary>
+        /// Size of the Banner Ad
+        /// </summary>
         public ChartboostMediationBannerAdSize Size
         {
             get => _size;
@@ -104,6 +120,9 @@ namespace Chartboost.Banner.Unity
             }
         }
 
+        /// <summary>
+        /// Enables/Disables dragging capabilities of Banner Ad
+        /// </summary>
         public bool Draggable
         {
             get => _draggable;
@@ -123,6 +142,9 @@ namespace Chartboost.Banner.Unity
             }
         }
 
+        /// <summary>
+        /// Enables/Disables visibility of the rect of this Gameobject's RectTransform
+        /// </summary>
         public bool Visualize
         {
             get => _visualize;
@@ -134,39 +156,86 @@ namespace Chartboost.Banner.Unity
             }
         }
         
+        /// <summary>
+        /// Initializes UnityBannerAd
+        /// </summary>
+        /// <param name="bannerAd"> <see cref="ChartboostMediationBannerAd"/> ad object  </param>
         public void Init(ChartboostMediationBannerAd bannerAd)
         {
             _bannerAd = bannerAd;
             _initialized = true;
         }
 
+        /// <summary>
+        /// Loads a banner ad inside this gameobject
+        /// </summary>
         public void Load()
         {
+            if (!_initialized)
+            {
+                Logger.LogError(LogTag, "Cannot load ! UnityBannerAd not initialized");
+                return;
+            }
+            
             var layoutParams = _rectTransform.LayoutParams();
             BannerAd.Load(layoutParams.x, layoutParams.y, layoutParams.width, layoutParams.height);
         }
+        
+        /// <summary>
+        /// Calculates and sets width and height of this Gameobject based on its size />
+        /// </summary>
+        public void AdjustSize()
+        {
+            if (_rectTransform == null)
+            {
+                _rectTransform = GetComponent<RectTransform>();
+            }
+            
+            _rectTransform.sizeDelta = new Vector2(Size.GetDimensions().Item1 * ScalingFactor,
+                Size.GetDimensions().Item2 * ScalingFactor);
+        }
 
+        /// <summary>
+        /// Set a keyword/value pair on the advertisement. If the keyword has previously been
+        /// set, then the value will be replaced with the new value.  These values will be
+        /// used upon the loading of the advertisement.
+        /// </summary>
+        /// <param name="keyword">The keyword (maximum of 64 characters)</param>
+        /// <param name="value">The value (maximum of 256 characters)</param>
+        /// <returns>true if the keyword was successfully set, else false</returns>
         public void SetKeyword(string keyword, string value) => BannerAd?.SetKeyword(keyword, value);
         
+        /// <summary>
+        /// Remove a keyword from the advertisement.
+        /// </summary>
+        /// <param name="keyword">The keyword to remove.</param>
+        /// <returns>The currently set value, else null</returns>
         public string RemoveKeyword(string keyword) => BannerAd?.RemoveKeyword(keyword);
         
+        /// <summary>This method changes the visibility of the banner ad.</summary>
+        /// <param name="isVisible">Specify if the banner should be visible.</param>
         public void SetVisibility(bool isVisible) => BannerAd?.SetVisibility(isVisible);
         
+        /// <summary>
+        /// If an advertisement has been loaded, clear it. Once cleared, a new
+        /// load can be performed.
+        /// </summary>
         public void ClearLoaded() => BannerAd?.ClearLoaded();
 
+        /// <summary>
+        /// Remove the banner.
+        /// </summary>
         public void Remove() => BannerAd?.Remove();
         
+        /// <summary>
+        /// Destroy the advertisement to free up memory resources.
+        /// </summary>
         public void Destroy() => BannerAd?.Destroy();
 
         #endregion
-        
-        public void AdjustSize()
-        {
-            _rectTransform ??= GetComponent<RectTransform>();
-            _rectTransform.sizeDelta = new Vector2(_size.GetDimensions().Item1 * ScalingFactor,
-                _size.GetDimensions().Item2 * ScalingFactor);
-        }
-        
+
+        #region Callbacks
+
         private void DidStart(string error)
         {
             if (!string.IsNullOrEmpty(error))
@@ -174,12 +243,12 @@ namespace Chartboost.Banner.Unity
             
             if (!_initialized)
             {
-                Logger.Log(TAG,"Creating banner on placement: " + bannerPlacementName);
+                Logger.Log(LogTag,"Creating banner on placement: " + bannerPlacementName);
                 var bannerAd = ChartboostMediation.GetBannerAd(bannerPlacementName, _size);
 
                 if (bannerAd == null)
                 {
-                    Debug.Log("Banner Ad not found");
+                    Logger.LogError(LogTag,"Banner Ad not found");
                     return;
                 }
 
@@ -210,26 +279,6 @@ namespace Chartboost.Banner.Unity
             }
         }
 
-        private ChartboostMediationBannerAd BannerAd
-        {
-            get
-            {
-                if (_bannerAd == null)
-                {
-                    Logger.LogError(TAG,"Banner Ad is NULL");
-                    return null;
-                }
-                
-                if (!_initialized)
-                {
-                    Logger.LogError(TAG,"Banner Not Initialized");
-                    return null;
-                }
-
-                return _bannerAd;
-            }
-        }
-        
         private void OnBannerDrag(float x, float y)
         {
             _canvas ??= GetComponentInParent<Canvas>();
@@ -256,6 +305,28 @@ namespace Chartboost.Banner.Unity
             var newY = y + (_size.GetDimensions().Item2 * ScalingFactor * (pivot.y - 1f)); // top-left y is 1
 
             rt.anchoredPosition = new Vector2(newX, newY);
+        }
+
+        #endregion
+        
+        private ChartboostMediationBannerAd BannerAd
+        {
+            get
+            {
+                if (_bannerAd == null)
+                {
+                    Logger.LogError(LogTag,"Banner Ad is NULL");
+                    return null;
+                }
+                
+                if (!_initialized)
+                {
+                    Logger.LogError(LogTag,"Banner Not Initialized");
+                    return null;
+                }
+
+                return _bannerAd;
+            }
         }
 
         // Note : This is a temporary hack/workaround until we have adaptive banners

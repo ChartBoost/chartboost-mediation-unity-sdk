@@ -307,6 +307,8 @@ static void subscribeToPartnerInitializationNotifications()
 
 - (void) enableBannerDrag:(const void*) uniqueId listener:(ChartboostMediationBannerDragEvent) dragListener
 {                
+    HeliumBannerView* bannerView = (__bridge HeliumBannerView*)uniqueId;
+
     ChartboostMediationBannerAdDragger* dragger = [[ChartboostMediationBannerAdDragger alloc] init];
     dragger.dragListener = dragListener;
     

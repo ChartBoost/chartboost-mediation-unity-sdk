@@ -43,9 +43,16 @@ namespace Chartboost.Banner
         [Preserve]
         void Remove();
 
+        /// <summary>
+        /// Enables dragging of this banner ad object
+        /// </summary>
+        /// <param name="onDrag"> Callback that receives screen coordinates of ad object, when dragged</param>
         [Preserve]
         void EnableDrag(Action<float, float> onDrag = null);
 
+        /// <summary>
+        /// Disables dragging of this banner ad object
+        /// </summary>
         [Preserve]
         void DisableDrag();
     }
