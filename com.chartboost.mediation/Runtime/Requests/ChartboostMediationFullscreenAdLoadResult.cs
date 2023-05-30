@@ -1,3 +1,5 @@
+using Chartboost.AdFormats.Fullscreen;
+
 namespace Chartboost.Placements
 {
     #nullable enable

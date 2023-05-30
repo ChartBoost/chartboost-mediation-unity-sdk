@@ -26,20 +26,20 @@ class AdWrapper(private val ad: HeliumAd) {
     private val activity: Activity? = UnityPlayer.currentActivity
 
     fun load() {
-        UnityBridge.runTaskOnUiThread {
+        runTaskOnUiThread {
             ad.load()
         }
     }
 
     fun load(screenLocation: Int) {
-        UnityBridge.runTaskOnUiThread {
+        runTaskOnUiThread {
             createBannerLayout(screenLocation)
             load()
         }
     }
 
     fun show() {
-        UnityBridge.runTaskOnUiThread {
+        runTaskOnUiThread {
             if (ad is HeliumFullscreenAd) {
                 ad.show()
             }
@@ -63,7 +63,7 @@ class AdWrapper(private val ad: HeliumAd) {
     }
 
     fun setBannerVisibility(isVisible: Boolean) {
-        UnityBridge.runTaskOnUiThread {
+        runTaskOnUiThread {
             if (ad is HeliumBannerAd && bannerLayout != null) {
                 val visibility = if (isVisible) View.VISIBLE else View.INVISIBLE
                 bannerLayout?.visibility = visibility
@@ -76,7 +76,7 @@ class AdWrapper(private val ad: HeliumAd) {
         when(ad) {
             is HeliumFullscreenAd -> { ad.clearLoaded() }
             is HeliumBannerAd -> {
-                UnityBridge.runTaskOnUiThread { ad.clearAd() }
+                runTaskOnUiThread { ad.clearAd() }
             }
         }
     }
@@ -98,7 +98,7 @@ class AdWrapper(private val ad: HeliumAd) {
     }
 
     fun destroy() {
-        UnityBridge.runTaskOnUiThread {
+        runTaskOnUiThread {
             destroyBannerLayout()
             ad.destroy()
         }
@@ -205,6 +205,16 @@ class AdWrapper(private val ad: HeliumAd) {
         @JvmStatic
         fun wrap(ad: HeliumAd): AdWrapper {
             return AdWrapper(ad)
+        }
+
+        fun runTaskOnUiThread(runnable: Runnable) {
+            UnityPlayer.currentActivity.runOnUiThread {
+                try {
+                    runnable.run()
+                } catch (ex: Exception) {
+                    Log.w(TAG, "Exception found when running on UI Thread: ${ex.message}")
+                }
+            }
         }
     }
 }

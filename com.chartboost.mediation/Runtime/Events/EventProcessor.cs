@@ -47,9 +47,9 @@ namespace Chartboost
             {
                 try
                 {
-                    if (!(JsonTools.Deserialize(dataString) is Dictionary<object, object> data)) 
+                    if (!(JsonTools.Deserialize(dataString) is Dictionary<object, object> data))
                         return;
-                    
+
                     data.TryGetValue("placementName", out var placementName);
                     ilrdEvent(placementName as string, new Hashtable(data));
                 }

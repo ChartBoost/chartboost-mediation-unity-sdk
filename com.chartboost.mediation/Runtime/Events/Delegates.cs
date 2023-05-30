@@ -1,4 +1,5 @@
 using System.Collections;
+using Chartboost.AdFormats.Fullscreen;
 using Chartboost.Placements;
 
 namespace Chartboost

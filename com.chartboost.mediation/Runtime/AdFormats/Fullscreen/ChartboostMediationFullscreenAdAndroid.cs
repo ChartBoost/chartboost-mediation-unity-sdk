@@ -1,10 +1,12 @@
 #if UNITY_ANDROID
 using System.Threading.Tasks;
+using Chartboost.Placements;
 using Chartboost.Platforms.Android;
+using Chartboost.Requests;
 using Chartboost.Utilities;
 using UnityEngine;
 
-namespace Chartboost.Placements
+namespace Chartboost.AdFormats.Fullscreen
 {
     public sealed class ChartboostMediationFullscreenAdAndroid : IChartboostMediationFullscreenAd
     {
@@ -39,7 +41,8 @@ namespace Chartboost.Placements
         public async Task<ChartboostMediationAdShowResult> Show()
         {
             var adShowListenerAwaitableProxy = new ChartboostMediationAndroid.ChartboostMediationFullscreenAdShowListener();
-            ChartboostMediationAndroid.UnityBridge.Call("showFullscreenAd", _chartboostMediationFullscreenAd, adShowListenerAwaitableProxy);
+            using var unityBridge = ChartboostMediationAndroid.GetUnityBridge();
+            unityBridge.Call("showFullscreenAd", _chartboostMediationFullscreenAd, adShowListenerAwaitableProxy);
             return await adShowListenerAwaitableProxy;
         }
 

@@ -1,6 +1,7 @@
 #if UNITY_ANDROID
 using System.Collections.Generic;
 using Chartboost.Placements;
+using Chartboost.Platforms.Android;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -37,11 +38,17 @@ namespace Chartboost.Utilities
         {
             var placementName = impressionData.Get<string>("placementId");
             var ilrdJson = impressionData.Get<AndroidJavaObject>("ilrdInfo").Call<string>("toString");
-            return $"\"placementName\" : {placementName}, \"ilrd\" : {ilrdJson}";
+            return $"{{\"placementName\" : \"{placementName}\", \"ilrd\" : {ilrdJson}}}";
         }
 
         public static string PartnerInitializationDataToJsonString(this AndroidJavaObject partnerInitializationData) 
             => partnerInitializationData.Get<AndroidJavaObject>("data").Call<string>("toString");
+
+        public static AndroidJavaObject ArrayToInitializationOptions(this string[] source)
+        {
+            using var unityBridge = ChartboostMediationAndroid.GetUnityBridge();
+            return unityBridge.CallStatic<AndroidJavaObject>("toInitializationOptions", string.Empty, source);
+        }
 
 #nullable enable
         public static Metrics? JsonObjectToMetrics(this AndroidJavaObject source)

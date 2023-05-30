@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Chartboost.AdFormats.Fullscreen;
+using Chartboost.Placements;
 
-namespace Chartboost.Placements
+namespace Chartboost.Requests
 {
     public class ChartboostMediationAdLoadRequest
     {
