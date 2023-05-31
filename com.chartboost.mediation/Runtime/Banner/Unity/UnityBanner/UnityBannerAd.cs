@@ -15,10 +15,14 @@ namespace Chartboost.Banner.Unity
     public enum EditorDPi
     {
         ldpi = 120,
+        hdpi = 240,
         mdpi = 160,
-        xdpi = 320,
+        xhdpi = 320,
         dpi420 = 420,
-        xxdpi = 480,
+        dpi440 = 440,
+        xxhdpi = 480,
+        dpi560 = 560,
+        xxxhdpi = 640
     }
     #endif
 
@@ -186,6 +190,7 @@ namespace Chartboost.Banner.Unity
         /// </summary>
         public void AdjustSize()
         {
+            
             if (_rectTransform == null)
             {
                 _rectTransform = GetComponent<RectTransform>();
