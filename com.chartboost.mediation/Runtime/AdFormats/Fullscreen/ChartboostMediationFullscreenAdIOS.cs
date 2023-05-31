@@ -2,9 +2,11 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Chartboost.Placements;
 using Chartboost.Platforms.IOS;
+using Chartboost.Requests;
 
-namespace Chartboost.Placements
+namespace Chartboost.AdFormats.Fullscreen
 {
     public class ChartboostMediationFullscreenAdIOS : IChartboostMediationFullscreenAd
     {

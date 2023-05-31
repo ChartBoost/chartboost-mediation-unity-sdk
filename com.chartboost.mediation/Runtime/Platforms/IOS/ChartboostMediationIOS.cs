@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AOT;
 using Chartboost.Placements;
+using Chartboost.Requests;
 using Newtonsoft.Json;
 using UnityEngine;
 

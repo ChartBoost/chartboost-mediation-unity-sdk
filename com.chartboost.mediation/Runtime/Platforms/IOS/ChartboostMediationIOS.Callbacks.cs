@@ -3,14 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using AOT;
+using Chartboost.AdFormats.Fullscreen;
 using Chartboost.Placements;
+using Chartboost.Requests;
 using Chartboost.Utilities;
 using Newtonsoft.Json;
 // ReSharper disable InconsistentNaming
 
 namespace Chartboost.Platforms.IOS
 {
-    public sealed partial class  ChartboostMediationIOS
+    public sealed partial class ChartboostMediationIOS
     {
         private delegate void ExternChartboostMediationFullscreenAdLoadResultEvent(int hashCode, IntPtr adHashCode, string loadId, string winningBidJson, string metricsJson, string code, string message);
         internal delegate void ExternChartboostMediationFullscreenAdShowResultEvent(int hashCode, string metricsJson, string code, string message);
