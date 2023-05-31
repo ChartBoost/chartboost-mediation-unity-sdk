@@ -11,6 +11,7 @@ namespace Chartboost.Utilities
     public interface ILater<TResult> : ILater
     {
         event Action<TResult> OnComplete;
+        
         TaskAwaiter<TResult> GetAwaiter();
     }
 
@@ -25,13 +26,13 @@ namespace Chartboost.Utilities
     {
         public event Action<TResult> OnComplete
         {
-            remove => _onComplete -= value;
+            remove => DidComplete -= value;
             add
             {
                 if (_isComplete)
-                    _onComplete += value;
-                else if (value != null)
-                    value(_result);
+                    DidComplete += value;
+                else
+                    value?.Invoke(_result);
             }
         }
 
@@ -45,7 +46,7 @@ namespace Chartboost.Utilities
             if (_isComplete)
                 _completionSource.TrySetResult(_result);
             else
-                _onComplete += result => _completionSource.TrySetResult(result);
+                DidComplete += result => _completionSource.TrySetResult(result);
 
             return _completionSource.Task.GetAwaiter();
         }
@@ -57,16 +58,16 @@ namespace Chartboost.Utilities
 
             _result = result;
 
-            var toComplete = _onComplete;
-            _onComplete = null;
+            var toComplete = DidComplete;
+            DidComplete = null;
 
             _isComplete = true;
             toComplete?.Invoke(_result);
         }
 
         private TaskCompletionSource<TResult> _completionSource;
-        private event Action<TResult> _onComplete;
-        private bool _isComplete = false;
+        private event Action<TResult> DidComplete;
+        private bool _isComplete;
         private TResult _result;
     }
 }
