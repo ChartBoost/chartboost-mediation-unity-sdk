@@ -23,7 +23,7 @@
     <package>com.chartboost:chartboost-mediation-adapter-unity-ads:4.4.6.1+@aar</package>
     <package>com.chartboost:chartboost-mediation-adapter-vungle:4.6.12.1+@aar</package>
     <package>com.chartboost:chartboost-mediation-adapter-yahoo:4.1.4.0+@aar</package>
-    <package>com.chartboost:chartboost-mediation-sdk:4.2+</package>
+    <package>com.chartboost:chartboost-mediation-sdk:4.3+</package>
     <package>com.chartboost:chartboost-sdk:9.3.0</package>
     <package>com.facebook.android:audience-network-sdk:6.13.7</package>
     <package>com.fyber:marketplace-sdk:8.2.2</package>
