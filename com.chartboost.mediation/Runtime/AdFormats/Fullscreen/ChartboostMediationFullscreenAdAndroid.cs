@@ -42,7 +42,7 @@ namespace Chartboost.AdFormats.Fullscreen
         {
             var adShowListenerAwaitableProxy = new ChartboostMediationAndroid.ChartboostMediationFullscreenAdShowListener();
             using var unityBridge = ChartboostMediationAndroid.GetUnityBridge();
-            unityBridge.Call("showFullscreenAd", _chartboostMediationFullscreenAd, adShowListenerAwaitableProxy);
+            unityBridge.CallStatic("showFullscreenAd", _chartboostMediationFullscreenAd, adShowListenerAwaitableProxy);
             return await adShowListenerAwaitableProxy;
         }
 

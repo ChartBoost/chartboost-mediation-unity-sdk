@@ -19,49 +19,49 @@ namespace Chartboost.FullScreen.Interstitial
             _androidAd = unityBridge.CallStatic<AndroidJavaObject>("getInterstitialAd", placementName);
         }
 
-        /// <inheritdoc cref="ChartboostMediationFullScreenBaseOLD.SetKeyword"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBase.SetKeyword"/>>
         public override bool SetKeyword(string keyword, string value)
         {
             base.SetKeyword(keyword, value);
             return _androidAd.Call<bool>("setKeyword", keyword, value);
         }
 
-        /// <inheritdoc cref="ChartboostMediationFullScreenBaseOLD.RemoveKeyword"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBase.RemoveKeyword"/>>
         public override string RemoveKeyword(string keyword)
         {
             base.RemoveKeyword(keyword);
             return _androidAd.Call<string>("removeKeyword", keyword);
         }
 
-        /// <inheritdoc cref="ChartboostMediationFullScreenBaseOLD.Destroy"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBase.Destroy"/>>
         public override void Destroy()
         {
             base.Destroy();
             _androidAd.Call("destroy");
         }
 
-        /// <inheritdoc cref="ChartboostMediationFullScreenBaseOLD.Load"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBase.Load"/>>
         public override void Load()
         {
             base.Load();
             _androidAd.Call("load");
         }
 
-        /// <inheritdoc cref="ChartboostMediationFullScreenBaseOLD.Show"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBase.Show"/>>
         public override void Show()
         {
             base.Show();
             _androidAd.Call("show");
         }
 
-        /// <inheritdoc cref="ChartboostMediationFullScreenBaseOLD.ReadyToShow"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBase.ReadyToShow"/>>
         public override bool ReadyToShow()
         {
             base.ReadyToShow();
             return _androidAd.Call<bool>("readyToShow");
         }
 
-        /// <inheritdoc cref="ChartboostMediationFullScreenBaseOLD.ClearLoaded"/>>
+        /// <inheritdoc cref="ChartboostMediationFullScreenBase.ClearLoaded"/>>
         public override void ClearLoaded()
         {
             base.ClearLoaded();

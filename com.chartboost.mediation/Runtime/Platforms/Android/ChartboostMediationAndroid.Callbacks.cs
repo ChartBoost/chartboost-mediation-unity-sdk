@@ -1,6 +1,7 @@
 #if UNITY_ANDROID
 using Chartboost.AdFormats.Fullscreen;
 using Chartboost.Placements;
+using Chartboost.Requests;
 using Chartboost.Utilities;
 using UnityEngine;
 // ReSharper disable InconsistentNaming
@@ -39,11 +40,8 @@ namespace Chartboost.Platforms.Android
             private ILRDObserver() : base(GetQualifiedNativeClassName("HeliumIlrdObserver")) { }
             public static readonly ILRDObserver Instance = new ILRDObserver();
 
-            private void onImpression(AndroidJavaObject impressionData)
-            {
-                Debug.LogError($"SCM - {impressionData.ImpressionDataToJsonString()}");
-                EventProcessor.ProcessEventWithILRD(impressionData.ImpressionDataToJsonString(), _instance.DidReceiveImpressionLevelRevenueData);
-            }
+            private void onImpression(AndroidJavaObject impressionData) 
+                => EventProcessor.ProcessEventWithILRD(impressionData.ImpressionDataToJsonString(), _instance.DidReceiveImpressionLevelRevenueData);
         }
 
         internal class PartnerInitializationResultsObserver : AndroidJavaProxy

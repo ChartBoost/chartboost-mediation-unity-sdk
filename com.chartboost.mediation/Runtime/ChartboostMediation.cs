@@ -1,9 +1,7 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Chartboost.Banner;
 using Chartboost.FullScreen.Interstitial;
 using Chartboost.FullScreen.Rewarded;
-using Chartboost.Placements;
 using Chartboost.Platforms;
 using Chartboost.Requests;
 #if UNITY_ANDROID

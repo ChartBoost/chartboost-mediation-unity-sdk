@@ -1,6 +1,7 @@
 using Chartboost.AdFormats.Fullscreen;
+using Chartboost.Placements;
 
-namespace Chartboost.Placements
+namespace Chartboost.Requests
 {
     #nullable enable
     public struct ChartboostMediationFullscreenAdLoadResult

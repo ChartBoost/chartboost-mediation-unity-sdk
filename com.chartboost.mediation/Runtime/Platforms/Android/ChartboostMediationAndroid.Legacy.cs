@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Chartboost.Platforms.Android
 {
-    public partial class ChartboostMediationAndroid
+    public sealed partial class ChartboostMediationAndroid
     {
         #region Interstitial Callbacks
         internal class InterstitialEventListener : AndroidJavaProxy

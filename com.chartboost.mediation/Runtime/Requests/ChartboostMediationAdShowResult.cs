@@ -1,6 +1,7 @@
 using System;
+using Chartboost.Placements;
 
-namespace Chartboost.Placements
+namespace Chartboost.Requests
 {
     #nullable enable
     [Serializable]

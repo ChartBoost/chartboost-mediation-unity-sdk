@@ -50,7 +50,7 @@ namespace Chartboost.Utilities
             return unityBridge.CallStatic<AndroidJavaObject>("toInitializationOptions", string.Empty, source);
         }
 
-#nullable enable
+        #nullable enable
         public static Metrics? JsonObjectToMetrics(this AndroidJavaObject source)
         {
             var jsonString = source.Call<string>("toString");
