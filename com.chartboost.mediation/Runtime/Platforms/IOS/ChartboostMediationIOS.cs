@@ -131,6 +131,13 @@ namespace Chartboost.Platforms.IOS
 
         public override async Task<ChartboostMediationFullscreenAdLoadResult> GetFullscreenAd(ChartboostMediationFullscreenAdLoadRequest request)
         {
+            if (!CanFetchAd(request.PlacementName))
+            {
+                var error = new ChartboostMediationError("Chartboost Mediation is not ready or placement is invalid.");
+                var adLoadResult = new ChartboostMediationFullscreenAdLoadResult(error);
+                return await Task.FromResult(adLoadResult);
+            }
+
             var (proxy, hashCode) = _setupProxy<ChartboostMediationFullscreenAdLoadResult>();
             CacheManager.TrackFullscreenAdLoadRequest(hashCode, request);
             var keywordsJson = string.Empty;

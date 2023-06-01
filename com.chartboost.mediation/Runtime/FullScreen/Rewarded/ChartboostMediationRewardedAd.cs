@@ -1,8 +1,11 @@
+using System;
+
 namespace Chartboost.FullScreen.Rewarded
 {
 	/// <summary>
 	/// Chartboost Mediation rewarded ad object.
 	/// </summary>
+	[Obsolete("ChartboostMediationRewardedAd has been deprecated, use the new fullscreen API instead.")]
 	public class ChartboostMediationRewardedAd : ChartboostMediationRewardedBase {
 		private readonly ChartboostMediationRewardedBase _platformRewarded;
 		

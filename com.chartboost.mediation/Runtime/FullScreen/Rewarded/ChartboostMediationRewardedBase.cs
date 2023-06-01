@@ -1,3 +1,4 @@
+using System;
 using Chartboost.Utilities;
 
 namespace Chartboost.FullScreen.Rewarded
@@ -5,6 +6,7 @@ namespace Chartboost.FullScreen.Rewarded
     /// <summary>
     /// Chartboost Mediation rewarded ad base structure.
     /// </summary>
+    [Obsolete("ChartboostMediationRewardedBase has been deprecated, use the new fullscreen API instead.")]
     public class ChartboostMediationRewardedBase : ChartboostMediationFullScreenBase, IChartBoostMediationRewardedAd
     {
         public ChartboostMediationRewardedBase(string placementName) : base(placementName) => logTag = "ChartboostMediationRewarded (Base)";

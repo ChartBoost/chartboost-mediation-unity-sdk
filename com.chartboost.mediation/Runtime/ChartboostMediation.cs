@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Chartboost.Banner;
 using Chartboost.FullScreen.Interstitial;
@@ -182,28 +183,24 @@ namespace Chartboost
         // Functions for showing ads
         //////////////////////////////////////////////////////
 
-        public static async Task<ChartboostMediationFullscreenAdLoadResult> GetFullscreenAd(ChartboostMediationFullscreenAdLoadRequest loadRequest)
-        {
-            return await _chartboostMediationExternal.GetFullscreenAd(loadRequest);
-        }
+        public static async Task<ChartboostMediationFullscreenAdLoadResult> GetFullscreenAd(ChartboostMediationFullscreenAdLoadRequest loadRequest) 
+            => await _chartboostMediationExternal.GetFullscreenAd(loadRequest);
 
         /// <summary>
         /// Returns a new ad unit that can be used to load and display interstitial ads.
         /// </summary>
         /// <param name="placementName">The placement ID for the Chartboost Mediation impression type.</param>
-        public static ChartboostMediationInterstitialAd GetInterstitialAd(string placementName)
-        {
-            return _chartboostMediationExternal.GetInterstitialAd(placementName);
-        }
+        [Obsolete("GetInterstitialAd has been deprecated and will be removed in future versions, use GetFullscreenAd instead.")]
+        public static ChartboostMediationInterstitialAd GetInterstitialAd(string placementName) 
+            => _chartboostMediationExternal.GetInterstitialAd(placementName);
 
         /// <summary>
         /// Returns a new ad unit that can be used to load and display rewarded video ads.
         /// </summary>
         /// <param name="placementName">The placement ID for the Chartboost Mediation impression type.</param>
+        [Obsolete("GetRewardedAd has been deprecated and will be removed in future versions, use GetFullscreenAd instead.")]
         public static ChartboostMediationRewardedAd GetRewardedAd(string placementName)
-        {
-            return _chartboostMediationExternal.GetRewardedAd(placementName);
-        }
+            => _chartboostMediationExternal.GetRewardedAd(placementName);
 
         /// <summary>
         /// Returns a new ad unit that can be used to load and display banner ads.
@@ -211,9 +208,7 @@ namespace Chartboost
         /// <param name="placementName">The placement ID for the Chartboost Mediation impression type.</param>
         /// <param name="size">The banner size</param>
         public static ChartboostMediationBannerAd GetBannerAd(string placementName, ChartboostMediationBannerAdSize size)
-        {
-            return _chartboostMediationExternal.GetBannerAd(placementName, size);
-        }
+            => _chartboostMediationExternal.GetBannerAd(placementName, size);
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Init()
