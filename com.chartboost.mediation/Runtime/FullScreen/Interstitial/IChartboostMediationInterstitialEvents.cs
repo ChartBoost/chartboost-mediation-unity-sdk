@@ -5,6 +5,7 @@ namespace Chartboost.FullScreen.Interstitial
     /// <summary>
     /// All interstitial placement callbacks.
     /// </summary>
+    [Obsolete("IChartboostMediationInterstitialEvents has been deprecated, use the new fullscreen API instead.")]
     public interface IChartboostMediationInterstitialEvents
     {
         /// <summary>
