@@ -120,6 +120,13 @@ namespace Chartboost.Platforms.Android
 
         public override async Task<ChartboostMediationFullscreenAdLoadResult> GetFullscreenAd(ChartboostMediationFullscreenAdLoadRequest request)
         {
+            if (!CanFetchAd(request.PlacementName))
+            {
+                var error = new ChartboostMediationError("Chartboost Mediation is not ready or placement is invalid.");
+                var adLoadResult = new ChartboostMediationFullscreenAdLoadResult(error);
+                return await Task.FromResult(adLoadResult);
+            }
+
             var adLoadListenerAwaitableProxy = new ChartboostMediationFullscreenAdLoadListener();
             try
             {

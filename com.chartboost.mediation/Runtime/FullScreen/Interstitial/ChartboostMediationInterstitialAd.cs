@@ -1,8 +1,11 @@
+using System;
+
 namespace Chartboost.FullScreen.Interstitial
 {
     /// <summary>
     /// Chartboost Mediation interstitial ad object.
     /// </summary>
+    [Obsolete("ChartboostMediationInterstitialAd has been deprecated, use the new fullscreen API instead.")]
     public class ChartboostMediationInterstitialAd : ChartboostMediationFullScreenBase
     {
         private readonly ChartboostMediationFullScreenBase _platformInterstitial;

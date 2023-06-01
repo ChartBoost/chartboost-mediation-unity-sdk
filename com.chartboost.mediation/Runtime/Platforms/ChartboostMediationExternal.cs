@@ -22,7 +22,7 @@ namespace Chartboost.Platforms
         {
             if (!CheckInitialized())
                 return false;
-            if (placementName != null) 
+            if (!string.IsNullOrEmpty(placementName)) 
                 return true;
             Logger.LogError(LogTag, "placementName passed is null cannot perform the operation requested");
             return false;
@@ -80,6 +80,7 @@ namespace Chartboost.Platforms
 
         public abstract Task<ChartboostMediationFullscreenAdLoadResult> GetFullscreenAd(ChartboostMediationFullscreenAdLoadRequest request);
       
+        [Obsolete("GetInterstitialAd has been deprecated and will be removed in future versions, use GetFullscreenAd instead.")]
         public ChartboostMediationInterstitialAd GetInterstitialAd(string placementName)
         {
             Logger.Log(LogTag, $"GetInterstitialAd at placement: {placementName}");
@@ -96,6 +97,7 @@ namespace Chartboost.Platforms
             }
         }
         
+        [Obsolete("GetRewardedAd has been deprecated and will be removed in future versions, use GetFullscreenAd instead.")]
         public ChartboostMediationRewardedAd GetRewardedAd(string placementName)
         {
             Logger.Log(LogTag, $"GetRewardedAd at placement: {placementName}");

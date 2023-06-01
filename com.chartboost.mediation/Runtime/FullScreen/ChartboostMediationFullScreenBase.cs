@@ -1,3 +1,4 @@
+using System;
 using Chartboost.Interfaces;
 using Chartboost.Utilities;
 
@@ -6,6 +7,7 @@ namespace Chartboost.FullScreen
     /// <summary>
     /// Chartboost Mediation fullscreen ad base structure.
     /// </summary>
+    [Obsolete("ChartboostMediationFullScreenBase has been deprecated, use the new fullscreen API instead.")]
     public abstract class ChartboostMediationFullScreenBase : IChartboostMediationAd, IChartboostMediationFullScreenAdOld
     {
         protected static string logTag = "ChartboostMediationFullScreen (Base)";

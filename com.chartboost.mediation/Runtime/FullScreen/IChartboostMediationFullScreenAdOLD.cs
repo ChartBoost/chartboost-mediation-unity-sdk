@@ -1,8 +1,11 @@
+using System;
+
 namespace Chartboost.FullScreen
 {
     /// <summary>
     /// Interface implemented by Chartboost Mediation fullscreen ads. 
     /// </summary>
+    [Obsolete("IChartboostMediationFullScreenAdOld has been deprecated, use the new fullscreen API instead.")]
     public interface IChartboostMediationFullScreenAdOld
     {
         /// <summary>
