@@ -1,6 +1,5 @@
 package com.chartboost.mediation.unity
 
-import android.util.Log
 import com.chartboost.heliumsdk.*
 import com.chartboost.heliumsdk.ad.*
 import com.chartboost.heliumsdk.ad.HeliumBannerAd.HeliumBannerSize
@@ -17,7 +16,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Suppress("NAME_SHADOWING")
 class UnityBridge {
 
     companion object {
@@ -65,37 +63,37 @@ class UnityBridge {
             val interstitialAd = HeliumInterstitialAd(UnityPlayer.currentActivity, placementName, object : HeliumFullscreenAdListener {
                 override fun onAdCached(placementName: String, loadId: String, winningBidInfo: Map<String, String>, error: ChartboostMediationAdException?) {
                     serializeLoadEvent(placementName, loadId, winningBidInfo, error,
-                        LoadEventConsumer { placementName: String, loadId: String, auctionId: String, partnerId: String, price: Double, error: String ->
-                            interstitialEventsListener?.DidLoadInterstitial(placementName, loadId, auctionId, partnerId, price, error)
+                        LoadEventConsumer { eventPlacementName: String, eventLoadId: String, auctionId: String, partnerId: String, price: Double, eventError: String ->
+                            interstitialEventsListener?.DidLoadInterstitial(eventPlacementName, eventLoadId, auctionId, partnerId, price, eventError)
                         }
                     )
                 }
 
                 override fun onAdShown(placementName: String, error: ChartboostMediationAdException?) {
                     serializeEventWithException(placementName, error,
-                        EventWithErrorConsumer { placementName: String, error: String ->
-                            interstitialEventsListener?.DidShowInterstitial(placementName, error)
+                        EventWithErrorConsumer { eventPlacementName: String, eventError: String ->
+                            interstitialEventsListener?.DidShowInterstitial(eventPlacementName, eventError)
                         })
                 }
 
                 override fun onAdClosed(placementName: String, error: ChartboostMediationAdException?) {
                     serializeEventWithException(placementName, error,
-                        EventWithErrorConsumer { placementName: String, error: String ->
-                            interstitialEventsListener?.DidCloseInterstitial(placementName, error)
+                        EventWithErrorConsumer { eventPlacementName: String, eventError: String ->
+                            interstitialEventsListener?.DidCloseInterstitial(eventPlacementName, eventError)
                         })
                 }
 
                 override fun onAdClicked(placementName: String) {
                     serializeEvent(placementName,
-                        EventConsumer { placementName: String ->
-                            interstitialEventsListener?.DidClickInterstitial(placementName)
+                        EventConsumer { eventPlacementName: String ->
+                            interstitialEventsListener?.DidClickInterstitial(eventPlacementName)
                         })
                 }
 
                 override fun onAdImpressionRecorded(placementName: String) {
                     serializeEvent(placementName,
-                        EventConsumer { placementName: String ->
-                            interstitialEventsListener?.DidRecordImpression(placementName)
+                        EventConsumer { eventPlacementName: String ->
+                            interstitialEventsListener?.DidRecordImpression(eventPlacementName)
                         })
                 }
 
@@ -112,44 +110,44 @@ class UnityBridge {
             val rewardedAd = HeliumRewardedAd(UnityPlayer.currentActivity, placementName, object : HeliumFullscreenAdListener {
                 override fun onAdCached(placementName: String, loadId: String, winningBidInfo: Map<String, String>, error: ChartboostMediationAdException?) {
                     serializeLoadEvent(placementName, loadId, winningBidInfo, error,
-                        LoadEventConsumer { placementName: String, loadId: String, auctionId: String, partnerId: String, price: Double, error: String ->
-                            rewardedEventListener?.DidLoadRewarded(placementName, loadId, auctionId, partnerId, price, error)
+                        LoadEventConsumer { eventPlacementName: String, eventLoadId: String, auctionId: String, partnerId: String, price: Double, eventError: String ->
+                            rewardedEventListener?.DidLoadRewarded(eventPlacementName, eventLoadId, auctionId, partnerId, price, eventError)
                         }
                     )
                 }
 
                 override fun onAdShown(placementName: String, error: ChartboostMediationAdException?) {
                     serializeEventWithException(placementName, error,
-                        EventWithErrorConsumer { placementName: String, error: String ->
-                            rewardedEventListener?.DidShowRewarded(placementName, error)
+                        EventWithErrorConsumer { eventPlacementName: String, eventError: String ->
+                            rewardedEventListener?.DidShowRewarded(eventPlacementName, eventError)
                         })
                 }
 
                 override fun onAdClosed(placementName: String, error: ChartboostMediationAdException?) {
                     serializeEventWithException(placementName, error,
-                        EventWithErrorConsumer { placementName: String, error: String ->
-                            rewardedEventListener?.DidCloseRewarded(placementName, error)
+                        EventWithErrorConsumer { eventPlacementName: String, eventError: String ->
+                            rewardedEventListener?.DidCloseRewarded(eventPlacementName, eventError)
                         })
                 }
 
                 override fun onAdClicked(placementName: String) {
                     serializeEvent(placementName,
-                        EventConsumer { placementName: String ->
-                            rewardedEventListener?.DidClickRewarded(placementName)
+                        EventConsumer { eventPlacementName: String ->
+                            rewardedEventListener?.DidClickRewarded(eventPlacementName)
                         })
                 }
 
                 override fun onAdImpressionRecorded(placementName: String) {
                     serializeEvent(placementName,
-                        EventConsumer { placementName: String ->
-                            rewardedEventListener?.DidRecordImpression(placementName)
+                        EventConsumer { eventPlacementName: String ->
+                            rewardedEventListener?.DidRecordImpression(eventPlacementName)
                         })
                 }
 
                 override fun onAdRewarded(placementName: String) {
                     serializeEvent(placementName,
-                        EventConsumer { placementName: String->
-                            rewardedEventListener?.DidReceiveReward(placementName)
+                        EventConsumer { eventPlacementName: String->
+                            rewardedEventListener?.DidReceiveReward(eventPlacementName)
                         })
                 }
             })
@@ -164,12 +162,13 @@ class UnityBridge {
                 0 -> wantedSize = HeliumBannerSize.STANDARD
                 1 -> wantedSize = HeliumBannerSize.MEDIUM
                 2 -> wantedSize = HeliumBannerSize.LEADERBOARD
+                else -> HeliumBannerSize.STANDARD
             }
             val bannerAd = HeliumBannerAd(UnityPlayer.currentActivity, placementName, wantedSize, object : HeliumBannerAdListener {
                 override fun onAdCached(placementName: String, loadId: String, winningBidInfo: Map<String, String>, error: ChartboostMediationAdException?) {
                     serializeLoadEvent(placementName, loadId, winningBidInfo, error,
-                        LoadEventConsumer { placementName: String, loadId: String, auctionId: String, partnerId: String, price: Double, error: String ->
-                            bannerEventsListener?.DidLoadBanner(placementName, loadId, auctionId, partnerId, price, error)
+                        LoadEventConsumer { eventPlacementName: String, eventLoadId: String, auctionId: String, partnerId: String, price: Double, eventError: String ->
+                            bannerEventsListener?.DidLoadBanner(eventPlacementName, eventLoadId, auctionId, partnerId, price, eventError)
                         }
                     )
                 }
@@ -177,16 +176,16 @@ class UnityBridge {
                 override fun onAdClicked(placementName: String) {
                     serializeEvent(
                         placementName,
-                        EventConsumer { placementName: String ->
-                            bannerEventsListener?.DidClickBanner(placementName)
+                        EventConsumer { eventPlacementName: String ->
+                            bannerEventsListener?.DidClickBanner(eventPlacementName)
                         })
                 }
 
                 override fun onAdImpressionRecorded(placementName: String) {
                     serializeEvent(
                         placementName,
-                        EventConsumer { placementName: String ->
-                            bannerEventsListener?.DidRecordImpression(placementName)
+                        EventConsumer { eventPlacementName: String ->
+                            bannerEventsListener?.DidRecordImpression(eventPlacementName)
                         })
                 }
             })
