@@ -1,5 +1,6 @@
 #if UNITY_ANDROID
-using Chartboost.Platforms;
+using Chartboost.Interfaces;
+using Chartboost.Platforms.Android;
 using UnityEngine;
 
 namespace Chartboost.Banner
@@ -14,7 +15,8 @@ namespace Chartboost.Banner
         public ChartboostMediationBannerAndroid(string placementName, ChartboostMediationBannerAdSize size) : base(placementName, size)
         {
             LogTag = "ChartboostMediationBanner (Android)";
-            _androidAd = ChartboostMediationAndroid.plugin().Call<AndroidJavaObject>("getBannerAd", placementName, (int)size);
+            using var unityBridge = ChartboostMediationAndroid.GetUnityBridge();
+            _androidAd = unityBridge.CallStatic<AndroidJavaObject>("getBannerAd", placementName, (int)size);
         }
 
         /// <inheritdoc cref="IChartboostMediationAd.SetKeyword"/>>

@@ -1,8 +1,14 @@
-using Chartboost;
+using System.Threading.Tasks;
 using Chartboost.Banner;
 using Chartboost.FullScreen.Interstitial;
 using Chartboost.FullScreen.Rewarded;
 using Chartboost.Platforms;
+using Chartboost.Requests;
+#if UNITY_ANDROID
+using Chartboost.Platforms.Android;
+#elif UNITY_IOS
+using Chartboost.Platforms.IOS;
+#endif
 using UnityEngine;
 
 // ReSharper disable InconsistentNaming
@@ -13,7 +19,7 @@ namespace Chartboost
     ///  For more information on integrating and using Chartboost Mediation
     ///  please visit our help site documentation at https://help.chartboost.com
     /// </summary>
-    public class ChartboostMediation
+    public sealed class ChartboostMediation
     {
         internal static readonly ChartboostMediationExternal _chartboostMediationExternal;
 
@@ -175,6 +181,11 @@ namespace Chartboost
         //////////////////////////////////////////////////////
         // Functions for showing ads
         //////////////////////////////////////////////////////
+
+        public static async Task<ChartboostMediationFullscreenAdLoadResult> GetFullscreenAd(ChartboostMediationFullscreenAdLoadRequest loadRequest)
+        {
+            return await _chartboostMediationExternal.GetFullscreenAd(loadRequest);
+        }
 
         /// <summary>
         /// Returns a new ad unit that can be used to load and display interstitial ads.

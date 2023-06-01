@@ -2,18 +2,21 @@ package com.chartboost.mediation.unity
 
 import android.util.Log
 import com.chartboost.heliumsdk.domain.ChartboostMediationAdException
-import org.json.JSONException
-import org.json.JSONObject
 
+@Deprecated("EventProcessor utilizes deprecated APIs and will be removed in the future")
 object EventProcessor {
     private val TAG = EventProcessor::class.java.simpleName
+
+    private fun getAuctionData(key: String, data: Map<String, String>?, defaultValue: String = ""): String {
+        return data?.get(key) ?: defaultValue
+    }
 
     @JvmStatic
     fun serializeEvent(placementName: String, eventConsumer: EventConsumer<String>)
         = eventConsumer.accept(placementName)
 
     @JvmStatic
-    fun serializeEventWithError(placementName: String, error: ChartboostMediationAdException?, eventConsumer: EventWithErrorConsumer<String, String>)
+    fun serializeEventWithException(placementName: String, error: ChartboostMediationAdException?, eventConsumer: EventWithErrorConsumer<String, String>)
         = eventConsumer.accept(placementName,error?.toString() ?: "")
 
     @JvmStatic
@@ -21,8 +24,8 @@ object EventProcessor {
                            loadConsumer: LoadEventConsumer<String, String, String, String, Double, String>) {
         val errorMessage = error?.toString() ?: ""
 
-        val partnerId = data["partner_id"] ?: ""
-        val auctionId = data["auction-id"] ?: ""
+        val partnerId =  getAuctionData("partner_id", data)
+        val auctionId = getAuctionData("auction-id", data)
         val price = try {
             data["price"]?.toDouble() ?: 0.0
         } catch (e: NumberFormatException) {
@@ -31,19 +34,6 @@ object EventProcessor {
         }
 
         loadConsumer.accept(placementName, loadId, auctionId, partnerId, price, errorMessage)
-    }
-
-    @JvmStatic
-    fun serializePlacementIlrdData(placementName: String, ilrdInfo: JSONObject?): String {
-        return try {
-            JSONObject().apply {
-                put("placementName", placementName)
-                put("ilrd", ilrdInfo)
-            }.toString()
-        } catch (e: JSONException) {
-            Log.d(TAG, "serializeError", e)
-            ""
-        }
     }
 
     fun interface EventConsumer<PlacementName>{

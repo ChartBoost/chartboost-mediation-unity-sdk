@@ -1,6 +1,6 @@
 {
   "name": "com.chartboost.mediation",
-  "version": "4.2.3",
+  "version": "4.3.0",
   "displayName": "Chartboost Mediation",
   "description": "The Chartboost Mediation Unity SDK. Better monetization powered by bidding",
   "unity": "2020.3",
@@ -9,7 +9,7 @@
   "changelogUrl": "https://developers.chartboost.com/docs/mediation-unity-changelog",
   "licensesUrl": "https://answers.chartboost.com/child_article/legal",
   "dependencies": {
-    "com.unity.nuget.newtonsoft-json": "3.0.2"
+    "com.unity.nuget.newtonsoft-json": "3.2.1"
   },
   "keywords": [],
   "author": {

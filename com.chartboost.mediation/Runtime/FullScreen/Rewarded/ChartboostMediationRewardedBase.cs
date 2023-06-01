@@ -1,3 +1,5 @@
+using Chartboost.Utilities;
+
 namespace Chartboost.FullScreen.Rewarded
 {
     /// <summary>

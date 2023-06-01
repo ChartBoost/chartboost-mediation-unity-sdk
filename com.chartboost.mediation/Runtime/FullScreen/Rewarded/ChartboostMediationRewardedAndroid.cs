@@ -1,5 +1,5 @@
 #if UNITY_ANDROID
-using Chartboost.Platforms;
+using Chartboost.Platforms.Android;
 using UnityEngine;
 
 namespace Chartboost.FullScreen.Rewarded
@@ -14,7 +14,8 @@ namespace Chartboost.FullScreen.Rewarded
         public ChartboostMediationRewardedAndroid(string placementName) : base(placementName)
         {
             logTag = "ChartboostMediationRewarded (Android)";
-            _androidAd = ChartboostMediationAndroid.plugin().Call<AndroidJavaObject>("getRewardedAd", placementName);
+            using var unityBridge = ChartboostMediationAndroid.GetUnityBridge();
+            _androidAd = unityBridge.CallStatic<AndroidJavaObject>("getRewardedAd", placementName);
         }
         
         // *NOTE* Implementation for Rewarded/FullScreen is very similar, and it could be simplified on a single file,

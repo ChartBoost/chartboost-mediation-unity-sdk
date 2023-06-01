@@ -2,10 +2,10 @@ using System;
 using System.ComponentModel;
 using UnityEngine;
 using System.IO;
-using Chartboost;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+using Logger = Chartboost.Utilities.Logger;
 
 namespace Chartboost
 {

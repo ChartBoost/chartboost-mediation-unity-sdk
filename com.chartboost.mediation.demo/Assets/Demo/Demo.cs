@@ -1,42 +1,32 @@
-using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using Chartboost;
+using Chartboost.AdFormats.Fullscreen;
 using Chartboost.Banner;
-using Chartboost.FullScreen.Interstitial;
-using Chartboost.FullScreen.Rewarded;
+using Chartboost.Requests;
 using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 [SuppressMessage("ReSharper", "InconsistentNaming")]
 public class Demo : MonoBehaviour
 {
-#if UNITY_ANDROID
-    private const string DefaultPlacementInterstitial = "CBInterstitial";
-    private const string DefaultPlacementRewarded = "CBRewarded";
-#else
-    private const string DefaultPlacementInterstitial = "Startup";
-    private const string DefaultPlacementRewarded = "Startup-Rewarded";
-#endif
+    private const string DefaultPlacementFullscreen = "CBRewarded";
     private const string DefaultPlacementBanner = "AllNetworkBanner";
     private const string DefaultUserIdentifier = "123456";
-    private const string DefaultRewardedAdCustomData = "{\"testkey\":\"testvalue\"}";
+    private const string DefaultFullscreenAdCustomData = "{\"testkey\":\"testvalue\"}";
 
     // advertisement type selection
     public GameObject fullScreenPanel;
     public GameObject bannerPanel;
 
     // interstitial controls
-    public InputField interstitialPlacementInputField;
-    private ChartboostMediationInterstitialAd _interstitialAd;
-
-    // rewarded controls
-    public InputField rewardedPlacementInputField;
-    private ChartboostMediationRewardedAd _rewardedAd;
-
+    public InputField fullscreenPlacementInputField;
+    private IChartboostMediationFullscreenAd _fullscreenAd;
+    
     // banner controls
     public InputField bannerPlacementInputField;
     public Dropdown bannerSizeDropdown;
@@ -50,7 +40,6 @@ public class Demo : MonoBehaviour
     public GameObject objectToDestroyForTest;
 
     #region Lifecycle
-
     private void Awake()
     {
         Application.targetFrameRate = 60;
@@ -58,11 +47,9 @@ public class Demo : MonoBehaviour
         ChartboostMediation.DidReceivePartnerInitializationData += DidReceivePartnerInitializationData;
         ChartboostMediation.DidReceiveImpressionLevelRevenueData += DidReceiveImpressionLevelRevenueData;
         ChartboostMediation.UnexpectedSystemErrorDidOccur += UnexpectedSystemErrorDidOccur;
-        SetupInterstitialDelegates();
-        SetupRewardedDelegates();
         SetupBannerDelegates();
     }
-
+    
     private void Start()
     {
         if (outputText != null)
@@ -70,8 +57,7 @@ public class Demo : MonoBehaviour
         fullScreenPanel.SetActive(true);
         bannerPanel.SetActive(false);
 
-        interstitialPlacementInputField.SetTextWithoutNotify(DefaultPlacementInterstitial);
-        rewardedPlacementInputField.SetTextWithoutNotify(DefaultPlacementRewarded);
+        fullscreenPlacementInputField.SetTextWithoutNotify(DefaultPlacementFullscreen);
         bannerPlacementInputField.SetTextWithoutNotify(DefaultPlacementBanner);
 
         ChartboostMediation.StartWithAppIdAndAppSignature(ChartboostMediationSettings.AppId, ChartboostMediationSettings.AppSignature);
@@ -79,24 +65,14 @@ public class Demo : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (_interstitialAd != null)
-        {
-            _interstitialAd.ClearLoaded();
-            _interstitialAd.Destroy();
-            Log("destroyed an existing interstitial");
-        }
-        if (_rewardedAd != null)
-        {
-            _rewardedAd.ClearLoaded();
-            _rewardedAd.Destroy();
-            Log("destroyed an existing rewarded");
-        }
-        if (_bannerAd != null)
-        {
-            _bannerAd.ClearLoaded();
-            _bannerAd.Destroy();
-            Log("destroyed an existing banner");
-        }
+        OnInvalidateFullscreenClick();
+
+        if (_bannerAd == null) 
+            return;
+        
+        _bannerAd.ClearLoaded();
+        _bannerAd.Destroy();
+        Log("destroyed an existing banner");
     }
 
     private void DidStart(string error)
@@ -137,180 +113,103 @@ public class Demo : MonoBehaviour
 
     #endregion
 
-    #region Interstitials
-
-    private void SetupInterstitialDelegates()
+    #region Fullscreen
+    public async void OnLoadFullscreenClick()
     {
-        ChartboostMediation.DidLoadInterstitial += DidLoadInterstitial;
-        ChartboostMediation.DidShowInterstitial += DidShowInterstitial;
-        ChartboostMediation.DidCloseInterstitial += DidCloseInterstitial;
-        ChartboostMediation.DidClickInterstitial += DidClickInterstitial;
-        ChartboostMediation.DidRecordImpressionInterstitial += DidRecordImpressionInterstitial;
-    }
-
-    public void OnCacheInterstitialClick()
-    {
-        _interstitialAd = ChartboostMediation.GetInterstitialAd(interstitialPlacementInputField.text);
-
-        if (_interstitialAd == null)
+        var keywords = new Dictionary<string, string>()
         {
-            Log("Interstitial Ad not found");
-            return;
-        }
+            { "i12_keyword1", "i12_value1" },
+            { "i12_keyword2", "i12_value2" }
+        };
 
-        // example keywords usage
-        _interstitialAd.SetKeyword("i12_keyword1", "i12_value1"); // accepted set
-        _interstitialAd.SetKeyword("i12_keyword2", "i12_value2"); // accepted set
-        _interstitialAd.SetKeyword(GenerateRandomString(65), "i12_value2"); // rejected set
-        _interstitialAd.SetKeyword("i12_keyword3", GenerateRandomString(257)); // rejected set
-        _interstitialAd.SetKeyword("i12_keyword4", "i12_value4"); // accepted set
-        var keyword4 = this._interstitialAd.RemoveKeyword("i12_keyword4"); // removal of existing
-        _interstitialAd.RemoveKeyword("i12_keyword4"); // removal of non-existing
-        _interstitialAd.SetKeyword("i12_keyword5", keyword4); // accepted set using prior value
-        _interstitialAd.SetKeyword("i12_keyword6", "i12_value6"); // accepted set
-        _interstitialAd.SetKeyword("i12_keyword6", "i12_value6_replaced"); // accepted replace
+        var loadRequest = new ChartboostMediationFullscreenAdLoadRequest(fullscreenPlacementInputField.text, keywords);
 
-        _interstitialAd.Load();
-    }
-
-    public void OnClearInterstitialClick()
-    {
-        if (_interstitialAd == null)
-        {
-            Log("interstitial ad does not exist");
-            return;
-        }
-
-        _interstitialAd.ClearLoaded();
-        Log("interstitial ad has been cleared");
-    }
-
-    public void OnDestroyInterstitial()
-    {
-        if (_interstitialAd == null)
-        {
-            Log("interstitial ad does not exist");
-            return;
-        }
+        loadRequest.DidClick += fullscreenAd => {
+            Log($"DidClick Name: {fullscreenAd.Request.PlacementName}");
+        };
         
-        _interstitialAd.Destroy();
-        _interstitialAd = null;
-        Log("interstitial ad has been destroyed");
+        loadRequest.DidClose += (fullscreenAd, error) =>
+        {
+            Log(!error.HasValue
+                ? $"DidClose Name: {fullscreenAd.Request.PlacementName}"
+                : $"DidClose Name: {fullscreenAd.Request.PlacementName}, Code: {error?.code}, Message: {error?.message}");
+        };
+        
+        loadRequest.DidReward += fullscreenAd =>
+        {
+            Log($"DidReward Name: {fullscreenAd.Request.PlacementName}");
+        };
+        
+        loadRequest.DidRecordImpression += fullscreenAd =>
+        {
+            Log($"DidImpressionRecorded Name: {fullscreenAd.Request.PlacementName}");
+        };
+        
+        loadRequest.DidExpire += fullscreenAd =>
+        {
+            Log($"DidExpire Name: {fullscreenAd.Request.PlacementName}");
+        };
+
+        var loadResult = await ChartboostMediation.GetFullscreenAd(loadRequest);
+        
+        // Failed to Load
+        if (loadResult.Error.HasValue)
+        {
+            var error = loadResult.Error.Value;
+            Log($"Fullscreen Failed to Load: {error.code}, message: {error.message}");
+            return;
+        }
+
+        // Loaded but AD is null?
+        _fullscreenAd = loadResult.AD;
+        if (_fullscreenAd == null)
+        {
+            Log("Fullscreen Ad is null but no error was found???");
+            return;
+        }
+
+        // DidLoad
+        _fullscreenAd.CustomData = DefaultFullscreenAdCustomData;
+        var customData = _fullscreenAd.CustomData;
+        var adRequestId = _fullscreenAd.LoadId;
+        var bidInfo = _fullscreenAd.WinningBidInfo;
+        var placementName = _fullscreenAd?.Request?.PlacementName;
+        var requestId = loadResult.RequestId;
+        var metrics = loadResult.Metrics;
+        Log($"Fullscreen: {placementName} Loaded with: \nAdRequestId {adRequestId} \nRequestID {requestId} \nBidInfo: {JsonConvert.SerializeObject(bidInfo, Formatting.Indented)} \n Metrics:{JsonConvert.SerializeObject(metrics, Formatting.Indented)} \n Custom Data: {customData}");
     }
 
-    public void OnShowInterstitialClick()
+    public void OnInvalidateFullscreenClick()
     {
-        if (_interstitialAd != null && _interstitialAd.ReadyToShow())
-            _interstitialAd.Show();
+        if (_fullscreenAd == null)
+        {
+            Log("fullscreen ad does not exist");
+            return;
+        }
+
+        _fullscreenAd.Invalidate();
+        Log("interstitial ad does not exist");
     }
 
-    private void DidLoadInterstitial(string placementName, string loadId, BidInfo info, string error) 
-        => Log($"DidLoadInterstitial {placementName}: \nLoadId: ${loadId} \nPrice: ${info.Price:F4} \nAuction Id: {info.AuctionId} \nPartner Id: {info.PartnerId} \nError: {error}");
+    public async void OnShowFullscreenClick()
+    {
+        if (_fullscreenAd == null)
+            return;
 
-    private  void DidShowInterstitial(string placementName, string error) 
-        => Log($"DidShowInterstitial {placementName}: {error}");
+        var adShowResult = await _fullscreenAd.Show();
+        var error = adShowResult.error;
+        
+        if (adShowResult.error.HasValue)
+        {
+            Log($"Fullscreen Failed to Show with Value: {error.Value.code}, {error.Value.message}");
+            return;
+        }
 
-    private void DidCloseInterstitial(string placementName, string error) 
-        => Log($"DidCloseInterstitial {placementName}: {error}");
-    
-    private void DidClickInterstitial(string placementName, string error) 
-        => Log($"DidClickInterstitial {placementName}: {error}");
-
-    private void DidRecordImpressionInterstitial(string placementName, string error) 
-        => Log($"DidRecordImpressionInterstitial {placementName}: {error}");
+        var metrics = adShowResult.metrics;
+        Log($"Fullscreen Ad Did Show: {JsonConvert.SerializeObject(metrics, Formatting.Indented)}");
+    }
     #endregion
-
-    #region Rewarded
-
-    private void SetupRewardedDelegates()
-    {
-        ChartboostMediation.DidLoadRewarded += DidLoadRewarded;
-        ChartboostMediation.DidShowRewarded += DidShowRewarded;
-        ChartboostMediation.DidCloseRewarded += DidCloseRewarded;
-        ChartboostMediation.DidReceiveReward += DidReceiveReward;
-        ChartboostMediation.DidClickRewarded += DidClickRewarded;
-        ChartboostMediation.DidRecordImpressionRewarded += DidRecordImpressionRewarded;
-    }
-
-    public void OnCacheRewardedClick()
-    {
-        _rewardedAd = ChartboostMediation.GetRewardedAd(rewardedPlacementInputField.text);
-        
-        if (_rewardedAd == null)
-        {
-            Log("Rewarded Ad not found");
-            return;
-        }
-
-        // example keywords usage
-        _rewardedAd.SetKeyword("rwd_keyword1", "rwd_value1"); // accepted set
-        _rewardedAd.SetKeyword("rwd_keyword2", "rwd_value2"); // accepted set
-        _rewardedAd.SetKeyword(GenerateRandomString(65), "rwd_value2"); // rejected set
-        _rewardedAd.SetKeyword("rwd_keyword3", GenerateRandomString(257)); // rejected set
-        _rewardedAd.SetKeyword("rwd_keyword4", "rwd_value4"); // accepted set
-        var keyword4 = this._rewardedAd.RemoveKeyword("rwd_keyword4"); // removal of existing
-        _rewardedAd.RemoveKeyword("rwd_keyword4"); // removal of non-existing
-        _rewardedAd.SetKeyword("rwd_keyword5", keyword4); // accepted set using prior value
-        _rewardedAd.SetKeyword("rwd_keyword6", "rwd_value6"); // accepted set
-        _rewardedAd.SetKeyword("rwd_keyword6", "rwd_value6_replaced"); // accepted replace
-
-        // example custom data usage
-        var bytesToEncode = Encoding.UTF8.GetBytes(DefaultRewardedAdCustomData);
-        var encodedText = Convert.ToBase64String(bytesToEncode);
-        _rewardedAd.SetCustomData(encodedText);
-
-        _rewardedAd.Load();
-    }
-
-    public void OnClearRewardedClick()
-    {
-        if (_rewardedAd == null)
-        {
-            Log("rewarded ad does not exist");
-            return;
-        }
-        _rewardedAd.ClearLoaded();
-        Log("rewarded ad has been cleared");
-    }
     
-    public void OnDestroyRewarded()
-    {
-        if (_rewardedAd == null)
-        {
-            Log("rewarded ad does not exist");
-            return;
-        }
-        
-        _rewardedAd.Destroy();
-        _rewardedAd = null;
-        Log("rewarded ad has been destroyed");
-    }
-
-    public void OnShowRewardedClick()
-    {
-        if (_rewardedAd != null && _rewardedAd.ReadyToShow())
-            _rewardedAd.Show();
-    }
-
-    private void DidLoadRewarded(string placementName, string loadId, BidInfo info, string error)
-        => Log($"DidLoadRewarded {placementName} \nLoadId: ${loadId} \nPrice: ${info.Price:F4} \nAuction Id: {info.AuctionId} \nPartner Id: {info.PartnerId} \nError: {error}");
-
-    private void DidShowRewarded(string placementName, string error) 
-        => Log($"DidShowRewarded {placementName}: {error}");
-
-    private void DidCloseRewarded(string placementName, string error) 
-        => Log($"DidCloseRewarded {placementName}: {error}");
-
-    private void DidClickRewarded(string placementName, string error) 
-        => Log($"DidClickRewarded {placementName}: {error}");
-
-    private void DidRecordImpressionRewarded(string placementName, string error) 
-        => Log($"DidRecordImpressionRewarded {placementName}: {error}");
-    
-    private void DidReceiveReward(string placementName, string error) 
-        => Log($"DidReceiveReward {placementName}: {error}");
-    #endregion
-
     #region Banners
     private void SetupBannerDelegates()
     {

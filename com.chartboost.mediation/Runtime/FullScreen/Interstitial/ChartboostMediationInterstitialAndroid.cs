@@ -1,5 +1,6 @@
 #if UNITY_ANDROID
 using Chartboost.Platforms;
+using Chartboost.Platforms.Android;
 using UnityEngine;
 
 namespace Chartboost.FullScreen.Interstitial
@@ -14,7 +15,8 @@ namespace Chartboost.FullScreen.Interstitial
         public ChartboostMediationInterstitialAndroid(string placementName) : base(placementName)
         {
             logTag = "ChartboostMediationInterstitial (Android)";
-            _androidAd = ChartboostMediationAndroid.plugin().Call<AndroidJavaObject>("getInterstitialAd", placementName);
+            using var unityBridge = ChartboostMediationAndroid.GetUnityBridge();
+            _androidAd = unityBridge.CallStatic<AndroidJavaObject>("getInterstitialAd", placementName);
         }
 
         /// <inheritdoc cref="ChartboostMediationFullScreenBase.SetKeyword"/>>

@@ -1,7 +1,6 @@
-using Chartboost;
 using UnityEngine;
 
-namespace Chartboost
+namespace Chartboost.Utilities
 {
     /// <summary>
     /// Chartboost Mediation utility logger which accounts for ChartboostMediationSettings.
