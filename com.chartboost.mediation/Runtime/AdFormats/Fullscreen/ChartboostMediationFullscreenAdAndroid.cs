@@ -1,4 +1,5 @@
 #if UNITY_ANDROID
+using System;
 using System.Threading.Tasks;
 using Chartboost.Placements;
 using Chartboost.Platforms.Android;
@@ -41,8 +42,15 @@ namespace Chartboost.AdFormats.Fullscreen
         public async Task<ChartboostMediationAdShowResult> Show()
         {
             var adShowListenerAwaitableProxy = new ChartboostMediationAndroid.ChartboostMediationFullscreenAdShowListener();
-            using var unityBridge = ChartboostMediationAndroid.GetUnityBridge();
-            unityBridge.CallStatic("showFullscreenAd", _chartboostMediationFullscreenAd, adShowListenerAwaitableProxy);
+            try
+            {
+                using var unityBridge = ChartboostMediationAndroid.GetUnityBridge();
+                unityBridge.CallStatic("showFullscreenAd", _chartboostMediationFullscreenAd, adShowListenerAwaitableProxy);
+            }
+            catch (NullReferenceException exception)
+            {
+                EventProcessor.ReportUnexpectedSystemError(exception.ToString());
+            }
             return await adShowListenerAwaitableProxy;
         }
 

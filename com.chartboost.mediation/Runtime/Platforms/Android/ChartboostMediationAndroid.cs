@@ -1,4 +1,5 @@
 #if UNITY_ANDROID
+using System;
 using System.Threading.Tasks;
 using Chartboost.Placements;
 using Chartboost.Requests;
@@ -120,10 +121,17 @@ namespace Chartboost.Platforms.Android
         public override async Task<ChartboostMediationFullscreenAdLoadResult> GetFullscreenAd(ChartboostMediationFullscreenAdLoadRequest request)
         {
             var adLoadListenerAwaitableProxy = new ChartboostMediationFullscreenAdLoadListener();
-            CacheManager.TrackFullscreenAdLoadRequest(adLoadListenerAwaitableProxy.hashCode(), request);
-            var nativeAdRequest = new AndroidJavaObject(GetQualifiedNativeClassName("ChartboostMediationAdLoadRequest", true), request.PlacementName, request.Keywords.ToKeywords());
-            using var bridge = GetUnityBridge();
-            bridge.CallStatic("getFullscreenAd", nativeAdRequest, adLoadListenerAwaitableProxy, ChartboostMediationFullscreenAdListener.Instance);
+            try
+            {
+                CacheManager.TrackFullscreenAdLoadRequest(adLoadListenerAwaitableProxy.hashCode(), request);
+                using var nativeAdRequest = new AndroidJavaObject(GetQualifiedNativeClassName("ChartboostMediationAdLoadRequest", true), request.PlacementName, request.Keywords.ToKeywords());
+                using var bridge = GetUnityBridge();
+                bridge.CallStatic("getFullscreenAd", nativeAdRequest, adLoadListenerAwaitableProxy, ChartboostMediationFullscreenAdListener.Instance);
+            }
+            catch (NullReferenceException exception)
+            {
+                EventProcessor.ReportUnexpectedSystemError(exception.ToString());
+            }
             return await adLoadListenerAwaitableProxy;
         }
         #endregion

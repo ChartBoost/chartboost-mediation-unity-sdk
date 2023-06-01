@@ -13,7 +13,7 @@ import com.chartboost.mediation.unity.EventProcessor.serializeEventWithException
 import com.chartboost.mediation.unity.EventProcessor.serializeLoadEvent
 import com.unity3d.player.UnityPlayer
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 
 class UnityBridge {
@@ -43,7 +43,7 @@ class UnityBridge {
 
         @JvmStatic
         fun getFullscreenAd(adRequest: ChartboostMediationAdLoadRequest, adLoadResultHandler: ChartboostMediationFullscreenAdLoadListener, fullscreenAdListener: ChartboostMediationFullscreenAdListener) {
-            CoroutineScope(Dispatchers.Main).launch {
+            CoroutineScope(Main).launch {
                 val adLoadResult = HeliumSdk.loadFullscreenAd(UnityPlayer.currentActivity, adRequest, fullscreenAdListener)
                 adLoadResultHandler.onAdLoaded(adLoadResult)
             }
@@ -51,7 +51,7 @@ class UnityBridge {
 
         @JvmStatic
         fun showFullscreenAd(fullscreenAd: ChartboostMediationFullscreenAd, adShowResultHandler: ChartboostMediationFullscreenAdShowListener) {
-            CoroutineScope(Dispatchers.Main).launch {
+            CoroutineScope(Main).launch {
                 val adShowResult =  fullscreenAd.show(UnityPlayer.currentActivity)
                 adShowResultHandler.onAdShown(adShowResult)
             }
