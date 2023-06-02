@@ -24,7 +24,7 @@ namespace Chartboost.Platforms.IOS
         private delegate void ExternChartboostMediationILRDEvent(string impressionDataJson);
         private delegate void ExternChartboostMediationPartnerInitializationDataEvent(string partnerInitializationData);
         private delegate void ExternChartboostMediationPlacementEvent(string placementName, string error);
-        private delegate void ExternChartboostMediationPlacementLoadEvent(string placementName, string loadId, string auctionId, string partnerId, double price, string error);
+        private delegate void ExternChartboostMediationPlacementLoadEvent(string placementName, string loadId, string auctionId, string partnerId, double price, string lineItemId, string error);
         
         private static readonly Dictionary<int, ILater> WaitingProxies = new Dictionary<int, ILater>();
         
@@ -122,8 +122,8 @@ namespace Chartboost.Platforms.IOS
         
         #region Banner Callbacks
         [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementLoadEvent))]
-        private static void ExternDidLoadBanner(string placementName, string loadId, string auctionId, string partnerId, double price, string error) 
-            => EventProcessor.ProcessChartboostMediationLoadEvent(placementName, loadId, auctionId, partnerId, price, error, _instance.DidLoadBanner);
+        private static void ExternDidLoadBanner(string placementName, string loadId, string auctionId, string partnerId, double price, string lineItemId, string error) 
+            => EventProcessor.ProcessChartboostMediationLoadEvent(placementName, loadId, auctionId, partnerId, price, lineItemId, error, _instance.DidLoadBanner);
 
         [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementEvent))]
         private static void ExternDidClickBanner(string placementName, string error) 

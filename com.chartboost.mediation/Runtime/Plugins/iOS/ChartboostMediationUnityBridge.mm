@@ -18,7 +18,7 @@ typedef void (*ChartboostMediationEvent)(const char* error);
 typedef void (*ChartboostMediationILRDEvent)(const char* impressionData);
 typedef void (*ChartboostMediationPartnerInitializationDataEvent)(const char* partnerInitializationData);
 typedef void (*ChartboostMediationPlacementEvent)(const char* placementName, const char* error);
-typedef void (*ChartboostMediationPlacementLoadEvent)(const char* placementName, const char* loadId, const char* auctionId, const char* partnerId, double price, const char* error);
+typedef void (*ChartboostMediationPlacementLoadEvent)(const char* placementName, const char* loadId, const char* auctionId, const char* partnerId, double price, const char* lineItemId, const char* error);
 
 // Fullscreen Events
 typedef void (*ChartboostMediationFullscreenAdLoadResultEvent)(int hashCode, const void* adHashCode, const char *loadId, const char *winningBidJson, const char *metricsJson, const char *code, const char *message);
@@ -87,17 +87,21 @@ const void serializePlacementLoadWithError(NSString *placementName, NSString *re
     NSString* partnerId = [winningBidInfo objectForKey:@"partner-id"];
     NSString* auctionId = [winningBidInfo objectForKey:@"auction-id"];
     NSNumber* price = [winningBidInfo objectForKey:@"price"];
+    NSString* lineItemId = [winningBidInfo objectForKey:@"line_item_id"];
 
     if (partnerId == nil)
         partnerId = @"";
 
     if (auctionId == nil)
         auctionId = @"";
+    
+    if (lineItemId == nil)
+        lineItemId = @"";
 
     if (price == nil)
         price = 0;
     
-    placementLoadEvent(placementName.UTF8String, requestIdentifier.UTF8String, auctionId.UTF8String, partnerId.UTF8String, [price doubleValue], error.localizedDescription.UTF8String);
+    placementLoadEvent(placementName.UTF8String, requestIdentifier.UTF8String, auctionId.UTF8String, partnerId.UTF8String, [price doubleValue], lineItemId.UTF8String, error.localizedDescription.UTF8String);
 }
 
 static NSMutableDictionary * storedAds;
