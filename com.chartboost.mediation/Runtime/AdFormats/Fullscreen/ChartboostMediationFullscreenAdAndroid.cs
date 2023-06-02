@@ -59,7 +59,7 @@ namespace Chartboost.AdFormats.Fullscreen
             if (!_isValid)
                 return;
 
-            _isValid = true;
+            _isValid = false;
             _chartboostMediationFullscreenAd.Call("invalidate");
             _chartboostMediationFullscreenAd.Dispose();
             CacheManager.ReleaseFullscreenAd(_hashCode);
