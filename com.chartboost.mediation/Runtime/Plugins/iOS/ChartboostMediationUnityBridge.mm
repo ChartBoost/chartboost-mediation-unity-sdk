@@ -566,7 +566,7 @@ void _chartboostMediationRewardedAdSetCustomData(const void * uniqueId, const ch
     ad.customData = GetStringParam(customData);
 }
 
-void _chartboostMediationGetFullscreenAd(const char *placementName, const char *keywords, int hashCode, ChartboostMediationFullscreenAdLoadResultEvent callback)
+void _chartboostMediationLoadFullscreenAd(const char *placementName, const char *keywords, int hashCode, ChartboostMediationFullscreenAdLoadResultEvent callback)
 {
     NSDictionary *formattedKeywords = objFromJsonString<NSDictionary *>(keywords);
     

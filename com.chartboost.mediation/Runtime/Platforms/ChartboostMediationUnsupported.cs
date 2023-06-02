@@ -37,7 +37,7 @@ namespace Chartboost.Platforms
             return _userIdentifier;
         }
 
-        public override Task<ChartboostMediationFullscreenAdLoadResult> GetFullscreenAd(ChartboostMediationFullscreenAdLoadRequest loadRequest) 
+        public override Task<ChartboostMediationFullscreenAdLoadResult> LoadFullscreenAd(ChartboostMediationFullscreenAdLoadRequest loadRequest) 
             => Task.FromResult(new ChartboostMediationFullscreenAdLoadResult(new ChartboostMediationError("Unsupported Platform")));
     }
 }

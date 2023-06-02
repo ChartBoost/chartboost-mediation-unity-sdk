@@ -78,9 +78,9 @@ namespace Chartboost.Platforms
         public virtual void Destroy() 
             => Logger.Log(LogTag, "Destroy");
 
-        public abstract Task<ChartboostMediationFullscreenAdLoadResult> GetFullscreenAd(ChartboostMediationFullscreenAdLoadRequest request);
+        public abstract Task<ChartboostMediationFullscreenAdLoadResult> LoadFullscreenAd(ChartboostMediationFullscreenAdLoadRequest request);
       
-        [Obsolete("GetInterstitialAd has been deprecated and will be removed in future versions, use GetFullscreenAd instead.")]
+        [Obsolete("GetInterstitialAd has been deprecated and will be removed in future versions, use LoadFullscreenAd instead.")]
         public ChartboostMediationInterstitialAd GetInterstitialAd(string placementName)
         {
             Logger.Log(LogTag, $"GetInterstitialAd at placement: {placementName}");
@@ -97,7 +97,7 @@ namespace Chartboost.Platforms
             }
         }
         
-        [Obsolete("GetRewardedAd has been deprecated and will be removed in future versions, use GetFullscreenAd instead.")]
+        [Obsolete("GetRewardedAd has been deprecated and will be removed in future versions, use LoadFullscreenAd instead.")]
         public ChartboostMediationRewardedAd GetRewardedAd(string placementName)
         {
             Logger.Log(LogTag, $"GetRewardedAd at placement: {placementName}");

@@ -40,7 +40,7 @@ class UnityBridge {
             HeliumInitializationOptions(options.toSet())
 
         @JvmStatic
-        fun getFullscreenAd(adRequest: ChartboostMediationAdLoadRequest, adLoadResultHandler: ChartboostMediationFullscreenAdLoadListener, fullscreenAdListener: ChartboostMediationFullscreenAdListener) {
+        fun loadFullscreenAd(adRequest: ChartboostMediationAdLoadRequest, adLoadResultHandler: ChartboostMediationFullscreenAdLoadListener, fullscreenAdListener: ChartboostMediationFullscreenAdListener) {
             CoroutineScope(Main).launch {
                 val adLoadResult = HeliumSdk.loadFullscreenAd(UnityPlayer.currentActivity, adRequest, fullscreenAdListener)
                 adLoadResultHandler.onAdLoaded(adLoadResult)
