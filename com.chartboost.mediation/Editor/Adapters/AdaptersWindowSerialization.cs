@@ -239,10 +239,13 @@ namespace Chartboost.Editor.Adapters
             var defaultTemplateContents = Constants.PathToMainTemplate.ReadAllLines().ToList();
             var androidVersionIndex = defaultTemplateContents.FindIndex(x => x.Contains(Constants.AndroidVersionInMainTemplate));
             var iosVersionIndex = defaultTemplateContents.FindIndex(x => x.Contains(Constants.IOSVersionInMainTemplate));
-
-            var optimisticVersion = MediationSelection.Remove(MediationSelection.Length - 2);
-            defaultTemplateContents[androidVersionIndex] = defaultTemplateContents[androidVersionIndex].Replace(Constants.AndroidVersionInMainTemplate, optimisticVersion);
-            defaultTemplateContents[iosVersionIndex] = defaultTemplateContents[iosVersionIndex].Replace(Constants.IOSVersionInMainTemplate, optimisticVersion);
+            
+            var androidOptimisticVersion = MediationSelection.Remove(MediationSelection.Length - 2);
+            defaultTemplateContents[androidVersionIndex] = defaultTemplateContents[androidVersionIndex].Replace(Constants.AndroidVersionInMainTemplate, androidOptimisticVersion);
+            
+            var lastDigit = MediationSelection.Length - 1;
+            var iosOptimisticVersion = MediationSelection.Remove(lastDigit).Insert(lastDigit, "0");
+            defaultTemplateContents[iosVersionIndex] = defaultTemplateContents[iosVersionIndex].Replace(Constants.IOSVersionInMainTemplate, iosOptimisticVersion);
 
             Constants.PathToPackageGeneratedFiles.DirectoryCreate();
             Constants.PathToEditorInGeneratedFiles.DirectoryCreate();
