@@ -113,7 +113,7 @@ namespace Chartboost
             }, null);
         }
 
-        public static void ProcessChartboostMediationLoadEvent(string placementName, string loadId, string auctionId, string partnerId, double price, string error, ChartboostMediationPlacementLoadEvent bidEvent)
+        public static void ProcessChartboostMediationLoadEvent(string placementName, string loadId, string auctionId, string partnerId, double price, string lineItemId, string error, ChartboostMediationPlacementLoadEvent bidEvent)
         {
             if (bidEvent == null)
                 return;
@@ -122,7 +122,7 @@ namespace Chartboost
             {
                 try
                 {
-                    var bidInfo = new BidInfo(auctionId, partnerId, price);
+                    var bidInfo = new BidInfo(auctionId, partnerId, price, lineItemId);
                     bidEvent(placementName, loadId, bidInfo, error);
                 }
                 catch (Exception e)

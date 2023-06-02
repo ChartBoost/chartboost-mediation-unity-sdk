@@ -21,11 +21,13 @@ object EventProcessor {
 
     @JvmStatic
     fun serializeLoadEvent(placementName: String, loadId: String, data: Map<String, String>, error: ChartboostMediationAdException?,
-                           loadConsumer: LoadEventConsumer<String, String, String, String, Double, String>) {
+                           loadConsumer: LoadEventConsumer<String, String, String, String, Double, String, String>) {
         val errorMessage = error?.toString() ?: ""
 
         val partnerId =  getAuctionData("partner_id", data)
         val auctionId = getAuctionData("auction-id", data)
+        val lineItemId = getAuctionData("line_item_id", data)
+
         val price = try {
             data["price"]?.toDouble() ?: 0.0
         } catch (e: NumberFormatException) {
@@ -33,7 +35,7 @@ object EventProcessor {
             0.0
         }
 
-        loadConsumer.accept(placementName, loadId, auctionId, partnerId, price, errorMessage)
+        loadConsumer.accept(placementName, loadId, auctionId, partnerId, price, lineItemId, errorMessage)
     }
 
     fun interface EventConsumer<PlacementName>{
@@ -44,7 +46,7 @@ object EventProcessor {
         fun accept(placementName: PlacementName, errorMessage: ErrorMessage)
     }
 
-    fun interface LoadEventConsumer<PlacementName, LoadId, AuctionId, PartnerId, Price, Error> {
-        fun accept(placementName: PlacementName, loadId: LoadId, auctionId: AuctionId, partnerId: PartnerId, price: Price, error: Error)
+    fun interface LoadEventConsumer<PlacementName, LoadId, AuctionId, PartnerId, Price, LineItemId, Error> {
+        fun accept(placementName: PlacementName, loadId: LoadId, auctionId: AuctionId, partnerId: PartnerId, price: Price, lineItemId: LineItemId, error: Error)
     }
 }
