@@ -183,8 +183,8 @@ namespace Chartboost
         // Functions for showing ads
         //////////////////////////////////////////////////////
 
-        public static async Task<ChartboostMediationFullscreenAdLoadResult> GetFullscreenAd(ChartboostMediationFullscreenAdLoadRequest loadRequest) 
-            => await _chartboostMediationExternal.GetFullscreenAd(loadRequest);
+        public static async Task<ChartboostMediationFullscreenAdLoadResult> LoadFullscreenAd(ChartboostMediationFullscreenAdLoadRequest loadRequest) 
+            => await _chartboostMediationExternal.LoadFullscreenAd(loadRequest);
 
         /// <summary>
         /// Returns a new ad unit that can be used to load and display interstitial ads.

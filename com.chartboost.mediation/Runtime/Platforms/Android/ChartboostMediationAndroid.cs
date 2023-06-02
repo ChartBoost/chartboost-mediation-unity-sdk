@@ -118,7 +118,7 @@ namespace Chartboost.Platforms.Android
             IsInitialized = false;
         }
 
-        public override async Task<ChartboostMediationFullscreenAdLoadResult> GetFullscreenAd(ChartboostMediationFullscreenAdLoadRequest request)
+        public override async Task<ChartboostMediationFullscreenAdLoadResult> LoadFullscreenAd(ChartboostMediationFullscreenAdLoadRequest request)
         {
             if (!CanFetchAd(request.PlacementName))
             {
@@ -133,7 +133,7 @@ namespace Chartboost.Platforms.Android
                 CacheManager.TrackFullscreenAdLoadRequest(adLoadListenerAwaitableProxy.hashCode(), request);
                 using var nativeAdRequest = new AndroidJavaObject(GetQualifiedNativeClassName("ChartboostMediationAdLoadRequest", true), request.PlacementName, request.Keywords.ToKeywords());
                 using var bridge = GetUnityBridge();
-                bridge.CallStatic("getFullscreenAd", nativeAdRequest, adLoadListenerAwaitableProxy, ChartboostMediationFullscreenAdListener.Instance);
+                bridge.CallStatic("loadFullscreenAd", nativeAdRequest, adLoadListenerAwaitableProxy, ChartboostMediationFullscreenAdListener.Instance);
             }
             catch (NullReferenceException exception)
             {

@@ -129,7 +129,7 @@ namespace Chartboost.Platforms.IOS
             _chartboostMediationSetTestMode(testModeEnabled);
         }
 
-        public override async Task<ChartboostMediationFullscreenAdLoadResult> GetFullscreenAd(ChartboostMediationFullscreenAdLoadRequest request)
+        public override async Task<ChartboostMediationFullscreenAdLoadResult> LoadFullscreenAd(ChartboostMediationFullscreenAdLoadRequest request)
         {
             if (!CanFetchAd(request.PlacementName))
             {
@@ -143,12 +143,12 @@ namespace Chartboost.Platforms.IOS
             var keywordsJson = string.Empty;
             if (request.Keywords.Count > 0)
                 keywordsJson = JsonConvert.SerializeObject(request.Keywords);
-            _chartboostMediationGetFullscreenAd(request.PlacementName, keywordsJson, hashCode, FullscreenAdLoadResultCallbackProxy);
+            _chartboostMediationLoadFullscreenAd(request.PlacementName, keywordsJson, hashCode, FullscreenAdLoadResultCallbackProxy);
             return await proxy;
         }
 
         [DllImport("__Internal")]
-        private static extern void _chartboostMediationGetFullscreenAd(string placementName, string keywords, int hashCode, ExternChartboostMediationFullscreenAdLoadResultEvent callback);
+        private static extern void _chartboostMediationLoadFullscreenAd(string placementName, string keywords, int hashCode, ExternChartboostMediationFullscreenAdLoadResultEvent callback);
         #endregion
     }
 }

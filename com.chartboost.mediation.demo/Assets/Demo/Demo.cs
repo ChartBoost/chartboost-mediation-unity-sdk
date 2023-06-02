@@ -150,7 +150,7 @@ public class Demo : MonoBehaviour
             Log($"DidExpire Name: {fullscreenAd.Request.PlacementName}");
         };
 
-        var loadResult = await ChartboostMediation.GetFullscreenAd(loadRequest);
+        var loadResult = await ChartboostMediation.LoadFullscreenAd(loadRequest);
         
         // Failed to Load
         if (loadResult.Error.HasValue)

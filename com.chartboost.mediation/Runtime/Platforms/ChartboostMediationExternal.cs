@@ -78,7 +78,7 @@ namespace Chartboost.Platforms
         public virtual void Destroy() 
             => Logger.Log(LogTag, "Destroy");
 
-        public abstract Task<ChartboostMediationFullscreenAdLoadResult> GetFullscreenAd(ChartboostMediationFullscreenAdLoadRequest request);
+        public abstract Task<ChartboostMediationFullscreenAdLoadResult> LoadFullscreenAd(ChartboostMediationFullscreenAdLoadRequest request);
       
         [Obsolete("GetInterstitialAd has been deprecated and will be removed in future versions, use GetFullscreenAd instead.")]
         public ChartboostMediationInterstitialAd GetInterstitialAd(string placementName)
