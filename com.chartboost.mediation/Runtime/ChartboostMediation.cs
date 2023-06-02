@@ -190,7 +190,7 @@ namespace Chartboost
         /// Returns a new ad unit that can be used to load and display interstitial ads.
         /// </summary>
         /// <param name="placementName">The placement ID for the Chartboost Mediation impression type.</param>
-        [Obsolete("GetInterstitialAd has been deprecated and will be removed in future versions, use GetFullscreenAd instead.")]
+        [Obsolete("GetInterstitialAd has been deprecated and will be removed in future versions, use LoadFullscreenAd instead.")]
         public static ChartboostMediationInterstitialAd GetInterstitialAd(string placementName) 
             => _chartboostMediationExternal.GetInterstitialAd(placementName);
 
@@ -198,7 +198,7 @@ namespace Chartboost
         /// Returns a new ad unit that can be used to load and display rewarded video ads.
         /// </summary>
         /// <param name="placementName">The placement ID for the Chartboost Mediation impression type.</param>
-        [Obsolete("GetRewardedAd has been deprecated and will be removed in future versions, use GetFullscreenAd instead.")]
+        [Obsolete("GetRewardedAd has been deprecated and will be removed in future versions, use LoadFullscreenAd instead.")]
         public static ChartboostMediationRewardedAd GetRewardedAd(string placementName)
             => _chartboostMediationExternal.GetRewardedAd(placementName);
 
