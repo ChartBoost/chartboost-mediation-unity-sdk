@@ -144,8 +144,8 @@ namespace Chartboost.Platforms.Android
 
             public static readonly BannerEventListener Instance = new BannerEventListener();
 
-            private void DidLoadBanner(string placementName, string loadId, string auctionId, string partnerId, double price, string error) 
-                => EventProcessor.ProcessChartboostMediationLoadEvent(placementName,  loadId, auctionId, partnerId, price, error, _instance.DidLoadBanner);
+            private void DidLoadBanner(string placementName, string loadId, string auctionId, string partnerId, double price, string lineItemId, string error) 
+                => EventProcessor.ProcessChartboostMediationLoadEvent(placementName,  loadId, auctionId, partnerId, price, lineItemId, error, _instance.DidLoadBanner);
 
             private void DidClickBanner(string placementName) 
                 => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, null, _instance.DidClickBanner);
