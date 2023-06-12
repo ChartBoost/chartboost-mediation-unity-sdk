@@ -27,11 +27,12 @@ namespace Chartboost.Utilities
             var partnerId = map.Call<string>("get","partner_id");
             var auctionId = map.Call<string>("get", "auction-id");
             var lineItemId = map.Call<string>("get", "line_item_id");
+            var lineItemName = map.Call<string>("get", "line_item_name");
             var price = map.Call<string>("get", "price");
 
             if (!double.TryParse(price, out var priceAsDouble))
                 EventProcessor.ReportUnexpectedSystemError("[ToWinningBidInfo] failed to parse bid info price, defaulting to 0");
-            var biddingInfo = new BidInfo(partnerId, auctionId, priceAsDouble, lineItemId);
+            var biddingInfo = new BidInfo(partnerId, auctionId, priceAsDouble, lineItemName, lineItemId);
             return biddingInfo;
         }
 

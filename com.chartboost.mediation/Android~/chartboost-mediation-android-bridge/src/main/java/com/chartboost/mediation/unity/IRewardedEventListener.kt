@@ -5,7 +5,7 @@ package com.chartboost.mediation.unity
  */
 @Deprecated("IRewardedEventListener has been deprecated, utilize the new fullscreen API instead.")
 interface IRewardedEventListener {
-    fun DidLoadRewarded(placementName: String, loadId: String, auctionId: String, partnerId: String, price: Double, lineItemId: String, error: String)
+    fun DidLoadRewarded(placementName: String, loadId: String, auctionId: String, partnerId: String, price: Double, lineItemName: String, lineItemId: String, error: String)
     fun DidShowRewarded(placementName: String, error: String)
     fun DidCloseRewarded(placementName: String, error: String)
     fun DidClickRewarded(placementName: String)
