@@ -6,6 +6,7 @@ Improvements:
 - Added support for Rewarded Interstitials. This is available via `ChartboostMediation.LoadFullscreenAd()` and supported only in the latest adapters. Please check each adapter's changelog to confirm which partners support rewarded interstitials.
 - Added new `ChartboostMediationFullscreenAd` APIs which combine and improve the interstitial and rewarded ad APIs. Previous interstitial and rewarded ad APIs are now deprecated.
 - Added `LineItemName` and `LineItemId` to `BidInfo`.
+- Added the ability to set consent and debug flags before calling `start`. Only the last change is applied and will only be updated after the SDK has finished initializing.
 
 Bug Fixes:
 - Added newly released networks into partner killswitch enum.
