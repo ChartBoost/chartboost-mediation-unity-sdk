@@ -10,13 +10,13 @@ namespace Chartboost.Requests
         /// Constructor for successful loads
         /// </summary>
         /// <param name="ad"></param>
-        /// <param name="requestId"></param>
+        /// <param name="loadId"></param>
         /// <param name="metrics"></param>
         /// <param name="error"></param>
-        public ChartboostMediationFullscreenAdLoadResult(IChartboostMediationFullscreenAd ad, string requestId, Metrics? metrics, ChartboostMediationError? error = null)
+        public ChartboostMediationFullscreenAdLoadResult(IChartboostMediationFullscreenAd ad, string loadId, Metrics? metrics, ChartboostMediationError? error = null)
         {
-            AD = ad;
-            RequestId = requestId;
+            Ad = ad;
+            LoadId = loadId;
             Metrics = metrics;
             Error = error;
         }
@@ -26,15 +26,15 @@ namespace Chartboost.Requests
         /// </summary>
         public ChartboostMediationFullscreenAdLoadResult(ChartboostMediationError error)
         {
-            AD = null;
-            RequestId = string.Empty;
+            Ad = null;
+            LoadId = string.Empty;
             Metrics = null;
             Error = error;
         }
 
-        public IChartboostMediationFullscreenAd? AD { get;  }
+        public IChartboostMediationFullscreenAd? Ad { get;  }
 
-        public string RequestId { get; }
+        public string LoadId { get; }
 
         public Metrics? Metrics { get; }
 
