@@ -13,7 +13,7 @@ Chartboost Mediation's delegate methods allow you to exercise a greater degree o
 
 The Chartboost Mediation Unity SDK implements its delegate functionality using C# style delegates and events. Before using any of the delegate methods, you should first subscribe to the relevant SDK events in your MonoBehaviour as demonstrated:
 
-### Subscribing Static Delegates
+### Subscribing Delegates
 ```c#
 private void OnEnable() {
     // Start Delegate
@@ -27,6 +27,21 @@ private void OnEnable() {
 
     // Error Handling Delegate
     ChartboostMediation.UnexpectedSystemErrorDidOccur += UnexpectedSystemErrorDidOccur;
+
+    // Interstitial Ad Delegates
+    ChartboostMediation.DidLoadInterstitial += DidLoadInterstitial;
+    ChartboostMediation.DidShowInterstitial += DidShowInterstitial;
+    ChartboostMediation.DidCloseInterstitial += DidCloseInterstitial;
+    ChartboostMediation.DidClickInterstitial += DidClickInterstitial;
+    ChartboostMediation.DidRecordImpressionInterstitial += DidRecordImpressionInterstitial;
+
+    // Rewarded Ad Delegates
+    ChartboostMediation.DidLoadRewarded += DidLoadRewarded;
+    ChartboostMediation.DidShowRewarded += DidShowRewarded;
+    ChartboostMediation.DidCloseRewarded += DidCloseRewarded;
+    ChartboostMediation.DidReceiveReward += DidReceiveReward;
+    ChartboostMediation.DidClickRewarded += DidClickRewarded;
+    ChartboostMediation.DidRecordImpressionRewarded += DidRecordImpressionRewarded;
 
     // Banner Ad Delegates
     ChartboostMediation.DidLoadBanner += DidLoadBanner;
@@ -62,6 +77,21 @@ private void OnDisable() {
     // Error Handling Delegate
     ChartboostMediation.UnexpectedSystemErrorDidOccur -= UnexpectedSystemErrorDidOccur;
 
+    // Interstitial Ad Delegates
+    ChartboostMediation.DidLoadInterstitial -= DidLoadInterstitial;
+    ChartboostMediation.DidShowInterstitial -= DidShowInterstitial;
+    ChartboostMediation.DidCloseInterstitial -= DidCloseInterstitial;
+    ChartboostMediation.DidClickInterstitial -= DidClickInterstitial;
+    ChartboostMediation.DidRecordImpressionInterstitial -= DidRecordImpressionInterstitial;
+
+    // Rewarded Ad Delegates
+    ChartboostMediation.DidLoadRewarded -= DidLoadRewarded;
+    ChartboostMediation.DidShowRewarded -= DidShowRewarded;
+    ChartboostMediation.DidCloseRewarded -= DidCloseRewarded;
+    ChartboostMediation.DidReceiveReward -= DidReceiveReward;
+    ChartboostMediation.DidClickRewarded -= DidClickRewarded;
+    ChartboostMediation.DidRecordImpressionRewarded -= DidRecordImpressionRewarded;
+
     // Banner Ad Delegates
     ChartboostMediation.DidLoadBanner -= DidLoadBanner;
     ChartboostMediation.DidClickBanner -= DidClickBanner;
@@ -69,7 +99,7 @@ private void OnDisable() {
 }
 ```
 
-### Subscribing Delegates
+## Example Delegate Methods
 
 ### Lifecycle Delegates
 ```c#
@@ -97,6 +127,67 @@ private void DidReceivePartnerInitializationData(string partnerInitializationDat
 private static void UnexpectedSystemErrorDidOccur(string error)
 {
     Debug.LogErrorFormat(error);
+}
+```
+
+### Interstitial Ad Delegates
+```c#
+private void DidLoadInterstitial(string placementName, string loadId, BidInfo info, string error)
+{
+    Debug.Log($"DidLoadInterstitial {placementName}, Price: ${info.Price:F4}, Auction Id: {info.AuctionId}, Partner Id: {info.PartnerId}. {error}");
+}
+
+private void DidShowInterstitial(string placementName, string error)
+{
+    Debug.Log($"DidShowInterstitial {placementName}: {error}");
+}
+
+private void DidCloseInterstitial(string placementName, string error)
+{
+    Debug.Log($"DidCloseInterstitial {placementName}: {error}");
+}
+
+private void DidClickInterstitial(string placementName, string error)
+{
+    Debug.Log($"DidClickInterstitial {placementName}: {error}");
+}
+
+private void DidRecordImpressionInterstitial(string placementName, string error)
+{
+    Log($"DidRecordImpressionInterstitial {placementName}: {error}");
+}
+```
+
+### Rewarded Ad Delegates
+```c#
+private void DidLoadRewarded(string placementName, string loadId, BidInfo info, string error)
+{
+    Debug.Log($"DidLoadRewarded {placementName}, Price: ${info.Price:F4}, Auction Id: {info.AuctionId}, Partner Id: {info.PartnerId}. {error}");
+}
+
+private void DidShowRewarded(string placementName, string error)
+{
+    Debug.Log($"DidShowRewarded {placementName}: {error}");
+}
+
+private void DidCloseRewarded(string placementName, string error)
+{
+    Debug.Log($"DidCloseRewarded {placementName}: {error}");
+}
+
+private void DidClickRewarded(string placementName, string error)
+{
+    Debug.Log($"DidClickRewarded {placementName}: {error}");
+}
+
+private void DidReceiveReward(string placementName, string error)
+{
+    Debug.Log($"DidReceiveReward {placementName}: {error}");
+}
+
+private void DidRecordImpressionRewarded(string placementName, string error)
+{
+    Log($"DidRecordImpressionRewarded {placementName}: {error}");
 }
 ```
 

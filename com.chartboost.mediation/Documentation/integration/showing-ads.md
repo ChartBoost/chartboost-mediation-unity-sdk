@@ -1,28 +1,23 @@
 # Showing Ads
 
-## Showing Fullscreen Placements
+## Showing Interstitial and Rewarded Ads
 
-Fullscreen Placements must be first loaded, see section [Loading Ads](loading-ads.md) for more information.
+When you are ready to show a Rewarded or Interstitial ad, you can check that it is ready to show and then display it like so:
 
-Similar to the new load API. The new Fullscreen API utilizes C# async/await in order to request ad show. See below for details on implementation:
+### Interstitial Ad
 
 ```c#
-if (_fullscreenPlacement == null)
-    return;
+// Showing an Interstitial Ad
+if (_interstitialAd.ReadyToShow())
+    _interstitialAd.Show();
+```
 
-var adShowResult = await _fullscreenPlacement.Show();
-var error = adShowResult.error;
+### Rewarded Ad
 
-// Failed to Show
-if (adShowResult.error.HasValue)
-{
-    Debug.Log($"Fullscreen Failed to Show with Value: {error.Value.code}, {error.Value.message}");
-    return;
-}
-
-// Successful Show
-var metrics = adShowResult.metrics;
-Debug.Log($"Fullscreen Ad Did Show: {JsonConvert.SerializeObject(metrics, Formatting.Indented)}");
+```c#
+//Showing a Rewarded Ad
+if (_rewardedAd.ReadyToShow()){
+  _rewardedAd.show();
 ```
 
 ## Showing Banner Ads
@@ -30,15 +25,22 @@ Banners are now automatically shown after load, see section [Loading Ads](loadin
 
 ## Releasing Chartboost Mediation Ads
 
-To clear resources used by Chartboost Mediation Ads, you can use the methods associated with the respective Ad you have used.
+To clear resources used by Chartboost Mediation Ads, you can use the destroy method associated with the respective Ad you have used.
 
 ```c#
 private void OnDestroy()
 {
-    if (_fullscreenPlacement != null)
+    if (_interstitialAd != null)
     {
-        _fullscreenPlacement.Invalidate();
-        Debug.Log("Invalidated an existing fullscreen");
+        _interstitialAd.ClearLoaded();
+        _interstitialAd.Destroy();
+        Debug.Log("Destroyed an existing interstitial");
+    }
+    if (_rewardedAd != null)
+    {
+        _rewardedAd.ClearLoaded();
+        _rewardedAd.Destroy();
+        Debug.Log("Destroyed an existing rewarded");
     }
     if (_bannerAd != null)
     {
@@ -47,4 +49,5 @@ private void OnDestroy()
         Debug.Log("Destroyed an existing banner");
     }
 }
+
 ```

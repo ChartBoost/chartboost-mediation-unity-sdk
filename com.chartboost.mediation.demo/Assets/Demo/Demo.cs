@@ -124,17 +124,31 @@ public class Demo : MonoBehaviour
 
         var loadRequest = new ChartboostMediationFullscreenAdLoadRequest(fullscreenPlacementInputField.text, keywords);
 
-        loadRequest.DidClick += fullscreenAd => Log($"DidClick Name: {fullscreenAd.Request.PlacementName}");
-
-        loadRequest.DidClose += (fullscreenAd, error) => Log(!error.HasValue
-            ? $"DidClose Name: {fullscreenAd.Request.PlacementName}"
-            : $"DidClose Name: {fullscreenAd.Request.PlacementName}, Code: {error?.code}, Message: {error?.message}");
-
-        loadRequest.DidReward += fullscreenAd => Log($"DidReward Name: {fullscreenAd.Request.PlacementName}");
-
-        loadRequest.DidRecordImpression += fullscreenAd => Log($"DidImpressionRecorded Name: {fullscreenAd.Request.PlacementName}");
-
-        loadRequest.DidExpire += fullscreenAd => Log($"DidExpire Name: {fullscreenAd.Request.PlacementName}");
+        loadRequest.DidClick += fullscreenAd => {
+            Log($"DidClick Name: {fullscreenAd.Request.PlacementName}");
+        };
+        
+        loadRequest.DidClose += (fullscreenAd, error) =>
+        {
+            Log(!error.HasValue
+                ? $"DidClose Name: {fullscreenAd.Request.PlacementName}"
+                : $"DidClose Name: {fullscreenAd.Request.PlacementName}, Code: {error?.code}, Message: {error?.message}");
+        };
+        
+        loadRequest.DidReward += fullscreenAd =>
+        {
+            Log($"DidReward Name: {fullscreenAd.Request.PlacementName}");
+        };
+        
+        loadRequest.DidRecordImpression += fullscreenAd =>
+        {
+            Log($"DidImpressionRecorded Name: {fullscreenAd.Request.PlacementName}");
+        };
+        
+        loadRequest.DidExpire += fullscreenAd =>
+        {
+            Log($"DidExpire Name: {fullscreenAd.Request.PlacementName}");
+        };
 
         var loadResult = await ChartboostMediation.LoadFullscreenAd(loadRequest);
         
@@ -147,7 +161,7 @@ public class Demo : MonoBehaviour
         }
 
         // Loaded but AD is null?
-        _fullscreenAd = loadResult.Ad;
+        _fullscreenAd = loadResult.AD;
         if (_fullscreenAd == null)
         {
             Log("Fullscreen Ad is null but no error was found???");
@@ -157,12 +171,12 @@ public class Demo : MonoBehaviour
         // DidLoad
         _fullscreenAd.CustomData = DefaultFullscreenAdCustomData;
         var customData = _fullscreenAd.CustomData;
-        var adLoadId = _fullscreenAd.LoadId;
+        var adRequestId = _fullscreenAd.LoadId;
         var bidInfo = _fullscreenAd.WinningBidInfo;
         var placementName = _fullscreenAd?.Request?.PlacementName;
-        var loadId = loadResult.LoadId;
+        var requestId = loadResult.RequestId;
         var metrics = loadResult.Metrics;
-        Log($"Fullscreen: {placementName} Loaded with: \nAdRequestId {adLoadId} \nRequestID {loadId} \nBidInfo: {JsonConvert.SerializeObject(bidInfo, Formatting.Indented)} \n Metrics:{JsonConvert.SerializeObject(metrics, Formatting.Indented)} \n Custom Data: {customData}");
+        Log($"Fullscreen: {placementName} Loaded with: \nAdRequestId {adRequestId} \nRequestID {requestId} \nBidInfo: {JsonConvert.SerializeObject(bidInfo, Formatting.Indented)} \n Metrics:{JsonConvert.SerializeObject(metrics, Formatting.Indented)} \n Custom Data: {customData}");
     }
 
     public void OnInvalidateFullscreenClick()

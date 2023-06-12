@@ -76,9 +76,9 @@ namespace Chartboost.Platforms.Android
 
                     var nativeAd = result.Get<AndroidJavaObject>("ad");
                     var ad = new ChartboostMediationFullscreenAdAndroid(nativeAd, CacheManager.GetFullScreenAdLoadRequest(hashCode()));
-                    var loadId = result.Get<string>("loadId");
+                    var requestIdentifier = result.Get<string>("loadId");
                     var metrics = result.Get<AndroidJavaObject>("metrics").JsonObjectToMetrics();
-                    _complete(new ChartboostMediationFullscreenAdLoadResult(ad, loadId, metrics));
+                    _complete(new ChartboostMediationFullscreenAdLoadResult(ad, requestIdentifier, metrics));
                 });
             }
         }
