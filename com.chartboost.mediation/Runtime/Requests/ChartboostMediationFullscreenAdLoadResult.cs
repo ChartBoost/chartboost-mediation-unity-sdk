@@ -1,9 +1,11 @@
 using Chartboost.AdFormats.Fullscreen;
-using Chartboost.Placements;
 
 namespace Chartboost.Requests
 {
     #nullable enable
+    /// <summary>
+    /// The Chartboost Mediation fullscreen ad load result.
+    /// </summary>
     public struct ChartboostMediationFullscreenAdLoadResult
     {
         /// <summary>
@@ -32,12 +34,24 @@ namespace Chartboost.Requests
             Error = error;
         }
 
+        /// <summary>
+        /// The <see cref="IChartboostMediationFullscreenAd"/> that was loaded, if any.
+        /// </summary>
         public IChartboostMediationFullscreenAd? Ad { get;  }
 
+        /// <summary>
+        /// The identifier for this load call.
+        /// </summary>
         public string LoadId { get; }
 
+        /// <summary>
+        /// Metrics data for the ad load event.
+        /// </summary>
         public Metrics? Metrics { get; }
 
+        /// <summary>
+        /// The error that occurred during the ad load event, if any.
+        /// </summary>
         public ChartboostMediationError? Error { get;  }
     }
     #nullable disable

@@ -2,12 +2,15 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Chartboost.Placements;
 using Chartboost.Platforms.IOS;
 using Chartboost.Requests;
+using Chartboost.Utilities;
 
 namespace Chartboost.AdFormats.Fullscreen
 {
+    /// <summary>
+    /// IOS implementation of IChartboostMediationFullscreenAd
+    /// </summary>
     public class ChartboostMediationFullscreenAdIOS : IChartboostMediationFullscreenAd
     {
         private readonly IntPtr _uniqueId;
@@ -23,7 +26,10 @@ namespace Chartboost.AdFormats.Fullscreen
             CacheManager.TrackFullscreenAd(uniqueID.ToInt32(), this);
         }
 
+        /// <inheritdoc cref="IChartboostMediationFullscreenAd.Request"/>
         public ChartboostMediationFullscreenAdLoadRequest Request { get; }
+        
+        /// <inheritdoc cref="IChartboostMediationFullscreenAd.CustomData"/>
         public string CustomData
         {
             get => _customData;
@@ -33,8 +39,14 @@ namespace Chartboost.AdFormats.Fullscreen
                 _chartboostMediationFullscreenSetCustomData(_uniqueId, _customData);
             }
         }
+        
+        /// <inheritdoc cref="IChartboostMediationFullscreenAd.LoadId"/>
         public string LoadId { get; }
+        
+        /// <inheritdoc cref="IChartboostMediationFullscreenAd.WinningBidInfo"/>
         public BidInfo WinningBidInfo { get; }
+        
+        /// <inheritdoc cref="IChartboostMediationFullscreenAd.Show"/>
         public async Task<ChartboostMediationAdShowResult> Show()
         {
             var (proxy, hashCode) = ChartboostMediationIOS._setupProxy<ChartboostMediationAdShowResult>();
@@ -42,6 +54,7 @@ namespace Chartboost.AdFormats.Fullscreen
             return await proxy;
         }
 
+        /// <inheritdoc cref="IChartboostMediationFullscreenAd.Invalidate"/>
         public void Invalidate()
         {
             if (!_isValid)
@@ -51,10 +64,7 @@ namespace Chartboost.AdFormats.Fullscreen
             _chartboostMediationInvalidateFullscreenAd(_uniqueId);
         }
 
-        ~ChartboostMediationFullscreenAdIOS()
-        {
-            Invalidate();
-        }
+        ~ChartboostMediationFullscreenAdIOS() => Invalidate();
 
         [DllImport("__Internal")] private static extern void _chartboostMediationFullscreenSetCustomData(IntPtr uniqueId, string customData);
         [DllImport("__Internal")] private static extern void _chartboostMediationInvalidateFullscreenAd(IntPtr uniqueId);

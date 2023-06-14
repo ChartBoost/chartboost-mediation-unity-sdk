@@ -1,7 +1,7 @@
 #if UNITY_ANDROID
 using System;
 using System.Threading.Tasks;
-using Chartboost.Placements;
+using Chartboost.Events;
 using Chartboost.Platforms.Android;
 using Chartboost.Requests;
 using Chartboost.Utilities;
@@ -9,6 +9,9 @@ using UnityEngine;
 
 namespace Chartboost.AdFormats.Fullscreen
 {
+    /// <summary>
+    /// Android implementation of IChartboostMediationFullscreenAd
+    /// </summary>
     public sealed class ChartboostMediationFullscreenAdAndroid : IChartboostMediationFullscreenAd
     {
         private readonly int _hashCode;
@@ -27,18 +30,23 @@ namespace Chartboost.AdFormats.Fullscreen
             CacheManager.TrackFullscreenAd(_hashCode, this);
         }
 
+        /// <inheritdoc cref="IChartboostMediationFullscreenAd.Request"/>
         public ChartboostMediationFullscreenAdLoadRequest Request { get; }
 
+        /// <inheritdoc cref="IChartboostMediationFullscreenAd.CustomData"/>
         public string CustomData
         {
             get => _chartboostMediationFullscreenAd.Get<string>("customData");
             set => _chartboostMediationFullscreenAd.Set("customData", value);
         }
         
+        /// <inheritdoc cref="IChartboostMediationFullscreenAd.LoadId"/>
         public string LoadId { get ;}
 
+        /// <inheritdoc cref="IChartboostMediationFullscreenAd.WinningBidInfo"/>
         public BidInfo WinningBidInfo { get; }
 
+        /// <inheritdoc cref="IChartboostMediationFullscreenAd.Show"/>
         public async Task<ChartboostMediationAdShowResult> Show()
         {
             var adShowListenerAwaitableProxy = new ChartboostMediationAndroid.ChartboostMediationFullscreenAdShowListener();
@@ -54,6 +62,7 @@ namespace Chartboost.AdFormats.Fullscreen
             return await adShowListenerAwaitableProxy;
         }
 
+        /// <inheritdoc cref="IChartboostMediationFullscreenAd.Invalidate"/>
         public void Invalidate()
         {
             if (!_isValid)
@@ -65,10 +74,7 @@ namespace Chartboost.AdFormats.Fullscreen
             CacheManager.ReleaseFullscreenAd(_hashCode);
         }
 
-        ~ChartboostMediationFullscreenAdAndroid()
-        {
-            Invalidate();
-        }
+        ~ChartboostMediationFullscreenAdAndroid() => Invalidate();
     }
 }
 #endif

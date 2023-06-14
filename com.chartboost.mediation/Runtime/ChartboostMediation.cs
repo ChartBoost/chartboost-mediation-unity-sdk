@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Chartboost.Banner;
+using Chartboost.Events;
 using Chartboost.FullScreen.Interstitial;
 using Chartboost.FullScreen.Rewarded;
 using Chartboost.Platforms;
@@ -183,6 +184,9 @@ namespace Chartboost
         // Functions for showing ads
         //////////////////////////////////////////////////////
 
+        /// <summary>
+        /// Load a fullscreen ad (interstitial, rewarded video, rewarded interstitial).
+        /// </summary>
         public static async Task<ChartboostMediationFullscreenAdLoadResult> LoadFullscreenAd(ChartboostMediationFullscreenAdLoadRequest loadRequest) 
             => await _chartboostMediationExternal.LoadFullscreenAd(loadRequest);
 

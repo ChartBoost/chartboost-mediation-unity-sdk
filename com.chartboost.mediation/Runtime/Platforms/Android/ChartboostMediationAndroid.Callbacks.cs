@@ -1,6 +1,6 @@
 #if UNITY_ANDROID
 using Chartboost.AdFormats.Fullscreen;
-using Chartboost.Placements;
+using Chartboost.Events;
 using Chartboost.Requests;
 using Chartboost.Utilities;
 using UnityEngine;

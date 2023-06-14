@@ -1,8 +1,9 @@
 #if UNITY_IOS
 using System.Runtime.InteropServices;
 using AOT;
-// ReSharper disable InconsistentNaming
+using Chartboost.Events;
 
+// ReSharper disable InconsistentNaming
 namespace Chartboost.Platforms.IOS
 {
     public sealed partial class ChartboostMediationIOS
@@ -69,6 +70,7 @@ namespace Chartboost.Platforms.IOS
         [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementEvent))]
         private static void ExternDidReceiveReward(string placementName, string error) 
             => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidReceiveReward);
+        
         public override event ChartboostMediationPlacementLoadEvent DidLoadRewarded;
         public override event ChartboostMediationPlacementEvent DidShowRewarded;
         public override event ChartboostMediationPlacementEvent DidCloseRewarded;
