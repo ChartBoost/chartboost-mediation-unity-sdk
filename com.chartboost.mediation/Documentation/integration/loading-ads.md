@@ -20,7 +20,7 @@ loadRequest.DidClick += fullscreenAd => Log($"DidClick Name: {fullscreenAd.Reque
 
 loadRequest.DidClose += (fullscreenAd, error) => 
 Debug.Log(!error.HasValue ? $"DidClose Name: {fullscreenAd.Request.PlacementName}"
-: $"DidClose with Error. Name: {fullscreenAd.Request.PlacementName}, Code: {error?.code}, Message: {error?.message}");
+: $"DidClose with Error. Name: {fullscreenAd.Request.PlacementName}, Code: {error?.Code}, Message: {error?.Message}");
 
 loadRequest.DidReward += fullscreenAd => Log($"DidReward Name: {fullscreenAd.Request.PlacementName}");
 
@@ -35,8 +35,7 @@ var loadResult = await ChartboostMediation.LoadFullscreenAd(loadRequest);
 // Failed to Load
 if (loadResult.Error.HasValue)
 {
-    var error = loadResult.Error.Value;
-    Debug.Log($"Fullscreen Failed to Load: {error.code}, message: {error.message}");
+    Debug.Log($"Fullscreen Failed to Load: {loadResult.Error?.Code}, message: {loadResult.Error?.Message}");
     return;
 }
 

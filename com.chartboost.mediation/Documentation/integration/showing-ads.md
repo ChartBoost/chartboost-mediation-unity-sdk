@@ -11,12 +11,12 @@ if (_fullscreenPlacement == null)
     return;
 
 var adShowResult = await _fullscreenPlacement.Show();
-var error = adShowResult.error;
+var error = adShowResult.Error;
 
 // Failed to Show
-if (adShowResult.error.HasValue)
+if (adShowResult.Error.HasValue)
 {
-    Debug.Log($"Fullscreen Failed to Show with Value: {error.Value.code}, {error.Value.message}");
+    Debug.Log($"Fullscreen Failed to Show with Value: {adShowResult.Error?.code}, {adShowResult.Error?.message}");
     return;
 }
 
