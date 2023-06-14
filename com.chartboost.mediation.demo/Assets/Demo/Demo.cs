@@ -8,7 +8,6 @@ using Chartboost.Banner;
 using Chartboost.Requests;
 using Newtonsoft.Json;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 [SuppressMessage("ReSharper", "InconsistentNaming")]
@@ -128,7 +127,7 @@ public class Demo : MonoBehaviour
 
         loadRequest.DidClose += (fullscreenAd, error) => Log(!error.HasValue
             ? $"DidClose Name: {fullscreenAd.Request.PlacementName}"
-            : $"DidClose Name: {fullscreenAd.Request.PlacementName}, Code: {error?.code}, Message: {error?.message}");
+            : $"DidClose Name: {fullscreenAd.Request.PlacementName}, Code: {error?.Code}, Message: {error?.Message}");
 
         loadRequest.DidReward += fullscreenAd => Log($"DidReward Name: {fullscreenAd.Request.PlacementName}");
 
@@ -141,8 +140,7 @@ public class Demo : MonoBehaviour
         // Failed to Load
         if (loadResult.Error.HasValue)
         {
-            var error = loadResult.Error.Value;
-            Log($"Fullscreen Failed to Load: {error.code}, message: {error.message}");
+            Log($"Fullscreen Failed to Load: {loadResult.Error?.Code}, message: {loadResult.Error?.Message}");
             return;
         }
 
@@ -183,15 +181,14 @@ public class Demo : MonoBehaviour
             return;
 
         var adShowResult = await _fullscreenAd.Show();
-        var error = adShowResult.error;
         
-        if (adShowResult.error.HasValue)
+        if (adShowResult.Error.HasValue)
         {
-            Log($"Fullscreen Failed to Show with Value: {error.Value.code}, {error.Value.message}");
+            Log($"Fullscreen Failed to Show with Value: {adShowResult.Error?.Code}, {adShowResult.Error?.Message}");
             return;
         }
 
-        var metrics = adShowResult.metrics;
+        var metrics = adShowResult.Metrics;
         Log($"Fullscreen Ad Did Show: {JsonConvert.SerializeObject(metrics, Formatting.Indented)}");
     }
     #endregion

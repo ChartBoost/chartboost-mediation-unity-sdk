@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using AOT;
 using Chartboost.AdFormats.Fullscreen;
-using Chartboost.Placements;
+using Chartboost.Events;
 using Chartboost.Requests;
 using Chartboost.Utilities;
 using Newtonsoft.Json;

@@ -1,4 +1,5 @@
 #if UNITY_ANDROID
+using Chartboost.Events;
 using UnityEngine;
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Local

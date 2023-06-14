@@ -1,7 +1,7 @@
 #if UNITY_ANDROID
 using System;
 using System.Threading.Tasks;
-using Chartboost.Placements;
+using Chartboost.Events;
 using Chartboost.Requests;
 using Chartboost.Utilities;
 using UnityEngine;

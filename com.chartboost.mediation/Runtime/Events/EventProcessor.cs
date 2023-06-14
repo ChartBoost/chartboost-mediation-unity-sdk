@@ -2,13 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using Chartboost.Placements;
+using Chartboost.Utilities;
 using UnityEditor;
 using UnityEngine;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo
-namespace Chartboost
+namespace Chartboost.Events
 {
     public static class EventProcessor
     {
@@ -95,6 +95,7 @@ namespace Chartboost
                 }
             }, null);
         }
+        
         public static void ProcessChartboostMediationPlacementEvent(string placementName, string error, ChartboostMediationPlacementEvent placementEvent)
         {
             if (placementEvent == null)

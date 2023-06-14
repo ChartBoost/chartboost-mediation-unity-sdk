@@ -1,6 +1,5 @@
 using System.Collections;
 using Chartboost.AdFormats.Fullscreen;
-using Chartboost.Placements;
 
 namespace Chartboost
 {
@@ -26,12 +25,19 @@ namespace Chartboost
 
     /// <summary>
     /// <param name="placement">The placement name for the placement.</param>
-    /// /// <param name="loadId">The placement name for the placement.</param>
+    /// <param name="loadId">The placement name for the placement.</param>
     /// <param name="error">The error encountered, if any.</param>
     /// </summary>
     public delegate void ChartboostMediationPlacementLoadEvent(string placement, string loadId, BidInfo bidInfo, string error);
 
+    /// <summary>
+    /// <param name="ad">The ad triggering the event.</param>
+    /// </summary>
     public delegate void ChartboostMediationFullscreenAdEvent(IChartboostMediationFullscreenAd ad);
 
+    /// <summary>
+    /// <param name="ad">The ad triggering the event.</param>
+    /// <param name="error">The error that occurred during the event, if any.</param>
+    /// </summary>
     public delegate void ChartboostMediationFullscreenAdEventWithError(IChartboostMediationFullscreenAd ad, ChartboostMediationError? error);
 }

@@ -1,27 +1,35 @@
 using System;
-using Chartboost.Placements;
 
 namespace Chartboost.Requests
 {
     #nullable enable
+    /// <summary>
+    /// The Chartboost Mediation ad show result.
+    /// </summary>
     [Serializable]
     public struct ChartboostMediationAdShowResult
     {
         public ChartboostMediationAdShowResult(Metrics? metrics, ChartboostMediationError? error = null)
         {
-            this.metrics = metrics;
-            this.error = error;
+            Metrics = metrics;
+            Error = error;
         }
         
         public ChartboostMediationAdShowResult(ChartboostMediationError error)
         {
-            metrics = null;
-            this.error = error;
+            Metrics = null;
+            Error = error;
         }
         
-        public Metrics? metrics;
+        /// <summary>
+        /// Metrics data for the ad show event.
+        /// </summary>
+        public Metrics? Metrics { get; }
 
-        public ChartboostMediationError? error;
+        /// <summary>
+        /// The error that occurred during the ad show event, if any.
+        /// </summary>
+        public ChartboostMediationError? Error { get;  }
     }
     #nullable disable
 }

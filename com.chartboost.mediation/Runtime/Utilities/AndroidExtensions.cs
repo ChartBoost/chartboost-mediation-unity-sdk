@@ -1,6 +1,6 @@
 #if UNITY_ANDROID
 using System.Collections.Generic;
-using Chartboost.Placements;
+using Chartboost.Events;
 using Chartboost.Platforms.Android;
 using Newtonsoft.Json;
 using UnityEngine;
