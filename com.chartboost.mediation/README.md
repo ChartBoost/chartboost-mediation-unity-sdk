@@ -26,7 +26,7 @@ Chartboost Mediation Unity SDK is distributed using the public [npm registry](ht
 
 ```json
   "dependencies": {
-    "com.chartboost.mediation": "4.2.0",
+    "com.chartboost.mediation": "4.3.0",
     ...
   },
   "scopedRegistries": [
