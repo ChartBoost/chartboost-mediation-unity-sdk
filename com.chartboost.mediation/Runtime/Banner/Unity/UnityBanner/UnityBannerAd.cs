@@ -93,12 +93,9 @@ namespace Chartboost.Banner.Unity
 
         private void Start()
         {
-            if(Application.isPlaying){}
-            {
-                Draggable = _draggable;
-                Visualize = _visualize;
-                AdjustSize();
-            }
+            Draggable = _draggable;
+            Visualize = _visualize;
+            AdjustSize();
         }
 
         private void OnDestroy()
@@ -134,7 +131,7 @@ namespace Chartboost.Banner.Unity
             {
                 _draggable = value;
                 _dragger.enabled = value;
-                
+
                 if (_draggable)
                 {
                     BannerAd?.EnableDrag(OnBannerDrag);
@@ -190,7 +187,6 @@ namespace Chartboost.Banner.Unity
         /// </summary>
         public void AdjustSize()
         {
-            
             if (_rectTransform == null)
             {
                 _rectTransform = GetComponent<RectTransform>();
