@@ -10,17 +10,17 @@ namespace Chartboost.Utilities
         /// <summary>
         /// Weak reference cache to fullscreen ads. if publishers do not keep a strong ref, this will make sure they get disposed as needed.
         /// </summary>
-        private static readonly Dictionary<int, WeakReference<IChartboostMediationFullscreenAd>> FullscreenCache;
+        private static readonly Dictionary<long, WeakReference<IChartboostMediationFullscreenAd>> FullscreenCache;
         
         /// <summary>
         /// Publisher supplied fullscreen ad load requests.
         /// </summary>
-        private static readonly Dictionary<int, ChartboostMediationFullscreenAdLoadRequest> FullscreenAdLoadRequests;
+        private static readonly Dictionary<long, ChartboostMediationFullscreenAdLoadRequest> FullscreenAdLoadRequests;
 
         static CacheManager()
         {
-            FullscreenCache = new Dictionary<int, WeakReference<IChartboostMediationFullscreenAd>>();
-            FullscreenAdLoadRequests = new Dictionary<int, ChartboostMediationFullscreenAdLoadRequest>();
+            FullscreenCache = new Dictionary<long, WeakReference<IChartboostMediationFullscreenAd>>();
+            FullscreenAdLoadRequests = new Dictionary<long, ChartboostMediationFullscreenAdLoadRequest>();
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace Chartboost.Utilities
         /// </summary>
         /// <param name="hashCode">Associated hashCode.</param>
         /// <param name="ad">Fullscreen ad to cache.</param>
-        public static void TrackFullscreenAd(int hashCode, IChartboostMediationFullscreenAd ad) 
+        public static void TrackFullscreenAd(long hashCode, IChartboostMediationFullscreenAd ad) 
             => FullscreenCache[hashCode] = new WeakReference<IChartboostMediationFullscreenAd>(ad, false);
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Chartboost.Utilities
         /// </summary>
         /// <param name="hashCode">Associated hashCode.</param>
         /// <returns>Cached <see cref="IChartboostMediationFullscreenAd"/>.</returns>
-        public static IChartboostMediationFullscreenAd GetFullscreenAd(int hashCode)
+        public static IChartboostMediationFullscreenAd GetFullscreenAd(long hashCode)
         {
             if (!FullscreenCache.ContainsKey(hashCode))
                 return null;
@@ -49,7 +49,7 @@ namespace Chartboost.Utilities
         /// Releases a <see cref="IChartboostMediationFullscreenAd"/> from the cache.
         /// </summary>
         /// <param name="hashCode">Associated hashCode.</param>
-        public static void ReleaseFullscreenAd(int hashCode)
+        public static void ReleaseFullscreenAd(long hashCode)
         {
             if (FullscreenCache.ContainsKey(hashCode))
                 FullscreenCache.Remove(hashCode);
@@ -60,7 +60,7 @@ namespace Chartboost.Utilities
         /// </summary>
         /// <param name="hashCode">Associated hashCode</param>
         /// <param name="request">Publisher's fullscreen ad load request.</param>
-        public static void TrackFullscreenAdLoadRequest(int hashCode, ChartboostMediationFullscreenAdLoadRequest request)
+        public static void TrackFullscreenAdLoadRequest(long hashCode, ChartboostMediationFullscreenAdLoadRequest request)
         {
             request.AssociatedProxy = hashCode;
             FullscreenAdLoadRequests[hashCode] = request;
@@ -71,7 +71,7 @@ namespace Chartboost.Utilities
         /// </summary>
         /// <param name="hashCode">Associated hashCode.</param>
         /// <returns>Cached <see cref="ChartboostMediationFullscreenAdLoadRequest"/>.</returns>
-        public static ChartboostMediationFullscreenAdLoadRequest GetFullScreenAdLoadRequest(int hashCode)
+        public static ChartboostMediationFullscreenAdLoadRequest GetFullScreenAdLoadRequest(long hashCode)
         {
             if (!FullscreenAdLoadRequests.TryGetValue(hashCode, out var fullscreenAdLoadRequest)) 
                 return null;
@@ -84,7 +84,7 @@ namespace Chartboost.Utilities
         /// Releases a <see cref="ChartboostMediationFullscreenAdLoadRequest"/> from the cache.
         /// </summary>
         /// <param name="hashCode">Associated hashCode.</param>
-        public static void ReleaseFullscreenAdLoadRequest(int hashCode)
+        public static void ReleaseFullscreenAdLoadRequest(long hashCode)
         {
             if (FullscreenAdLoadRequests.ContainsKey(hashCode))
                 FullscreenAdLoadRequests.Remove(hashCode);

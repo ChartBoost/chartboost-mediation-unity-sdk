@@ -172,7 +172,7 @@ public class Demo : MonoBehaviour
         }
 
         _fullscreenAd.Invalidate();
-        Log("interstitial ad does not exist");
+        Log("fullscreen ad has been invalidated");
     }
 
     public async void OnShowFullscreenClick()
@@ -181,7 +181,6 @@ public class Demo : MonoBehaviour
             return;
 
         var adShowResult = await _fullscreenAd.Show();
-        
         if (adShowResult.Error.HasValue)
         {
             Log($"Fullscreen Failed to Show with Value: {adShowResult.Error?.Code}, {adShowResult.Error?.Message}");

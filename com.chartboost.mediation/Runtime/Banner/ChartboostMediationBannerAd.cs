@@ -49,30 +49,49 @@ namespace Chartboost.Banner
 
         /// <inheritdoc cref="ChartboostMediationBannerBase.SetKeyword"/>>
         public override bool SetKeyword(string keyword, string value) 
-            => _platformBanner.SetKeyword(keyword, value);
+            => _platformBanner.IsValid && _platformBanner.SetKeyword(keyword, value);
         
         /// <inheritdoc cref="ChartboostMediationBannerBase.RemoveKeyword"/>>
         public override string RemoveKeyword(string keyword) 
-            => _platformBanner.RemoveKeyword(keyword);
+            => _platformBanner.IsValid ? _platformBanner.RemoveKeyword(keyword) : null;
         
         /// <inheritdoc cref="ChartboostMediationBannerBase.Destroy"/>>
-        public override void Destroy() 
-            => _platformBanner.Destroy();
-        
+        public override void Destroy()
+        {
+            if (!_platformBanner.IsValid)
+                return;
+            _platformBanner.Destroy();
+            base.Destroy();
+        }
+
         /// <inheritdoc cref="ChartboostMediationBannerBase.Load"/>>
-        public override void Load(ChartboostMediationBannerAdScreenLocation location) 
-            => _platformBanner.Load(location);
-        
+        public override void Load(ChartboostMediationBannerAdScreenLocation location)
+        {
+            if (_platformBanner.IsValid)
+                _platformBanner.Load(location);
+        }
+
         /// <inheritdoc cref="ChartboostMediationBannerBase.SetVisibility"/>>
-        public override void SetVisibility(bool isVisible) 
-            =>_platformBanner.SetVisibility(isVisible);
+        public override void SetVisibility(bool isVisible)
+        {
+            if (_platformBanner.IsValid)
+                _platformBanner.SetVisibility(isVisible);
+        }
 
         /// <inheritdoc cref="ChartboostMediationBannerBase.ClearLoaded"/>>
-        public override void ClearLoaded() 
-            => _platformBanner.ClearLoaded();
+        public override void ClearLoaded()
+        {
+            if (_platformBanner.IsValid)
+                _platformBanner.ClearLoaded();
+        }
 
         /// <inheritdoc cref="ChartboostMediationBannerBase.Remove"/>>
         public override void Remove()
-            =>_platformBanner.Remove();
+        {
+            if (_platformBanner.IsValid)
+                _platformBanner.Remove();
+        }
+
+        ~ChartboostMediationBannerAd() => Destroy();
     }
 }

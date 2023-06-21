@@ -12,6 +12,7 @@ namespace Chartboost.FullScreen
     {
         protected static string logTag = "ChartboostMediationFullScreen (Base)";
         protected readonly string placementName;
+        internal bool IsValid { get; private set; } = true;
 
         protected ChartboostMediationFullScreenBase(string placementName)
             => this.placementName = placementName;
@@ -32,7 +33,10 @@ namespace Chartboost.FullScreen
 
         /// <inheritdoc cref="IChartboostMediationAd.Destroy"/>>
         public virtual void Destroy()
-            => Logger.Log(logTag, $"destroying fullscreen: {placementName}");
+        {
+            Logger.Log(logTag, $"destroying fullscreen: {placementName}");
+            IsValid = false;
+        }
 
         /// <inheritdoc cref="IChartboostMediationFullScreenAdOld.Load"/>>
         public virtual void Load()

@@ -145,7 +145,7 @@ namespace Chartboost.Events
         {
             _context.Post(o =>
             {
-                var ad = CacheManager.GetFullscreenAd((int)adHashCode);
+                var ad = CacheManager.GetFullscreenAd(adHashCode);
 
                 // Ad event was fired but no reference for it exists. Developer did not set strong reference to it so it was gc.
                 if (ad == null)
@@ -170,11 +170,11 @@ namespace Chartboost.Events
                         break;
                     case FullscreenAdEvents.Expire:
                         ad.Request?.OnExpire(ad);
-                        CacheManager.ReleaseFullscreenAd((int)adHashCode);
+                        CacheManager.ReleaseFullscreenAd(adHashCode);
                         break;
                     case FullscreenAdEvents.Close:
                         ad.Request?.OnClose(ad, error);
-                        CacheManager.ReleaseFullscreenAd((int)adHashCode);
+                        CacheManager.ReleaseFullscreenAd(adHashCode);
                         break;
                     default:
                         return;

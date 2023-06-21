@@ -11,6 +11,7 @@ namespace Chartboost.Banner
         protected static string LogTag = "ChartboostMediationBanner (Base)";
         protected readonly string placementName;
         private readonly ChartboostMediationBannerAdSize _size;
+        internal bool IsValid { get; private set; } = true;
 
         protected ChartboostMediationBannerBase(string placementName, ChartboostMediationBannerAdSize size)
         {
@@ -34,7 +35,10 @@ namespace Chartboost.Banner
 
         /// <inheritdoc cref="IChartboostMediationAd.Destroy"/>>
         public virtual void Destroy()
-            => Logger.Log(LogTag, $"destroying banner: {placementName}");
+        {
+            Logger.Log(LogTag, $"destroying banner: {placementName}");
+            IsValid = false;
+        }
 
         /// <inheritdoc cref="IChartboostMediationBannerAd.Load"/>>
         public virtual void Load(ChartboostMediationBannerAdScreenLocation location)

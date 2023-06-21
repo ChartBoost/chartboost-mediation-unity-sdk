@@ -69,9 +69,6 @@ namespace Chartboost.FullScreen.Rewarded
             _chartboostMediationRewardedAdSetCustomData(_uniqueId, customData);
         }
 
-        ~ChartboostMediationRewardedIOS()
-            => _chartboostMediationFreeAdObject(_uniqueId, placementName, false);
-
         #region External Methods
         [DllImport("__Internal")]
         private static extern IntPtr _chartboostMediationGetRewardedAd(string placementName);

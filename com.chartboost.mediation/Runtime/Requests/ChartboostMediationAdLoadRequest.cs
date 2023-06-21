@@ -31,7 +31,7 @@ namespace Chartboost.Requests
         /// </summary>
         public Dictionary<string, string> Keywords { get;  }
 
-        internal int AssociatedProxy { get; set; }
+        internal long AssociatedProxy { get; set; }
         
         ~ChartboostMediationAdLoadRequest()
         {

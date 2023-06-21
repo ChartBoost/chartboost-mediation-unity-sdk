@@ -24,31 +24,47 @@ namespace Chartboost.FullScreen.Interstitial
         }
 
         /// <inheritdoc cref="ChartboostMediationFullScreenBase.SetKeyword"/>>
-        public override bool SetKeyword(string keyword, string value)
-            => _platformInterstitial.SetKeyword(keyword, value);
+        public override bool SetKeyword(string keyword, string value) 
+            => _platformInterstitial.IsValid && _platformInterstitial.SetKeyword(keyword, value);
 
         /// <inheritdoc cref="ChartboostMediationFullScreenBase.RemoveKeyword"/>>
         public override string RemoveKeyword(string keyword)
-            => _platformInterstitial.RemoveKeyword(keyword);
+            => _platformInterstitial.IsValid ? _platformInterstitial.RemoveKeyword(keyword) : null; 
 
         /// <inheritdoc cref="ChartboostMediationFullScreenBase.Destroy"/>>
         public override void Destroy()
-            => _platformInterstitial.Destroy();
+        {
+            if (!_platformInterstitial.IsValid)
+                return;
+            _platformInterstitial.Destroy();
+            base.Destroy();
+        }
 
         /// <inheritdoc cref="ChartboostMediationFullScreenBase.Load"/>>
         public override void Load()
-            => _platformInterstitial.Load();
+        {
+            if (_platformInterstitial.IsValid)
+                _platformInterstitial.Load();
+        }
 
         /// <inheritdoc cref="ChartboostMediationFullScreenBase.Show"/>>
         public override void Show()
-            => _platformInterstitial.Show();
+        {
+            if (_platformInterstitial.IsValid)
+                _platformInterstitial.Show();
+        }
 
         /// <inheritdoc cref="ChartboostMediationFullScreenBase.ReadyToShow"/>>
-        public override bool ReadyToShow()
-            => _platformInterstitial.ReadyToShow();
+        public override bool ReadyToShow() 
+            => IsValid && _platformInterstitial.ReadyToShow();
 
         /// <inheritdoc cref="ChartboostMediationFullScreenBase.ClearLoaded"/>>
         public override void ClearLoaded()
-            => _platformInterstitial.ClearLoaded();
+        {
+            if (_platformInterstitial.IsValid)
+                _platformInterstitial.ClearLoaded();
+        }
+
+        ~ChartboostMediationInterstitialAd() => Destroy();
     }
 }
