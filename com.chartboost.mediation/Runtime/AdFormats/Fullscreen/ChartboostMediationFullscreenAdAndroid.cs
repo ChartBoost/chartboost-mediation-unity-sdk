@@ -12,43 +12,48 @@ namespace Chartboost.AdFormats.Fullscreen
     /// <summary>
     /// Android implementation of IChartboostMediationFullscreenAd
     /// </summary>
-    public sealed class ChartboostMediationFullscreenAdAndroid : IChartboostMediationFullscreenAd
+    public sealed class ChartboostMediationFullscreenAdAndroid : ChartboostMediationFullscreenAdBase
     {
-        private readonly int _hashCode;
-        private bool _isValid = true;
         private readonly AndroidJavaObject _chartboostMediationFullscreenAd;
         
-        public ChartboostMediationFullscreenAdAndroid(AndroidJavaObject fullscreenAd, ChartboostMediationFullscreenAdLoadRequest request)
+        public ChartboostMediationFullscreenAdAndroid(AndroidJavaObject fullscreenAd, ChartboostMediationFullscreenAdLoadRequest request) : base(uniqueId: fullscreenAd.HashCode())
         {
-            _hashCode = fullscreenAd.HashCode();
             _chartboostMediationFullscreenAd = fullscreenAd;
             var bidInfoMap = _chartboostMediationFullscreenAd.Get<AndroidJavaObject>("winningBidInfo");
             if (bidInfoMap != null)
                 WinningBidInfo = bidInfoMap.MapToWinningBidInfo();
             Request = request;
             LoadId = _chartboostMediationFullscreenAd.Get<string>("loadId");
-            CacheManager.TrackFullscreenAd(_hashCode, this);
+            CacheManager.TrackFullscreenAd(uniqueId.ToInt32(), this);
         }
 
         /// <inheritdoc cref="IChartboostMediationFullscreenAd.Request"/>
-        public ChartboostMediationFullscreenAdLoadRequest Request { get; }
+        public override ChartboostMediationFullscreenAdLoadRequest Request { get; }
 
         /// <inheritdoc cref="IChartboostMediationFullscreenAd.CustomData"/>
-        public string CustomData
+        public override string CustomData
         {
-            get => _chartboostMediationFullscreenAd.Get<string>("customData");
-            set => _chartboostMediationFullscreenAd.Set("customData", value);
+            get =>  customData;
+            set
+            {
+                customData = value;
+                if (isValid)
+                    _chartboostMediationFullscreenAd.Set("customData", value);
+            }
         }
-        
+
         /// <inheritdoc cref="IChartboostMediationFullscreenAd.LoadId"/>
-        public string LoadId { get ;}
+        public override string LoadId { get; }
 
         /// <inheritdoc cref="IChartboostMediationFullscreenAd.WinningBidInfo"/>
-        public BidInfo WinningBidInfo { get; }
+        public override BidInfo WinningBidInfo { get; }
 
         /// <inheritdoc cref="IChartboostMediationFullscreenAd.Show"/>
-        public async Task<ChartboostMediationAdShowResult> Show()
+        public override async Task<ChartboostMediationAdShowResult> Show()
         {
+            if (!isValid)
+                return GetAdShowResultForInvalidAd();
+
             var adShowListenerAwaitableProxy = new ChartboostMediationAndroid.ChartboostMediationFullscreenAdShowListener();
             try
             {
@@ -63,15 +68,15 @@ namespace Chartboost.AdFormats.Fullscreen
         }
 
         /// <inheritdoc cref="IChartboostMediationFullscreenAd.Invalidate"/>
-        public void Invalidate()
+        public override void Invalidate()
         {
-            if (!_isValid)
+            if (!isValid)
                 return;
 
-            _isValid = false;
+            isValid = false;
             _chartboostMediationFullscreenAd.Call("invalidate");
             _chartboostMediationFullscreenAd.Dispose();
-            CacheManager.ReleaseFullscreenAd(_hashCode);
+            CacheManager.ReleaseFullscreenAd(uniqueId.ToInt32());
         }
 
         ~ChartboostMediationFullscreenAdAndroid() => Invalidate();
