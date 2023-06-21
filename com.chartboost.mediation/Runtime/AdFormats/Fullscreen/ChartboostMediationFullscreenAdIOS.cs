@@ -18,7 +18,7 @@ namespace Chartboost.AdFormats.Fullscreen
             LoadId = loadId;
             Request = request;
             WinningBidInfo = winningBid;
-            CacheManager.TrackFullscreenAd(uniqueID.ToInt32(), this);
+            CacheManager.TrackFullscreenAd(uniqueID.ToInt64(), this);
         }
 
         /// <inheritdoc cref="IChartboostMediationFullscreenAd.Request"/>
@@ -61,7 +61,7 @@ namespace Chartboost.AdFormats.Fullscreen
 
             isValid = false;
             _chartboostMediationInvalidateFullscreenAd(uniqueId);
-            CacheManager.ReleaseFullscreenAd(uniqueId.ToInt32());
+            CacheManager.ReleaseFullscreenAd(uniqueId.ToInt64());
         }
 
         ~ChartboostMediationFullscreenAdIOS() => Invalidate();

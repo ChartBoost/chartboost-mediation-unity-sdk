@@ -10,7 +10,7 @@ namespace Chartboost.AdFormats.Fullscreen
         protected bool isValid = true;
         protected string customData;
 
-        protected ChartboostMediationFullscreenAdBase(int uniqueId) => this.uniqueId = new IntPtr(uniqueId);
+        protected ChartboostMediationFullscreenAdBase(long uniqueId) => this.uniqueId = new IntPtr(uniqueId);
         protected ChartboostMediationFullscreenAdBase(IntPtr uniqueId) => this.uniqueId = uniqueId;
 
         public abstract ChartboostMediationFullscreenAdLoadRequest Request { get; }

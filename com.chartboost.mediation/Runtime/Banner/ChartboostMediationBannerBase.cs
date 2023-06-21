@@ -36,8 +36,8 @@ namespace Chartboost.Banner
         /// <inheritdoc cref="IChartboostMediationAd.Destroy"/>>
         public virtual void Destroy()
         {
-            IsValid = false;
             Logger.Log(LogTag, $"destroying banner: {placementName}");
+            IsValid = false;
         }
 
         /// <inheritdoc cref="IChartboostMediationBannerAd.Load"/>>
