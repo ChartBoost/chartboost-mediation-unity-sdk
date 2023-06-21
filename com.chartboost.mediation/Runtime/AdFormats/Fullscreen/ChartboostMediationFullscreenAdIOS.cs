@@ -13,7 +13,7 @@ namespace Chartboost.AdFormats.Fullscreen
     /// </summary>
     public class ChartboostMediationFullscreenAdIOS : ChartboostMediationFullscreenAdBase
     {
-        public ChartboostMediationFullscreenAdIOS(IntPtr uniqueID, string loadId, ChartboostMediationFullscreenAdLoadRequest request, BidInfo winningBid) : base(uniqueId:uniqueID)
+        public ChartboostMediationFullscreenAdIOS(IntPtr uniqueID, string loadId, ChartboostMediationFullscreenAdLoadRequest request, BidInfo winningBid) : base(uniqueId: uniqueID)
         {
             LoadId = loadId;
             Request = request;
@@ -23,7 +23,7 @@ namespace Chartboost.AdFormats.Fullscreen
 
         /// <inheritdoc cref="IChartboostMediationFullscreenAd.Request"/>
         public override ChartboostMediationFullscreenAdLoadRequest Request { get; }
-        
+
         /// <inheritdoc cref="IChartboostMediationFullscreenAd.CustomData"/>
         public override string CustomData
         {
@@ -35,13 +35,13 @@ namespace Chartboost.AdFormats.Fullscreen
                     _chartboostMediationFullscreenSetCustomData(uniqueId, customData);
             }
         }
-        
+
         /// <inheritdoc cref="IChartboostMediationFullscreenAd.LoadId"/>
         public override string LoadId { get; }
-        
+
         /// <inheritdoc cref="IChartboostMediationFullscreenAd.WinningBidInfo"/>
         public override BidInfo WinningBidInfo { get; }
-        
+
         /// <inheritdoc cref="IChartboostMediationFullscreenAd.Show"/>
         public override async Task<ChartboostMediationAdShowResult> Show()
         {

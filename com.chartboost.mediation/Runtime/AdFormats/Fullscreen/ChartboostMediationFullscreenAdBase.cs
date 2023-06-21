@@ -13,7 +13,7 @@ namespace Chartboost.AdFormats.Fullscreen
         protected ChartboostMediationFullscreenAdBase(int uniqueId) => this.uniqueId = new IntPtr(uniqueId);
         protected ChartboostMediationFullscreenAdBase(IntPtr uniqueId) => this.uniqueId = uniqueId;
 
-        public abstract  ChartboostMediationFullscreenAdLoadRequest Request { get; }
+        public abstract ChartboostMediationFullscreenAdLoadRequest Request { get; }
         public abstract string CustomData { get; set; }
         public abstract string LoadId { get; }
         public abstract BidInfo WinningBidInfo { get; }

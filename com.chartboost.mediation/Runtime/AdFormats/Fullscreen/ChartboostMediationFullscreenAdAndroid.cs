@@ -15,7 +15,7 @@ namespace Chartboost.AdFormats.Fullscreen
     public sealed class ChartboostMediationFullscreenAdAndroid : ChartboostMediationFullscreenAdBase
     {
         private readonly AndroidJavaObject _chartboostMediationFullscreenAd;
-        
+
         public ChartboostMediationFullscreenAdAndroid(AndroidJavaObject fullscreenAd, ChartboostMediationFullscreenAdLoadRequest request) : base(uniqueId: fullscreenAd.HashCode())
         {
             _chartboostMediationFullscreenAd = fullscreenAd;
@@ -33,7 +33,7 @@ namespace Chartboost.AdFormats.Fullscreen
         /// <inheritdoc cref="IChartboostMediationFullscreenAd.CustomData"/>
         public override string CustomData
         {
-            get =>  customData;
+            get => customData;
             set
             {
                 customData = value;
