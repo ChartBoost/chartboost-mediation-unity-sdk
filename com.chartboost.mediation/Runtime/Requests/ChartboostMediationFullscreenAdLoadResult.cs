@@ -1,22 +1,24 @@
 using Chartboost.AdFormats.Fullscreen;
-using Chartboost.Placements;
 
 namespace Chartboost.Requests
 {
     #nullable enable
+    /// <summary>
+    /// The Chartboost Mediation fullscreen ad load result.
+    /// </summary>
     public struct ChartboostMediationFullscreenAdLoadResult
     {
         /// <summary>
         /// Constructor for successful loads
         /// </summary>
         /// <param name="ad"></param>
-        /// <param name="requestId"></param>
+        /// <param name="loadId"></param>
         /// <param name="metrics"></param>
         /// <param name="error"></param>
-        public ChartboostMediationFullscreenAdLoadResult(IChartboostMediationFullscreenAd ad, string requestId, Metrics? metrics, ChartboostMediationError? error = null)
+        public ChartboostMediationFullscreenAdLoadResult(IChartboostMediationFullscreenAd ad, string loadId, Metrics? metrics, ChartboostMediationError? error = null)
         {
-            AD = ad;
-            RequestId = requestId;
+            Ad = ad;
+            LoadId = loadId;
             Metrics = metrics;
             Error = error;
         }
@@ -26,18 +28,30 @@ namespace Chartboost.Requests
         /// </summary>
         public ChartboostMediationFullscreenAdLoadResult(ChartboostMediationError error)
         {
-            AD = null;
-            RequestId = string.Empty;
+            Ad = null;
+            LoadId = string.Empty;
             Metrics = null;
             Error = error;
         }
 
-        public IChartboostMediationFullscreenAd? AD { get;  }
+        /// <summary>
+        /// The <see cref="IChartboostMediationFullscreenAd"/> that was loaded, if any.
+        /// </summary>
+        public IChartboostMediationFullscreenAd? Ad { get;  }
 
-        public string RequestId { get; }
+        /// <summary>
+        /// The identifier for this load call.
+        /// </summary>
+        public string LoadId { get; }
 
+        /// <summary>
+        /// Metrics data for the ad load event.
+        /// </summary>
         public Metrics? Metrics { get; }
 
+        /// <summary>
+        /// The error that occurred during the ad load event, if any.
+        /// </summary>
         public ChartboostMediationError? Error { get;  }
     }
     #nullable disable

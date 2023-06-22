@@ -30,7 +30,10 @@ namespace Chartboost
         [Description("tapjoy")] TapJoy = 2048,
         [Description("unity")] UnityAds = 4096,
         [Description("vungle")] Vungle = 8192,
-        [Description("yahoo")] Yahoo = 16384
+        [Description("yahoo")] Yahoo = 16384,
+        [Description("mobilefuse")] MobileFuse = 32768,
+        [Description("verve")] Verve = 65536,
+        [Description("hyprmx")] HyprMX = 131072
     }
 
     /// <summary>

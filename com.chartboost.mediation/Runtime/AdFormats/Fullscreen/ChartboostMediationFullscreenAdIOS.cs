@@ -2,59 +2,69 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Chartboost.Placements;
 using Chartboost.Platforms.IOS;
 using Chartboost.Requests;
+using Chartboost.Utilities;
 
 namespace Chartboost.AdFormats.Fullscreen
 {
-    public class ChartboostMediationFullscreenAdIOS : IChartboostMediationFullscreenAd
+    /// <summary>
+    /// IOS implementation of IChartboostMediationFullscreenAd
+    /// </summary>
+    public class ChartboostMediationFullscreenAdIOS : ChartboostMediationFullscreenAdBase
     {
-        private readonly IntPtr _uniqueId;
-        private string _customData;
-        private bool _isValid = true;
-        
-        public ChartboostMediationFullscreenAdIOS(IntPtr uniqueID, string loadId, ChartboostMediationFullscreenAdLoadRequest request, BidInfo winningBid)
+        public ChartboostMediationFullscreenAdIOS(IntPtr uniqueID, string loadId, ChartboostMediationFullscreenAdLoadRequest request, BidInfo winningBid) : base(uniqueId: uniqueID)
         {
-            _uniqueId = uniqueID;
             LoadId = loadId;
             Request = request;
             WinningBidInfo = winningBid;
-            CacheManager.TrackFullscreenAd(uniqueID.ToInt32(), this);
+            CacheManager.TrackFullscreenAd(uniqueID.ToInt64(), this);
         }
 
-        public ChartboostMediationFullscreenAdLoadRequest Request { get; }
-        public string CustomData
+        /// <inheritdoc cref="IChartboostMediationFullscreenAd.Request"/>
+        public override ChartboostMediationFullscreenAdLoadRequest Request { get; }
+
+        /// <inheritdoc cref="IChartboostMediationFullscreenAd.CustomData"/>
+        public override string CustomData
         {
-            get => _customData;
+            get => customData;
             set
             {
-                _customData = value;
-                _chartboostMediationFullscreenSetCustomData(_uniqueId, _customData);
+                customData = value;
+                if (isValid)
+                    _chartboostMediationFullscreenSetCustomData(uniqueId, customData);
             }
         }
-        public string LoadId { get; }
-        public BidInfo WinningBidInfo { get; }
-        public async Task<ChartboostMediationAdShowResult> Show()
+
+        /// <inheritdoc cref="IChartboostMediationFullscreenAd.LoadId"/>
+        public override string LoadId { get; }
+
+        /// <inheritdoc cref="IChartboostMediationFullscreenAd.WinningBidInfo"/>
+        public override BidInfo WinningBidInfo { get; }
+
+        /// <inheritdoc cref="IChartboostMediationFullscreenAd.Show"/>
+        public override async Task<ChartboostMediationAdShowResult> Show()
         {
+            if (!isValid)
+                return GetAdShowResultForInvalidAd();
+
             var (proxy, hashCode) = ChartboostMediationIOS._setupProxy<ChartboostMediationAdShowResult>();
-            _chartboostMediationShowFullscreenAd(_uniqueId, hashCode, ChartboostMediationIOS.FullscreenAdShowResultCallbackProxy);
+            _chartboostMediationShowFullscreenAd(uniqueId, hashCode, ChartboostMediationIOS.FullscreenAdShowResultCallbackProxy);
             return await proxy;
         }
 
-        public void Invalidate()
+        /// <inheritdoc cref="IChartboostMediationFullscreenAd.Invalidate"/>
+        public override void Invalidate()
         {
-            if (!_isValid)
+            if (!isValid)
                 return;
 
-            _isValid = false;
-            _chartboostMediationInvalidateFullscreenAd(_uniqueId);
+            isValid = false;
+            _chartboostMediationInvalidateFullscreenAd(uniqueId);
+            CacheManager.ReleaseFullscreenAd(uniqueId.ToInt64());
         }
 
-        ~ChartboostMediationFullscreenAdIOS()
-        {
-            Invalidate();
-        }
+        ~ChartboostMediationFullscreenAdIOS() => Invalidate();
 
         [DllImport("__Internal")] private static extern void _chartboostMediationFullscreenSetCustomData(IntPtr uniqueId, string customData);
         [DllImport("__Internal")] private static extern void _chartboostMediationInvalidateFullscreenAd(IntPtr uniqueId);

@@ -1,4 +1,5 @@
 #if UNITY_ANDROID
+using Chartboost.Events;
 using UnityEngine;
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Local
@@ -14,8 +15,8 @@ namespace Chartboost.Platforms.Android
 
             public static readonly InterstitialEventListener Instance = new InterstitialEventListener();
 
-            private void DidLoadInterstitial(string placementName, string loadId, string auctionId, string partnerId, double price, string lineItemId, string error)
-                => EventProcessor.ProcessChartboostMediationLoadEvent(placementName, loadId, auctionId, partnerId, price, lineItemId, error, _instance.DidLoadInterstitial);
+            private void DidLoadInterstitial(string placementName, string loadId, string auctionId, string partnerId, double price, string lineItemName, string lineItemId, string error)
+                => EventProcessor.ProcessChartboostMediationLoadEvent(placementName, loadId, auctionId, partnerId, price,  lineItemName, lineItemId, error, _instance.DidLoadInterstitial);
 
             private void DidShowInterstitial(string placementName, string error) 
                 => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidShowInterstitial);
@@ -44,8 +45,8 @@ namespace Chartboost.Platforms.Android
 
             public static readonly RewardedVideoEventListener Instance = new RewardedVideoEventListener();
 
-            private void DidLoadRewarded(string placementName, string loadId, string auctionId, string partnerId, double price, string lineItemId, string error) 
-                => EventProcessor.ProcessChartboostMediationLoadEvent(placementName, loadId, auctionId, partnerId, price, lineItemId, error, _instance.DidLoadRewarded);
+            private void DidLoadRewarded(string placementName, string loadId, string auctionId, string partnerId, double price, string lineItemName, string lineItemId, string error) 
+                => EventProcessor.ProcessChartboostMediationLoadEvent(placementName, loadId, auctionId, partnerId, price, lineItemName, lineItemId, error, _instance.DidLoadRewarded);
 
             private void DidShowRewarded(string placementName, string error) 
                 => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidShowRewarded);

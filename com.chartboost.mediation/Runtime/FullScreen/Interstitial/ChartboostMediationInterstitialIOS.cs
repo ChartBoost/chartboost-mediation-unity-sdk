@@ -35,7 +35,6 @@ namespace Chartboost.FullScreen.Interstitial
         public override void Load()
         {
             base.Load();
-            GC.Collect(); // make sure previous i12 ads get destructed if necessary
             _chartboostMediationInterstitialAdLoad(_uniqueId);
         }
 
@@ -65,9 +64,6 @@ namespace Chartboost.FullScreen.Interstitial
             base.Destroy();
             _chartboostMediationFreeAdObject(_uniqueId, placementName, false);
         }
-
-        ~ChartboostMediationInterstitialIOS() 
-            => _chartboostMediationFreeAdObject(_uniqueId, placementName, false);
 
         #region External Methods
         [DllImport("__Internal")]

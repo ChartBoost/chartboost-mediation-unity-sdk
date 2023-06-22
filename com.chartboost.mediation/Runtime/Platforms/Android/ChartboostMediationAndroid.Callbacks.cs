@@ -1,6 +1,6 @@
 #if UNITY_ANDROID
 using Chartboost.AdFormats.Fullscreen;
-using Chartboost.Placements;
+using Chartboost.Events;
 using Chartboost.Requests;
 using Chartboost.Utilities;
 using UnityEngine;
@@ -76,9 +76,9 @@ namespace Chartboost.Platforms.Android
 
                     var nativeAd = result.Get<AndroidJavaObject>("ad");
                     var ad = new ChartboostMediationFullscreenAdAndroid(nativeAd, CacheManager.GetFullScreenAdLoadRequest(hashCode()));
-                    var requestIdentifier = result.Get<string>("loadId");
+                    var loadId = result.Get<string>("loadId");
                     var metrics = result.Get<AndroidJavaObject>("metrics").JsonObjectToMetrics();
-                    _complete(new ChartboostMediationFullscreenAdLoadResult(ad, requestIdentifier, metrics));
+                    _complete(new ChartboostMediationFullscreenAdLoadResult(ad, loadId, metrics));
                 });
             }
         }
@@ -144,8 +144,8 @@ namespace Chartboost.Platforms.Android
 
             public static readonly BannerEventListener Instance = new BannerEventListener();
 
-            private void DidLoadBanner(string placementName, string loadId, string auctionId, string partnerId, double price, string lineItemId, string error) 
-                => EventProcessor.ProcessChartboostMediationLoadEvent(placementName,  loadId, auctionId, partnerId, price, lineItemId, error, _instance.DidLoadBanner);
+            private void DidLoadBanner(string placementName, string loadId, string auctionId, string partnerId, double price, string lineItemName, string lineItemId, string error) 
+                => EventProcessor.ProcessChartboostMediationLoadEvent(placementName,  loadId, auctionId, partnerId, price, lineItemName, lineItemId, error, _instance.DidLoadBanner);
 
             private void DidClickBanner(string placementName) 
                 => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, null, _instance.DidClickBanner);

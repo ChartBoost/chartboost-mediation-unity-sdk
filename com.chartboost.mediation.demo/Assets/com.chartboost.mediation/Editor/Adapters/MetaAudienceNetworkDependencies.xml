@@ -2,10 +2,10 @@
 <dependencies>
     <androidPackages>
         <!-- Android Adapter -->
-        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-meta-audience-network:4.6.13.7+@aar"/>
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-meta-audience-network:4.6.14.0+@aar"/>
 
         <!-- Partner Android SDK Dependencies-->
-        <androidPackage spec="com.facebook.android:audience-network-sdk:6.13.7"/>
+        <androidPackage spec="com.facebook.android:audience-network-sdk:6.14.0"/>
     </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->

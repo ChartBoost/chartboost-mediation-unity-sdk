@@ -1,8 +1,9 @@
 #if UNITY_IOS
 using System.Runtime.InteropServices;
 using AOT;
-// ReSharper disable InconsistentNaming
+using Chartboost.Events;
 
+// ReSharper disable InconsistentNaming
 namespace Chartboost.Platforms.IOS
 {
     public sealed partial class ChartboostMediationIOS
@@ -19,8 +20,8 @@ namespace Chartboost.Platforms.IOS
         
         #region Interstitial Callbacks
         [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementLoadEvent))]
-        private static void ExternDidLoadInterstitial(string placementName, string loadId, string auctionId, string partnerId, double price, string lineItemId, string error)
-            => EventProcessor.ProcessChartboostMediationLoadEvent(placementName, loadId, auctionId, partnerId, price, lineItemId, error, _instance.DidLoadInterstitial);
+        private static void ExternDidLoadInterstitial(string placementName, string loadId, string auctionId, string partnerId, double price, string lineItemName, string lineItemId, string error)
+            => EventProcessor.ProcessChartboostMediationLoadEvent(placementName, loadId, auctionId, partnerId, price, lineItemName, lineItemId, error, _instance.DidLoadInterstitial);
 
         [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementEvent))]
         private static void ExternDidShowInterstitial(string placementName, string error) 
@@ -47,8 +48,8 @@ namespace Chartboost.Platforms.IOS
 
         #region Rewarded Callbacks
         [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementLoadEvent))]
-        private static void ExternDidLoadRewarded(string placementName, string loadId, string auctionId, string partnerId, double price, string lineItemId, string error) 
-            => EventProcessor.ProcessChartboostMediationLoadEvent(placementName, loadId, auctionId, partnerId, price, lineItemId, error, _instance.DidLoadRewarded);
+        private static void ExternDidLoadRewarded(string placementName, string loadId, string auctionId, string partnerId, double price, string lineItemName, string lineItemId, string error) 
+            => EventProcessor.ProcessChartboostMediationLoadEvent(placementName, loadId, auctionId, partnerId, price, lineItemName, lineItemId, error, _instance.DidLoadRewarded);
 
         [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementEvent))]
         private static void ExternDidShowRewarded(string placementName, string error) 
@@ -69,6 +70,7 @@ namespace Chartboost.Platforms.IOS
         [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementEvent))]
         private static void ExternDidReceiveReward(string placementName, string error) 
             => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidReceiveReward);
+        
         public override event ChartboostMediationPlacementLoadEvent DidLoadRewarded;
         public override event ChartboostMediationPlacementEvent DidShowRewarded;
         public override event ChartboostMediationPlacementEvent DidCloseRewarded;

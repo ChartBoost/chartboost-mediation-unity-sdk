@@ -8,7 +8,6 @@ using Chartboost.Banner;
 using Chartboost.Requests;
 using Newtonsoft.Json;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 [SuppressMessage("ReSharper", "InconsistentNaming")]
@@ -124,44 +123,29 @@ public class Demo : MonoBehaviour
 
         var loadRequest = new ChartboostMediationFullscreenAdLoadRequest(fullscreenPlacementInputField.text, keywords);
 
-        loadRequest.DidClick += fullscreenAd => {
-            Log($"DidClick Name: {fullscreenAd.Request.PlacementName}");
-        };
-        
-        loadRequest.DidClose += (fullscreenAd, error) =>
-        {
-            Log(!error.HasValue
-                ? $"DidClose Name: {fullscreenAd.Request.PlacementName}"
-                : $"DidClose Name: {fullscreenAd.Request.PlacementName}, Code: {error?.code}, Message: {error?.message}");
-        };
-        
-        loadRequest.DidReward += fullscreenAd =>
-        {
-            Log($"DidReward Name: {fullscreenAd.Request.PlacementName}");
-        };
-        
-        loadRequest.DidRecordImpression += fullscreenAd =>
-        {
-            Log($"DidImpressionRecorded Name: {fullscreenAd.Request.PlacementName}");
-        };
-        
-        loadRequest.DidExpire += fullscreenAd =>
-        {
-            Log($"DidExpire Name: {fullscreenAd.Request.PlacementName}");
-        };
+        loadRequest.DidClick += fullscreenAd => Log($"DidClick Name: {fullscreenAd.Request.PlacementName}");
+
+        loadRequest.DidClose += (fullscreenAd, error) => Log(!error.HasValue
+            ? $"DidClose Name: {fullscreenAd.Request.PlacementName}"
+            : $"DidClose Name: {fullscreenAd.Request.PlacementName}, Code: {error?.Code}, Message: {error?.Message}");
+
+        loadRequest.DidReward += fullscreenAd => Log($"DidReward Name: {fullscreenAd.Request.PlacementName}");
+
+        loadRequest.DidRecordImpression += fullscreenAd => Log($"DidImpressionRecorded Name: {fullscreenAd.Request.PlacementName}");
+
+        loadRequest.DidExpire += fullscreenAd => Log($"DidExpire Name: {fullscreenAd.Request.PlacementName}");
 
         var loadResult = await ChartboostMediation.LoadFullscreenAd(loadRequest);
         
         // Failed to Load
         if (loadResult.Error.HasValue)
         {
-            var error = loadResult.Error.Value;
-            Log($"Fullscreen Failed to Load: {error.code}, message: {error.message}");
+            Log($"Fullscreen Failed to Load: {loadResult.Error?.Code}, message: {loadResult.Error?.Message}");
             return;
         }
 
         // Loaded but AD is null?
-        _fullscreenAd = loadResult.AD;
+        _fullscreenAd = loadResult.Ad;
         if (_fullscreenAd == null)
         {
             Log("Fullscreen Ad is null but no error was found???");
@@ -171,12 +155,12 @@ public class Demo : MonoBehaviour
         // DidLoad
         _fullscreenAd.CustomData = DefaultFullscreenAdCustomData;
         var customData = _fullscreenAd.CustomData;
-        var adRequestId = _fullscreenAd.LoadId;
+        var adLoadId = _fullscreenAd.LoadId;
         var bidInfo = _fullscreenAd.WinningBidInfo;
         var placementName = _fullscreenAd?.Request?.PlacementName;
-        var requestId = loadResult.RequestId;
+        var loadId = loadResult.LoadId;
         var metrics = loadResult.Metrics;
-        Log($"Fullscreen: {placementName} Loaded with: \nAdRequestId {adRequestId} \nRequestID {requestId} \nBidInfo: {JsonConvert.SerializeObject(bidInfo, Formatting.Indented)} \n Metrics:{JsonConvert.SerializeObject(metrics, Formatting.Indented)} \n Custom Data: {customData}");
+        Log($"Fullscreen: {placementName} Loaded with: \nAdRequestId {adLoadId} \nRequestID {loadId} \nBidInfo: {JsonConvert.SerializeObject(bidInfo, Formatting.Indented)} \n Metrics:{JsonConvert.SerializeObject(metrics, Formatting.Indented)} \n Custom Data: {customData}");
     }
 
     public void OnInvalidateFullscreenClick()
@@ -188,7 +172,7 @@ public class Demo : MonoBehaviour
         }
 
         _fullscreenAd.Invalidate();
-        Log("interstitial ad does not exist");
+        Log("fullscreen ad has been invalidated");
     }
 
     public async void OnShowFullscreenClick()
@@ -197,15 +181,13 @@ public class Demo : MonoBehaviour
             return;
 
         var adShowResult = await _fullscreenAd.Show();
-        var error = adShowResult.error;
-        
-        if (adShowResult.error.HasValue)
+        if (adShowResult.Error.HasValue)
         {
-            Log($"Fullscreen Failed to Show with Value: {error.Value.code}, {error.Value.message}");
+            Log($"Fullscreen Failed to Show with Value: {adShowResult.Error?.Code}, {adShowResult.Error?.Message}");
             return;
         }
 
-        var metrics = adShowResult.metrics;
+        var metrics = adShowResult.Metrics;
         Log($"Fullscreen Ad Did Show: {JsonConvert.SerializeObject(metrics, Formatting.Indented)}");
     }
     #endregion

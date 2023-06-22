@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file using the standards as defined at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0).
 
+### Version 4.3.0 *(2023-06-22)*
+Improvements:
+- Added support for Rewarded Interstitials. This is available via `ChartboostMediation.LoadFullscreenAd()` and supported only in the latest adapters. Please check each adapter's changelog to confirm which partners support rewarded interstitials.
+- Added new `ChartboostMediationFullscreenAd` APIs which combine and improve the interstitial and rewarded ad APIs. Previous interstitial and rewarded ad APIs are now deprecated.
+- Added `LineItemName` and `LineItemId` to `BidInfo`.
+- Added the ability to set consent and debug flags before calling `start`. Only the last change is applied and will only be updated after the SDK has finished initializing.
+
+Bug Fixes:
+- Added newly released networks into partner killswitch enum.
+
 ## Version 4.2.3 *(2023-05-18)*
 Bug Fixes:
 - Fixed an issue with Unity-iOS Rewarded Ads hanging onto the ad instances for too long, potentially causing duplicate callback events.

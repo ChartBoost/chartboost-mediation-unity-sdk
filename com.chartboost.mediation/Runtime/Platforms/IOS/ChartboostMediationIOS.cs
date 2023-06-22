@@ -1,9 +1,8 @@
 #if UNITY_IPHONE
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using AOT;
-using Chartboost.Placements;
 using Chartboost.Requests;
+using Chartboost.Utilities;
 using Newtonsoft.Json;
 using UnityEngine;
 

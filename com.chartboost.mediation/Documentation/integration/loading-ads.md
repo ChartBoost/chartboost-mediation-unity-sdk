@@ -1,31 +1,61 @@
 # Loading Ads
 
-## Creating Interstitial & Rewarded Ad Objects
+## Loading Fullscreen Placements
 
-To show an Interstitial or Rewarded Ads, first declare a variable to hold a reference to either the Interstitial or Rewarded Chartboost Mediation Ad. Supply the corresponding Placement Name you set up on your dashboard as the argument for each of these functions:
+Since Chartboost Mediation Unity SDK 4.3.X we have deprecated the previous approach for loading fullscreen placements. A new Fullscreen API has been provided for `interstitials`, `rewarded videos` and `rewarded interstitials`, the new API makes use of C# asycn/await methods in order to await for load and show. A detailed example on the load logic for fullscreen placements can be found below:
 
 ```c#
-// Interstitial Ad
-private ChartboostMediationInterstitialAd _interstitialAd;
-
-// Rewarded Ad
-private ChartboostMediationRewardedAd _rewardedAd;
+// Strong reference to cached ad.
+private IChartboostMediationFullscreenAd _fullscreenPlacement;
 
 ...
-_interstitialAd = ChartboostMediation.GetInterstitialAd(PLACEMENT_INTERSTITIAL);
-_rewardedAd = ChartboostMediation.GetRewardedAd(PLACEMENT_REWARDED);
+// keywords are optional
+var keywords = new Dictionary<string, string> { { "i12_keyword1", "i12_value1" } };
+
+// Create a Fullscreen Ad Load Request
+var loadRequest = new ChartboostMediationFullscreenAdLoadRequest(FULLSCREEN_PLACEMENT, keywords);
+
+// Subscribing Instance Delegates
+loadRequest.DidClick += fullscreenAd => Log($"DidClick Name: {fullscreenAd.Request.PlacementName}");
+
+loadRequest.DidClose += (fullscreenAd, error) => 
+Debug.Log(!error.HasValue ? $"DidClose Name: {fullscreenAd.Request.PlacementName}"
+: $"DidClose with Error. Name: {fullscreenAd.Request.PlacementName}, Code: {error?.Code}, Message: {error?.Message}");
+
+loadRequest.DidReward += fullscreenAd => Log($"DidReward Name: {fullscreenAd.Request.PlacementName}");
+
+loadRequest.DidRecordImpression += fullscreenAd => Log($"DidImpressionRecorded Name: {fullscreenAd.Request.PlacementName}");
+
+loadRequest.DidExpire += fullscreenAd => Log($"DidExpire Name: {fullscreenAd.Request.PlacementName}");
+
+// Await on FullscreenAd Load
+var loadResult = await ChartboostMediation.LoadFullscreenAd(loadRequest);
+
+
+// Failed to Load
+if (loadResult.Error.HasValue)
+{
+    Debug.Log($"Fullscreen Failed to Load: {loadResult.Error?.Code}, message: {loadResult.Error?.Message}");
+    return;
+}
+
+// Successful Load!
+
+// Set strong reference to cached ad
+_fullscreenPlacement = loadResult.AD;
+
+// Set custom data before show
+_fullscreenPlacement.CustomData = "CUSTOM DATA HERE!";
+
+var placementName = _fullscreenAd?.Request?.PlacementName;
+Debug.Log($"Fullscreen Placement Loaded with PlacementName: {placementName}")
 ```
 
-## Loading Interstitial & Rewarded Ads
+> **Note** \
+> The new fullscreen API supports multiple placement loads of the same placement. It is important to properly manage your ad instances if you are planning to create an Ad Queue system.
 
-You will need to create an instance for each Placement Name you want to use. Finally, make the call to load the ad:
-
-```c#
-_interstitialAd.Load();
-_rewardedAd.Load();
-```
-
-You can implement delegates in your class to receive notifications about the success or failure of the ad loading process for both Interstitial and Rewarded formats. See section [Delegate Usage](delegate-usage.md) for more details.
+> **Warning** \
+> The new fullscreen API utilizes instance based callbacks to notify information regarding the advertisement life-cycle. You must take this into account when migrating from the old API static callbacks.
 
 ## Creating Banner Ad Objects
 
@@ -100,9 +130,17 @@ You can implement delegates in your class to receive notifications about the suc
 Sometimes, you may need to clear loaded ads on existing placements to request another ad (i.e. for an in-house programmatic auction). To do this:
 
 ```c#
+// Old API
 _interstitialAd.ClearLoaded();
 _rewardedAd.ClearLoaded();
+
 _bannerAd.ClearLoaded();
 ```
 
-The clearLoaded API returns a boolean and indicates if the ad object has been cleared and is ready for another load call.
+```c#
+/// New fullscreen API
+_fullscreenPlacement.Invalidate();
+```
+
+> **Warning** \
+> `Invalidate` behaves similarly like `ClearLoaded` and `Destroy`. As such, once called, you must free your ad reference to avoid any possible issues. 

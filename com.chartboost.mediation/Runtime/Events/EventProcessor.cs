@@ -2,13 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using Chartboost.Placements;
+using Chartboost.Utilities;
 using UnityEditor;
 using UnityEngine;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo
-namespace Chartboost
+namespace Chartboost.Events
 {
     public static class EventProcessor
     {
@@ -95,6 +95,7 @@ namespace Chartboost
                 }
             }, null);
         }
+        
         public static void ProcessChartboostMediationPlacementEvent(string placementName, string error, ChartboostMediationPlacementEvent placementEvent)
         {
             if (placementEvent == null)
@@ -113,7 +114,7 @@ namespace Chartboost
             }, null);
         }
 
-        public static void ProcessChartboostMediationLoadEvent(string placementName, string loadId, string auctionId, string partnerId, double price, string lineItemId, string error, ChartboostMediationPlacementLoadEvent bidEvent)
+        public static void ProcessChartboostMediationLoadEvent(string placementName, string loadId, string auctionId, string partnerId, double price, string lineItemName, string lineItemId, string error, ChartboostMediationPlacementLoadEvent bidEvent)
         {
             if (bidEvent == null)
                 return;
@@ -122,7 +123,7 @@ namespace Chartboost
             {
                 try
                 {
-                    var bidInfo = new BidInfo(auctionId, partnerId, price, lineItemId);
+                    var bidInfo = new BidInfo(auctionId, partnerId, price, lineItemName, lineItemId);
                     bidEvent(placementName, loadId, bidInfo, error);
                 }
                 catch (Exception e)
@@ -144,7 +145,7 @@ namespace Chartboost
         {
             _context.Post(o =>
             {
-                var ad = CacheManager.GetFullscreenAd((int)adHashCode);
+                var ad = CacheManager.GetFullscreenAd(adHashCode);
 
                 // Ad event was fired but no reference for it exists. Developer did not set strong reference to it so it was gc.
                 if (ad == null)
@@ -169,11 +170,11 @@ namespace Chartboost
                         break;
                     case FullscreenAdEvents.Expire:
                         ad.Request?.OnExpire(ad);
-                        CacheManager.ReleaseFullscreenAd((int)adHashCode);
+                        CacheManager.ReleaseFullscreenAd(adHashCode);
                         break;
                     case FullscreenAdEvents.Close:
                         ad.Request?.OnClose(ad, error);
-                        CacheManager.ReleaseFullscreenAd((int)adHashCode);
+                        CacheManager.ReleaseFullscreenAd(adHashCode);
                         break;
                     default:
                         return;
