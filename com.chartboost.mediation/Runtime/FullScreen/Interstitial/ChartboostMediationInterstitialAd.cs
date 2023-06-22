@@ -56,7 +56,7 @@ namespace Chartboost.FullScreen.Interstitial
 
         /// <inheritdoc cref="ChartboostMediationFullScreenBase.ReadyToShow"/>>
         public override bool ReadyToShow() 
-            => IsValid && _platformInterstitial.ReadyToShow();
+            =>  _platformInterstitial.IsValid && _platformInterstitial.ReadyToShow();
 
         /// <inheritdoc cref="ChartboostMediationFullScreenBase.ClearLoaded"/>>
         public override void ClearLoaded()
