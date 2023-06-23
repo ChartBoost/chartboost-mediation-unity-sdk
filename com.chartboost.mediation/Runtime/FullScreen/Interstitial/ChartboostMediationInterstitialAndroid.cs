@@ -8,7 +8,7 @@ namespace Chartboost.FullScreen.Interstitial
     /// <summary>
     /// ChartboostMediation interstitial object for Android.
     /// </summary>
-    public class ChartboostMediationInterstitialAndroid : ChartboostMediationFullScreenBase
+    public sealed class ChartboostMediationInterstitialAndroid : ChartboostMediationFullScreenBase
     {
         private readonly AndroidJavaObject _androidAd;
 
@@ -18,6 +18,8 @@ namespace Chartboost.FullScreen.Interstitial
             using var unityBridge = ChartboostMediationAndroid.GetUnityBridge();
             _androidAd = unityBridge.CallStatic<AndroidJavaObject>("getInterstitialAd", placementName);
         }
+
+        internal override bool IsValid { get; set; } = true;
 
         /// <inheritdoc cref="ChartboostMediationFullScreenBase.SetKeyword"/>>
         public override bool SetKeyword(string keyword, string value)
@@ -38,6 +40,7 @@ namespace Chartboost.FullScreen.Interstitial
         {
             base.Destroy();
             _androidAd.Call("destroy");
+            IsValid = false;
         }
 
         /// <inheritdoc cref="ChartboostMediationFullScreenBase.Load"/>>

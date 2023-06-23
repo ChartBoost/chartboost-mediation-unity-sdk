@@ -12,9 +12,9 @@ namespace Chartboost.FullScreen
     {
         protected static string logTag = "ChartboostMediationFullScreen (Base)";
         protected readonly string placementName;
-        internal bool IsValid { get; private set; } = true;
+        internal abstract bool IsValid { get; set; }
 
-        protected ChartboostMediationFullScreenBase(string placementName)
+        protected ChartboostMediationFullScreenBase(string placementName) 
             => this.placementName = placementName;
 
         /// <inheritdoc cref="IChartboostMediationAd.SetKeyword"/>>
@@ -35,7 +35,6 @@ namespace Chartboost.FullScreen
         public virtual void Destroy()
         {
             Logger.Log(logTag, $"destroying fullscreen: {placementName}");
-            IsValid = false;
         }
 
         /// <inheritdoc cref="IChartboostMediationFullScreenAdOld.Load"/>>
@@ -69,5 +68,7 @@ namespace Chartboost.FullScreen
         {
             logTag = "ChartboostMediationInterstitial (Unsupported)";
         }
+
+        internal override bool IsValid { get; set; }
     }
 }

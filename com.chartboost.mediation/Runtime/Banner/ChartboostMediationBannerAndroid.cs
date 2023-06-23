@@ -8,7 +8,7 @@ namespace Chartboost.Banner
     /// <summary>
     /// Chartboost Mediation banner object for Android.
     /// </summary>
-    public class ChartboostMediationBannerAndroid : ChartboostMediationBannerBase
+    public sealed class ChartboostMediationBannerAndroid : ChartboostMediationBannerBase
     {
         private readonly AndroidJavaObject _androidAd;
 
@@ -18,6 +18,8 @@ namespace Chartboost.Banner
             using var unityBridge = ChartboostMediationAndroid.GetUnityBridge();
             _androidAd = unityBridge.CallStatic<AndroidJavaObject>("getBannerAd", placementName, (int)size);
         }
+
+        internal override bool IsValid { get; set; } = true;
 
         /// <inheritdoc cref="IChartboostMediationAd.SetKeyword"/>>
         public override bool SetKeyword(string keyword, string value)
@@ -38,6 +40,7 @@ namespace Chartboost.Banner
         {
             base.Destroy();
             _androidAd.Call("destroy");
+            IsValid = false;
         }
 
         /// <inheritdoc cref="IChartboostMediationBannerAd.Load"/>>
