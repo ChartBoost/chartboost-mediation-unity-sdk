@@ -1,3 +1,5 @@
+using System;
+
 namespace Chartboost.Banner
 {
     /// <summary>
@@ -34,7 +36,7 @@ namespace Chartboost.Banner
     {
         private readonly ChartboostMediationBannerBase _platformBanner;
 
-        public ChartboostMediationBannerAd(string placementName, ChartboostMediationBannerAdSize size) : base(placementName, size)
+        internal ChartboostMediationBannerAd(string placementName, ChartboostMediationBannerAdSize size) : base(placementName, size)
         {
             #if UNITY_EDITOR
             _platformBanner = new ChartboostMediationBannerUnsupported(placementName, size);
@@ -88,6 +90,7 @@ namespace Chartboost.Banner
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerBase.Remove"/>>
+        [Obsolete("Remove has been deprecated, please use Destroy instead.")]
         public override void Remove()
         {
             if (IsValid)

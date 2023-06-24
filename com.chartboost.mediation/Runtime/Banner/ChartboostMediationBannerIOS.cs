@@ -36,7 +36,7 @@ namespace Chartboost.Banner
         public override void Destroy()
         {
             base.Destroy();
-            Remove();
+            _chartboostMediationBannerRemove(_uniqueId);
             _chartboostMediationFreeAdObject(_uniqueId, placementName, true);
             IsValid = false;
         }
@@ -66,7 +66,7 @@ namespace Chartboost.Banner
         public override void Remove()
         {
             base.Remove();
-            _chartboostMediationBannerRemove(_uniqueId);
+            Destroy();
         }
 
         #region External Methods

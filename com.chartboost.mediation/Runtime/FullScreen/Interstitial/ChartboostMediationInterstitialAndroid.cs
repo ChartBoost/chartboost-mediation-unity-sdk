@@ -40,6 +40,7 @@ namespace Chartboost.FullScreen.Interstitial
         {
             base.Destroy();
             _androidAd.Call("destroy");
+            _androidAd.Dispose();
             IsValid = false;
         }
 

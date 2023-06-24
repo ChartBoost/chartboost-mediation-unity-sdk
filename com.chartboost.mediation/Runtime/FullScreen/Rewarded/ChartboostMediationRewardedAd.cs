@@ -9,7 +9,7 @@ namespace Chartboost.FullScreen.Rewarded
 	public sealed class ChartboostMediationRewardedAd : ChartboostMediationRewardedBase {
 		private readonly ChartboostMediationRewardedBase _platformRewarded;
 
-		public ChartboostMediationRewardedAd(string placementName) : base(placementName)
+		internal ChartboostMediationRewardedAd(string placementName) : base(placementName)
 		{
 			#if UNITY_EDITOR
 			_platformRewarded = new ChartboostMediationRewardedUnsupported(placementName);

@@ -68,6 +68,7 @@ namespace Chartboost.Banner
         public override void Remove()
         {
             //android doesn't have a remove method. Instead, calling destroy
+            base.Remove();
             Destroy();
         }
     }

@@ -1,3 +1,5 @@
+using System;
+
 namespace Chartboost.Banner
 {
     /// <summary>
@@ -24,6 +26,7 @@ namespace Chartboost.Banner
         /// <summary>
         /// Remove the banner.
         /// </summary>
+        [Obsolete("Remove has been deprecated, please use Destroy instead.")] 
         void Remove();
     }
 }

@@ -10,7 +10,7 @@ namespace Chartboost.FullScreen.Interstitial
     {
         private readonly ChartboostMediationFullScreenBase _platformInterstitial;
 
-        public ChartboostMediationInterstitialAd(string placementName) : base(placementName)
+        internal ChartboostMediationInterstitialAd(string placementName) : base(placementName)
         {
             #if UNITY_EDITOR
             _platformInterstitial = new ChartboostMediationInterstitialUnsupported(placementName);
@@ -36,9 +36,8 @@ namespace Chartboost.FullScreen.Interstitial
         /// <inheritdoc cref="ChartboostMediationFullScreenBase.Destroy"/>>
         public override void Destroy()
         {
-            if (!IsValid)
-                return;
-            _platformInterstitial.Destroy();
+            if (IsValid)
+               _platformInterstitial.Destroy();
         }
 
         /// <inheritdoc cref="ChartboostMediationFullScreenBase.Load"/>>
