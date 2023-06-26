@@ -12,7 +12,7 @@ using Logger = Chartboost.Utilities.Logger;
 
 namespace Chartboost.Platforms
 {
-    public abstract class ChartboostMediationExternal : IChartboostMediationLifeCycle, IChartboostMediationInterstitialEvents, IChartboostMediationRewardedEvents, IChartboostMediationBannerEvents
+    internal abstract class ChartboostMediationExternal : IChartboostMediationLifeCycle, IChartboostMediationInterstitialEvents, IChartboostMediationRewardedEvents, IChartboostMediationBannerEvents
     {
         public static bool IsInitialized { get; protected set; }
         

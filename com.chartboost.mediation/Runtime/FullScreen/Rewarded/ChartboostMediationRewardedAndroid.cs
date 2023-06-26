@@ -8,7 +8,7 @@ namespace Chartboost.FullScreen.Rewarded
     /// <summary>
     /// Chartboost Mediation rewarded ad object for Android.
     /// </summary>
-    public sealed class ChartboostMediationRewardedAndroid : ChartboostMediationRewardedBase
+    internal sealed class ChartboostMediationRewardedAndroid : ChartboostMediationRewardedBase
     {
         private readonly AndroidJavaObject _androidAd;
         private readonly int _uniqueId;

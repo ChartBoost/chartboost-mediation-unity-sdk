@@ -79,7 +79,7 @@ namespace Chartboost.FullScreen.Rewarded
 			base.Destroy();
             
 			if (isCollected) 
-				EventProcessor.ReportUnexpectedSystemError($"Interstitial Ad with placement: {placementName}, got GC. Make sure to properly dispose of ads utilizing Destroy for the best integration experience.");
+				EventProcessor.ReportUnexpectedSystemError($"Rewarded Ad with placement: {placementName}, got GC. Make sure to properly dispose of ads utilizing Destroy for the best integration experience.");
 		}
 
 		~ChartboostMediationRewardedAd() => Destroy(true);

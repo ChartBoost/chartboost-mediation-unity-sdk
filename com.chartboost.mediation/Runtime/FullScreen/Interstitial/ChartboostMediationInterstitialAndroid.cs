@@ -8,7 +8,7 @@ namespace Chartboost.FullScreen.Interstitial
     /// <summary>
     /// ChartboostMediation interstitial object for Android.
     /// </summary>
-    public sealed class ChartboostMediationInterstitialAndroid : ChartboostMediationFullScreenBase
+    internal sealed class ChartboostMediationInterstitialAndroid : ChartboostMediationFullScreenBase
     {
         private readonly AndroidJavaObject _androidAd;
         private readonly int _uniqueId;

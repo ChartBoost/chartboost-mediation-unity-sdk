@@ -3,7 +3,7 @@ using Chartboost.Requests;
 
 namespace Chartboost.Platforms
 {
-    public class ChartboostMediationUnsupported : ChartboostMediationExternal
+    internal class ChartboostMediationUnsupported : ChartboostMediationExternal
     {
         private static string _userIdentifier;
         

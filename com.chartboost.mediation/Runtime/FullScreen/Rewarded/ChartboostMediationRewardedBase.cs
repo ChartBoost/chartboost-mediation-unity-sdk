@@ -19,7 +19,7 @@ namespace Chartboost.FullScreen.Rewarded
     /// <summary>
     /// Chartboost Mediation rewarded ad object for unsupported platforms.
     /// </summary>
-    public sealed class ChartboostMediationRewardedUnsupported : ChartboostMediationRewardedBase
+    internal sealed class ChartboostMediationRewardedUnsupported : ChartboostMediationRewardedBase
     {
         internal override bool IsValid { get; set; }
 

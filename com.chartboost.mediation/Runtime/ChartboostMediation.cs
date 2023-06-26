@@ -23,7 +23,7 @@ namespace Chartboost
     /// </summary>
     public sealed class ChartboostMediation
     {
-        internal static readonly ChartboostMediationExternal _chartboostMediationExternal;
+        private static readonly ChartboostMediationExternal _chartboostMediationExternal;
 
         static ChartboostMediation() 
         {

@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Chartboost.Platforms.IOS
 {
-    public sealed partial class ChartboostMediationIOS : ChartboostMediationExternal
+    internal sealed partial class ChartboostMediationIOS : ChartboostMediationExternal
     {
         #region Objective-C Extern Members
         [DllImport("__Internal")]

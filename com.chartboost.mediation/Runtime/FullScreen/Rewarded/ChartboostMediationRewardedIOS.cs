@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace Chartboost.FullScreen.Rewarded
 {
-    public sealed class ChartboostMediationRewardedIOS : ChartboostMediationRewardedBase
+    internal sealed class ChartboostMediationRewardedIOS : ChartboostMediationRewardedBase
     {
         private readonly IntPtr _uniqueId;
 
