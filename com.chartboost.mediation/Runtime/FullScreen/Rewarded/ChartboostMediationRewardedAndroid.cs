@@ -1,5 +1,6 @@
 #if UNITY_ANDROID
 using Chartboost.Platforms.Android;
+using Chartboost.Utilities;
 using UnityEngine;
 
 namespace Chartboost.FullScreen.Rewarded
@@ -10,12 +11,14 @@ namespace Chartboost.FullScreen.Rewarded
     public sealed class ChartboostMediationRewardedAndroid : ChartboostMediationRewardedBase
     {
         private readonly AndroidJavaObject _androidAd;
+        private readonly int _uniqueId;
 
         public ChartboostMediationRewardedAndroid(string placementName) : base(placementName)
         {
             logTag = "ChartboostMediationRewarded (Android)";
             using var unityBridge = ChartboostMediationAndroid.GetUnityBridge();
             _androidAd = unityBridge.CallStatic<AndroidJavaObject>("getRewardedAd", placementName);
+            _uniqueId = _androidAd.HashCode();
         }
         
         internal override bool IsValid { get; set; } = true;
@@ -38,8 +41,9 @@ namespace Chartboost.FullScreen.Rewarded
         public override void Destroy()
         {
             base.Destroy();
-            _androidAd.Call("destroy");
             IsValid = false;
+            _androidAd.Dispose();
+            AndroidAdStore.ReleaseLegacyAd(_uniqueId);
         }
 
         /// <inheritdoc cref="ChartboostMediationRewardedBase.Load"/>>

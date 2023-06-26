@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Chartboost.Events;
 using Chartboost.Requests;
 
 namespace Chartboost.AdFormats.Fullscreen
@@ -19,6 +20,14 @@ namespace Chartboost.AdFormats.Fullscreen
         public abstract BidInfo WinningBidInfo { get; }
         public abstract Task<ChartboostMediationAdShowResult> Show();
         public abstract void Invalidate();
+
+        protected void Invalidate(bool isCollected)
+        {
+            // only report error if the ad is being disposed by gc and it has not been manually invalidated.
+            if (isCollected && isValid)
+                EventProcessor.ReportUnexpectedSystemError($"Fullscreen Ad with placement: {Request.PlacementName} and LoadId: {LoadId}, got GC. Make sure to properly dispose of ads utilizing Invalidate for the best integration experience.");
+            Invalidate();
+        }
 
         protected static ChartboostMediationAdShowResult GetAdShowResultForInvalidAd()
         {

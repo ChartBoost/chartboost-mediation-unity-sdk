@@ -1,6 +1,6 @@
 #if UNITY_ANDROID
-using Chartboost.Platforms;
 using Chartboost.Platforms.Android;
+using Chartboost.Utilities;
 using UnityEngine;
 
 namespace Chartboost.FullScreen.Interstitial
@@ -11,12 +11,14 @@ namespace Chartboost.FullScreen.Interstitial
     public sealed class ChartboostMediationInterstitialAndroid : ChartboostMediationFullScreenBase
     {
         private readonly AndroidJavaObject _androidAd;
+        private readonly int _uniqueId;
 
         public ChartboostMediationInterstitialAndroid(string placementName) : base(placementName)
         {
             logTag = "ChartboostMediationInterstitial (Android)";
             using var unityBridge = ChartboostMediationAndroid.GetUnityBridge();
             _androidAd = unityBridge.CallStatic<AndroidJavaObject>("getInterstitialAd", placementName);
+            _uniqueId = _androidAd.HashCode();
         }
 
         internal override bool IsValid { get; set; } = true;
@@ -39,9 +41,9 @@ namespace Chartboost.FullScreen.Interstitial
         public override void Destroy()
         {
             base.Destroy();
-            _androidAd.Call("destroy");
-            _androidAd.Dispose();
             IsValid = false;
+            _androidAd.Dispose();
+            AndroidAdStore.ReleaseLegacyAd(_uniqueId);
         }
 
         /// <inheritdoc cref="ChartboostMediationFullScreenBase.Load"/>>

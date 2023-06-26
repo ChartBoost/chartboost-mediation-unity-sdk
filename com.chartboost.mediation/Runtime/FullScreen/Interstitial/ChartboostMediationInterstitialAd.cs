@@ -1,4 +1,5 @@
 using System;
+using Chartboost.Events;
 
 namespace Chartboost.FullScreen.Interstitial
 {
@@ -36,8 +37,7 @@ namespace Chartboost.FullScreen.Interstitial
         /// <inheritdoc cref="ChartboostMediationFullScreenBase.Destroy"/>>
         public override void Destroy()
         {
-            if (IsValid)
-               _platformInterstitial.Destroy();
+            Destroy(false);
         }
 
         /// <inheritdoc cref="ChartboostMediationFullScreenBase.Load"/>>
@@ -64,7 +64,18 @@ namespace Chartboost.FullScreen.Interstitial
             if (IsValid)
                 _platformInterstitial.ClearLoaded();
         }
+        
+        private void Destroy(bool isCollected)
+        {
+            if (!IsValid)
+                return;
+            _platformInterstitial.Destroy();
+            base.Destroy();
+            
+            if (isCollected) 
+                EventProcessor.ReportUnexpectedSystemError($"Interstitial Ad with placement: {placementName}, got GC. Make sure to properly dispose of ads utilizing Destroy for the best integration experience.");
+        }
 
-        ~ChartboostMediationInterstitialAd() => Destroy();
+        ~ChartboostMediationInterstitialAd() => Destroy(true);
     }
 }

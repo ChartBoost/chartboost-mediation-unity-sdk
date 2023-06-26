@@ -1,3 +1,4 @@
+using System;
 using Chartboost.Interfaces;
 using Chartboost.Utilities;
 
@@ -52,6 +53,7 @@ namespace Chartboost.Banner
             => Logger.Log(LogTag, $"clearing banner: {placementName}");
 
         /// <inheritdoc cref="IChartboostMediationBannerAd.Remove"/>>
+        [Obsolete("Remove has been deprecated, please use Destroy instead.")]
         public virtual void Remove()
             => Logger.Log(LogTag, $"removing banner: {placementName}");
     }

@@ -22,7 +22,7 @@ namespace Chartboost.Utilities
             FullscreenCache = new Dictionary<long, WeakReference<IChartboostMediationFullscreenAd>>();
             FullscreenAdLoadRequests = new Dictionary<long, ChartboostMediationFullscreenAdLoadRequest>();
         }
-
+        
         /// <summary>
         /// Keeps track of a <see cref="IChartboostMediationFullscreenAd"/> with a weak reference so it can be disposed by GC.
         /// </summary>
@@ -89,5 +89,7 @@ namespace Chartboost.Utilities
             if (FullscreenAdLoadRequests.ContainsKey(hashCode))
                 FullscreenAdLoadRequests.Remove(hashCode);
         }
+        
+        public new static string CacheInfo() => $"CacheManager Fullscreen Cache: {FullscreenCache.Count}, FullscreenAdLoadRequest: {FullscreenAdLoadRequests.Count}\n";
     }
 }

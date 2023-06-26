@@ -1,4 +1,5 @@
 using System;
+using Chartboost.Events;
 
 namespace Chartboost.Banner
 {
@@ -62,10 +63,7 @@ namespace Chartboost.Banner
         /// <inheritdoc cref="ChartboostMediationBannerBase.Destroy"/>>
         public override void Destroy()
         {
-            if (!IsValid)
-                return;
-            _platformBanner.Destroy();
-            base.Destroy();
+            Destroy(false);
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerBase.Load"/>>
@@ -90,13 +88,23 @@ namespace Chartboost.Banner
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerBase.Remove"/>>
-        [Obsolete("Remove has been deprecated, please use Destroy instead.")]
         public override void Remove()
         {
             if (IsValid)
                 _platformBanner.Remove();
         }
 
-        ~ChartboostMediationBannerAd() => Destroy();
+        private void Destroy(bool isCollected)
+        {
+            if (!IsValid)
+                return;
+            _platformBanner.Destroy();
+            base.Destroy();
+            
+            if (isCollected) 
+                EventProcessor.ReportUnexpectedSystemError($"Banner Ad with placement: {placementName}, got GC. Make sure to properly dispose of ads utilizing Destroy for the best integration experience.");
+        }
+
+        ~ChartboostMediationBannerAd() => Destroy(true);
     }
 }

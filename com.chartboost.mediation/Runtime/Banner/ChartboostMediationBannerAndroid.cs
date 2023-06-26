@@ -1,6 +1,7 @@
 #if UNITY_ANDROID
 using Chartboost.Interfaces;
 using Chartboost.Platforms.Android;
+using Chartboost.Utilities;
 using UnityEngine;
 
 namespace Chartboost.Banner
@@ -11,12 +12,14 @@ namespace Chartboost.Banner
     public sealed class ChartboostMediationBannerAndroid : ChartboostMediationBannerBase
     {
         private readonly AndroidJavaObject _androidAd;
+        private readonly int _uniqueId;
 
         public ChartboostMediationBannerAndroid(string placementName, ChartboostMediationBannerAdSize size) : base(placementName, size)
         {
             LogTag = "ChartboostMediationBanner (Android)";
             using var unityBridge = ChartboostMediationAndroid.GetUnityBridge();
             _androidAd = unityBridge.CallStatic<AndroidJavaObject>("getBannerAd", placementName, (int)size);
+            _uniqueId = _androidAd.HashCode();
         }
 
         internal override bool IsValid { get; set; } = true;
@@ -39,8 +42,9 @@ namespace Chartboost.Banner
         public override void Destroy()
         {
             base.Destroy();
-            _androidAd.Call("destroy");
             IsValid = false;
+            _androidAd.Dispose();
+            AndroidAdStore.ReleaseLegacyAd(_uniqueId);
         }
 
         /// <inheritdoc cref="IChartboostMediationBannerAd.Load"/>>

@@ -1,4 +1,5 @@
 using System;
+using Chartboost.Events;
 
 namespace Chartboost.FullScreen.Rewarded
 {
@@ -35,10 +36,7 @@ namespace Chartboost.FullScreen.Rewarded
 		/// <inheritdoc cref="ChartboostMediationRewardedBase.Destroy"/>>
 		public override void Destroy()
 		{
-			if (!IsValid)
-				return;
-			_platformRewarded.Destroy();
-			base.Destroy();
+			Destroy(false);
 		}
 
 		/// <inheritdoc cref="ChartboostMediationRewardedBase.Load"/>>
@@ -72,7 +70,18 @@ namespace Chartboost.FullScreen.Rewarded
 			if (IsValid)
 				_platformRewarded.SetCustomData(customData);
 		}
+		
+		private void Destroy(bool isCollected)
+		{
+			if (!IsValid)
+				return;
+			_platformRewarded.Destroy();
+			base.Destroy();
+            
+			if (isCollected) 
+				EventProcessor.ReportUnexpectedSystemError($"Interstitial Ad with placement: {placementName}, got GC. Make sure to properly dispose of ads utilizing Destroy for the best integration experience.");
+		}
 
-		~ChartboostMediationRewardedAd() => Destroy();
+		~ChartboostMediationRewardedAd() => Destroy(true);
 	}
 }

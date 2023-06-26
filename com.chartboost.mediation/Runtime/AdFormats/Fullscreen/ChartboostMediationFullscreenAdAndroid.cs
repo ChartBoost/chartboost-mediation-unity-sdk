@@ -36,9 +36,10 @@ namespace Chartboost.AdFormats.Fullscreen
             get => customData;
             set
             {
+                if (!isValid) 
+                    return;
                 customData = value;
-                if (isValid)
-                    _chartboostMediationFullscreenAd.Set("customData", value);
+                _chartboostMediationFullscreenAd.Set("customData", value);
             }
         }
 
@@ -74,12 +75,12 @@ namespace Chartboost.AdFormats.Fullscreen
                 return;
 
             isValid = false;
-            _chartboostMediationFullscreenAd.Call("invalidate");
             _chartboostMediationFullscreenAd.Dispose();
+            AndroidAdStore.ReleaseFullscreenAd(uniqueId.ToInt32());
             CacheManager.ReleaseFullscreenAd(uniqueId.ToInt64());
         }
 
-        ~ChartboostMediationFullscreenAdAndroid() => Invalidate();
+        ~ChartboostMediationFullscreenAdAndroid() => Invalidate(true);
     }
 }
 #endif
