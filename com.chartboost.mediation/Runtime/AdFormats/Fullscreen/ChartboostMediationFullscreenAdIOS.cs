@@ -64,7 +64,7 @@ namespace Chartboost.AdFormats.Fullscreen
             CacheManager.ReleaseFullscreenAd(uniqueId.ToInt64());
         }
 
-        ~ChartboostMediationFullscreenAdIOS() => Invalidate();
+        ~ChartboostMediationFullscreenAdIOS() => Invalidate(true);
 
         [DllImport("__Internal")] private static extern void _chartboostMediationFullscreenSetCustomData(IntPtr uniqueId, string customData);
         [DllImport("__Internal")] private static extern void _chartboostMediationInvalidateFullscreenAd(IntPtr uniqueId);

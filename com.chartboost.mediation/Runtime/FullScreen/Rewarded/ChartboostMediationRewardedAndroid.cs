@@ -1,5 +1,6 @@
 #if UNITY_ANDROID
 using Chartboost.Platforms.Android;
+using Chartboost.Utilities;
 using UnityEngine;
 
 namespace Chartboost.FullScreen.Rewarded
@@ -7,19 +8,20 @@ namespace Chartboost.FullScreen.Rewarded
     /// <summary>
     /// Chartboost Mediation rewarded ad object for Android.
     /// </summary>
-    public class ChartboostMediationRewardedAndroid : ChartboostMediationRewardedBase
+    internal sealed class ChartboostMediationRewardedAndroid : ChartboostMediationRewardedBase
     {
         private readonly AndroidJavaObject _androidAd;
+        private readonly int _uniqueId;
 
         public ChartboostMediationRewardedAndroid(string placementName) : base(placementName)
         {
             logTag = "ChartboostMediationRewarded (Android)";
             using var unityBridge = ChartboostMediationAndroid.GetUnityBridge();
             _androidAd = unityBridge.CallStatic<AndroidJavaObject>("getRewardedAd", placementName);
+            _uniqueId = _androidAd.HashCode();
         }
         
-        // *NOTE* Implementation for Rewarded/FullScreen is very similar, and it could be simplified on a single file,
-        // for now it will stay separated in case placement specific placement changes are required. This only applies for Android.
+        internal override bool IsValid { get; set; } = true;
 
         /// <inheritdoc cref="ChartboostMediationRewardedBase.SetKeyword"/>>
         public override bool SetKeyword(string keyword, string value)
@@ -39,7 +41,9 @@ namespace Chartboost.FullScreen.Rewarded
         public override void Destroy()
         {
             base.Destroy();
-            _androidAd.Call("destroy");
+            IsValid = false;
+            _androidAd.Dispose();
+            AndroidAdStore.ReleaseLegacyAd(_uniqueId);
         }
 
         /// <inheritdoc cref="ChartboostMediationRewardedBase.Load"/>>

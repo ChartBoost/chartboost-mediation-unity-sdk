@@ -1,3 +1,6 @@
+using System;
+using Chartboost.Events;
+
 namespace Chartboost.Banner
 {
     /// <summary>
@@ -30,11 +33,11 @@ namespace Chartboost.Banner
     /// <summary>
     /// Chartboost Mediation banner ad object.
     /// </summary>
-    public class ChartboostMediationBannerAd : ChartboostMediationBannerBase
+    public sealed class ChartboostMediationBannerAd : ChartboostMediationBannerBase
     {
         private readonly ChartboostMediationBannerBase _platformBanner;
 
-        public ChartboostMediationBannerAd(string placementName, ChartboostMediationBannerAdSize size) : base(placementName, size)
+        internal ChartboostMediationBannerAd(string placementName, ChartboostMediationBannerAdSize size) : base(placementName, size)
         {
             #if UNITY_EDITOR
             _platformBanner = new ChartboostMediationBannerUnsupported(placementName, size);
@@ -47,51 +50,61 @@ namespace Chartboost.Banner
             #endif
         }
 
+        internal override bool IsValid { get => _platformBanner.IsValid; set => _platformBanner.IsValid = value; }
+
         /// <inheritdoc cref="ChartboostMediationBannerBase.SetKeyword"/>>
         public override bool SetKeyword(string keyword, string value) 
-            => _platformBanner.IsValid && _platformBanner.SetKeyword(keyword, value);
+            => IsValid && _platformBanner.SetKeyword(keyword, value);
         
         /// <inheritdoc cref="ChartboostMediationBannerBase.RemoveKeyword"/>>
         public override string RemoveKeyword(string keyword) 
-            => _platformBanner.IsValid ? _platformBanner.RemoveKeyword(keyword) : null;
+            => IsValid ? _platformBanner.RemoveKeyword(keyword) : null;
         
         /// <inheritdoc cref="ChartboostMediationBannerBase.Destroy"/>>
         public override void Destroy()
         {
-            if (!_platformBanner.IsValid)
-                return;
-            _platformBanner.Destroy();
-            base.Destroy();
+            Destroy(false);
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerBase.Load"/>>
         public override void Load(ChartboostMediationBannerAdScreenLocation location)
         {
-            if (_platformBanner.IsValid)
+            if (IsValid)
                 _platformBanner.Load(location);
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerBase.SetVisibility"/>>
         public override void SetVisibility(bool isVisible)
         {
-            if (_platformBanner.IsValid)
+            if (IsValid)
                 _platformBanner.SetVisibility(isVisible);
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerBase.ClearLoaded"/>>
         public override void ClearLoaded()
         {
-            if (_platformBanner.IsValid)
+            if (IsValid)
                 _platformBanner.ClearLoaded();
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerBase.Remove"/>>
         public override void Remove()
         {
-            if (_platformBanner.IsValid)
+            if (IsValid)
                 _platformBanner.Remove();
         }
 
-        ~ChartboostMediationBannerAd() => Destroy();
+        private void Destroy(bool isCollected)
+        {
+            if (!IsValid)
+                return;
+            _platformBanner.Destroy();
+            base.Destroy();
+            
+            if (isCollected) 
+                EventProcessor.ReportUnexpectedSystemError($"Banner Ad with placement: {placementName}, got GC. Make sure to properly dispose of ads utilizing Destroy for the best integration experience.");
+        }
+
+        ~ChartboostMediationBannerAd() => Destroy(true);
     }
 }

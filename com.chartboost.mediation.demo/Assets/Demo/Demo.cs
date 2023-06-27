@@ -325,8 +325,9 @@ public class Demo : MonoBehaviour
         return new string(stringChars);
     }
 
-    private static void UnexpectedSystemErrorDidOccur(string error)
+    private void UnexpectedSystemErrorDidOccur(string error)
     {
+        Log($"<color='red'>{error}</color>");
         Debug.LogErrorFormat(error);
     }
     

@@ -13,6 +13,7 @@ import com.chartboost.mediation.unity.EventProcessor.serializeEventWithException
 import com.chartboost.mediation.unity.EventProcessor.serializeLoadEvent
 import com.unity3d.player.UnityPlayer
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 
@@ -43,6 +44,7 @@ class UnityBridge {
         fun loadFullscreenAd(adRequest: ChartboostMediationAdLoadRequest, adLoadResultHandler: ChartboostMediationFullscreenAdLoadListener, fullscreenAdListener: ChartboostMediationFullscreenAdListener) {
             CoroutineScope(Main).launch {
                 val adLoadResult = HeliumSdk.loadFullscreenAd(UnityPlayer.currentActivity, adRequest, fullscreenAdListener)
+                adLoadResult.ad?.let { AdStore.trackFullscreenAd(it) }
                 adLoadResultHandler.onAdLoaded(adLoadResult)
             }
         }
@@ -99,7 +101,8 @@ class UnityBridge {
 //                TODO("Not yet implemented")
                 }
             })
-            return wrap(interstitialAd)
+
+            return trackLegacy(interstitialAd)
         }
 
         @Deprecated("getInterstitialAd has been deprecated, utilize getFullscreenAd instead.")
@@ -149,7 +152,8 @@ class UnityBridge {
                         })
                 }
             })
-            return wrap(rewardedAd)
+
+            return trackLegacy(rewardedAd)
         }
 
         @JvmStatic
@@ -187,7 +191,13 @@ class UnityBridge {
                         })
                 }
             })
-            return wrap(bannerAd)
+            return trackLegacy(bannerAd)
+        }
+
+        private fun trackLegacy(ad: HeliumAd): AdWrapper {
+            val wrapped = wrap(ad)
+            AdStore.trackLegacyAd(wrapped)
+            return wrapped;
         }
     }
 }

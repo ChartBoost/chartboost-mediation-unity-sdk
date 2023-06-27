@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Chartboost.Platforms.Android
 {
-    public sealed partial class ChartboostMediationAndroid : ChartboostMediationExternal
+    internal sealed partial class ChartboostMediationAndroid : ChartboostMediationExternal
     {
         #region Chartboost Mediation
         private const string ChartboostMediationSDK = "com.chartboost.mediation";

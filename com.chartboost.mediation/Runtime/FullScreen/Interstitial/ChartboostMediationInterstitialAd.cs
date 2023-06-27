@@ -1,4 +1,5 @@
 using System;
+using Chartboost.Events;
 
 namespace Chartboost.FullScreen.Interstitial
 {
@@ -10,7 +11,7 @@ namespace Chartboost.FullScreen.Interstitial
     {
         private readonly ChartboostMediationFullScreenBase _platformInterstitial;
 
-        public ChartboostMediationInterstitialAd(string placementName) : base(placementName)
+        internal ChartboostMediationInterstitialAd(string placementName) : base(placementName)
         {
             #if UNITY_EDITOR
             _platformInterstitial = new ChartboostMediationInterstitialUnsupported(placementName);
@@ -23,48 +24,58 @@ namespace Chartboost.FullScreen.Interstitial
             #endif
         }
 
+        internal override bool IsValid { get => _platformInterstitial.IsValid; set => _platformInterstitial.IsValid = value; }
+
         /// <inheritdoc cref="ChartboostMediationFullScreenBase.SetKeyword"/>>
         public override bool SetKeyword(string keyword, string value) 
-            => _platformInterstitial.IsValid && _platformInterstitial.SetKeyword(keyword, value);
+            => IsValid && _platformInterstitial.SetKeyword(keyword, value);
 
         /// <inheritdoc cref="ChartboostMediationFullScreenBase.RemoveKeyword"/>>
         public override string RemoveKeyword(string keyword)
-            => _platformInterstitial.IsValid ? _platformInterstitial.RemoveKeyword(keyword) : null; 
+            => IsValid ? _platformInterstitial.RemoveKeyword(keyword) : null; 
 
         /// <inheritdoc cref="ChartboostMediationFullScreenBase.Destroy"/>>
         public override void Destroy()
         {
-            if (!_platformInterstitial.IsValid)
-                return;
-            _platformInterstitial.Destroy();
-            base.Destroy();
+            Destroy(false);
         }
 
         /// <inheritdoc cref="ChartboostMediationFullScreenBase.Load"/>>
         public override void Load()
         {
-            if (_platformInterstitial.IsValid)
+            if (IsValid)
                 _platformInterstitial.Load();
         }
 
         /// <inheritdoc cref="ChartboostMediationFullScreenBase.Show"/>>
         public override void Show()
         {
-            if (_platformInterstitial.IsValid)
+            if (IsValid)
                 _platformInterstitial.Show();
         }
 
         /// <inheritdoc cref="ChartboostMediationFullScreenBase.ReadyToShow"/>>
         public override bool ReadyToShow() 
-            =>  _platformInterstitial.IsValid && _platformInterstitial.ReadyToShow();
+            =>  IsValid && _platformInterstitial.ReadyToShow();
 
         /// <inheritdoc cref="ChartboostMediationFullScreenBase.ClearLoaded"/>>
         public override void ClearLoaded()
         {
-            if (_platformInterstitial.IsValid)
+            if (IsValid)
                 _platformInterstitial.ClearLoaded();
         }
+        
+        private void Destroy(bool isCollected)
+        {
+            if (!IsValid)
+                return;
+            _platformInterstitial.Destroy();
+            base.Destroy();
+            
+            if (isCollected) 
+                EventProcessor.ReportUnexpectedSystemError($"Interstitial Ad with placement: {placementName}, got GC. Make sure to properly dispose of ads utilizing Destroy for the best integration experience.");
+        }
 
-        ~ChartboostMediationInterstitialAd() => Destroy();
+        ~ChartboostMediationInterstitialAd() => Destroy(true);
     }
 }

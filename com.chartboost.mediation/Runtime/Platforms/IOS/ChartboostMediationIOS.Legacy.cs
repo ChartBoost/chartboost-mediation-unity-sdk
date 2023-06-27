@@ -6,7 +6,7 @@ using Chartboost.Events;
 // ReSharper disable InconsistentNaming
 namespace Chartboost.Platforms.IOS
 {
-    public sealed partial class ChartboostMediationIOS
+    internal sealed partial class ChartboostMediationIOS
     {
         [DllImport("__Internal")]
         private static extern void _setInterstitialCallbacks(ExternChartboostMediationPlacementLoadEvent DidLoadCallback,
