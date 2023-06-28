@@ -182,9 +182,7 @@ namespace Chartboost.Events
             }, null);
         }
 
-        internal static void ReportUnexpectedSystemError(string message)
-        {
-            UnexpectedSystemErrorDidOccur?.Invoke(message);
-        }
+        internal static void ReportUnexpectedSystemError(string message) 
+            => _context.Post(o => UnexpectedSystemErrorDidOccur?.Invoke(message), null);
     }
 }
