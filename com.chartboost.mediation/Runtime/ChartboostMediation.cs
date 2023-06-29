@@ -221,10 +221,17 @@ namespace Chartboost
                 _chartboostMediationExternal.Init();
         }
 
+        [Obsolete("StartWithAppIdAndAppSignature is obsolete and will be removed in future versions, please use StartWithOptions instead.")]
         public static void StartWithAppIdAndAppSignature(string appId, string appSignature)
         {
             if (!ChartboostMediationExternal.IsInitialized)
                 _chartboostMediationExternal.InitWithAppIdAndSignature(appId, appSignature);
+        }
+
+        public static void StartWithOptions(string appId, string appSignature, string[] options = null)
+        {
+            if (!ChartboostMediationExternal.IsInitialized)
+                _chartboostMediationExternal.StartWithOptions(appId, appSignature, options);
         }
 
         public static void SetSubjectToCoppa(bool isSubject) => _chartboostMediationExternal.SetSubjectToCoppa(isSubject);

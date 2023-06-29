@@ -59,7 +59,7 @@ public class Demo : MonoBehaviour
         fullscreenPlacementInputField.SetTextWithoutNotify(DefaultPlacementFullscreen);
         bannerPlacementInputField.SetTextWithoutNotify(DefaultPlacementBanner);
 
-        ChartboostMediation.StartWithAppIdAndAppSignature(ChartboostMediationSettings.AppId, ChartboostMediationSettings.AppSignature);
+        ChartboostMediation.StartWithOptions(ChartboostMediationSettings.AppId, ChartboostMediationSettings.AppSignature);
     }
 
     private void OnDestroy()
