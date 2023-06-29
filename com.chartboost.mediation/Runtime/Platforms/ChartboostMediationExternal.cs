@@ -50,7 +50,7 @@ namespace Chartboost.Platforms
             => Logger.Log(LogTag, $"InitWithAppIdAndSignature {appId}, {appSignature} and version {Application.unityVersion}");
 
         public virtual void StartWithOptions(string appId, string appSignature, string[] initializationOptions = null) 
-            => Logger.Log(LogTag, $"InitWithAppIdAndSignature {appId}, {appSignature} and version {JsonConvert.SerializeObject(initializationOptions)}");
+            => Logger.Log(LogTag, $"StartWithOptions {appId}, {appSignature}, options {JsonConvert.SerializeObject(initializationOptions)} and version {Application.unityVersion}");
 
         public virtual void SetSubjectToCoppa(bool isSubject) 
             => Logger.Log(LogTag, $"SetSubjectToCoppa {isSubject}");
