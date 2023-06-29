@@ -87,9 +87,9 @@ namespace Chartboost.Platforms.IOS
             IsInitialized = true;
         }
 
-        public override void InitWithOptions(string appId, string appSignature, string[] initializationOptions = null)
+        public override void StartWithOptions(string appId, string appSignature, string[] initializationOptions = null)
         {
-            base.InitWithOptions(appId, appSignature, initializationOptions);
+            base.StartWithOptions(appId, appSignature, initializationOptions);
             ChartboostMediationSettings.IOSAppId = appId;
             ChartboostMediationSettings.IOSAppSignature = appSignature;
             initializationOptions ??= Array.Empty<string>();

@@ -231,7 +231,7 @@ namespace Chartboost
         public static void StartWithOptions(string appId, string appSignature, string[] options = null)
         {
             if (!ChartboostMediationExternal.IsInitialized)
-                _chartboostMediationExternal.InitWithOptions(appId, appSignature, options);
+                _chartboostMediationExternal.StartWithOptions(appId, appSignature, options);
         }
 
         public static void SetSubjectToCoppa(bool isSubject) => _chartboostMediationExternal.SetSubjectToCoppa(isSubject);
