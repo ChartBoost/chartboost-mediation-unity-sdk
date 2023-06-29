@@ -7,6 +7,7 @@ using Chartboost.Banner;
 using Chartboost.FullScreen.Interstitial;
 using Chartboost.FullScreen.Rewarded;
 using Chartboost.Requests;
+using Newtonsoft.Json;
 using UnityEngine;
 using Logger = Chartboost.Utilities.Logger;
 
@@ -44,11 +45,13 @@ namespace Chartboost.Platforms
 
         /// Initialize the Chartboost Mediation plugin with a specific appId
         /// Either one of the init() methods must be called before using any other Chartboost Mediation feature
-        public virtual void InitWithAppIdAndSignature(string appId, string appSignature)
-        {
-            Logger.Log(LogTag, $"InitWithAppIdAndSignature {appId}, {appSignature} and version {Application.unityVersion}");
-        }
-        
+        [Obsolete("InitWithAppIdAndSignature has been deprecated, please use InitWithOptions instead")]
+        public virtual void InitWithAppIdAndSignature(string appId, string appSignature) 
+            => Logger.Log(LogTag, $"InitWithAppIdAndSignature {appId}, {appSignature} and version {Application.unityVersion}");
+
+        public virtual void InitWithOptions(string appId, string appSignature, string[] initializationOptions = null) 
+            => Logger.Log(LogTag, $"InitWithAppIdAndSignature {appId}, {appSignature} and version {JsonConvert.SerializeObject(initializationOptions)}");
+
         public virtual void SetSubjectToCoppa(bool isSubject) 
             => Logger.Log(LogTag, $"SetSubjectToCoppa {isSubject}");
 

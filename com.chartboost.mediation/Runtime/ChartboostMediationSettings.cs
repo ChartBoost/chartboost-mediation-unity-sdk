@@ -13,6 +13,7 @@ namespace Chartboost
     /// List of officially supported Chartboost Mediation mediation partners and their identifiers
     /// </summary>
     [Flags]
+    [Obsolete("ChartboostMediationPartners has been deprecated, please use StartWithOptions instead.")]
     public enum ChartboostMediationPartners
     {
         [Description("none")] None = 0,
@@ -127,6 +128,7 @@ namespace Chartboost
         /// <summary>
         /// Accessor for partnerKillSwitch. 
         /// </summary>
+        [Obsolete("PartnerKillSwitch has been deprecated and will be removed in future versions, please use StartWithOptions instead.")]
         public static ChartboostMediationPartners PartnerKillSwitch
         {
             get => Instance.partnerKillSwitch;

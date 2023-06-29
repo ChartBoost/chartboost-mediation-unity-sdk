@@ -1,5 +1,6 @@
 #if UNITY_ANDROID
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Chartboost.Events;
 using Chartboost.Requests;
@@ -56,6 +57,20 @@ namespace Chartboost.Platforms.Android
             using var activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
             var initializationOptions = GetInitializationOptions().ArrayToInitializationOptions();
             nativeSDK.CallStatic("start", activity, appId, appSignature, initializationOptions,  new ChartboostMediationSDKListener());
+            IsInitialized = true;
+        }
+
+        public override void StartWithOptions(string appId, string appSignature, string[] initializationOptions = null)
+        {
+            base.StartWithOptions(appId, appSignature, initializationOptions);
+            ChartboostMediationSettings.AndroidAppId = appId;
+            ChartboostMediationSettings.AndroidAppSignature = appSignature;
+            initializationOptions ??= Array.Empty<string>();
+            var nativeOptions = initializationOptions.ArrayToInitializationOptions();
+            using var nativeSDK = GetNativeSDK();
+            using var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+            using var activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+            nativeSDK.CallStatic("start", activity, appId, appSignature, nativeOptions,  new ChartboostMediationSDKListener());
             IsInitialized = true;
         }
 

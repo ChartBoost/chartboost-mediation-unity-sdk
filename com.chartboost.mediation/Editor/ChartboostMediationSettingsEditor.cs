@@ -48,7 +48,7 @@ namespace Chartboost.Editor
 			EditorGUILayout.BeginVertical();
 			EditorGUILayout.LabelField(_partnerKilLSwitchTitle, _title);
 			EditorGUILayout.Space();
-			EditorGUILayout.HelpBox("Select partners to disable their initialization.", MessageType.Info);
+			EditorGUILayout.HelpBox("Select partners to disable their initialization.\n(Enum flag has been deprecated and will be removed in future versions, use StartWithOptions instead)", MessageType.Info);
 			ChartboostMediationSettings.PartnerKillSwitch = (ChartboostMediationPartners)EditorGUILayout.EnumFlagsField(ChartboostMediationSettings.PartnerKillSwitch);
 			EditorGUILayout.EndVertical();
 			
