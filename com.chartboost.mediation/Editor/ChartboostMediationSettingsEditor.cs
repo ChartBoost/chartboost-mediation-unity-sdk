@@ -22,13 +22,17 @@ namespace Chartboost.Editor
 		private readonly GUIContent _enableAutomaticInitToggle = new GUIContent("Initialize Chartboost Mediation Automatically");
 		private readonly GUIContent _skAdNetworkLabel = new GUIContent("SKAdNetwork");
 		private readonly GUIContent _skAdNetworkToggle = new GUIContent("Use Chartboost Mediation SKAdNetwork Identifier Resolution");
+		private readonly GUIContent _disableBitCodeLabel = new GUIContent("BitCode");
+		private readonly GUIContent _disableBitCodeToggle = new GUIContent("Disable BitCode for XCode Projects/Workspaces");
+		private readonly GUIContent _sdkKeysLabel = new GUIContent("SDK Keys");
+		private readonly GUIContent _googleLabelAndroid = new GUIContent("Google App Id - Android [?]:");
+		private readonly GUIContent _googleLabelIOS = new GUIContent("Google App Id - IOS [?]:");
+		private readonly GUIContent _applovinLabel = new GUIContent("AppLovin SDK Key [?]:");
 
-		private ChartboostMediationSettings _instance;
 		private GUIStyle _title;
 
 		public override void OnInspectorGUI()
 		{
-			_instance = (ChartboostMediationSettings)target;
 			_title = new GUIStyle {
 				fontSize = 16,
 				fontStyle = FontStyle.Bold,
@@ -51,77 +55,57 @@ namespace Chartboost.Editor
 			EditorGUILayout.HelpBox("Select partners to disable their initialization.\n(Enum flag has been deprecated and will be removed in future versions, please use the StartWithOptions API instead)", MessageType.Info);
 			ChartboostMediationSettings.PartnerKillSwitch = (ChartboostMediationPartners)EditorGUILayout.EnumFlagsField(ChartboostMediationSettings.PartnerKillSwitch);
 			EditorGUILayout.EndVertical();
-			
-			EditorGUILayout.Space();
 			EditorGUILayout.Space();
 			
 			EditorGUILayout.LabelField(_platformsIdsLabel, _title);
-			
 			EditorGUILayout.HelpBox("Add the Chartboost Mediation App Id & App Signature associated with this game.", MessageType.Info);
+			EditorGUILayout.Space();
+
 			// iOS
 			EditorGUILayout.LabelField(_iOSLabel, _title);
-
-			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.LabelField(_iOSAppIdLabel);
-			EditorGUILayout.EndHorizontal();
-
-			EditorGUILayout.BeginHorizontal();
 			ChartboostMediationSettings.IOSAppId = EditorGUILayout.TextField(ChartboostMediationSettings.IOSAppId);
-			EditorGUILayout.EndHorizontal();
-			EditorGUILayout.Space();
 			EditorGUILayout.Space();
 
-			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.LabelField(_iOSAppSigLabel);
-			EditorGUILayout.EndHorizontal();
-
-			EditorGUILayout.BeginHorizontal();
 			ChartboostMediationSettings.IOSAppSignature = EditorGUILayout.TextField(ChartboostMediationSettings.IOSAppSignature);
-			EditorGUILayout.EndHorizontal();
-			EditorGUILayout.Space();
 			EditorGUILayout.Space();
 
 			// Android
-			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.LabelField(_androidLabel, _title);
-			EditorGUILayout.EndHorizontal();
-
-			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.LabelField(_androidAppIdLabel);
-			EditorGUILayout.EndHorizontal();
-
-			EditorGUILayout.BeginHorizontal();
 			ChartboostMediationSettings.AndroidAppId = EditorGUILayout.TextField(ChartboostMediationSettings.AndroidAppId);
-			EditorGUILayout.EndHorizontal();
-			EditorGUILayout.Space();
 			EditorGUILayout.Space();
 
-			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.LabelField(_androidAppSigLabel);
-			EditorGUILayout.EndHorizontal();
-
-			EditorGUILayout.BeginHorizontal();
 			ChartboostMediationSettings.AndroidAppSignature = EditorGUILayout.TextField(ChartboostMediationSettings.AndroidAppSignature);
-			EditorGUILayout.EndHorizontal();
+			EditorGUILayout.Separator();
+
+			EditorGUILayout.LabelField(_sdkKeysLabel, _title);
+			EditorGUILayout.LabelField(_googleLabelAndroid);
+			ChartboostMediationSettings.AndroidGoogleAppId = EditorGUILayout.TextField(ChartboostMediationSettings.AndroidGoogleAppId);
 			EditorGUILayout.Space();
+			EditorGUILayout.LabelField(_googleLabelIOS);
+			ChartboostMediationSettings.IOSGoogleAppId = EditorGUILayout.TextField(ChartboostMediationSettings.IOSGoogleAppId);
 			EditorGUILayout.Space();
-			
+			EditorGUILayout.LabelField(_applovinLabel);
+			ChartboostMediationSettings.AppLovinSDKKey = EditorGUILayout.TextField(ChartboostMediationSettings.AppLovinSDKKey);
+			EditorGUILayout.Space();
+
 			EditorGUILayout.LabelField(_debuggingTitle, _title);
-			EditorGUILayout.BeginHorizontal();
 			ChartboostMediationSettings.IsLoggingEnabled = EditorGUILayout.Toggle(_enableLoggingToggle, ChartboostMediationSettings.IsLoggingEnabled);
-			EditorGUILayout.EndHorizontal();
 			EditorGUILayout.Space();
 
 			EditorGUILayout.LabelField(_automaticInitLabel, _title);
-			EditorGUILayout.BeginHorizontal();
 			ChartboostMediationSettings.IsAutomaticInitializationEnabled = EditorGUILayout.Toggle(_enableAutomaticInitToggle, ChartboostMediationSettings.IsAutomaticInitializationEnabled);
-			EditorGUILayout.EndHorizontal();
 			EditorGUILayout.Space();
 			
 			EditorGUILayout.LabelField(_skAdNetworkLabel, _title);
-			EditorGUILayout.BeginHorizontal();
 			ChartboostMediationSettings.IsSkAdNetworkResolutionEnabled = EditorGUILayout.Toggle(_skAdNetworkToggle, ChartboostMediationSettings.IsSkAdNetworkResolutionEnabled);
-			EditorGUILayout.EndHorizontal();
+			EditorGUILayout.Space();
+			
+			EditorGUILayout.LabelField(_disableBitCodeLabel, _title);
+			ChartboostMediationSettings.DisableBitCode = EditorGUILayout.Toggle(_disableBitCodeToggle, ChartboostMediationSettings.DisableBitCode);
 		}
 	}
 }

@@ -53,10 +53,10 @@ namespace Chartboost.Editor.Adapters
         /// </summary>
         private static Task<AdapterData> FetchCacheAndLoad()
         {
-            if (!Constants.PathToLibrary.DirectoryExists())
+            if (!AdapterWindowConstants.PathToLibrary.DirectoryExists())
                 return null;
 
-            Constants.PathToLibraryCacheDirectory.DirectoryCreate();
+            AdapterWindowConstants.PathToLibraryCacheDirectory.DirectoryCreate();
             
             var newConfigJson = FetchAdapters();
 
@@ -64,9 +64,9 @@ namespace Chartboost.Editor.Adapters
 
             var newAdapters = newConfigJson.Result;
             var newAdapterConfig = JsonConvert.DeserializeObject<AdapterData>(newAdapters);
-            if (Constants.PathToAdaptersCachedJson.FileExist())
+            if (AdapterWindowConstants.PathToAdaptersCachedJson.FileExist())
             {
-                var cachedJson = Constants.PathToAdaptersCachedJson.ReadAllText();
+                var cachedJson = AdapterWindowConstants.PathToAdaptersCachedJson.ReadAllText();
                 var cacheAdapterConfig = JsonConvert.DeserializeObject<AdapterData>(cachedJson);
 
                 var newVersion = DateTime.Parse(newAdapterConfig.lastUpdated);
@@ -74,11 +74,11 @@ namespace Chartboost.Editor.Adapters
 
                 if (newVersion <= oldVersion)
                     return Task.FromResult(cacheAdapterConfig);
-                Constants.PathToAdaptersCachedJson.FileCreate(newAdapters);
+                AdapterWindowConstants.PathToAdaptersCachedJson.FileCreate(newAdapters);
                 return Task.FromResult(newAdapterConfig);
             }
             
-            Constants.PathToAdaptersCachedJson.FileCreate(newAdapters);
+            AdapterWindowConstants.PathToAdaptersCachedJson.FileCreate(newAdapters);
             return Task.FromResult(newAdapterConfig);
         }
 

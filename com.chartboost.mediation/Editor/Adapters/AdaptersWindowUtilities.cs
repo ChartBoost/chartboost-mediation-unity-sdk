@@ -16,7 +16,7 @@ namespace Chartboost.Editor.Adapters
         /// <param name="id">network id</param>
         /// <param name="selections">current selections</param>
         /// <returns></returns>
-        private static bool DefaultAddCondition(string id, Dictionary<string, AdapterSelection> selections) => !selections.ContainsKey(id) || selections[id].android == Constants.Unselected || selections[id].ios == Constants.Unselected;
+        private static bool DefaultAddCondition(string id, Dictionary<string, AdapterSelection> selections) => !selections.ContainsKey(id) || selections[id].android == AdapterWindowConstants.Unselected || selections[id].ios == AdapterWindowConstants.Unselected;
 
         /// <summary>
         /// Adds adapter networks to user selections.
@@ -128,7 +128,7 @@ namespace Chartboost.Editor.Adapters
                 var version = new Version(MediationSelection);
                 var packageVersion = new Version(ChartboostMediationPackage.version);
                 
-                if (Constants.PathToMainDependency.FileExist() && version == packageVersion)
+                if (AdapterWindowConstants.PathToMainDependency.FileExist() && version == packageVersion)
                     return false;
             }
 
@@ -140,7 +140,7 @@ namespace Chartboost.Editor.Adapters
         
         private static void UpdateSelection(IReadOnlyList<string> versions, List<AdapterChange> selectionChanges,  string id, string startValue, Platform platform)
         {
-            if (startValue.Equals(Constants.Unselected))
+            if (startValue.Equals(AdapterWindowConstants.Unselected))
                 return;
             
             if (versions.Count <= 0)
@@ -175,7 +175,7 @@ namespace Chartboost.Editor.Adapters
         {
             if (!Application.isBatchMode)
                 Instance.rootVisualElement.Clear();
-            _mediationPackage = Utilities.FindPackage(Constants.ChartboostMediationPackageName);
+            _mediationPackage = Utilities.FindPackage(AdapterWindowConstants.ChartboostMediationPackageName);
             AdapterDataSource.Update();
             Initialize();
             if (!Application.isBatchMode|| !ignore)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Chartboost.Editor.Adapters.Serialization;
+using Chartboost.Editor.Settings;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -12,7 +13,12 @@ namespace Chartboost.Editor.Adapters
     public partial class AdaptersWindow : EditorWindow
     {
         [MenuItem("Chartboost Mediation/Adapters")]
-        private static void MenuWindow() => Instance.Focus();
+        private static void MenuWindow()
+        {
+            Instance.Focus();
+            SettingsWindow.Instance.Show();
+            Instance.Focus();
+        }
 
         /// <summary>
         /// Currently loaded partner networks versions.
@@ -37,19 +43,18 @@ namespace Chartboost.Editor.Adapters
         private static Button _saveButton;
         private static Button _warningButton;
         
-        private static PackageInfo ChartboostMediationPackage => _mediationPackage ??= Utilities.FindPackage(Constants.ChartboostMediationPackageName);
+        private static PackageInfo ChartboostMediationPackage => _mediationPackage ??= Utilities.FindPackage(AdapterWindowConstants.ChartboostMediationPackageName);
         private static PackageInfo _mediationPackage;
         
-        private static AdaptersWindow Instance {
+        internal static AdaptersWindow Instance {
             get
             {
-                if (_instance != null) return _instance;
+                if (_instance != null)
+                    return _instance;
                 
-                var wnd = GetWindow<AdaptersWindow>();
-                wnd.titleContent = new GUIContent("Chartboost Mediation Adapters");
-                var windowSize = new Vector2(420, 520);
-                wnd.minSize = windowSize;
-                _instance = wnd;
+                var adaptersWindow = GetWindow<AdaptersWindow>("Adapters");
+                adaptersWindow.minSize = Constants.MinWindowSize;
+                _instance = adaptersWindow;
                 return _instance;
             }
         }
@@ -71,7 +76,7 @@ namespace Chartboost.Editor.Adapters
             
             // Each editor window contains a root VisualElement object
             var root = Instance.rootVisualElement;
-            root.styleSheets.Add(Constants.StyleSheet.LoadAsset<StyleSheet>());
+            root.styleSheets.Add(AdapterWindowConstants.StyleSheet.LoadAsset<StyleSheet>());
             root.name = "body";
             
             CreateTableHeaders(root);
@@ -84,7 +89,7 @@ namespace Chartboost.Editor.Adapters
             var logo = new Image
             {
                 name = "icon",
-                image = Constants.WarningPNG.LoadAsset<Texture>(),
+                image = AdapterWindowConstants.WarningPNG.LoadAsset<Texture>(),
                 scaleMode = ScaleMode.ScaleToFit
             };
             
@@ -92,7 +97,7 @@ namespace Chartboost.Editor.Adapters
             _warningButton.name = "warning-button";
             _warningButton.Add(logo);
             
-            if (string.IsNullOrEmpty(MediationSelection) || !Constants.PathToMainDependency.FileExist())
+            if (string.IsNullOrEmpty(MediationSelection) || !AdapterWindowConstants.PathToMainDependency.FileExist())
             {
                 _warningButton.tooltip = $"Dependencies for Chartboost Mediation {ChartboostMediationPackage.version} have not been found. Press to add.";
                 root.Add(_warningButton);
@@ -114,14 +119,14 @@ namespace Chartboost.Editor.Adapters
             var logo = new Image
             {
                 name = "mediation-logo",
-                image = Constants.LogoPNG.LoadAsset<Texture>(),
+                image = AdapterWindowConstants.LogoPNG.LoadAsset<Texture>(),
                 scaleMode = ScaleMode.ScaleToFit
             };
             
             var upgradeImage = new Image
             {
                 name = "icon",
-                image = Constants.UpgradePNG.LoadAsset<Texture>(),
+                image = AdapterWindowConstants.UpgradePNG.LoadAsset<Texture>(),
                 scaleMode = ScaleMode.ScaleToFit
             };
 
@@ -133,7 +138,7 @@ namespace Chartboost.Editor.Adapters
             var refreshImage = new Image
             {
                 name = "icon",
-                image = Constants.RefreshPNG.LoadAsset<Texture>(),
+                image = AdapterWindowConstants.RefreshPNG.LoadAsset<Texture>(),
                 scaleMode = ScaleMode.ScaleToFit
             };
 
@@ -168,10 +173,10 @@ namespace Chartboost.Editor.Adapters
         
             var androidVersionLabel = new Label("Android");
             androidVersionLabel.name = "header-version";
-            adapterNameLabel.tooltip = "Android Version of Ad Adapters.";
+            androidVersionLabel.tooltip = "Android Version of Ad Adapters.";
             headers.Add(androidVersionLabel);
         
-            var iosVersionLabel = new Label("iOS");
+            var iosVersionLabel = new Label("IOS");
             iosVersionLabel.name = "header-version";
             iosVersionLabel.tooltip = "iOS Version of Ad Adapters.";
             headers.Add(iosVersionLabel);
@@ -192,8 +197,8 @@ namespace Chartboost.Editor.Adapters
                 var iosVersions = PartnerSDKVersions[adapterId].ios;
 
                 var hasSelection = UserSelectedVersions.ContainsKey(adapterId);
-                var androidStartValue = hasSelection && UserSelectedVersions[adapterId] != null ? UserSelectedVersions[adapterId].android : Constants.Unselected;
-                var iosStartValue = hasSelection && UserSelectedVersions[adapterId] != null ? UserSelectedVersions[adapterId].ios : Constants.Unselected;
+                var androidStartValue = hasSelection && UserSelectedVersions[adapterId] != null ? UserSelectedVersions[adapterId].android : AdapterWindowConstants.Unselected;
+                var iosStartValue = hasSelection && UserSelectedVersions[adapterId] != null ? UserSelectedVersions[adapterId].ios : AdapterWindowConstants.Unselected;
 
                 var androidDropdown = CreateAdapterVersionDropdown(root, adapter, androidVersions, Platform.Android, androidStartValue);
                 var iosDropdown = CreateAdapterVersionDropdown(root, adapter, iosVersions, Platform.IOS, iosStartValue);
@@ -250,9 +255,9 @@ namespace Chartboost.Editor.Adapters
                             throw new ArgumentOutOfRangeException(nameof(platform), platform, null);
                     }
 
-                    if (selection.Equals(Constants.Unselected) && UserSelectedVersions.ContainsKey(adapter.id))
+                    if (selection.Equals(AdapterWindowConstants.Unselected) && UserSelectedVersions.ContainsKey(adapter.id))
                     {
-                        if (UserSelectedVersions[adapter.id].android == Constants.Unselected && UserSelectedVersions[adapter.id].ios == Constants.Unselected)
+                        if (UserSelectedVersions[adapter.id].android == AdapterWindowConstants.Unselected && UserSelectedVersions[adapter.id].ios == AdapterWindowConstants.Unselected)
                             UserSelectedVersions.Remove(adapter.id);
                     }
                     
@@ -269,7 +274,7 @@ namespace Chartboost.Editor.Adapters
             var saveIconImage = new Image
             {
                 name = "icon",
-                image = Constants.SavePNG.LoadAsset<Texture>(),
+                image = AdapterWindowConstants.SavePNG.LoadAsset<Texture>(),
                 scaleMode = ScaleMode.ScaleToFit
             };
 

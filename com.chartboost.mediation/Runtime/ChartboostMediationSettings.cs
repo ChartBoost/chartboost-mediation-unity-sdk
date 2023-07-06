@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using UnityEngine;
 using System.IO;
+using UnityEngine.Serialization;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -60,6 +61,7 @@ namespace Chartboost
         private const string CredentialsWarningAndroid = "Android";
         private const string CredentialsWarningAppID = "App ID";
         private const string CredentialsWarningAppSignature = "App Signature";
+        public const string DefaultSDKKeyValue = "Fill to enable build-processing features.";
 
         private static bool _credentialsWarning = false;
 
@@ -100,12 +102,6 @@ namespace Chartboost
         }
 
 #if UNITY_EDITOR
-        [MenuItem("Chartboost Mediation/Edit Settings")]
-        public static void Edit()
-        {
-            Selection.activeObject = Instance;
-        }
-
         [MenuItem("Chartboost Mediation/Documentation")]
         public static void OpenDocumentation()
         {
@@ -124,6 +120,10 @@ namespace Chartboost
         [SerializeField] private bool isAutomaticInitEnabled;
         [SerializeField] private bool isSkAdNetworkResolutionEnabled;
         [SerializeField] private ChartboostMediationPartners partnerKillSwitch = ChartboostMediationPartners.None;
+        [SerializeField] private bool disableBitCode = false;
+        [FormerlySerializedAs("androidApplovinKey")] [SerializeField] private string applovinSDKKey = DefaultSDKKeyValue; 
+        [SerializeField] private string androidGoogleAppId = DefaultSDKKeyValue;
+        [SerializeField] private string iOSGoogleAppId = DefaultSDKKeyValue;
 
         /// <summary>
         /// Accessor for partnerKillSwitch. 
@@ -291,6 +291,46 @@ namespace Chartboost
             set
             {
                 Instance.isSkAdNetworkResolutionEnabled = value;
+                DirtyEditor();
+            }
+        }
+
+        public static string AndroidGoogleAppId
+        {
+            get => Instance.androidGoogleAppId;
+            set
+            {
+                Instance.androidGoogleAppId = value;
+                DirtyEditor();
+            }
+        }
+        
+        public static string IOSGoogleAppId
+        {
+            get => Instance.iOSGoogleAppId;
+            set
+            {
+                Instance.iOSGoogleAppId = value;
+                DirtyEditor();
+            }
+        }
+
+        public static string AppLovinSDKKey
+        {
+            get => Instance.applovinSDKKey;
+            set
+            {
+                Instance.applovinSDKKey = value;
+                DirtyEditor();
+            }
+        }
+
+        public static bool DisableBitCode
+        {
+            get => Instance.disableBitCode;
+            set
+            {
+                Instance.disableBitCode = value;
                 DirtyEditor();
             }
         }

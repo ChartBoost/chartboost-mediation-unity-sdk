@@ -20,10 +20,10 @@ namespace Chartboost.Editor.Adapters
                 foreach (var partnerAdapter in AdapterDataSource.LoadedAdapters.adapters)
                     PartnerSDKVersions[partnerAdapter.id] = new PartnerVersions(partnerAdapter.android.versions, partnerAdapter.ios.versions);
             
-            if (!Constants.PathToSelectionsFile.FileExist())
+            if (!AdapterWindowConstants.PathToSelectionsFile.FileExist())
                 return;
 
-            var jsonContents = Constants.PathToSelectionsFile.ReadAllText();
+            var jsonContents = AdapterWindowConstants.PathToSelectionsFile.ReadAllText();
             var selections = JsonConvert.DeserializeObject<SDKSelections>(jsonContents);
 
             if (selections == null)
@@ -47,7 +47,7 @@ namespace Chartboost.Editor.Adapters
         /// </summary>
         public static void SaveSelections()
         {
-            var allSelections = UserSelectedVersions.Values.Where(x => x.android != Constants.Unselected || x.ios != Constants.Unselected).ToArray();
+            var allSelections = UserSelectedVersions.Values.Where(x => x.android != AdapterWindowConstants.Unselected || x.ios != AdapterWindowConstants.Unselected).ToArray();
 
             var sdkSelections = new SDKSelections
             {
@@ -57,13 +57,13 @@ namespace Chartboost.Editor.Adapters
 
             var selectionsJson = JsonConvert.SerializeObject(sdkSelections, Formatting.Indented);
 
-            Constants.PathToPackageGeneratedFiles.DirectoryCreate();
-            Constants.PathToEditorInGeneratedFiles.DirectoryCreate();
+            AdapterWindowConstants.PathToPackageGeneratedFiles.DirectoryCreate();
+            AdapterWindowConstants.PathToEditorInGeneratedFiles.DirectoryCreate();
             
             if (UserSelectedVersions.Count <= 0 && string.IsNullOrEmpty(MediationSelection))
-                Constants.PathToSelectionsFile.DeleteFileWithMeta();
+                AdapterWindowConstants.PathToSelectionsFile.DeleteFileWithMeta();
             else
-                Constants.PathToSelectionsFile.FileCreate(selectionsJson);
+                AdapterWindowConstants.PathToSelectionsFile.FileCreate(selectionsJson);
             
             if (!Application.isBatchMode && _saveButton != null)
                 _saveButton.RemoveFromHierarchy();
@@ -73,13 +73,13 @@ namespace Chartboost.Editor.Adapters
 
         private static void GenerateDependenciesFromSelections()
         {
-            if (!Constants.PathToAdapterTemplate.FileExist())
+            if (!AdapterWindowConstants.PathToAdapterTemplate.FileExist())
             {
                 Debug.LogError("[Chartboost Mediation] Unable to create dependencies from selection, TemplateAdapter.xml could not be found.");
                 return;
             }
 
-            var defaultTemplateContents = Constants.PathToAdapterTemplate.ReadAllLines().ToList();
+            var defaultTemplateContents = AdapterWindowConstants.PathToAdapterTemplate.ReadAllLines().ToList();
             var adapters = AdapterDataSource.LoadedAdapters.adapters;
 
             if (adapters == null)
@@ -100,16 +100,16 @@ namespace Chartboost.Editor.Adapters
                 if (UserSelectedVersions.ContainsKey(adapter.id)) 
                     continue;
                 
-                var pathToAdapter = Path.Combine(Constants.PathToAdaptersDirectory, $"{adapter.name.RemoveWhitespace()}Dependencies.xml");
+                var pathToAdapter = Path.Combine(AdapterWindowConstants.PathToAdaptersDirectory, $"{adapter.name.RemoveWhitespace()}Dependencies.xml");
                 pathToAdapter.DeleteFileWithMeta();
             }
 
             if (UserSelectedVersions.Count <= 0)
             {
-                Constants.PathToAdaptersDirectory.DeleteDirectoryWithMeta();
+                AdapterWindowConstants.PathToAdaptersDirectory.DeleteDirectoryWithMeta();
                 
-                if (!Constants.PathToSelectionsFile.FileExist() && !Constants.PathToMainDependency.FileExist())
-                    Constants.PathToEditorInGeneratedFiles.DeleteDirectoryWithMeta();
+                if (!AdapterWindowConstants.PathToSelectionsFile.FileExist() && !AdapterWindowConstants.PathToMainDependency.FileExist())
+                    AdapterWindowConstants.PathToEditorInGeneratedFiles.DeleteDirectoryWithMeta();
             }
             
             foreach (var selection in UserSelectedVersions)
@@ -117,18 +117,18 @@ namespace Chartboost.Editor.Adapters
                 var template = new List<string>(defaultTemplateContents);
                 var adapter = adapters.First(x => x.id == selection.Key);
                 var adapterId = adapter.id;
-                var pathToAdapter = Path.Combine(Constants.PathToAdaptersDirectory, $"{adapter.name.RemoveWhitespace()}Dependencies.xml");
+                var pathToAdapter = Path.Combine(AdapterWindowConstants.PathToAdaptersDirectory, $"{adapter.name.RemoveWhitespace()}Dependencies.xml");
                 
                 var androidAdapterIndexInTemplate = template.FindIndex(x => x.Contains(androidAdapterInTemplate));
                 var extraDependenciesStartPoint = template.FindIndex(x => x.Contains(androidDependenciesInTemplate));
                 var androidSDKVersion = selection.Value.android;
-                var androidSelected = androidSDKVersion != Constants.Unselected;
+                var androidSelected = androidSDKVersion != AdapterWindowConstants.Unselected;
                 
                 // Android SDK Adapter Version
                 if (androidSelected)
                 {
                     // handling IronSource SDK versioning quirk
-                    if (adapterId.Equals(Constants.IronSource) && androidSDKVersion[androidSDKVersion.Length - 1] == '0')
+                    if (adapterId.Equals(AdapterWindowConstants.IronSource) && androidSDKVersion[androidSDKVersion.Length - 1] == '0')
                         androidSDKVersion = androidSDKVersion.Remove(androidSDKVersion.Length - 2, 2);
                     
                     // Set Adapter versioning
@@ -142,7 +142,7 @@ namespace Chartboost.Editor.Adapters
                         
                         foreach (var dependency in versionSet.dependencies)
                         {
-                            var hasVersionNumber = Constants.NeedsVersionNumber.IsMatch(dependency);
+                            var hasVersionNumber = AdapterWindowConstants.NeedsVersionNumber.IsMatch(dependency);
 
                             var toInsert = dependency;
                             if (!hasVersionNumber)
@@ -185,7 +185,7 @@ namespace Chartboost.Editor.Adapters
                 var iosSDKIndexInTemplate = template.FindIndex(x => x.Contains(iosDependenciesInTemplate));
                 
                 var iosSDKVersion = selection.Value.ios;
-                if (iosSDKVersion != Constants.Unselected)
+                if (iosSDKVersion != AdapterWindowConstants.Unselected)
                 {
                     var versionSet = GetAdapterVersionSet(iosSDKVersion, adapter.ios.versions);
                     template[iosAdapterIndexInTemplate] = $"        <iosPod name=\"{adapter.ios.adapter}\" version=\"~> 4.{iosSDKVersion}\"/>";
@@ -207,9 +207,9 @@ namespace Chartboost.Editor.Adapters
                     template[iosSDKIndexInTemplate] = message;
                 }
             
-                Constants.PathToPackageGeneratedFiles.DirectoryCreate();
-                Constants.PathToEditorInGeneratedFiles.DirectoryCreate();
-                Constants.PathToAdaptersDirectory.DirectoryCreate();
+                AdapterWindowConstants.PathToPackageGeneratedFiles.DirectoryCreate();
+                AdapterWindowConstants.PathToEditorInGeneratedFiles.DirectoryCreate();
+                AdapterWindowConstants.PathToAdaptersDirectory.DirectoryCreate();
                 pathToAdapter.FileCreate(template);
             }
             
@@ -230,26 +230,26 @@ namespace Chartboost.Editor.Adapters
 
         private static void GenerateChartboostMediationDependency()
         {
-            if (!Constants.PathToMainTemplate.FileExist())
+            if (!AdapterWindowConstants.PathToMainTemplate.FileExist())
             {
                 Debug.LogError("[Chartboost Mediation] Unable to create dependencies for Chartboost Mediation, TemplateChartboostMediation.xml could not be found.");
                 return;
             }
             
-            var defaultTemplateContents = Constants.PathToMainTemplate.ReadAllLines().ToList();
-            var androidVersionIndex = defaultTemplateContents.FindIndex(x => x.Contains(Constants.AndroidVersionInMainTemplate));
-            var iosVersionIndex = defaultTemplateContents.FindIndex(x => x.Contains(Constants.IOSVersionInMainTemplate));
+            var defaultTemplateContents = AdapterWindowConstants.PathToMainTemplate.ReadAllLines().ToList();
+            var androidVersionIndex = defaultTemplateContents.FindIndex(x => x.Contains(AdapterWindowConstants.AndroidVersionInMainTemplate));
+            var iosVersionIndex = defaultTemplateContents.FindIndex(x => x.Contains(AdapterWindowConstants.IOSVersionInMainTemplate));
             
             var androidOptimisticVersion = MediationSelection.Remove(MediationSelection.Length - 2);
-            defaultTemplateContents[androidVersionIndex] = defaultTemplateContents[androidVersionIndex].Replace(Constants.AndroidVersionInMainTemplate, androidOptimisticVersion);
+            defaultTemplateContents[androidVersionIndex] = defaultTemplateContents[androidVersionIndex].Replace(AdapterWindowConstants.AndroidVersionInMainTemplate, androidOptimisticVersion);
             
             var lastDigit = MediationSelection.Length - 1;
             var iosOptimisticVersion = MediationSelection.Remove(lastDigit).Insert(lastDigit, "0");
-            defaultTemplateContents[iosVersionIndex] = defaultTemplateContents[iosVersionIndex].Replace(Constants.IOSVersionInMainTemplate, iosOptimisticVersion);
+            defaultTemplateContents[iosVersionIndex] = defaultTemplateContents[iosVersionIndex].Replace(AdapterWindowConstants.IOSVersionInMainTemplate, iosOptimisticVersion);
 
-            Constants.PathToPackageGeneratedFiles.DirectoryCreate();
-            Constants.PathToEditorInGeneratedFiles.DirectoryCreate();
-            Constants.PathToMainDependency.FileCreate(defaultTemplateContents);
+            AdapterWindowConstants.PathToPackageGeneratedFiles.DirectoryCreate();
+            AdapterWindowConstants.PathToEditorInGeneratedFiles.DirectoryCreate();
+            AdapterWindowConstants.PathToMainDependency.FileCreate(defaultTemplateContents);
             SaveSelections();
             AssetDatabase.Refresh();
         }
