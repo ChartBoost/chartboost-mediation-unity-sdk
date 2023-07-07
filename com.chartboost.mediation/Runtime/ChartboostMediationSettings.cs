@@ -57,7 +57,7 @@ namespace Chartboost
         private const string AndroidExampleAppSignature = "";
         private const string CredentialsWarningDefaultFormat = "You are using the Chartboost Mediation SDK {0} example {1}! Go to the Chartboost Mediation dashboard and replace these with an App ID & App Signature from your account! If you need help, check out answers.chartboost.com";
         private const string CredentialsWarningEmptyFormat = "You are using an empty string for the {0} {1}! Go to the Chartboost Mediation dashboard and replace these with an App ID & App Signature from your account! If you need help, check out answers.chartboost.com";
-        private const string CredentialsWarningIOS = "IOS";
+        private const string CredentialsWarningIOS = "iOS";
         private const string CredentialsWarningAndroid = "Android";
         private const string CredentialsWarningAppID = "App ID";
         private const string CredentialsWarningAppSignature = "App Signature";

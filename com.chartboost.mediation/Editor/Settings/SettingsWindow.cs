@@ -122,7 +122,7 @@ namespace Chartboost.Editor.Settings
                 var iosAppIdInput = new TextField {
                     name = "col",
                     value = onIOSChange.Item1,
-                    tooltip = $"Fill this field to modify the IOS {label}."
+                    tooltip = $"Fill this field to modify the iOS {label}."
                 };
                 iosAppIdInput.RegisterValueChangedCallback(changeEvent => onIOSChange.Item2?.Invoke(changeEvent.newValue));
             
