@@ -86,7 +86,7 @@ namespace Chartboost.Editor.Settings
             };
             headers.Add(androidIdentifiersLabel);
             
-            var iosIdentifiersLabel = new Label("IOS") {
+            var iosIdentifiersLabel = new Label("iOS") {
                 name = "header",
                 tooltip = "IOS identifiers."
             };
@@ -137,8 +137,8 @@ namespace Chartboost.Editor.Settings
         private static TemplateContainer CreateSDKConfigTogglesTable()
         {
             var retContainer = new TemplateContainer { name = "flex-grid" };
-            retContainer.Add(CreateToggle("SDK Debugging", "", (ChartboostMediationSettings.IsLoggingEnabled, newValue => ChartboostMediationSettings.IsLoggingEnabled = newValue)));
-            retContainer.Add(CreateToggle("Automatic Initialization", "", (ChartboostMediationSettings.IsAutomaticInitializationEnabled, newValue => ChartboostMediationSettings.IsAutomaticInitializationEnabled = newValue)));
+            retContainer.Add(CreateToggle("SDK Debugging", "Chartboost Mediation logging status.", (ChartboostMediationSettings.IsLoggingEnabled, newValue => ChartboostMediationSettings.IsLoggingEnabled = newValue)));
+            retContainer.Add(CreateToggle("Automatic Initialization", "Initialize Chartboost Mediation automatically.", (ChartboostMediationSettings.IsAutomaticInitializationEnabled, newValue => ChartboostMediationSettings.IsAutomaticInitializationEnabled = newValue)));
             return retContainer;
         }
 
@@ -153,7 +153,7 @@ namespace Chartboost.Editor.Settings
             
             retContainer.Add(identifiersLabels);
             retContainer.Add(CreateSDKKeyTableRow("Google App Id - Android", (ChartboostMediationSettings.AndroidGoogleAppId, newValue => ChartboostMediationSettings.AndroidGoogleAppId = newValue)));
-            retContainer.Add(CreateSDKKeyTableRow("Google App Id - IOS", (ChartboostMediationSettings.IOSGoogleAppId, newValue => ChartboostMediationSettings.IOSGoogleAppId = newValue)));
+            retContainer.Add(CreateSDKKeyTableRow("Google App Id - iOS", (ChartboostMediationSettings.IOSGoogleAppId, newValue => ChartboostMediationSettings.IOSGoogleAppId = newValue)));
             retContainer.Add(CreateSDKKeyTableRow("Applovin SDK Key", (ChartboostMediationSettings.AppLovinSDKKey, newValue => ChartboostMediationSettings.AppLovinSDKKey = newValue)));
 
             return retContainer;
@@ -183,8 +183,8 @@ namespace Chartboost.Editor.Settings
         private static TemplateContainer CreateBuildProcessingTogglesTable()
         {
             var retContainer = new TemplateContainer { name = "flex-grid" };
-            retContainer.Add(CreateToggle("SKAdNetwork Resolution", "", (ChartboostMediationSettings.IsSkAdNetworkResolutionEnabled, newValue => ChartboostMediationSettings.IsSkAdNetworkResolutionEnabled = newValue)));
-            retContainer.Add(CreateToggle("Disable Bitcode", "", (ChartboostMediationSettings.DisableBitCode, newValue => ChartboostMediationSettings.DisableBitCode = newValue)));
+            retContainer.Add(CreateToggle("SKAdNetwork Resolution", "Use Chartboost Mediation SKAdNetwork identifier resolution.", (ChartboostMediationSettings.IsSkAdNetworkResolutionEnabled, newValue => ChartboostMediationSettings.IsSkAdNetworkResolutionEnabled = newValue)));
+            retContainer.Add(CreateToggle("Disable Bitcode", "Disables BitCode for XCode projects/workspaces.", (ChartboostMediationSettings.DisableBitCode, newValue => ChartboostMediationSettings.DisableBitCode = newValue)));
             return retContainer;
         }
 

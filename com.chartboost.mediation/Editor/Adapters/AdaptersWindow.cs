@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Chartboost.Editor.Adapters.Serialization;
-using Chartboost.Editor.Settings;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -12,23 +11,15 @@ namespace Chartboost.Editor.Adapters
 {
     public partial class AdaptersWindow : EditorWindow
     {
-        [MenuItem("Chartboost Mediation/Adapters")]
-        private static void MenuWindow()
-        {
-            Instance.Focus();
-            SettingsWindow.Instance.Show();
-            Instance.Focus();
-        }
-
         /// <summary>
         /// Currently loaded partner networks versions.
         /// </summary>
-        public static Dictionary<string, PartnerVersions> PartnerSDKVersions { get; set; } = new Dictionary<string, PartnerVersions>();
+        public static Dictionary<string, PartnerVersions> PartnerSDKVersions { get; } = new Dictionary<string, PartnerVersions>();
         
         /// <summary>
         /// Currently loaded user selections.
         /// </summary>
-        public static Dictionary<string, AdapterSelection> UserSelectedVersions { get; set; } = new Dictionary<string, AdapterSelection>();
+        public static Dictionary<string, AdapterSelection> UserSelectedVersions { get; } = new Dictionary<string, AdapterSelection>();
         
         /// <summary>
         /// Currently saved user selections.
@@ -176,7 +167,7 @@ namespace Chartboost.Editor.Adapters
             androidVersionLabel.tooltip = "Android Version of Ad Adapters.";
             headers.Add(androidVersionLabel);
         
-            var iosVersionLabel = new Label("IOS");
+            var iosVersionLabel = new Label("iOS");
             iosVersionLabel.name = "header-version";
             iosVersionLabel.tooltip = "iOS Version of Ad Adapters.";
             headers.Add(iosVersionLabel);
