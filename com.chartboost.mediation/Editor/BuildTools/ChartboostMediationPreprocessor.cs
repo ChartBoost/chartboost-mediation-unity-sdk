@@ -8,10 +8,9 @@ using UnityEngine;
 
 namespace Chartboost.Editor.BuildTools
 {
-    public class ChartboostMediationPreprocessor : IPreprocessBuildWithReport
+    internal class ChartboostMediationPreprocessor : IPreprocessBuildWithReport
     {
         public int callbackOrder { get; }
-        
         public void OnPreprocessBuild(BuildReport report)
         {
             if (report.summary.platform != BuildTarget.Android)
