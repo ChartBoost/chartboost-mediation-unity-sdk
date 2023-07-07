@@ -30,7 +30,7 @@ namespace Chartboost.Editor.Adapters.Serialization
 
         private static string[] GetSupportedVersions(AdapterVersion[] adapters)
         {
-            var temp = new List<string> { Constants.Unselected };
+            var temp = new List<string> { AdapterWindowConstants.Unselected };
 
             foreach (var adapterVersion in adapters)
             {

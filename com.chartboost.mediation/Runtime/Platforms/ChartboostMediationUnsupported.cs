@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Chartboost.Requests;
 
@@ -18,9 +19,16 @@ namespace Chartboost.Platforms
             IsInitialized = true;
         }
 
+        [Obsolete("InitWithAppIdAndSignature has been deprecated, please use StartWithOptions instead")]
         public override void InitWithAppIdAndSignature(string appId, string appSignature)
         {
             base.InitWithAppIdAndSignature(appId, appSignature);
+            IsInitialized = true;
+        }
+
+        public override void StartWithOptions(string appId, string appSignature, string[] initializationOptions = null)
+        {
+            base.StartWithOptions(appId, appSignature, initializationOptions);
             IsInitialized = true;
         }
 

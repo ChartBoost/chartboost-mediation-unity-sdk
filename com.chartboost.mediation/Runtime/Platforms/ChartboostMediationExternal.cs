@@ -45,7 +45,7 @@ namespace Chartboost.Platforms
 
         /// Initialize the Chartboost Mediation plugin with a specific appId
         /// Either one of the init() methods must be called before using any other Chartboost Mediation feature
-        [Obsolete("InitWithAppIdAndSignature has been deprecated, please use InitWithOptions instead")]
+        [Obsolete("InitWithAppIdAndSignature has been deprecated, please use StartWithOptions instead")]
         public virtual void InitWithAppIdAndSignature(string appId, string appSignature) 
             => Logger.Log(LogTag, $"InitWithAppIdAndSignature {appId}, {appSignature} and version {Application.unityVersion}");
 
@@ -133,6 +133,7 @@ namespace Chartboost.Platforms
             }
         }
         
+        [Obsolete]
         protected static string[] GetInitializationOptions()
         {
             string GetEnumDescription(Enum value)

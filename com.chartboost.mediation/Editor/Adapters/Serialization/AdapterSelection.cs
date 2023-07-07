@@ -17,12 +17,12 @@ namespace Chartboost.Editor.Adapters.Serialization
         /// <summary>
         /// Current Android adapter version selection.
         /// </summary>
-        public string android = Constants.Unselected;
+        public string android = AdapterWindowConstants.Unselected;
         
         /// <summary>
         /// Current IOS adapter version selection.
         /// </summary>
-        public string ios = Constants.Unselected;
+        public string ios = AdapterWindowConstants.Unselected;
             
         #nullable enable
         /// <summary>

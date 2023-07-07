@@ -1,4 +1,5 @@
 #if UNITY_ANDROID
+using System;
 using Chartboost.Interfaces;
 using Chartboost.Platforms.Android;
 using Chartboost.Utilities;
@@ -69,6 +70,7 @@ namespace Chartboost.Banner
         }
 
         /// <inheritdoc cref="IChartboostMediationBannerAd.Remove"/>>
+        [Obsolete("Remove has been deprecated, please use Destroy instead.")]
         public override void Remove()
         {
             //android doesn't have a remove method. Instead, calling destroy

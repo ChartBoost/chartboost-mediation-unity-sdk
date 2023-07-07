@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Chartboost.Editor.Adapters
 {
-    public class Constants
+    public class AdapterWindowConstants
     {
         public const string Unselected = "Unselected";
         public const string ChartboostMediationPackageName = "com.chartboost.mediation";
@@ -25,11 +25,9 @@ namespace Chartboost.Editor.Adapters
         public static readonly string PathToAdaptersCachedJson = Path.Combine(PathToLibraryCacheDirectory, "partnersv2.json");
         
         // Networks with special handling due to different versioning, dependencies, or multiple sdks
-        public const string InMobi = "inmobi";
         public const string IronSource = "ironsource";
-        public const string Mintegral = "mintegral";
-        
-        const string VersionNumberIsPresent = @"(?<=:)(?<major>\d+)\.(?<minor>\d+)(\.(?<build>\d+))?(-(?<suffix>\w+(\.\w+)*))?(?=[^.\d]|$)";
+
+        private const string VersionNumberIsPresent = @"(?<=:)(?<major>\d+)\.(?<minor>\d+)(\.(?<build>\d+))?(-(?<suffix>\w+(\.\w+)*))?(?=[^.\d]|$)";
         public static readonly Regex NeedsVersionNumber = new Regex(VersionNumberIsPresent);
 
         public const string StyleSheet = "Packages/com.chartboost.mediation/Editor/Adapters/Visuals/AdaptersWindow.uss";

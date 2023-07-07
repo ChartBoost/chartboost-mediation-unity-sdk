@@ -90,6 +90,6 @@ namespace Chartboost.Utilities
                 FullscreenAdLoadRequests.Remove(hashCode);
         }
         
-        public new static string CacheInfo() => $"CacheManager Fullscreen Cache: {FullscreenCache.Count}, FullscreenAdLoadRequest: {FullscreenAdLoadRequests.Count}\n";
+        public static string CacheInfo() => $"CacheManager Fullscreen Cache: {FullscreenCache.Count}, FullscreenAdLoadRequest: {FullscreenAdLoadRequests.Count}\n";
     }
 }

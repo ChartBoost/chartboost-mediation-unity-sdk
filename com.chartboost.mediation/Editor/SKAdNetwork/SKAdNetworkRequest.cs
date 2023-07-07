@@ -1,67 +1,16 @@
-#nullable enable
-#if UNITY_IOS
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using UnityEditor;
-using UnityEditor.Callbacks;
-using UnityEditor.iOS.Xcode;
 using UnityEngine;
 using UnityEngine.Networking;
-// ReSharper disable InconsistentNaming
-// ReSharper disable StringLiteralTypo
-// ReSharper disable IdentifierTypo
-// ReSharper disable CommentTypo
 
-// ReSharper disable once CheckNamespace
-namespace Chartboost.Editor
+namespace Chartboost.Editor.SKAdNetwork
 {
-    /// <summary>
-    /// Adds the SKAdNetwork Ids to the app's Info.plist
-    /// </summary>
-    public class ChartboostMediationSKAdNetworkIds
+    public class SKAdNetworkRequest
     {
-        [PostProcessBuild]
-        public static void PostProcess(BuildTarget buildTarget, string pathToBuiltProject)
-        {
-            if (!ChartboostMediationSettings.IsSkAdNetworkResolutionEnabled)
-                return;
-            
-            if (buildTarget != BuildTarget.iOS)
-                return;
-
-            var ids = GetSKAdNetworkIds();
-
-            var plistPath = pathToBuiltProject + "/Info.plist";
-            var plist = new PlistDocument();
-            plist.ReadFromFile(plistPath);
-
-            var skanItems = plist.root.CreateArray(SKAdNetworkItemsKey);
-
-            foreach (var skadnetworkID in ids)
-            {
-                var skanId = skanItems.AddDict();
-                skanId.SetString(SKAdNetworkIdKey, skadnetworkID.ToLower());
-            }
-
-            plist.WriteToFile(plistPath);
-        }
-
-        private const string AppLovin = "https://dash.applovin.com/docs/v1/skadnetwork_ids.json";
-        private const string Chartboost = "https://a3.chartboost.com/skadnetworkids.json";
-        private const string Fyber = "https://fyber-engineering.github.io/SKAdNetworks/skadnetwork.json";
-        private const string InMobi = "https://www.inmobi.com/skadnetworkids.json";
-        private const string TapJoy = "https://skadnetwork.tapjoy.com/skadnetworkids.json";
-        private const string Vungle = "https://vungle.com/skadnetworkids.json";
-        private const string Unity = "https://skan.mz.unity3d.com/v3/partner/skadnetworks.plist.json";
-        private const string AdColony = "https://raw.githubusercontent.com/AdColony/AdColony-iOS-SDK/master/skadnetworkids.json";
-
-        private const string SKAdNetworkItemsKey = "SKAdNetworkItems";
-        private const string SKAdNetworkIdKey = "SKAdNetworkIdentifier";
-        
-        private static IEnumerable<string> GetSKAdNetworkIds()
+        public static IEnumerable<string> GetSKAdNetworkIds()
         {
             var idsToAdd = new List<string>();
 
@@ -78,14 +27,14 @@ namespace Chartboost.Editor
             }
 
             // json compatible SkAdNetworkFetching
-            var appLovinIds = SKAdNetworkRequest(AppLovin);
-            var adColonyIds = SKAdNetworkRequest(AdColony);
-            var chartboostIds = SKAdNetworkRequest(Chartboost);
-            var fyberIds = SKAdNetworkRequest(Fyber);
-            var inMobiIds = SKAdNetworkRequest(InMobi);
-            var tapJoyIds = SKAdNetworkRequest(TapJoy);
-            var vungleIds = SKAdNetworkRequest(Vungle);
-            var unityIds = SkAdNetworkRequestUnity(Unity);
+            var appLovinIds = Request(SKAdNetworkConstants.AppLovin);
+            var adColonyIds = Request(SKAdNetworkConstants.AdColony);
+            var chartboostIds = Request(SKAdNetworkConstants.Chartboost);
+            var fyberIds = Request(SKAdNetworkConstants.Fyber);
+            var inMobiIds = Request(SKAdNetworkConstants.InMobi);
+            var tapJoyIds = Request(SKAdNetworkConstants.TapJoy);
+            var vungleIds = Request(SKAdNetworkConstants.Vungle);
+            var unityIds = RequestUnity(SKAdNetworkConstants.Unity);
             
             // merge all ids
             MergeIDs(appLovinIds, adColonyIds, chartboostIds, fyberIds, inMobiIds, tapJoyIds, vungleIds, unityIds);
@@ -167,7 +116,7 @@ namespace Chartboost.Editor
             return idsToAdd.Distinct();
         }
         
-        private static SKAdNetworkIds SKAdNetworkRequest(string url)
+        private static SKAdNetworkIds Request(string url)
         {
             var skanIdsRequest = UnityWebRequest.Get(url);
             var request = skanIdsRequest.SendWebRequest();
@@ -192,7 +141,7 @@ namespace Chartboost.Editor
             }
         }
 
-        private static SKAdNetworkIds SkAdNetworkRequestUnity(string url) 
+        private static SKAdNetworkIds RequestUnity(string url) 
         {
             var skanIdsRequest = UnityWebRequest.Get(url);
             var request = skanIdsRequest.SendWebRequest();
@@ -233,23 +182,6 @@ namespace Chartboost.Editor
                 return ret;
             }
         }
-
-        [Serializable]
-        private class SKAdNetworkIds
-        {
-            public string? company_name;
-            public string? company_address;
-            public string? company_domain;
-            public List<IdEntry>? skadnetwork_ids;
-        }
         
-        [Serializable]
-        private class IdEntry
-        {
-            public string? skadnetwork_id;
-            public string? creation_date;
-            public string? entity_name;
-        }
     }
 }
-#endif
