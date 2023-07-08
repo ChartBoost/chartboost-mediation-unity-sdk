@@ -1,6 +1,21 @@
 # Changelog
 All notable changes to this project will be documented in this file using the standards as defined at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0).
 
+### Version 4.4.0 *(2023-07-27)*
+Improvements:
+- Added new SDK initialization method `ChartboostMediation.StartWithOptions`.
+- Fixed garbage collection ad disposal and invalidation logic.
+- Changed `ChartboostMediation.UnexpectedSystemErrorDidOccur` to be sent into the Unity main-thread.
+- Added a new `EditorWindow` and `SettingsWindow.cs` to unify the Chartboost Mediation integration into a single location. It can be accessed through the menu item `Chartboost Mediation/Configure`.
+The following feature improvements can be enabled through the new settings window:
+- Added build postprocessing capabilities to automatically add `GADApplicationIdentifier` to `Info.plist`. 
+- Added build postprocessing capabilities to disable bitcode for XCode projects.
+- Added build preprocessing capabilities to automatically add `com.google.android.gms.ads.APPLICATION_ID` to the `AndroidManifest.xml`.
+- Added build preprocessing capabilities to automatically add `applovin.sdk.key` to the `AndroidManifest.xml`. 
+
+API Changes:
+- Marked `ChartboostMediationPartners` enum as deprecated. Use `ChartboostMediation.StartWithOptions` instead.
+
 ### Version 4.3.0 *(2023-06-22)*
 Improvements:
 - Added support for Rewarded Interstitials. This is available via `ChartboostMediation.LoadFullscreenAd()` and supported only in the latest adapters. Please check each adapter's changelog to confirm which partners support rewarded interstitials.
