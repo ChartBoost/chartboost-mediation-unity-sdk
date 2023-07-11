@@ -20,6 +20,9 @@ namespace Chartboost.Editor.Settings
                 var settingsWindow = GetWindow<SettingsWindow>("Settings", typeof(AdaptersWindow));
                 settingsWindow.minSize = Constants.MinWindowSize;
                 _instance = settingsWindow;
+                var scriptableInstance = ChartboostMediationSettings.Instance == null;
+                if (!scriptableInstance)
+                    Debug.LogWarning($"[Settings Window] Could not fetch ChartboostMediationSettings instance.");
                 return _instance;
             }
         }

@@ -98,17 +98,18 @@ The user identifier property is found on the ChartboostMediation class. This pro
 ChartboostMediation.SetUserIdentifier("user");
 ```
 
-### Setting Custom Data
+### Setting Fullscreen Placements Custom Data
 
-The custom data property is found on the `ChartboostMediationRewardedAd` instance, and has a maximum character limit of `1000` characters. In the event that the limit is exceeded, the customData property will be set to null.
+The custom data property is found on the `IChartboostMediationFullscreenAd` instance, and has a maximum character limit of `1000` characters. In the event that the limit is exceeded, the customData property will be set to null.
 
 Custom data may be set at any time before calling `Show()`
 
 ```csharp
-_rewardedAd = ChartboostMediation.GetRewardedAd(“placement”);
+var loadResult = await ChartboostMediation.LoadFullscreenAd(loadRequest);
+...
+// after checking proper load result
+_fullscreenAd = loadResult.Ad;
 var bytesToEncode = Encoding.UTF8.GetBytes("{\"testkey\":\"testvalue\"}");
 var encodedText = Convert.ToBase64String(bytesToEncode);
-_rewardedAd.SetCustomData(encodedText);
-
-_rewardedAd.Load();
+_fullscreenAd.CustomData = encodedText;
 ```

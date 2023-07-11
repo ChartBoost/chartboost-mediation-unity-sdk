@@ -19,7 +19,7 @@ Until Chartboost Mediation Unity SDK 4.1.0, adapters were added through the UPM 
 
 ### ***Adapters Window Default State***
 
-The Adapters window can be accessed through the following unity menu: ***Chartboost Mediation/Adapters***
+The Adapters window can be accessed through the following unity menu: ***Chartboost Mediation/Configure***
 
 ![Chartboost Mediation Settings](../images/adapters-window-default.png)
 

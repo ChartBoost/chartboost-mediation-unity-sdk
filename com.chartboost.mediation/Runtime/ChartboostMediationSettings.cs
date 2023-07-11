@@ -70,7 +70,7 @@ namespace Chartboost
         /// <summary>
         /// Creates or Fetches a ChartboostMediationSettings instance.
         /// </summary>
-        internal static ChartboostMediationSettings Instance
+        public static ChartboostMediationSettings Instance
         {
             get
             {

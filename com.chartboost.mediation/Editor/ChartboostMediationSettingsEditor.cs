@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Chartboost.Editor
 {
 	[CustomEditor(typeof(ChartboostMediationSettings))]
-	public class ChartboostMediationSettingEditor : UnityEditor.Editor
+	internal class ChartboostMediationSettingEditor : UnityEditor.Editor
 	{
 		private const string AppIdLink = "https://dashboard.chartboost.com/all/publishing";
 
