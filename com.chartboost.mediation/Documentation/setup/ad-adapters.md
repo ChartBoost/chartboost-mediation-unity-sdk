@@ -6,11 +6,6 @@ The Chartboost Mediation Unity SDK does not embed Google’s EDM plugin.
 
 If you want to integrate ad networks with other supported SDKs as well, you will need [Google's External Dependency Manager](https://developers.google.com/unity/archive#external_dependency_manager_for_unity). For more information see our recommended setup in [Google External Dependency Manager (EDM)](edm.md).
 
-The Chartboost Mediation Unity SDK package contains samples with optional dependencies for ad adapters. Such samples can be found in the `Package Manager/Sample` sections.
-
-Each Chartboost Mediation Unity SDK sample contains a .xml file with dependencies for the adapter available platforms (Android/iOS). In order for such dependencies to be included into the final build the [Google's External Dependency Manager](https://github.com/googlesamples/unity-jar-resolver) is needed.
-The `EDM` makes sure to download and package any dependencies with your build.
-
 ## Chartboost Mediation Adapters Window
 
 Since Chartboost Mediation 4.X Adapters are no longer released at the cadence as the Chartboost Mediation SDK, it is now possible to receive adapter updates in between SDK releases. 
