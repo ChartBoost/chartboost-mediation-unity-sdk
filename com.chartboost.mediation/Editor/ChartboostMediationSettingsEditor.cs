@@ -105,7 +105,7 @@ namespace Chartboost.Editor
 			EditorGUILayout.Space();
 			
 			EditorGUILayout.LabelField(_disableBitCodeLabel, _title);
-			ChartboostMediationSettings.DisableBitCode = EditorGUILayout.Toggle(_disableBitCodeToggle, ChartboostMediationSettings.DisableBitCode);
+			ChartboostMediationSettings.DisableBitcode = EditorGUILayout.Toggle(_disableBitCodeToggle, ChartboostMediationSettings.DisableBitcode);
 		}
 	}
 }
