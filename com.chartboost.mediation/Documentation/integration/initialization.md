@@ -19,7 +19,7 @@ Visit [Chartboost Mediation Settings](../setup/settings.md) for more information
 
 ### Manual Initialization
 
-If you would like to have more control on when to initialize the Chartboost Mediation SDK, you can call the following on your `Awake` method.
+If you would like to have more control over when to initialize the Chartboost Mediation SDK, call the following on your Awake method.
 
 ```c#
 // New Manual Initialization after 4.1.0

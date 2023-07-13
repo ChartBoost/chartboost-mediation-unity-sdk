@@ -100,7 +100,7 @@ ChartboostMediation.SetUserIdentifier("user");
 
 ### Setting Fullscreen Placements Custom Data
 
-The custom data property is found on the `IChartboostMediationFullscreenAd` instance, and has a maximum character limit of `1000` characters. In the event that the limit is exceeded, the customData property will be set to null.
+The custom data property is found on the `IChartboostMediationFullscreenAd` instance, and has a maximum character limit of `1000` characters. In the event that the limit is exceeded, the `customData` property will be set to null.
 
 Custom data may be set at any time before calling `Show()`
 
