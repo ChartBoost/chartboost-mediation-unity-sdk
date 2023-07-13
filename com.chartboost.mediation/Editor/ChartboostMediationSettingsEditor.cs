@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Chartboost.Editor
 {
 	[CustomEditor(typeof(ChartboostMediationSettings))]
-	public class ChartboostMediationSettingEditor : UnityEditor.Editor
+	internal class ChartboostMediationSettingEditor : UnityEditor.Editor
 	{
 		private const string AppIdLink = "https://dashboard.chartboost.com/all/publishing";
 
@@ -105,7 +105,7 @@ namespace Chartboost.Editor
 			EditorGUILayout.Space();
 			
 			EditorGUILayout.LabelField(_disableBitCodeLabel, _title);
-			ChartboostMediationSettings.DisableBitCode = EditorGUILayout.Toggle(_disableBitCodeToggle, ChartboostMediationSettings.DisableBitCode);
+			ChartboostMediationSettings.DisableBitcode = EditorGUILayout.Toggle(_disableBitCodeToggle, ChartboostMediationSettings.DisableBitcode);
 		}
 	}
 }

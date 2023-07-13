@@ -44,7 +44,7 @@ namespace Chartboost.Editor.BuildTools
 
             static bool DisableBitcode(PBXProject pbxProject)
             {
-                if (!ChartboostMediationSettings.DisableBitCode)
+                if (!ChartboostMediationSettings.DisableBitcode)
                     return false;
 
                 const string bitcodeKey = "ENABLE_BITCODE";

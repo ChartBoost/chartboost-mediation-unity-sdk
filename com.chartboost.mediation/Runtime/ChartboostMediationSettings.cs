@@ -70,7 +70,7 @@ namespace Chartboost
         /// <summary>
         /// Creates or Fetches a ChartboostMediationSettings instance.
         /// </summary>
-        internal static ChartboostMediationSettings Instance
+        public static ChartboostMediationSettings Instance
         {
             get
             {
@@ -120,8 +120,8 @@ namespace Chartboost
         [SerializeField] private bool isAutomaticInitEnabled;
         [SerializeField] private bool isSkAdNetworkResolutionEnabled;
         [SerializeField] private ChartboostMediationPartners partnerKillSwitch = ChartboostMediationPartners.None;
-        [SerializeField] private bool disableBitCode = false;
-        [FormerlySerializedAs("androidApplovinKey")] [SerializeField] private string applovinSDKKey = DefaultSDKKeyValue; 
+        [SerializeField] private bool disableBitcode = false;
+        [SerializeField] private string applovinSDKKey = DefaultSDKKeyValue; 
         [SerializeField] private string androidGoogleAppId = DefaultSDKKeyValue;
         [SerializeField] private string iOSGoogleAppId = DefaultSDKKeyValue;
 
@@ -295,6 +295,9 @@ namespace Chartboost
             }
         }
 
+        /// <summary>
+        /// Accessor for androidGoogleAppId.
+        /// </summary>
         public static string AndroidGoogleAppId
         {
             get => Instance.androidGoogleAppId;
@@ -305,6 +308,9 @@ namespace Chartboost
             }
         }
         
+        /// <summary>
+        /// Accessor for iOSGoogleAppId.
+        /// </summary>
         public static string IOSGoogleAppId
         {
             get => Instance.iOSGoogleAppId;
@@ -315,6 +321,9 @@ namespace Chartboost
             }
         }
 
+        /// <summary>
+        /// Accessor for applovinSDKKey.
+        /// </summary>
         public static string AppLovinSDKKey
         {
             get => Instance.applovinSDKKey;
@@ -325,12 +334,15 @@ namespace Chartboost
             }
         }
 
-        public static bool DisableBitCode
+        /// <summary>
+        /// Accessor for disableBitcode.
+        /// </summary>
+        public static bool DisableBitcode
         {
-            get => Instance.disableBitCode;
+            get => Instance.disableBitcode;
             set
             {
-                Instance.disableBitCode = value;
+                Instance.disableBitcode = value;
                 DirtyEditor();
             }
         }
