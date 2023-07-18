@@ -8,43 +8,43 @@
     },
     {
       "id": "admob",
-      "android": "21.5.0",
-      "ios": "10.3.0"
+      "android": "22.1.0",
+      "ios": "10.6.0"
     },
     {
       "id": "aps",
-      "android": "9.7.1",
-      "ios": "4.6.0"
+      "android": "9.8.2",
+      "ios": "4.7.0"
     },
     {
       "id": "applovin",
-      "android": "11.8.2",
-      "ios": "11.8.0"
+      "android": "11.10.1",
+      "ios": "11.10.0"
     },
     {
       "id": "chartboost",
-      "android": "9.3.0",
+      "android": "9.3.1",
       "ios": "9.3.0"
     },
     {
       "id": "digitalturbine",
-      "android": "8.2.2",
+      "android": "8.2.3",
       "ios": "8.2.1"
     },
     {
       "id": "googlebidding",
-      "android": "21.5.0",
-      "ios": "10.3.0"
+      "android": "22.1.0",
+      "ios": "10.6.0"
     },
     {
       "id": "inmobi",
-      "android": "10.5.4",
+      "android": "10.5.5",
       "ios": "10.5.0"
     },
     {
       "id": "ironsource",
-      "android": "7.3.0.0",
-      "ios": "7.3.0.0"
+      "android": "7.3.1.0",
+      "ios": "7.3.1.0"
     },
     {
       "id": "meta",
@@ -68,8 +68,8 @@
     },
     {
       "id": "unityads",
-      "android": "4.6.1",
-      "ios": "4.6.0"
+      "android": "4.7.1",
+      "ios": "4.7.0"
     },
     {
       "id": "vungle",
@@ -84,7 +84,17 @@
     {
       "id": "hyprmx",
       "android": "6.0.3",
-      "ios": "6.0.0"
+      "ios": "6.2.0"
+    },
+    {
+      "id": "verve",
+      "android": "2.17.0",
+      "ios": "2.18.0"
+    },
+    {
+      "id": "mobilefuse",
+      "android": "1.4.4",
+      "ios": "1.4.4"
     }
   ]
 }

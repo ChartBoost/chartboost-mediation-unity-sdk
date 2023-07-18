@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependencies>
+    <androidPackages>
+        <!-- Android Adapter -->
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-mobilefuse:4.1.4.4+@aar"/>
+
+        <!-- Partner Android SDK Dependencies-->
+        <androidPackage spec="com.mobilefuse.sdk:mobilefuse-sdk-core:1.4.4"/>
+    </androidPackages>
+    <iosPods>
+        <!-- iOS Adapter -->
+        <iosPod name="ChartboostMediationAdapterMobileFuse" version="~> 4.1.4.4"/>
+
+        <!-- Partner iOS SDK-->
+        <iosPod name="MobileFuseSDK" version="~> 1.4.4" addToAllTargets="true"/>
+    </iosPods>
+</dependencies>
