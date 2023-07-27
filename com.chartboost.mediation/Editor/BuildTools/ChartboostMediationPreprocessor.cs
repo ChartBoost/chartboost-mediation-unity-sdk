@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using UnityEditor;
@@ -8,10 +9,9 @@ using UnityEngine;
 
 namespace Chartboost.Editor.BuildTools
 {
-    public class ChartboostMediationPreprocessor : IPreprocessBuildWithReport
+    internal class ChartboostMediationPreprocessor : IPreprocessBuildWithReport
     {
         public int callbackOrder { get; }
-        
         public void OnPreprocessBuild(BuildReport report)
         {
             if (report.summary.platform != BuildTarget.Android)
@@ -27,12 +27,14 @@ namespace Chartboost.Editor.BuildTools
             const string googleAppIdIdentifier = "com.google.android.gms.ads.APPLICATION_ID";
             
             var androidManifest = XDocument.Load(pathToAndroidManifest);
-            var modified = IncludeElementsOrAdd(androidManifest, googleAppIdIdentifier, ChartboostMediationSettings.AndroidGoogleAppId);
-            var appLovinAdded = IncludeElementsOrAdd(androidManifest, appLovinKeyIdentifier, ChartboostMediationSettings.AppLovinSDKKey);
-            if (appLovinAdded && !modified)
-                modified = true;
 
-            if (modified)
+            var mods = new HashSet<bool>
+            {
+                IncludeElementsOrAdd(androidManifest, googleAppIdIdentifier, ChartboostMediationSettings.AndroidGoogleAppId),
+                IncludeElementsOrAdd(androidManifest, appLovinKeyIdentifier, ChartboostMediationSettings.AppLovinSDKKey)
+            };
+            
+            if (mods.Any(x => x))
             {
                 androidManifest.Save(pathToAndroidManifest);
                 AssetDatabase.Refresh();

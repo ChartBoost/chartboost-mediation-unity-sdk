@@ -1,5 +1,6 @@
 using UnityEditor;
-using UnityEditor.Callbacks;
+using UnityEditor.Build;
+using UnityEditor.Build.Reporting;
 #if UNITY_IOS
 using System.Collections.Generic;
 using UnityEditor.iOS.Xcode;
@@ -11,11 +12,14 @@ using Chartboost.Editor.SKAdNetwork;
 
 namespace Chartboost.Editor.BuildTools
 {
-    internal sealed class ChartboostMediationPostprocessor
+    internal sealed class ChartboostMediationPostprocessor : IPostprocessBuildWithReport
     {
-        [PostProcessBuild]
-        public static void PostProcess(BuildTarget buildTarget, string pathToBuiltProject)
+        public int callbackOrder { get; }
+        public void OnPostprocessBuild(BuildReport report)
         {
+            var buildTarget = report.summary.platform;
+            var pathToBuiltProject = report.summary.outputPath;
+            
             if (buildTarget != BuildTarget.iOS)
                 return;
             
@@ -40,7 +44,7 @@ namespace Chartboost.Editor.BuildTools
 
             static bool DisableBitcode(PBXProject pbxProject)
             {
-                if (!ChartboostMediationSettings.DisableBitCode)
+                if (!ChartboostMediationSettings.DisableBitcode)
                     return false;
 
                 const string bitcodeKey = "ENABLE_BITCODE";

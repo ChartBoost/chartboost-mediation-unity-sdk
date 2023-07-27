@@ -20,6 +20,9 @@ namespace Chartboost.Editor.Settings
                 var settingsWindow = GetWindow<SettingsWindow>("Settings", typeof(AdaptersWindow));
                 settingsWindow.minSize = Constants.MinWindowSize;
                 _instance = settingsWindow;
+                var scriptableInstance = ChartboostMediationSettings.Instance == null;
+                if (!scriptableInstance)
+                    Debug.LogWarning($"[Settings Window] Could not fetch ChartboostMediationSettings instance.");
                 return _instance;
             }
         }
@@ -184,7 +187,7 @@ namespace Chartboost.Editor.Settings
         {
             var retContainer = new TemplateContainer { name = "flex-grid" };
             retContainer.Add(CreateToggle("SKAdNetwork Resolution", "Use Chartboost Mediation SKAdNetwork identifier resolution.", (ChartboostMediationSettings.IsSkAdNetworkResolutionEnabled, newValue => ChartboostMediationSettings.IsSkAdNetworkResolutionEnabled = newValue)));
-            retContainer.Add(CreateToggle("Disable Bitcode", "Disables BitCode for XCode projects/workspaces.", (ChartboostMediationSettings.DisableBitCode, newValue => ChartboostMediationSettings.DisableBitCode = newValue)));
+            retContainer.Add(CreateToggle("Disable Bitcode", "Disables BitCode for XCode projects/workspaces.", (ChartboostMediationSettings.DisableBitcode, newValue => ChartboostMediationSettings.DisableBitcode = newValue)));
             return retContainer;
         }
 

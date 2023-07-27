@@ -2,10 +2,10 @@
 <dependencies>
     <androidPackages>
         <!-- Android Adapter -->
-        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-digital-turbine-exchange:4.8.2.2+@aar"/>
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-digital-turbine-exchange:4.8.2.3+@aar"/>
 
         <!-- Partner Android SDK Dependencies-->
-        <androidPackage spec="com.fyber:marketplace-sdk:8.2.2"/>
+        <androidPackage spec="com.fyber:marketplace-sdk:8.2.3"/>
     </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->

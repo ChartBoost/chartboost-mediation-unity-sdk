@@ -15,7 +15,7 @@ Chartboost Mediation Unity SDK provides support for Unity based games to easily 
 | [iOS](https://www.apple.com/ios)                                      | 10.0+                |
 | [Minimum Android API Level](https://developer.android.com/studio/releases/platforms#5.0) | 5.0+ (API level 21)  |
 | [Target Android API Level](https://developer.android.com/studio/releases/platforms#12) | 12.0+ (API level 31) |
-| [Minimum Unity Version](https://unity.com/releases/editor/whats-new/2020.3.27) | 2020.3.27f1 |
+| [Minimum Unity Version](https://unity.com/releases/editor/whats-new/2020.3.27) | 2020.3.37f1 |
 
 ### CHANGELOG
 Visit the [CHANGELOG](com.chartboost.mediation/CHANGELOG.md) to reference changes to each version of the Chartboost Mediation Unity SDK.
@@ -26,7 +26,7 @@ Chartboost Mediation Unity SDK is distributed using the public [npm registry](ht
 
 ```json
   "dependencies": {
-    "com.chartboost.mediation": "4.3.0",
+    "com.chartboost.mediation": "4.4.0",
     ...
   },
   "scopedRegistries": [
@@ -47,8 +47,7 @@ In order to better understand the Chartboost Mediation Unity SDK, documentation 
 2. [Android Manifest](com.chartboost.mediation/Documentation/setup/androidmanifest.md)
 3. [Google External Dependency Manager (EDM)](com.chartboost.mediation/Documentation/setup/edm.md)
 4. [Multidex](com.chartboost.mediation/Documentation/setup/multidex.md)
-5. [Chartboost Mediation Integration Checker](com.chartboost.mediation/Documentation/setup/integration-checker.md)
-6. [Enabling SKAdNetwork](com.chartboost.mediation/Documentation/setup/skadnetwork.md)
+6. [Chartboost Mediation Settings](com.chartboost.mediation/Documentation/setup/settings.md)
 
 #### Integration
 

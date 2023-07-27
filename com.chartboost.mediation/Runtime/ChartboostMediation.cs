@@ -227,7 +227,7 @@ namespace Chartboost
             if (!ChartboostMediationExternal.IsInitialized)
                 _chartboostMediationExternal.InitWithAppIdAndSignature(appId, appSignature);
         }
-
+        
         public static void StartWithOptions(string appId, string appSignature, string[] options = null)
         {
             if (!ChartboostMediationExternal.IsInitialized)
