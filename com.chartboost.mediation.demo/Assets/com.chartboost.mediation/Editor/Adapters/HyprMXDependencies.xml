@@ -2,10 +2,10 @@
 <dependencies>
     <androidPackages>
         <!-- Android Adapter -->
-        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-hyprmx:4.6.0.3+@aar"/>
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-hyprmx:4.6.2.0+@aar"/>
 
         <!-- Partner Android SDK Dependencies-->
-        <androidPackage spec="com.hyprmx.android:HyprMX-SDK:6.0.3"/>
+        <androidPackage spec="com.hyprmx.android:HyprMX-SDK:6.2.0"/>
     </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->

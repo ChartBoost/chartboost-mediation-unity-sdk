@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file using the standards as defined at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0).
 
+### Version 4.5.0 *(2023-08-31)*
+- Fixed a typo in ad-adapters.md
+- Updated native dependencies to support native SDKs for Chartboost Mediation SDK.
+
 ### Version 4.4.0 *(2023-07-27)*
 Improvements:
 - Added new SDK initialization method `ChartboostMediation.StartWithOptions`.
