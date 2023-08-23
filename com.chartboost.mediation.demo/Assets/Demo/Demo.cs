@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics.CodeAnalysis;
 using Chartboost;
+using Chartboost.AdFormats.Banner;
 using Chartboost.AdFormats.Fullscreen;
 using Chartboost.Banner;
 using Chartboost.Requests;
@@ -31,7 +32,7 @@ public class Demo : MonoBehaviour
     public InputField bannerPlacementInputField;
     public Dropdown bannerSizeDropdown;
     public Dropdown bannerLocationDropdown;
-    private ChartboostMediationBannerAd _bannerAd;
+    private IChartboostMediationBannerView _bannerAd;
     private bool _bannerAdIsVisible;
 
     public ScrollRect outputTextScrollRect;
@@ -47,7 +48,6 @@ public class Demo : MonoBehaviour
         ChartboostMediation.DidReceivePartnerInitializationData += DidReceivePartnerInitializationData;
         ChartboostMediation.DidReceiveImpressionLevelRevenueData += DidReceiveImpressionLevelRevenueData;
         ChartboostMediation.UnexpectedSystemErrorDidOccur += UnexpectedSystemErrorDidOccur;
-        SetupBannerDelegates();
     }
     
     private void Start()
@@ -70,8 +70,6 @@ public class Demo : MonoBehaviour
         if (_bannerAd == null) 
             return;
         
-        _bannerAd.ClearLoaded();
-        _bannerAd.Destroy();
         Log("destroyed an existing banner");
     }
 
@@ -194,44 +192,30 @@ public class Demo : MonoBehaviour
     #endregion
     
     #region Banners
-    private void SetupBannerDelegates()
-    {
-        ChartboostMediation.DidLoadBanner += DidLoadBanner;
-        ChartboostMediation.DidClickBanner += DidClickBanner;
-        ChartboostMediation.DidRecordImpressionBanner += DidRecordImpressionBanner;
-    }
 
-    public void OnCreateBannerClick()
+
+    public async void OnCreateBannerClick()
     {
+        _bannerAd?.Reset();
+        
+        Log($"Creating new banner view");
+        _bannerAd = ChartboostMediation.GetBannerView();
+        
+        _bannerAd.WillAppear += WillAppearBanner;
+        _bannerAd.DidClick +=DidClickBanner;
+        _bannerAd.DidRecordImpression += DidRecordImpressionBanner;
+        
+        _bannerAd.Keywords.Add("bnr_keyword1", "bnr_value1"); 
+        _bannerAd.Keywords.Add("bnr_keyword2", "bnr_value2"); 
+        
         var size = bannerSizeDropdown.value switch
         {
-            2 => ChartboostMediationBannerAdSize.Leaderboard,
-            1 => ChartboostMediationBannerAdSize.MediumRect,
-            _ => ChartboostMediationBannerAdSize.Standard
+            2 => ChartboostMediationBannerSize.Leaderboard,
+            1 => ChartboostMediationBannerSize.Medium,
+            _ => ChartboostMediationBannerSize.Standard
         };
-
-        _bannerAd?.Remove();
-
-        Log("Creating banner on placement: " + bannerPlacementInputField.text + " with size: " + size);
-        _bannerAd = ChartboostMediation.GetBannerAd(bannerPlacementInputField.text, size);
+        var loadRequest = new ChartboostMediationBannerAdLoadRequest(bannerPlacementInputField.text, size);
         
-        if (_bannerAd == null)
-        {
-            Log("Banner not found");
-            return;
-        }
-
-        // example keywords usage
-        _bannerAd.SetKeyword("bnr_keyword1", "bnr_value1"); // accepted set
-        _bannerAd.SetKeyword("bnr_keyword2", "bnr_value2"); // accepted set
-        _bannerAd.SetKeyword(GenerateRandomString(65), "bnr_value2"); // rejected set
-        _bannerAd.SetKeyword("bnr_keyword3", GenerateRandomString(257)); // rejected set
-        _bannerAd.SetKeyword("bnr_keyword4", "bnr_value4"); // accepted set
-        var keyword4 = this._bannerAd.RemoveKeyword("bnr_keyword4"); // removal of existing
-        _bannerAd.RemoveKeyword("bnr_keyword4"); // removal of non-existing
-        _bannerAd.SetKeyword("bnr_keyword5", keyword4); // accepted set using prior value
-        _bannerAd.SetKeyword("bnr_keyword6", "bnr_value6"); // accepted set
-        _bannerAd.SetKeyword("bnr_keyword6", "bnr_value6_replaced"); // accepted replace
         var screenPos = bannerLocationDropdown.value switch
         {
             0 => ChartboostMediationBannerAdScreenLocation.TopLeft,
@@ -243,48 +227,36 @@ public class Demo : MonoBehaviour
             6 => ChartboostMediationBannerAdScreenLocation.BottomRight,
             _ => ChartboostMediationBannerAdScreenLocation.TopCenter
         };
-        _bannerAd.Load(screenPos);
-    }
 
-    public void OnRemoveBannerClick()
-    {
-        _bannerAd?.Remove();
-        _bannerAd = null;
-        Log("Banner Removed");
-    }
-
-    public void OnClearBannerClick()
-    {
-        if (_bannerAd == null)
+        var result = await _bannerAd.Load(loadRequest, screenPos);
+        if (result.Error != null)
         {
-            Log("banner ad does not exist");
-            return;
+            Log($"BannerAd fail to load => {result.Error?.Code} - {result.Error?.Message}");
         }
-        _bannerAd.ClearLoaded();
-        Log("banner ad has been cleared");
+        
+        Debug.Log($"BannerAd loaded successfully with loadId : {result.LoadId}");
     }
 
-    public void OnToggleBannerVisibilityClick()
+    public void OnResetBannerClick()
     {
-        if (_bannerAd != null)
-        {
-            _bannerAdIsVisible = !_bannerAdIsVisible;
-            _bannerAd.SetVisibility(_bannerAdIsVisible);
-        }
-        Log("Banner Visibility Toggled");
+        _bannerAd?.Reset();
     }
 
-    private void DidLoadBanner(string placementName, string loadId, BidInfo info, string error)
+    private void WillAppearBanner(IChartboostMediationBannerView bannerAd)
     {
-        _bannerAdIsVisible = true;
-        Log($"DidLoadBanner{placementName}: \nLoadId: ${loadId} \nPrice: ${info.Price:F4} \nAuction Id: {info.AuctionId} \nPartner Id: {info.PartnerId} \nError: {error}");
+        Log($"WillAppearBanner {JsonConvert.SerializeObject(bannerAd)}");
+    }
+    
+    private void DidRecordImpressionBanner(IChartboostMediationBannerView bannerAd)
+    {
+        Log($"DidRecordImpressionBanner {JsonConvert.SerializeObject(bannerAd)}");
     }
 
-    private void DidClickBanner(string placementName, string error) 
-        => Log($"DidClickBanner {placementName}: {error}");
-
-    private void DidRecordImpressionBanner(string placementName, string error) 
-        => Log($"DidRecordImpressionBanner {placementName}: {error}");
+    private void DidClickBanner(IChartboostMediationBannerView bannerAd)
+    {
+        Log($"DidClickBanner {JsonConvert.SerializeObject(bannerAd)}");
+    }
+    
     #endregion
 
     #region Utility

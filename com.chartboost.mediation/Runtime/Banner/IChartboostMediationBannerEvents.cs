@@ -1,9 +1,13 @@
 // ReSharper disable InconsistentNaming
+
+using System;
+
 namespace Chartboost.Banner
 {
     /// <summary>
     /// All Banner placement callbacks.
     /// </summary>
+    [Obsolete("IChartboostMediationBannerEvents has been deprecated, use the new bannerView API instead.")]
     public interface IChartboostMediationBannerEvents
     {
         /// <summary>

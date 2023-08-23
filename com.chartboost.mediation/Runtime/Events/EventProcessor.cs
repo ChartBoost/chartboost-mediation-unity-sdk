@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Chartboost.AdFormats.Banner;
 using Chartboost.Utilities;
+using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,13 +14,20 @@ namespace Chartboost.Events
 {
     public static class EventProcessor
     {
-        internal enum FullscreenAdEvents
+        private enum FullscreenAdEvents
         {
             RecordImpression = 0,
             Click = 1,
             Reward = 2,
             Close = 3,
             Expire = 4
+        }
+
+        private enum BannerAdEvents
+        {
+            Show = 0,
+            Click = 1,
+            RecordImpression = 2
         }
 
         private static SynchronizationContext _context;
@@ -125,6 +134,40 @@ namespace Chartboost.Events
                 {
                     var bidInfo = new BidInfo(auctionId, partnerId, price, lineItemName, lineItemId);
                     bidEvent(placementName, loadId, bidInfo, error);
+                }
+                catch (Exception e)
+                {
+                    ReportUnexpectedSystemError(e.ToString());
+                }
+            }, null);
+        }
+
+        public static void ProcessChartboostMediationBannerEvent(long adHashCode, int eventType)
+        {
+            _context.Post(o =>
+            {
+                try
+                {
+                    var ad = (ChartboostMediationBannerViewBase)CacheManager.GetBannerAd(adHashCode);
+                    
+                    // Ad event was fired but no reference for it exists. Developer did not set strong reference to it so it was gc.
+                    if (ad == null)
+                        return;
+                    
+                    switch ((BannerAdEvents)eventType)
+                    {
+                        case BannerAdEvents.Show : 
+                            ad.OnBannerWillAppear(ad);
+                            break;
+                        case BannerAdEvents.Click :
+                            ad.OnBannerClick(ad);
+                            break;
+                        case BannerAdEvents.RecordImpression:
+                            ad.OnBannerRecordImpression(ad);
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(eventType), eventType, null);
+                    }
                 }
                 catch (Exception e)
                 {

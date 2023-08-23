@@ -1,11 +1,13 @@
 using System;
 using System.Threading.Tasks;
+using Chartboost.AdFormats.Banner;
 using Chartboost.Banner;
 using Chartboost.Events;
 using Chartboost.FullScreen.Interstitial;
 using Chartboost.FullScreen.Rewarded;
 using Chartboost.Platforms;
 using Chartboost.Requests;
+using Chartboost.Results;
 #if UNITY_ANDROID
 using Chartboost.Platforms.Android;
 #elif UNITY_IOS
@@ -191,6 +193,11 @@ namespace Chartboost
             => await _chartboostMediationExternal.LoadFullscreenAd(loadRequest);
 
         /// <summary>
+        /// Returns a new ad unit that can be used to load and display banner ads.
+        /// </summary>
+        public static IChartboostMediationBannerView GetBannerView() => _chartboostMediationExternal.GetBannerView();
+
+        /// <summary>
         /// Returns a new ad unit that can be used to load and display interstitial ads.
         /// </summary>
         /// <param name="placementName">The placement ID for the Chartboost Mediation impression type.</param>
@@ -211,6 +218,7 @@ namespace Chartboost
         /// </summary>
         /// <param name="placementName">The placement ID for the Chartboost Mediation impression type.</param>
         /// <param name="size">The banner size</param>
+        [Obsolete("GetBannerAd has been deprecated and will be removed in future versions, use GetBannerView instead.")]
         public static ChartboostMediationBannerAd GetBannerAd(string placementName, ChartboostMediationBannerAdSize size)
             => _chartboostMediationExternal.GetBannerAd(placementName, size);
 

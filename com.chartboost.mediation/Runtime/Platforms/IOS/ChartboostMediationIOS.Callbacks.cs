@@ -1,13 +1,17 @@
-#if UNITY_IOS
+#if UNITY_IPHONE
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using AOT;
+using Chartboost.AdFormats.Banner;
 using Chartboost.AdFormats.Fullscreen;
 using Chartboost.Events;
 using Chartboost.Requests;
+using Chartboost.Results;
 using Chartboost.Utilities;
 using Newtonsoft.Json;
+using UnityEngine;
+
 // ReSharper disable InconsistentNaming
 
 namespace Chartboost.Platforms.IOS
@@ -36,12 +40,18 @@ namespace Chartboost.Platforms.IOS
         }
         private static void ResolveCallbackProxy<TResponse>(int hashCode, TResponse response) {
             if (!WaitingProxies.ContainsKey(hashCode))
+            {
+                Debug.Log($" Proxy not found hashcode : {hashCode}");
                 return;
-            
+            }
+
+            Debug.Log($" Proxy found with hashcode : {hashCode}");
+
             if (WaitingProxies[hashCode] is Later<TResponse> later)
                 later.Complete(response);
             
-            WaitingProxies.Remove(hashCode);
+            Debug.Log($" Removing proxy hashcode : {hashCode}");
+            // WaitingProxies.Remove(hashCode);
         }
         
         [DllImport("__Internal")]
@@ -51,6 +61,10 @@ namespace Chartboost.Platforms.IOS
         [DllImport("__Internal")]
         private static extern void _setFullscreenCallbacks(ExternChartboostMediationFullscreenAdEvent fullscreenAdEvents);
 
+        [DllImport("__Internal")]
+        private static extern void _setBannerAdCallbacks(ExternChartboostMediationBannerAdEvent bannerAdEvents);
+
+        
         [DllImport("__Internal")]
         private static extern void _setBannerCallbacks(ExternChartboostMediationPlacementLoadEvent DidLoadCallback, ExternChartboostMediationPlacementEvent DidRecordImpression, ExternChartboostMediationPlacementEvent DidClickCallback);
 
@@ -120,7 +134,7 @@ namespace Chartboost.Platforms.IOS
             => EventProcessor.ProcessFullscreenEvent(adHashCode, eventType, code, message);
         #endregion
         
-        #region Banner Callbacks
+        #region Banner Callbacks (deprecated)
         [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementLoadEvent))]
         private static void ExternDidLoadBanner(string placementName, string loadId, string auctionId, string partnerId, double price, string lineItemName, string lineItemId, string error) 
             => EventProcessor.ProcessChartboostMediationLoadEvent(placementName, loadId, auctionId, partnerId, price, lineItemName, lineItemId, error, _instance.DidLoadBanner);
@@ -136,6 +150,40 @@ namespace Chartboost.Platforms.IOS
         public override event ChartboostMediationPlacementLoadEvent DidLoadBanner;
         public override event ChartboostMediationPlacementEvent DidClickBanner;
         public override event ChartboostMediationPlacementEvent DidRecordImpressionBanner;
+        #endregion
+
+        #region Baner Callbacks
+        public delegate void ExternChartboostMediationBannerAdLoadResultEvent(int hashCode, IntPtr adHashCode, string loadId, string metricsJson, string code, string message);
+        
+        [MonoPInvokeCallback(typeof(ExternChartboostMediationBannerAdLoadResultEvent))]
+        internal static void BannerAdLoadResultCallbackProxy(int hashCode, IntPtr adHashCode, string loadId, string metricsJson, string code, string message)
+        {
+            EventProcessor.ProcessEvent(() => { 
+                ChartboostMediationBannerAdLoadResult adLoadResult;
+                if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(message))
+                {
+                    var error = new ChartboostMediationError(code, message);
+                    adLoadResult = new ChartboostMediationBannerAdLoadResult(error);
+                    ResolveCallbackProxy(hashCode, adLoadResult);
+                    CacheManager.ReleaseFullscreenAdLoadRequest(hashCode);
+                    return;
+                }
+                var metrics = string.IsNullOrEmpty(metricsJson)? new Metrics() : JsonConvert.DeserializeObject<Metrics>(metricsJson);
+                adLoadResult = new ChartboostMediationBannerAdLoadResult(loadId, metrics, null);
+                ResolveCallbackProxy(hashCode, adLoadResult);
+                CacheManager.ReleaseBannerAdLoadRequest(hashCode);
+            });
+        }
+
+        private delegate void ExternChartboostMediationBannerAdEvent(long adHashCode, int eventType);
+
+        [MonoPInvokeCallback(typeof(ExternChartboostMediationBannerAdEvent))]
+        internal static void BannerAdEvents(long adHashCode, int eventType)
+        {
+            EventProcessor.ProcessChartboostMediationBannerEvent(adHashCode, eventType);
+        }
+        
+
         #endregion
     }
 }
