@@ -97,8 +97,8 @@ namespace Chartboost.AdFormats.Banner
 
             if(request.Size.BannerType == ChartboostMediationBannerType.Adaptive)
             {
-                var width = ChartboostMediationConverters.PixelsToNative(request.Size.Width);
-                var height = ChartboostMediationConverters.PixelsToNative(request.Size.Height);
+                var width = request.Size.Width;
+                var height = request.Size.Height;
                 _chartboostMediationBannerLoadAdaptiveSize(uniqueId, placement, width, height, (int)screenLocation, hashCode, BannerAdLoadResultCallbackProxy);
             }
             else
@@ -114,7 +114,6 @@ namespace Chartboost.AdFormats.Banner
             }
 
             var result = await proxy;
-            Debug.Log($"Load result : {JsonConvert.SerializeObject(result)}");
             return result;
         }
 

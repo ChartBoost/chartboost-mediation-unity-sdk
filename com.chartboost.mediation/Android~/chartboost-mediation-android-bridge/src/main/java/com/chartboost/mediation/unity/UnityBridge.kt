@@ -1,5 +1,6 @@
 package com.chartboost.mediation.unity
 
+import android.util.DisplayMetrics
 import com.chartboost.heliumsdk.*
 import com.chartboost.heliumsdk.ad.*
 import com.chartboost.heliumsdk.ad.HeliumBannerAd.HeliumBannerSize
@@ -13,7 +14,6 @@ import com.chartboost.mediation.unity.EventProcessor.serializeEventWithException
 import com.chartboost.mediation.unity.EventProcessor.serializeLoadEvent
 import com.unity3d.player.UnityPlayer
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 
@@ -55,6 +55,27 @@ class UnityBridge {
                 val adShowResult =  fullscreenAd.show(UnityPlayer.currentActivity)
                 adShowResultHandler.onAdShown(adShowResult)
             }
+        }
+
+        // TODO
+        @JvmStatic
+        fun createBannerView(listener: IBannerEventListener) : BannerAdWrapper{
+            val bannerView = HeliumBannerAd(UnityPlayer.currentActivity);
+
+            val bannerAdWrapper = BannerAdWrapper.wrap(bannerView);
+            bannerAdWrapper.setListener(listener);
+//            AdStore.trackBannerAd(bannerAdWrapper);
+            return bannerAdWrapper;
+        }
+
+        @JvmStatic
+        fun loadBannerAd(bannerAd: BannerAdWrapper, screenLocation: Int, adRequest: ChartboostMediationBannerAdLoadResult, adLoadResultHandler: ChartboostMediationBannerAdLoadListener){
+            bannerAd.load(screenLocation, adRequest, adLoadResultHandler);
+        }
+
+        @JvmStatic
+        fun getUIScaleFactor(): Float {
+            return UnityPlayer.currentActivity.resources?.displayMetrics?.density ?: DisplayMetrics.DENSITY_DEFAULT.toFloat()
         }
 
         @Deprecated("getInterstitialAd has been deprecated, utilize getFullscreenAd instead.")

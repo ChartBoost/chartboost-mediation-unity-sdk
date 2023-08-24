@@ -40,18 +40,12 @@ namespace Chartboost.Platforms.IOS
         }
         private static void ResolveCallbackProxy<TResponse>(int hashCode, TResponse response) {
             if (!WaitingProxies.ContainsKey(hashCode))
-            {
-                Debug.Log($" Proxy not found hashcode : {hashCode}");
                 return;
-            }
-
-            Debug.Log($" Proxy found with hashcode : {hashCode}");
-
+            
             if (WaitingProxies[hashCode] is Later<TResponse> later)
                 later.Complete(response);
             
-            Debug.Log($" Removing proxy hashcode : {hashCode}");
-            // WaitingProxies.Remove(hashCode);
+            WaitingProxies.Remove(hashCode);
         }
         
         [DllImport("__Internal")]

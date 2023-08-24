@@ -14,7 +14,7 @@ namespace Chartboost.Events
 {
     public static class EventProcessor
     {
-        private enum FullscreenAdEvents
+        internal enum FullscreenAdEvents
         {
             RecordImpression = 0,
             Click = 1,
@@ -23,7 +23,7 @@ namespace Chartboost.Events
             Expire = 4
         }
 
-        private enum BannerAdEvents
+        internal enum BannerAdEvents
         {
             Show = 0,
             Click = 1,
