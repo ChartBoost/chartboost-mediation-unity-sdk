@@ -157,16 +157,8 @@ class UnityBridge {
         }
 
         @JvmStatic
-        fun getBannerAd(placementName: String, size: Int): AdWrapper {
-            // default to standard
-            var wantedSize = HeliumBannerSize.STANDARD
-            when (size) {
-                0 -> wantedSize = HeliumBannerSize.STANDARD
-                1 -> wantedSize = HeliumBannerSize.MEDIUM
-                2 -> wantedSize = HeliumBannerSize.LEADERBOARD
-                else -> HeliumBannerSize.STANDARD
-            }
-            val bannerAd = HeliumBannerAd(UnityPlayer.currentActivity, placementName, wantedSize, object : HeliumBannerAdListener {
+        fun getBannerAd(placementName: String, size: HeliumBannerSize): AdWrapper {
+            val bannerAd = HeliumBannerAd(UnityPlayer.currentActivity, placementName, size, object : HeliumBannerAdListener {
                 override fun onAdCached(placementName: String, loadId: String, winningBidInfo: Map<String, String>, error: ChartboostMediationAdException?) {
                     serializeLoadEvent(placementName, loadId, winningBidInfo, error,
                         LoadEventConsumer { eventPlacementName: String, eventLoadId: String, auctionId: String, partnerId: String, price: Double, lineItemName:String, lineItemId:String, eventError: String ->
