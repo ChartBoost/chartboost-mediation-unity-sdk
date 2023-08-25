@@ -10,52 +10,64 @@ namespace Chartboost.Banner
     public abstract class ChartboostMediationBannerBase : IChartboostMediationAd, IChartboostMediationBannerAd
     {
         protected static string LogTag = "ChartboostMediationBanner (Base)";
-        protected readonly string placementName;
-        private readonly ChartboostMediationBannerAdSize _size;
+        protected readonly string PlacementName;
+        protected readonly ChartboostMediationBannerAdSize Size;
         internal abstract bool IsValid { get; set; }
 
         protected ChartboostMediationBannerBase(string placementName, ChartboostMediationBannerAdSize size)
         {
-            this.placementName = placementName;
-            _size = size;
+            PlacementName = placementName;
+            Size = size;
         }
 
         /// <inheritdoc cref="IChartboostMediationAd.SetKeyword"/>>
         public virtual bool SetKeyword(string keyword, string value)
         {
-            Logger.Log(LogTag, $"banner: {placementName}, setting keyword {keyword} with value: {value}");
+            Logger.Log(LogTag, $"banner: {PlacementName}, setting keyword {keyword} with value: {value}");
             return false;
         }
 
         /// <inheritdoc cref="IChartboostMediationAd.RemoveKeyword"/>>
         public virtual string RemoveKeyword(string keyword)
         {
-            Logger.Log(LogTag, $"banner: {placementName}, removing keyword {keyword}");
+            Logger.Log(LogTag, $"banner: {PlacementName}, removing keyword {keyword}");
             return keyword;
         }
 
         /// <inheritdoc cref="IChartboostMediationAd.Destroy"/>>
         public virtual void Destroy()
         {
-            Logger.Log(LogTag, $"destroying banner: {placementName}");
+            Logger.Log(LogTag, $"destroying banner: {PlacementName}");
         }
 
         /// <inheritdoc cref="IChartboostMediationBannerAd.Load"/>>
         public virtual void Load(ChartboostMediationBannerAdScreenLocation location)
-            => Logger.Log(LogTag, $"loading banner: {placementName} with size: {_size} at {location}");
+            => Logger.Log(LogTag, $"loading banner: {PlacementName} with size: {Size} at {location}");
 
         /// <inheritdoc cref="IChartboostMediationBannerAd.SetVisibility"/>>
         public virtual void SetVisibility(bool isVisible)
-            => Logger.Log(LogTag, $"setting visibility: {isVisible} for banner: {placementName}");
+            => Logger.Log(LogTag, $"setting visibility: {isVisible} for banner: {PlacementName}");
+
+        public virtual void SetHorizontalAlignment(ChartboostMediationBannerHorizontalAlignment horizontalAlignment) 
+            => Logger.Log(LogTag, $"setting horizontal alignment: {horizontalAlignment} for banner: {PlacementName}");
+
+        public virtual void SetVerticalAlignment(ChartboostMediationBannerVerticalAlignment verticalAlignment)
+            => Logger.Log(LogTag, $"setting vertical alignment: {verticalAlignment} for banner: {PlacementName}");
+
+        public virtual ChartboostMediationBannerAdSize GetAdSize()
+        {
+            Logger.Log(LogTag, $"getting ad size for banner: {PlacementName}");
+            return null;
+        }
 
         /// <inheritdoc cref="IChartboostMediationBannerAd.ClearLoaded"/>>
         public virtual void ClearLoaded()
-            => Logger.Log(LogTag, $"clearing banner: {placementName}");
+            => Logger.Log(LogTag, $"clearing banner: {PlacementName}");
 
         /// <inheritdoc cref="IChartboostMediationBannerAd.Remove"/>>
         [Obsolete("Remove has been deprecated, please use Destroy instead.")]
         public virtual void Remove()
-            => Logger.Log(LogTag, $"removing banner: {placementName}");
+            => Logger.Log(LogTag, $"removing banner: {PlacementName}");
     }
 
     /// <summary>

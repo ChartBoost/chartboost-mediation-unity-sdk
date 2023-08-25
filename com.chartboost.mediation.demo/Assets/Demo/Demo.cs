@@ -31,6 +31,8 @@ public class Demo : MonoBehaviour
     public InputField bannerPlacementInputField;
     public Dropdown bannerSizeDropdown;
     public Dropdown bannerLocationDropdown;
+    public Dropdown horizontalAlignmentDropdown;
+    public Dropdown verticalAlignmentDropdown;
     private ChartboostMediationBannerAd _bannerAd;
     private bool _bannerAdIsVisible;
 
@@ -205,11 +207,13 @@ public class Demo : MonoBehaviour
     {
         var size = bannerSizeDropdown.value switch
         {
+            4 => ChartboostMediationBannerAdSize.Adaptive4X1(400),
+            3 => ChartboostMediationBannerAdSize.Adaptive1X3(100),
             2 => ChartboostMediationBannerAdSize.Leaderboard,
             1 => ChartboostMediationBannerAdSize.MediumRect,
             _ => ChartboostMediationBannerAdSize.Standard
         };
-
+        
         _bannerAd?.Remove();
 
         Log("Creating banner on placement: " + bannerPlacementInputField.text + " with size: " + size);
@@ -243,7 +247,21 @@ public class Demo : MonoBehaviour
             6 => ChartboostMediationBannerAdScreenLocation.BottomRight,
             _ => ChartboostMediationBannerAdScreenLocation.TopCenter
         };
+        
+        _bannerAd.SetVerticalAlignment((ChartboostMediationBannerVerticalAlignment)verticalAlignmentDropdown.value);
+        _bannerAd.SetHorizontalAlignment((ChartboostMediationBannerHorizontalAlignment)horizontalAlignmentDropdown.value);
+
         _bannerAd.Load(screenPos);
+    }
+
+    public void OnHorizontalAlignmentChange()
+    {
+        _bannerAd.SetHorizontalAlignment((ChartboostMediationBannerHorizontalAlignment)horizontalAlignmentDropdown.value);
+    }
+
+    public void OnVerticalAlignmentChange()
+    {
+        _bannerAd.SetVerticalAlignment((ChartboostMediationBannerVerticalAlignment)verticalAlignmentDropdown.value);
     }
 
     public void OnRemoveBannerClick()

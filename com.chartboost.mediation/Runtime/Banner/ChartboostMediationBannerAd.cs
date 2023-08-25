@@ -3,19 +3,20 @@ using Chartboost.Events;
 
 namespace Chartboost.Banner
 {
-    /// <summary>
-    /// Chartboost Mediation defined banner sizes.
-    /// </summary>
-    public enum ChartboostMediationBannerAdSize
+    public enum ChartboostMediationBannerHorizontalAlignment
     {
-        /// 320 x 50
-        Standard = 0,
-        /// 300 x 250
-        MediumRect = 1,
-        /// 728 x 90
-        Leaderboard = 2
+        Left,
+        Center,
+        Right
     }
-
+    
+    public enum ChartboostMediationBannerVerticalAlignment
+    {
+        Top,
+        Center,
+        Bottom
+    }
+    
     /// <summary>
     /// Chartboost Mediation defined screen locations.
     /// </summary>
@@ -59,7 +60,23 @@ namespace Chartboost.Banner
         /// <inheritdoc cref="ChartboostMediationBannerBase.RemoveKeyword"/>>
         public override string RemoveKeyword(string keyword) 
             => IsValid ? _platformBanner.RemoveKeyword(keyword) : null;
+
+        /// <inheritdoc cref="ChartboostMediationBannerBase.SetHorizontalAlignment"/>
+        public override void SetHorizontalAlignment(ChartboostMediationBannerHorizontalAlignment horizontalAlignment)
+        {
+            if(IsValid) _platformBanner.SetHorizontalAlignment(horizontalAlignment);
+        }
         
+        /// <inheritdoc cref="ChartboostMediationBannerBase.SetVerticalAlignment"/>
+        public override void SetVerticalAlignment(ChartboostMediationBannerVerticalAlignment verticalAlignment)
+        {
+            if(IsValid) _platformBanner.SetVerticalAlignment(verticalAlignment);
+        }
+        
+        /// <inheritdoc cref="ChartboostMediationBannerBase.GetAdSize"/>
+        public override ChartboostMediationBannerAdSize GetAdSize()
+            => IsValid ? _platformBanner.GetAdSize() : null;
+
         /// <inheritdoc cref="ChartboostMediationBannerBase.Destroy"/>>
         public override void Destroy()
         {
@@ -103,7 +120,7 @@ namespace Chartboost.Banner
             base.Destroy();
             
             if (isCollected) 
-                EventProcessor.ReportUnexpectedSystemError($"Banner Ad with placement: {placementName}, got GC. Make sure to properly dispose of ads utilizing Destroy for the best integration experience.");
+                EventProcessor.ReportUnexpectedSystemError($"Banner Ad with placement: {PlacementName}, got GC. Make sure to properly dispose of ads utilizing Destroy for the best integration experience.");
         }
 
         ~ChartboostMediationBannerAd() => Destroy(true);
