@@ -60,7 +60,7 @@ const char* dictionaryToJSON(NSDictionary *data)
         return "";
      }
     NSString *json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    return [json UTF8String];
+    return ConvertNSStringToCString(json);
 }
 
 const void serializeEvent(ChartboostMediationError *error, ChartboostMediationEvent event)
@@ -352,8 +352,6 @@ struct Implementation {
 #pragma mark ChartboostMediationBannerAdDelegate
 - (void)willAppearWithBannerView:(ChartboostMediationBannerView *)bannerView {
     
-    
-    // TODO: No loadId 
     NSString* loadid = [bannerView.loadMetrics objectForKey:@"load-id"] ?: @"";
     NSString* placementName = bannerView.request.placement;
     serializePlacementLoadWithError(placementName, loadid, bannerView.winningBidInfo, nil, _bannerDidLoadCallback);
@@ -656,40 +654,34 @@ void * _chartboostMediationGetBannerAd()
     [[ChartboostMediationObserver sharedObserver] storeAd:ad placementName:nil multiPlacementSupport:true];
         
     return (__bridge void*)ad;
-//    CHBHBannerSize cbSize;
-//    switch (size) {
-//        case 2:
-//            cbSize = CHBHBannerSize_Leaderboard;
-//            break;
-//        case 1:
-//            cbSize = CHBHBannerSize_Medium;
-//            break;
-//
-//        default:
-//            cbSize = CHBHBannerSize_Standard;
-//            break;
-//    }
-//
-//    HeliumBannerView *ad = [[Helium sharedHelium] bannerProviderWithDelegate:[ChartboostMediationObserver sharedObserver] andPlacementName:GetStringParam(placementName) andSize:cbSize];
-//
-//    if (ad == NULL)
-//        return NULL;
-//
-//    [[ChartboostMediationObserver sharedObserver] storeAd:ad placementName:placementName multiPlacementSupport:true];
-//    return (__bridge void*)ad;
 }
 
 BOOL _chartboostMediationBannerSetKeyword(const void *uniqueId, const char *keyword, const char *value)
 {
     ChartboostMediationBannerView * ad = (__bridge ChartboostMediationBannerView *)uniqueId;
-    [ad.keywords setValue:GetStringParam(value) forKey:GetStringParam(keyword)];
+    
+    NSString * key = GetStringParam(keyword);
+    NSString * val = GetStringParam(value);
+    NSLog(@"Key : %@, value : %@", key, val);
+   
+    NSMutableDictionary *keywords = [ad.keywords mutableCopy];
+    [keywords setObject:val forKey:key];
+    ad.keywords = keywords;
+    
+    NSLog(@"keywords count : %lu", (unsigned long)[keywords count]);
+    NSLog(@"ad.keywords count : %lu", (unsigned long)[ad.keywords count]);
+    for( NSString *aKey in [ad.keywords allKeys] )
+    {
+        NSLog(@"%@", aKey);
+    }
+    
     return true;
 }
 
-char * _chartboostMediationBannerRemoveKeyword(const void *uniqueId, const char *keyword){
+const char * _chartboostMediationBannerRemoveKeyword(const void *uniqueId, const char *keyword){
     ChartboostMediationBannerView * ad = (__bridge ChartboostMediationBannerView *)uniqueId;
     if ([ad.keywords objectForKey:GetStringParam(keyword)]) {
-        char * value = ConvertNSStringToCString([ad.keywords valueForKey:GetStringParam(keyword)]);
+        const char * value = ConvertNSStringToCString([ad.keywords valueForKey:GetStringParam(keyword)]);
         NSMutableDictionary *dict = ad.keywords;
         [dict removeObjectForKey:GetStringParam(keyword)];
         return value;
@@ -705,7 +697,22 @@ const char * _chartboostMediationBannerGetAdSize(const void * uniqueId) {
     NSString * heightKey = @"height"; NSString * heightValue = [NSString stringWithFormat:@"%f", bannerView.size.size.height];
     NSString * typeKey = @"type"; NSString * typeValue = [NSString stringWithFormat:@"%d", (int)bannerView.size.type];
     
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:aspectRatioValue,aspectRatioKey,widthValue,widthKey,heightValue,heightKey,typeValue, typeKey, nil];
+    NSString *nameKey = @"name";
+    NSString *nameValue = @"";
+    if(bannerView.size.type == 0) {  // Adaptive
+        int width = bannerView.size.size.width;
+        switch (width) {
+            case 320: nameValue = @"STANDARD"; break;
+            case 300: nameValue = @"MEDIUM"; break;
+            case 728: nameValue = @"LEADERBOARD"; break;
+            default:break;
+        }
+    }
+    else{
+        nameValue = @"ADAPTIVE";
+    }
+    
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:nameValue,nameKey,aspectRatioValue,aspectRatioKey,widthValue,widthKey,heightValue,heightKey,typeValue, typeKey, nil];
 
     return dictionaryToJSON(dict);
 }
@@ -726,102 +733,93 @@ void _chartboostMediationBannerSetVerticalAlignment(const void * uniqueId, int v
 }
 
 void _chartboostMediationBannerAdLoad(const void * uniqueId, const char* placementName, const char* sizeJson,long screenLocation){
-        ChartboostMediationBannerView *bannerView =(__bridge ChartboostMediationBannerView*)uniqueId;
+    ChartboostMediationBannerView *bannerView =(__bridge ChartboostMediationBannerView*)uniqueId;
 
-        // size
-        NSDictionary *formattedSize = objFromJsonString<NSDictionary *>(sizeJson);
-        ChartboostMediationBannerSize *size;
-        
-        int type = [[formattedSize objectForKey:@"type"] intValue];
-        float width = [[formattedSize objectForKey:@"width"] floatValue];
-        float height = [[formattedSize objectForKey:@"height"] floatValue];
-        
-        if(type == 0){
-            switch ((int)width) {
-                case 320:
-                    size = [ChartboostMediationBannerSize standard];
-                    break;
-                case 300:
-                    size = [ChartboostMediationBannerSize medium];
-                    break;
-                case 728:
-                    size = [ChartboostMediationBannerSize leaderboard];
-                    break;
-                default:
-                    break;
-            }
-        }
-        else {
-            size = [ChartboostMediationBannerSize adaptiveWithWidth:width maxHeight:height];
-        }
-        
-        ChartboostMediationBannerLoadRequest *loadRequest = [[ChartboostMediationBannerLoadRequest alloc] initWithPlacement:GetStringParam(placementName) size:size];
-        
-        // View Controller
-        UIViewController *unityVC = GetAppController().rootViewController;
-            
-        UILayoutGuide *safeGuide;
-        if (@available(iOS 11.0, *))
-            safeGuide = unityVC.view.safeAreaLayoutGuide;
-        else
-            safeGuide = unityVC.view.layoutMarginsGuide;
-        
-        [bannerView removeFromSuperview];
-        [unityVC.view  addSubview:bannerView];
-        bannerView.translatesAutoresizingMaskIntoConstraints=NO;
-        NSLayoutConstraint *xConstraint;
+    // size
+    NSDictionary *formattedSize = objFromJsonString<NSDictionary *>(sizeJson);
+    ChartboostMediationBannerSize *size;
+    
+    NSString *name = [[formattedSize objectForKey:@"name"] stringValue];
+    int type = [[formattedSize objectForKey:@"type"] intValue];
+    float width = [[formattedSize objectForKey:@"width"] floatValue];
+    float height = [[formattedSize objectForKey:@"height"] floatValue];
 
-        switch (screenLocation) // X Constraints
+    NSArray *sizeNames = @[@"ADAPTIVE", @"STANDARD", @"MEDIUM", @"LEADERBOARD"];
+    long item = [sizeNames indexOfObject:name];
+    switch(item){
+        case 0 : size = [ChartboostMediationBannerSize adaptiveWithWidth:width maxHeight:height]; break;
+        case 1 : size = [ChartboostMediationBannerSize standard]; break;
+        case 2 : size = [ChartboostMediationBannerSize medium]; break;
+        case 3 : size = [ChartboostMediationBannerSize leaderboard]; break;            
+    }
+    
+    ChartboostMediationBannerLoadRequest *loadRequest = [[ChartboostMediationBannerLoadRequest alloc] initWithPlacement:GetStringParam(placementName) size:size];
+    
+    // View Controller
+    UIViewController *unityVC = GetAppController().rootViewController;
+        
+    UILayoutGuide *safeGuide;
+    if (@available(iOS 11.0, *))
+        safeGuide = unityVC.view.safeAreaLayoutGuide;
+    else
+        safeGuide = unityVC.view.layoutMarginsGuide;
+    
+    [bannerView removeFromSuperview];
+    [unityVC.view  addSubview:bannerView];
+    bannerView.translatesAutoresizingMaskIntoConstraints=NO;
+    NSLayoutConstraint *xConstraint;
+
+    switch (screenLocation) // X Constraints
+    {
+        case 1: // Top Center
+        case 3: // Center
+        case 5: // Bottom Center
+            xConstraint = [bannerView.centerXAnchor constraintEqualToAnchor:safeGuide.centerXAnchor];
+            break;
+        case 2: // Top Right
+        case 6: // Bottom Right
+            xConstraint = [bannerView.trailingAnchor constraintEqualToAnchor:safeGuide.trailingAnchor];
+            break;
+        default:
+            xConstraint = [bannerView.leadingAnchor constraintEqualToAnchor:safeGuide.leadingAnchor];
+    }
+
+    NSLayoutConstraint *yConstraint;
+    switch (screenLocation) // Y Constraints
+    {
+        case 0: // Top Left:
+        case 1: // Top Center
+        case 2: // Top
+            yConstraint = [bannerView.topAnchor constraintEqualToAnchor:safeGuide.topAnchor];
+            break;;
+        case 4: // Bottom Left
+        case 5: // Bottom Center
+        case 6: // Bottom Right
+            yConstraint = [bannerView.bottomAnchor constraintEqualToAnchor:safeGuide.bottomAnchor];
+            break;
+        default:
+            yConstraint = [bannerView.centerYAnchor constraintEqualToAnchor:safeGuide.centerYAnchor];
+    }
+
+    [NSLayoutConstraint activateConstraints:@[
+        [bannerView.widthAnchor constraintEqualToConstant:size.size.width],
+        [bannerView.heightAnchor constraintEqualToConstant:size.size.height],
+        xConstraint,
+        yConstraint
+    ]];
+    
+    // Load
+    [bannerView loadWith:loadRequest viewController:unityVC completion:^(ChartboostMediationBannerLoadResult *adLoadResult) {
+        ChartboostMediationError *error = [adLoadResult error];
+        if (error != nil)
         {
-            case 1: // Top Center
-            case 3: // Center
-            case 5: // Bottom Center
-                xConstraint = [bannerView.centerXAnchor constraintEqualToAnchor:safeGuide.centerXAnchor];
-                break;
-            case 2: // Top Right
-            case 6: // Bottom Right
-                xConstraint = [bannerView.trailingAnchor constraintEqualToAnchor:safeGuide.trailingAnchor];
-                break;
-            default:
-                xConstraint = [bannerView.leadingAnchor constraintEqualToAnchor:safeGuide.leadingAnchor];
+            [[ChartboostMediationObserver sharedObserver] willAppearWithError:error];
+            return;
         }
-
-        NSLayoutConstraint *yConstraint;
-        switch (screenLocation) // Y Constraints
-        {
-            case 0: // Top Left:
-            case 1: // Top Center
-            case 2: // Top
-                yConstraint = [bannerView.topAnchor constraintEqualToAnchor:safeGuide.topAnchor];
-                break;;
-            case 4: // Bottom Left
-            case 5: // Bottom Center
-            case 6: // Bottom Right
-                yConstraint = [bannerView.bottomAnchor constraintEqualToAnchor:safeGuide.bottomAnchor];
-                break;
-            default:
-                yConstraint = [bannerView.centerYAnchor constraintEqualToAnchor:safeGuide.centerYAnchor];
-        }
-
-        [NSLayoutConstraint activateConstraints:@[
-            [bannerView.widthAnchor constraintEqualToConstant:size.size.width],
-            [bannerView.heightAnchor constraintEqualToConstant:size.size.height],
-            xConstraint,
-            yConstraint
-        ]];
         
-        // Load
-        [bannerView loadWith:loadRequest viewController:unityVC completion:^(ChartboostMediationBannerLoadResult *adLoadResult) {
-            ChartboostMediationError *error = [adLoadResult error];
-            if (error != nil)
-            {
-                [[ChartboostMediationObserver sharedObserver] willAppearWithError:error];
-                return;
-            }
-            
-            // succesful load
-            
-        }];
+        // succesful load
+        
+    }];
 }
 
 
