@@ -13,9 +13,9 @@ import com.chartboost.mediation.unity.EventProcessor.serializeEventWithException
 import com.chartboost.mediation.unity.EventProcessor.serializeLoadEvent
 import com.unity3d.player.UnityPlayer
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 class UnityBridge {
 
@@ -157,7 +157,15 @@ class UnityBridge {
         }
 
         @JvmStatic
-        fun getBannerAd(placementName: String, size: HeliumBannerSize): AdWrapper {
+        fun getBannerAd(placementName: String, name: String, width: Float, height: Float): AdWrapper {
+            val size:HeliumBannerSize = when(name){
+                "ADAPTIVE" -> HeliumBannerSize.bannerSize(width.roundToInt(), height.roundToInt())
+                "STANDARD" -> HeliumBannerSize.STANDARD
+                "MEDIUM" -> HeliumBannerSize.MEDIUM
+                "LEADERBOARD" -> HeliumBannerSize.LEADERBOARD
+                else -> HeliumBannerSize.STANDARD
+            }
+
             val bannerAd = HeliumBannerAd(UnityPlayer.currentActivity, placementName, size, object : HeliumBannerAdListener {
                 override fun onAdCached(placementName: String, loadId: String, winningBidInfo: Map<String, String>, error: ChartboostMediationAdException?) {
                     serializeLoadEvent(placementName, loadId, winningBidInfo, error,

@@ -14,6 +14,7 @@ import com.chartboost.heliumsdk.ad.HeliumBannerAd.HeliumBannerSize
 import com.chartboost.heliumsdk.ad.HeliumFullscreenAd
 import com.chartboost.heliumsdk.ad.HeliumRewardedAd
 import com.unity3d.player.UnityPlayer
+import org.json.JSONObject
 
 @Deprecated("AdWrapper utilizes deprecated APIs and will be removed in the future.")
 class AdWrapper(private val ad: HeliumAd) {
@@ -59,6 +60,50 @@ class AdWrapper(private val ad: HeliumAd) {
             ad.customData = customData
         } else {
             Log.d(TAG, "custom data can only be set on a rewarded ad")
+        }
+    }
+
+    fun getSize(): String? {
+        if(ad !is HeliumBannerAd){
+            Log.w(TAG, "getSize should only be called on banner ads")
+            return null
+        }
+
+        val size = ad.getSize();
+        val json = JSONObject();
+        json.put("name", size?.name);
+        json.put("aspectRatio", size?.aspectRatio);
+        json.put("width", size?.width);
+        json.put("height", size?.height);
+        json.put("type", size?.isAdaptive);
+
+        return json.toString();
+    }
+
+    fun setHorizontalAlignment(horizontalAlignment: Int) {
+        if(ad !is HeliumBannerAd){
+            Log.w(TAG, "setHorizontalAlignment should only be called on banner ads")
+            return
+        }
+
+        val bannerAd:HeliumBannerAd = ad;
+        when(horizontalAlignment){
+            0 -> bannerAd.foregroundGravity =  Gravity.LEFT
+            1 -> bannerAd.foregroundGravity =  Gravity.CENTER_HORIZONTAL
+            2 -> bannerAd.foregroundGravity =  Gravity.RIGHT
+        }
+    }
+
+    fun setVerticalAlignment(verticalAlignment: Int) {
+        if(ad !is HeliumBannerAd){
+            Log.w(TAG, "setVerticalAlignment should only be called on banner ads")
+            return
+        }
+        val bannerAd:HeliumBannerAd = ad;
+        when(verticalAlignment){
+            0 -> bannerAd.foregroundGravity =  Gravity.TOP
+            1 -> bannerAd.foregroundGravity =  Gravity.CENTER_VERTICAL
+            2 -> bannerAd.foregroundGravity =  Gravity.BOTTOM
         }
     }
 
