@@ -69,6 +69,7 @@ class AdWrapper(private val ad: HeliumAd) {
             return null
         }
 
+        // TODO: Replace with getCreativeSize()
         val size = ad.getSize();
         val json = JSONObject();
         json.put("name", size?.name);
@@ -86,11 +87,13 @@ class AdWrapper(private val ad: HeliumAd) {
             return
         }
 
-        val bannerAd:HeliumBannerAd = ad;
-        when(horizontalAlignment){
-            0 -> bannerAd.foregroundGravity =  Gravity.LEFT
-            1 -> bannerAd.foregroundGravity =  Gravity.CENTER_HORIZONTAL
-            2 -> bannerAd.foregroundGravity =  Gravity.RIGHT
+        runTaskOnUiThread {
+            val bannerAd: HeliumBannerAd = ad;
+            when (horizontalAlignment) {
+                0 -> bannerAd.foregroundGravity = Gravity.LEFT
+                1 -> bannerAd.foregroundGravity = Gravity.CENTER_HORIZONTAL
+                2 -> bannerAd.foregroundGravity = Gravity.RIGHT
+            }
         }
     }
 
@@ -99,11 +102,13 @@ class AdWrapper(private val ad: HeliumAd) {
             Log.w(TAG, "setVerticalAlignment should only be called on banner ads")
             return
         }
-        val bannerAd:HeliumBannerAd = ad;
-        when(verticalAlignment){
-            0 -> bannerAd.foregroundGravity =  Gravity.TOP
-            1 -> bannerAd.foregroundGravity =  Gravity.CENTER_VERTICAL
-            2 -> bannerAd.foregroundGravity =  Gravity.BOTTOM
+        runTaskOnUiThread {
+            val bannerAd:HeliumBannerAd = ad;
+            when(verticalAlignment){
+                0 -> bannerAd.foregroundGravity =  Gravity.TOP
+                1 -> bannerAd.foregroundGravity =  Gravity.CENTER_VERTICAL
+                2 -> bannerAd.foregroundGravity =  Gravity.BOTTOM
+            }
         }
     }
 
@@ -202,11 +207,10 @@ class AdWrapper(private val ad: HeliumAd) {
         // Attach the banner layout to the activity.
         val density = displayDensity
         try {
-            when (ad.getSize() ?: HeliumBannerSize.STANDARD) {
-                HeliumBannerSize.LEADERBOARD -> ad.layoutParams = getBannerLayoutParams(density, LEADERBOARD.first, LEADERBOARD.second)
-                HeliumBannerSize.MEDIUM -> ad.layoutParams = getBannerLayoutParams(density, MEDIUM.first, MEDIUM.second)
-                HeliumBannerSize.STANDARD -> ad.layoutParams = getBannerLayoutParams(density, STANDARD.first, STANDARD.second)
-            }
+
+            ad.getSize()?.let { size -> {
+                ad.layoutParams = getBannerLayoutParams(density, size.width, size.height);
+            } }
 
             // Attach the banner to the banner layout.
             layout.addView(ad)
