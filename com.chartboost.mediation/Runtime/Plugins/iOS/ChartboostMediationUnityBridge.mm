@@ -656,85 +656,10 @@ void * _chartboostMediationGetBannerAd()
     return (__bridge void*)ad;
 }
 
-BOOL _chartboostMediationBannerSetKeyword(const void *uniqueId, const char *keyword, const char *value)
+void _chartboostMediationBannerAdLoad(const void * uniqueId, const char* placementName, const char* sizeJson,long screenLocation)
 {
-    ChartboostMediationBannerView * ad = (__bridge ChartboostMediationBannerView *)uniqueId;
-    
-    NSString * key = GetStringParam(keyword);
-    NSString * val = GetStringParam(value);
-    NSLog(@"Key : %@, value : %@", key, val);
-   
-    NSMutableDictionary *keywords = [ad.keywords mutableCopy];
-    [keywords setObject:val forKey:key];
-    ad.keywords = keywords;
-    
-    NSLog(@"keywords count : %lu", (unsigned long)[keywords count]);
-    NSLog(@"ad.keywords count : %lu", (unsigned long)[ad.keywords count]);
-    for( NSString *aKey in [ad.keywords allKeys] )
-    {
-        NSLog(@"%@", aKey);
-    }
-    
-    return true;
-}
-
-const char * _chartboostMediationBannerRemoveKeyword(const void *uniqueId, const char *keyword){
-    ChartboostMediationBannerView * ad = (__bridge ChartboostMediationBannerView *)uniqueId;
-    if ([ad.keywords objectForKey:GetStringParam(keyword)]) {
-        const char * value = ConvertNSStringToCString([ad.keywords valueForKey:GetStringParam(keyword)]);
-        NSMutableDictionary *dict = ad.keywords;
-        [dict removeObjectForKey:GetStringParam(keyword)];
-        return value;
-    }
-    return NULL;
-}
-
-const char * _chartboostMediationBannerGetAdSize(const void * uniqueId) {
     ChartboostMediationBannerView *bannerView =(__bridge ChartboostMediationBannerView*)uniqueId;
-
-    NSString * aspectRatioKey =@"aspectRatio"; NSString * aspectRatioValue = [NSString stringWithFormat:@"%f", bannerView.size.aspectRatio];
-    NSString * widthKey = @"width"; NSString * widthValue = [NSString stringWithFormat:@"%f", bannerView.size.size.width];
-    NSString * heightKey = @"height"; NSString * heightValue = [NSString stringWithFormat:@"%f", bannerView.size.size.height];
-    NSString * typeKey = @"type"; NSString * typeValue = [NSString stringWithFormat:@"%d", (int)bannerView.size.type];
     
-    NSString *nameKey = @"name";
-    NSString *nameValue = @"";
-    if(bannerView.size.type == 0) {  // Adaptive
-        int width = bannerView.size.size.width;
-        switch (width) {
-            case 320: nameValue = @"STANDARD"; break;
-            case 300: nameValue = @"MEDIUM"; break;
-            case 728: nameValue = @"LEADERBOARD"; break;
-            default:break;
-        }
-    }
-    else{
-        nameValue = @"ADAPTIVE";
-    }
-    
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:nameValue,nameKey,aspectRatioValue,aspectRatioKey,widthValue,widthKey,heightValue,heightKey,typeValue, typeKey, nil];
-
-    return dictionaryToJSON(dict);
-}
-
-void _chartboostMediationBannerSetHorizontalAlignment(const void * uniqueId, int horizontalAlignment){
-    sendToMain(^(){
-        ChartboostMediationBannerView * ad = (__bridge ChartboostMediationBannerView *)uniqueId;
-        [ad setHorizontalAlignment:(ChartboostMediationBannerHorizontalAlignment)horizontalAlignment];
-    });
-}
-
-
-void _chartboostMediationBannerSetVerticalAlignment(const void * uniqueId, int verticalAlignment){
-    sendToMain(^(){
-        ChartboostMediationBannerView * ad = (__bridge ChartboostMediationBannerView *)uniqueId;
-        [ad setVerticalAlignment:(ChartboostMediationBannerVerticalAlignment)verticalAlignment];
-    });
-}
-
-void _chartboostMediationBannerAdLoad(const void * uniqueId, const char* placementName, const char* sizeJson,long screenLocation){
-    ChartboostMediationBannerView *bannerView =(__bridge ChartboostMediationBannerView*)uniqueId;
-
     // size
     NSDictionary *formattedSize = objFromJsonString<NSDictionary *>(sizeJson);
     ChartboostMediationBannerSize *size;
@@ -750,9 +675,9 @@ void _chartboostMediationBannerAdLoad(const void * uniqueId, const char* placeme
         case 0 : size = [ChartboostMediationBannerSize adaptiveWithWidth:width maxHeight:height]; break;
         case 1 : size = [ChartboostMediationBannerSize standard]; break;
         case 2 : size = [ChartboostMediationBannerSize medium]; break;
-        case 3 : size = [ChartboostMediationBannerSize leaderboard]; break;            
+        case 3 : size = [ChartboostMediationBannerSize leaderboard]; break;
     }
-    
+        
     ChartboostMediationBannerLoadRequest *loadRequest = [[ChartboostMediationBannerLoadRequest alloc] initWithPlacement:GetStringParam(placementName) size:size];
     
     // View Controller
@@ -822,6 +747,75 @@ void _chartboostMediationBannerAdLoad(const void * uniqueId, const char* placeme
     }];
 }
 
+BOOL _chartboostMediationBannerSetKeyword(const void *uniqueId, const char *keyword, const char *value)
+{
+    ChartboostMediationBannerView * ad = (__bridge ChartboostMediationBannerView *)uniqueId;
+    
+    NSMutableDictionary *keywords = ad.keywords == nil ? [[NSMutableDictionary alloc] init] : [ad.keywords mutableCopy];
+    [keywords setObject:GetStringParam(value) forKey:GetStringParam(keyword)];
+    ad.keywords = keywords;
+
+    return true;
+}
+
+const char * _chartboostMediationBannerRemoveKeyword(const void *uniqueId, const char *keyword)
+{
+    ChartboostMediationBannerView * ad = (__bridge ChartboostMediationBannerView *)uniqueId;
+    
+    if ([ad.keywords objectForKey:GetStringParam(keyword)]) {
+        const char * value = ConvertNSStringToCString([ad.keywords valueForKey:GetStringParam(keyword)]);
+        NSMutableDictionary *keywords = [ad.keywords mutableCopy];
+        [keywords removeObjectForKey:GetStringParam(keyword)];
+        ad.keywords = keywords;
+        return value;
+    }
+    
+    return NULL;
+}
+
+const char * _chartboostMediationBannerGetAdSize(const void * uniqueId)
+{
+    ChartboostMediationBannerView *bannerView =(__bridge ChartboostMediationBannerView*)uniqueId;
+    
+    NSString * aspectRatioKey =@"aspectRatio"; NSString * aspectRatioValue = [NSString stringWithFormat:@"%f", bannerView.size.aspectRatio];
+    NSString * widthKey = @"width"; NSString * widthValue = [NSString stringWithFormat:@"%f", bannerView.size.size.width];
+    NSString * heightKey = @"height"; NSString * heightValue = [NSString stringWithFormat:@"%f", bannerView.size.size.height];
+    NSString * typeKey = @"type"; NSString * typeValue = [NSString stringWithFormat:@"%d", (int)bannerView.size.type];
+    
+    NSString *nameKey = @"name";
+    NSString *nameValue = @"";
+    if(bannerView.size.type == 0) {  // Fixed
+        int width = bannerView.size.size.width;
+        switch (width) {
+            case 320: nameValue = @"STANDARD"; break;
+            case 300: nameValue = @"MEDIUM"; break;
+            case 728: nameValue = @"LEADERBOARD"; break;
+            default:break;
+        }
+    }
+    else{
+        nameValue = @"ADAPTIVE";
+    }
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:nameValue,nameKey,aspectRatioValue,aspectRatioKey,widthValue,widthKey,heightValue,heightKey,typeValue, typeKey, nil];
+
+    return dictionaryToJSON(dict);
+}
+
+void _chartboostMediationBannerSetHorizontalAlignment(const void * uniqueId, int horizontalAlignment)
+{
+    sendToMain(^(){
+        ChartboostMediationBannerView * ad = (__bridge ChartboostMediationBannerView *)uniqueId;
+        [ad setHorizontalAlignment:(ChartboostMediationBannerHorizontalAlignment)horizontalAlignment];
+    });
+}
+
+void _chartboostMediationBannerSetVerticalAlignment(const void * uniqueId, int verticalAlignment)
+{
+    sendToMain(^(){
+        ChartboostMediationBannerView * ad = (__bridge ChartboostMediationBannerView *)uniqueId;
+        [ad setVerticalAlignment:(ChartboostMediationBannerVerticalAlignment)verticalAlignment];
+    });
+}
 
 void _chartboostMediationBannerClearLoaded(const void * uniqueId)
 {

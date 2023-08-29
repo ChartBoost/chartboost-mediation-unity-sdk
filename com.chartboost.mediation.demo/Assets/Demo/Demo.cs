@@ -296,6 +296,7 @@ public class Demo : MonoBehaviour
     {
         _bannerAdIsVisible = true;
         Log($"DidLoadBanner{placementName}: \nLoadId: ${loadId} \nPrice: ${info.Price:F4} \nAuction Id: {info.AuctionId} \nPartner Id: {info.PartnerId} \nError: {error}");
+        Log($"banner size : {JsonConvert.SerializeObject(_bannerAd.GetAdSize())}");
     }
 
     private void DidClickBanner(string placementName, string error) 
