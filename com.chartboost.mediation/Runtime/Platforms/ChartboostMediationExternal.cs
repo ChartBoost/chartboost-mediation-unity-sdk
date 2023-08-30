@@ -13,7 +13,9 @@ using Logger = Chartboost.Utilities.Logger;
 
 namespace Chartboost.Platforms
 {
+    #pragma warning disable CS0618
     internal abstract class ChartboostMediationExternal : IChartboostMediationLifeCycle, IChartboostMediationInterstitialEvents, IChartboostMediationRewardedEvents, IChartboostMediationBannerEvents
+    #pragma warning restore CS0618
     {
         public static bool IsInitialized { get; protected set; }
         

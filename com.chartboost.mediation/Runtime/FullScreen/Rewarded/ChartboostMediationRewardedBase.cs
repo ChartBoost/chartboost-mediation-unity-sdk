@@ -19,7 +19,9 @@ namespace Chartboost.FullScreen.Rewarded
     /// <summary>
     /// Chartboost Mediation rewarded ad object for unsupported platforms.
     /// </summary>
+    #pragma warning disable CS0618
     internal sealed class ChartboostMediationRewardedUnsupported : ChartboostMediationRewardedBase
+    #pragma warning restore CS0618
     {
         internal override bool IsValid { get; set; }
 

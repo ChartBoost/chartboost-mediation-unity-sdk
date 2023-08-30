@@ -62,7 +62,9 @@ namespace Chartboost.FullScreen
     /// <summary>
     /// Chartboost Mediation interstitial ad object for unsupported platforms.
     /// </summary>
+    #pragma warning disable CS0618
     internal class ChartboostMediationInterstitialUnsupported : ChartboostMediationFullScreenBase
+    #pragma warning restore CS0618
     {
         public ChartboostMediationInterstitialUnsupported(string placementName) : base(placementName)
         {

@@ -119,7 +119,9 @@ namespace Chartboost
         [SerializeField] private bool isLoggingEnabled;
         [SerializeField] private bool isAutomaticInitEnabled;
         [SerializeField] private bool isSkAdNetworkResolutionEnabled;
+        #pragma warning disable CS0618
         [SerializeField] private ChartboostMediationPartners partnerKillSwitch = ChartboostMediationPartners.None;
+        #pragma warning restore CS0618
         [SerializeField] private bool disableBitcode = false;
         [SerializeField] private string applovinSDKKey = DefaultSDKKeyValue; 
         [SerializeField] private string androidGoogleAppId = DefaultSDKKeyValue;
