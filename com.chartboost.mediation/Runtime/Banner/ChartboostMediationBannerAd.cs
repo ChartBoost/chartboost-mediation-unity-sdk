@@ -120,7 +120,7 @@ namespace Chartboost.Banner
             base.Destroy();
             
             if (isCollected) 
-                EventProcessor.ReportUnexpectedSystemError($"Banner Ad with placement: {PlacementName}, got GC. Make sure to properly dispose of ads utilizing Destroy for the best integration experience.");
+                EventProcessor.ReportUnexpectedSystemError($"Banner Ad with placement: {placementName}, got GC. Make sure to properly dispose of ads utilizing Destroy for the best integration experience.");
         }
 
         ~ChartboostMediationBannerAd() => Destroy(true);

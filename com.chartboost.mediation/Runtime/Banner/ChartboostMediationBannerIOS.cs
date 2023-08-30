@@ -59,7 +59,7 @@ namespace Chartboost.Banner
         {
             base.Destroy();
             _chartboostMediationBannerRemove(_uniqueId);
-            _chartboostMediationFreeAdObject(_uniqueId, PlacementName, true);
+            _chartboostMediationFreeAdObject(_uniqueId, placementName, true);
             IsValid = false;
         }
 
@@ -67,8 +67,8 @@ namespace Chartboost.Banner
         public override void Load(ChartboostMediationBannerAdScreenLocation location)
         {
             base.Load(location);
-            var sizeJson = JsonConvert.SerializeObject(Size);
-            _chartboostMediationBannerAdLoad(_uniqueId, PlacementName, sizeJson, (int)location);
+            var sizeJson = JsonConvert.SerializeObject(size);
+            _chartboostMediationBannerAdLoad(_uniqueId, placementName, sizeJson, (int)location);
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerBase.SetVisibility"/>>
