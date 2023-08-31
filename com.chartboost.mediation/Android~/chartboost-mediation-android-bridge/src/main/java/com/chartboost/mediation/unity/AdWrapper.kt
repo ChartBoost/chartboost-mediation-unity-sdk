@@ -157,10 +157,13 @@ class AdWrapper(private val ad: HeliumAd) {
         // Attach the banner layout to the activity.
         val density = displayDensity
         try {
-            when (ad.getSize() ?: HeliumBannerSize.STANDARD) {
-                HeliumBannerSize.LEADERBOARD -> ad.layoutParams = getBannerLayoutParams(density, LEADERBOARD.first, LEADERBOARD.second)
-                HeliumBannerSize.MEDIUM -> ad.layoutParams = getBannerLayoutParams(density, MEDIUM.first, MEDIUM.second)
-                HeliumBannerSize.STANDARD -> ad.layoutParams = getBannerLayoutParams(density, STANDARD.first, STANDARD.second)
+
+            val size = ad.getSize()
+
+            when {
+                size == HeliumBannerSize.LEADERBOARD -> ad.layoutParams = getBannerLayoutParams(density, LEADERBOARD.first, LEADERBOARD.second)
+                size == HeliumBannerSize.MEDIUM -> ad.layoutParams = getBannerLayoutParams(density, MEDIUM.first, MEDIUM.second)
+                else -> ad.layoutParams = getBannerLayoutParams(density, STANDARD.first, STANDARD.second)
             }
 
             // Attach the banner to the banner layout.
