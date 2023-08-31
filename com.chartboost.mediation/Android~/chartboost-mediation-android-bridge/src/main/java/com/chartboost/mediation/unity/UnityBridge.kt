@@ -57,20 +57,12 @@ class UnityBridge {
             }
         }
 
-        // TODO
         @JvmStatic
-        fun createBannerView(listener: IBannerEventListener) : BannerAdWrapper{
-            val bannerView = HeliumBannerAd(UnityPlayer.currentActivity);
-
+        fun loadBannerAd(listener: ChartboostMediationBannerViewListener): BannerAdWrapper{
+            val bannerView = HeliumBannerAd(UnityPlayer.currentActivity,"", HeliumBannerSize.STANDARD, listener);
             val bannerAdWrapper = BannerAdWrapper.wrap(bannerView);
-            bannerAdWrapper.setListener(listener);
 //            AdStore.trackBannerAd(bannerAdWrapper);
             return bannerAdWrapper;
-        }
-
-        @JvmStatic
-        fun loadBannerAd(bannerAd: BannerAdWrapper, screenLocation: Int, adRequest: ChartboostMediationBannerAdLoadResult, adLoadResultHandler: ChartboostMediationBannerAdLoadListener){
-            bannerAd.load(screenLocation, adRequest, adLoadResultHandler);
         }
 
         @JvmStatic

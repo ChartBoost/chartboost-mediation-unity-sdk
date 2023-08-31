@@ -19,7 +19,7 @@ namespace Chartboost.Banner
         {
             LogTag = "ChartboostMediationBanner (Android)";
             using var unityBridge = ChartboostMediationAndroid.GetUnityBridge();
-            _androidAd = unityBridge.CallStatic<AndroidJavaObject>("getBannerAd", placementName, (int)size);
+            _androidAd = unityBridge.CallStatic<AndroidJavaObject>("getBannerAd", placementName, size.Name, size.Width, size.Height);
             _uniqueId = _androidAd.HashCode();
         }
 

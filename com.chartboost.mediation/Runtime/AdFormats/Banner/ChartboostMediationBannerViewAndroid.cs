@@ -8,8 +8,10 @@ using Chartboost.Platforms.Android;
 using Chartboost.Requests;
 using Chartboost.Results;
 using Chartboost.Utilities;
+using Newtonsoft.Json;
 using UnityEngine;
 using static Chartboost.Platforms.Android.ChartboostMediationAndroid;
+using Logger = Chartboost.Utilities.Logger;
 
 namespace Chartboost.AdFormats.Banner
 {
@@ -17,6 +19,8 @@ namespace Chartboost.AdFormats.Banner
     {
         private readonly AndroidJavaObject _bannerAd;
         private BannerEventListener _bannerEventListener;
+        internal bool IsPubTriggeredLoad;
+        internal Later<ChartboostMediationBannerAdLoadResult> AdLoadResult;
         
         public ChartboostMediationBannerViewAndroid(AndroidJavaObject bannerAd) : base(new IntPtr(bannerAd.HashCode()))
         {
@@ -26,15 +30,21 @@ namespace Chartboost.AdFormats.Banner
 
         public override Dictionary<string, string> Keywords
         {
-            get => _bannerAd.Get<AndroidJavaObject>("keywords").ToKeywords();
-            set => _bannerAd.Set("keywords", value.ToKeywords());
+            get => _bannerAd.Call<AndroidJavaObject>("getKeywords").ToKeywords();
+            set => _bannerAd.Call("setKeywords", value.ToKeywords());
         }
 
-        public override ChartboostMediationBannerAdLoadRequest Request { get; internal set; }
+        public override ChartboostMediationBannerAdLoadRequest Request { get; protected set; }
 
         public override BidInfo WinningBidInfo
         {
             get => _bannerAd.Get<AndroidJavaObject>("winningBidInfo").MapToWinningBidInfo();
+            protected set { }
+        }
+
+        public override string LoadId
+        {
+            get => _bannerAd.Get<string>("loadId");
             protected set { }
         }
 
@@ -44,24 +54,26 @@ namespace Chartboost.AdFormats.Banner
             protected set { }
         }
 
-        public override ChartboostMediationBannerSize Size
+        public override ChartboostMediationBannerAdSize AdSize
         {
-            get => _bannerAd.Get<AndroidJavaObject>("size").ToChartboostMediationBannerSize();
+            get
+            {
+                var sizeJson = _bannerAd.Call<string>("getAdSize");
+                return JsonConvert.DeserializeObject<ChartboostMediationBannerAdSize>(sizeJson);
+            }
             protected set { }
         }
 
         public override ChartboostMediationBannerHorizontalAlignment HorizontalAlignment
         {
-            // TODO : Enum in Native might need a bridge function to cast from int 
-            get => (ChartboostMediationBannerHorizontalAlignment)_bannerAd.Get<int>("horizontalAlignment");
-            set => _bannerAd.Set("horizontalAlignment", (int)value);
+            get => (ChartboostMediationBannerHorizontalAlignment)_bannerAd.Get<int>("getHorizontalAlignment");
+            set => _bannerAd.Call("setHorizontalAlignment", (int)value);
         }
 
         public override ChartboostMediationBannerVerticalAlignment VerticalAlignment
         {
-            // TODO : Enum in Native might need a bridge function to cast from int 
-            get => (ChartboostMediationBannerVerticalAlignment)_bannerAd.Get<int>("verticalAlignment");
-            set => _bannerAd.Set("verticalAlignment", (int)value);
+            get => (ChartboostMediationBannerVerticalAlignment)_bannerAd.Get<int>("getVerticalAlignment");
+            set => _bannerAd.Call("setVerticalAlignment", (int)value);
         }
 
         public override void Reset()
@@ -72,28 +84,61 @@ namespace Chartboost.AdFormats.Banner
         public override async Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, ChartboostMediationBannerAdScreenLocation screenLocation)
         {
             await base.Load(request, screenLocation);
-            
-            var adLoadListenerAwaitableProxy = new ChartboostMediationBannerAdLoadListener();
-            
 
-            try
+            if (AdLoadResult != null)
             {
-                // size
-                var width = request.Size.Width;
-                var height = request.Size.Height;
-                var sizeClass = new AndroidJavaClass(GetQualifiedNativeClassName("HeliumBannerSize", true));
-                var size = sizeClass.CallStatic<AndroidJavaObject>("bannerSize", width, height);
-                
-                _bannerAd.Call("load", request.PlacementName, size);
-                
+                Logger.LogWarning(LogTag, "A new load is triggered while the previous load is not yet complete");
             }
-            catch (NullReferenceException e)
+            else
             {
-                EventProcessor.ReportUnexpectedSystemError(e.ToString());
+                AdLoadResult = new Later<ChartboostMediationBannerAdLoadResult>();
+                _bannerAd.Call("load", request.PlacementName, request.AdSize.Name, request.AdSize.Width, request.AdSize.Height, screenLocation);
             }
-
-            return await adLoadListenerAwaitableProxy;
+            
+            var result = await AdLoadResult;
+            AdLoadResult = null;
+            return result;
         }
+    }
+    
+    internal class ChartboostMediationBannerAdListener : AndroidJavaProxy
+    {
+        public ChartboostMediationBannerAdListener() : base(GetQualifiedClassName("ChartboostMediationBannerViewListener")) {}
+        
+        private void onAdCached(AndroidJavaObject ad, string error)
+        {
+            var bannerView = CacheManager.GetBannerAd(ad.HashCode());
+            if (!(bannerView is ChartboostMediationBannerViewAndroid androidBannerView)) 
+                return;
+            
+            // auto refresh load
+            if (androidBannerView.AdLoadResult == null)
+            {
+                EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Show);
+                return;
+            }
+                
+            // Publisher triggered load 
+            ChartboostMediationBannerAdLoadResult loadResult;
+            if (!string.IsNullOrEmpty(error))
+            {
+                loadResult = new ChartboostMediationBannerAdLoadResult(new ChartboostMediationError(error));
+            }
+            else
+            {
+                loadResult = new ChartboostMediationBannerAdLoadResult(bannerView.LoadId, null, null);
+                EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Show);
+            }
+
+            androidBannerView.AdLoadResult.Complete(loadResult);
+        }
+
+        private void onAdClicked(AndroidJavaObject ad) =>
+            EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Click);
+
+        private void onAdImpressionRecorded(AndroidJavaObject ad) =>
+            EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.RecordImpression);
+
     }
 }
 

@@ -10,13 +10,28 @@ namespace Chartboost.AdFormats.Banner
 {
     public delegate void ChartboostMediationBannerEvent(IChartboostMediationBannerView bannerView);
     
+    public enum ChartboostMediationBannerHorizontalAlignment
+    {
+        Left,
+        Center,
+        Right
+    }
+    
+    public enum ChartboostMediationBannerVerticalAlignment
+    {
+        Top,
+        Center,
+        Bottom
+    }
+    
     public interface IChartboostMediationBannerView
     {
         abstract Dictionary<string, string> Keywords { get; set; }
         abstract ChartboostMediationBannerAdLoadRequest Request { get; }
         abstract BidInfo WinningBidInfo { get; }
+        abstract string LoadId { get; }
         abstract Metrics? LoadMetrics { get; }
-        abstract ChartboostMediationBannerSize Size { get; }
+        abstract ChartboostMediationBannerAdSize AdSize { get; }
         abstract ChartboostMediationBannerHorizontalAlignment HorizontalAlignment { get; set; }
         abstract ChartboostMediationBannerVerticalAlignment VerticalAlignment { get; set; }
         abstract Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, ChartboostMediationBannerAdScreenLocation screenLocation);

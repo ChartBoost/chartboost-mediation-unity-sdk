@@ -37,13 +37,6 @@ namespace Chartboost.Utilities
             return biddingInfo;
         }
 
-        public static ChartboostMediationBannerSize ToChartboostMediationBannerSize(this AndroidJavaObject nativeSize)
-        {
-            var width = ChartboostMediationConverters.NativeToPixels(nativeSize.Call<float>("width"));
-            var height = ChartboostMediationConverters.NativeToPixels(nativeSize.Call<float>("height"));
-            return ChartboostMediationBannerSize.Adaptive(width, height);
-        }
-
         public static string ImpressionDataToJsonString(this AndroidJavaObject impressionData)
         {
             var placementName = impressionData.Get<string>("placementId");

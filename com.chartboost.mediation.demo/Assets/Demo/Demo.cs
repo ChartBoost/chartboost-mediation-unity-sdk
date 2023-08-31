@@ -200,7 +200,6 @@ public class Demo : MonoBehaviour
         
         Log($"Creating new banner view");
         _bannerAd = ChartboostMediation.GetBannerView();
-        
         _bannerAd.WillAppear += WillAppearBanner;
         _bannerAd.DidClick +=DidClickBanner;
         _bannerAd.DidRecordImpression += DidRecordImpressionBanner;
@@ -208,11 +207,16 @@ public class Demo : MonoBehaviour
         _bannerAd.Keywords.Add("bnr_keyword1", "bnr_value1"); 
         _bannerAd.Keywords.Add("bnr_keyword2", "bnr_value2"); 
         
+        Log($"keywords set");
+
+        
         var size = bannerSizeDropdown.value switch
         {
-            2 => ChartboostMediationBannerSize.Leaderboard,
-            1 => ChartboostMediationBannerSize.Medium,
-            _ => ChartboostMediationBannerSize.Standard
+            4 => ChartboostMediationBannerAdSize.Adaptive1X4(100),
+            3 => ChartboostMediationBannerAdSize.Adaptive4X1(400),
+            2 => ChartboostMediationBannerAdSize.Leaderboard,
+            1 => ChartboostMediationBannerAdSize.MediumRect,
+            _ => ChartboostMediationBannerAdSize.Standard
         };
         var loadRequest = new ChartboostMediationBannerAdLoadRequest(bannerPlacementInputField.text, size);
         

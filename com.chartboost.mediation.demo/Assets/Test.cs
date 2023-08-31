@@ -51,7 +51,7 @@ public class Test : MonoBehaviour
         _bannerView.Keywords = new Dictionary<string, string> { { "foo", "bar" } };
         
         var request =
-            new ChartboostMediationBannerAdLoadRequest("AllNetworkBanner", ChartboostMediationBannerSize.Leaderboard);
+            new ChartboostMediationBannerAdLoadRequest("AllNetworkBanner", ChartboostMediationBannerAdSize.Leaderboard);
 
         _bannerView.WillAppear += view =>
         {
@@ -60,8 +60,8 @@ public class Test : MonoBehaviour
             Debug.Log($"load metrics : {JsonConvert.SerializeObject(view.LoadMetrics)}");
             Debug.Log($" request : {JsonConvert.SerializeObject(view.Request)}");
             Debug.Log($"Keywords : {JsonConvert.SerializeObject(view.Keywords)}");
-            Debug.Log($"Size Width : {view.Size.Width}, height : {view.Size.Height}");
-            Debug.Log($"size json : {JsonConvert.SerializeObject( view.Size)}");
+            Debug.Log($"Size Width : {view.AdSize.Width}, height : {view.AdSize.Height}");
+            Debug.Log($"size json : {JsonConvert.SerializeObject( view.AdSize)}");
             Debug.Log($" Horizontal alignment of view {view} : {view.HorizontalAlignment}");
             Debug.Log($" Vertical alignment of view {view} : {view.VerticalAlignment}");
         };

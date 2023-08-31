@@ -30,10 +30,11 @@ namespace Chartboost.AdFormats.Banner
         }
 
         public override Dictionary<string, string> Keywords { get; set; }
-        public override ChartboostMediationBannerAdLoadRequest Request { get; internal set; }
+        public override ChartboostMediationBannerAdLoadRequest Request { get; protected set; }
         public override BidInfo WinningBidInfo { get; protected set; }
+        public override string LoadId { get; protected set; }
         public override Metrics? LoadMetrics { get; protected set; }
-        public override ChartboostMediationBannerSize Size { get; protected set; }
+        public override ChartboostMediationBannerAdSize AdSize { get; protected set; }
         public override ChartboostMediationBannerHorizontalAlignment HorizontalAlignment { get; set; }
         public override ChartboostMediationBannerVerticalAlignment VerticalAlignment { get; set; }
         public override async Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, ChartboostMediationBannerAdScreenLocation screenLocation)
@@ -89,7 +90,7 @@ namespace Chartboost.AdFormats.Banner
             rect.anchorMin = rect.anchorMax = anchor;
             rect.pivot = pivot;
             rect.anchoredPosition = Vector2.zero;
-            rect.sizeDelta = new Vector2(request.Size.Width, request.Size.Height);
+            rect.sizeDelta = new Vector2(request.AdSize.Width, request.AdSize.Height);
 
             if (_bannerView.GetComponentInChildren<Image>() == null)
             {
@@ -147,7 +148,7 @@ namespace Chartboost.AdFormats.Banner
                 auctionId = auctions[rand]
             };
             // Size = (rand % 2 == 0) ? ChartboostMediationBannerSize.STANDARD : ChartboostMediationBannerSize.LEADERBOARD;
-            Size = ChartboostMediationBannerSize.Standard;
+            AdSize = ChartboostMediationBannerAdSize.Standard;
 
             if(_bannerView == null)
                 return;
@@ -168,7 +169,7 @@ namespace Chartboost.AdFormats.Banner
                 return;
             
             var adRect = ad.GetComponent<RectTransform>();
-            adRect.sizeDelta = new Vector2(Size.Width, Size.Height);
+            adRect.sizeDelta = new Vector2(AdSize.Width, AdSize.Height);
             
             var pivot = new Vector2(0.5f, 0.5f);
             var anchor = pivot;

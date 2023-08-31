@@ -29,22 +29,23 @@ namespace Chartboost.AdFormats.Banner
             this.uniqueId = uniqueId;
             CacheManager.TrackBannerAd(uniqueId.ToInt64(), this);
             
-            Initialize();
+            // Initialize();
         }
 
-        protected void Initialize()
+        private void Initialize()
         {
-            Size = new ChartboostMediationBannerSize();
+            AdSize = new ChartboostMediationBannerAdSize();
             Keywords = new Dictionary<string, string>();
             HorizontalAlignment = ChartboostMediationBannerHorizontalAlignment.Center;
             VerticalAlignment = ChartboostMediationBannerVerticalAlignment.Center;
         }
 
         public abstract Dictionary<string, string> Keywords { get; set; } 
-        public abstract ChartboostMediationBannerAdLoadRequest Request { get; internal set; }
+        public abstract ChartboostMediationBannerAdLoadRequest Request { get; protected set; }
         public abstract BidInfo WinningBidInfo { get; protected set;  }
+        public abstract String LoadId { get; protected set;  }
         public abstract Metrics? LoadMetrics { get; protected set;  }
-        public abstract ChartboostMediationBannerSize Size { get; protected set; }
+        public abstract ChartboostMediationBannerAdSize AdSize { get; protected set; }
         public abstract ChartboostMediationBannerHorizontalAlignment HorizontalAlignment { get; set; }
         public abstract ChartboostMediationBannerVerticalAlignment VerticalAlignment { get; set; }
         public virtual Task<ChartboostMediationBannerAdLoadResult> Load(

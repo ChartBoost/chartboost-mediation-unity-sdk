@@ -151,7 +151,7 @@ namespace Chartboost.Platforms.Android
                     var error = result.ToChartboostMediationError();
                     if (error.HasValue)
                     {
-                        CacheManager.ReleaseFullscreenAdLoadRequest(hashCode());
+                        CacheManager.ReleaseBannerAdLoadRequest(hashCode());
                         _complete(new ChartboostMediationBannerAdLoadResult(error.Value));
                         return;
                     }
@@ -165,30 +165,6 @@ namespace Chartboost.Platforms.Android
             }
         }
 
-        internal class ChartboostMediationBannerAdListener : AndroidJavaProxy
-        {
-            public ChartboostMediationBannerAdListener() : base(GetQualifiedNativeClassName("ChartboostMediationBannerAdListener")) { }
-
-            // TODO: match function names with Native 
-            private void onAdCached(AndroidJavaObject ad)
-            {
-                EventProcessor.ProcessChartboostMediationBannerEvent(
-                    ad.HashCode(), (int)EventProcessor.BannerAdEvents.Show);
-            }
-            
-            private void onAdClicked(AndroidJavaObject ad)
-            {
-                EventProcessor.ProcessChartboostMediationBannerEvent(
-                    ad.HashCode(), (int)EventProcessor.BannerAdEvents.Click);
-            }
-
-            private void onAdImpressionRecorded(AndroidJavaObject ad)
-            {
-                EventProcessor.ProcessChartboostMediationBannerEvent(
-                    ad.HashCode(), (int)EventProcessor.BannerAdEvents.RecordImpression);
-            }
-        }
-        
         #endregion
 
         #region Banner Callbacks (deprecated)

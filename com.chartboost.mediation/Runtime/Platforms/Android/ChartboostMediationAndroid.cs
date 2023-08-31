@@ -164,7 +164,7 @@ namespace Chartboost.Platforms.Android
         {
             using var unityBridge = GetUnityBridge();
             {
-                var bannerAd = unityBridge.Call<AndroidJavaObject>("creatBannerView");
+                var bannerAd = unityBridge.CallStatic<AndroidJavaObject>("loadBannerAd", new ChartboostMediationBannerAdListener());
                 return new ChartboostMediationBannerViewAndroid(bannerAd);
             }
         }
