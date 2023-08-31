@@ -18,7 +18,7 @@ The Adapters window can be accessed through the following unity menu: ***Chartbo
 
 ![Chartboost Mediation Settings](../images/adapters-window-default.png)
 
-As seen, in the screenshot above, in its default state, the Adapters Window does not select any adapters, and there are multiple elements grabbing your attention. For a detailed step-by-step intruction on how to use the window see below:
+As seen, in the screenshot above, in its default state, the Adapters Window does not select any adapters, and there are multiple elements grabbing your attention. For a detailed step-by-step instruction on how to use the window see below:
 
 ### ChartboostMediationDependencies.xml
 

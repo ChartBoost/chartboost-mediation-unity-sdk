@@ -10,9 +10,9 @@
     </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->
-        <iosPod name="ChartboostMediationAdapterVungle" version="~> 4.6.12.3"/>
+        <iosPod name="ChartboostMediationAdapterVungle" version="~> 4.7.0.0"/>
 
         <!-- Partner iOS SDK-->
-        <iosPod name="VungleSDK-iOS" version="~> 6.12.3" addToAllTargets="false"/>
+        <iosPod name="VungleAds" version="~> 7.0.0" addToAllTargets="true"/>
     </iosPods>
 </dependencies>
