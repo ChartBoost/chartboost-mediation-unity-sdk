@@ -18,7 +18,6 @@ namespace Chartboost.AdFormats.Banner
     internal class ChartboostMediationBannerViewAndroid : ChartboostMediationBannerViewBase
     {
         private readonly AndroidJavaObject _bannerAd;
-        private BannerEventListener _bannerEventListener;
         internal Later<ChartboostMediationBannerAdLoadResult> LoadRequest;
 
         private Dictionary<string, string> _keywords = new Dictionary<string, string>();

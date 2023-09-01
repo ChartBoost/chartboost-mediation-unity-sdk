@@ -1,7 +1,3 @@
-// ReSharper disable InconsistentNaming
-
-using System;
-
 namespace Chartboost.Banner
 {
     /// <summary>
