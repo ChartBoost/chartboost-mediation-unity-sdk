@@ -13,22 +13,21 @@ using Logger = Chartboost.Utilities.Logger;
 namespace Chartboost.AdFormats.Banner
 {
     [Serializable]
-    public abstract class ChartboostMediationBannerViewBase : IChartboostMediationBannerView
+    internal abstract class ChartboostMediationBannerViewBase : IChartboostMediationBannerView
     {
         public event ChartboostMediationBannerEvent WillAppear;
         public event ChartboostMediationBannerEvent DidClick;
         public event ChartboostMediationBannerEvent DidRecordImpression;
         
         protected static string LogTag = "ChartboostMediationBanner (Base)";
-        protected IntPtr uniqueId { get; set; }
+        protected IntPtr UniqueId { get; set; }
 
         protected ChartboostMediationBannerViewBase() => Initialize();
         
         protected ChartboostMediationBannerViewBase(IntPtr uniqueId)
         {
-            this.uniqueId = uniqueId;
+            this.UniqueId = uniqueId;
             CacheManager.TrackBannerAd(uniqueId.ToInt64(), this);
-            
             // Initialize();
         }
 
@@ -43,7 +42,7 @@ namespace Chartboost.AdFormats.Banner
         public abstract Dictionary<string, string> Keywords { get; set; } 
         public abstract ChartboostMediationBannerAdLoadRequest Request { get; protected set; }
         public abstract BidInfo WinningBidInfo { get; protected set;  }
-        public abstract String LoadId { get; protected set;  }
+        public abstract string LoadId { get; protected set;  }
         public abstract Metrics? LoadMetrics { get; protected set;  }
         public abstract ChartboostMediationBannerAdSize AdSize { get; protected set; }
         public abstract ChartboostMediationBannerHorizontalAlignment HorizontalAlignment { get; set; }
@@ -89,8 +88,8 @@ namespace Chartboost.AdFormats.Banner
 
         ~ChartboostMediationBannerViewBase()
         {
-            if(uniqueId != IntPtr.Zero)
-                CacheManager.ReleaseBannerAd(uniqueId.ToInt64());
+            if(UniqueId != IntPtr.Zero)
+                CacheManager.ReleaseBannerAd(UniqueId.ToInt64());
         }
         
     }

@@ -16,7 +16,7 @@ using static Chartboost.Platforms.IOS.ChartboostMediationIOS;
 
 namespace Chartboost.AdFormats.Banner
 {
-    public class ChartboostMediationBannerViewIOS : ChartboostMediationBannerViewBase
+    internal class ChartboostMediationBannerViewIOS : ChartboostMediationBannerViewBase
     {
         private Dictionary<string, string> _keywords;
 

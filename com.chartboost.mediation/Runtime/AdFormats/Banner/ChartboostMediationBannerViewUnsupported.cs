@@ -7,7 +7,7 @@ using Chartboost.Results;
 
 namespace Chartboost.AdFormats.Banner
 {
-    public class ChartboostMediationBannerViewUnsupported : ChartboostMediationBannerViewBase
+    internal class ChartboostMediationBannerViewUnsupported : ChartboostMediationBannerViewBase
     {
         public ChartboostMediationBannerViewUnsupported()
         {

@@ -57,7 +57,6 @@ public class Test : MonoBehaviour
         {
             // Debug.Log($" ON Banner Show : {JsonConvert.SerializeObject(view)}");
             Debug.Log($"winingBid : {JsonConvert.SerializeObject(view.WinningBidInfo)}");
-            Debug.Log($"load metrics : {JsonConvert.SerializeObject(view.LoadMetrics)}");
             Debug.Log($" request : {JsonConvert.SerializeObject(view.Request)}");
             Debug.Log($"Keywords : {JsonConvert.SerializeObject(view.Keywords)}");
             Debug.Log($"Size Width : {view.AdSize.Width}, height : {view.AdSize.Height}");

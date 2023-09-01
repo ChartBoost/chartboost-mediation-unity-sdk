@@ -1,9 +1,10 @@
 package com.chartboost.mediation.unity
 
 import android.util.DisplayMetrics
+import android.util.Log
 import com.chartboost.heliumsdk.*
 import com.chartboost.heliumsdk.ad.*
-import com.chartboost.heliumsdk.ad.HeliumBannerAd.HeliumBannerSize
+import com.chartboost.heliumsdk.ad.HeliumBannerAd.HeliumBannerSize.Companion
 import com.chartboost.heliumsdk.domain.ChartboostMediationAdException
 import com.chartboost.mediation.unity.AdWrapper.Companion.wrap
 import com.chartboost.mediation.unity.EventProcessor.EventConsumer
@@ -59,8 +60,10 @@ class UnityBridge {
 
         @JvmStatic
         fun loadBannerAd(listener: ChartboostMediationBannerViewListener): BannerAdWrapper{
-            val bannerView = HeliumBannerAd(UnityPlayer.currentActivity,"", HeliumBannerSize.STANDARD, listener);
+            val size = HeliumBannerAd.HeliumBannerSize.STANDARD;
+            val bannerView = HeliumBannerAd(UnityPlayer.currentActivity,"", size, null);
             val bannerAdWrapper = BannerAdWrapper.wrap(bannerView);
+            bannerAdWrapper.setListener(listener);
 //            AdStore.trackBannerAd(bannerAdWrapper);
             return bannerAdWrapper;
         }
@@ -171,13 +174,14 @@ class UnityBridge {
 
         @JvmStatic
         fun getBannerAd(placementName: String, size: Int): AdWrapper {
+            Log.d("unity", "getBannerAd");
             // default to standard
-            var wantedSize = HeliumBannerSize.STANDARD
+            var wantedSize = HeliumBannerAd.HeliumBannerSize.STANDARD
             when (size) {
-                0 -> wantedSize = HeliumBannerSize.STANDARD
-                1 -> wantedSize = HeliumBannerSize.MEDIUM
-                2 -> wantedSize = HeliumBannerSize.LEADERBOARD
-                else -> HeliumBannerSize.STANDARD
+                0 -> wantedSize = HeliumBannerAd.HeliumBannerSize.STANDARD
+                1 -> wantedSize = HeliumBannerAd.HeliumBannerSize.MEDIUM
+                2 -> wantedSize = HeliumBannerAd.HeliumBannerSize.LEADERBOARD
+                else -> HeliumBannerAd.HeliumBannerSize.STANDARD
             }
             val bannerAd = HeliumBannerAd(UnityPlayer.currentActivity, placementName, wantedSize, object : HeliumBannerAdListener {
                 override fun onAdCached(placementName: String, loadId: String, winningBidInfo: Map<String, String>, error: ChartboostMediationAdException?) {

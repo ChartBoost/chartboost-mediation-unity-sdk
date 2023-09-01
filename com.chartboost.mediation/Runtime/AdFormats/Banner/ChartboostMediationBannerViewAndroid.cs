@@ -15,13 +15,14 @@ using Logger = Chartboost.Utilities.Logger;
 
 namespace Chartboost.AdFormats.Banner
 {
-    public class ChartboostMediationBannerViewAndroid : ChartboostMediationBannerViewBase
+    internal class ChartboostMediationBannerViewAndroid : ChartboostMediationBannerViewBase
     {
         private readonly AndroidJavaObject _bannerAd;
         private BannerEventListener _bannerEventListener;
-        internal bool IsPubTriggeredLoad;
-        internal Later<ChartboostMediationBannerAdLoadResult> AdLoadResult;
-        
+        internal Later<ChartboostMediationBannerAdLoadResult> LoadRequest;
+
+        private Dictionary<string, string> _keywords = new Dictionary<string, string>();
+
         public ChartboostMediationBannerViewAndroid(AndroidJavaObject bannerAd) : base(new IntPtr(bannerAd.HashCode()))
         {
             LogTag = "ChartboostMediationBanner (Android)";
@@ -30,8 +31,19 @@ namespace Chartboost.AdFormats.Banner
 
         public override Dictionary<string, string> Keywords
         {
-            get => _bannerAd.Call<AndroidJavaObject>("getKeywords").ToKeywords();
-            set => _bannerAd.Call("setKeywords", value.ToKeywords());
+            get => _keywords;
+            set
+            {
+                try
+                {
+                    _bannerAd.Call("setKeywords", value.ToKeywords());
+                    _keywords = value;
+                }
+                catch (Exception e)
+                {
+                    EventProcessor.ReportUnexpectedSystemError($"Error setting keywords => {e.Message}");
+                }
+            }
         }
 
         public override ChartboostMediationBannerAdLoadRequest Request { get; protected set; }
@@ -48,9 +60,11 @@ namespace Chartboost.AdFormats.Banner
             protected set { }
         }
 
+        // Note: This is currently only available in iOS but not on Android and will be available in Android from 5.0  
+        // Public API `IChartboostMediationBannerView` will then include this field as well
         public override Metrics? LoadMetrics
         {
-            get => _bannerAd.Get<AndroidJavaObject>("loadMetrics").JsonObjectToMetrics();
+            get => null;
             protected set { }
         }
 
@@ -66,13 +80,13 @@ namespace Chartboost.AdFormats.Banner
 
         public override ChartboostMediationBannerHorizontalAlignment HorizontalAlignment
         {
-            get => (ChartboostMediationBannerHorizontalAlignment)_bannerAd.Get<int>("getHorizontalAlignment");
+            get => (ChartboostMediationBannerHorizontalAlignment)_bannerAd.Call<int>("getHorizontalAlignment");
             set => _bannerAd.Call("setHorizontalAlignment", (int)value);
         }
 
         public override ChartboostMediationBannerVerticalAlignment VerticalAlignment
         {
-            get => (ChartboostMediationBannerVerticalAlignment)_bannerAd.Get<int>("getVerticalAlignment");
+            get => (ChartboostMediationBannerVerticalAlignment)_bannerAd.Call<int>("getVerticalAlignment");
             set => _bannerAd.Call("setVerticalAlignment", (int)value);
         }
 
@@ -85,18 +99,18 @@ namespace Chartboost.AdFormats.Banner
         {
             await base.Load(request, screenLocation);
 
-            if (AdLoadResult != null)
+            if (LoadRequest != null)
             {
                 Logger.LogWarning(LogTag, "A new load is triggered while the previous load is not yet complete");
             }
             else
             {
-                AdLoadResult = new Later<ChartboostMediationBannerAdLoadResult>();
-                _bannerAd.Call("load", request.PlacementName, request.AdSize.Name, request.AdSize.Width, request.AdSize.Height, screenLocation);
+                LoadRequest = new Later<ChartboostMediationBannerAdLoadResult>();
+                _bannerAd.Call("load", request.PlacementName, request.AdSize.Name, request.AdSize.Width, request.AdSize.Height, (int)screenLocation);
             }
             
-            var result = await AdLoadResult;
-            AdLoadResult = null;
+            var result = await LoadRequest;
+            LoadRequest = null;
             return result;
         }
     }
@@ -112,12 +126,14 @@ namespace Chartboost.AdFormats.Banner
                 return;
             
             // auto refresh load
-            if (androidBannerView.AdLoadResult == null)
+            if (androidBannerView.LoadRequest == null)
             {
+                Debug.Log($"auto refresh");
                 EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Show);
                 return;
             }
                 
+            Debug.Log($"pub triggered load");
             // Publisher triggered load 
             ChartboostMediationBannerAdLoadResult loadResult;
             if (!string.IsNullOrEmpty(error))
@@ -130,7 +146,7 @@ namespace Chartboost.AdFormats.Banner
                 EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Show);
             }
 
-            androidBannerView.AdLoadResult.Complete(loadResult);
+            androidBannerView.LoadRequest.Complete(loadResult);
         }
 
         private void onAdClicked(AndroidJavaObject ad) =>

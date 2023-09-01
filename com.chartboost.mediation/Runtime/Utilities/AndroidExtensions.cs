@@ -1,5 +1,6 @@
 #if UNITY_ANDROID
 using System.Collections.Generic;
+using System.Linq;
 using Chartboost.AdFormats.Banner;
 using Chartboost.Events;
 using Chartboost.Platforms.Android;
@@ -75,26 +76,6 @@ namespace Chartboost.Utilities
                    EventProcessor.ReportUnexpectedSystemError($"[Keywords] failed to set the following keyword: {kvp.Key}, with value: {kvp.Value}");
             }
             
-            return keywords;
-        }
-
-        public static Dictionary<string, string> ToKeywords(this AndroidJavaObject source)
-        {
-            var keywords = new Dictionary<string, string>();
-            
-            var nativeMap =  source.Call<AndroidJavaObject>("get");
-            // TODO: Java --> entrySet
-            var entries = nativeMap.Call<AndroidJavaObject>("entries")
-                .Call<AndroidJavaObject[]>("toTypedArray");
-
-            // TODO: kotlin --> key, Java --> getKey (check if kotlin is fine)
-            foreach (var entry in entries)
-            {
-                var key = entry.Call<string>("key");
-                var val = entry.Call<string>("value");
-                keywords.Add(key,val);
-            }
-
             return keywords;
         }
 

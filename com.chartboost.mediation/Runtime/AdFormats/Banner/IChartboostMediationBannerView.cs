@@ -30,7 +30,6 @@ namespace Chartboost.AdFormats.Banner
         abstract ChartboostMediationBannerAdLoadRequest Request { get; }
         abstract BidInfo WinningBidInfo { get; }
         abstract string LoadId { get; }
-        abstract Metrics? LoadMetrics { get; }
         abstract ChartboostMediationBannerAdSize AdSize { get; }
         abstract ChartboostMediationBannerHorizontalAlignment HorizontalAlignment { get; set; }
         abstract ChartboostMediationBannerVerticalAlignment VerticalAlignment { get; set; }

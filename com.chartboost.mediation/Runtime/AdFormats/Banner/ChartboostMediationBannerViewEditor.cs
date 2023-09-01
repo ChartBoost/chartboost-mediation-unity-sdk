@@ -13,7 +13,7 @@ using Object = UnityEngine.Object;
 
 namespace Chartboost.AdFormats.Banner
 {
-    public class ChartboostMediationBannerViewEditor : ChartboostMediationBannerViewBase
+    internal class ChartboostMediationBannerViewEditor : ChartboostMediationBannerViewBase
     {
         private bool _autoRefresh = false;
         private GameObject _bannerView;
