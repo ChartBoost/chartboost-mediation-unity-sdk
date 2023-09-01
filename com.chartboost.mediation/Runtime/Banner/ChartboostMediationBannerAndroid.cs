@@ -3,7 +3,6 @@ using System;
 using Chartboost.Interfaces;
 using Chartboost.Platforms.Android;
 using Chartboost.Utilities;
-using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Chartboost.Banner
@@ -20,10 +19,8 @@ namespace Chartboost.Banner
         {
             LogTag = "ChartboostMediationBanner (Android)";
             using var unityBridge = ChartboostMediationAndroid.GetUnityBridge();
-            {
-                _androidAd = unityBridge.CallStatic<AndroidJavaObject>("getBannerAd", placementName, size.Name, size.Width, size.Height);
-                _uniqueId = _androidAd.HashCode();
-            }
+            _androidAd = unityBridge.CallStatic<AndroidJavaObject>("getBannerAd", placementName, size.Name, size.Width, size.Height);
+            _uniqueId = _androidAd.HashCode();
         }
 
         internal override bool IsValid { get; set; } = true;
@@ -63,27 +60,6 @@ namespace Chartboost.Banner
         {
             base.SetVisibility(isVisible);
             _androidAd.Call("setBannerVisibility", isVisible);
-        }
-
-        public override void SetHorizontalAlignment(ChartboostMediationBannerHorizontalAlignment horizontalAlignment)
-        {
-            base.SetHorizontalAlignment(horizontalAlignment);
-            _androidAd.Call("SetHorizontalAlignment", (int)horizontalAlignment);
-
-        }
-
-        public override void SetVerticalAlignment(ChartboostMediationBannerVerticalAlignment verticalAlignment)
-        {
-            base.SetVerticalAlignment(verticalAlignment);
-            _androidAd.Call("setVerticalAlignment", (int)verticalAlignment);
-        }
-
-        public override ChartboostMediationBannerAdSize GetAdSize()
-        {
-            base.GetAdSize();
-            
-            var json = _androidAd.Call<string>("getSize");
-            return JsonConvert.DeserializeObject<ChartboostMediationBannerAdSize>(json);
         }
 
         /// <inheritdoc cref="IChartboostMediationBannerAd.ClearLoaded"/>>

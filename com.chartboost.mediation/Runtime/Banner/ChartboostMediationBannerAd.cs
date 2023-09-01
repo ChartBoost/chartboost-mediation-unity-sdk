@@ -3,20 +3,6 @@ using Chartboost.Events;
 
 namespace Chartboost.Banner
 {
-    public enum ChartboostMediationBannerHorizontalAlignment
-    {
-        Left,
-        Center,
-        Right
-    }
-    
-    public enum ChartboostMediationBannerVerticalAlignment
-    {
-        Top,
-        Center,
-        Bottom
-    }
-    
     /// <summary>
     /// Chartboost Mediation defined screen locations.
     /// </summary>
@@ -60,23 +46,7 @@ namespace Chartboost.Banner
         /// <inheritdoc cref="ChartboostMediationBannerBase.RemoveKeyword"/>>
         public override string RemoveKeyword(string keyword) 
             => IsValid ? _platformBanner.RemoveKeyword(keyword) : null;
-
-        /// <inheritdoc cref="ChartboostMediationBannerBase.SetHorizontalAlignment"/>
-        public override void SetHorizontalAlignment(ChartboostMediationBannerHorizontalAlignment horizontalAlignment)
-        {
-            if(IsValid) _platformBanner.SetHorizontalAlignment(horizontalAlignment);
-        }
         
-        /// <inheritdoc cref="ChartboostMediationBannerBase.SetVerticalAlignment"/>
-        public override void SetVerticalAlignment(ChartboostMediationBannerVerticalAlignment verticalAlignment)
-        {
-            if(IsValid) _platformBanner.SetVerticalAlignment(verticalAlignment);
-        }
-        
-        /// <inheritdoc cref="ChartboostMediationBannerBase.GetAdSize"/>
-        public override ChartboostMediationBannerAdSize GetAdSize()
-            => IsValid ? _platformBanner.GetAdSize() : null;
-
         /// <inheritdoc cref="ChartboostMediationBannerBase.Destroy"/>>
         public override void Destroy()
         {

@@ -1,5 +1,7 @@
 #if UNITY_ANDROID
 using System.Collections.Generic;
+using System.Linq;
+using Chartboost.AdFormats.Banner;
 using Chartboost.Events;
 using Chartboost.Platforms.Android;
 using Newtonsoft.Json;

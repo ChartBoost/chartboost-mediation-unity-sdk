@@ -2,7 +2,9 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Chartboost.AdFormats.Banner;
 using Chartboost.Requests;
+using Chartboost.Results;
 using Chartboost.Utilities;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -69,6 +71,8 @@ namespace Chartboost.Platforms.IOS
             _setBannerCallbacks(ExternDidLoadBanner,
                 ExternDidRecordImpressionBanner, 
                 ExternDidClickBanner);
+            
+            _setBannerAdCallbacks(BannerAdEvents);
         }
 
         public override void Init()
@@ -157,9 +161,18 @@ namespace Chartboost.Platforms.IOS
             return await proxy;
         }
 
+        public override IChartboostMediationBannerView GetBannerView()
+        {
+            var uniqueId = _chartboostMediationCreateBannerView();
+            return new ChartboostMediationBannerViewIOS(uniqueId);
+        }
+
         [DllImport("__Internal")]
         private static extern void _chartboostMediationLoadFullscreenAd(string placementName, string keywords, int hashCode, ExternChartboostMediationFullscreenAdLoadResultEvent callback);
         #endregion
+        
+        [DllImport("__Internal")]
+        private static extern IntPtr _chartboostMediationCreateBannerView();
     }
 }
 #endif

@@ -1,7 +1,9 @@
 #if UNITY_ANDROID
+using Chartboost.AdFormats.Banner;
 using Chartboost.AdFormats.Fullscreen;
 using Chartboost.Events;
 using Chartboost.Requests;
+using Chartboost.Results;
 using Chartboost.Utilities;
 using UnityEngine;
 // ReSharper disable InconsistentNaming
@@ -136,8 +138,36 @@ namespace Chartboost.Platforms.Android
                 => EventProcessor.ProcessFullscreenEvent(ad.HashCode(), (int)EventProcessor.FullscreenAdEvents.Reward,null, null);
         }
         #endregion
-
+        
         #region Banner Callbacks
+        internal class  ChartboostMediationBannerAdLoadListener : AwaitableAndroidJavaProxy<ChartboostMediationBannerAdLoadResult>
+        {
+            //TODO: native name 
+            public ChartboostMediationBannerAdLoadListener() : base(GetQualifiedNativeClassName("ChartboostMediationBannerAdLoadListener")) { }
+            private void onAdLoaded(AndroidJavaObject result)
+            {
+                EventProcessor.ProcessEvent(() =>
+                {
+                    var error = result.ToChartboostMediationError();
+                    if (error.HasValue)
+                    {
+                        CacheManager.ReleaseBannerAdLoadRequest(hashCode());
+                        _complete(new ChartboostMediationBannerAdLoadResult(error.Value));
+                        return;
+                    }
+                
+                    var loadId = result.Get<string>("loadId");
+                    var metrics = result.Get<AndroidJavaObject>("metrics").JsonObjectToMetrics();
+                    // TODO: Why is this not done in fullscreen ?
+                    CacheManager.ReleaseBannerAdLoadRequest(hashCode());
+                    _complete(new ChartboostMediationBannerAdLoadResult(loadId, metrics, null));
+                });
+            }
+        }
+
+        #endregion
+
+        #region Banner Callbacks (deprecated)
         internal class BannerEventListener : AndroidJavaProxy
         {
             private BannerEventListener() : base(GetQualifiedClassName("IBannerEventListener")) { }
