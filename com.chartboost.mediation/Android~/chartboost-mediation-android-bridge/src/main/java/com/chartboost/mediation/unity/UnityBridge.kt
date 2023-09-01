@@ -174,7 +174,6 @@ class UnityBridge {
 
         @JvmStatic
         fun getBannerAd(placementName: String, size: Int): AdWrapper {
-            Log.d("unity", "getBannerAd");
             // default to standard
             var wantedSize = HeliumBannerAd.HeliumBannerSize.STANDARD
             when (size) {

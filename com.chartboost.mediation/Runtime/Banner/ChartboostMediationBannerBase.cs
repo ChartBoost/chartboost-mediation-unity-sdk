@@ -11,13 +11,13 @@ namespace Chartboost.Banner
     {
         protected static string LogTag = "ChartboostMediationBanner (Base)";
         protected readonly string placementName;
-        protected readonly ChartboostMediationBannerAdSize size;
+        private readonly ChartboostMediationBannerAdSize _size;
         internal abstract bool IsValid { get; set; }
 
         protected ChartboostMediationBannerBase(string placementName, ChartboostMediationBannerAdSize size)
         {
             this.placementName = placementName;
-            this.size = size;
+            _size = size;
         }
 
         /// <inheritdoc cref="IChartboostMediationAd.SetKeyword"/>>
@@ -42,12 +42,12 @@ namespace Chartboost.Banner
 
         /// <inheritdoc cref="IChartboostMediationBannerAd.Load"/>>
         public virtual void Load(ChartboostMediationBannerAdScreenLocation location)
-            => Logger.Log(LogTag, $"loading banner: {placementName} with size: {size} at {location}");
+            => Logger.Log(LogTag, $"loading banner: {placementName} with size: {_size} at {location}");
 
         /// <inheritdoc cref="IChartboostMediationBannerAd.SetVisibility"/>>
         public virtual void SetVisibility(bool isVisible)
             => Logger.Log(LogTag, $"setting visibility: {isVisible} for banner: {placementName}");
-       
+
         /// <inheritdoc cref="IChartboostMediationBannerAd.ClearLoaded"/>>
         public virtual void ClearLoaded()
             => Logger.Log(LogTag, $"clearing banner: {placementName}");

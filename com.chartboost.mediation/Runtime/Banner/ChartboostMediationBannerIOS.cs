@@ -1,6 +1,8 @@
 #if UNITY_IOS
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Chartboost.Utilities;
 using Newtonsoft.Json;
 
 namespace Chartboost.Banner
@@ -15,7 +17,21 @@ namespace Chartboost.Banner
         public ChartboostMediationBannerIOS(string placement, ChartboostMediationBannerAdSize size) : base(placement, size)
         {
             LogTag = "ChartboostMediation Banner (iOS)";
-            _uniqueId = _chartboostMediationGetBannerAd();
+
+            if (size.Name == "ADAPTIVE")
+            {
+                Logger.LogError(LogTag,$"Adaptive sizes are not supported for `ChartboostMediationBannerAd`. Use `ChartboostMediationBannerView` instead");
+                return;
+            }
+            
+            var fixedSize = size.Name switch
+            {
+                "STANDARD" => 0,
+                "MEDIUM" => 1,
+                "LEADERBOARD" => 2,
+                _ => 0
+            };
+            _uniqueId = _chartboostMediationGetBannerAd(placement, fixedSize);
         }
 
         internal override bool IsValid { get; set; } = true;
@@ -34,27 +50,6 @@ namespace Chartboost.Banner
             return _chartboostMediationBannerRemoveKeyword(_uniqueId, keyword);
         }
 
-        public override void SetHorizontalAlignment(ChartboostMediationBannerHorizontalAlignment horizontalAlignment)
-        {
-            base.SetHorizontalAlignment(horizontalAlignment);
-            _chartboostMediationBannerSetHorizontalAlignment(_uniqueId, (int)horizontalAlignment);
-        }
-
-        public override void SetVerticalAlignment(ChartboostMediationBannerVerticalAlignment verticalAlignment)
-        {
-            base.SetVerticalAlignment(verticalAlignment);
-            _chartboostMediationBannerSetVerticalAlignment(_uniqueId, (int)verticalAlignment);
-
-        }
-
-        public override ChartboostMediationBannerAdSize GetAdSize()
-        {
-            base.GetAdSize();
-            var sizeJson = _chartboostMediationBannerGetAdSize(_uniqueId);
-            var size = JsonConvert.DeserializeObject<ChartboostMediationBannerAdSize>(sizeJson);
-            return size;
-        }
-
         public override void Destroy()
         {
             base.Destroy();
@@ -67,8 +62,7 @@ namespace Chartboost.Banner
         public override void Load(ChartboostMediationBannerAdScreenLocation location)
         {
             base.Load(location);
-            var sizeJson = JsonConvert.SerializeObject(size);
-            _chartboostMediationBannerAdLoad(_uniqueId, placementName, sizeJson, (int)location);
+            _chartboostMediationBannerAdLoad(_uniqueId, (int)location);
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerBase.SetVisibility"/>>
@@ -94,19 +88,13 @@ namespace Chartboost.Banner
 
         #region External Methods
         [DllImport("__Internal")]
-        private static extern IntPtr _chartboostMediationGetBannerAd();
+        private static extern IntPtr _chartboostMediationGetBannerAd(string placementName, int size);
         [DllImport("__Internal")]
         private static extern bool _chartboostMediationBannerSetKeyword(IntPtr uniqueId, string keyword, string value);
         [DllImport("__Internal")]
         private static extern string _chartboostMediationBannerRemoveKeyword(IntPtr uniqueID, string keyword);
         [DllImport("__Internal")]
-        private static extern void _chartboostMediationBannerSetHorizontalAlignment(IntPtr uniqueId, int verticalAlignment);
-        [DllImport("__Internal")]
-        private static extern void _chartboostMediationBannerSetVerticalAlignment(IntPtr uniqueId, int verticalAlignment);
-        [DllImport("__Internal")]
-        private static extern string _chartboostMediationBannerGetAdSize(IntPtr uniqueId);
-        [DllImport("__Internal")]
-        private static extern void _chartboostMediationBannerAdLoad(IntPtr uniqueID, string placementName, string size, int screenLocation);
+        private static extern void _chartboostMediationBannerAdLoad(IntPtr uniqueID, int screenLocation);
         [DllImport("__Internal")]
         private static extern void _chartboostMediationBannerClearLoaded(IntPtr uniqueID);
         [DllImport("__Internal")]

@@ -60,8 +60,8 @@ namespace Chartboost.AdFormats.Banner
             protected set { }
         }
 
-        // Note: This is currently only available in iOS but not on Android and will be available in Android from 5.0  
-        // Public API `IChartboostMediationBannerView` will then include this field as well
+        // Note: This is currently only available in iOS but not on Android   
+        // Android will include this from 5.0, public API `IChartboostMediationBannerView` will then include this field as well
         public override Metrics? LoadMetrics
         {
             get => null;
@@ -106,7 +106,7 @@ namespace Chartboost.AdFormats.Banner
             else
             {
                 LoadRequest = new Later<ChartboostMediationBannerAdLoadResult>();
-                _bannerAd.Call("load", request.PlacementName, request.AdSize.Name, request.AdSize.Width, request.AdSize.Height, (int)screenLocation);
+                _bannerAd.Call("load", request.PlacementName, request.Size.Name, request.Size.Width, request.Size.Height, (int)screenLocation);
             }
             
             var result = await LoadRequest;
@@ -124,31 +124,31 @@ namespace Chartboost.AdFormats.Banner
             var bannerView = CacheManager.GetBannerAd(ad.HashCode());
             if (!(bannerView is ChartboostMediationBannerViewAndroid androidBannerView)) 
                 return;
-            
-            // auto refresh load
-            if (androidBannerView.LoadRequest == null)
+
+            if (androidBannerView.LoadRequest != null)
             {
-                Debug.Log($"auto refresh");
-                EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Show);
+                ChartboostMediationBannerAdLoadResult loadResult;
+                if (!string.IsNullOrEmpty(error))
+                {
+                    loadResult = new ChartboostMediationBannerAdLoadResult(new ChartboostMediationError(error));
+                }
+                else
+                {
+                    loadResult = new ChartboostMediationBannerAdLoadResult(bannerView.LoadId, null, null);
+                    EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(),
+                        (int)EventProcessor.BannerAdEvents.Appear);
+                }
+
+                androidBannerView.LoadRequest.Complete(loadResult);
                 return;
             }
-                
-            Debug.Log($"pub triggered load");
-            // Publisher triggered load 
-            ChartboostMediationBannerAdLoadResult loadResult;
-            if (!string.IsNullOrEmpty(error))
-            {
-                loadResult = new ChartboostMediationBannerAdLoadResult(new ChartboostMediationError(error));
-            }
-            else
-            {
-                loadResult = new ChartboostMediationBannerAdLoadResult(bannerView.LoadId, null, null);
-                EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Show);
-            }
-
-            androidBannerView.LoadRequest.Complete(loadResult);
+            
+            EventProcessor.ReportUnexpectedSystemError("Load result received for a null request");
         }
 
+        private void onAdRefreshed(AndroidJavaObject ad) =>
+            EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Appear);
+        
         private void onAdClicked(AndroidJavaObject ad) =>
             EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Click);
 

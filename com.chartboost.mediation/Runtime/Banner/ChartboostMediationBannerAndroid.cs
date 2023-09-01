@@ -4,6 +4,7 @@ using Chartboost.Interfaces;
 using Chartboost.Platforms.Android;
 using Chartboost.Utilities;
 using UnityEngine;
+using Logger = Chartboost.Utilities.Logger;
 
 namespace Chartboost.Banner
 {
@@ -18,8 +19,23 @@ namespace Chartboost.Banner
         public ChartboostMediationBannerAndroid(string placementName, ChartboostMediationBannerAdSize size) : base(placementName, size)
         {
             LogTag = "ChartboostMediationBanner (Android)";
+            
+            if (size.Name == "ADAPTIVE")
+            {
+                Logger.LogError(LogTag,$"Adaptive sizes are not supported for `ChartboostMediationBannerAd`. Use `ChartboostMediationBannerView` instead");
+                return;
+            }
+            
+            var fixedSize = size.Name switch
+            {
+                "STANDARD" => 0,
+                "MEDIUM" => 1,
+                "LEADERBOARD" => 2,
+                _ => 0
+            };
+            
             using var unityBridge = ChartboostMediationAndroid.GetUnityBridge();
-            _androidAd = unityBridge.CallStatic<AndroidJavaObject>("getBannerAd", placementName, size.Name, size.Width, size.Height);
+            _androidAd = unityBridge.CallStatic<AndroidJavaObject>("getBannerAd", placementName, fixedSize);
             _uniqueId = _androidAd.HashCode();
         }
 

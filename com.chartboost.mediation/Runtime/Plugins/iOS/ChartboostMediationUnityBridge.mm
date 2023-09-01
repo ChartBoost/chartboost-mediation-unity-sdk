@@ -903,26 +903,16 @@ const void* _chartboostMediationCreateBannerView(){
     return (__bridge void*)bannnerView;
 }
 
-void _chartboostMediationBannerLoadFixedSize(const void *uniqueId, const char *placementName, int fixedSize, long screenLocation, int hashCode, ChartboostMediationBannerAdLoadResultEvent callback){
-        
-    ChartboostMediationBannerView *bannerView =(__bridge ChartboostMediationBannerView*)uniqueId;
-
-    ChartboostMediationBannerSize *size;
-    switch (fixedSize) {
-        case 0:
-            size = ChartboostMediationBannerSize.standard;
-            break;
-        case 1:
-            size = ChartboostMediationBannerSize.medium;
-            break;
-        case 2:
-            size = ChartboostMediationBannerSize.leaderboard;
-            break;
-            
-        default:
-            break;
+void _chartboostMediationBannerLoad(const void *uniqueId, const char *placementName, const char* sizeName, float width, float height, long screenLocation, int hashCode, ChartboostMediationBannerAdLoadResultEvent callback) {
+    NSArray *sizeNames = @[@"ADAPTIVE", @"STANDARD", @"MEDIUM", @"LEADERBOARD"];
+    long item = [sizeNames indexOfObject:name];
+    switch(item){
+        case 0 : size = [ChartboostMediationBannerSize adaptiveWithWidth:width maxHeight:height]; break;
+        case 1 : size = [ChartboostMediationBannerSize standard]; break;
+        case 2 : size = [ChartboostMediationBannerSize medium]; break;
+        case 3 : size = [ChartboostMediationBannerSize leaderboard]; break;
     }
-             
+    
     ChartboostMediationBannerLoadRequest *loadRequest = [[ChartboostMediationBannerLoadRequest alloc] initWithPlacement:GetStringParam(placementName) size:size];
     UIViewController* viewController = [[ChartboostMediationObserver sharedObserver] getBannerViewController:bannerView size:size.size screenLocation:screenLocation];
     
@@ -944,34 +934,6 @@ void _chartboostMediationBannerLoadFixedSize(const void *uniqueId, const char *p
     }];
     
 }
-
-void _chartboostMediationBannerLoadAdaptiveSize(const void *uniqueId, const char *placementName, float width, float height, long screenLocation, int hashCode, ChartboostMediationBannerAdLoadResultEvent callback){
-    
-    ChartboostMediationBannerView *bannerView =(__bridge ChartboostMediationBannerView*)uniqueId;
-
-    ChartboostMediationBannerSize *size = [ChartboostMediationBannerSize adaptiveWithWidth:width maxHeight:height];
-    ChartboostMediationBannerLoadRequest *loadRequest = [[ChartboostMediationBannerLoadRequest alloc] initWithPlacement:GetStringParam(placementName) size:size];
-
-    UIViewController* viewController = [[ChartboostMediationObserver sharedObserver] getBannerViewController:bannerView size:size.size screenLocation:screenLocation];
-    
-    // Load
-    [bannerView loadWith:loadRequest viewController:viewController completion:^(ChartboostMediationBannerLoadResult *adLoadResult) {
-        ChartboostMediationError *error = [adLoadResult error];
-        if (error != nil)
-        {
-            ChartboostMediationErrorCode codeInt = [error chartboostMediationCode];
-            const char *code = [[NSString stringWithFormat:@"CM_%ld", codeInt] UTF8String];
-            const char *message = [[error localizedDescription] UTF8String];
-            callback(hashCode, uniqueId, "", "", code, message);
-            return;
-        }
-        
-        const char *loadId = [[adLoadResult loadID] UTF8String];
-        const char *metricsJson = dictionaryToJSON([adLoadResult metrics]);
-        callback(hashCode, uniqueId, loadId, metricsJson, "", "");
-    }];
-}
-
 
 void _chartboostMediationBannerSetKeywords(const void* uniqueId, const char * keywords){
     

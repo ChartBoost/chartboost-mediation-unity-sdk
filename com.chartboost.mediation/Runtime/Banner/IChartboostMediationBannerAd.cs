@@ -10,8 +10,6 @@ namespace Chartboost.Banner
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="placementName"></param>
-        /// <param name="size"></param>
         /// <param name="location"></param>
         void Load(ChartboostMediationBannerAdScreenLocation location);
 

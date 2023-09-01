@@ -24,6 +24,9 @@ namespace Chartboost
     [Serializable]
     public struct MetricsData
     {
+        [JsonProperty("load_id")]
+        public string? loadId;
+        
         [JsonProperty("network_type")]
         public string? networkType;
         

@@ -90,7 +90,7 @@ namespace Chartboost.AdFormats.Banner
             rect.anchorMin = rect.anchorMax = anchor;
             rect.pivot = pivot;
             rect.anchoredPosition = Vector2.zero;
-            rect.sizeDelta = new Vector2(request.AdSize.Width, request.AdSize.Height);
+            rect.sizeDelta = new Vector2(request.Size.Width, request.Size.Height);
 
             if (_bannerView.GetComponentInChildren<Image>() == null)
             {

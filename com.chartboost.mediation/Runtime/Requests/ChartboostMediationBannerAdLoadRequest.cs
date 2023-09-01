@@ -6,14 +6,14 @@ namespace Chartboost.Requests
 {
     public class ChartboostMediationBannerAdLoadRequest
     {
-        public ChartboostMediationBannerAdLoadRequest(string placementName, ChartboostMediationBannerAdSize adSize)
+        public ChartboostMediationBannerAdLoadRequest(string placementName, ChartboostMediationBannerAdSize size)
         {
             PlacementName = placementName;
-            AdSize = adSize;
+            Size = size;
         }
 
         public string PlacementName { get; set; }
-        public ChartboostMediationBannerAdSize AdSize { get; set; }
+        public ChartboostMediationBannerAdSize Size { get; set; }
 
         internal long AssociatedProxy { get; set; }
         
