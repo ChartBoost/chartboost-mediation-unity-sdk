@@ -3,7 +3,7 @@ package com.chartboost.mediation.unity
 import android.util.Log
 import com.chartboost.heliumsdk.domain.ChartboostMediationAdException
 
-//@Deprecated("EventProcessor utilizes deprecated APIs and will be removed in the future")
+@Deprecated("EventProcessor utilizes deprecated APIs and will be removed in the future")
 object EventProcessor {
     private val TAG = EventProcessor::class.java.simpleName
 
