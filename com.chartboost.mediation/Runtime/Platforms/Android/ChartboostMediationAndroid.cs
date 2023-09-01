@@ -44,7 +44,9 @@ namespace Chartboost.Platforms.Android
         public override void Init()
         {
             base.Init();
+            #pragma warning disable CS0618
             InitWithAppIdAndSignature(ChartboostMediationSettings.AndroidAppId, ChartboostMediationSettings.AndroidAppSignature);
+            #pragma warning restore CS0618
         }
 
         [Obsolete("InitWithAppIdAndSignature has been deprecated, please use StartWithOptions instead")]

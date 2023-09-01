@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -210,7 +209,7 @@ public class Demo : MonoBehaviour
             _ => ChartboostMediationBannerAdSize.Standard
         };
 
-        _bannerAd?.Remove();
+        _bannerAd?.Destroy();
 
         Log("Creating banner on placement: " + bannerPlacementInputField.text + " with size: " + size);
         _bannerAd = ChartboostMediation.GetBannerAd(bannerPlacementInputField.text, size);
@@ -248,7 +247,7 @@ public class Demo : MonoBehaviour
 
     public void OnRemoveBannerClick()
     {
-        _bannerAd?.Remove();
+        _bannerAd?.Destroy();
         _bannerAd = null;
         Log("Banner Removed");
     }
