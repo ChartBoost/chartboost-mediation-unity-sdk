@@ -246,6 +246,26 @@ public class Demo : MonoBehaviour
         Debug.Log($"BannerAd loaded successfully with loadId : {result.LoadId}");
     }
 
+    public void OnHorizontalAlignmentChange()
+    {
+        _bannerAd.HorizontalAlignment = (ChartboostMediationBannerHorizontalAlignment) horizontalAlignmentDropdown.value;
+    }
+
+    public void OnVerticalAlignmentChange()
+    {
+        _bannerAd.VerticalAlignment = (ChartboostMediationBannerVerticalAlignment)verticalAlignmentDropdown.value;
+    }
+
+    public void OnToggleBannerVisibilityClick()
+    {
+        if (_bannerAd != null)
+        {
+            _bannerAdIsVisible = !_bannerAdIsVisible;
+            // _bannerAd.SetVisibility(_bannerAdIsVisible);
+        }
+        Log("Banner Visibility Toggled");
+    }
+    
     public void OnResetBannerClick()
     {
         if (_bannerAd == null)
@@ -256,15 +276,18 @@ public class Demo : MonoBehaviour
         _bannerAd?.Reset();
         Log("banner ad has been reset");
     }
-    
-    public void OnToggleBannerVisibilityClick()
+
+    public void OnRemoveBannerClick()
     {
-        if (_bannerAd != null)
+        if (_bannerAd == null)
         {
-            _bannerAdIsVisible = !_bannerAdIsVisible;
-            // _bannerAd.SetVisibility(_bannerAdIsVisible);
+            Log("banner ad does not exist");
+            return;
         }
-        Log("Banner Visibility Toggled");
+
+        _bannerAd.Destroy();
+        Log("banner ad has been destroyed");
+
     }
 
     private void WillAppearBanner(IChartboostMediationBannerView bannerAd)

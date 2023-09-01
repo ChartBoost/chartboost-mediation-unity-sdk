@@ -993,6 +993,14 @@ void _chartboostMediationBannerReset(const void* uniqueId){
     [bannerView reset];
 }
 
+void _chartboostMediationBannerDestroy(const void * uniqueId)
+{
+    sendToMain(^(){
+        ChartboostMediationBannerView* bannerView = (__bridge HeliumBannerView*)uniqueId;
+        [bannerView removeFromSuperview];
+        [[ChartboostMediationObserver sharedObserver] releaseAd: [NSNumber numberWithLong:(long)uniqueId] placementName:nil multiPlacementSupport:true];
+    });
+}
 
 
 

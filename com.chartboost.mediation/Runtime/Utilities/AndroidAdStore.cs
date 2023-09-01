@@ -1,3 +1,4 @@
+using System;
 using Chartboost.Events;
 using UnityEngine;
 
@@ -30,6 +31,14 @@ namespace Chartboost.Utilities
             EventProcessor.ProcessEvent(() => { 
                 using var adStore = new AndroidJavaClass(QualifiedAdStoreName);
                 adStore.CallStatic("releaseFullscreenAd", uniqueId);
+            });
+        }
+        
+        public static void ReleaseBannerAd(int uniqueId)
+        {
+            EventProcessor.ProcessEvent(() => { 
+                using var adStore = new AndroidJavaClass(QualifiedAdStoreName);
+                adStore.CallStatic("releaseBannerAd", uniqueId);
             });
         }
 

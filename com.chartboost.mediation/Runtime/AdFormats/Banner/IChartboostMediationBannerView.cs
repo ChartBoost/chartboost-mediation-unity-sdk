@@ -35,10 +35,12 @@ namespace Chartboost.AdFormats.Banner
         abstract ChartboostMediationBannerVerticalAlignment VerticalAlignment { get; set; }
         abstract Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, ChartboostMediationBannerAdScreenLocation screenLocation);
         abstract void Reset();
+        abstract void Destroy();
         
         // ReSharper disable once InconsistentNaming
         abstract event ChartboostMediationBannerEvent WillAppear;
         abstract event ChartboostMediationBannerEvent DidClick;
         abstract event ChartboostMediationBannerEvent DidRecordImpression;
+        
     }
 }

@@ -62,8 +62,15 @@ namespace Chartboost.AdFormats.Banner
             return Task.FromResult<ChartboostMediationBannerAdLoadResult>(null);
         }
 
-        public abstract void Reset();
-        
+        public virtual void Reset()
+        {
+        }
+
+        public virtual void Destroy()
+        {
+            CacheManager.ReleaseBannerAd(UniqueId.ToInt64());
+        }
+
         internal virtual void OnBannerWillAppear(IChartboostMediationBannerView bannerView)  => 
             WillAppear?.Invoke(bannerView);
 

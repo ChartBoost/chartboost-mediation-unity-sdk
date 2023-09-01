@@ -112,7 +112,14 @@ namespace Chartboost.AdFormats.Banner
 
         public override void Reset()
         {
+            base.Reset();
             _chartboostMediationBannerReset(UniqueId);
+        }
+
+        public override void Destroy()
+        {
+            base.Destroy();
+            _chartboostMediationBannerDestroy(UniqueId);   
         }
 
         #region Native
@@ -145,7 +152,10 @@ namespace Chartboost.AdFormats.Banner
         private static extern int _chartboostMediationBannerGetVerticalAlignment(IntPtr UniqueId);
 
         [DllImport("__Internal")]
-        private static extern void _chartboostMediationBannerReset(IntPtr uniqueI);
+        private static extern void _chartboostMediationBannerReset(IntPtr uniqueId);
+        
+        [DllImport("__Internal")]
+        private static extern void _chartboostMediationBannerDestroy(IntPtr uniqueId);
         
         #endregion
     }

@@ -26,6 +26,9 @@ namespace Chartboost.AdFormats.Banner
         {
             LogTag = "ChartboostMediationBanner (Android)";
             _bannerAd = bannerAd;
+            
+            // TODO: this can be also done on bridge   
+            AndroidAdStore.TrackBannerAd(bannerAd);
         }
 
         public override Dictionary<string, string> Keywords
@@ -91,7 +94,15 @@ namespace Chartboost.AdFormats.Banner
 
         public override void Reset()
         {
+            base.Reset();
             _bannerAd.Call("reset"); ;
+        }
+
+        public override void Destroy()
+        {
+            base.Destroy();
+            _bannerAd.Dispose();
+            AndroidAdStore.ReleaseBannerAd(UniqueId.ToInt32());
         }
 
         public override async Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, ChartboostMediationBannerAdScreenLocation screenLocation)
@@ -124,25 +135,25 @@ namespace Chartboost.AdFormats.Banner
             if (!(bannerView is ChartboostMediationBannerViewAndroid androidBannerView)) 
                 return;
 
-            if (androidBannerView.LoadRequest != null)
+            if (androidBannerView.LoadRequest == null)
             {
-                ChartboostMediationBannerAdLoadResult loadResult;
-                if (!string.IsNullOrEmpty(error))
-                {
-                    loadResult = new ChartboostMediationBannerAdLoadResult(new ChartboostMediationError(error));
-                }
-                else
-                {
-                    loadResult = new ChartboostMediationBannerAdLoadResult(bannerView.LoadId, null, null);
-                    EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(),
-                        (int)EventProcessor.BannerAdEvents.Appear);
-                }
-
-                androidBannerView.LoadRequest.Complete(loadResult);
+                EventProcessor.ReportUnexpectedSystemError("Load result received for a null request");
                 return;
             }
-            
-            EventProcessor.ReportUnexpectedSystemError("Load result received for a null request");
+
+            ChartboostMediationBannerAdLoadResult loadResult;
+            if (!string.IsNullOrEmpty(error))
+            {
+                loadResult = new ChartboostMediationBannerAdLoadResult(new ChartboostMediationError(error));
+            }
+            else
+            {
+                loadResult = new ChartboostMediationBannerAdLoadResult(bannerView.LoadId, null, null);
+                EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(),
+                    (int)EventProcessor.BannerAdEvents.Appear);
+            }
+
+            androidBannerView.LoadRequest.Complete(loadResult);
         }
 
         private void onAdRefreshed(AndroidJavaObject ad) =>
