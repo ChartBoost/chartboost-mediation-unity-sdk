@@ -72,8 +72,9 @@ public class Demo : MonoBehaviour
         if (_bannerAd == null) 
             return;
         
-        _bannerAd.ClearLoaded();
-        _bannerAd.Destroy();
+        // TODO: add Destroy/Remove/Invalidate
+        // _bannerAd.ClearLoaded();
+        // _bannerAd.Destroy();
         Log("destroyed an existing banner");
     }
 
@@ -211,9 +212,6 @@ public class Demo : MonoBehaviour
         _bannerAd.Keywords.Add("bnr_keyword1", "bnr_value1"); 
         _bannerAd.Keywords.Add("bnr_keyword2", "bnr_value2"); 
         
-        Log($"keywords set");
-
-        
         var size = bannerSizeDropdown.value switch
         {
             4 => ChartboostMediationBannerAdSize.Adaptive1X4(100),
@@ -236,8 +234,8 @@ public class Demo : MonoBehaviour
             _ => ChartboostMediationBannerAdScreenLocation.TopCenter
         };
 
-        _bannerAd.SetVerticalAlignment((ChartboostMediationBannerVerticalAlignment)verticalAlignmentDropdown.value);
-        _bannerAd.SetHorizontalAlignment((ChartboostMediationBannerHorizontalAlignment)horizontalAlignmentDropdown.value);
+        _bannerAd.VerticalAlignment = (ChartboostMediationBannerVerticalAlignment)verticalAlignmentDropdown.value;
+        _bannerAd.HorizontalAlignment = (ChartboostMediationBannerHorizontalAlignment)horizontalAlignmentDropdown.value;
         
         var result = await _bannerAd.Load(loadRequest, screenPos);
         if (result.Error != null)

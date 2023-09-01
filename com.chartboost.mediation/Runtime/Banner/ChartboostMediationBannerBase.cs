@@ -47,19 +47,7 @@ namespace Chartboost.Banner
         /// <inheritdoc cref="IChartboostMediationBannerAd.SetVisibility"/>>
         public virtual void SetVisibility(bool isVisible)
             => Logger.Log(LogTag, $"setting visibility: {isVisible} for banner: {placementName}");
-
-        public virtual void SetHorizontalAlignment(ChartboostMediationBannerHorizontalAlignment horizontalAlignment) 
-            => Logger.Log(LogTag, $"setting horizontal alignment: {horizontalAlignment} for banner: {placementName}");
-
-        public virtual void SetVerticalAlignment(ChartboostMediationBannerVerticalAlignment verticalAlignment)
-            => Logger.Log(LogTag, $"setting vertical alignment: {verticalAlignment} for banner: {placementName}");
-
-        public virtual ChartboostMediationBannerAdSize GetAdSize()
-        {
-            Logger.Log(LogTag, $"getting ad size for banner: {placementName}");
-            return null;
-        }
-
+       
         /// <inheritdoc cref="IChartboostMediationBannerAd.ClearLoaded"/>>
         public virtual void ClearLoaded()
             => Logger.Log(LogTag, $"clearing banner: {placementName}");

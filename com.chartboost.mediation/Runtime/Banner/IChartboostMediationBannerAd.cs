@@ -20,24 +20,6 @@ namespace Chartboost.Banner
         void SetVisibility(bool isVisible);
         
         /// <summary>
-        /// This method sets the horizontal alignment of the banner ad within its container  
-        /// </summary>
-        /// <param name="horizontalAlignment"></param>
-        void SetHorizontalAlignment(ChartboostMediationBannerHorizontalAlignment horizontalAlignment);
-        
-        /// <summary>
-        /// This method sets the vertical alignment of the banner ad within its container
-        /// </summary>
-        /// <param name="verticalAlignment"></param>
-        void SetVerticalAlignment(ChartboostMediationBannerVerticalAlignment verticalAlignment);
-
-        /// <summary>
-        /// Gets the size of banner ad loaded inside its container
-        /// </summary>
-        /// <returns></returns>
-        ChartboostMediationBannerAdSize GetAdSize();
-        
-        /// <summary>
         /// If an advertisement has been loaded, clear it. Once cleared, a new
         /// load can be performed.
         /// </summary>
