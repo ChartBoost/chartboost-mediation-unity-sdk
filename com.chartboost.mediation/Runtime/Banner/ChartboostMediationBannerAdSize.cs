@@ -15,7 +15,7 @@ namespace Chartboost.Banner
     public class ChartboostMediationBannerAdSize
     {
         [JsonProperty("name")]
-        public string Name = "ADAPTIVE";
+        public string Name { get; private set; } = "ADAPTIVE";
         [JsonProperty("aspectRatio")]
         public float AspectRatio;
         [JsonProperty("width")]

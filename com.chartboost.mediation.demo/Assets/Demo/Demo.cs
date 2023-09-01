@@ -214,6 +214,7 @@ public class Demo : MonoBehaviour
         
         var size = bannerSizeDropdown.value switch
         {
+            // TODO: Add all other adaptive sizes ( rework UI)
             4 => ChartboostMediationBannerAdSize.Adaptive1X4(100),
             3 => ChartboostMediationBannerAdSize.Adaptive4X1(400),
             2 => ChartboostMediationBannerAdSize.Leaderboard,
