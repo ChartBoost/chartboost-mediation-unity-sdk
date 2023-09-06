@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Chartboost.AdFormats.Banner;
+using Chartboost.AdFormats.Banner.Unity;
 using Chartboost.Banner;
 using Chartboost.Events;
 using Chartboost.FullScreen.Interstitial;
@@ -193,11 +194,6 @@ namespace Chartboost
             => await _chartboostMediationExternal.LoadFullscreenAd(loadRequest);
 
         /// <summary>
-        /// Returns a new ad unit that can be used to load and display banner ads.
-        /// </summary>
-        public static IChartboostMediationBannerView GetBannerView() => _chartboostMediationExternal.GetBannerView();
-
-        /// <summary>
         /// Returns a new ad unit that can be used to load and display interstitial ads.
         /// </summary>
         /// <param name="placementName">The placement ID for the Chartboost Mediation impression type.</param>
@@ -221,7 +217,29 @@ namespace Chartboost
         [Obsolete("GetBannerAd has been deprecated and will be removed in future versions, use GetBannerView instead.")]
         public static ChartboostMediationBannerAd GetBannerAd(string placementName, ChartboostMediationBannerAdSize size)
             => _chartboostMediationExternal.GetBannerAd(placementName, size);
+        
+        /// <summary>
+        /// Returns a new ad unit that can be used to load and display banner ads.
+        /// </summary>
+        public static IChartboostMediationBannerView GetBannerView() => _chartboostMediationExternal.GetBannerView();
 
+        /// <summary>
+        /// Returns a new gameobject that can be used to load and display banner ads.
+        /// </summary>
+        /// <param name="placementName">The placement name for this banner ad</param>
+        /// <param name="draggable">if this ad can be dragged on screen</param>
+        /// <param name="size">size of the gameobject</param>
+        /// <param name="screenLocation">pre-defined location on screen where this gameobject will be created</param>
+        /// <returns></returns>
+        public static ChartboostMediationUnityBannerAd GetUnityBannerAd(string placementName, bool draggable = true, ChartboostMediationBannerAdSize size = null, ChartboostMediationBannerAdScreenLocation screenLocation = ChartboostMediationBannerAdScreenLocation.Center)
+        {
+            var unityBannerAd = ChartboostMediationUnityBannerAd.Instantiate(size, screenLocation);
+            unityBannerAd.PlacementName = placementName;
+            unityBannerAd.Draggable = draggable;
+            return unityBannerAd;
+        }
+        
+        
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Init()
         {

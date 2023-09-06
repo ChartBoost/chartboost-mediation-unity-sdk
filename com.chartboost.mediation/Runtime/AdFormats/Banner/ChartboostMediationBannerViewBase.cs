@@ -18,7 +18,8 @@ namespace Chartboost.AdFormats.Banner
         public event ChartboostMediationBannerEvent WillAppear;
         public event ChartboostMediationBannerEvent DidClick;
         public event ChartboostMediationBannerEvent DidRecordImpression;
-        
+        public event ChartboostMediationBannerDragEvent DidDrag;
+
         protected static string LogTag = "ChartboostMediationBanner (Base)";
         protected IntPtr UniqueId { get; set; }
 
@@ -51,23 +52,34 @@ namespace Chartboost.AdFormats.Banner
             ChartboostMediationBannerAdLoadRequest request, ChartboostMediationBannerAdScreenLocation screenLocation)
         {
             Request = request;
-
             if (!CanFetchAd(request.PlacementName))
             {
                 var error = new ChartboostMediationError("Chartboost Mediation is not ready or placement is invalid.");
                 var adLoadResult = new ChartboostMediationBannerAdLoadResult(error);
                 return Task.FromResult(adLoadResult);
             }
-            
+            Logger.Log(LogTag, $"Loading banner ad for placement {request.PlacementName} and size {request.Size.Name} at {screenLocation}");
             return Task.FromResult<ChartboostMediationBannerAdLoadResult>(null);
         }
 
-        public virtual void Reset()
+        public virtual Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, float x, float y)
         {
+            if (!CanFetchAd(request.PlacementName))
+            {
+                var error = new ChartboostMediationError("Chartboost Mediation is not ready or placement is invalid.");
+                var adLoadResult = new ChartboostMediationBannerAdLoadResult(error);
+                return Task.FromResult(adLoadResult);
+            }
+            Logger.Log(LogTag, $"Loading banner ad for placement {request.PlacementName} and size {request.Size.Name} at ({x}, {y})");
+            return Task.FromResult<ChartboostMediationBannerAdLoadResult>(null);
         }
 
+        public virtual void SetDraggability(bool canDrag) => Logger.Log(LogTag, $"Setting Draggability to {canDrag}");
+        public virtual void SetVisibility(bool visibility)=> Logger.Log(LogTag, $"Setting Visibility to {visibility}");
+        public virtual void Reset() => Logger.Log(LogTag, $"Resetting banner ad");
         public virtual void Destroy()
         {
+            Logger.Log(LogTag, $"Removing/Destroying banner ad");
             CacheManager.ReleaseBannerAd(UniqueId.ToInt64());
         }
 
@@ -79,6 +91,9 @@ namespace Chartboost.AdFormats.Banner
         
         internal virtual void OnBannerRecordImpression(IChartboostMediationBannerView bannerView) =>
             DidRecordImpression?.Invoke(bannerView);
+
+        internal virtual void OnBannerDrag(IChartboostMediationBannerView bannerView, float x, float y) =>
+            DidDrag?.Invoke(bannerView, x, y);
 
         private static bool CanFetchAd(string placementName)
         {

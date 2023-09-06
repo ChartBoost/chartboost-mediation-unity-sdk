@@ -10,7 +10,6 @@ using Chartboost.Results;
 using Chartboost.Utilities;
 using Newtonsoft.Json;
 using UnityEngine;
-using static Chartboost.Platforms.Android.ChartboostMediationAndroid;
 using Logger = Chartboost.Utilities.Logger;
 
 namespace Chartboost.AdFormats.Banner
@@ -92,19 +91,6 @@ namespace Chartboost.AdFormats.Banner
             set => _bannerAd.Call("setVerticalAlignment", (int)value);
         }
 
-        public override void Reset()
-        {
-            base.Reset();
-            _bannerAd.Call("reset"); ;
-        }
-
-        public override void Destroy()
-        {
-            base.Destroy();
-            _bannerAd.Dispose();
-            AndroidAdStore.ReleaseBannerAd(UniqueId.ToInt32());
-        }
-
         public override async Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, ChartboostMediationBannerAdScreenLocation screenLocation)
         {
             await base.Load(request, screenLocation);
@@ -123,48 +109,55 @@ namespace Chartboost.AdFormats.Banner
             LoadRequest = null;
             return result;
         }
-    }
-    
-    internal class ChartboostMediationBannerAdListener : AndroidJavaProxy
-    {
-        public ChartboostMediationBannerAdListener() : base(GetQualifiedClassName("ChartboostMediationBannerViewListener")) {}
         
-        private void onAdCached(AndroidJavaObject ad, string error)
+        // x,y is Native
+        public override async Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, float x, float y)
         {
-            var bannerView = CacheManager.GetBannerAd(ad.HashCode());
-            if (!(bannerView is ChartboostMediationBannerViewAndroid androidBannerView)) 
-                return;
+            await base.Load(request, x,y);
 
-            if (androidBannerView.LoadRequest == null)
+            if (LoadRequest != null)
             {
-                EventProcessor.ReportUnexpectedSystemError("Load result received for a null request");
-                return;
-            }
-
-            ChartboostMediationBannerAdLoadResult loadResult;
-            if (!string.IsNullOrEmpty(error))
-            {
-                loadResult = new ChartboostMediationBannerAdLoadResult(new ChartboostMediationError(error));
+                Logger.LogWarning(LogTag, "A new load is triggered while the previous load is not yet complete");
             }
             else
             {
-                loadResult = new ChartboostMediationBannerAdLoadResult(bannerView.LoadId, null, null);
-                EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(),
-                    (int)EventProcessor.BannerAdEvents.Appear);
+                LoadRequest = new Later<ChartboostMediationBannerAdLoadResult>();
+                
+                // y is counted from top in Android whereas Unity counts it from bottom
+                y = ChartboostMediationConverters.PixelsToNative(Screen.height) - y;
+                _bannerAd.Call("load", request.PlacementName, request.Size.Name, request.Size.Width, request.Size.Height, x, y);
             }
-
-            androidBannerView.LoadRequest.Complete(loadResult);
+            
+            var result = await LoadRequest;
+            LoadRequest = null;
+            return result;
         }
 
-        private void onAdRefreshed(AndroidJavaObject ad) =>
-            EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Appear);
-        
-        private void onAdClicked(AndroidJavaObject ad) =>
-            EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Click);
+        public override void SetDraggability(bool canDrag)
+        {
+            base.SetDraggability(canDrag);
+            _bannerAd.Call("setDraggability", canDrag);
+        }
 
-        private void onAdImpressionRecorded(AndroidJavaObject ad) =>
-            EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.RecordImpression);
+        public override void SetVisibility(bool visibility)
+        {
+            base.SetVisibility(visibility);
+            _bannerAd.Call("setVisibility", visibility);
+        }
 
+        public override void Reset()
+        {
+            base.Reset();
+            _bannerAd.Call("reset"); ;
+        }
+
+        public override void Destroy()
+        {
+            base.Destroy();
+            _bannerAd.Call("destroy");
+            _bannerAd.Dispose();
+            AndroidAdStore.ReleaseBannerAd(UniqueId.ToInt32());
+        }
     }
 }
 

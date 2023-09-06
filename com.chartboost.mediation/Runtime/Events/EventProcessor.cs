@@ -27,7 +27,8 @@ namespace Chartboost.Events
         {
             Appear = 0,
             Click = 1,
-            RecordImpression = 2
+            RecordImpression = 2,
+            Drag = 3
         }
 
         private static SynchronizationContext _context;
@@ -142,7 +143,7 @@ namespace Chartboost.Events
             }, null);
         }
 
-        public static void ProcessChartboostMediationBannerEvent(long adHashCode, int eventType)
+        public static void ProcessChartboostMediationBannerEvent(long adHashCode, int eventType, float x = default, float y = default)
         {
             _context.Post(o =>
             {
@@ -164,6 +165,9 @@ namespace Chartboost.Events
                             break;
                         case BannerAdEvents.RecordImpression:
                             ad.OnBannerRecordImpression(ad);
+                            break;
+                        case BannerAdEvents.Drag:
+                            ad.OnBannerDrag(ad, x, y);
                             break;
                         default:
                             throw new ArgumentOutOfRangeException(nameof(eventType), eventType, null);

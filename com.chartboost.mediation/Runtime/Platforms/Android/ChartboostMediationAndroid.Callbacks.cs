@@ -140,29 +140,51 @@ namespace Chartboost.Platforms.Android
         #endregion
         
         #region Banner Callbacks
-        internal class  ChartboostMediationBannerAdLoadListener : AwaitableAndroidJavaProxy<ChartboostMediationBannerAdLoadResult>
+        internal class ChartboostMediationBannerViewListener : AndroidJavaProxy
         {
-            //TODO: native name 
-            public ChartboostMediationBannerAdLoadListener() : base(GetQualifiedNativeClassName("ChartboostMediationBannerAdLoadListener")) { }
-            private void onAdLoaded(AndroidJavaObject result)
+            public ChartboostMediationBannerViewListener() : base(GetQualifiedClassName("ChartboostMediationBannerViewListener")) {}
+            
+            private void onAdCached(AndroidJavaObject ad, string error)
             {
-                EventProcessor.ProcessEvent(() =>
+                var bannerView = CacheManager.GetBannerAd(ad.HashCode());
+                if (!(bannerView is ChartboostMediationBannerViewAndroid androidBannerView)) 
+                    return;
+
+                if (androidBannerView.LoadRequest == null)
                 {
-                    var error = result.ToChartboostMediationError();
-                    if (error.HasValue)
-                    {
-                        CacheManager.ReleaseBannerAdLoadRequest(hashCode());
-                        _complete(new ChartboostMediationBannerAdLoadResult(error.Value));
-                        return;
-                    }
-                
-                    var loadId = result.Get<string>("loadId");
-                    var metrics = result.Get<AndroidJavaObject>("metrics").JsonObjectToMetrics();
-                    // TODO: Why is this not done in fullscreen ?
-                    CacheManager.ReleaseBannerAdLoadRequest(hashCode());
-                    _complete(new ChartboostMediationBannerAdLoadResult(loadId, metrics, null));
-                });
+                    EventProcessor.ReportUnexpectedSystemError("Load result received for a null request");
+                    return;
+                }
+
+                ChartboostMediationBannerAdLoadResult loadResult;
+                if (!string.IsNullOrEmpty(error))
+                {
+                    loadResult = new ChartboostMediationBannerAdLoadResult(new ChartboostMediationError(error));
+                }
+                else
+                {
+                    loadResult = new ChartboostMediationBannerAdLoadResult(bannerView.LoadId, null, null);
+                    EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(),
+                        (int)EventProcessor.BannerAdEvents.Appear);
+                }
+
+                androidBannerView.LoadRequest.Complete(loadResult);
             }
+
+            private void onAdViewAdded(AndroidJavaObject ad) =>
+                EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Appear);
+            
+            private void onAdClicked(AndroidJavaObject ad) =>
+                EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Click);
+
+            private void onAdImpressionRecorded(AndroidJavaObject ad) =>
+                EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.RecordImpression);
+
+            private void onAdDrag(AndroidJavaObject ad, float x, float y)
+            {
+                EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Drag, x, Screen.height - y);
+            }
+            
         }
 
         #endregion

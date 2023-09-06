@@ -9,6 +9,7 @@ using Chartboost.Results;
 namespace Chartboost.AdFormats.Banner
 {
     public delegate void ChartboostMediationBannerEvent(IChartboostMediationBannerView bannerView);
+    public delegate void ChartboostMediationBannerDragEvent(IChartboostMediationBannerView bannerView, float x, float y);
     
     public enum ChartboostMediationBannerHorizontalAlignment
     {
@@ -34,6 +35,9 @@ namespace Chartboost.AdFormats.Banner
         abstract ChartboostMediationBannerHorizontalAlignment HorizontalAlignment { get; set; }
         abstract ChartboostMediationBannerVerticalAlignment VerticalAlignment { get; set; }
         abstract Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, ChartboostMediationBannerAdScreenLocation screenLocation);
+        abstract Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, float x, float y);
+        abstract void SetDraggability(bool canDrag);
+        abstract void SetVisibility(bool visibility);
         abstract void Reset();
         abstract void Destroy();
         
@@ -41,6 +45,7 @@ namespace Chartboost.AdFormats.Banner
         abstract event ChartboostMediationBannerEvent WillAppear;
         abstract event ChartboostMediationBannerEvent DidClick;
         abstract event ChartboostMediationBannerEvent DidRecordImpression;
-        
+        abstract event ChartboostMediationBannerDragEvent DidDrag;
+
     }
 }

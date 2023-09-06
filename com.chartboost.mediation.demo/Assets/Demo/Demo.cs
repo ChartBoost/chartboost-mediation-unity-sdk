@@ -5,9 +5,11 @@ using System.IO;
 using System.Diagnostics.CodeAnalysis;
 using Chartboost;
 using Chartboost.AdFormats.Banner;
+using Chartboost.AdFormats.Banner.Unity;
 using Chartboost.AdFormats.Fullscreen;
 using Chartboost.Banner;
 using Chartboost.Requests;
+using Chartboost.Utilities;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,10 +34,11 @@ public class Demo : MonoBehaviour
     public InputField bannerPlacementInputField;
     public Dropdown bannerSizeDropdown;
     public Dropdown bannerLocationDropdown;
-    private IChartboostMediationBannerView _bannerAd;
+    private ChartboostMediationUnityBannerAd _bannerAd;
     public Dropdown horizontalAlignmentDropdown;
     public Dropdown verticalAlignmentDropdown;
     private bool _bannerAdIsVisible;
+    private bool _bannerAdIsDraggable;
 
     public ScrollRect outputTextScrollRect;
     public Text outputText;
@@ -72,9 +75,8 @@ public class Demo : MonoBehaviour
         if (_bannerAd == null) 
             return;
         
-        // TODO: add Destroy/Remove/Invalidate
-        // _bannerAd.ClearLoaded();
-        // _bannerAd.Destroy();
+        _bannerAd.ResetAd();
+        Destroy(_bannerAd);
         Log("destroyed an existing banner");
     }
 
@@ -201,16 +203,8 @@ public class Demo : MonoBehaviour
 
     public async void OnCreateBannerClick()
     {
-        _bannerAd?.Reset();
-        
-        Log($"Creating new banner view");
-        _bannerAd = ChartboostMediation.GetBannerView();
-        _bannerAd.WillAppear += WillAppearBanner;
-        _bannerAd.DidClick +=DidClickBanner;
-        _bannerAd.DidRecordImpression += DidRecordImpressionBanner;
-        
-        _bannerAd.Keywords.Add("bnr_keyword1", "bnr_value1"); 
-        _bannerAd.Keywords.Add("bnr_keyword2", "bnr_value2"); 
+        if(_bannerAd != null)
+            Destroy(_bannerAd.gameObject);
         
         var size = bannerSizeDropdown.value switch
         {
@@ -221,7 +215,6 @@ public class Demo : MonoBehaviour
             1 => ChartboostMediationBannerAdSize.MediumRect,
             _ => ChartboostMediationBannerAdSize.Standard
         };
-        var loadRequest = new ChartboostMediationBannerAdLoadRequest(bannerPlacementInputField.text, size);
         
         var screenPos = bannerLocationDropdown.value switch
         {
@@ -234,18 +227,77 @@ public class Demo : MonoBehaviour
             6 => ChartboostMediationBannerAdScreenLocation.BottomRight,
             _ => ChartboostMediationBannerAdScreenLocation.TopCenter
         };
+        
+        Log($"Creating new Unity banner ad");
+        _bannerAd = ChartboostMediation.GetUnityBannerAd(bannerPlacementInputField.text, true, size, screenPos);
+        _bannerAd.WillAppear += WillAppearBanner;
+        _bannerAd.DidClick +=DidClickBanner;
+        _bannerAd.DidRecordImpression += DidRecordImpressionBanner;
+        _bannerAd.DidDrag += DidDragBanner;
+        
+        _bannerAd.Keywords.Add("bnr_keyword1", "bnr_value1"); 
+        _bannerAd.Keywords.Add("bnr_keyword2", "bnr_value2"); 
 
         _bannerAd.VerticalAlignment = (ChartboostMediationBannerVerticalAlignment)verticalAlignmentDropdown.value;
         _bannerAd.HorizontalAlignment = (ChartboostMediationBannerHorizontalAlignment)horizontalAlignmentDropdown.value;
         
-        var result = await _bannerAd.Load(loadRequest, screenPos);
-        if (result.Error != null)
-        {
-            Log($"BannerAd fail to load => {result.Error?.Code} - {result.Error?.Message}");
-        }
+        // TODO: Debug mode (Remove)
+        var image =_bannerAd.gameObject.AddComponent<Image>();
+        image.color = new Color(0.25f,1,0.25f, .25f);
         
-        Debug.Log($"BannerAd loaded successfully with loadId : {result.LoadId}");
+        var result = await _bannerAd.Load();
+        Log(result.Error == null ? "Successfully loaded banner" : result.Error?.Message);
+
+        _bannerAd.ResizeToFit = true;
     }
+
+    // public async void OnCreateBannerClick()
+    // {
+    //     _bannerAd?.Reset();
+    //     
+    //     Log($"Creating new banner view");
+    //     _bannerAd = ChartboostMediation.GetBannerView();
+    //     _bannerAd.WillAppear += WillAppearBanner;
+    //     _bannerAd.DidClick +=DidClickBanner;
+    //     _bannerAd.DidRecordImpression += DidRecordImpressionBanner;
+    //     
+    //     _bannerAd.Keywords.Add("bnr_keyword1", "bnr_value1"); 
+    //     _bannerAd.Keywords.Add("bnr_keyword2", "bnr_value2"); 
+    //     
+    //     var size = bannerSizeDropdown.value switch
+    //     {
+    //         // TODO: Add all other adaptive sizes ( rework UI)
+    //         4 => ChartboostMediationBannerAdSize.Adaptive1X4(100),
+    //         3 => ChartboostMediationBannerAdSize.Adaptive4X1(400),
+    //         2 => ChartboostMediationBannerAdSize.Leaderboard,
+    //         1 => ChartboostMediationBannerAdSize.MediumRect,
+    //         _ => ChartboostMediationBannerAdSize.Standard
+    //     };
+    //     var loadRequest = new ChartboostMediationBannerAdLoadRequest(bannerPlacementInputField.text, size);
+    //     
+    //     var screenPos = bannerLocationDropdown.value switch
+    //     {
+    //         0 => ChartboostMediationBannerAdScreenLocation.TopLeft,
+    //         1 => ChartboostMediationBannerAdScreenLocation.TopCenter,
+    //         2 => ChartboostMediationBannerAdScreenLocation.TopRight,
+    //         3 => ChartboostMediationBannerAdScreenLocation.Center,
+    //         4 => ChartboostMediationBannerAdScreenLocation.BottomLeft,
+    //         5 => ChartboostMediationBannerAdScreenLocation.BottomCenter,
+    //         6 => ChartboostMediationBannerAdScreenLocation.BottomRight,
+    //         _ => ChartboostMediationBannerAdScreenLocation.TopCenter
+    //     };
+    //
+    //     _bannerAd.VerticalAlignment = (ChartboostMediationBannerVerticalAlignment)verticalAlignmentDropdown.value;
+    //     _bannerAd.HorizontalAlignment = (ChartboostMediationBannerHorizontalAlignment)horizontalAlignmentDropdown.value;
+    //     
+    //     var result = await _bannerAd.Load(loadRequest, screenPos);
+    //     if (result.Error != null)
+    //     {
+    //         Log($"BannerAd fail to load => {result.Error?.Code} - {result.Error?.Message}");
+    //     }
+    //     
+    //     Debug.Log($"BannerAd loaded successfully with loadId : {result.LoadId}");
+    // }
 
     public void OnHorizontalAlignmentChange()
     {
@@ -262,9 +314,19 @@ public class Demo : MonoBehaviour
         if (_bannerAd != null)
         {
             _bannerAdIsVisible = !_bannerAdIsVisible;
-            // _bannerAd.SetVisibility(_bannerAdIsVisible);
+            _bannerAd.gameObject.SetActive(_bannerAdIsVisible);
         }
         Log("Banner Visibility Toggled");
+    }
+    
+    public void OnToggleBannerDraggabilityClick()
+    {
+        if (_bannerAd != null)
+        {
+            _bannerAdIsDraggable = !_bannerAdIsDraggable;
+            _bannerAd.Draggable = _bannerAdIsDraggable;
+        }
+        Log("Banner Draggability Toggled");
     }
     
     public void OnResetBannerClick()
@@ -274,7 +336,7 @@ public class Demo : MonoBehaviour
             Log("banner ad does not exist");
             return;
         }
-        _bannerAd?.Reset();
+        _bannerAd.ResetAd();
         Log("banner ad has been reset");
     }
 
@@ -286,24 +348,29 @@ public class Demo : MonoBehaviour
             return;
         }
 
-        _bannerAd.Destroy();
+        Destroy(_bannerAd);
         Log("banner ad has been destroyed");
 
     }
 
-    private void WillAppearBanner(IChartboostMediationBannerView bannerAd)
+    private void WillAppearBanner()
     {
-        Log($"WillAppearBanner {JsonConvert.SerializeObject(bannerAd)}");
+        // Log($"WillAppearBanner {JsonConvert.SerializeObject(_bannerAd)}");
     }
     
-    private void DidRecordImpressionBanner(IChartboostMediationBannerView bannerAd)
+    private void DidRecordImpressionBanner()
     {
-        Log($"DidRecordImpressionBanner {JsonConvert.SerializeObject(bannerAd)}");
+        Log($"DidRecordImpressionBanner {JsonConvert.SerializeObject(_bannerAd)}");
     }
 
-    private void DidClickBanner(IChartboostMediationBannerView bannerAd)
+    private void DidClickBanner()
     {
-        Log($"DidClickBanner {JsonConvert.SerializeObject(bannerAd)}");
+        Log($"DidClickBanner {JsonConvert.SerializeObject(_bannerAd)}");
+    }
+    
+    private void DidDragBanner(float x, float y)
+    {
+        
     }
     
     #endregion
