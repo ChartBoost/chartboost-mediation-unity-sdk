@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Chartboost.Banner;
 using Chartboost.Requests;
@@ -9,6 +10,7 @@ using Chartboost.Utilities;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Logger = Chartboost.Utilities.Logger;
 
@@ -24,12 +26,22 @@ namespace Chartboost.AdFormats.Banner.Unity
         public ChartboostMediationUnityBannerAdEvent DidRecordImpression;
         public ChartboostMediationUnityBannerAdDragEvent DidDrag;
         
-        [SerializeField] private string _placementName;
-        [SerializeField] private bool _draggable = true;
-        [SerializeField] private bool _autoLoadOnInit = true;
-        [SerializeField] private bool _resizeToFit;
-        [SerializeField] private ChartboostMediationBannerHorizontalAlignment _horizontalAlignment = ChartboostMediationBannerHorizontalAlignment.Center;
-        [SerializeField] private ChartboostMediationBannerVerticalAlignment _verticalAlignment = ChartboostMediationBannerVerticalAlignment.Center;
+        [SerializeField] 
+        private bool autoLoadOnInit = true;
+
+        [SerializeField] 
+        private string placementName;
+        [SerializeField] 
+        private bool draggable = true;
+        
+        [SerializeField][HideInInspector] 
+        private UnityBannerAdSize size;
+        [SerializeField][HideInInspector] 
+        private bool resizeToFit;
+        [SerializeField][HideInInspector] 
+        private ChartboostMediationBannerHorizontalAlignment horizontalAlignment = ChartboostMediationBannerHorizontalAlignment.Center;
+        [SerializeField][HideInInspector] 
+        private ChartboostMediationBannerVerticalAlignment verticalAlignment = ChartboostMediationBannerVerticalAlignment.Center;
         
         private IChartboostMediationBannerView _bannerView;
 
@@ -61,23 +73,22 @@ namespace Chartboost.AdFormats.Banner.Unity
 
         public string PlacementName
         {
-            get => _placementName;
-            internal set => _placementName = value;
+            get => placementName;
+            internal set => placementName = value;
         }
         public bool Draggable
         {
-            get => _draggable;
+            get => draggable;
             set
             {
-                BannerView.SetDraggability(_draggable);
-                _draggable = value;
+                BannerView.SetDraggability(draggable);
+                draggable = value;
             }
         }
-        public bool ResizeToFit { get => _resizeToFit; set => _resizeToFit = value; }
-        
+        public bool ResizeToFit { get => resizeToFit; set => resizeToFit = value; }
         public async Task<ChartboostMediationBannerAdLoadResult> Load()
         {
-            if (string.IsNullOrEmpty(_placementName))
+            if (string.IsNullOrEmpty(placementName))
             {
                 const string error = "Placement Name is empty or not set in inspector";
                 Logger.LogError("ChartboostMediationUnityBannerAd",  error);
@@ -99,8 +110,16 @@ namespace Chartboost.AdFormats.Banner.Unity
             
             var width = ChartboostMediationConverters.PixelsToNative(layoutParams.width);
             var height = ChartboostMediationConverters.PixelsToNative(layoutParams.height);
-            var size = GetSize(width, height);
-            var loadRequest = new ChartboostMediationBannerAdLoadRequest(_placementName, size);
+
+            var bannerViewSize = this.size switch
+            {
+                UnityBannerAdSize.Standard => ChartboostMediationBannerAdSize.Standard,
+                UnityBannerAdSize.Medium => ChartboostMediationBannerAdSize.MediumRect,
+                UnityBannerAdSize.Leaderboard => ChartboostMediationBannerAdSize.Leaderboard,
+                _ => ChartboostMediationBannerAdSize.Adaptive(width, height)
+            };
+
+            var loadRequest = new ChartboostMediationBannerAdLoadRequest(placementName, bannerViewSize);
             
             var x = ChartboostMediationConverters.PixelsToNative(layoutParams.x);
             var y = ChartboostMediationConverters.PixelsToNative(layoutParams.y);
@@ -121,20 +140,20 @@ namespace Chartboost.AdFormats.Banner.Unity
         public ChartboostMediationBannerAdSize AdSize => BannerView?.AdSize;
         public ChartboostMediationBannerHorizontalAlignment HorizontalAlignment
         {
-            get => _horizontalAlignment;
+            get => horizontalAlignment;
             set
             {
                 BannerView.HorizontalAlignment = value;
-                _horizontalAlignment = value;
+                horizontalAlignment = value;
             }
         }
         public ChartboostMediationBannerVerticalAlignment VerticalAlignment
         {
-            get => _verticalAlignment;
+            get => verticalAlignment;
             set
             {
                 BannerView.VerticalAlignment = value;
-                _verticalAlignment = value;
+                verticalAlignment = value;
             }
         }
         public void ResetAd() => BannerView.Reset();
@@ -162,7 +181,7 @@ namespace Chartboost.AdFormats.Banner.Unity
         {
             if (string.IsNullOrEmpty(error))
             {
-                if (_autoLoadOnInit)
+                if (autoLoadOnInit)
                 {
                     await Load();
                 }
@@ -174,7 +193,12 @@ namespace Chartboost.AdFormats.Banner.Unity
             DidDrag?.Invoke(x, y);
         }
 
-        #endregion 
+        #endregion
+
+        internal void SetUnityBannerAdSize(UnityBannerAdSize size)
+        {
+            this.size = size;
+        }
         private IChartboostMediationBannerView BannerView
         {
             get
@@ -214,4 +238,72 @@ namespace Chartboost.AdFormats.Banner.Unity
         }
         
     }
+    
+    #if UNITY_EDITOR
+
+    public enum UnityBannerAdSize
+    {
+        Adaptive,
+        Standard,
+        Medium,
+        Leaderboard
+    }
+    
+    [CustomEditor(typeof(ChartboostMediationUnityBannerAd))]
+    internal class ChartboostMediationUnityBannerAdEditor : Editor
+    {
+        private SerializedProperty _sizeSP;
+        private SerializedProperty _horizontalAlignmentSP;
+        private SerializedProperty _verticalAlignmentSP;
+        private SerializedProperty _resizeToFitSP;
+        
+        // Fixed
+        private UnityBannerAdSize _size = UnityBannerAdSize.Standard;
+        
+        // Adaptive
+        private bool _resizeToFit;
+        private ChartboostMediationBannerHorizontalAlignment _horizontalAlignment = ChartboostMediationBannerHorizontalAlignment.Center;
+        private ChartboostMediationBannerVerticalAlignment _verticalAlignment = ChartboostMediationBannerVerticalAlignment.Center;
+
+        private void OnEnable()
+        {
+            _sizeSP = serializedObject.FindProperty("size");
+            _horizontalAlignmentSP = serializedObject.FindProperty("horizontalAlignment");
+            _verticalAlignmentSP = serializedObject.FindProperty("verticalAlignment");
+            _resizeToFitSP = serializedObject.FindProperty("resizeToFit");
+
+            _size = (UnityBannerAdSize)_sizeSP.intValue;
+            _resizeToFit = _resizeToFitSP.boolValue;
+            _horizontalAlignment = (ChartboostMediationBannerHorizontalAlignment)_horizontalAlignmentSP.intValue;
+            _verticalAlignment = (ChartboostMediationBannerVerticalAlignment)_verticalAlignmentSP.intValue;
+        }
+
+        public override void OnInspectorGUI()
+        {
+            DrawDefaultInspector();
+
+            _size = (UnityBannerAdSize)EditorGUILayout.EnumPopup("Size", _size);
+            
+            if (_size == (int)UnityBannerAdSize.Adaptive)
+            {
+                _resizeToFit = EditorGUILayout.Toggle("Resize To Fit", _resizeToFit);
+                
+                if (!_resizeToFitSP.boolValue)
+                {
+                    _horizontalAlignment = (ChartboostMediationBannerHorizontalAlignment)EditorGUILayout.EnumPopup("Horizontal Alignment", _horizontalAlignment);
+                    _verticalAlignment = (ChartboostMediationBannerVerticalAlignment)EditorGUILayout.EnumPopup("Vertical Alignment", _verticalAlignment);
+                }
+            }
+            
+            _sizeSP.intValue = (int)_size;
+            _resizeToFitSP.boolValue = _resizeToFit;
+            _horizontalAlignmentSP.intValue = (int)_horizontalAlignment;
+            _verticalAlignmentSP.intValue = (int)_verticalAlignment;
+
+            serializedObject.ApplyModifiedProperties();
+        }
+    }
+    
+    #endif
+    
 }

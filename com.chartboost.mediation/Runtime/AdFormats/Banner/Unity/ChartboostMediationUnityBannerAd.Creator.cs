@@ -37,6 +37,15 @@ namespace Chartboost.AdFormats.Banner.Unity
             rectTransform.anchoredPosition = Vector2.zero;
             
             size ??= ChartboostMediationBannerAdSize.Standard;
+            var unityBannerAdSize = size.Name switch
+            {
+                "STANDARD" => UnityBannerAdSize.Standard,
+                "MEDIUM" => UnityBannerAdSize.Medium,
+                "LEADERBOARD" => UnityBannerAdSize.Leaderboard,
+                _ => UnityBannerAdSize.Adaptive
+            };
+            unityBannerAd.SetUnityBannerAdSize(unityBannerAdSize);
+            
             var canvasScale = canvas.transform.localScale.x;
             var width = ChartboostMediationConverters.NativeToPixels(size.Width)/canvasScale;
             var height = ChartboostMediationConverters.NativeToPixels(size.Height)/canvasScale;
