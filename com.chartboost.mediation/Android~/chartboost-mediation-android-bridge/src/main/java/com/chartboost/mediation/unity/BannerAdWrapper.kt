@@ -46,8 +46,8 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
                 }
             }
 
-            /*override*/ fun onAdViewAdded() {
-                bannerViewListener.onAdViewAdded(this@BannerAdWrapper);
+            override fun onAdViewAdded(placementName: String) {
+                thisWrapper.bannerViewListener?.onAdViewAdded(thisWrapper);
             }
 
             override fun onAdClicked(placementName: String) {
