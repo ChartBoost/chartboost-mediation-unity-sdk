@@ -40,6 +40,10 @@ namespace Chartboost.Platforms.IOS
 
         [DllImport("__Internal")]
         private static extern void _chartboostMediationSetTestMode(bool isTestMode);
+
+        [DllImport("__Internal")]
+        private static extern float _chartboostMediationGetUIScaleFactor();
+        
         #endregion
 
         #region Chartboost Mediation
@@ -143,6 +147,11 @@ namespace Chartboost.Platforms.IOS
             _chartboostMediationSetTestMode(testModeEnabled);
         }
 
+        public static float GetUIScaleFactor()
+        {
+            return _chartboostMediationGetUIScaleFactor();
+        }
+
         public override async Task<ChartboostMediationFullscreenAdLoadResult> LoadFullscreenAd(ChartboostMediationFullscreenAdLoadRequest request)
         {
             if (!CanFetchAd(request.PlacementName))
@@ -163,7 +172,7 @@ namespace Chartboost.Platforms.IOS
 
         public override IChartboostMediationBannerView GetBannerView()
         {
-            var uniqueId = _chartboostMediationCreateBannerView();
+            var uniqueId = _chartboostMediationLoadBannerView(BannerAdDragEvent);
             return new ChartboostMediationBannerViewIOS(uniqueId);
         }
 
@@ -172,7 +181,7 @@ namespace Chartboost.Platforms.IOS
         #endregion
         
         [DllImport("__Internal")]
-        private static extern IntPtr _chartboostMediationCreateBannerView();
+        private static extern IntPtr _chartboostMediationLoadBannerView(ExternChartboostMediationBannerAdDragEvent dragListener);
     }
 }
 #endif

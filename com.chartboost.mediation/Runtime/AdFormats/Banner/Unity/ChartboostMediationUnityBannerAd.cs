@@ -50,8 +50,15 @@ namespace Chartboost.AdFormats.Banner.Unity
         }
 
         public void OnDestroy() => BannerView?.Destroy();
-        #endregion
         
+        #endregion
+
+        public override string ToString()
+        {
+            base.ToString();
+            return JsonConvert.SerializeObject(BannerView);
+        }
+
         public string PlacementName
         {
             get => _placementName;
@@ -83,7 +90,7 @@ namespace Chartboost.AdFormats.Banner.Unity
             {
                 // Note : if rectTransform is part of a layoutgroup then we need wait until the layout is created
                 // https://forum.unity.com/threads/solved-cant-get-the-rect-width-rect-height-of-an-element-when-using-layouts.377953/
-                while (layoutParams.width == 0 && layoutParams.height == 0) // TODO: Find a better approach
+                while (layoutParams.width == 0 && layoutParams.height == 0) // TODO: Find a better approach => use minWidth and minHeight instead of 0s ?
                 {
                     await Task.Yield();
                     layoutParams = recTransform.LayoutParams();
@@ -92,22 +99,7 @@ namespace Chartboost.AdFormats.Banner.Unity
             
             var width = ChartboostMediationConverters.PixelsToNative(layoutParams.width);
             var height = ChartboostMediationConverters.PixelsToNative(layoutParams.height);
-            var size = ChartboostMediationBannerAdSize.Adaptive(width, height);
-            
-            // TODO: Remove
-            if (Math.Abs(width - 320) < .5f && Math.Abs(height - 50) < .5f)
-            {
-                size = ChartboostMediationBannerAdSize.Standard;    
-            }
-            else if (Math.Abs(width - 300) < .5f && Math.Abs(height - 250) < .5f)
-            {
-                size = ChartboostMediationBannerAdSize.MediumRect;    
-            }
-            else if (Math.Abs(width - 728) < .5f && Math.Abs(height - 90) < .5f)
-            {
-                size = ChartboostMediationBannerAdSize.Leaderboard;    
-            }
-            
+            var size = GetSize(width, height);
             var loadRequest = new ChartboostMediationBannerAdLoadRequest(_placementName, size);
             
             var x = ChartboostMediationConverters.PixelsToNative(layoutParams.x);
@@ -117,7 +109,12 @@ namespace Chartboost.AdFormats.Banner.Unity
         }
         
         #region BannerView Wrap
-        public Dictionary<string, string> Keywords => BannerView?.Keywords;
+        public Dictionary<string, string> Keywords
+        {
+            get => BannerView?.Keywords;
+            set => BannerView.Keywords = value;
+        }
+
         public ChartboostMediationBannerAdLoadRequest Request => BannerView?.Request;
         public BidInfo? WinningBidInfo => BannerView?.WinningBidInfo;
         public string LoadId => BannerView?.LoadId;
@@ -193,6 +190,27 @@ namespace Chartboost.AdFormats.Banner.Unity
         
                 return _bannerView;
             }
+        }
+        
+        private ChartboostMediationBannerAdSize GetSize(float width, float height)
+        {
+            var size = ChartboostMediationBannerAdSize.Adaptive(width, height);
+
+            // TODO: Remove?
+            if (Math.Abs(width - 320) < .5f && Math.Abs(height - 50) < .5f)
+            {
+                size = ChartboostMediationBannerAdSize.Standard;
+            }
+            else if (Math.Abs(width - 300) < .5f && Math.Abs(height - 250) < .5f)
+            {
+                size = ChartboostMediationBannerAdSize.MediumRect;
+            }
+            else if (Math.Abs(width - 728) < .5f && Math.Abs(height - 90) < .5f)
+            {
+                size = ChartboostMediationBannerAdSize.Leaderboard;
+            }
+
+            return size;
         }
         
     }

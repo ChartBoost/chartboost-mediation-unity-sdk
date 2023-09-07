@@ -171,10 +171,18 @@ namespace Chartboost.Platforms.IOS
 
         private delegate void ExternChartboostMediationBannerAdEvent(long adHashCode, int eventType);
 
+        private delegate void ExternChartboostMediationBannerAdDragEvent(long adHasCode, float x, float y);
+
         [MonoPInvokeCallback(typeof(ExternChartboostMediationBannerAdEvent))]
         internal static void BannerAdEvents(long adHashCode, int eventType)
         {
             EventProcessor.ProcessChartboostMediationBannerEvent(adHashCode, eventType);
+        }
+
+        [MonoPInvokeCallback(typeof(ExternChartboostMediationBannerAdDragEvent))]
+        internal static void BannerAdDragEvent(long adHashCode, float x, float y)
+        {
+            EventProcessor.ProcessChartboostMediationBannerEvent(adHashCode,(int)EventProcessor.BannerAdEvents.Drag, x, Screen.height - y);
         }
         
 

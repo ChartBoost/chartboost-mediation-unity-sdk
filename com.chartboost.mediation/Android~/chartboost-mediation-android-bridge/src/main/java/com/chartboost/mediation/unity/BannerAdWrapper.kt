@@ -280,8 +280,6 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
             }
         } )
 
-        layout.setBackgroundColor(Color.TRANSPARENT)
-
 
         // Attach the banner layout to the activity.
         val density = displayDensity

@@ -209,8 +209,15 @@ public class Demo : MonoBehaviour
         var size = bannerSizeDropdown.value switch
         {
             // TODO: Add all other adaptive sizes ( rework UI)
-            4 => ChartboostMediationBannerAdSize.Adaptive1X4(100),
-            3 => ChartboostMediationBannerAdSize.Adaptive4X1(400),
+            11 => ChartboostMediationBannerAdSize.Adaptive9X16(400),
+            10 => ChartboostMediationBannerAdSize.Adaptive1X4(400),
+            9 => ChartboostMediationBannerAdSize.Adaptive1X3(400),
+            8 => ChartboostMediationBannerAdSize.Adaptive1X2(400),
+            7 => ChartboostMediationBannerAdSize.Adaptive10X1(400),
+            6 => ChartboostMediationBannerAdSize.Adaptive8X1(400),
+            5 => ChartboostMediationBannerAdSize.Adaptive6X1(400),
+            4 => ChartboostMediationBannerAdSize.Adaptive4X1(400),
+            3 => ChartboostMediationBannerAdSize.Adaptive2X1(400),
             2 => ChartboostMediationBannerAdSize.Leaderboard,
             1 => ChartboostMediationBannerAdSize.MediumRect,
             _ => ChartboostMediationBannerAdSize.Standard
@@ -234,9 +241,11 @@ public class Demo : MonoBehaviour
         _bannerAd.DidClick +=DidClickBanner;
         _bannerAd.DidRecordImpression += DidRecordImpressionBanner;
         _bannerAd.DidDrag += DidDragBanner;
-        
-        _bannerAd.Keywords.Add("bnr_keyword1", "bnr_value1"); 
-        _bannerAd.Keywords.Add("bnr_keyword2", "bnr_value2"); 
+
+        var keywords = _bannerAd.Keywords ??= new Dictionary<string, string>();
+        keywords.Add("bnr_keyword1", "bnr_value1"); 
+        keywords.Add("bnr_keyword2", "bnr_value2");
+        _bannerAd.Keywords = keywords;
 
         _bannerAd.VerticalAlignment = (ChartboostMediationBannerVerticalAlignment)verticalAlignmentDropdown.value;
         _bannerAd.HorizontalAlignment = (ChartboostMediationBannerHorizontalAlignment)horizontalAlignmentDropdown.value;
@@ -348,24 +357,24 @@ public class Demo : MonoBehaviour
             return;
         }
 
-        Destroy(_bannerAd);
+        Destroy(_bannerAd.gameObject);
         Log("banner ad has been destroyed");
 
     }
 
     private void WillAppearBanner()
     {
-        // Log($"WillAppearBanner {JsonConvert.SerializeObject(_bannerAd)}");
+        Log($"WillAppearBanner {_bannerAd}");
     }
     
     private void DidRecordImpressionBanner()
     {
-        Log($"DidRecordImpressionBanner {JsonConvert.SerializeObject(_bannerAd)}");
+        Log($"DidRecordImpressionBanner {_bannerAd}");
     }
 
     private void DidClickBanner()
     {
-        Log($"DidClickBanner {JsonConvert.SerializeObject(_bannerAd)}");
+        Log($"DidClickBanner {_bannerAd}");
     }
     
     private void DidDragBanner(float x, float y)

@@ -1,6 +1,9 @@
 #if UNITY_IPHONE
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -19,7 +22,7 @@ namespace Chartboost.AdFormats.Banner
 {
     internal class ChartboostMediationBannerViewIOS : ChartboostMediationBannerViewBase
     {
-        private Dictionary<string, string> _keywords;
+        private Dictionary<string, string> _keywords = new Dictionary<string, string>();
 
         public ChartboostMediationBannerViewIOS(IntPtr uniqueId) : base(uniqueId)
         {
@@ -31,12 +34,12 @@ namespace Chartboost.AdFormats.Banner
             get => _keywords;
             set
             {
-                _keywords = value;
                 var keywordsJson = string.Empty;
                 if (_keywords.Count > 0)
                     keywordsJson = JsonConvert.SerializeObject(_keywords);
                 
-                _chartboostMediationBannerSetKeywords(UniqueId, keywordsJson);
+                _chartboostMediationBannerViewSetKeywords(UniqueId, keywordsJson);
+                _keywords = value;
             }
         }
         public override ChartboostMediationBannerAdLoadRequest Request { get; protected set; }
@@ -45,7 +48,7 @@ namespace Chartboost.AdFormats.Banner
         {
             get
             {
-                var winningBidJson = _chartboostMediationBannerAdGetWinningBidInfo(UniqueId);
+                var winningBidJson = _chartboostMediationBannerViewGetWinningBidInfo(UniqueId);
                 var winningBid = string.IsNullOrEmpty(winningBidJson) ? new BidInfo() : JsonConvert.DeserializeObject<BidInfo>(winningBidJson);
                 return winningBid;
             }
@@ -62,7 +65,7 @@ namespace Chartboost.AdFormats.Banner
         {
             get
             {
-                var metricsJson = _chartboostMediationBannerAdGetLoadMetrics(UniqueId);
+                var metricsJson = _chartboostMediationBannerViewGetLoadMetrics(UniqueId);
                 var metrics = string.IsNullOrEmpty(metricsJson) ? new Metrics() : JsonConvert.DeserializeObject<Metrics>(metricsJson);
                 return metrics;
             }
@@ -73,7 +76,7 @@ namespace Chartboost.AdFormats.Banner
         {
             get
             {
-                var sizeJson = _chartboostMediationBannerAdGetSize(UniqueId);
+                var sizeJson = _chartboostMediationBannerViewGetSize(UniqueId);
                 var size = string.IsNullOrEmpty(sizeJson) ? new ChartboostMediationBannerAdSize(): JsonConvert.DeserializeObject<ChartboostMediationBannerAdSize>(sizeJson);
                 return size;
             }
@@ -82,14 +85,14 @@ namespace Chartboost.AdFormats.Banner
 
         public override ChartboostMediationBannerHorizontalAlignment HorizontalAlignment
         {
-            get =>  (ChartboostMediationBannerHorizontalAlignment)_chartboostMediationBannerGetHorizontalAlignment(UniqueId);
-            set => _chartboostMediationBannerSetHorizontalAlignment(UniqueId, (int)value);
+            get =>  (ChartboostMediationBannerHorizontalAlignment)_chartboostMediationBannerViewGetHorizontalAlignment(UniqueId);
+            set => _chartboostMediationBannerViewSetHorizontalAlignment(UniqueId, (int)value);
         }
 
         public override ChartboostMediationBannerVerticalAlignment VerticalAlignment
         {
-            get =>  (ChartboostMediationBannerVerticalAlignment)_chartboostMediationBannerGetVerticalAlignment(UniqueId);
-            set => _chartboostMediationBannerSetVerticalAlignment(UniqueId, (int)value);
+            get =>  (ChartboostMediationBannerVerticalAlignment)_chartboostMediationBannerViewGetVerticalAlignment(UniqueId);
+            set => _chartboostMediationBannerViewSetVerticalAlignment(UniqueId, (int)value);
         }
 
         public override async Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, ChartboostMediationBannerAdScreenLocation screenLocation)
@@ -104,58 +107,97 @@ namespace Chartboost.AdFormats.Banner
             var sizeWidth = request.Size.Width;
             var sizeHeight = request.Size.Height;
             
-            _chartboostMediationBannerLoad(UniqueId, placement, sizeName, sizeWidth, sizeHeight, (int)screenLocation, hashCode, BannerAdLoadResultCallbackProxy);
+            _chartboostMediationBannerViewLoadAdWithScreenPos(UniqueId, placement, sizeName, sizeWidth, sizeHeight, (int)screenLocation, hashCode, BannerAdLoadResultCallbackProxy);
             
             var result = await proxy;
             return result;
         }
 
+        public override async Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, float x, float y)
+        {
+            await base.Load(request, x, y);
+            var (proxy, hashCode) = _setupProxy<ChartboostMediationBannerAdLoadResult>();
+            CacheManager.TrackBannerAdLoadRequest(hashCode, request);
+
+            var placement = request.PlacementName;
+            var sizeName = request.Size.Name;
+            var sizeWidth = request.Size.Width;
+            var sizeHeight = request.Size.Height;
+            // y is counted from top in iOS whereas Unity counts it from bottom
+            y = ChartboostMediationConverters.PixelsToNative(Screen.height) - y;
+            _chartboostMediationBannerViewLoadAdWithXY(UniqueId, placement, sizeName, sizeWidth, sizeHeight, x, y, hashCode, BannerAdLoadResultCallbackProxy);
+            
+            var result = await proxy;
+            return result;
+        }
+
+        public override void SetDraggability(bool canDrag)
+        {
+            base.SetDraggability(canDrag);
+            _chartboostMediationBannerViewSetDraggability(UniqueId, canDrag);
+        }
+
+        public override void SetVisibility(bool visibility)
+        {
+            base.SetVisibility(visibility);
+            _chartboostMediationBannerViewSetVisibility(UniqueId, visibility);
+        }
+
         public override void Reset()
         {
             base.Reset();
-            _chartboostMediationBannerReset(UniqueId);
+            _chartboostMediationBannerViewReset(UniqueId);
         }
 
         public override void Destroy()
         {
             base.Destroy();
-            _chartboostMediationBannerDestroy(UniqueId);   
+            _chartboostMediationBannerViewDestroy(UniqueId);   
         }
 
         #region Native
         
         [DllImport("__Internal")]
-        private static extern void _chartboostMediationBannerLoad(IntPtr UniqueId, string placementName, string sizeName, float width, float height, int screenLocation, int hashCode, ExternChartboostMediationBannerAdLoadResultEvent callback);
+        private static extern void _chartboostMediationBannerViewLoadAdWithScreenPos(IntPtr uniqueId, string placementName, string sizeName, float width, float height, int screenLocation, int hashCode, ExternChartboostMediationBannerAdLoadResultEvent callback);
 
         [DllImport("__Internal")]
-        private static extern void _chartboostMediationBannerSetKeywords(IntPtr UniqueId, string keywords);
+        private static extern void _chartboostMediationBannerViewLoadAdWithXY(IntPtr uniqueId, string placementName, string sizeName, float width, float height, float x, float y, int hashCode, ExternChartboostMediationBannerAdLoadResultEvent callback);
 
         [DllImport("__Internal")]
-        private static extern string _chartboostMediationBannerAdGetSize(IntPtr UniqueId);
+        private static extern void _chartboostMediationBannerViewSetKeywords(IntPtr uniqueId, string keywords);
+
+        [DllImport("__Internal")]
+        private static extern string _chartboostMediationBannerViewGetSize(IntPtr uniqueId);
 
         [DllImport("__Internal")] [CanBeNull]
-        private static extern string _chartboostMediationBannerAdGetWinningBidInfo(IntPtr UniqueId);
+        private static extern string _chartboostMediationBannerViewGetWinningBidInfo(IntPtr uniqueId);
 
         [DllImport("__Internal")]
-        private static extern string _chartboostMediationBannerAdGetLoadMetrics(IntPtr UniqueId);
+        private static extern string _chartboostMediationBannerViewGetLoadMetrics(IntPtr uniqueId);
         
         [DllImport("__Internal")]
-        private static extern void _chartboostMediationBannerSetHorizontalAlignment(IntPtr UniqueId, int horizontalAlignment );
+        private static extern void _chartboostMediationBannerViewSetHorizontalAlignment(IntPtr uniqueId, int horizontalAlignment );
         
         [DllImport("__Internal")]
-        private static extern int _chartboostMediationBannerGetHorizontalAlignment(IntPtr UniqueId);
+        private static extern int _chartboostMediationBannerViewGetHorizontalAlignment(IntPtr uniqueId);
         
         [DllImport("__Internal")]
-        private static extern void _chartboostMediationBannerSetVerticalAlignment(IntPtr UniqueId, int verticalAlignment );
+        private static extern void _chartboostMediationBannerViewSetVerticalAlignment(IntPtr uniqueId, int verticalAlignment );
         
         [DllImport("__Internal")]
-        private static extern int _chartboostMediationBannerGetVerticalAlignment(IntPtr UniqueId);
+        private static extern int _chartboostMediationBannerViewGetVerticalAlignment(IntPtr uniqueId);
+        
+        [DllImport("__Internal")]
+        private static extern void _chartboostMediationBannerViewSetDraggability(IntPtr uniqueId, bool canDrag );
 
         [DllImport("__Internal")]
-        private static extern void _chartboostMediationBannerReset(IntPtr uniqueId);
+        private static extern void _chartboostMediationBannerViewSetVisibility(IntPtr uniqueId, bool visible );
         
         [DllImport("__Internal")]
-        private static extern void _chartboostMediationBannerDestroy(IntPtr uniqueId);
+        private static extern void _chartboostMediationBannerViewReset(IntPtr uniqueId);
+        
+        [DllImport("__Internal")]
+        private static extern void _chartboostMediationBannerViewDestroy(IntPtr uniqueId);
         
         #endregion
     }
