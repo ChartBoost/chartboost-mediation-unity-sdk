@@ -19,7 +19,7 @@ namespace Chartboost.AdFormats.Banner
 {
     internal class ChartboostMediationBannerViewIOS : ChartboostMediationBannerViewBase
     {
-        private Dictionary<string, string> _keywords;
+        private Dictionary<string, string> _keywords = new Dictionary<string, string>();
 
         public ChartboostMediationBannerViewIOS(IntPtr uniqueId) : base(uniqueId)
         {
@@ -31,12 +31,13 @@ namespace Chartboost.AdFormats.Banner
             get => _keywords;
             set
             {
-                _keywords = value;
                 var keywordsJson = string.Empty;
                 if (_keywords.Count > 0)
                     keywordsJson = JsonConvert.SerializeObject(_keywords);
                 
                 _chartboostMediationBannerSetKeywords(UniqueId, keywordsJson);
+                _keywords = value;
+
             }
         }
         public override ChartboostMediationBannerAdLoadRequest Request { get; protected set; }

@@ -155,6 +155,9 @@ namespace Chartboost.AdFormats.Banner
 
             androidBannerView.LoadRequest.Complete(loadResult);
         }
+        
+        private void onAdViewAdded(AndroidJavaObject ad) =>
+            EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Appear);
 
         private void onAdRefreshed(AndroidJavaObject ad) =>
             EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Appear);
