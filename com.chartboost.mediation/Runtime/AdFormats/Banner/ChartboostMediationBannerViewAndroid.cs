@@ -97,13 +97,12 @@ namespace Chartboost.AdFormats.Banner
 
             if (LoadRequest != null)
             {
-                Logger.LogWarning(LogTag, "A new load is triggered while the previous load is not yet complete");
+                Logger.LogWarning(LogTag, "A new load is triggered while the previous load is not yet complete. Discarding previous load.");
+                LoadRequest = null;
             }
-            else
-            {
-                LoadRequest = new Later<ChartboostMediationBannerAdLoadResult>();
-                _bannerAd.Call("load", request.PlacementName, request.Size.Name, request.Size.Width, request.Size.Height, (int)screenLocation);
-            }
+            
+            LoadRequest = new Later<ChartboostMediationBannerAdLoadResult>();
+            _bannerAd.Call("load", request.PlacementName, request.Size.Name, request.Size.Width, request.Size.Height, (int)screenLocation);
             
             var result = await LoadRequest;
             LoadRequest = null;
@@ -117,17 +116,15 @@ namespace Chartboost.AdFormats.Banner
 
             if (LoadRequest != null)
             {
-                Logger.LogWarning(LogTag, "A new load is triggered while the previous load is not yet complete");
-            }
-            else
-            {
-                LoadRequest = new Later<ChartboostMediationBannerAdLoadResult>();
-                
-                // y is counted from top in Android whereas Unity counts it from bottom
-                y = ChartboostMediationConverters.PixelsToNative(Screen.height) - y;
-                _bannerAd.Call("load", request.PlacementName, request.Size.Name, request.Size.Width, request.Size.Height, x, y);
+                Logger.LogWarning(LogTag, "A new load is triggered while the previous load is not yet complete. Discarding previous load.");
+                LoadRequest = null;
             }
             
+            LoadRequest = new Later<ChartboostMediationBannerAdLoadResult>();
+            // y is counted from top in Android whereas Unity counts it from bottom
+            y = ChartboostMediationConverters.PixelsToNative(Screen.height) - y;
+            _bannerAd.Call("load", request.PlacementName, request.Size.Name, request.Size.Width, request.Size.Height, x, y);
+
             var result = await LoadRequest;
             LoadRequest = null;
             return result;
