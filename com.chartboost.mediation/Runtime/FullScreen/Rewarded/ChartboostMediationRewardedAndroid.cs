@@ -8,7 +8,9 @@ namespace Chartboost.FullScreen.Rewarded
     /// <summary>
     /// Chartboost Mediation rewarded ad object for Android.
     /// </summary>
+    #pragma warning disable CS0618
     internal sealed class ChartboostMediationRewardedAndroid : ChartboostMediationRewardedBase
+    #pragma warning restore CS0618
     {
         private readonly AndroidJavaObject _androidAd;
         private readonly int _uniqueId;

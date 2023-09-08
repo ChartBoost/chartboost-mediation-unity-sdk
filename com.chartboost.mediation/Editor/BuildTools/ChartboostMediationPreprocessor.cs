@@ -58,6 +58,7 @@ namespace Chartboost.Editor.BuildTools
                 }
                 catch (InvalidOperationException googleAppIdException)
                 {
+                    Chartboost.Utilities.Logger.LogError("[ChartboostMediationPreprocessor]",googleAppIdException.Message);
                     try
                     {
                         var applicationNode = androidManifest.Descendants("application").First();
@@ -66,7 +67,7 @@ namespace Chartboost.Editor.BuildTools
                     }
                     catch (InvalidOperationException applicationNodeException)
                     {
-                        Debug.LogError("[ChartboostMediationPreprocessor] Could not find an application element in AndroidManifest.xml, your AndroidManifest might be malformed.");
+                        Debug.LogError($"[ChartboostMediationPreprocessor] Could not find an application element in AndroidManifest.xml, your AndroidManifest might be malformed. \n{applicationNodeException.Message}");
                     }
                 }
                 return true;
