@@ -1,21 +1,25 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Chartboost.Banner;
 using Chartboost.Requests;
 using Chartboost.Results;
 using Chartboost.Utilities;
 using Newtonsoft.Json;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Logger = Chartboost.Utilities.Logger;
 
 namespace Chartboost.AdFormats.Banner.Unity
 {
+    public enum UnityBannerAdSize
+    {
+        Adaptive,
+        Standard,
+        Medium,
+        Leaderboard
+    }
+    
     public delegate void ChartboostMediationUnityBannerAdEvent();
     public delegate void ChartboostMediationUnityBannerAdDragEvent(float x, float y);
     
@@ -133,7 +137,6 @@ namespace Chartboost.AdFormats.Banner.Unity
             get => BannerView?.Keywords;
             set => BannerView.Keywords = value;
         }
-
         public ChartboostMediationBannerAdLoadRequest Request => BannerView?.Request;
         public BidInfo? WinningBidInfo => BannerView?.WinningBidInfo;
         public string LoadId => BannerView?.LoadId;
@@ -195,7 +198,7 @@ namespace Chartboost.AdFormats.Banner.Unity
 
         #endregion
 
-        internal void SetUnityBannerAdSize(UnityBannerAdSize size)
+        private void SetUnityBannerAdSize(UnityBannerAdSize size)
         {
             this.size = size;
         }
@@ -238,72 +241,4 @@ namespace Chartboost.AdFormats.Banner.Unity
         }
         
     }
-    
-    #if UNITY_EDITOR
-
-    public enum UnityBannerAdSize
-    {
-        Adaptive,
-        Standard,
-        Medium,
-        Leaderboard
-    }
-    
-    [CustomEditor(typeof(ChartboostMediationUnityBannerAd))]
-    internal class ChartboostMediationUnityBannerAdEditor : Editor
-    {
-        private SerializedProperty _sizeSP;
-        private SerializedProperty _horizontalAlignmentSP;
-        private SerializedProperty _verticalAlignmentSP;
-        private SerializedProperty _resizeToFitSP;
-        
-        // Fixed
-        private UnityBannerAdSize _size = UnityBannerAdSize.Standard;
-        
-        // Adaptive
-        private bool _resizeToFit;
-        private ChartboostMediationBannerHorizontalAlignment _horizontalAlignment = ChartboostMediationBannerHorizontalAlignment.Center;
-        private ChartboostMediationBannerVerticalAlignment _verticalAlignment = ChartboostMediationBannerVerticalAlignment.Center;
-
-        private void OnEnable()
-        {
-            _sizeSP = serializedObject.FindProperty("size");
-            _horizontalAlignmentSP = serializedObject.FindProperty("horizontalAlignment");
-            _verticalAlignmentSP = serializedObject.FindProperty("verticalAlignment");
-            _resizeToFitSP = serializedObject.FindProperty("resizeToFit");
-
-            _size = (UnityBannerAdSize)_sizeSP.intValue;
-            _resizeToFit = _resizeToFitSP.boolValue;
-            _horizontalAlignment = (ChartboostMediationBannerHorizontalAlignment)_horizontalAlignmentSP.intValue;
-            _verticalAlignment = (ChartboostMediationBannerVerticalAlignment)_verticalAlignmentSP.intValue;
-        }
-
-        public override void OnInspectorGUI()
-        {
-            DrawDefaultInspector();
-
-            _size = (UnityBannerAdSize)EditorGUILayout.EnumPopup("Size", _size);
-            
-            if (_size == (int)UnityBannerAdSize.Adaptive)
-            {
-                _resizeToFit = EditorGUILayout.Toggle("Resize To Fit", _resizeToFit);
-                
-                if (!_resizeToFitSP.boolValue)
-                {
-                    _horizontalAlignment = (ChartboostMediationBannerHorizontalAlignment)EditorGUILayout.EnumPopup("Horizontal Alignment", _horizontalAlignment);
-                    _verticalAlignment = (ChartboostMediationBannerVerticalAlignment)EditorGUILayout.EnumPopup("Vertical Alignment", _verticalAlignment);
-                }
-            }
-            
-            _sizeSP.intValue = (int)_size;
-            _resizeToFitSP.boolValue = _resizeToFit;
-            _horizontalAlignmentSP.intValue = (int)_horizontalAlignment;
-            _verticalAlignmentSP.intValue = (int)_verticalAlignment;
-
-            serializedObject.ApplyModifiedProperties();
-        }
-    }
-    
-    #endif
-    
 }

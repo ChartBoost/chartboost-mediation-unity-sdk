@@ -2,6 +2,7 @@ using Chartboost.Banner;
 using Chartboost.Utilities;
 using UnityEditor;
 using UnityEngine;
+using static Chartboost.Utilities.Constants;
 
 namespace Chartboost.AdFormats.Banner.Unity
 {
@@ -36,7 +37,7 @@ namespace Chartboost.AdFormats.Banner.Unity
             var rectTransform = unityBannerAd.gameObject.AddComponent<RectTransform>();
             rectTransform.anchoredPosition = Vector2.zero;
             
-            size ??= ChartboostMediationBannerAdSize.Standard;
+            size ??= ChartboostMediationBannerAdSize.Adaptive(BannerSize.STANDARD.Item1, BannerSize.STANDARD.Item2);
             var unityBannerAdSize = size.Name switch
             {
                 "STANDARD" => UnityBannerAdSize.Standard,
