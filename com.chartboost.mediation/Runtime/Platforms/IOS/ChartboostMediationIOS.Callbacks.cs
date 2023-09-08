@@ -159,7 +159,7 @@ namespace Chartboost.Platforms.IOS
                     var error = new ChartboostMediationError(code, message);
                     adLoadResult = new ChartboostMediationBannerAdLoadResult(error);
                     ResolveCallbackProxy(hashCode, adLoadResult);
-                    CacheManager.ReleaseFullscreenAdLoadRequest(hashCode);
+                    CacheManager.ReleaseBannerAdLoadRequest(hashCode);
                     return;
                 }
                 var metrics = string.IsNullOrEmpty(metricsJson)? new Metrics() : JsonConvert.DeserializeObject<Metrics>(metricsJson);
