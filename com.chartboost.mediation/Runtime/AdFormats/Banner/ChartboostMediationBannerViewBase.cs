@@ -12,7 +12,6 @@ using Logger = Chartboost.Utilities.Logger;
 
 namespace Chartboost.AdFormats.Banner
 {
-    [Serializable]
     internal abstract class ChartboostMediationBannerViewBase : IChartboostMediationBannerView
     {
         public event ChartboostMediationBannerEvent WillAppear;
@@ -23,21 +22,11 @@ namespace Chartboost.AdFormats.Banner
         protected static string LogTag = "ChartboostMediationBanner (Base)";
         protected IntPtr UniqueId { get; set; }
 
-        protected ChartboostMediationBannerViewBase() => Initialize();
-        
+        protected ChartboostMediationBannerViewBase() { }
         protected ChartboostMediationBannerViewBase(IntPtr uniqueId)
         {
             this.UniqueId = uniqueId;
             CacheManager.TrackBannerAd(uniqueId.ToInt64(), this);
-            // Initialize();
-        }
-
-        private void Initialize()
-        {
-            AdSize = new ChartboostMediationBannerAdSize();
-            Keywords = new Dictionary<string, string>();
-            HorizontalAlignment = ChartboostMediationBannerHorizontalAlignment.Center;
-            VerticalAlignment = ChartboostMediationBannerVerticalAlignment.Center;
         }
 
         public abstract Dictionary<string, string> Keywords { get; set; } 

@@ -40,14 +40,14 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
                 thisWrapper.winningBidInfo = winningBidInfo;
 
                 error?.let { err ->
-                    thisWrapper.bannerViewListener?.onAdCached(thisWrapper, err.message)
+                    thisListener?.onAdCached(thisWrapper, err.message)
                 } ?: run {
-                    thisWrapper.bannerViewListener?.onAdCached(thisWrapper, "");
+                    thisListener?.onAdCached(thisWrapper, "");
                 }
             }
 
             override fun onAdViewAdded(placementName: String) {
-                thisWrapper.bannerViewListener?.onAdViewAdded(thisWrapper);
+                thisListener?.onAdViewAdded(thisWrapper);
             }
 
             override fun onAdClicked(placementName: String) {
@@ -55,7 +55,7 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
             }
 
             override fun onAdImpressionRecorded(placementName: String) {
-                thisWrapper.bannerViewListener?.onAdImpressionRecorded(thisWrapper);
+                thisListener?.onAdImpressionRecorded(thisWrapper);
             }
         }
     }
