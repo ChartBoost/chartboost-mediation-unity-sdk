@@ -37,8 +37,8 @@ public class Demo : MonoBehaviour
     private ChartboostMediationUnityBannerAd _bannerAd;
     public Dropdown horizontalAlignmentDropdown;
     public Dropdown verticalAlignmentDropdown;
-    private bool _bannerAdIsVisible;
-    private bool _bannerAdIsDraggable;
+    private bool _bannerAdIsVisible = true;
+    private bool _bannerAdIsDraggable = true;
 
     public ScrollRect outputTextScrollRect;
     public Text outputText;

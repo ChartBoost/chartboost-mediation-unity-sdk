@@ -6646,7 +6646,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1132835359}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.11915107
+  m_Size: 0.10117103
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -7546,8 +7546,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 607549598}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: OnToggleBannerVisibilityClick
+        m_TargetAssemblyTypeName: Demo, Assembly-CSharp
+        m_MethodName: OnToggleBannerDraggabilityClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

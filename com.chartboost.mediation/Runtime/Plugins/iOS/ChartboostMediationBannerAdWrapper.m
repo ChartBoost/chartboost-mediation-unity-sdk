@@ -36,7 +36,10 @@
 
 
 - (void)handlePan:(UIPanGestureRecognizer *)gr
-{    
+{
+    if(!self.canDrag)
+        return;
+        
     CGPoint translation = [gr translationInView:gr.view.superview];
     CGPoint center = gr.view.center;
     center.x += translation.x;
@@ -47,11 +50,8 @@
     float scale = UIScreen.mainScreen.scale;
     float x = gr.view.frame.origin.x * scale;
     float y = gr.view.frame.origin.y * scale;
-    
-    if(self.canDrag)
-    {
-        self.dragListener((__bridge void*)self, x, y);
-    }
+        
+    self.dragListener((__bridge void*)self, x, y);
 }
 
 @end

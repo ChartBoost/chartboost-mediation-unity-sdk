@@ -76,7 +76,7 @@ namespace Chartboost.AdFormats.Banner.Unity
             get => draggable;
             set
             {
-                BannerView.SetDraggability(draggable);
+                BannerView.SetDraggability(value);
                 draggable = value;
             }
         }
@@ -185,6 +185,14 @@ namespace Chartboost.AdFormats.Banner.Unity
         private void OnClick(IChartboostMediationBannerView bannerView) => DidClick?.Invoke();
         private void OnDrag(IChartboostMediationBannerView bannerView, float x, float y)
         {
+            // x,y obtained from native is for top left corner (x = 0,y = 1)
+            // RectTransform pivot may or may not be top-left (it's usually at center)
+            var pivot = GetComponent<RectTransform>().pivot;
+            var widthInPixels = ChartboostMediationConverters.NativeToPixels(AdSize.Width);
+            var heightInPixels = ChartboostMediationConverters.NativeToPixels(AdSize.Height);
+            x += widthInPixels * pivot.x; // top-left x is 0
+            y += heightInPixels * (pivot.y - 1); // top-left y is 1
+
             transform.position = new Vector3(x, y, 0);
             DidDrag?.Invoke(x, y);
         }
