@@ -214,6 +214,9 @@ namespace Chartboost.AdFormats.Banner.Unity
                     _bannerView.DidClick += OnClick;
                     _bannerView.DidRecordImpression += OnRecordImpression;
                     _bannerView.DidDrag += OnDrag;
+                    
+                    _bannerView.SetVisibility(gameObject.activeSelf);
+                    _bannerView.SetDraggability(Draggable);
                 }
         
                 return _bannerView;

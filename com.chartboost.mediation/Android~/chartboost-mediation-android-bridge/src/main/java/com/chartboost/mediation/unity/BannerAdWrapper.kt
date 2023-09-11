@@ -27,8 +27,8 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
 
     fun setListener(bannerViewListener: ChartboostMediationBannerViewListener){
         this.bannerViewListener = bannerViewListener;
-        var thisWrapper = this@BannerAdWrapper;
-        var thisListener = this@BannerAdWrapper.bannerViewListener;
+        val thisWrapper = this@BannerAdWrapper;
+        val thisListener = this@BannerAdWrapper.bannerViewListener;
         ad.heliumBannerAdListener = object : HeliumBannerAdListener {
             override fun onAdCached(
                 placementName: String,
@@ -38,7 +38,6 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
             ) {
                 thisWrapper.loadId = loadId;
                 thisWrapper.winningBidInfo = winningBidInfo;
-
                 error?.let { err ->
                     thisListener?.onAdCached(thisWrapper, err.message)
                 } ?: run {

@@ -205,18 +205,20 @@ public class Demo : MonoBehaviour
     {
         if(_bannerAd != null)
             Destroy(_bannerAd.gameObject);
+
+        var screenWidthNative = ChartboostMediationConverters.PixelsToNative(Screen.width);
         
         var size = bannerSizeDropdown.value switch
         {
-            11 => ChartboostMediationBannerAdSize.Adaptive9X16(400),
-            10 => ChartboostMediationBannerAdSize.Adaptive1X4(400),
-            9 => ChartboostMediationBannerAdSize.Adaptive1X3(400),
-            8 => ChartboostMediationBannerAdSize.Adaptive1X2(400),
-            7 => ChartboostMediationBannerAdSize.Adaptive10X1(400),
-            6 => ChartboostMediationBannerAdSize.Adaptive8X1(400),
-            5 => ChartboostMediationBannerAdSize.Adaptive6X1(400),
-            4 => ChartboostMediationBannerAdSize.Adaptive4X1(400),
-            3 => ChartboostMediationBannerAdSize.Adaptive2X1(400),
+            11 => ChartboostMediationBannerAdSize.Adaptive9X16(screenWidthNative),
+            10 => ChartboostMediationBannerAdSize.Adaptive1X4(screenWidthNative),
+            9 => ChartboostMediationBannerAdSize.Adaptive1X3(screenWidthNative),
+            8 => ChartboostMediationBannerAdSize.Adaptive1X2(screenWidthNative),
+            7 => ChartboostMediationBannerAdSize.Adaptive10X1(screenWidthNative),
+            6 => ChartboostMediationBannerAdSize.Adaptive8X1(screenWidthNative),
+            5 => ChartboostMediationBannerAdSize.Adaptive6X1(screenWidthNative),
+            4 => ChartboostMediationBannerAdSize.Adaptive4X1(screenWidthNative),
+            3 => ChartboostMediationBannerAdSize.Adaptive2X1(screenWidthNative),
             2 => ChartboostMediationBannerAdSize.Leaderboard,
             1 => ChartboostMediationBannerAdSize.MediumRect,
             _ => ChartboostMediationBannerAdSize.Standard
