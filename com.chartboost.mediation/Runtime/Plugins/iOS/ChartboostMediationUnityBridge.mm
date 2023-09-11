@@ -928,6 +928,7 @@ void _chartboostMediationBannerViewLoadAdWithScreenPos(const void *uniqueId, con
         case 1 : size = [ChartboostMediationBannerSize standard]; break;
         case 2 : size = [ChartboostMediationBannerSize medium]; break;
         case 3 : size = [ChartboostMediationBannerSize leaderboard]; break;
+        default: size =  [ChartboostMediationBannerSize standard]; break;
     }
     
     ChartboostMediationBannerLoadRequest *loadRequest = [[ChartboostMediationBannerLoadRequest alloc] initWithPlacement:GetStringParam(placementName) size:size];
@@ -962,6 +963,7 @@ void _chartboostMediationBannerViewLoadAdWithXY(const void *uniqueId, const char
         case 1 : size = [ChartboostMediationBannerSize standard]; break;
         case 2 : size = [ChartboostMediationBannerSize medium]; break;
         case 3 : size = [ChartboostMediationBannerSize leaderboard]; break;
+        default: size =  [ChartboostMediationBannerSize standard]; break;
     }
     
     ChartboostMediationBannerLoadRequest *loadRequest = [[ChartboostMediationBannerLoadRequest alloc] initWithPlacement:GetStringParam(placementName) size:size];
@@ -987,14 +989,8 @@ void _chartboostMediationBannerViewLoadAdWithXY(const void *uniqueId, const char
 
 void _chartboostMediationBannerViewSetKeywords(const void* uniqueId, const char * keywords){
     ChartboostMediationBannerView *ad = _getBannerView(uniqueId);
-    
-    
     NSMutableDictionary *formattedKeywords = objFromJsonString<NSMutableDictionary *>(keywords);
-//    NSMutableDictionary *adKeywords = ad.keywords == nil ? [[NSMutableDictionary alloc] init] : [ad.keywords mutableCopy];
     ad.keywords = formattedKeywords;
-        
-    NSLog(@"ad.keywords count : %lu", ad.keywords.count);
-    NSLog(@"keys : %@", [ad.keywords allKeys]);
 }
 
 const char * _chartboostMediationBannerViewGetSize(const void* uniqueId){
