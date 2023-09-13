@@ -18,7 +18,7 @@ using UnityEngine.UI;
 public class Demo : MonoBehaviour
 {
     private const string DefaultPlacementFullscreen = "CBRewarded";
-    private const string DefaultPlacementBanner = "AllNetworkBanner";
+    private const string DefaultPlacementBanner = "ACAdaptiveBanner";
     private const string DefaultUserIdentifier = "123456";
     private const string DefaultFullscreenAdCustomData = "{\"testkey\":\"testvalue\"}";
 
@@ -37,6 +37,7 @@ public class Demo : MonoBehaviour
     private ChartboostMediationUnityBannerAd _bannerAd;
     public Dropdown horizontalAlignmentDropdown;
     public Dropdown verticalAlignmentDropdown;
+    public Dropdown resizeDropdown;
     private bool _bannerAdIsVisible = true;
     private bool _bannerAdIsDraggable = true;
 
@@ -44,6 +45,7 @@ public class Demo : MonoBehaviour
     public Text outputText;
 
     public GameObject objectToDestroyForTest;
+    
 
     #region Lifecycle
     private void Awake()
@@ -91,6 +93,7 @@ public class Demo : MonoBehaviour
         ChartboostMediation.SetSubjectToGDPR(false);
         ChartboostMediation.SetSubjectToCoppa(false);
         ChartboostMediation.SetUserHasGivenConsent(true);
+        ChartboostMediation.SetTestMode(true);
     }
 
     private void DidReceiveImpressionLevelRevenueData(string placement, Hashtable impressionData)
@@ -206,19 +209,19 @@ public class Demo : MonoBehaviour
         if(_bannerAd != null)
             Destroy(_bannerAd.gameObject);
 
-        var screenWidthNative = ChartboostMediationConverters.PixelsToNative(Screen.width);
+        var widthNative = ChartboostMediationConverters.PixelsToNative(bannerPanel.GetComponent<RectTransform>().LayoutParams().width);
         
         var size = bannerSizeDropdown.value switch
         {
-            11 => ChartboostMediationBannerAdSize.Adaptive9X16(screenWidthNative),
-            10 => ChartboostMediationBannerAdSize.Adaptive1X4(screenWidthNative),
-            9 => ChartboostMediationBannerAdSize.Adaptive1X3(screenWidthNative),
-            8 => ChartboostMediationBannerAdSize.Adaptive1X2(screenWidthNative),
-            7 => ChartboostMediationBannerAdSize.Adaptive10X1(screenWidthNative),
-            6 => ChartboostMediationBannerAdSize.Adaptive8X1(screenWidthNative),
-            5 => ChartboostMediationBannerAdSize.Adaptive6X1(screenWidthNative),
-            4 => ChartboostMediationBannerAdSize.Adaptive4X1(screenWidthNative),
-            3 => ChartboostMediationBannerAdSize.Adaptive2X1(screenWidthNative),
+            11 => ChartboostMediationBannerAdSize.Adaptive9X16(widthNative),
+            10 => ChartboostMediationBannerAdSize.Adaptive1X4(widthNative),
+            9 => ChartboostMediationBannerAdSize.Adaptive1X3(widthNative),
+            8 => ChartboostMediationBannerAdSize.Adaptive1X2(widthNative),
+            7 => ChartboostMediationBannerAdSize.Adaptive10X1(widthNative),
+            6 => ChartboostMediationBannerAdSize.Adaptive8X1(widthNative),
+            5 => ChartboostMediationBannerAdSize.Adaptive6X1(widthNative),
+            4 => ChartboostMediationBannerAdSize.Adaptive4X1(widthNative),
+            3 => ChartboostMediationBannerAdSize.Adaptive2X1(widthNative),
             2 => ChartboostMediationBannerAdSize.Leaderboard,
             1 => ChartboostMediationBannerAdSize.MediumRect,
             _ => ChartboostMediationBannerAdSize.Standard
@@ -236,6 +239,8 @@ public class Demo : MonoBehaviour
             _ => ChartboostMediationBannerAdScreenLocation.TopCenter
         };
         
+        
+        
         Log($"Creating new Unity banner ad");
         _bannerAd = ChartboostMediation.GetUnityBannerAd(bannerPlacementInputField.text, true, size, screenPos);
         _bannerAd.WillAppear += WillAppearBanner;
@@ -251,6 +256,17 @@ public class Demo : MonoBehaviour
         _bannerAd.VerticalAlignment = (ChartboostMediationBannerVerticalAlignment)verticalAlignmentDropdown.value;
         _bannerAd.HorizontalAlignment = (ChartboostMediationBannerHorizontalAlignment)horizontalAlignmentDropdown.value;
         
+        var resizeAxis = resizeDropdown.value switch
+        {
+            0 => ChartboostMediationBannerResizeAxis.Horizontal,
+            1 => ChartboostMediationBannerResizeAxis.Vertical,
+            _ => ChartboostMediationBannerResizeAxis.Both
+        };
+
+        var shouldResize = resizeDropdown.value != 3;   // 3 => "No Resize"
+        _bannerAd.ResizeAxis = resizeAxis;
+        _bannerAd.ResizeToFit = shouldResize;
+        
         // TODO: Debug mode (Remove)
         var image =_bannerAd.gameObject.AddComponent<Image>();
         image.color = new Color(0.25f,1,0.25f, .25f);
@@ -258,7 +274,7 @@ public class Demo : MonoBehaviour
         var result = await _bannerAd.Load();
         Log(result.Error == null ? "Successfully loaded banner" : result.Error?.Message);
 
-        _bannerAd.ResizeToFit = true;
+        
     }
 
     public void OnHorizontalAlignmentChange()
@@ -329,7 +345,7 @@ public class Demo : MonoBehaviour
     {
         Log($"DidClickBanner {_bannerAd}");
     }
-    
+
     private void DidDragBanner(float x, float y)
     {
         

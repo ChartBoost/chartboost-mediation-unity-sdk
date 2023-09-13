@@ -40,7 +40,9 @@ namespace Chartboost.AdFormats.Banner.Unity
         [SerializeField][HideInInspector] 
         private UnityBannerAdSize size;
         [SerializeField][HideInInspector] 
-        private bool resizeToFit;
+        private bool resizeToFit = false;
+        [SerializeField][HideInInspector] 
+        private ChartboostMediationBannerResizeAxis resizeAxis;
         [SerializeField][HideInInspector] 
         private ChartboostMediationBannerHorizontalAlignment horizontalAlignment = ChartboostMediationBannerHorizontalAlignment.Center;
         [SerializeField][HideInInspector] 
@@ -81,6 +83,7 @@ namespace Chartboost.AdFormats.Banner.Unity
             }
         }
         public bool ResizeToFit { get => resizeToFit; set => resizeToFit = value; }
+        public ChartboostMediationBannerResizeAxis ResizeAxis { get => resizeAxis; set => resizeAxis = value; }
         public async Task<ChartboostMediationBannerAdLoadResult> Load()
         {
             if (string.IsNullOrEmpty(placementName))
@@ -172,13 +175,29 @@ namespace Chartboost.AdFormats.Banner.Unity
             WillAppear?.Invoke();
             if (ResizeToFit)
             {
-                var canvas = GetComponentInParent<Canvas>();
-                var canvasScale = canvas.transform.localScale.x;
+                var rect = GetComponent<RectTransform>();
+                
+                var canvasScale = GetComponentInParent<Canvas>().transform.localScale.x;
                 var width = ChartboostMediationConverters.NativeToPixels(AdSize.Width)/canvasScale;
                 var height = ChartboostMediationConverters.NativeToPixels(AdSize.Height)/canvasScale;
-                var rect = GetComponent<RectTransform>();
-                rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
-                rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+                switch (resizeAxis)
+                {
+                    case ChartboostMediationBannerResizeAxis.Horizontal:
+                        rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
+                        BannerView.VerticalAlignment = verticalAlignment;
+                        break;
+                    case ChartboostMediationBannerResizeAxis.Vertical:
+                        rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+                        BannerView.HorizontalAlignment = horizontalAlignment;
+                        break;
+                    case ChartboostMediationBannerResizeAxis.Both:
+                    default:
+                        rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
+                        rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+                        break;
+                }
+                
+                BannerView?.ResizeToFit(resizeAxis, rect.pivot);
             }
         }
         private void OnRecordImpression(IChartboostMediationBannerView bannerView) => DidRecordImpression?.Invoke();
@@ -188,10 +207,10 @@ namespace Chartboost.AdFormats.Banner.Unity
             // x,y obtained from native is for top left corner (x = 0,y = 1)
             // RectTransform pivot may or may not be top-left (it's usually at center)
             var pivot = GetComponent<RectTransform>().pivot;
-            var widthInPixels = ChartboostMediationConverters.NativeToPixels(AdSize.Width);
-            var heightInPixels = ChartboostMediationConverters.NativeToPixels(AdSize.Height);
-            x += widthInPixels * pivot.x; // top-left x is 0
-            y += heightInPixels * (pivot.y - 1); // top-left y is 1
+            var widthInPixels = ChartboostMediationConverters.NativeToPixels(Request.Size.Width);
+            var heightInPixels = ChartboostMediationConverters.NativeToPixels(Request.Size.Height);
+            x += widthInPixels * pivot.x;
+            y -= heightInPixels - heightInPixels * pivot.y;
 
             transform.position = new Vector3(x, y, 0);
             DidDrag?.Invoke(x, y);

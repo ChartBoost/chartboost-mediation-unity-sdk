@@ -2,12 +2,13 @@ package com.chartboost.mediation.unity
 
 import android.app.Activity
 import android.graphics.Color
+import android.graphics.PointF
 import android.util.DisplayMetrics
 import android.util.Log
+import android.util.Size
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
 import com.chartboost.heliumsdk.ad.HeliumBannerAd
 import com.chartboost.heliumsdk.ad.HeliumBannerAdListener
 import com.chartboost.heliumsdk.domain.ChartboostMediationAdException
@@ -22,7 +23,8 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
     var loadId:String = ""
     private var bannerLayout: BannerLayout? = null
     private var bannerViewListener:ChartboostMediationBannerViewListener? = null;
-    
+
+    private var bannerRequestContainer:BannerRequestContainer? = null;
     private val activity: Activity? = UnityPlayer.currentActivity
 
     fun setListener(bannerViewListener: ChartboostMediationBannerViewListener){
@@ -156,6 +158,15 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
         return json.toString();
     }
 
+    fun resizeToFit(axis:Int, pivotX:Float, pivotY:Float){
+        runTaskOnUiThread {
+            val width = displayDensity * ad.getCreativeSizeDips().width
+            val height = displayDensity * ad.getCreativeSizeDips().height
+            val newSize = Size(width.roundToInt(), height.roundToInt())
+            bannerRequestContainer?.resize(newSize, axis, PointF(pivotX, pivotY))
+        }
+    }
+
     fun setDraggability(canDrag:Boolean) {
         runTaskOnUiThread{
             bannerLayout?.canDrag = canDrag
@@ -249,6 +260,10 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
             // This affects future visibility of the banner layout. Despite it never being
             // set invisible, not setting this to visible here makes the banner not visible.
             layout.visibility = View.VISIBLE
+
+            // create bannerRequestContainer to be used later for resizing
+            bannerRequestContainer = BannerRequestContainer(bannerGravityPosition, ad)
+
         } catch (ex: Exception) {
             Log.w(TAG, "Helium encountered an error calling banner load() - ${ex.message}")
         }
@@ -298,6 +313,9 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
             // This affects future visibility of the banner layout. Despite it never being
             // set invisible, not setting this to visible here makes the banner not visible.
             layout.visibility = View.VISIBLE
+
+            // create bannerRequestContainer to be used later for resizing
+            bannerRequestContainer = BannerRequestContainer(x, y, ad)
         } catch (ex: Exception) {
             Log.w(TAG, "Helium encountered an error calling banner load() - ${ex.message}")
         }

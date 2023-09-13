@@ -94,6 +94,7 @@ namespace Chartboost.AdFormats.Banner
         public override async Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, ChartboostMediationBannerAdScreenLocation screenLocation)
         {
             await base.Load(request, screenLocation);
+            Request = request;
 
             if (LoadRequest != null)
             {
@@ -113,6 +114,7 @@ namespace Chartboost.AdFormats.Banner
         public override async Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, float x, float y)
         {
             await base.Load(request, x,y);
+            Request = request;
 
             if (LoadRequest != null)
             {
@@ -128,6 +130,13 @@ namespace Chartboost.AdFormats.Banner
             var result = await LoadRequest;
             LoadRequest = null;
             return result;
+        }
+
+        public override void ResizeToFit(ChartboostMediationBannerResizeAxis axis = ChartboostMediationBannerResizeAxis.Both,
+            Vector2 pivot = default)
+        {
+            base.ResizeToFit(axis, pivot);
+            _bannerAd.Call("resizeToFit", (int)axis, pivot.x, pivot.y);
         }
 
         public override void SetDraggability(bool canDrag)

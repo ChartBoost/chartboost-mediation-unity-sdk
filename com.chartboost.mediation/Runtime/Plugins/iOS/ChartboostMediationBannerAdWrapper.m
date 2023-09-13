@@ -10,8 +10,7 @@
 
 @implementation ChartboostMediationBannerAdWrapper
 
-- (instancetype)initWithBannerView:(ChartboostMediationBannerView *)bannerView andDragListener:(ChartboostMediationBannerAdDragEvent)dragListener
-{
+- (instancetype)initWithBannerView:(ChartboostMediationBannerView *)bannerView andDragListener:(ChartboostMediationBannerAdDragEvent)dragListener{
     self.bannerView = bannerView;
     
     self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
@@ -24,19 +23,28 @@
     return self;
 }
 
+- (void)createBannerRequestContainer {
+    self.bannerRequestContainer = [[ChartboostMediationBannerRequestContainer alloc] initWithBannerView:self.bannerView];
+}
 
-- (void)setDraggable: (BOOL) canDrag {
+- (void)createBannerRequestContainerWithXY:(float)x y:(float)y {
+    self.bannerRequestContainer = [[ChartboostMediationBannerRequestContainer alloc] initWithXY:x y:y andbannerView:self.bannerView];
+}
+
+- (void)setDraggable: (BOOL) canDrag{
     self.canDrag = canDrag;
-    
+    NSLog(@"Self.canDrag = %d", self.canDrag);
     [self.bannerView removeGestureRecognizer:self.panGesture];
 
     if(self.canDrag)
         [self.bannerView addGestureRecognizer:self.panGesture];
 }
 
+- (void) resize:(int)axis pivotX:(float) pivotX pivotY:(float)pivotY {    
+    [self.bannerRequestContainer resize:_bannerView.size.size axis:axis pivotX:pivotX pivotY:pivotY];
+}
 
-- (void)handlePan:(UIPanGestureRecognizer *)gr
-{
+- (void)handlePan:(UIPanGestureRecognizer *)gr{
     if(!self.canDrag)
         return;
         
@@ -53,5 +61,4 @@
         
     self.dragListener((__bridge void*)self, x, y);
 }
-
 @end

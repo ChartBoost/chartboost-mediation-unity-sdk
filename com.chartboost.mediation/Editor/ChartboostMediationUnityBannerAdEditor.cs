@@ -18,9 +18,12 @@ namespace Chartboost.Editor
         private SerializedProperty _horizontalAlignmentSP;
         private SerializedProperty _verticalAlignmentSP;
         private SerializedProperty _resizeToFitSP;
+        private SerializedProperty _resizeAxisSP;
         
         private UnityBannerAdSize _size = UnityBannerAdSize.Standard;
+        
         private bool _resizeToFit;
+        private ChartboostMediationBannerResizeAxis _resizeAxis = ChartboostMediationBannerResizeAxis.Both;
         private ChartboostMediationBannerHorizontalAlignment _horizontalAlignment = ChartboostMediationBannerHorizontalAlignment.Center;
         private ChartboostMediationBannerVerticalAlignment _verticalAlignment = ChartboostMediationBannerVerticalAlignment.Center;
 
@@ -30,11 +33,14 @@ namespace Chartboost.Editor
             _horizontalAlignmentSP = serializedObject.FindProperty("horizontalAlignment");
             _verticalAlignmentSP = serializedObject.FindProperty("verticalAlignment");
             _resizeToFitSP = serializedObject.FindProperty("resizeToFit");
+            _resizeAxisSP = serializedObject.FindProperty("resizeAxis");
 
             _size = (UnityBannerAdSize)_sizeSP.intValue;
             _resizeToFit = _resizeToFitSP.boolValue;
+            _resizeAxis = (ChartboostMediationBannerResizeAxis)_resizeAxisSP.intValue;
             _horizontalAlignment = (ChartboostMediationBannerHorizontalAlignment)_horizontalAlignmentSP.intValue;
             _verticalAlignment = (ChartboostMediationBannerVerticalAlignment)_verticalAlignmentSP.intValue;
+            
         }
 
         public override void OnInspectorGUI()
@@ -47,7 +53,20 @@ namespace Chartboost.Editor
             {
                 _resizeToFit = EditorGUILayout.Toggle("Resize To Fit", _resizeToFit);
                 
-                if (!_resizeToFitSP.boolValue)
+                if (_resizeToFitSP.boolValue)
+                {
+                    _resizeAxis = (ChartboostMediationBannerResizeAxis)EditorGUILayout.EnumPopup("Resize Axis", _resizeAxis);
+                    switch (_resizeAxis)
+                    {
+                        case ChartboostMediationBannerResizeAxis.Horizontal:
+                            _verticalAlignment = (ChartboostMediationBannerVerticalAlignment)EditorGUILayout.EnumPopup("Vertical Alignment", _verticalAlignment);
+                            break;
+                        case ChartboostMediationBannerResizeAxis.Vertical:
+                            _horizontalAlignment = (ChartboostMediationBannerHorizontalAlignment)EditorGUILayout.EnumPopup("Horizontal Alignment", _horizontalAlignment);
+                            break;
+                    }
+                }
+                else
                 {
                     _horizontalAlignment = (ChartboostMediationBannerHorizontalAlignment)EditorGUILayout.EnumPopup("Horizontal Alignment", _horizontalAlignment);
                     _verticalAlignment = (ChartboostMediationBannerVerticalAlignment)EditorGUILayout.EnumPopup("Vertical Alignment", _verticalAlignment);
@@ -60,6 +79,7 @@ namespace Chartboost.Editor
             
             _sizeSP.intValue = (int)_size;
             _resizeToFitSP.boolValue = _resizeToFit;
+            _resizeAxisSP.intValue = (int)_resizeAxis;
             _horizontalAlignmentSP.intValue = (int)_horizontalAlignment;
             _verticalAlignmentSP.intValue = (int)_verticalAlignment;
             
@@ -70,10 +90,9 @@ namespace Chartboost.Editor
         {
             var unityBannerAd = target as ChartboostMediationUnityBannerAd;
             // ReSharper disable once PossibleNullReferenceException
-            var canvas =  unityBannerAd.GetComponentInParent<Canvas>();
             var rect = unityBannerAd.GetComponent<RectTransform>();
             
-            var canvasScale = canvas.transform.localScale.x;
+            var canvasScale = unityBannerAd.GetComponentInParent<Canvas>().transform.localScale.x;
             float width;
             float height;
 
@@ -94,7 +113,7 @@ namespace Chartboost.Editor
                     height = ChartboostMediationConverters.NativeToPixels(BannerSize.LEADERBOARD.Item2)/canvasScale;
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    return;
             }
 
             var temp = unityBannerAd.transform.position;

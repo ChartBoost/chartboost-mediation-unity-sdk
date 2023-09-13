@@ -933,7 +933,7 @@ void _chartboostMediationBannerViewLoadAdWithScreenPos(const void *uniqueId, con
     
     ChartboostMediationBannerLoadRequest *loadRequest = [[ChartboostMediationBannerLoadRequest alloc] initWithPlacement:GetStringParam(placementName) size:size];
     UIViewController* viewController = [[ChartboostMediationObserver sharedObserver] getBannerViewController:bannerView size:size.size screenLocation:screenLocation];
-    
+                
     // Load
     [bannerView loadWith:loadRequest viewController:viewController completion:^(ChartboostMediationBannerLoadResult *adLoadResult) {
         ChartboostMediationError *error = [adLoadResult error];
@@ -949,7 +949,12 @@ void _chartboostMediationBannerViewLoadAdWithScreenPos(const void *uniqueId, con
         const char *loadId = [[adLoadResult loadID] UTF8String];
         const char *metricsJson = dictionaryToJSON([adLoadResult metrics]);
         callback(hashCode, uniqueId, loadId, metricsJson, "", "");
-    }];    
+    }];
+    
+    bannerView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:1 alpha:0.5];
+    
+    ChartboostMediationBannerAdWrapper * bannerWrapper = (__bridge ChartboostMediationBannerAdWrapper*)uniqueId;
+    [bannerWrapper createBannerRequestContainer];
 }
 
 void _chartboostMediationBannerViewLoadAdWithXY(const void *uniqueId, const char *placementName, const char* sizeName, float width, float height, float x, float y, int hashCode, ChartboostMediationBannerAdLoadResultEvent callback) {
@@ -984,7 +989,12 @@ void _chartboostMediationBannerViewLoadAdWithXY(const void *uniqueId, const char
         const char *loadId = [[adLoadResult loadID] UTF8String];
         const char *metricsJson = dictionaryToJSON([adLoadResult metrics]);
         callback(hashCode, uniqueId, loadId, metricsJson, "", "");
-    }];    
+    }];
+    
+    bannerView.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:0.5];
+    
+    ChartboostMediationBannerAdWrapper * bannerWrapper = (__bridge ChartboostMediationBannerAdWrapper*)uniqueId;
+    [bannerWrapper createBannerRequestContainerWithXY:x y:y];
 }
 
 void _chartboostMediationBannerViewSetKeywords(const void* uniqueId, const char * keywords){
@@ -1050,6 +1060,12 @@ void _chartboostMediationBannerViewSetVerticalAlignment(const void* uniqueId, in
 int _chartboostMediationBannerViewGetVerticalAlignment(const void* uniqueId){
     ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
     return (int)bannerView.verticalAlignment;
+}
+
+void _chartboostMediationBannerViewResizeToFit(const void* uniqueId, int axis, float pivotX, float pivotY) {
+    ChartboostMediationBannerAdWrapper *bannerWrapper = (__bridge ChartboostMediationBannerAdWrapper *)uniqueId;
+    
+    [bannerWrapper resize:axis pivotX:pivotX pivotY:pivotY];
 }
 
 void _chartboostMediationBannerViewSetDraggability(const void* uniqueId, BOOL canDrag){
