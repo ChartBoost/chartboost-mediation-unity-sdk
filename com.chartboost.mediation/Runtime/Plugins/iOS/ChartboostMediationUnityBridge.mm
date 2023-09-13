@@ -117,6 +117,7 @@ static ChartboostMediationBannerView * _getBannerView(const void * uniqueId){
 }
 
 static NSMutableDictionary * storedAds;
+static NSMutableDictionary * storedWrappers;
 enum fullscreenEvents {RecordImpression = 0, Click = 1, Reward = 2, Close = 3, Expire = 4};
 enum bannerEvents {BannerAppear = 0, BannerClick = 1, BannerRecordImpression = 2 };
 
@@ -212,6 +213,18 @@ struct Implementation {
     }
 }
 
+- (void)storeWrapper:(id) wrapper forAd:(id)ad{
+    if(storedWrappers == nil) {
+        storedWrappers = [[NSMutableDictionary alloc] init];
+    }
+    NSNumber *key = [NSNumber numberWithLong:(long)ad];
+    [storedWrappers setObject:wrapper forKey:key];
+}
+
+- (void)releaseWrapperForAd:(NSNumber*)ad {
+    [storedWrappers removeObjectForKey:ad];
+}
+
 - (void)subscribeToPartnerInitializationNotifications
 {
     static id partnerInitializationObserver = nil;
@@ -268,7 +281,9 @@ struct Implementation {
 
 - (void)serializeBannerEvent: (ChartboostMediationBannerView*) ad bannerEvent:(bannerEvents)bannerEvent {
     
-    _bannerAdEvents((long)ad, (int)bannerEvent);
+    NSNumber *key = [NSNumber numberWithLong:(long)ad];
+    ChartboostMediationBannerAdWrapper *wrapper = [storedWrappers objectForKey:key];
+    _bannerAdEvents((long)wrapper, (int)bannerEvent);
 }
 
 - (UIViewController*) getBannerViewController: (ChartboostMediationBannerView*) bannerView size:(CGSize)size x:(float) x y:(float) y {
@@ -461,6 +476,7 @@ struct Implementation {
 
 #pragma mark ChartboostMediationBannerAdDelegate
 - (void)willAppearWithBannerView:(ChartboostMediationBannerView *)bannerView {
+    NSLog(@"WillAppear");
     [self serializeBannerEvent:bannerView bannerEvent:BannerAppear];
 }
 
@@ -913,6 +929,7 @@ const void* _chartboostMediationLoadBannerView(ChartboostMediationBannerAdDragEv
     
     ChartboostMediationBannerAdWrapper *wrapper = [[ChartboostMediationBannerAdWrapper alloc] initWithBannerView:bannerView andDragListener:dragListener];
     [[ChartboostMediationObserver sharedObserver] storeAd:wrapper placementName:nil multiPlacementSupport:true];
+    [[ChartboostMediationObserver sharedObserver] storeWrapper:wrapper forAd:bannerView];
     
     return (__bridge void*)wrapper;
 }
@@ -1073,6 +1090,8 @@ void _chartboostMediationBannerViewDestroy(const void * uniqueId)
         ChartboostMediationBannerView* bannerView = _getBannerView(uniqueId);
         [bannerView removeFromSuperview];
         [[ChartboostMediationObserver sharedObserver] releaseAd: [NSNumber numberWithLong:(long)uniqueId] placementName:nil multiPlacementSupport:true];
+                
+        [[ChartboostMediationObserver sharedObserver] releaseWrapperForAd:[NSNumber numberWithLong:(long)bannerView]];
     });
 }
 
