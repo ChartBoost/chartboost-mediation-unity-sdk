@@ -13,8 +13,6 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <ChartboostMediationSDK/ChartboostMediationSDK-Swift.h>
-#import "ChartboostMediationBannerRequestContainer.h"
-
 
 
 typedef void (*ChartboostMediationBannerAdDragEvent)(void* uniqueId, float x, float y);
@@ -25,11 +23,9 @@ typedef void (*ChartboostMediationBannerAdDragEvent)(void* uniqueId, float x, fl
 @property ChartboostMediationBannerAdDragEvent dragListener;
 @property UIPanGestureRecognizer *panGesture;
 @property BOOL canDrag;
-@property ChartboostMediationBannerRequestContainer *bannerRequestContainer;
+@property BOOL usesConstraints;
 
 - (instancetype)initWithBannerView: (ChartboostMediationBannerView*) bannerView andDragListener:(ChartboostMediationBannerAdDragEvent) dragListener;
-- (void)createBannerRequestContainer:(float)width height:(float)height ;
-- (void)createBannerRequestContainerWithXY:(float)x y:(float)y width:(float)width height:(float)height;
 - (void)setDraggable:(BOOL)canDrag;
 - (void) resize:(int)axis pivotX:(float) pivotX pivotY:(float)pivotY;
 
