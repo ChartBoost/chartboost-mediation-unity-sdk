@@ -28,8 +28,8 @@ typedef void (*ChartboostMediationBannerAdDragEvent)(void* uniqueId, float x, fl
 @property ChartboostMediationBannerRequestContainer *bannerRequestContainer;
 
 - (instancetype)initWithBannerView: (ChartboostMediationBannerView*) bannerView andDragListener:(ChartboostMediationBannerAdDragEvent) dragListener;
-- (void)createBannerRequestContainer ;
-- (void)createBannerRequestContainerWithXY:(float)x y:(float)y ;
+- (void)createBannerRequestContainer:(float)width height:(float)height ;
+- (void)createBannerRequestContainerWithXY:(float)x y:(float)y width:(float)width height:(float)height;
 - (void)setDraggable:(BOOL)canDrag;
 - (void) resize:(int)axis pivotX:(float) pivotX pivotY:(float)pivotY;
 

@@ -971,7 +971,7 @@ void _chartboostMediationBannerViewLoadAdWithScreenPos(const void *uniqueId, con
     bannerView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:1 alpha:0.5];
     
     ChartboostMediationBannerAdWrapper * bannerWrapper = (__bridge ChartboostMediationBannerAdWrapper*)uniqueId;
-    [bannerWrapper createBannerRequestContainer];
+    [bannerWrapper createBannerRequestContainer:size.size.width height:size.size.height];
 }
 
 void _chartboostMediationBannerViewLoadAdWithXY(const void *uniqueId, const char *placementName, const char* sizeName, float width, float height, float x, float y, int hashCode, ChartboostMediationBannerAdLoadResultEvent callback) {
@@ -1011,7 +1011,7 @@ void _chartboostMediationBannerViewLoadAdWithXY(const void *uniqueId, const char
     bannerView.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:0.5];
     
     ChartboostMediationBannerAdWrapper * bannerWrapper = (__bridge ChartboostMediationBannerAdWrapper*)uniqueId;
-    [bannerWrapper createBannerRequestContainerWithXY:x y:y];
+    [bannerWrapper createBannerRequestContainerWithXY:x y:y width:size.size.width height:size.size.height];
 }
 
 void _chartboostMediationBannerViewSetKeywords(const void* uniqueId, const char * keywords){
@@ -1081,7 +1081,6 @@ int _chartboostMediationBannerViewGetVerticalAlignment(const void* uniqueId){
 
 void _chartboostMediationBannerViewResizeToFit(const void* uniqueId, int axis, float pivotX, float pivotY) {
     ChartboostMediationBannerAdWrapper *bannerWrapper = (__bridge ChartboostMediationBannerAdWrapper *)uniqueId;
-    
     [bannerWrapper resize:axis pivotX:pivotX pivotY:pivotY];
 }
 

@@ -23,24 +23,23 @@
     return self;
 }
 
-- (void)createBannerRequestContainer {
-    self.bannerRequestContainer = [[ChartboostMediationBannerRequestContainer alloc] initWithBannerView:self.bannerView];
+- (void)createBannerRequestContainer:(float)width height:(float)height {
+    self.bannerRequestContainer = [[ChartboostMediationBannerRequestContainer alloc] init:width height:height andBannerView:self.bannerView];
 }
 
-- (void)createBannerRequestContainerWithXY:(float)x y:(float)y {
-    self.bannerRequestContainer = [[ChartboostMediationBannerRequestContainer alloc] initWithXY:x y:y andbannerView:self.bannerView];
+- (void)createBannerRequestContainerWithXY:(float)x y:(float)y width:(float)width height:(float)height {
+    self.bannerRequestContainer = [[ChartboostMediationBannerRequestContainer alloc] initWithXY:x y:y width:width height:height andBannerView:self.bannerView];
 }
 
 - (void)setDraggable: (BOOL) canDrag{
     self.canDrag = canDrag;
-    NSLog(@"Self.canDrag = %d", self.canDrag);
     [self.bannerView removeGestureRecognizer:self.panGesture];
 
     if(self.canDrag)
         [self.bannerView addGestureRecognizer:self.panGesture];
 }
 
-- (void) resize:(int)axis pivotX:(float) pivotX pivotY:(float)pivotY {    
+- (void) resize:(int)axis pivotX:(float) pivotX pivotY:(float)pivotY {
     [self.bannerRequestContainer resize:_bannerView.size.size axis:axis pivotX:pivotX pivotY:pivotY];
 }
 

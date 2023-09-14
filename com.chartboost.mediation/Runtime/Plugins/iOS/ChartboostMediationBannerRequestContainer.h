@@ -22,8 +22,8 @@
 @property BOOL usesConstraints;
 @property ChartboostMediationBannerView* bannerView;
 
-- (instancetype) initWithXY: (float)x y:(float)y andbannerView:(ChartboostMediationBannerView*) bannerView;
-- (instancetype) initWithBannerView:(ChartboostMediationBannerView*) bannerView;
+- (instancetype) init:(float)width height:(float)height andBannerView:(ChartboostMediationBannerView*) bannerView ;
+- (instancetype) initWithXY: (float)x y:(float)y width:(float)width height:(float)height andBannerView:(ChartboostMediationBannerView*) bannerView;
 - (void) resize:(CGSize)newSize axis: (int) axis pivotX:(float) pivotX pivotY:(float) pivotY;
 
 

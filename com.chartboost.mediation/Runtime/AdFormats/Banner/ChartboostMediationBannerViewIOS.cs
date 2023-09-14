@@ -134,7 +134,7 @@ namespace Chartboost.AdFormats.Banner
             Vector2 pivot = default)
         {
             base.ResizeToFit(axis, pivot);
-            _chartboostMediationBannerViewResizeToFit(UniqueId, (int)axis, pivot.x, pivot.y);
+            _chartboostMediationBannerViewResizeToFit(UniqueId, (int)axis, pivot.x, 1-pivot.y);
         }
 
         public override void SetDraggability(bool canDrag)

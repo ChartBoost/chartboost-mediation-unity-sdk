@@ -206,9 +206,10 @@ namespace Chartboost.AdFormats.Banner.Unity
         {
             // x,y obtained from native is for top left corner (x = 0,y = 1)
             // RectTransform pivot may or may not be top-left (it's usually at center)
-            var pivot = GetComponent<RectTransform>().pivot;
-            var widthInPixels = ChartboostMediationConverters.NativeToPixels(Request.Size.Width);
-            var heightInPixels = ChartboostMediationConverters.NativeToPixels(Request.Size.Height);
+            var rect = GetComponent<RectTransform>();
+            var pivot = rect.pivot;
+            var widthInPixels = rect.LayoutParams().width;
+            var heightInPixels = rect.LayoutParams().height;
             x += widthInPixels * pivot.x;
             y -= heightInPixels - heightInPixels * pivot.y;
 
