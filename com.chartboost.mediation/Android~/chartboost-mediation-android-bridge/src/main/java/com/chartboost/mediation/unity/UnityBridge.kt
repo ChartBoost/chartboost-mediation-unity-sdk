@@ -61,7 +61,7 @@ class UnityBridge {
         @JvmStatic
         fun loadBannerAd(listener: ChartboostMediationBannerViewListener): BannerAdWrapper{
             val size = HeliumBannerAd.HeliumBannerSize.STANDARD;
-            val bannerView = HeliumBannerAd(UnityPlayer.currentActivity,"", size, null);
+            val bannerView = HeliumBannerAd(UnityPlayer.currentActivity,"Dummy", size, null);
             val bannerAdWrapper = BannerAdWrapper.wrap(bannerView);
             bannerAdWrapper.setListener(listener);
 //            AdStore.trackBannerAd(bannerAdWrapper);

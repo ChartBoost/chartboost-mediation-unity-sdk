@@ -3,6 +3,7 @@ package com.chartboost.mediation.unity
 import android.app.Activity
 import android.graphics.Color
 import android.graphics.PointF
+import android.os.Build
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.Size
@@ -24,6 +25,7 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
     private var bannerLayout: BannerLayout? = null
     private var bannerViewListener:ChartboostMediationBannerViewListener? = null;
 
+    private var usesGravity = false;
     private var bannerRequestContainer:BannerRequestContainer? = null;
     private val activity: Activity? = UnityPlayer.currentActivity
 
@@ -94,7 +96,10 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
                 "LEADERBOARD" -> size = HeliumBannerAd.HeliumBannerSize.LEADERBOARD
             }
             createBannerLayout(size, x,y);
+            Log.d("Unity", "Before load => placement name : ${ad.placementName}, size : ${ad.getSize()?.name}")
+            Log.d("Unity", "Updating placement to $placementName, size : ${size.name}")
             ad.load(placementName, size);
+            Log.d("Unity", "After load => placement name : ${ad.placementName}, size : ${ad.getSize()?.name}")
         }
     }
     
@@ -160,10 +165,56 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
 
     fun resizeToFit(axis:Int, pivotX:Float, pivotY:Float){
         runTaskOnUiThread {
+
             val width = displayDensity * ad.getCreativeSizeDips().width
             val height = displayDensity * ad.getCreativeSizeDips().height
             val newSize = Size(width.roundToInt(), height.roundToInt())
-            bannerRequestContainer?.resize(newSize, axis, PointF(pivotX, pivotY))
+
+            // if container is positioned based on gravity then pivot and gravity are pretty much the same
+            // so we don't make any adjustments in container's position
+            if(usesGravity) {
+                when (axis) {
+                    0 -> ad.layoutParams =
+                        ViewGroup.LayoutParams(newSize.width, ad.layoutParams.height)
+
+                    1 -> ad.layoutParams =
+                        ViewGroup.LayoutParams(ad.layoutParams.width, newSize.height)
+
+                    else -> ad.layoutParams = ViewGroup.LayoutParams(newSize.width, newSize.height)
+                }
+            }
+            // if container is not positioned based on gravity then we have to manually position it
+            // by moving it around its pivot
+            else{
+                val containerSize = Size(ad.layoutParams.width, ad.layoutParams.height);
+                val containerPivot = PointF(ad.x + (containerSize.width * pivotX), ad.y + (containerSize.height * pivotY));
+                Log.d("Unity","Container pivot : (${containerPivot.x},${containerPivot.y})" )
+
+                // Find top-left corner of newSize w.r.t pivot
+                val left =  pivotX * newSize.width
+                val top = pivotY * newSize.height
+                Log.d("Unity", "left : $left, top : $top")
+
+                // Resize and move container to top-left of new size
+                val topLeft= PointF(containerPivot.x - left, containerPivot.y - top)
+                Log.d("Unity", "top-left : $topLeft")
+
+                when(axis){
+                    0 -> {
+                        ad.layoutParams = ViewGroup.LayoutParams(newSize.width, ad.layoutParams.height)
+                        ad.x = topLeft.x
+                    }
+                    1 -> {
+                        ad.layoutParams = ViewGroup.LayoutParams(ad.layoutParams.width, newSize.height)
+                        ad.y = topLeft.y
+                    }
+                    else -> {
+                        ad.layoutParams = ViewGroup.LayoutParams(newSize.width, newSize.height)
+                        ad.x = topLeft.x
+                        ad.y = topLeft.y
+                    }
+                }
+            }
         }
     }
 
@@ -243,6 +294,7 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
         }
 
         layout.gravity = bannerGravityPosition
+        usesGravity = true;
 
         // Attach the banner layout to the activity.
         val density = displayDensity
@@ -260,9 +312,6 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
             // This affects future visibility of the banner layout. Despite it never being
             // set invisible, not setting this to visible here makes the banner not visible.
             layout.visibility = View.VISIBLE
-
-            // create bannerRequestContainer to be used later for resizing
-            bannerRequestContainer = BannerRequestContainer(bannerGravityPosition, ad)
 
         } catch (ex: Exception) {
             Log.w(TAG, "Helium encountered an error calling banner load() - ${ex.message}")
@@ -293,7 +342,7 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
                 bannerViewListener?.onAdDrag(this@BannerAdWrapper, x,y)
             }
         } )
-
+        usesGravity = false;
 
         // Attach the banner layout to the activity.
         val density = displayDensity
@@ -301,7 +350,9 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
             ad.layoutParams = getBannerLayoutParams(displayDensity, size.width, size.height);
             ad.x = displayDensity * x
             ad.y = displayDensity * y
-            ad.setBackgroundColor(Color.BLUE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                ad.setBackgroundColor(Color.argb(0.3f,0f,0f, 1f))
+            };
             // Attach the banner to the banner layout.
             layout.addView(ad)
             activity.addContentView(layout, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
@@ -315,7 +366,7 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
             layout.visibility = View.VISIBLE
 
             // create bannerRequestContainer to be used later for resizing
-            bannerRequestContainer = BannerRequestContainer(x, y, ad)
+            bannerRequestContainer = BannerRequestContainer(displayDensity*x, displayDensity*y, ad)
         } catch (ex: Exception) {
             Log.w(TAG, "Helium encountered an error calling banner load() - ${ex.message}")
         }
