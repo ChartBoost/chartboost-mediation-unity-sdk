@@ -11,6 +11,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.View.OnLayoutChangeListener
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import com.chartboost.heliumsdk.ad.HeliumBannerAd
 import com.chartboost.heliumsdk.ad.HeliumBannerAdListener
@@ -24,11 +25,14 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
 
     var winningBidInfo:Map<String, String>? = null
     var loadId:String = ""
-    private var bannerLayout: BannerLayout? = null
-    private var bannerViewListener:ChartboostMediationBannerViewListener? = null;
+
+    var horizontalGravity = Gravity.CENTER_HORIZONTAL;
+    var verticalGravity = Gravity.CENTER_VERTICAL;
 
     private var usesGravity = false;
     private var partnerAd:View? = null;
+    private var bannerLayout: BannerLayout? = null
+    private var bannerViewListener:ChartboostMediationBannerViewListener? = null;
     private val activity: Activity? = UnityPlayer.currentActivity
 
     fun setListener(bannerViewListener: ChartboostMediationBannerViewListener){
@@ -68,6 +72,18 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
                         p7: Int,
                         p8: Int
                     ) {
+                        // FrameLayout cannot set gravity for its children, each child has to
+                        // set its own gravity.
+                        runTaskOnUiThread {
+                            partnerAd?.let {
+                                val horizontalGravity = this@BannerAdWrapper.horizontalGravity;
+                                val verticalGravity = this@BannerAdWrapper.verticalGravity;
+                                val layoutParams = it.layoutParams as FrameLayout.LayoutParams
+                                layoutParams.gravity = horizontalGravity or verticalGravity;
+                                partnerAd?.layoutParams = layoutParams;
+                            }
+                        }
+
                         thisListener?.onAdViewAdded(thisWrapper);
                         child.removeOnLayoutChangeListener(this);
                     }
@@ -129,17 +145,27 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
 
     fun setHorizontalAlignment(horizontalAlignment:Int) {
         runTaskOnUiThread {
-            ad.foregroundGravity = when (horizontalAlignment) {
+            this.horizontalGravity = when (horizontalAlignment) {
                 0 -> Gravity.LEFT
                 1 -> Gravity.CENTER_HORIZONTAL
                 2 -> Gravity.RIGHT
                 else -> Gravity.CENTER_HORIZONTAL
             }
+            Log.d(TAG, "Setting horizontal alignment as ${this.horizontalGravity}");
+
+            partnerAd?.let {
+                val layoutParams = it.layoutParams as FrameLayout.LayoutParams
+                
+                // apply both since we don't want to overwrite previously set verticalAlignment by
+                // only setting horizontalAlignment
+                layoutParams.gravity = this.horizontalGravity or this.verticalGravity;
+                partnerAd?.layoutParams = layoutParams;
+            }
         }
     }
 
-    fun getHorizontalAlignment():Int {
-        return when (ad.foregroundGravity) {
+    fun getHorizontalAlignment():Int{
+        return when (horizontalGravity) {
             Gravity.LEFT -> 0
             Gravity.CENTER_HORIZONTAL -> 1
             Gravity.RIGHT -> 2
@@ -149,17 +175,27 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
 
     fun setVerticalAlignment(verticalAlignment:Int) {
         runTaskOnUiThread {
-            ad.foregroundGravity = when (verticalAlignment) {
+            this.verticalGravity = when (verticalAlignment) {
                 0 -> Gravity.TOP
                 1 -> Gravity.CENTER_VERTICAL
                 2 -> Gravity.BOTTOM
                 else -> Gravity.CENTER_VERTICAL
             }
+            Log.d(TAG, "Setting vertical alignment as ${this.verticalGravity}");
+
+            partnerAd?.let {
+                val layoutParams = it.layoutParams as FrameLayout.LayoutParams
+
+                // apply both since we don't want to overwrite previously set horizontalAlignment by
+                // only setting verticalAlignment
+                layoutParams.gravity = this.horizontalGravity or this.verticalGravity;
+                partnerAd?.layoutParams = layoutParams;
+            }
         }
     }
 
-    fun getVerticalAlignment():Int {
-        return when (ad.foregroundGravity) {
+    fun getVerticalAlignment():Int{
+        return when (verticalGravity) {
             Gravity.TOP -> 0
             Gravity.CENTER_VERTICAL -> 1
             Gravity.BOTTOM -> 2
