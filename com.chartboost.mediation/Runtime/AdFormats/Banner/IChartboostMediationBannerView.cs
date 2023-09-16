@@ -46,6 +46,5 @@ namespace Chartboost.AdFormats.Banner
         abstract event ChartboostMediationBannerEvent DidClick;
         abstract event ChartboostMediationBannerEvent DidRecordImpression;
         abstract event ChartboostMediationBannerDragEvent DidDrag;
-
     }
 }

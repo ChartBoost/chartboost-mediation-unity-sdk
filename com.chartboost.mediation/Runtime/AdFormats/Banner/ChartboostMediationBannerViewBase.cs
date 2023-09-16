@@ -72,7 +72,7 @@ namespace Chartboost.AdFormats.Banner
             CacheManager.ReleaseBannerAd(UniqueId.ToInt64());
         }
 
-        internal virtual void OnBannerWillAppear(IChartboostMediationBannerView bannerView)  => 
+        internal virtual void OnBannerWillAppear(IChartboostMediationBannerView bannerView) => 
             WillAppear?.Invoke(bannerView);
 
         internal virtual void OnBannerClick(IChartboostMediationBannerView bannerView) =>

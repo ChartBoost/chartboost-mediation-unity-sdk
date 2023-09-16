@@ -72,6 +72,7 @@ namespace Chartboost.AdFormats.Banner.Unity
             internal set => placementName = value;
         }
         public bool Draggable
+        
         {
             get => draggable;
             set
@@ -81,6 +82,7 @@ namespace Chartboost.AdFormats.Banner.Unity
             }
         }
         public bool ResizeToFit { get => resizeToFit; set => resizeToFit = value; }
+
         public async Task<ChartboostMediationBannerAdLoadResult> Load()
         {
             if (string.IsNullOrEmpty(placementName))
@@ -129,10 +131,15 @@ namespace Chartboost.AdFormats.Banner.Unity
             get => BannerView?.Keywords;
             set => BannerView.Keywords = value;
         }
+
         public ChartboostMediationBannerAdLoadRequest Request => BannerView?.Request;
+
         public BidInfo? WinningBidInfo => BannerView?.WinningBidInfo;
+
         public string LoadId => BannerView?.LoadId;
+
         public ChartboostMediationBannerAdSize AdSize => BannerView?.AdSize;
+
         public ChartboostMediationBannerHorizontalAlignment HorizontalAlignment
         {
             get => horizontalAlignment;
@@ -142,6 +149,7 @@ namespace Chartboost.AdFormats.Banner.Unity
                 horizontalAlignment = value;
             }
         }
+
         public ChartboostMediationBannerVerticalAlignment VerticalAlignment
         {
             get => verticalAlignment;
@@ -151,6 +159,7 @@ namespace Chartboost.AdFormats.Banner.Unity
                 verticalAlignment = value;
             }
         }
+
         public void ResetAd() => BannerView.Reset();
         
         #endregion
@@ -167,6 +176,7 @@ namespace Chartboost.AdFormats.Banner.Unity
                 }
             }
         }
+
         private void OnWillAppear(IChartboostMediationBannerView bannerView)
         {
             WillAppear?.Invoke();
@@ -181,8 +191,11 @@ namespace Chartboost.AdFormats.Banner.Unity
                 rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
             }
         }
+
         private void OnRecordImpression(IChartboostMediationBannerView bannerView) => DidRecordImpression?.Invoke();
+
         private void OnClick(IChartboostMediationBannerView bannerView) => DidClick?.Invoke();
+
         private void OnDrag(IChartboostMediationBannerView bannerView, float x, float y)
         {
             // x,y obtained from native is for top left corner (x = 0,y = 1)
@@ -203,6 +216,7 @@ namespace Chartboost.AdFormats.Banner.Unity
         {
             this.size = size;
         }
+
         private IChartboostMediationBannerView BannerView
         {
             get

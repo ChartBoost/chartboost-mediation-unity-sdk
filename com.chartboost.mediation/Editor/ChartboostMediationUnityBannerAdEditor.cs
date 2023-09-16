@@ -79,17 +79,17 @@ namespace Chartboost.Editor
 
             switch (_size)
             {
-                case UnityBannerAdSize.Adaptive : 
+                case UnityBannerAdSize.Adaptive: 
                     return;
-                case UnityBannerAdSize.Standard : 
+                case UnityBannerAdSize.Standard: 
                     width = ChartboostMediationConverters.NativeToPixels(BannerSize.STANDARD.Item1)/canvasScale;
                     height = ChartboostMediationConverters.NativeToPixels(BannerSize.STANDARD.Item2)/canvasScale;
                     break;
-                case UnityBannerAdSize.Medium : 
+                case UnityBannerAdSize.Medium:
                     width = ChartboostMediationConverters.NativeToPixels(BannerSize.MEDIUM.Item1)/canvasScale;
                     height = ChartboostMediationConverters.NativeToPixels(BannerSize.MEDIUM.Item2)/canvasScale;
                     break;
-                case UnityBannerAdSize.Leaderboard : 
+                case UnityBannerAdSize.Leaderboard:
                     width = ChartboostMediationConverters.NativeToPixels(BannerSize.LEADERBOARD.Item1)/canvasScale;
                     height = ChartboostMediationConverters.NativeToPixels(BannerSize.LEADERBOARD.Item2)/canvasScale;
                     break;

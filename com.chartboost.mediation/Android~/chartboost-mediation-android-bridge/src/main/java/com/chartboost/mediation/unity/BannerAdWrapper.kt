@@ -23,8 +23,8 @@ import kotlin.math.roundToInt
 
 class BannerAdWrapper(private val ad:HeliumBannerAd) {
 
-    var winningBidInfo:Map<String, String>? = null
-    var loadId:String = ""
+    var winningBidInfo: Map<String, String>? = null
+    var loadId: String = ""
 
     var horizontalGravity = Gravity.CENTER_HORIZONTAL;
     var verticalGravity = Gravity.CENTER_VERTICAL;
@@ -32,7 +32,7 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
     private var usesGravity = false;
     private var partnerAd:View? = null;
     private var bannerLayout: BannerLayout? = null
-    private var bannerViewListener:ChartboostMediationBannerViewListener? = null;
+    private var bannerViewListener: ChartboostMediationBannerViewListener? = null
     private val activity: Activity? = UnityPlayer.currentActivity
 
     fun setListener(bannerViewListener: ChartboostMediationBannerViewListener){
@@ -100,7 +100,7 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
         }
     }
 
-    fun load(placementName:String, sizeName: String, sizeWidth:Float, sizeHeight:Float, screenLocation: Int){
+    fun load(placementName:String, sizeName: String, sizeWidth:Float, sizeHeight:Float, screenLocation: Int) {
         runTaskOnUiThread {
             var size = HeliumBannerAd.HeliumBannerSize.STANDARD // default
             when (sizeName) {
@@ -119,7 +119,7 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
         }
     }
 
-    fun load(placementName:String, sizeName: String, sizeWidth:Float, sizeHeight:Float, x:Float, y:Float){
+    fun load(placementName:String, sizeName: String, sizeWidth:Float, sizeHeight:Float, x:Float, y:Float) {
         runTaskOnUiThread {
             var size = HeliumBannerAd.HeliumBannerSize.STANDARD // default
             when (sizeName) {
@@ -143,7 +143,7 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
         }
     }
 
-    fun setHorizontalAlignment(horizontalAlignment:Int) {
+    fun setHorizontalAlignment(horizontalAlignment: Int) {
         runTaskOnUiThread {
             this.horizontalGravity = when (horizontalAlignment) {
                 0 -> Gravity.LEFT
@@ -173,7 +173,7 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
         }
     }
 
-    fun setVerticalAlignment(verticalAlignment:Int) {
+    fun setVerticalAlignment(verticalAlignment: Int) {
         runTaskOnUiThread {
             this.verticalGravity = when (verticalAlignment) {
                 0 -> Gravity.TOP
@@ -274,7 +274,7 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
     }
 
     fun setDraggability(canDrag:Boolean) {
-        runTaskOnUiThread{
+        runTaskOnUiThread {
             bannerLayout?.canDrag = canDrag
         }
     }
@@ -374,7 +374,7 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
         bannerLayout = layout
     }
 
-    private fun createBannerLayout(size:HeliumBannerAd.HeliumBannerSize, x:Float, y:Float){
+    private fun createBannerLayout(size:HeliumBannerAd.HeliumBannerSize, x:Float, y:Float) {
         if (activity == null) {
             Log.w(TAG, "Activity not found")
             return
@@ -396,7 +396,7 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
             override fun onDrag(x: Float, y: Float) {
                 bannerViewListener?.onAdDrag(this@BannerAdWrapper, x,y)
             }
-        } )
+        })
         usesGravity = false;
 
         // Attach the banner layout to the activity.

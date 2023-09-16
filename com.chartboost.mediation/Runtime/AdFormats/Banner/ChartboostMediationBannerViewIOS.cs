@@ -17,7 +17,6 @@ using Newtonsoft.Json;
 using UnityEngine;
 using static Chartboost.Platforms.IOS.ChartboostMediationIOS;
 
-
 namespace Chartboost.AdFormats.Banner
 {
     internal class ChartboostMediationBannerViewIOS : ChartboostMediationBannerViewBase
@@ -54,6 +53,7 @@ namespace Chartboost.AdFormats.Banner
             }
             protected set { }
         }
+
         public override string LoadId
         {
             // TODO: why metrics is a list ?

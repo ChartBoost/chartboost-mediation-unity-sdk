@@ -1,7 +1,7 @@
 package com.chartboost.mediation.unity
 
 interface ChartboostMediationBannerViewListener {
-    public abstract fun onAdCached(ad: BannerAdWrapper, error:String)
+    public abstract fun onAdCached(ad: BannerAdWrapper, error: String)
     
     public abstract fun onAdViewAdded(ad: BannerAdWrapper)
     
@@ -9,5 +9,5 @@ interface ChartboostMediationBannerViewListener {
 
     public abstract fun onAdImpressionRecorded(ad: BannerAdWrapper)
 
-    public abstract fun onAdDrag(ad: BannerAdWrapper, x:Float, y:Float)
+    public abstract fun onAdDrag(ad: BannerAdWrapper, x: Float, y: Float)
 }
