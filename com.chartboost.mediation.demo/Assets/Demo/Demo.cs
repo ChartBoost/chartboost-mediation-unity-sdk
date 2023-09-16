@@ -263,12 +263,18 @@ public class Demo : MonoBehaviour
 
     public void OnHorizontalAlignmentChange()
     {
-        _bannerAd.HorizontalAlignment = (ChartboostMediationBannerHorizontalAlignment) horizontalAlignmentDropdown.value;
+        if (_bannerAd != null)
+        {
+            _bannerAd.HorizontalAlignment = (ChartboostMediationBannerHorizontalAlignment)horizontalAlignmentDropdown.value;
+        }
     }
 
     public void OnVerticalAlignmentChange()
     {
-        _bannerAd.VerticalAlignment = (ChartboostMediationBannerVerticalAlignment)verticalAlignmentDropdown.value;
+        if (_bannerAd != null)
+        {
+            _bannerAd.VerticalAlignment = (ChartboostMediationBannerVerticalAlignment)verticalAlignmentDropdown.value;
+        }
     }
 
     public void OnToggleBannerVisibilityClick()
