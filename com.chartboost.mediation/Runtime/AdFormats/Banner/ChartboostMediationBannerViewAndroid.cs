@@ -51,7 +51,11 @@ namespace Chartboost.AdFormats.Banner
 
         public override BidInfo WinningBidInfo
         {
-            get => _bannerAd.Get<AndroidJavaObject>("winningBidInfo").MapToWinningBidInfo();
+            get
+            {
+                var winningBidInfo = _bannerAd.Get<AndroidJavaObject>("winningBidInfo");
+                return winningBidInfo?.MapToWinningBidInfo() ?? new BidInfo();
+            }
             protected set { }
         }
 

@@ -4,12 +4,27 @@ import android.content.Context
 import android.view.MotionEvent
 import android.widget.RelativeLayout
 import com.chartboost.heliumsdk.ad.HeliumBannerAd
-import kotlin.math.sqrt
 import kotlin.math.pow
+import kotlin.math.sqrt
 
-class BannerLayout(context: Context, private var bannerView: HeliumBannerAd, private var dragListener: IBannerDragListener) : RelativeLayout(context) {
+class BannerLayout : RelativeLayout {
+    private var bannerView: HeliumBannerAd
+    private var dragListener: IBannerDragListener
+
+    constructor(
+        context: Context,
+        bannerView: HeliumBannerAd,
+        dragListener: IBannerDragListener
+    ) : super(context) {
+        this.bannerView = bannerView
+        this.dragListener = dragListener
+
+        // making it clickable here allows onInterceptTouchEvent to intercept touch events on bannerView
+        bannerView.isClickable = true;
+    }
+
     var canDrag:Boolean = true
-    private val DragThresholdDistance = 10 // in pixels
+    private val dragThresholdDistance = 10 // in pixels
 
     private var startX:Int = 0;
     private var startY:Int = 0;
@@ -18,7 +33,6 @@ class BannerLayout(context: Context, private var bannerView: HeliumBannerAd, pri
 
 
     override fun onInterceptTouchEvent(event: MotionEvent?): Boolean {
-
         if(!canDrag)
             return super.onInterceptTouchEvent(event)
 
@@ -57,6 +71,6 @@ class BannerLayout(context: Context, private var bannerView: HeliumBannerAd, pri
             (lastX - startX).toDouble().pow(2.0) + (lastY - startY).toDouble().pow(2.0)
         ).toFloat()
 
-        return distance > DragThresholdDistance
+        return distance > dragThresholdDistance
     }
 }

@@ -2513,8 +2513,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.92800003, y: 0.62982976}
-  m_AnchoredPosition: {x: -42.041992, y: -361.94232}
-  m_SizeDelta: {x: 258.95, y: 341.5135}
+  m_AnchoredPosition: {x: -73.039, y: -563}
+  m_SizeDelta: {x: 210.7123, y: -116.40546}
   m_Pivot: {x: 0.83764315, y: 0.5369574}
 --- !u!114 &520640963
 MonoBehaviour:
@@ -2567,9 +2567,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   autoLoadOnInit: 1
-  placementName: ACAdaptiveBanner
+  placementName: AllNetworkBanner
   draggable: 1
-  size: 0
+  size: 1
   resizeToFit: 1
   resizeAxis: 2
   horizontalAlignment: 2
