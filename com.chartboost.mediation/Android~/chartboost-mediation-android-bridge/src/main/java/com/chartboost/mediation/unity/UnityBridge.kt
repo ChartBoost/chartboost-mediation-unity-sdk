@@ -173,11 +173,11 @@ class UnityBridge {
         @JvmStatic
         fun getBannerAd(placementName: String, size: Int): AdWrapper {
             // default to standard
-            var wantedSize = HeliumBannerAd.HeliumBannerSize.STANDARD
+            val wantedSize =
             when (size) {
-                0 -> wantedSize = HeliumBannerAd.HeliumBannerSize.STANDARD
-                1 -> wantedSize = HeliumBannerAd.HeliumBannerSize.MEDIUM
-                2 -> wantedSize = HeliumBannerAd.HeliumBannerSize.LEADERBOARD
+                0 -> HeliumBannerAd.HeliumBannerSize.STANDARD
+                1 -> HeliumBannerAd.HeliumBannerSize.MEDIUM
+                2 -> HeliumBannerAd.HeliumBannerSize.LEADERBOARD
                 else -> HeliumBannerAd.HeliumBannerSize.STANDARD
             }
             val bannerAd = HeliumBannerAd(UnityPlayer.currentActivity, placementName, wantedSize, object : HeliumBannerAdListener {

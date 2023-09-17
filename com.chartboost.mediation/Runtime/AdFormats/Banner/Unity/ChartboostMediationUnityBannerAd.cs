@@ -75,6 +75,7 @@ namespace Chartboost.AdFormats.Banner.Unity
                 draggable = value;
             }
         }
+        
         public bool ResizeToFit { get => resizeToFit; set => resizeToFit = value; }
 
         public async Task<ChartboostMediationBannerAdLoadResult> Load()
