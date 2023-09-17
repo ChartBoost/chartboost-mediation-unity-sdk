@@ -179,7 +179,6 @@ namespace Chartboost.Platforms.Android
             }
         }
         
-
         #endregion
     }
 }

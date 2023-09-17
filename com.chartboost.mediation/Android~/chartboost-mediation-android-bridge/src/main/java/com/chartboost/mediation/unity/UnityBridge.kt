@@ -1,10 +1,8 @@
 package com.chartboost.mediation.unity
 
 import android.util.DisplayMetrics
-import android.util.Log
 import com.chartboost.heliumsdk.*
 import com.chartboost.heliumsdk.ad.*
-import com.chartboost.heliumsdk.ad.HeliumBannerAd.HeliumBannerSize.Companion
 import com.chartboost.heliumsdk.domain.ChartboostMediationAdException
 import com.chartboost.mediation.unity.AdWrapper.Companion.wrap
 import com.chartboost.mediation.unity.EventProcessor.EventConsumer
@@ -59,13 +57,13 @@ class UnityBridge {
         }
 
         @JvmStatic
-        fun loadBannerAd(listener: ChartboostMediationBannerViewListener): BannerAdWrapper{
-            val size = HeliumBannerAd.HeliumBannerSize.STANDARD;
-            val bannerView = HeliumBannerAd(UnityPlayer.currentActivity,"", size, null);
-            val bannerAdWrapper = BannerAdWrapper.wrap(bannerView);
-            bannerAdWrapper.setListener(listener);
+        fun loadBannerAd(listener: ChartboostMediationBannerViewListener): BannerAdWrapper {
+            val size = HeliumBannerAd.HeliumBannerSize.STANDARD
+            val bannerView = HeliumBannerAd(UnityPlayer.currentActivity, "", size, null)
+            val bannerAdWrapper = BannerAdWrapper.wrap(bannerView)
+            bannerAdWrapper.setListener(listener)
 //            AdStore.trackBannerAd(bannerAdWrapper);
-            return bannerAdWrapper;
+            return bannerAdWrapper
         }
 
         @JvmStatic
@@ -213,7 +211,7 @@ class UnityBridge {
         private fun trackLegacy(ad: HeliumAd): AdWrapper {
             val wrapped = wrap(ad)
             AdStore.trackLegacyAd(wrapped)
-            return wrapped;
+            return wrapped
         }
     }
 }

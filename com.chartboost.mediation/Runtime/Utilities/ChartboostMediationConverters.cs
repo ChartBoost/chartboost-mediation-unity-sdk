@@ -37,16 +37,16 @@ namespace Chartboost.Utilities
             get
             {
                 #if UNITY_EDITOR
-                return _scaleFactor ??= 2.5f;
+                return _scaleFactor ??= Constants.EditorUIScaleFactor;
                 #elif UNITY_ANDROID
                 return _scaleFactor ??= ChartboostMediationAndroid.GetUIScaleFactor();
                 #elif UNITY_IPHONE
                 return _scaleFactor ??= ChartboostMediationIOS.GetUIScaleFactor();
                 #else
-                return _scaleFactor ??= 2.5f;
+                return _scaleFactor ??= Constants.EditorUIScaleFactor;
                 #endif
             }
         }
-
+        
     }
 }

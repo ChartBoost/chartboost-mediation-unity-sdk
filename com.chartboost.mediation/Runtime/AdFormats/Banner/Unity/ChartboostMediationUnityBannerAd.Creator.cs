@@ -22,14 +22,11 @@ namespace Chartboost.AdFormats.Banner.Unity
             ChartboostMediationBannerAdScreenLocation screenLocation = ChartboostMediationBannerAdScreenLocation.Center)
         {
             // Find canvas with highest sorting order
-            var canvas =  ChartboostMediationUtils.GetCanvasWithHighestSortingOrder();
-            
+            var canvas = ChartboostMediationUtils.GetCanvasWithHighestSortingOrder();
+
             // Instantiate inside this canvas
-            var unityBannerAd = new GameObject("CM_UnityBannerAd").AddComponent<ChartboostMediationUnityBannerAd>();
-            
-            // var unityBannerAd = Instantiate(
-            //     Resources.Load<ChartboostMediationUnityBannerAd>("Chartboost Mediation/Banner/Unity/CM_UnityBannerAd"), 
-            //     canvas.transform);
+            var unityBannerAd = new GameObject("ChartboostMediationUnityBannerAd")
+                .AddComponent<ChartboostMediationUnityBannerAd>();
 
             unityBannerAd.transform.parent = canvas.transform;
             unityBannerAd.name = "CM_UnityBannerAd";

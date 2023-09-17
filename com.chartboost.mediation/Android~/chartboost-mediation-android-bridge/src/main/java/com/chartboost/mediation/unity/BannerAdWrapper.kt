@@ -3,7 +3,6 @@ package com.chartboost.mediation.unity
 import android.app.Activity
 import android.graphics.Color
 import android.graphics.PointF
-import android.os.Build
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.Size
@@ -21,24 +20,24 @@ import com.unity3d.player.UnityPlayer
 import org.json.JSONObject
 import kotlin.math.roundToInt
 
-class BannerAdWrapper(private val ad:HeliumBannerAd) {
+class BannerAdWrapper(private val ad: HeliumBannerAd) {
 
     var winningBidInfo: Map<String, String>? = null
     var loadId: String = ""
 
-    var horizontalGravity = Gravity.CENTER_HORIZONTAL;
-    var verticalGravity = Gravity.CENTER_VERTICAL;
+    var horizontalGravity = Gravity.CENTER_HORIZONTAL
+    var verticalGravity = Gravity.CENTER_VERTICAL
 
-    private var usesGravity = false;
-    private var partnerAd:View? = null;
+    private var usesGravity = false
+    private var partnerAd: View? = null
     private var bannerLayout: BannerLayout? = null
     private var bannerViewListener: ChartboostMediationBannerViewListener? = null
     private val activity: Activity? = UnityPlayer.currentActivity
 
-    fun setListener(bannerViewListener: ChartboostMediationBannerViewListener){
-        this.bannerViewListener = bannerViewListener;
-        val thisWrapper = this@BannerAdWrapper;
-        val thisListener = this@BannerAdWrapper.bannerViewListener;
+    fun setListener(bannerViewListener: ChartboostMediationBannerViewListener) {
+        this.bannerViewListener = bannerViewListener
+        val thisWrapper = this@BannerAdWrapper
+        val thisListener = this@BannerAdWrapper.bannerViewListener
         ad.heliumBannerAdListener = object : HeliumBannerAdListener {
             override fun onAdCached(
                 placementName: String,
@@ -46,18 +45,18 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
                 winningBidInfo: Map<String, String>,
                 error: ChartboostMediationAdException?
             ) {
-                thisWrapper.loadId = loadId;
-                thisWrapper.winningBidInfo = winningBidInfo;
+                thisWrapper.loadId = loadId
+                thisWrapper.winningBidInfo = winningBidInfo
 
                 error?.let { err ->
                     thisListener?.onAdCached(thisWrapper, err.message)
                 } ?: run {
-                    thisListener?.onAdCached(thisWrapper, "");
+                    thisListener?.onAdCached(thisWrapper, "")
                 }
             }
 
             override fun onAdViewAdded(placementName: String, child: View?) {
-                thisWrapper.partnerAd = child;
+                thisWrapper.partnerAd = child
 
                 // Wait till partnerAd is lay out
                 child?.addOnLayoutChangeListener(object : OnLayoutChangeListener {
@@ -76,31 +75,37 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
                         // set its own gravity.
                         runTaskOnUiThread {
                             partnerAd?.let {
-                                val horizontalGravity = this@BannerAdWrapper.horizontalGravity;
-                                val verticalGravity = this@BannerAdWrapper.verticalGravity;
+                                val horizontalGravity = this@BannerAdWrapper.horizontalGravity
+                                val verticalGravity = this@BannerAdWrapper.verticalGravity
                                 val layoutParams = it.layoutParams as FrameLayout.LayoutParams
-                                layoutParams.gravity = horizontalGravity or verticalGravity;
-                                partnerAd?.layoutParams = layoutParams;
+                                layoutParams.gravity = horizontalGravity or verticalGravity
+                                partnerAd?.layoutParams = layoutParams
                             }
                         }
 
-                        thisListener?.onAdViewAdded(thisWrapper);
-                        child.removeOnLayoutChangeListener(this);
+                        thisListener?.onAdViewAdded(thisWrapper)
+                        child.removeOnLayoutChangeListener(this)
                     }
                 })
             }
 
             override fun onAdClicked(placementName: String) {
-                thisListener?.onAdClicked(thisWrapper);
+                thisListener?.onAdClicked(thisWrapper)
             }
 
             override fun onAdImpressionRecorded(placementName: String) {
-                thisListener?.onAdImpressionRecorded(thisWrapper);
+                thisListener?.onAdImpressionRecorded(thisWrapper)
             }
         }
     }
 
-    fun load(placementName:String, sizeName: String, sizeWidth:Float, sizeHeight:Float, screenLocation: Int) {
+    fun load(
+        placementName: String,
+        sizeName: String,
+        sizeWidth: Float,
+        sizeHeight: Float,
+        screenLocation: Int
+    ) {
         runTaskOnUiThread {
             var size = HeliumBannerAd.HeliumBannerSize.STANDARD // default
             when (sizeName) {
@@ -114,12 +119,19 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
                 "LEADERBOARD" -> size = HeliumBannerAd.HeliumBannerSize.LEADERBOARD
             }
 
-            createBannerLayout(size, screenLocation);
-            ad.load(placementName, size);
+            createBannerLayout(size, screenLocation)
+            ad.load(placementName, size)
         }
     }
 
-    fun load(placementName:String, sizeName: String, sizeWidth:Float, sizeHeight:Float, x:Float, y:Float) {
+    fun load(
+        placementName: String,
+        sizeName: String,
+        sizeWidth: Float,
+        sizeHeight: Float,
+        x: Float,
+        y: Float
+    ) {
         runTaskOnUiThread {
             var size = HeliumBannerAd.HeliumBannerSize.STANDARD // default
             when (sizeName) {
@@ -132,13 +144,13 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
                 "MEDIUM" -> size = HeliumBannerAd.HeliumBannerSize.MEDIUM
                 "LEADERBOARD" -> size = HeliumBannerAd.HeliumBannerSize.LEADERBOARD
             }
-            createBannerLayout(size, x,y);
-            ad.load(placementName, size);
+            createBannerLayout(size, x, y)
+            ad.load(placementName, size)
         }
     }
 
     fun setKeywords(keywords: Keywords) {
-        for (kvp in keywords.get()){
+        for (kvp in keywords.get()) {
             ad.keywords[kvp.key] = kvp.value
         }
     }
@@ -151,20 +163,20 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
                 2 -> Gravity.RIGHT
                 else -> Gravity.CENTER_HORIZONTAL
             }
-            Log.d(TAG, "Setting horizontal alignment as ${this.horizontalGravity}");
+            Log.d(TAG, "Setting horizontal alignment as ${this.horizontalGravity}")
 
             partnerAd?.let {
                 val layoutParams = it.layoutParams as FrameLayout.LayoutParams
-                
+
                 // apply both since we don't want to overwrite previously set verticalAlignment by
                 // only setting horizontalAlignment
-                layoutParams.gravity = this.horizontalGravity or this.verticalGravity;
-                partnerAd?.layoutParams = layoutParams;
+                layoutParams.gravity = this.horizontalGravity or this.verticalGravity
+                partnerAd?.layoutParams = layoutParams
             }
         }
     }
 
-    fun getHorizontalAlignment():Int{
+    fun getHorizontalAlignment(): Int {
         return when (horizontalGravity) {
             Gravity.LEFT -> 0
             Gravity.CENTER_HORIZONTAL -> 1
@@ -181,20 +193,20 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
                 2 -> Gravity.BOTTOM
                 else -> Gravity.CENTER_VERTICAL
             }
-            Log.d(TAG, "Setting vertical alignment as ${this.verticalGravity}");
+            Log.d(TAG, "Setting vertical alignment as ${this.verticalGravity}")
 
             partnerAd?.let {
                 val layoutParams = it.layoutParams as FrameLayout.LayoutParams
 
                 // apply both since we don't want to overwrite previously set horizontalAlignment by
                 // only setting verticalAlignment
-                layoutParams.gravity = this.horizontalGravity or this.verticalGravity;
-                partnerAd?.layoutParams = layoutParams;
+                layoutParams.gravity = this.horizontalGravity or this.verticalGravity
+                partnerAd?.layoutParams = layoutParams
             }
         }
     }
 
-    fun getVerticalAlignment():Int{
+    fun getVerticalAlignment(): Int {
         return when (verticalGravity) {
             Gravity.TOP -> 0
             Gravity.CENTER_VERTICAL -> 1
@@ -203,23 +215,25 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
         }
     }
 
-    fun getAdSize(): String? {
-        val size = ad.getSize();
+    fun getAdSize(): String {
+        val size = ad.getSize()
         val creativeSize = partnerAd?.let {
-            Size((it.width/displayDensity).toInt(), (it.height/displayDensity).toInt()
-        ) }
+            Size(
+                (it.width / displayDensity).toInt(), (it.height / displayDensity).toInt()
+            )
+        }
 
-        val json = JSONObject();
-        json.put("name", size?.name);
-        json.put("aspectRatio", size?.aspectRatio);
-        json.put("width", creativeSize?.width ?: {size?.width});
-        json.put("height", creativeSize?.height ?: {size?.height});
-        json.put("type", size?.isAdaptive);
+        val json = JSONObject()
+        json.put("name", size?.name)
+        json.put("aspectRatio", size?.aspectRatio)
+        json.put("width", creativeSize?.width ?: { size?.width })
+        json.put("height", creativeSize?.height ?: { size?.height })
+        json.put("type", size?.isAdaptive)
 
-        return json.toString();
+        return json.toString()
     }
 
-    fun resizeToFit(axis:Int, pivotX:Float, pivotY:Float){
+    fun resizeToFit(axis: Int, pivotX: Float, pivotY: Float) {
         runTaskOnUiThread {
             partnerAd?.let {
                 val newSize = Size(it.width, it.height)
@@ -232,15 +246,15 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
                         1 -> ad.layoutParams = ViewGroup.LayoutParams(ad.layoutParams.width, newSize.height)
                         else -> ad.layoutParams = ViewGroup.LayoutParams(newSize.width, newSize.height)
                     }
-                    return@runTaskOnUiThread;
+                    return@runTaskOnUiThread
                 }
                 // if container is not positioned based on gravity then we have to manually position it
                 // by moving it around its pivot
-                val containerSize = Size(ad.layoutParams.width, ad.layoutParams.height);
+                val containerSize = Size(ad.layoutParams.width, ad.layoutParams.height)
                 val containerPivot = PointF(
                     ad.x + (containerSize.width * pivotX),
                     ad.y + (containerSize.height * pivotY)
-                );
+                )
 
                 // Find top-left corner of newSize w.r.t pivot
                 val left = pivotX * newSize.width
@@ -267,13 +281,13 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
                     }
                 }
             }
-            ?: run {
-                Log.d(TAG, "Cannot resize. No partner ad available")
-            }
+                ?: run {
+                    Log.d(TAG, "Cannot resize. No partner ad available")
+                }
         }
     }
 
-    fun setDraggability(canDrag:Boolean) {
+    fun setDraggability(canDrag: Boolean) {
         runTaskOnUiThread {
             bannerLayout?.canDrag = canDrag
         }
@@ -320,10 +334,10 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
 
         layout = BannerLayout(activity, ad, object : IBannerDragListener {
             override fun onDrag(x: Float, y: Float) {
-                bannerViewListener?.onAdDrag(this@BannerAdWrapper, x,y)
+                bannerViewListener?.onAdDrag(this@BannerAdWrapper, x, y)
             }
-        } )
-        
+        })
+
         layout.setBackgroundColor(Color.TRANSPARENT)
 
         /*
@@ -349,12 +363,12 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
         }
 
         layout.gravity = bannerGravityPosition
-        usesGravity = true;
+        usesGravity = true
 
         // Attach the banner layout to the activity.
         val density = displayDensity
         try {
-            ad.layoutParams = getBannerLayoutParams(displayDensity, size.width, size.height);
+            ad.layoutParams = getBannerLayoutParams(displayDensity, size.width, size.height)
 
             // Attach the banner to the banner layout.
             layout.addView(ad)
@@ -374,7 +388,7 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
         bannerLayout = layout
     }
 
-    private fun createBannerLayout(size:HeliumBannerAd.HeliumBannerSize, x:Float, y:Float) {
+    private fun createBannerLayout(size: HeliumBannerAd.HeliumBannerSize, x: Float, y: Float) {
         if (activity == null) {
             Log.w(TAG, "Activity not found")
             return
@@ -394,20 +408,18 @@ class BannerAdWrapper(private val ad:HeliumBannerAd) {
 
         layout = BannerLayout(activity, ad, object : IBannerDragListener {
             override fun onDrag(x: Float, y: Float) {
-                bannerViewListener?.onAdDrag(this@BannerAdWrapper, x,y)
+                bannerViewListener?.onAdDrag(this@BannerAdWrapper, x, y)
             }
         })
-        usesGravity = false;
+        usesGravity = false
 
         // Attach the banner layout to the activity.
         val density = displayDensity
         try {
-            ad.layoutParams = getBannerLayoutParams(displayDensity, size.width, size.height);
+            ad.layoutParams = getBannerLayoutParams(displayDensity, size.width, size.height)
             ad.x = displayDensity * x
             ad.y = displayDensity * y
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                ad.setBackgroundColor(Color.argb(0.3f,0f,0f, 1f))
-            };
+
             // Attach the banner to the banner layout.
             layout.addView(ad)
             activity.addContentView(layout, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))

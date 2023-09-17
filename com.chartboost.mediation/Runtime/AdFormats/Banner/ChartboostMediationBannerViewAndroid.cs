@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Chartboost.Banner;
 using Chartboost.Events;
-using Chartboost.Platforms.Android;
 using Chartboost.Requests;
 using Chartboost.Results;
 using Chartboost.Utilities;
@@ -112,7 +111,7 @@ namespace Chartboost.AdFormats.Banner
         // x,y is Native
         public override async Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, float x, float y)
         {
-            await base.Load(request, x,y);
+            await base.Load(request, x, y);
 
             if (LoadRequest != null)
             {
@@ -145,7 +144,7 @@ namespace Chartboost.AdFormats.Banner
         public override void Reset()
         {
             base.Reset();
-            _bannerAd.Call("reset"); ;
+            _bannerAd.Call("reset");
         }
 
         public override void Destroy()

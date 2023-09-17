@@ -1,4 +1,4 @@
-#if UNITY_IPHONE
+#if UNITY_IOS
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;

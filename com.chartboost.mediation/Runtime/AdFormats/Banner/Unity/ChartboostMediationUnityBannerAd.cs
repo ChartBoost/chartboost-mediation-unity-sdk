@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Chartboost.Banner;
@@ -21,6 +20,7 @@ namespace Chartboost.AdFormats.Banner.Unity
     }
     
     public delegate void ChartboostMediationUnityBannerAdEvent();
+
     public delegate void ChartboostMediationUnityBannerAdDragEvent(float x, float y);
     
     public partial class ChartboostMediationUnityBannerAd : MonoBehaviour
@@ -47,12 +47,6 @@ namespace Chartboost.AdFormats.Banner.Unity
         private ChartboostMediationBannerVerticalAlignment verticalAlignment = ChartboostMediationBannerVerticalAlignment.Center;
         
         private IChartboostMediationBannerView _bannerView;
-        
-        public override string ToString()
-        {
-            base.ToString();
-            return JsonConvert.SerializeObject(BannerView);
-        }
 
         # region Unity Lifecycle
         
@@ -71,8 +65,8 @@ namespace Chartboost.AdFormats.Banner.Unity
             get => placementName;
             internal set => placementName = value;
         }
+
         public bool Draggable
-        
         {
             get => draggable;
             set
@@ -88,7 +82,7 @@ namespace Chartboost.AdFormats.Banner.Unity
             if (string.IsNullOrEmpty(placementName))
             {
                 const string error = "Placement Name is empty or not set in inspector";
-                Logger.LogError("ChartboostMediationUnityBannerAd",  error);
+                Logger.LogError("ChartboostMediationUnityBannerAd", error);
                 return new ChartboostMediationBannerAdLoadResult(new ChartboostMediationError(error));
             }
             
@@ -163,6 +157,12 @@ namespace Chartboost.AdFormats.Banner.Unity
         public void ResetAd() => BannerView.Reset();
         
         #endregion
+        
+        public override string ToString()
+        {
+            base.ToString();
+            return JsonConvert.SerializeObject(BannerView);
+        }
 
         #region Events
         
@@ -180,12 +180,13 @@ namespace Chartboost.AdFormats.Banner.Unity
         private void OnWillAppear(IChartboostMediationBannerView bannerView)
         {
             WillAppear?.Invoke();
+
             if (ResizeToFit)
             {
                 var canvas = GetComponentInParent<Canvas>();
                 var canvasScale = canvas.transform.localScale.x;
-                var width = ChartboostMediationConverters.NativeToPixels(AdSize.Width)/canvasScale;
-                var height = ChartboostMediationConverters.NativeToPixels(AdSize.Height)/canvasScale;
+                var width = ChartboostMediationConverters.NativeToPixels(AdSize.Width) / canvasScale;
+                var height = ChartboostMediationConverters.NativeToPixels(AdSize.Height) / canvasScale;
                 var rect = GetComponent<RectTransform>();
                 rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
                 rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
@@ -224,7 +225,7 @@ namespace Chartboost.AdFormats.Banner.Unity
                 if (_bannerView == null)
                 {
                     _bannerView = ChartboostMediation.GetBannerView();
-                    _bannerView.WillAppear +=OnWillAppear;
+                    _bannerView.WillAppear += OnWillAppear;
                     _bannerView.DidClick += OnClick;
                     _bannerView.DidRecordImpression += OnRecordImpression;
                     _bannerView.DidDrag += OnDrag;

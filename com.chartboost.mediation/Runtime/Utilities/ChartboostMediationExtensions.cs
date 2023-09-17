@@ -17,8 +17,8 @@ namespace Chartboost.Utilities
         [JsonIgnore]public Vector2 bottomLeft;
         [JsonIgnore]public Vector2 topRight;
         [JsonIgnore]public Vector2 bottomRight;
-        
     }
+    
     public static class ChartboostMediationExtensions
     {
         public static LayoutParams LayoutParams(this RectTransform rectTransform)
@@ -37,8 +37,7 @@ namespace Chartboost.Utilities
             //    |           |
             //     - - - - - -
             //    0           3
-            
-            
+
             var lp = new LayoutParams
             {
                 x = corners[0].x,  

@@ -7,22 +7,25 @@ import com.chartboost.heliumsdk.ad.HeliumBannerAd
 import kotlin.math.sqrt
 import kotlin.math.pow
 
-class BannerLayout(context: Context, private var bannerView: HeliumBannerAd, private var dragListener: IBannerDragListener) : RelativeLayout(context) {
-    var canDrag:Boolean = true
-    private val DragThresholdDistance = 10 // in pixels
+class BannerLayout(
+    context: Context,
+    private var bannerView: HeliumBannerAd,
+    private var dragListener: IBannerDragListener
+) : RelativeLayout(context) {
+    var canDrag: Boolean = true
+    private val dragThresholdDistance = 10 // in pixels
 
     private var startX: Int = 0
     private var startY: Int = 0
     private var lastX: Int = 0
     private var lastY: Int = 0
 
-
     override fun onInterceptTouchEvent(event: MotionEvent?): Boolean {
 
         if (!canDrag)
             return super.onInterceptTouchEvent(event)
 
-        if (event?.action == MotionEvent.ACTION_DOWN){
+        if (event?.action == MotionEvent.ACTION_DOWN) {
             startX = event.rawX.toInt()
             startY = event.rawY.toInt()
 
@@ -32,21 +35,21 @@ class BannerLayout(context: Context, private var bannerView: HeliumBannerAd, pri
 
         if (event?.action == MotionEvent.ACTION_MOVE) {
 
-            val dx = (event.rawX - lastX).toInt();
-            val dy = (event.rawY - lastY).toInt();
+            val dx = (event.rawX - lastX).toInt()
+            val dy = (event.rawY - lastY).toInt()
 
             lastX = event.rawX.toInt()
             lastY = event.rawY.toInt()
 
             if (hasDragged()) {
-                bannerView.x += dx;
-                bannerView.y += dy;
-                dragListener.onDrag(bannerView.x, bannerView.y);
+                bannerView.x += dx
+                bannerView.y += dy
+                dragListener.onDrag(bannerView.x, bannerView.y)
             }
         }
 
         if (event?.action == MotionEvent.ACTION_UP) {
-            return hasDragged();
+            return hasDragged()
         }
 
         return super.onInterceptTouchEvent(event)
@@ -57,6 +60,6 @@ class BannerLayout(context: Context, private var bannerView: HeliumBannerAd, pri
             (lastX - startX).toDouble().pow(2.0) + (lastY - startY).toDouble().pow(2.0)
         ).toFloat()
 
-        return distance > DragThresholdDistance
+        return distance > dragThresholdDistance
     }
 }
