@@ -28,9 +28,10 @@ namespace Chartboost.AdFormats.Banner.Unity
             var unityBannerAd = new GameObject("ChartboostMediationUnityBannerAd")
                 .AddComponent<ChartboostMediationUnityBannerAd>();
 
-            unityBannerAd.transform.parent = canvas.transform;
             unityBannerAd.name = "CM_UnityBannerAd";
-            unityBannerAd.transform.localScale = Vector3.one;
+            var bannerTransform = unityBannerAd.transform;
+            bannerTransform.parent = canvas.transform;
+            bannerTransform.localScale = Vector3.one;
             var rectTransform = unityBannerAd.gameObject.AddComponent<RectTransform>();
             rectTransform.anchoredPosition = Vector2.zero;
             
