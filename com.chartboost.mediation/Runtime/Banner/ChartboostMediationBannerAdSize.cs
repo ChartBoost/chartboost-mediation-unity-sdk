@@ -50,14 +50,11 @@ namespace Chartboost.Banner
         }
 
         #region static conveniences
-        public static ChartboostMediationBannerAdSize Standard
-            => new ChartboostMediationBannerAdSize("STANDARD", BannerSize.STANDARD.Item1, BannerSize.STANDARD.Item2, ChartboostMediationBannerType.Fixed);
+        public static readonly ChartboostMediationBannerAdSize Standard = new ChartboostMediationBannerAdSize("STANDARD", BannerSize.STANDARD.Item1, BannerSize.STANDARD.Item2, ChartboostMediationBannerType.Fixed);
 
-        public static ChartboostMediationBannerAdSize MediumRect
-            => new ChartboostMediationBannerAdSize("MEDIUM", BannerSize.MEDIUM.Item1, BannerSize.MEDIUM.Item2, ChartboostMediationBannerType.Fixed);
+        public static readonly ChartboostMediationBannerAdSize MediumRect = new ChartboostMediationBannerAdSize("MEDIUM", BannerSize.MEDIUM.Item1, BannerSize.MEDIUM.Item2, ChartboostMediationBannerType.Fixed);
 
-        public static ChartboostMediationBannerAdSize Leaderboard
-            => new ChartboostMediationBannerAdSize("LEADERBOARD", BannerSize.LEADERBOARD.Item1, BannerSize.LEADERBOARD.Item2, ChartboostMediationBannerType.Fixed);
+        public static readonly ChartboostMediationBannerAdSize Leaderboard = new ChartboostMediationBannerAdSize("LEADERBOARD", BannerSize.LEADERBOARD.Item1, BannerSize.LEADERBOARD.Item2, ChartboostMediationBannerType.Fixed);
 
         //Horizontal 
         public static ChartboostMediationBannerAdSize Adaptive2X1(float width)
