@@ -106,13 +106,8 @@ public class Demo : MonoBehaviour
     private void OnDestroy()
     {
         OnInvalidateFullscreenClick();
-
-        if (_bannerAd == null) 
-            return;
         
-        _bannerAd.ResetAd();
-        Destroy(_bannerAd);
-        Log("destroyed an existing banner");
+        // BannerAd is destroyed on its own`OnDestroy()` 
     }
 
     private void DidStart(string error)
