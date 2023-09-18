@@ -63,4 +63,3 @@ class BannerLayout(
         return distance > dragThresholdDistance
     }
 }
-
