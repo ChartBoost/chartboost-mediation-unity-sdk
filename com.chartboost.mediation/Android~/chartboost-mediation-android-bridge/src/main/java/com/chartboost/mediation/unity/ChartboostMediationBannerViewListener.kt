@@ -11,3 +11,4 @@ interface ChartboostMediationBannerViewListener {
 
     public abstract fun onAdDrag(ad: BannerAdWrapper, x: Float, y: Float)
 }
+
