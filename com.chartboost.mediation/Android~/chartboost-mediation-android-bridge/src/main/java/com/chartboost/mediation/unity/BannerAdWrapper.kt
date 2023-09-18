@@ -477,3 +477,4 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
     }
 
 }
+
