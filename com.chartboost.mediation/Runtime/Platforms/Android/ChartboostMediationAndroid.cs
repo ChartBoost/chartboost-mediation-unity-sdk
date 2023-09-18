@@ -165,18 +165,14 @@ namespace Chartboost.Platforms.Android
         public override IChartboostMediationBannerView GetBannerView()
         {
             using var unityBridge = GetUnityBridge();
-            {
-                var bannerAd = unityBridge.CallStatic<AndroidJavaObject>("loadBannerAd", new ChartboostMediationBannerViewListener());
-                return new ChartboostMediationBannerViewAndroid(bannerAd);
-            }
+            var bannerAd = unityBridge.CallStatic<AndroidJavaObject>("loadBannerAd", new ChartboostMediationBannerViewListener());
+            return new ChartboostMediationBannerViewAndroid(bannerAd);
         }
 
         public static float GetUIScaleFactor()
         {
             using var unityBridge = GetUnityBridge();
-            {
-                return unityBridge.CallStatic<float>("getUIScaleFactor");
-            }
+            return unityBridge.CallStatic<float>("getUIScaleFactor");
         }
         
         #endregion

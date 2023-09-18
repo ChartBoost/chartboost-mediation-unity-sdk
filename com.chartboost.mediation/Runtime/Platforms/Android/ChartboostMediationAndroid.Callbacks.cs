@@ -181,10 +181,8 @@ namespace Chartboost.Platforms.Android
                 EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.RecordImpression);
 
             private void onAdDrag(AndroidJavaObject ad, float x, float y)
-            {
-                EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Drag, x, Screen.height - y);
-            }
-            
+                => EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Drag, x, Screen.height - y);
+
         }
 
         #endregion

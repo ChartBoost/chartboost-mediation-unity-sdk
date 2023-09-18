@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Chartboost.AdFormats.Banner;
 using Chartboost.AdFormats.Fullscreen;
-using Chartboost.Interfaces;
 using Chartboost.Requests;
 
 namespace Chartboost.Utilities
