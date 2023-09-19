@@ -1,11 +1,14 @@
 using System;
 using System.Threading.Tasks;
+using Chartboost.AdFormats.Banner;
+using Chartboost.AdFormats.Banner.Unity;
 using Chartboost.Banner;
 using Chartboost.Events;
 using Chartboost.FullScreen.Interstitial;
 using Chartboost.FullScreen.Rewarded;
 using Chartboost.Platforms;
 using Chartboost.Requests;
+using Chartboost.Results;
 #if UNITY_ANDROID
 using Chartboost.Platforms.Android;
 #elif UNITY_IOS
@@ -211,9 +214,31 @@ namespace Chartboost
         /// </summary>
         /// <param name="placementName">The placement ID for the Chartboost Mediation impression type.</param>
         /// <param name="size">The banner size</param>
+        [Obsolete("GetBannerAd has been deprecated and will be removed in future versions, use GetBannerView instead.")]
         public static ChartboostMediationBannerAd GetBannerAd(string placementName, ChartboostMediationBannerAdSize size)
             => _chartboostMediationExternal.GetBannerAd(placementName, size);
+        
+        /// <summary>
+        /// Returns a new ad unit that can be used to load and display banner ads.
+        /// </summary>
+        public static IChartboostMediationBannerView GetBannerView() => _chartboostMediationExternal.GetBannerView();
 
+        /// <summary>
+        /// Returns a new gameobject that can be used to load and display banner ads.
+        /// </summary>
+        /// <param name="placementName">The placement name for this banner ad</param>
+        /// <param name="canvas">Canvas under which this gameobject will be created</param>
+        /// <param name="size">size of the gameobject</param>
+        /// <param name="screenLocation">pre-defined location on screen where this gameobject will be created</param>
+        /// <returns></returns>
+        public static ChartboostMediationUnityBannerAd GetUnityBannerAd(string placementName, Canvas canvas, ChartboostMediationBannerAdSize size = null, ChartboostMediationBannerAdScreenLocation screenLocation = ChartboostMediationBannerAdScreenLocation.Center)
+        {
+            var unityBannerAd = ChartboostMediationUnityBannerAd.Instantiate(canvas, size, screenLocation);
+            unityBannerAd.PlacementName = placementName;
+            return unityBannerAd;
+        }
+        
+        
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Init()
         {

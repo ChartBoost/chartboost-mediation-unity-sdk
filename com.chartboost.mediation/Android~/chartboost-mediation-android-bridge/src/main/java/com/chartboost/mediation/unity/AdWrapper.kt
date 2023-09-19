@@ -157,13 +157,10 @@ class AdWrapper(private val ad: HeliumAd) {
         // Attach the banner layout to the activity.
         val density = displayDensity
         try {
-
-            val size = ad.getSize()
-
-            when {
-                size == HeliumBannerSize.LEADERBOARD -> ad.layoutParams = getBannerLayoutParams(density, LEADERBOARD.first, LEADERBOARD.second)
-                size == HeliumBannerSize.MEDIUM -> ad.layoutParams = getBannerLayoutParams(density, MEDIUM.first, MEDIUM.second)
-                else -> ad.layoutParams = getBannerLayoutParams(density, STANDARD.first, STANDARD.second)
+            when (ad.getSize()?.name ?: "STANDARD") {
+                "LEADERBOARD" -> ad.layoutParams = getBannerLayoutParams(density, LEADERBOARD.first, LEADERBOARD.second)
+                "MEDIUM" -> ad.layoutParams = getBannerLayoutParams(density, MEDIUM.first, MEDIUM.second)
+                "STANDARD" -> ad.layoutParams = getBannerLayoutParams(density, STANDARD.first, STANDARD.second)
             }
 
             // Attach the banner to the banner layout.
@@ -172,9 +169,7 @@ class AdWrapper(private val ad: HeliumAd) {
 
             // This immediately sets the visibility of this banner. If this doesn't happen
             // here, it is impossible to set the visibility later.
-            layout.visibility = View.VISIBLE
-
-            // This affects future visibility of the banner layout. Despite it never being
+            // This also affects future visibility of the banner layout. Despite it never being
             // set invisible, not setting this to visible here makes the banner not visible.
             layout.visibility = View.VISIBLE
         } catch (ex: Exception) {

@@ -12,6 +12,12 @@ namespace Chartboost.Utilities
             if (ChartboostMediationSettings.IsLoggingEnabled)
                 Debug.Log( $"{tag}/{message}");
         }
+        
+        public static void LogWarning(string tag, string warning)
+        {
+            if (ChartboostMediationSettings.IsLoggingEnabled)
+                Debug.LogWarning( $"{tag}/{warning}");
+        }
 
         public static void LogError(string tag, string error)
         {

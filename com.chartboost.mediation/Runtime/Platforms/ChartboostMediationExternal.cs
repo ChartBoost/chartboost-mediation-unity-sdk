@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Chartboost.AdFormats.Banner;
 using Chartboost.Banner;
 using Chartboost.FullScreen.Interstitial;
 using Chartboost.FullScreen.Rewarded;
 using Chartboost.Requests;
+using Chartboost.Results;
 using Newtonsoft.Json;
 using UnityEngine;
 using Logger = Chartboost.Utilities.Logger;
@@ -79,11 +81,14 @@ namespace Chartboost.Platforms
         
         public virtual void SetTestMode(bool testModeEnabled) 
             => Logger.Log(LogTag, $"SetTestMode {testModeEnabled}");
+        
 
         public virtual void Destroy() 
             => Logger.Log(LogTag, "Destroy");
 
         public abstract Task<ChartboostMediationFullscreenAdLoadResult> LoadFullscreenAd(ChartboostMediationFullscreenAdLoadRequest request);
+
+        public abstract IChartboostMediationBannerView GetBannerView();
       
         [Obsolete("GetInterstitialAd has been deprecated and will be removed in future versions, use LoadFullscreenAd instead.")]
         public ChartboostMediationInterstitialAd GetInterstitialAd(string placementName)

@@ -1,7 +1,9 @@
 #if UNITY_ANDROID
+using Chartboost.AdFormats.Banner;
 using Chartboost.AdFormats.Fullscreen;
 using Chartboost.Events;
 using Chartboost.Requests;
+using Chartboost.Results;
 using Chartboost.Utilities;
 using UnityEngine;
 // ReSharper disable InconsistentNaming
@@ -136,8 +138,56 @@ namespace Chartboost.Platforms.Android
                 => EventProcessor.ProcessFullscreenEvent(ad.HashCode(), (int)EventProcessor.FullscreenAdEvents.Reward,null, null);
         }
         #endregion
-
+        
         #region Banner Callbacks
+        internal class ChartboostMediationBannerViewListener : AndroidJavaProxy
+        {
+            public ChartboostMediationBannerViewListener() : base(GetQualifiedClassName("ChartboostMediationBannerViewListener")) {}
+            
+            private void onAdCached(AndroidJavaObject ad, string error)
+            {
+                var bannerView = CacheManager.GetBannerAd(ad.HashCode());
+                if (!(bannerView is ChartboostMediationBannerViewAndroid androidBannerView)) 
+                    return;
+
+                if (androidBannerView.LoadRequest == null)
+                {
+                    EventProcessor.ReportUnexpectedSystemError("Load result received for a null request");
+                    return;
+                }
+
+                ChartboostMediationBannerAdLoadResult loadResult;
+                if (!string.IsNullOrEmpty(error))
+                {
+                    loadResult = new ChartboostMediationBannerAdLoadResult(new ChartboostMediationError(error));
+                }
+                else
+                {
+                    loadResult = new ChartboostMediationBannerAdLoadResult(bannerView.LoadId, null, null);
+                    EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(),
+                        (int)EventProcessor.BannerAdEvents.Load);
+                }
+
+                androidBannerView.LoadRequest.Complete(loadResult);
+            }
+
+            private void onAdViewAdded(AndroidJavaObject ad) =>
+                EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Load);
+            
+            private void onAdClicked(AndroidJavaObject ad) =>
+                EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Click);
+
+            private void onAdImpressionRecorded(AndroidJavaObject ad) =>
+                EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.RecordImpression);
+
+            private void onAdDrag(AndroidJavaObject ad, float x, float y)
+                => EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Drag, x, Screen.height - y);
+
+        }
+
+        #endregion
+
+        #region Banner Callbacks (deprecated)
         internal class BannerEventListener : AndroidJavaProxy
         {
             private BannerEventListener() : base(GetQualifiedClassName("IBannerEventListener")) { }

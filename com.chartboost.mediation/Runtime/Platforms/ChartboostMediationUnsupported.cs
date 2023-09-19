@@ -1,6 +1,8 @@
 using System;
 using System.Threading.Tasks;
+using Chartboost.AdFormats.Banner;
 using Chartboost.Requests;
+using Chartboost.Results;
 
 namespace Chartboost.Platforms
 {
@@ -45,6 +47,12 @@ namespace Chartboost.Platforms
         }
 
         public override Task<ChartboostMediationFullscreenAdLoadResult> LoadFullscreenAd(ChartboostMediationFullscreenAdLoadRequest loadRequest) 
-            => Task.FromResult(new ChartboostMediationFullscreenAdLoadResult(new ChartboostMediationError("Unsupported Platform")));
+            => Task.FromResult(new ChartboostMediationFullscreenAdLoadResult(new ChartboostMediationError("")));
+
+        public override IChartboostMediationBannerView GetBannerView()
+        {
+            return new ChartboostMediationBannerViewUnsupported();
+        }
+        
     }
 }

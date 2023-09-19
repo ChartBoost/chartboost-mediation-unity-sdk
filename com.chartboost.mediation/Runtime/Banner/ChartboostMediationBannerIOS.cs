@@ -1,6 +1,9 @@
 #if UNITY_IOS
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Chartboost.Utilities;
+using Newtonsoft.Json;
 
 namespace Chartboost.Banner
 {
@@ -14,7 +17,21 @@ namespace Chartboost.Banner
         public ChartboostMediationBannerIOS(string placement, ChartboostMediationBannerAdSize size) : base(placement, size)
         {
             LogTag = "ChartboostMediation Banner (iOS)";
-            _uniqueId = _chartboostMediationGetBannerAd(placement, (int)size);
+
+            if (size.Name == "ADAPTIVE")
+            {
+                Logger.LogError(LogTag,$"Adaptive sizes are not supported for `ChartboostMediationBannerAd`. Use `ChartboostMediationBannerView` instead");
+                return;
+            }
+            
+            var fixedSize = size.Name switch
+            {
+                "STANDARD" => 0,
+                "MEDIUM" => 1,
+                "LEADERBOARD" => 2,
+                _ => 0
+            };
+            _uniqueId = _chartboostMediationGetBannerAd(placement, fixedSize);
         }
 
         internal override bool IsValid { get; set; } = true;

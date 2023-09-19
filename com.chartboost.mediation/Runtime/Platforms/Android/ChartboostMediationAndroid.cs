@@ -2,8 +2,10 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Chartboost.AdFormats.Banner;
 using Chartboost.Events;
 using Chartboost.Requests;
+using Chartboost.Results;
 using Chartboost.Utilities;
 using UnityEngine;
 // ReSharper disable StringLiteralTypo
@@ -159,6 +161,20 @@ namespace Chartboost.Platforms.Android
             }
             return await adLoadListenerAwaitableProxy;
         }
+
+        public override IChartboostMediationBannerView GetBannerView()
+        {
+            using var unityBridge = GetUnityBridge();
+            var bannerAd = unityBridge.CallStatic<AndroidJavaObject>("loadBannerAd", new ChartboostMediationBannerViewListener());
+            return new ChartboostMediationBannerViewAndroid(bannerAd);
+        }
+
+        public static float GetUIScaleFactor()
+        {
+            using var unityBridge = GetUnityBridge();
+            return unityBridge.CallStatic<float>("getUIScaleFactor");
+        }
+        
         #endregion
     }
 }

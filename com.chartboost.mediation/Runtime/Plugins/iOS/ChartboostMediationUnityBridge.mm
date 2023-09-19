@@ -7,6 +7,7 @@
 #import <ChartboostMediationSDK/ChartboostMediationSDK-Swift.h>
 #import <ChartboostMediationSDK/HeliumInitResultsEvent.h>
 #import "UnityAppController.h"
+#import "ChartboostMediationBannerAdWrapper.h"
 
 // Converts C style string to NSString
 #define GetStringParam(_x_) (_x_ != NULL) ? [NSString stringWithUTF8String:_x_] : [NSString stringWithUTF8String:""]
@@ -24,6 +25,11 @@ typedef void (*ChartboostMediationPlacementLoadEvent)(const char* placementName,
 typedef void (*ChartboostMediationFullscreenAdLoadResultEvent)(int hashCode, const void* adHashCode, const char *loadId, const char *winningBidJson, const char *metricsJson, const char *code, const char *message);
 typedef void (*ChartboostMediationFullscreenAdShowResultEvent)(int hashCode, const char* metricsJson, const char *code, const char *message);
 typedef void (*ChartboostMediationFullscreenAdEvent)(long hashCode, int eventType, const char *code, const char* message);
+
+// Banner Events
+typedef void (*ChartboostMediationBannerAdEvent)(long hashCode, int eventType);
+typedef void (*ChartboostMediationBannerAdLoadResultEvent)(int hashCode, const void* adHashCode, const char *loadId, const char *metricsJson, const char *code, const char *message);
+
 
 typedef void (^block)(void);
 
@@ -51,6 +57,17 @@ static char* ConvertNSStringToCString(const NSString* nsString) {
     return cString;
 }
 
+const char * getCStringOrNull(NSString* nsString) {
+    if (nsString == NULL)
+        return NULL;
+
+    const char* nsStringUtf8 = [nsString UTF8String];
+    //create a null terminated C string on the heap so that our string's memory isn't wiped out right after method's return
+    char* cString = (char*)malloc(strlen(nsStringUtf8) + 1);
+    strcpy(cString, nsStringUtf8);
+    return cString;
+}
+
 const char* dictionaryToJSON(NSDictionary *data)
 {
     NSError *error;
@@ -60,7 +77,7 @@ const char* dictionaryToJSON(NSDictionary *data)
         return "";
      }
     NSString *json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    return [json UTF8String];
+    return getCStringOrNull(json);
 }
 
 const void serializeEvent(ChartboostMediationError *error, ChartboostMediationEvent event)
@@ -93,10 +110,19 @@ const void serializePlacementLoadWithError(NSString *placementName, NSString *re
     placementLoadEvent(placementName.UTF8String, requestIdentifier.UTF8String, auctionId.UTF8String, partnerId.UTF8String, [price doubleValue], lineItemName.UTF8String, lineItemId.UTF8String, error.localizedDescription.UTF8String);
 }
 
-static NSMutableDictionary * storedAds;
-enum fullscreenEvents {RecordImpression = 0, Click = 1, Reward = 2, Close = 3, Expire = 4};
+static ChartboostMediationBannerView * _getBannerView(const void * uniqueId){
+    ChartboostMediationBannerAdWrapper *bannerWrapper =(__bridge ChartboostMediationBannerAdWrapper*)uniqueId;
+    ChartboostMediationBannerView* bannerView = bannerWrapper.bannerView;
+    return bannerView;
+}
 
-@interface ChartboostMediationObserver : NSObject <HeliumSdkDelegate, ChartboostMediationFullscreenAdDelegate, CHBHeliumInterstitialAdDelegate, CHBHeliumRewardedAdDelegate, CHBHeliumBannerAdDelegate>
+static NSMutableDictionary * storedAds;
+static NSMutableDictionary * storedWrappers;
+enum fullscreenEvents {RecordImpression = 0, Click = 1, Reward = 2, Close = 3, Expire = 4};
+enum bannerEvents {BannerAppear = 0, BannerClick = 1, BannerRecordImpression = 2 };
+
+
+@interface ChartboostMediationObserver : NSObject <HeliumSdkDelegate, ChartboostMediationFullscreenAdDelegate, ChartboostMediationBannerViewDelegate, CHBHeliumInterstitialAdDelegate, CHBHeliumRewardedAdDelegate, CHBHeliumBannerAdDelegate>
 
 + (instancetype) sharedObserver;
 
@@ -127,6 +153,9 @@ enum fullscreenEvents {RecordImpression = 0, Click = 1, Reward = 2, Close = 3, E
 
 // fullscreen callbacks
 @property ChartboostMediationFullscreenAdEvent fullscreenAdEvents;
+
+// banner callbacks
+@property ChartboostMediationBannerAdEvent bannerAdEvents;
 
 @end
 
@@ -184,6 +213,18 @@ struct Implementation {
     }
 }
 
+- (void)storeWrapper:(id) wrapper forAd:(id)ad{
+    if(storedWrappers == nil) {
+        storedWrappers = [[NSMutableDictionary alloc] init];
+    }
+    NSNumber *key = [NSNumber numberWithLong:(long)ad];
+    [storedWrappers setObject:wrapper forKey:key];
+}
+
+- (void)releaseWrapperForAd:(NSNumber*)ad {
+    [storedWrappers removeObjectForKey:ad];
+}
+
 - (void)subscribeToPartnerInitializationNotifications
 {
     static id partnerInitializationObserver = nil;
@@ -237,6 +278,91 @@ struct Implementation {
     
     _fullscreenAdEvents((long)ad, (int)fullscreenEvent, code, message);
 }
+
+- (void)serializeBannerEvent: (ChartboostMediationBannerView*) ad bannerEvent:(bannerEvents)bannerEvent {
+    
+    NSNumber *key = [NSNumber numberWithLong:(long)ad];
+    ChartboostMediationBannerAdWrapper *wrapper = [storedWrappers objectForKey:key];
+    _bannerAdEvents((long)wrapper, (int)bannerEvent);
+}
+
+- (UIViewController*) getBannerViewController: (ChartboostMediationBannerView*) bannerView size:(CGSize)size x:(float) x y:(float) y {
+ 
+    UIViewController *unityVC = GetAppController().rootViewController;
+    
+    UILayoutGuide *safeGuide;
+    if (@available(iOS 11.0, *))
+        safeGuide = unityVC.view.safeAreaLayoutGuide;
+    else
+        safeGuide = unityVC.view.layoutMarginsGuide;
+    
+    [bannerView removeFromSuperview];
+    [unityVC.view  addSubview:bannerView];
+//     bannerView.translatesAutoresizingMaskIntoConstraints=NO;
+    
+    bannerView.frame = CGRectMake(x, y, size.width, size.height);
+    
+    return unityVC;
+}
+
+
+- (UIViewController*) getBannerViewController: (ChartboostMediationBannerView*) bannerView size:(CGSize)size screenLocation:(long) screenLocation {
+
+    UIViewController *unityVC = GetAppController().rootViewController;
+    
+    UILayoutGuide *safeGuide;
+    if (@available(iOS 11.0, *))
+        safeGuide = unityVC.view.safeAreaLayoutGuide;
+    else
+        safeGuide = unityVC.view.layoutMarginsGuide;
+    
+    [bannerView removeFromSuperview];
+    [unityVC.view  addSubview:bannerView];
+    bannerView.translatesAutoresizingMaskIntoConstraints=NO;
+    NSLayoutConstraint *xConstraint;
+
+    switch (screenLocation) // X Constraints
+    {
+        case 1: // Top Center
+        case 3: // Center
+        case 5: // Bottom Center
+            xConstraint = [bannerView.centerXAnchor constraintEqualToAnchor:safeGuide.centerXAnchor];
+            break;
+        case 2: // Top Right
+        case 6: // Bottom Right
+            xConstraint = [bannerView.trailingAnchor constraintEqualToAnchor:safeGuide.trailingAnchor];
+            break;
+        default:
+            xConstraint = [bannerView.leadingAnchor constraintEqualToAnchor:safeGuide.leadingAnchor];
+    }
+
+    NSLayoutConstraint *yConstraint;
+    switch (screenLocation) // Y Constraints
+    {
+        case 0: // Top Left:
+        case 1: // Top Center
+        case 2: // Top
+            yConstraint = [bannerView.topAnchor constraintEqualToAnchor:safeGuide.topAnchor];
+            break;;
+        case 4: // Bottom Left
+        case 5: // Bottom Center
+        case 6: // Bottom Right
+            yConstraint = [bannerView.bottomAnchor constraintEqualToAnchor:safeGuide.bottomAnchor];
+            break;
+        default:
+            yConstraint = [bannerView.centerYAnchor constraintEqualToAnchor:safeGuide.centerYAnchor];
+    }
+
+    [NSLayoutConstraint activateConstraints:@[
+        [bannerView.widthAnchor constraintEqualToConstant:size.width],
+        [bannerView.heightAnchor constraintEqualToConstant:size.height],
+        xConstraint,
+        yConstraint
+    ]];
+    
+    return unityVC;
+}
+
 
 #pragma mark HeliumSdkDelegate
 - (void)heliumDidStartWithError:(ChartboostMediationError *)error;
@@ -346,6 +472,24 @@ struct Implementation {
 - (void)didExpireWithAd:(id <ChartboostMediationFullscreenAd> _Nonnull)ad {
     [self serializeFullscreenEvent:ad fullscreenEvent:Expire error:nil];
 }
+
+
+#pragma mark ChartboostMediationBannerAdDelegate
+- (void)willAppearWithBannerView:(ChartboostMediationBannerView *)bannerView {
+    // run on next iteration of the run loop
+    sendToMain(^{
+        [self serializeBannerEvent:bannerView bannerEvent:BannerAppear];
+    });
+}
+
+- (void)didClickWithBannerView:(ChartboostMediationBannerView *)bannerView {
+    [self serializeBannerEvent:bannerView bannerEvent:BannerClick];
+}
+
+- (void)didRecordImpressionWithBannerView:(ChartboostMediationBannerView *)bannerView {
+    [self serializeBannerEvent:bannerView bannerEvent:BannerRecordImpression];
+}
+
 @end
 
 #pragma mark Bridge Functions
@@ -388,6 +532,10 @@ void _setBannerCallbacks(ChartboostMediationPlacementLoadEvent didLoadCallback, 
 
 void _setFullscreenCallbacks(ChartboostMediationFullscreenAdEvent fullscreenAdEvents){
     [[ChartboostMediationObserver sharedObserver] setFullscreenAdEvents:fullscreenAdEvents];
+}
+
+void _setBannerAdCallbacks(ChartboostMediationBannerAdEvent bannerEvents){
+    [[ChartboostMediationObserver sharedObserver] setBannerAdEvents:bannerEvents];
 }
 
 void _chartboostMediationInit(const char *appId, const char *appSignature, const char *unityVersion, const char** initializationOptions, int initializationOptionsSize)
@@ -435,6 +583,11 @@ void _chartboostMediationSetUserIdentifier(const char * userIdentifier)
 char * _chartboostMediationGetUserIdentifier()
 {
     return ConvertNSStringToCString([[Helium sharedHelium] userIdentifier]);
+}
+
+float _chartboostMediationGetUIScaleFactor() {
+    // TODO: https://github.com/ChartBoost/ios-helium-sdk/pull/1314
+    return UIScreen.mainScreen.scale;
 }
 
 void _chartboostMediationSetTestMode(BOOL isTestModeEnabled)
@@ -621,6 +774,8 @@ void _chartboostMediationFullscreenSetCustomData(const void *uniqueId, const cha
     });
 }
 
+
+__deprecated
 void * _chartboostMediationGetBannerAd(const char *placementName, long size)
 {
     CHBHBannerSize cbSize;
@@ -646,6 +801,7 @@ void * _chartboostMediationGetBannerAd(const char *placementName, long size)
     return (__bridge void*)ad;
 }
 
+__deprecated
 BOOL _chartboostMediationBannerSetKeyword(const void *uniqueId, const char *keyword, const char *value)
 {
     id<HeliumBannerAd> ad = (__bridge id<HeliumBannerAd>)uniqueId;
@@ -656,12 +812,14 @@ BOOL _chartboostMediationBannerSetKeyword(const void *uniqueId, const char *keyw
     return [ad.keywords setKeyword:GetStringParam(keyword) value:GetStringParam(value)];
 }
 
+__deprecated
 char * _chartboostMediationBannerRemoveKeyword(const void *uniqueId, const char *keyword)
 {
     id<HeliumBannerAd> ad = (__bridge id<HeliumBannerAd>)uniqueId;
     return ConvertNSStringToCString([ad.keywords removeKeyword:GetStringParam(keyword)]);
 }
 
+__deprecated
 void _chartboostMediationBannerAdLoad(const void * uniqueId, long screenLocation)
 {
     sendToMain(^{
@@ -729,6 +887,7 @@ void _chartboostMediationBannerAdLoad(const void * uniqueId, long screenLocation
     });
 }
 
+__deprecated
 void _chartboostMediationBannerClearLoaded(const void * uniqueId)
 {
     sendToMain(^(){
@@ -737,6 +896,7 @@ void _chartboostMediationBannerClearLoaded(const void * uniqueId)
     });
 }
 
+__deprecated
 void _chartboostMediationBannerRemove(const void * uniqueId)
 {
     sendToMain(^(){
@@ -746,6 +906,7 @@ void _chartboostMediationBannerRemove(const void * uniqueId)
     });
 }
 
+__deprecated
 void _chartboostMediationBannerSetVisibility(const void * uniqueId, BOOL isVisible)
 {
     sendToMain(^{
@@ -754,10 +915,188 @@ void _chartboostMediationBannerSetVisibility(const void * uniqueId, BOOL isVisib
     });
 }
 
+__deprecated
 void _chartboostMediationFreeAdObject(const void * uniqueId, const char * placementName, bool multiPlacementSupport)
 {
     sendToMain(^(){
         [[ChartboostMediationObserver sharedObserver] releaseAd: [NSNumber numberWithLong:(long)uniqueId] placementName:GetStringParam(placementName) multiPlacementSupport:multiPlacementSupport];
     });
 }
+
+
+const void* _chartboostMediationLoadBannerView(ChartboostMediationBannerAdDragEvent dragListener){
+        
+    ChartboostMediationBannerView *bannerView = [[ChartboostMediationBannerView alloc] init];
+    [bannerView setDelegate:[ChartboostMediationObserver sharedObserver]];
+    
+    ChartboostMediationBannerAdWrapper *wrapper = [[ChartboostMediationBannerAdWrapper alloc] initWithBannerView:bannerView andDragListener:dragListener];
+    [[ChartboostMediationObserver sharedObserver] storeAd:wrapper placementName:nil multiPlacementSupport:true];
+    [[ChartboostMediationObserver sharedObserver] storeWrapper:wrapper forAd:bannerView];
+    
+    return (__bridge void*)wrapper;
+}
+
+void _chartboostMediationBannerViewLoadAdWithScreenPos(const void *uniqueId, const char *placementName, const char* sizeName, float width, float height, long screenLocation, int hashCode, ChartboostMediationBannerAdLoadResultEvent callback) {
+    ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
+
+    ChartboostMediationBannerSize *size;
+    NSArray *sizeNames = @[@"ADAPTIVE", @"STANDARD", @"MEDIUM", @"LEADERBOARD"];
+    long item = [sizeNames indexOfObject:GetStringParam(sizeName)];
+    switch(item){
+        case 0 : size = [ChartboostMediationBannerSize adaptiveWithWidth:width maxHeight:height]; break;
+        case 1 : size = [ChartboostMediationBannerSize standard]; break;
+        case 2 : size = [ChartboostMediationBannerSize medium]; break;
+        case 3 : size = [ChartboostMediationBannerSize leaderboard]; break;
+        default: size =  [ChartboostMediationBannerSize standard]; break;
+    }
+    
+    ChartboostMediationBannerLoadRequest *loadRequest = [[ChartboostMediationBannerLoadRequest alloc] initWithPlacement:GetStringParam(placementName) size:size];
+    UIViewController* viewController = [[ChartboostMediationObserver sharedObserver] getBannerViewController:bannerView size:size.size screenLocation:screenLocation];
+    
+    // Load
+    [bannerView loadWith:loadRequest viewController:viewController completion:^(ChartboostMediationBannerLoadResult *adLoadResult) {
+        ChartboostMediationError *error = [adLoadResult error];
+        if (error != nil)
+        {
+            ChartboostMediationErrorCode codeInt = [error chartboostMediationCode];
+            const char *code = [[NSString stringWithFormat:@"CM_%ld", codeInt] UTF8String];
+            const char *message = [[error localizedDescription] UTF8String];
+            callback(hashCode, uniqueId, "", "", code, message);
+            return;
+        }
+        
+        const char *loadId = [[adLoadResult loadID] UTF8String];
+        const char *metricsJson = dictionaryToJSON([adLoadResult metrics]);
+        callback(hashCode, uniqueId, loadId, metricsJson, "", "");
+    }];    
+}
+
+void _chartboostMediationBannerViewLoadAdWithXY(const void *uniqueId, const char *placementName, const char* sizeName, float width, float height, float x, float y, int hashCode, ChartboostMediationBannerAdLoadResultEvent callback) {
+    ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
+
+    ChartboostMediationBannerSize *size;
+    NSArray *sizeNames = @[@"ADAPTIVE", @"STANDARD", @"MEDIUM", @"LEADERBOARD"];
+    long item = [sizeNames indexOfObject:GetStringParam(sizeName)];
+    switch(item){
+        case 0 : size = [ChartboostMediationBannerSize adaptiveWithWidth:width maxHeight:height]; break;
+        case 1 : size = [ChartboostMediationBannerSize standard]; break;
+        case 2 : size = [ChartboostMediationBannerSize medium]; break;
+        case 3 : size = [ChartboostMediationBannerSize leaderboard]; break;
+        default: size =  [ChartboostMediationBannerSize standard]; break;
+    }
+    
+    ChartboostMediationBannerLoadRequest *loadRequest = [[ChartboostMediationBannerLoadRequest alloc] initWithPlacement:GetStringParam(placementName) size:size];
+    UIViewController* viewController = [[ChartboostMediationObserver sharedObserver] getBannerViewController:bannerView size:size.size x:x y:y];
+    
+    // Load
+    [bannerView loadWith:loadRequest viewController:viewController completion:^(ChartboostMediationBannerLoadResult *adLoadResult) {
+        ChartboostMediationError *error = [adLoadResult error];
+        if (error != nil)
+        {
+            ChartboostMediationErrorCode codeInt = [error chartboostMediationCode];
+            const char *code = [[NSString stringWithFormat:@"CM_%ld", codeInt] UTF8String];
+            const char *message = [[error localizedDescription] UTF8String];
+            callback(hashCode, uniqueId, "", "", code, message);
+            return;
+        }
+        
+        const char *loadId = [[adLoadResult loadID] UTF8String];
+        const char *metricsJson = dictionaryToJSON([adLoadResult metrics]);
+        callback(hashCode, uniqueId, loadId, metricsJson, "", "");
+    }];    
+}
+
+void _chartboostMediationBannerViewSetKeywords(const void* uniqueId, const char * keywords){
+    ChartboostMediationBannerView *ad = _getBannerView(uniqueId);
+    NSMutableDictionary *formattedKeywords = objFromJsonString<NSMutableDictionary *>(keywords);
+    ad.keywords = formattedKeywords;
+}
+
+const char * _chartboostMediationBannerViewGetSize(const void* uniqueId){
+    ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
+
+    NSString * aspectRatioKey =@"aspectRatio"; NSString * aspectRatioValue = [NSString stringWithFormat:@"%f", bannerView.size.aspectRatio];
+    NSString * widthKey = @"width"; NSString * widthValue = [NSString stringWithFormat:@"%f", bannerView.size.size.width];
+    NSString * heightKey = @"height"; NSString * heightValue = [NSString stringWithFormat:@"%f", bannerView.size.size.height];
+    NSString * typeKey = @"type"; NSString * typeValue = [NSString stringWithFormat:@"%d", (int)bannerView.size.type];
+    
+    NSString *nameKey = @"name";
+    NSString *nameValue = @"";
+    if(bannerView.size.type == 0) {  // Fixed
+        int width = bannerView.size.size.width;
+        switch (width) {
+            case 320: nameValue = @"STANDARD"; break;
+            case 300: nameValue = @"MEDIUM"; break;
+            case 728: nameValue = @"LEADERBOARD"; break;
+            default:break;
+        }
+    }
+    else{
+        nameValue = @"ADAPTIVE";
+    }
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:nameValue,nameKey,aspectRatioValue,aspectRatioKey,widthValue,widthKey,heightValue,heightKey,typeValue, typeKey, nil];
+
+    return dictionaryToJSON(dict);
+}
+
+const char * _chartboostMediationBannerViewGetWinningBidInfo(const void* uniqueId){
+    ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
+    return dictionaryToJSON(bannerView.winningBidInfo);
+}
+
+const char * _chartboostMediationBannerViewGetLoadMetrics(const void* uniqueId){
+    ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
+    return dictionaryToJSON(bannerView.loadMetrics);
+}
+
+void _chartboostMediationBannerViewSetHorizontalAlignment(const void* uniqueId, int horizontalAlignment){
+            
+    ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
+    bannerView.horizontalAlignment = (ChartboostMediationBannerHorizontalAlignment)horizontalAlignment;
+}
+
+int _chartboostMediationBannerViewGetHorizontalAlignment(const void* uniqueId){
+    ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
+    return (int)bannerView.horizontalAlignment;
+}
+
+void _chartboostMediationBannerViewSetVerticalAlignment(const void* uniqueId, int verticalAlignment){
+            
+    ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
+    bannerView.verticalAlignment = (ChartboostMediationBannerVerticalAlignment)verticalAlignment;
+}
+
+int _chartboostMediationBannerViewGetVerticalAlignment(const void* uniqueId){
+    ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
+    return (int)bannerView.verticalAlignment;
+}
+
+void _chartboostMediationBannerViewSetDraggability(const void* uniqueId, BOOL canDrag){
+    ChartboostMediationBannerAdWrapper *bannerWrapper = (__bridge ChartboostMediationBannerAdWrapper *)uniqueId;
+    [bannerWrapper setDraggable:canDrag];        
+}
+
+void _chartboostMediationBannerViewSetVisibility(const void* uniqueId, BOOL visible){
+    ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
+    [bannerView setHidden:!visible];
+}
+
+void _chartboostMediationBannerViewReset(const void* uniqueId){
+    ChartboostMediationBannerView *bannerView =(__bridge ChartboostMediationBannerView*)uniqueId;
+    [bannerView reset];
+}
+
+void _chartboostMediationBannerViewDestroy(const void * uniqueId)
+{
+    sendToMain(^(){
+        ChartboostMediationBannerView* bannerView = _getBannerView(uniqueId);
+        [bannerView removeFromSuperview];
+        [[ChartboostMediationObserver sharedObserver] releaseAd: [NSNumber numberWithLong:(long)uniqueId] placementName:nil multiPlacementSupport:true];
+                
+        [[ChartboostMediationObserver sharedObserver] releaseWrapperForAd:[NSNumber numberWithLong:(long)bannerView]];
+    });
+}
+
+
+
 }
