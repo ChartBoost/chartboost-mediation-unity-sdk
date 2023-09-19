@@ -27,8 +27,7 @@ namespace Chartboost.AdFormats.Banner.Unity
             // Instantiate inside this canvas
             var unityBannerAd = new GameObject("ChartboostMediationUnityBannerAd")
                 .AddComponent<ChartboostMediationUnityBannerAd>();
-
-            unityBannerAd.name = "CM_UnityBannerAd";
+            
             var bannerTransform = unityBannerAd.transform;
             bannerTransform.parent = canvas.transform;
             bannerTransform.localScale = Vector3.one;
