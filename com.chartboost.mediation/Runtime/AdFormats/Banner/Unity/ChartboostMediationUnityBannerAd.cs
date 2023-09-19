@@ -25,7 +25,7 @@ namespace Chartboost.AdFormats.Banner.Unity
     
     public partial class ChartboostMediationUnityBannerAd : MonoBehaviour
     {
-        public ChartboostMediationUnityBannerAdEvent WillAppear;
+        public ChartboostMediationUnityBannerAdEvent DidLoad;
         public ChartboostMediationUnityBannerAdEvent DidClick;
         public ChartboostMediationUnityBannerAdEvent DidRecordImpression;
         public ChartboostMediationUnityBannerAdDragEvent DidDrag;
@@ -178,9 +178,9 @@ namespace Chartboost.AdFormats.Banner.Unity
             }
         }
 
-        private void OnWillAppear(IChartboostMediationBannerView bannerView)
+        private void OnLoad(IChartboostMediationBannerView bannerView)
         {
-            WillAppear?.Invoke();
+            DidLoad?.Invoke();
 
             if (ResizeToFit)
             {
@@ -226,7 +226,7 @@ namespace Chartboost.AdFormats.Banner.Unity
                 if (_bannerView == null)
                 {
                     _bannerView = ChartboostMediation.GetBannerView();
-                    _bannerView.WillAppear += OnWillAppear;
+                    _bannerView.DidLoad += OnLoad;
                     _bannerView.DidClick += OnClick;
                     _bannerView.DidRecordImpression += OnRecordImpression;
                     _bannerView.DidDrag += OnDrag;

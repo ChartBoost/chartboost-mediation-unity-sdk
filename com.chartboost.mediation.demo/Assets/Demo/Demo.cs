@@ -244,7 +244,7 @@ public class Demo : MonoBehaviour
         Log($"Creating new Unity banner ad");
         var canvas = GetComponentInParent<Canvas>();
         _bannerAd = ChartboostMediation.GetUnityBannerAd(bannerPlacementInputField.text, canvas, size, screenPos);
-        _bannerAd.WillAppear += WillAppearBanner;
+        _bannerAd.DidLoad += DidLoadBanner;
         _bannerAd.DidClick += DidClickBanner;
         _bannerAd.DidRecordImpression += DidRecordImpressionBanner;
         _bannerAd.DidDrag += DidDragBanner;
@@ -321,9 +321,9 @@ public class Demo : MonoBehaviour
 
     }
 
-    private void WillAppearBanner()
+    private void DidLoadBanner()
     {
-        Log($"WillAppearBanner {_bannerAd}");
+        Log($"DidLoadBanner {_bannerAd}");
     }
     
     private void DidRecordImpressionBanner()
