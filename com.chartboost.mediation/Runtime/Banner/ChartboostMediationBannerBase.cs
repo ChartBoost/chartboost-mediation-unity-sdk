@@ -16,6 +16,12 @@ namespace Chartboost.Banner
 
         protected ChartboostMediationBannerBase(string placementName, ChartboostMediationBannerAdSize size)
         {
+            if (size.Name == ChartboostMediationBannerName.Adaptive)
+            {
+                Logger.LogError(LogTag,$"Adaptive sizes are not supported for `ChartboostMediationBannerAd`. Use `ChartboostMediationBannerView` instead");
+                return;
+            }
+
             this.placementName = placementName;
             _size = size;
         }

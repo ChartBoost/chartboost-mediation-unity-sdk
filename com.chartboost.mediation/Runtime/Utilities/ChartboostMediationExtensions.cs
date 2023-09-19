@@ -1,8 +1,7 @@
 using System;
-using Chartboost.AdFormats.Banner.Unity;
+using Chartboost.Banner;
 using Newtonsoft.Json;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Chartboost.Utilities
 {
@@ -51,6 +50,16 @@ namespace Chartboost.Utilities
             };
         
             return lp;
+        }
+
+        public static int? GetFixedSize(this ChartboostMediationBannerAdSize size)
+        {
+            if (size.Name == ChartboostMediationBannerName.Adaptive)
+            {
+                return null;
+            }
+
+            return (int)size.Name;
         }
     }
 }

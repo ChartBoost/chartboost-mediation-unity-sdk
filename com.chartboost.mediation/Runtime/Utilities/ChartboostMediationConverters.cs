@@ -1,4 +1,3 @@
-using Chartboost.Platforms;
 #if UNITY_ANDROID
 using Chartboost.Platforms.Android;
 #elif UNITY_IPHONE
@@ -36,7 +35,9 @@ namespace Chartboost.Utilities
         {
             get
             {
-                #if UNITY_ANDROID
+                #if UNITY_EDITOR
+                return _scaleFactor ??= Constants.EditorUIScaleFactor;
+                #elif UNITY_ANDROID
                 return _scaleFactor ??= ChartboostMediationAndroid.GetUIScaleFactor();
                 #elif UNITY_IPHONE
                 return _scaleFactor ??= ChartboostMediationIOS.GetUIScaleFactor();

@@ -936,17 +936,15 @@ const void* _chartboostMediationLoadBannerView(ChartboostMediationBannerAdDragEv
     return (__bridge void*)wrapper;
 }
 
-void _chartboostMediationBannerViewLoadAdWithScreenPos(const void *uniqueId, const char *placementName, const char* sizeName, float width, float height, long screenLocation, int hashCode, ChartboostMediationBannerAdLoadResultEvent callback) {
+void _chartboostMediationBannerViewLoadAdWithScreenPos(const void *uniqueId, const char *placementName, long sizeName, float width, float height, long screenLocation, int hashCode, ChartboostMediationBannerAdLoadResultEvent callback) {
     ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
 
-    ChartboostMediationBannerSize *size;
-    NSArray *sizeNames = @[@"ADAPTIVE", @"STANDARD", @"MEDIUM", @"LEADERBOARD"];
-    long item = [sizeNames indexOfObject:GetStringParam(sizeName)];
-    switch(item){
-        case 0 : size = [ChartboostMediationBannerSize adaptiveWithWidth:width maxHeight:height]; break;
-        case 1 : size = [ChartboostMediationBannerSize standard]; break;
-        case 2 : size = [ChartboostMediationBannerSize medium]; break;
-        case 3 : size = [ChartboostMediationBannerSize leaderboard]; break;
+    ChartboostMediationBannerSize *size;    
+    switch(sizeName){
+        case -1 : size = [ChartboostMediationBannerSize adaptiveWithWidth:width maxHeight:height]; break;
+        case 0 : size = [ChartboostMediationBannerSize standard]; break;
+        case 1 : size = [ChartboostMediationBannerSize medium]; break;
+        case 2 : size = [ChartboostMediationBannerSize leaderboard]; break;
         default: size =  [ChartboostMediationBannerSize standard]; break;
     }
     
@@ -971,19 +969,17 @@ void _chartboostMediationBannerViewLoadAdWithScreenPos(const void *uniqueId, con
     }];    
 }
 
-void _chartboostMediationBannerViewLoadAdWithXY(const void *uniqueId, const char *placementName, const char* sizeName, float width, float height, float x, float y, int hashCode, ChartboostMediationBannerAdLoadResultEvent callback) {
+void _chartboostMediationBannerViewLoadAdWithXY(const void *uniqueId, const char *placementName, long sizeName, float width, float height, float x, float y, int hashCode, ChartboostMediationBannerAdLoadResultEvent callback) {
     ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
 
     ChartboostMediationBannerSize *size;
-    NSArray *sizeNames = @[@"ADAPTIVE", @"STANDARD", @"MEDIUM", @"LEADERBOARD"];
-    long item = [sizeNames indexOfObject:GetStringParam(sizeName)];
-    switch(item){
-        case 0 : size = [ChartboostMediationBannerSize adaptiveWithWidth:width maxHeight:height]; break;
-        case 1 : size = [ChartboostMediationBannerSize standard]; break;
-        case 2 : size = [ChartboostMediationBannerSize medium]; break;
-        case 3 : size = [ChartboostMediationBannerSize leaderboard]; break;
-        default: size =  [ChartboostMediationBannerSize standard]; break;
-    }
+    switch(sizeName){
+            case -1 : size = [ChartboostMediationBannerSize adaptiveWithWidth:width maxHeight:height]; break;
+            case 0 : size = [ChartboostMediationBannerSize standard]; break;
+            case 1 : size = [ChartboostMediationBannerSize medium]; break;
+            case 2 : size = [ChartboostMediationBannerSize leaderboard]; break;
+            default: size =  [ChartboostMediationBannerSize standard]; break;
+        }
     
     ChartboostMediationBannerLoadRequest *loadRequest = [[ChartboostMediationBannerLoadRequest alloc] initWithPlacement:GetStringParam(placementName) size:size];
     UIViewController* viewController = [[ChartboostMediationObserver sharedObserver] getBannerViewController:bannerView size:size.size x:x y:y];
@@ -1025,14 +1021,14 @@ const char * _chartboostMediationBannerViewGetSize(const void* uniqueId){
     if(bannerView.size.type == 0) {  // Fixed
         int width = bannerView.size.size.width;
         switch (width) {
-            case 320: nameValue = @"STANDARD"; break;
-            case 300: nameValue = @"MEDIUM"; break;
-            case 728: nameValue = @"LEADERBOARD"; break;
+            case 320: nameValue = [NSString stringWithFormat:@"%d", 0]; break;
+            case 300: nameValue = [NSString stringWithFormat:@"%d", 1]; break;
+            case 728: nameValue = [NSString stringWithFormat:@"%d", 2]; break;
             default:break;
         }
     }
     else{
-        nameValue = @"ADAPTIVE";
+        nameValue = [NSString stringWithFormat:@"%d", -1];
     }
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:nameValue,nameKey,aspectRatioValue,aspectRatioKey,widthValue,widthKey,heightValue,heightKey,typeValue, typeKey, nil];
 

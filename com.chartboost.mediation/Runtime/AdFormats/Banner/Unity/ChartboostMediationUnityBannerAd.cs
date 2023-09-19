@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Chartboost.Banner;
@@ -7,22 +8,16 @@ using Chartboost.Utilities;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
+using static Chartboost.Utilities.Constants;
 using Logger = Chartboost.Utilities.Logger;
 
 namespace Chartboost.AdFormats.Banner.Unity
 {
-    public enum UnityBannerAdSize
-    {
-        Adaptive,
-        Standard,
-        Medium,
-        Leaderboard
-    }
-    
     public delegate void ChartboostMediationUnityBannerAdEvent();
 
     public delegate void ChartboostMediationUnityBannerAdDragEvent(float x, float y);
     
+    [RequireComponent(typeof(RectTransform))]
     public partial class ChartboostMediationUnityBannerAd : MonoBehaviour
     {
         public ChartboostMediationUnityBannerAdEvent DidLoad;
@@ -37,8 +32,8 @@ namespace Chartboost.AdFormats.Banner.Unity
         [SerializeField] 
         private bool draggable = true;
         
-        [SerializeField][HideInInspector] 
-        private UnityBannerAdSize size;
+        [SerializeField][HideInInspector][InspectorName("Size")] 
+        private ChartboostMediationBannerName sizeName;
         [SerializeField][HideInInspector] 
         private bool resizeToFit;
         [SerializeField][HideInInspector] 
@@ -49,8 +44,15 @@ namespace Chartboost.AdFormats.Banner.Unity
         private IChartboostMediationBannerView _bannerView;
 
         # region Unity Lifecycle
-        
-        private void Start() => ChartboostMediation.DidStart += ChartboostMediationOnDidStart;
+        private void Start()
+        {
+            if (sizeName != ChartboostMediationBannerName.Adaptive)
+            {
+                LockToFixedSize(sizeName);
+            }
+            
+            ChartboostMediation.DidStart += ChartboostMediationOnDidStart;
+        }
 
         private void OnEnable() => BannerView?.SetVisibility(true);
 
@@ -75,7 +77,7 @@ namespace Chartboost.AdFormats.Banner.Unity
                 draggable = value;
             }
         }
-        
+
         public bool ResizeToFit { get => resizeToFit; set => resizeToFit = value; }
 
         public async Task<ChartboostMediationBannerAdLoadResult> Load()
@@ -87,35 +89,12 @@ namespace Chartboost.AdFormats.Banner.Unity
                 return new ChartboostMediationBannerAdLoadResult(new ChartboostMediationError(error));
             }
             
-            var recTransform = GetComponent<RectTransform>();
-            var layoutParams = recTransform.LayoutParams();
-            if (recTransform.GetComponentInParent<LayoutGroup>())
-            {
-                // Note : if rectTransform is part of a layoutgroup then we need to wait until the layout is created
-                // https://forum.unity.com/threads/solved-cant-get-the-rect-width-rect-height-of-an-element-when-using-layouts.377953/
-                while (layoutParams.width == 0 && layoutParams.height == 0) // TODO: Find a better approach => use minWidth and minHeight instead of 0s ?
-                {
-                    await Task.Yield();
-                    layoutParams = recTransform.LayoutParams();
-                }
-            }
-            
-            var width = ChartboostMediationConverters.PixelsToNative(layoutParams.width);
-            var height = ChartboostMediationConverters.PixelsToNative(layoutParams.height);
-
-            var bannerViewSize = this.size switch
-            {
-                UnityBannerAdSize.Standard => ChartboostMediationBannerAdSize.Standard,
-                UnityBannerAdSize.Medium => ChartboostMediationBannerAdSize.MediumRect,
-                UnityBannerAdSize.Leaderboard => ChartboostMediationBannerAdSize.Leaderboard,
-                _ => ChartboostMediationBannerAdSize.Adaptive(width, height)
-            };
-
-            var loadRequest = new ChartboostMediationBannerAdLoadRequest(placementName, bannerViewSize);
-            
+            var containerSize = await GetContainerSizeInNative();
+            var loadRequest = new ChartboostMediationBannerAdLoadRequest(placementName, containerSize);
+            var layoutParams = GetComponent<RectTransform>().LayoutParams();
             var x = ChartboostMediationConverters.PixelsToNative(layoutParams.x);
             var y = ChartboostMediationConverters.PixelsToNative(layoutParams.y);
-            
+        
             return await BannerView.Load(loadRequest, x, y);
         }
         
@@ -133,7 +112,7 @@ namespace Chartboost.AdFormats.Banner.Unity
 
         public string LoadId => BannerView?.LoadId;
 
-        public ChartboostMediationBannerAdSize AdSize => BannerView?.AdSize;
+        public ChartboostMediationBannerAdSize? AdSize => BannerView?.AdSize;
 
         public ChartboostMediationBannerHorizontalAlignment HorizontalAlignment
         {
@@ -158,6 +137,40 @@ namespace Chartboost.AdFormats.Banner.Unity
         public void ResetAd() => BannerView.Reset();
         
         #endregion
+        
+        public void LockToFixedSize(ChartboostMediationBannerName fixedSizeName)
+        {
+            // ReSharper disable once PossibleNullReferenceException
+            var canvas =  GetComponentInParent<Canvas>();
+            var rect = GetComponent<RectTransform>();
+            
+            var canvasScale = canvas.transform.localScale.x;
+            float width;
+            float height;
+
+            switch (fixedSizeName)
+            {
+                case ChartboostMediationBannerName.Adaptive: 
+                    return;
+                case ChartboostMediationBannerName.Standard: 
+                    width = ChartboostMediationConverters.NativeToPixels(BannerSize.STANDARD.Item1)/canvasScale;
+                    height = ChartboostMediationConverters.NativeToPixels(BannerSize.STANDARD.Item2)/canvasScale;
+                    break;
+                case ChartboostMediationBannerName.Medium:
+                    width = ChartboostMediationConverters.NativeToPixels(BannerSize.MEDIUM.Item1)/canvasScale;
+                    height = ChartboostMediationConverters.NativeToPixels(BannerSize.MEDIUM.Item2)/canvasScale;
+                    break;
+                case ChartboostMediationBannerName.Leaderboard:
+                    width = ChartboostMediationConverters.NativeToPixels(BannerSize.LEADERBOARD.Item1)/canvasScale;
+                    height = ChartboostMediationConverters.NativeToPixels(BannerSize.LEADERBOARD.Item2)/canvasScale;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
+            rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+        }
         
         public override string ToString()
         {
@@ -214,9 +227,9 @@ namespace Chartboost.AdFormats.Banner.Unity
 
         #endregion
 
-        private void SetUnityBannerAdSize(UnityBannerAdSize size)
+        private void SetSizeName(ChartboostMediationBannerName size)
         {
-            this.size = size;
+            this.sizeName = size;
         }
 
         private IChartboostMediationBannerView BannerView
@@ -237,6 +250,33 @@ namespace Chartboost.AdFormats.Banner.Unity
         
                 return _bannerView;
             }
+        }
+
+        private async Task<ChartboostMediationBannerAdSize> GetContainerSizeInNative()
+        {
+            var recTransform = GetComponent<RectTransform>();
+            var layoutParams = recTransform.LayoutParams();
+            
+            // Note : if rectTransform is part of a layoutgroup then we need to wait until the layout is created
+            // https://forum.unity.com/threads/solved-cant-get-the-rect-width-rect-height-of-an-element-when-using-layouts.377953/
+            if (recTransform.GetComponentInParent<LayoutGroup>())
+            {
+                // Wait a couple of frames
+                await Task.Yield();
+                await Task.Yield();
+                layoutParams = recTransform.LayoutParams();
+            }
+            
+            var width = ChartboostMediationConverters.PixelsToNative(layoutParams.width);
+            var height = ChartboostMediationConverters.PixelsToNative(layoutParams.height);
+
+            return sizeName switch
+            {
+                ChartboostMediationBannerName.Standard => ChartboostMediationBannerAdSize.Standard,
+                ChartboostMediationBannerName.Medium => ChartboostMediationBannerAdSize.MediumRect,
+                ChartboostMediationBannerName.Leaderboard => ChartboostMediationBannerAdSize.Leaderboard,
+                _ => ChartboostMediationBannerAdSize.Adaptive(width, height)
+            };
         }
         
     }

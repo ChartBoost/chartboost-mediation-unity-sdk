@@ -18,19 +18,10 @@ namespace Chartboost.Banner
         {
             LogTag = "ChartboostMediation Banner (iOS)";
 
-            if (size.Name == "ADAPTIVE")
-            {
-                Logger.LogError(LogTag,$"Adaptive sizes are not supported for `ChartboostMediationBannerAd`. Use `ChartboostMediationBannerView` instead");
+            var fixedSize = size.GetFixedSize();
+            if(fixedSize == null)
                 return;
-            }
-            
-            var fixedSize = size.Name switch
-            {
-                "STANDARD" => 0,
-                "MEDIUM" => 1,
-                "LEADERBOARD" => 2,
-                _ => 0
-            };
+
             _uniqueId = _chartboostMediationGetBannerAd(placement, fixedSize);
         }
 

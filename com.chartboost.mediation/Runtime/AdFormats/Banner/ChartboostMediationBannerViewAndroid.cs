@@ -101,7 +101,7 @@ namespace Chartboost.AdFormats.Banner
             }
             
             LoadRequest = new Later<ChartboostMediationBannerAdLoadResult>();
-            _bannerAd.Call("load", request.PlacementName, request.Size.Name, request.Size.Width, request.Size.Height, (int)screenLocation);
+            _bannerAd.Call("load", request.PlacementName, (int)request.Size.Name, request.Size.Width, request.Size.Height, (int)screenLocation);
             
             var result = await LoadRequest;
             LoadRequest = null;
@@ -122,7 +122,7 @@ namespace Chartboost.AdFormats.Banner
             LoadRequest = new Later<ChartboostMediationBannerAdLoadResult>();
             // y is counted from top in Android whereas Unity counts it from bottom
             y = ChartboostMediationConverters.PixelsToNative(Screen.height) - y;
-            _bannerAd.Call("load", request.PlacementName, request.Size.Name, request.Size.Width, request.Size.Height, x, y);
+            _bannerAd.Call("load", request.PlacementName, (int)request.Size.Name, request.Size.Width, request.Size.Height, x, y);
 
             var result = await LoadRequest;
             LoadRequest = null;
