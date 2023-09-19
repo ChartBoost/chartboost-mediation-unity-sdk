@@ -242,8 +242,9 @@ public class Demo : MonoBehaviour
             ? _screenLocations[bannerLocationDropdown.value] : ChartboostMediationBannerAdScreenLocation.Center; 
         
         Log($"Creating new Unity banner ad");
-        _bannerAd = ChartboostMediation.GetUnityBannerAd(bannerPlacementInputField.text, true, size, screenPos);
-        _bannerAd.WillAppear += WillAppearBanner;
+        var canvas = GetComponentInParent<Canvas>();
+        _bannerAd = ChartboostMediation.GetUnityBannerAd(bannerPlacementInputField.text, canvas, size, screenPos);
+        _bannerAd.DidLoad += DidLoadBanner;
         _bannerAd.DidClick += DidClickBanner;
         _bannerAd.DidRecordImpression += DidRecordImpressionBanner;
         _bannerAd.DidDrag += DidDragBanner;
@@ -320,9 +321,9 @@ public class Demo : MonoBehaviour
 
     }
 
-    private void WillAppearBanner()
+    private void DidLoadBanner()
     {
-        Log($"WillAppearBanner {_bannerAd}");
+        Log($"DidLoadBanner {_bannerAd}");
     }
     
     private void DidRecordImpressionBanner()

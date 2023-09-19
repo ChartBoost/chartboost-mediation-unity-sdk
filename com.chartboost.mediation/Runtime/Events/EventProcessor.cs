@@ -25,7 +25,7 @@ namespace Chartboost.Events
 
         internal enum BannerAdEvents
         {
-            Appear = 0,
+            Load = 0,
             Click = 1,
             RecordImpression = 2,
             Drag = 3
@@ -157,8 +157,8 @@ namespace Chartboost.Events
                     
                     switch ((BannerAdEvents)eventType)
                     {
-                        case BannerAdEvents.Appear : 
-                            ad.OnBannerWillAppear(ad);
+                        case BannerAdEvents.Load : 
+                            ad.OnBannerDidLoad(ad);
                             break;
                         case BannerAdEvents.Click :
                             ad.OnBannerClick(ad);

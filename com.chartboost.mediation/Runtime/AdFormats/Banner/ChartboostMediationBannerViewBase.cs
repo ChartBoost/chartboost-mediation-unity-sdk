@@ -12,7 +12,7 @@ namespace Chartboost.AdFormats.Banner
 {
     internal abstract class ChartboostMediationBannerViewBase : IChartboostMediationBannerView
     {
-        public event ChartboostMediationBannerEvent WillAppear;
+        public event ChartboostMediationBannerEvent DidLoad;
         public event ChartboostMediationBannerEvent DidClick;
         public event ChartboostMediationBannerEvent DidRecordImpression;
         public event ChartboostMediationBannerDragEvent DidDrag;
@@ -69,7 +69,7 @@ namespace Chartboost.AdFormats.Banner
             CacheManager.ReleaseBannerAd(UniqueId.ToInt64());
         }
 
-        internal virtual void OnBannerWillAppear(IChartboostMediationBannerView bannerView) => WillAppear?.Invoke(bannerView);
+        internal virtual void OnBannerDidLoad(IChartboostMediationBannerView bannerView) => DidLoad?.Invoke(bannerView);
 
         internal virtual void OnBannerClick(IChartboostMediationBannerView bannerView) => DidClick?.Invoke(bannerView);
 

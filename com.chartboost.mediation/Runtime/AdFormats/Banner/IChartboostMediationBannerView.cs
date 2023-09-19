@@ -41,8 +41,7 @@ namespace Chartboost.AdFormats.Banner
         abstract void Reset();
         abstract void Destroy();
         
-        // ReSharper disable once InconsistentNaming
-        abstract event ChartboostMediationBannerEvent WillAppear;
+        abstract event ChartboostMediationBannerEvent DidLoad;
         abstract event ChartboostMediationBannerEvent DidClick;
         abstract event ChartboostMediationBannerEvent DidRecordImpression;
         abstract event ChartboostMediationBannerDragEvent DidDrag;

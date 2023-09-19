@@ -165,14 +165,14 @@ namespace Chartboost.Platforms.Android
                 {
                     loadResult = new ChartboostMediationBannerAdLoadResult(bannerView.LoadId, null, null);
                     EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(),
-                        (int)EventProcessor.BannerAdEvents.Appear);
+                        (int)EventProcessor.BannerAdEvents.Load);
                 }
 
                 androidBannerView.LoadRequest.Complete(loadResult);
             }
 
             private void onAdViewAdded(AndroidJavaObject ad) =>
-                EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Appear);
+                EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Load);
             
             private void onAdClicked(AndroidJavaObject ad) =>
                 EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Click);

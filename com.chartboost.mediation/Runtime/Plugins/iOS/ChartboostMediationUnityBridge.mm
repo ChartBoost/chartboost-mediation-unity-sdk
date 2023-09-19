@@ -476,8 +476,10 @@ struct Implementation {
 
 #pragma mark ChartboostMediationBannerAdDelegate
 - (void)willAppearWithBannerView:(ChartboostMediationBannerView *)bannerView {
-    NSLog(@"WillAppear");
-    [self serializeBannerEvent:bannerView bannerEvent:BannerAppear];
+    // run on next iteration of the run loop
+    sendToMain(^{
+        [self serializeBannerEvent:bannerView bannerEvent:BannerAppear];
+    });
 }
 
 - (void)didClickWithBannerView:(ChartboostMediationBannerView *)bannerView {

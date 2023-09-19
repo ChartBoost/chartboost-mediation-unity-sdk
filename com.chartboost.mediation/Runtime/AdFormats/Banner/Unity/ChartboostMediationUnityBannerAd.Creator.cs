@@ -18,12 +18,12 @@ namespace Chartboost.AdFormats.Banner.Unity
 #endif
 
         internal static ChartboostMediationUnityBannerAd Instantiate(
+            Canvas canvas = null,
             ChartboostMediationBannerAdSize size = null,
             ChartboostMediationBannerAdScreenLocation screenLocation = ChartboostMediationBannerAdScreenLocation.Center)
         {
-            // Find canvas with highest sorting order
-            var canvas = ChartboostMediationUtils.GetCanvasWithHighestSortingOrder();
-
+            canvas ??= ChartboostMediationUtils.GetCanvas();
+            
             // Instantiate inside this canvas
             var unityBannerAd = new GameObject("ChartboostMediationUnityBannerAd")
                 .AddComponent<ChartboostMediationUnityBannerAd>();
