@@ -44,7 +44,7 @@ namespace Chartboost.AdFormats.Banner
                 var adLoadResult = new ChartboostMediationBannerAdLoadResult(error);
                 return Task.FromResult(adLoadResult);
             }
-            Logger.Log(LogTag, $"Loading banner ad for placement {request.PlacementName} and size {request.Size.Name} at {screenLocation}");
+            Logger.Log(LogTag, $"Loading banner ad for placement {request.PlacementName} and size {request.Size.SizeType} at {screenLocation}");
             return Task.FromResult<ChartboostMediationBannerAdLoadResult>(null);
         }
 
@@ -56,7 +56,7 @@ namespace Chartboost.AdFormats.Banner
                 var adLoadResult = new ChartboostMediationBannerAdLoadResult(error);
                 return Task.FromResult(adLoadResult);
             }
-            Logger.Log(LogTag, $"Loading banner ad for placement {request.PlacementName} and size {request.Size.Name} at ({x}, {y})");
+            Logger.Log(LogTag, $"Loading banner ad for placement {request.PlacementName} and size {request.Size.SizeType} at ({x}, {y})");
             return Task.FromResult<ChartboostMediationBannerAdLoadResult>(null);
         }
 

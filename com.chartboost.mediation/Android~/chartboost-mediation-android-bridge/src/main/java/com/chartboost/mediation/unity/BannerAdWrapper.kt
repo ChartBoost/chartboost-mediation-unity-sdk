@@ -101,24 +101,13 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
 
     fun load(
         placementName: String,
-        sizeName: String,
+        sizeType: Int,
         sizeWidth: Float,
         sizeHeight: Float,
         screenLocation: Int
     ) {
         runTaskOnUiThread {
-            var size = HeliumBannerAd.HeliumBannerSize.STANDARD // default
-            when (sizeName) {
-                "ADAPTIVE" -> size = HeliumBannerAd.HeliumBannerSize.bannerSize(
-                    sizeWidth.roundToInt(),
-                    sizeHeight.roundToInt()
-                )
-
-                "STANDARD" -> size = HeliumBannerAd.HeliumBannerSize.STANDARD
-                "MEDIUM" -> size = HeliumBannerAd.HeliumBannerSize.MEDIUM
-                "LEADERBOARD" -> size = HeliumBannerAd.HeliumBannerSize.LEADERBOARD
-            }
-
+            val size = getSizeFromSizeType(sizeType, sizeWidth, sizeHeight)
             createBannerLayout(size, screenLocation)
             ad.load(placementName, size)
         }
@@ -126,24 +115,14 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
 
     fun load(
         placementName: String,
-        sizeName: String,
+        sizeType: Int,
         sizeWidth: Float,
         sizeHeight: Float,
         x: Float,
         y: Float
     ) {
         runTaskOnUiThread {
-            var size = HeliumBannerAd.HeliumBannerSize.STANDARD // default
-            when (sizeName) {
-                "ADAPTIVE" -> size = HeliumBannerAd.HeliumBannerSize.bannerSize(
-                    sizeWidth.roundToInt(),
-                    sizeHeight.roundToInt()
-                )
-
-                "STANDARD" -> size = HeliumBannerAd.HeliumBannerSize.STANDARD
-                "MEDIUM" -> size = HeliumBannerAd.HeliumBannerSize.MEDIUM
-                "LEADERBOARD" -> size = HeliumBannerAd.HeliumBannerSize.LEADERBOARD
-            }
+            val size = getSizeFromSizeType(sizeType, sizeWidth, sizeHeight)
             createBannerLayout(size, x, y)
             ad.load(placementName, size)
         }
@@ -224,7 +203,13 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
         }
 
         val json = JSONObject()
-        json.put("name", size?.name)
+        json.put("sizeType", when(size?.name) {
+            "ADAPTIVE" -> -1
+            "STANDARD" -> 0
+            "MEDIUM" -> 1
+            "LEADERBOARD" -> 2
+            else -> 0
+        })
         json.put("aspectRatio", size?.aspectRatio)
         json.put("width", creativeSize?.width ?: { size?.width })
         json.put("height", creativeSize?.height ?: { size?.height })
@@ -432,6 +417,20 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
             Log.w(TAG, "Helium encountered an error calling banner load() - ${ex.message}")
         }
         bannerLayout = layout
+    }
+    
+    private fun getSizeFromSizeType(sizeType: Int, sizeWidth: Float, sizeHeight: Float): HeliumBannerAd.HeliumBannerSize {
+        var size:HeliumBannerAd.HeliumBannerSize = HeliumBannerAd.HeliumBannerSize.bannerSize(0,0);
+        when (sizeType) {
+            -1 -> size = HeliumBannerAd.HeliumBannerSize.bannerSize(
+                sizeWidth.roundToInt(),
+                sizeHeight.roundToInt()
+            )
+            0 -> size = HeliumBannerAd.HeliumBannerSize.STANDARD
+            1 -> size = HeliumBannerAd.HeliumBannerSize.MEDIUM
+            2 -> size = HeliumBannerAd.HeliumBannerSize.LEADERBOARD
+        }
+        return size;
     }
 
     private fun destroyBannerLayout() {

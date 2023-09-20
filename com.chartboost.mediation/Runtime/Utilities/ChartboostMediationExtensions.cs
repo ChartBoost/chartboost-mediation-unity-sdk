@@ -1,8 +1,8 @@
 using System;
-using Chartboost.AdFormats.Banner.Unity;
+using Chartboost.Banner;
 using Newtonsoft.Json;
 using UnityEngine;
-using UnityEngine.Serialization;
+using static Chartboost.Utilities.Constants;
 
 namespace Chartboost.Utilities
 {
@@ -51,6 +51,17 @@ namespace Chartboost.Utilities
             };
         
             return lp;
+        }
+
+        public static Vector2 Size(this ChartboostMediationBannerSizeType sizeType)
+        {
+            return sizeType switch
+            {
+                ChartboostMediationBannerSizeType.Standard => new Vector2(BannerSize.STANDARD.Item1, BannerSize.STANDARD.Item2),
+                ChartboostMediationBannerSizeType.Medium => new Vector2(BannerSize.MEDIUM.Item1, BannerSize.MEDIUM.Item2),
+                ChartboostMediationBannerSizeType.Leaderboard => new Vector2(BannerSize.LEADERBOARD.Item1, BannerSize.LEADERBOARD.Item2),
+                _ => Vector2.zero
+            };
         }
     }
 }
