@@ -20,7 +20,7 @@ namespace Chartboost.Banner
     /// <summary>
     /// Chartboost Mediation defined banner sizes.
     /// </summary>
-    public class ChartboostMediationBannerAdSize
+    public struct ChartboostMediationBannerAdSize
     {
         [JsonProperty("name")]
         public ChartboostMediationBannerName Name { get; private set; }

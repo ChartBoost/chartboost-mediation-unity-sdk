@@ -112,7 +112,7 @@ namespace Chartboost.AdFormats.Banner.Unity
 
         public string LoadId => BannerView?.LoadId;
 
-        public ChartboostMediationBannerAdSize? AdSize => BannerView?.AdSize;
+        public ChartboostMediationBannerAdSize AdSize => BannerView?.AdSize ?? ChartboostMediationBannerAdSize.Adaptive(0,0);
 
         public ChartboostMediationBannerHorizontalAlignment HorizontalAlignment
         {
