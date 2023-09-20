@@ -36,8 +36,6 @@ public class Demo : MonoBehaviour
     public Dropdown horizontalAlignmentDropdown;
     public Dropdown verticalAlignmentDropdown;
     public Dropdown resizeDropdown;
-    private bool _bannerAdIsVisible = true;
-    private bool _bannerAdIsDraggable = true;
 
     public ScrollRect outputTextScrollRect;
     public Text outputText;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Chartboost.Banner;
@@ -7,6 +8,7 @@ using Chartboost.Utilities;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
+using static Chartboost.Utilities.Constants;
 using Logger = Chartboost.Utilities.Logger;
 
 namespace Chartboost.AdFormats.Banner.Unity

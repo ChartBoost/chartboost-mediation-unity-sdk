@@ -2,6 +2,7 @@
 using System;
 using Chartboost.AdFormats.Banner;
 using Chartboost.AdFormats.Banner.Unity;
+using Chartboost.Banner;
 using Chartboost.Utilities;
 using UnityEditor;
 using UnityEngine;
