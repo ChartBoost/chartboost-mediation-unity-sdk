@@ -19,23 +19,9 @@ namespace Chartboost.Banner
         public ChartboostMediationBannerAndroid(string placementName, ChartboostMediationBannerAdSize size) : base(placementName, size)
         {
             LogTag = "ChartboostMediationBanner (Android)";
-            
-            if (size.Name == "ADAPTIVE")
-            {
-                Logger.LogError(LogTag,$"Adaptive sizes are not supported for `ChartboostMediationBannerAd`. Use `ChartboostMediationBannerView` instead");
-                return;
-            }
-            
-            var fixedSize = size.Name switch
-            {
-                "STANDARD" => 0,
-                "MEDIUM" => 1,
-                "LEADERBOARD" => 2,
-                _ => 0
-            };
-            
+
             using var unityBridge = ChartboostMediationAndroid.GetUnityBridge();
-            _androidAd = unityBridge.CallStatic<AndroidJavaObject>("getBannerAd", placementName, fixedSize);
+            _androidAd = unityBridge.CallStatic<AndroidJavaObject>("getBannerAd", placementName, (int)size.SizeType);
             _uniqueId = _androidAd.HashCode();
         }
 

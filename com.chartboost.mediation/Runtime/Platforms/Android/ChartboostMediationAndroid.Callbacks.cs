@@ -165,14 +165,14 @@ namespace Chartboost.Platforms.Android
                 {
                     loadResult = new ChartboostMediationBannerAdLoadResult(bannerView.LoadId, null, null);
                     EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(),
-                        (int)EventProcessor.BannerAdEvents.Appear);
+                        (int)EventProcessor.BannerAdEvents.Load);
                 }
 
                 androidBannerView.LoadRequest.Complete(loadResult);
             }
 
             private void onAdViewAdded(AndroidJavaObject ad) =>
-                EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Appear);
+                EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Load);
             
             private void onAdClicked(AndroidJavaObject ad) =>
                 EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Click);
@@ -181,10 +181,8 @@ namespace Chartboost.Platforms.Android
                 EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.RecordImpression);
 
             private void onAdDrag(AndroidJavaObject ad, float x, float y)
-            {
-                EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Drag, x, Screen.height - y);
-            }
-            
+                => EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(), (int)EventProcessor.BannerAdEvents.Drag, x, Screen.height - y);
+
         }
 
         #endregion

@@ -27,6 +27,5 @@ namespace Chartboost.AdFormats.Banner
             base.Load(request, screenLocation);
             return Task.FromResult(new ChartboostMediationBannerAdLoadResult(new ChartboostMediationError("Unsupported Platform")));
         }
-
     }
 }

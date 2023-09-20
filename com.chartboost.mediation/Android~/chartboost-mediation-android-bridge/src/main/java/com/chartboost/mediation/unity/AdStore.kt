@@ -49,7 +49,6 @@ class AdStore {
         @JvmStatic
         fun releaseBannerAd(hashCode: Int)
         {
-            val bannerAd = bannerAdStore[hashCode]
             bannerAdStore.remove(hashCode)
         }
 

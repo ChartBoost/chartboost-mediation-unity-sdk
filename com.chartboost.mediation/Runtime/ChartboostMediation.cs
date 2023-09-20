@@ -227,15 +227,14 @@ namespace Chartboost
         /// Returns a new gameobject that can be used to load and display banner ads.
         /// </summary>
         /// <param name="placementName">The placement name for this banner ad</param>
-        /// <param name="draggable">if this ad can be dragged on screen</param>
+        /// <param name="canvas">Canvas under which this gameobject will be created</param>
         /// <param name="size">size of the gameobject</param>
         /// <param name="screenLocation">pre-defined location on screen where this gameobject will be created</param>
         /// <returns></returns>
-        public static ChartboostMediationUnityBannerAd GetUnityBannerAd(string placementName, bool draggable = true, ChartboostMediationBannerAdSize size = null, ChartboostMediationBannerAdScreenLocation screenLocation = ChartboostMediationBannerAdScreenLocation.Center)
+        public static ChartboostMediationUnityBannerAd GetUnityBannerAd(string placementName, Canvas canvas, ChartboostMediationBannerAdSize? size = null, ChartboostMediationBannerAdScreenLocation screenLocation = ChartboostMediationBannerAdScreenLocation.Center)
         {
-            var unityBannerAd = ChartboostMediationUnityBannerAd.Instantiate(size, screenLocation);
+            var unityBannerAd = ChartboostMediationUnityBannerAd.Instantiate(canvas, size, screenLocation);
             unityBannerAd.PlacementName = placementName;
-            unityBannerAd.Draggable = draggable;
             return unityBannerAd;
         }
         

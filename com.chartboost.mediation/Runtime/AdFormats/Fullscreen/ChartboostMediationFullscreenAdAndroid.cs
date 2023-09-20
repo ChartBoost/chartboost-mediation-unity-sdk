@@ -1,6 +1,5 @@
 #if UNITY_ANDROID
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Chartboost.Events;
 using Chartboost.Platforms.Android;

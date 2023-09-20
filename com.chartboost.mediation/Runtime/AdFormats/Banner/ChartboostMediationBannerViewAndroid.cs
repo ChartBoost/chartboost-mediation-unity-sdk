@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Chartboost.Banner;
 using Chartboost.Events;
-using Chartboost.Platforms.Android;
 using Chartboost.Requests;
 using Chartboost.Results;
 using Chartboost.Utilities;
@@ -107,7 +106,7 @@ namespace Chartboost.AdFormats.Banner
             }
             
             LoadRequest = new Later<ChartboostMediationBannerAdLoadResult>();
-            _bannerAd.Call("load", request.PlacementName, request.Size.Name, request.Size.Width, request.Size.Height, (int)screenLocation);
+            _bannerAd.Call("load", request.PlacementName, (int)request.Size.SizeType, request.Size.Width, request.Size.Height, (int)screenLocation);
             
             var result = await LoadRequest;
             LoadRequest = null;
@@ -129,7 +128,7 @@ namespace Chartboost.AdFormats.Banner
             LoadRequest = new Later<ChartboostMediationBannerAdLoadResult>();
             // y is counted from top in Android whereas Unity counts it from bottom
             y = ChartboostMediationConverters.PixelsToNative(Screen.height) - y;
-            _bannerAd.Call("load", request.PlacementName, request.Size.Name, request.Size.Width, request.Size.Height, x, y);
+            _bannerAd.Call("load", request.PlacementName, (int)request.Size.SizeType, request.Size.Width, request.Size.Height, x, y);
 
             var result = await LoadRequest;
             LoadRequest = null;
@@ -158,7 +157,7 @@ namespace Chartboost.AdFormats.Banner
         public override void Reset()
         {
             base.Reset();
-            _bannerAd.Call("reset"); ;
+            _bannerAd.Call("reset");
         }
 
         public override void Destroy()

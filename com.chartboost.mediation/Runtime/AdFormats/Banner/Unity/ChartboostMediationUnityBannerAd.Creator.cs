@@ -18,38 +18,30 @@ namespace Chartboost.AdFormats.Banner.Unity
 #endif
 
         internal static ChartboostMediationUnityBannerAd Instantiate(
-            ChartboostMediationBannerAdSize size = null,
+            Canvas canvas = null,
+            ChartboostMediationBannerAdSize? size = null,
             ChartboostMediationBannerAdScreenLocation screenLocation = ChartboostMediationBannerAdScreenLocation.Center)
         {
-            // Find canvas with highest sorting order
-            var canvas =  ChartboostMediationUtils.GetCanvasWithHighestSortingOrder();
+            canvas ??= ChartboostMediationUtils.GetCanvas();
             
             // Instantiate inside this canvas
-            var unityBannerAd = new GameObject("ChartboostMediationUnityBannerAd").AddComponent<ChartboostMediationUnityBannerAd>();
+            var unityBannerAd = new GameObject("ChartboostMediationUnityBannerAd")
+                .AddComponent<ChartboostMediationUnityBannerAd>();
             
-            // var unityBannerAd = Instantiate(
-            //     Resources.Load<ChartboostMediationUnityBannerAd>("Chartboost Mediation/Banner/Unity/CM_UnityBannerAd"), 
-            //     canvas.transform);
+            var bannerTransform = unityBannerAd.transform;
+            bannerTransform.parent = canvas.transform;
+            bannerTransform.localScale = Vector3.one;
 
-            unityBannerAd.transform.parent = canvas.transform;
-            unityBannerAd.name = "CM_UnityBannerAd";
-            unityBannerAd.transform.localScale = Vector3.one;
-            var rectTransform = unityBannerAd.gameObject.AddComponent<RectTransform>();
-            rectTransform.anchoredPosition = Vector2.zero;
-            
-            size ??= ChartboostMediationBannerAdSize.Adaptive(BannerSize.STANDARD.Item1, BannerSize.STANDARD.Item2);
-            var unityBannerAdSize = size.Name switch
-            {
-                "STANDARD" => UnityBannerAdSize.Standard,
-                "MEDIUM" => UnityBannerAdSize.Medium,
-                "LEADERBOARD" => UnityBannerAdSize.Leaderboard,
-                _ => UnityBannerAdSize.Adaptive
-            };
-            unityBannerAd.SetUnityBannerAdSize(unityBannerAdSize);
+            // If no size is provided use Standard size as default
+            var containerSize = size ?? ChartboostMediationBannerAdSize.Standard;
+            unityBannerAd.SetSizeType(containerSize.SizeType);
             
             var canvasScale = canvas.transform.localScale.x;
-            var width = ChartboostMediationConverters.NativeToPixels(size.Width)/canvasScale;
-            var height = ChartboostMediationConverters.NativeToPixels(size.Height)/canvasScale;
+            var width = ChartboostMediationConverters.NativeToPixels(containerSize.Width)/canvasScale;
+            var height = ChartboostMediationConverters.NativeToPixels(containerSize.Height)/canvasScale;
+            
+            var rectTransform = unityBannerAd.gameObject.GetComponent<RectTransform>();
+            rectTransform.anchoredPosition = Vector2.zero;
             rectTransform.sizeDelta = new Vector2(width, height);
 
             PlaceUnityBannerAd(unityBannerAd, screenLocation);
