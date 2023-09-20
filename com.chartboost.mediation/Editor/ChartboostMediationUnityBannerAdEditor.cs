@@ -15,7 +15,7 @@ namespace Chartboost.Editor
     [CustomEditor(typeof(ChartboostMediationUnityBannerAd))]
     internal class ChartboostMediationUnityBannerAdEditor : UnityEditor.Editor
     {
-        private SerializedProperty _sizeNameSP;
+        private SerializedProperty _sizeTypeSP;
         private SerializedProperty _horizontalAlignmentSP;
         private SerializedProperty _verticalAlignmentSP;
         private SerializedProperty _resizeToFitSP;
@@ -27,12 +27,12 @@ namespace Chartboost.Editor
 
         private void OnEnable()
         {
-            _sizeNameSP = serializedObject.FindProperty("sizeType");
+            _sizeTypeSP = serializedObject.FindProperty("sizeType");
             _horizontalAlignmentSP = serializedObject.FindProperty("horizontalAlignment");
             _verticalAlignmentSP = serializedObject.FindProperty("verticalAlignment");
             _resizeToFitSP = serializedObject.FindProperty("resizeToFit");
 
-            _sizeType = (ChartboostMediationBannerSizeType)_sizeNameSP.intValue;
+            _sizeType = (ChartboostMediationBannerSizeType)_sizeTypeSP.intValue;
             _resizeToFit = _resizeToFitSP.boolValue;
             _horizontalAlignment = (ChartboostMediationBannerHorizontalAlignment)_horizontalAlignmentSP.intValue;
             _verticalAlignment = (ChartboostMediationBannerVerticalAlignment)_verticalAlignmentSP.intValue;
@@ -60,7 +60,7 @@ namespace Chartboost.Editor
                 unityBannerAd.LockToFixedSize(_sizeType);
             }
             
-            _sizeNameSP.intValue = (int)_sizeType;
+            _sizeTypeSP.intValue = (int)_sizeType;
             _resizeToFitSP.boolValue = _resizeToFit;
             _horizontalAlignmentSP.intValue = (int)_horizontalAlignment;
             _verticalAlignmentSP.intValue = (int)_verticalAlignment;
