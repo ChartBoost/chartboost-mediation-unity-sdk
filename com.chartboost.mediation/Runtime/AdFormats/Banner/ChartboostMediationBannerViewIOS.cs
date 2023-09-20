@@ -103,11 +103,11 @@ namespace Chartboost.AdFormats.Banner
             CacheManager.TrackBannerAdLoadRequest(hashCode, request);
 
             var placement = request.PlacementName;
-            var sizeName = request.Size.Name;
+            var sizeType = request.Size.SizeType;
             var sizeWidth = request.Size.Width;
             var sizeHeight = request.Size.Height;
             
-            _chartboostMediationBannerViewLoadAdWithScreenPos(UniqueId, placement, (int)sizeName, sizeWidth, sizeHeight, (int)screenLocation, hashCode, BannerAdLoadResultCallbackProxy);
+            _chartboostMediationBannerViewLoadAdWithScreenPos(UniqueId, placement, (int)sizeType, sizeWidth, sizeHeight, (int)screenLocation, hashCode, BannerAdLoadResultCallbackProxy);
             
             var result = await proxy;
             return result;
@@ -120,12 +120,12 @@ namespace Chartboost.AdFormats.Banner
             CacheManager.TrackBannerAdLoadRequest(hashCode, request);
 
             var placement = request.PlacementName;
-            var sizeName = request.Size.Name;
+            var sizeType = request.Size.SizeType;
             var sizeWidth = request.Size.Width;
             var sizeHeight = request.Size.Height;
             // y is counted from top in iOS whereas Unity counts it from bottom
             y = ChartboostMediationConverters.PixelsToNative(Screen.height) - y;
-            _chartboostMediationBannerViewLoadAdWithXY(UniqueId, placement, (int)sizeName, sizeWidth, sizeHeight, x, y, hashCode, BannerAdLoadResultCallbackProxy);
+            _chartboostMediationBannerViewLoadAdWithXY(UniqueId, placement, (int)sizeType, sizeWidth, sizeHeight, x, y, hashCode, BannerAdLoadResultCallbackProxy);
             
             var result = await proxy;
             return result;
@@ -158,10 +158,10 @@ namespace Chartboost.AdFormats.Banner
         #region Native
         
         [DllImport("__Internal")]
-        private static extern void _chartboostMediationBannerViewLoadAdWithScreenPos(IntPtr uniqueId, string placementName, int sizeName, float width, float height, int screenLocation, int hashCode, ExternChartboostMediationBannerAdLoadResultEvent callback);
+        private static extern void _chartboostMediationBannerViewLoadAdWithScreenPos(IntPtr uniqueId, string placementName, int sizeType, float width, float height, int screenLocation, int hashCode, ExternChartboostMediationBannerAdLoadResultEvent callback);
 
         [DllImport("__Internal")]
-        private static extern void _chartboostMediationBannerViewLoadAdWithXY(IntPtr uniqueId, string placementName, int sizeName, float width, float height, float x, float y, int hashCode, ExternChartboostMediationBannerAdLoadResultEvent callback);
+        private static extern void _chartboostMediationBannerViewLoadAdWithXY(IntPtr uniqueId, string placementName, int sizeType, float width, float height, float x, float y, int hashCode, ExternChartboostMediationBannerAdLoadResultEvent callback);
 
         [DllImport("__Internal")]
         private static extern void _chartboostMediationBannerViewSetKeywords(IntPtr uniqueId, string keywords);

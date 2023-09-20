@@ -21,18 +21,18 @@ namespace Chartboost.Editor
         private SerializedProperty _resizeToFitSP;
         
         private bool _resizeToFit;
-        private ChartboostMediationBannerName _sizeName = ChartboostMediationBannerName.Standard;
+        private ChartboostMediationBannerSizeType _sizeType = ChartboostMediationBannerSizeType.Standard;
         private ChartboostMediationBannerHorizontalAlignment _horizontalAlignment = ChartboostMediationBannerHorizontalAlignment.Center;
         private ChartboostMediationBannerVerticalAlignment _verticalAlignment = ChartboostMediationBannerVerticalAlignment.Center;
 
         private void OnEnable()
         {
-            _sizeNameSP = serializedObject.FindProperty("sizeName");
+            _sizeNameSP = serializedObject.FindProperty("sizeType");
             _horizontalAlignmentSP = serializedObject.FindProperty("horizontalAlignment");
             _verticalAlignmentSP = serializedObject.FindProperty("verticalAlignment");
             _resizeToFitSP = serializedObject.FindProperty("resizeToFit");
 
-            _sizeName = (ChartboostMediationBannerName)_sizeNameSP.intValue;
+            _sizeType = (ChartboostMediationBannerSizeType)_sizeNameSP.intValue;
             _resizeToFit = _resizeToFitSP.boolValue;
             _horizontalAlignment = (ChartboostMediationBannerHorizontalAlignment)_horizontalAlignmentSP.intValue;
             _verticalAlignment = (ChartboostMediationBannerVerticalAlignment)_verticalAlignmentSP.intValue;
@@ -42,9 +42,9 @@ namespace Chartboost.Editor
         {
             DrawDefaultInspector();
 
-            _sizeName = (ChartboostMediationBannerName)EditorGUILayout.EnumPopup("Size", _sizeName);
+            _sizeType = (ChartboostMediationBannerSizeType)EditorGUILayout.EnumPopup("Size", _sizeType);
             
-            if (_sizeName == (int)ChartboostMediationBannerName.Adaptive)
+            if (_sizeType == (int)ChartboostMediationBannerSizeType.Adaptive)
             {
                 _resizeToFit = EditorGUILayout.Toggle("Resize To Fit", _resizeToFit);
                 
@@ -57,10 +57,10 @@ namespace Chartboost.Editor
             else
             {
                 var unityBannerAd = target as ChartboostMediationUnityBannerAd;
-                unityBannerAd.LockToFixedSize(_sizeName);
+                unityBannerAd.LockToFixedSize(_sizeType);
             }
             
-            _sizeNameSP.intValue = (int)_sizeName;
+            _sizeNameSP.intValue = (int)_sizeType;
             _resizeToFitSP.boolValue = _resizeToFit;
             _horizontalAlignmentSP.intValue = (int)_horizontalAlignment;
             _verticalAlignmentSP.intValue = (int)_verticalAlignment;

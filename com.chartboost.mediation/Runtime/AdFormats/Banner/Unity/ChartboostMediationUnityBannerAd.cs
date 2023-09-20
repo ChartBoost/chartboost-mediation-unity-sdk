@@ -33,7 +33,7 @@ namespace Chartboost.AdFormats.Banner.Unity
         private bool draggable = true;
         
         [SerializeField][HideInInspector][InspectorName("Size")] 
-        private ChartboostMediationBannerName sizeName;
+        private ChartboostMediationBannerSizeType sizeType;
         [SerializeField][HideInInspector] 
         private bool resizeToFit;
         [SerializeField][HideInInspector] 
@@ -46,9 +46,9 @@ namespace Chartboost.AdFormats.Banner.Unity
         # region Unity Lifecycle
         private void Start()
         {
-            if (sizeName != ChartboostMediationBannerName.Adaptive)
+            if (sizeType != ChartboostMediationBannerSizeType.Adaptive)
             {
-                LockToFixedSize(sizeName);
+                LockToFixedSize(sizeType);
             }
             
             ChartboostMediation.DidStart += ChartboostMediationOnDidStart;
@@ -89,7 +89,13 @@ namespace Chartboost.AdFormats.Banner.Unity
                 return new ChartboostMediationBannerAdLoadResult(new ChartboostMediationError(error));
             }
             
-            var containerSize = await GetContainerSizeInNative();
+            var containerSize = sizeType switch
+            {
+                ChartboostMediationBannerSizeType.Standard => ChartboostMediationBannerAdSize.Standard,
+                ChartboostMediationBannerSizeType.Medium => ChartboostMediationBannerAdSize.MediumRect,
+                ChartboostMediationBannerSizeType.Leaderboard => ChartboostMediationBannerAdSize.Leaderboard,
+                _ => await GetAdaptiveSize()
+            };
             var loadRequest = new ChartboostMediationBannerAdLoadRequest(placementName, containerSize);
             var layoutParams = GetComponent<RectTransform>().LayoutParams();
             var x = ChartboostMediationConverters.PixelsToNative(layoutParams.x);
@@ -138,7 +144,7 @@ namespace Chartboost.AdFormats.Banner.Unity
         
         #endregion
         
-        public void LockToFixedSize(ChartboostMediationBannerName fixedSizeName)
+        public void LockToFixedSize(ChartboostMediationBannerSizeType sizeType)
         {
             // ReSharper disable once PossibleNullReferenceException
             var canvas =  GetComponentInParent<Canvas>();
@@ -148,19 +154,19 @@ namespace Chartboost.AdFormats.Banner.Unity
             float width;
             float height;
 
-            switch (fixedSizeName)
+            switch (sizeType)
             {
-                case ChartboostMediationBannerName.Adaptive: 
+                case ChartboostMediationBannerSizeType.Adaptive: 
                     return;
-                case ChartboostMediationBannerName.Standard: 
+                case ChartboostMediationBannerSizeType.Standard: 
                     width = ChartboostMediationConverters.NativeToPixels(BannerSize.STANDARD.Item1)/canvasScale;
                     height = ChartboostMediationConverters.NativeToPixels(BannerSize.STANDARD.Item2)/canvasScale;
                     break;
-                case ChartboostMediationBannerName.Medium:
+                case ChartboostMediationBannerSizeType.Medium:
                     width = ChartboostMediationConverters.NativeToPixels(BannerSize.MEDIUM.Item1)/canvasScale;
                     height = ChartboostMediationConverters.NativeToPixels(BannerSize.MEDIUM.Item2)/canvasScale;
                     break;
-                case ChartboostMediationBannerName.Leaderboard:
+                case ChartboostMediationBannerSizeType.Leaderboard:
                     width = ChartboostMediationConverters.NativeToPixels(BannerSize.LEADERBOARD.Item1)/canvasScale;
                     height = ChartboostMediationConverters.NativeToPixels(BannerSize.LEADERBOARD.Item2)/canvasScale;
                     break;
@@ -227,9 +233,9 @@ namespace Chartboost.AdFormats.Banner.Unity
 
         #endregion
 
-        private void SetSizeName(ChartboostMediationBannerName size)
+        private void SetSizeType(ChartboostMediationBannerSizeType sizeType)
         {
-            this.sizeName = size;
+            this.sizeType = sizeType;
         }
 
         private IChartboostMediationBannerView BannerView
@@ -252,7 +258,7 @@ namespace Chartboost.AdFormats.Banner.Unity
             }
         }
 
-        private async Task<ChartboostMediationBannerAdSize> GetContainerSizeInNative()
+        private async Task<ChartboostMediationBannerAdSize> GetAdaptiveSize()
         {
             var recTransform = GetComponent<RectTransform>();
             var layoutParams = recTransform.LayoutParams();
@@ -270,13 +276,7 @@ namespace Chartboost.AdFormats.Banner.Unity
             var width = ChartboostMediationConverters.PixelsToNative(layoutParams.width);
             var height = ChartboostMediationConverters.PixelsToNative(layoutParams.height);
 
-            return sizeName switch
-            {
-                ChartboostMediationBannerName.Standard => ChartboostMediationBannerAdSize.Standard,
-                ChartboostMediationBannerName.Medium => ChartboostMediationBannerAdSize.MediumRect,
-                ChartboostMediationBannerName.Leaderboard => ChartboostMediationBannerAdSize.Leaderboard,
-                _ => ChartboostMediationBannerAdSize.Adaptive(width, height)
-            };
+            return ChartboostMediationBannerAdSize.Adaptive(width, height);
         }
         
     }

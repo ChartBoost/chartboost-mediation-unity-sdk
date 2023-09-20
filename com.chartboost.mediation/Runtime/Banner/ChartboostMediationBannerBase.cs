@@ -16,7 +16,7 @@ namespace Chartboost.Banner
 
         protected ChartboostMediationBannerBase(string placementName, ChartboostMediationBannerAdSize size)
         {
-            if (size.Name == ChartboostMediationBannerName.Adaptive)
+            if (size.SizeType == ChartboostMediationBannerSizeType.Adaptive)
             {
                 Logger.LogError(LogTag,$"Adaptive sizes are not supported for `ChartboostMediationBannerAd`. Use `ChartboostMediationBannerView` instead");
                 return;

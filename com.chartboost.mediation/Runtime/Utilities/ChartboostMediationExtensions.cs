@@ -2,6 +2,7 @@ using System;
 using Chartboost.Banner;
 using Newtonsoft.Json;
 using UnityEngine;
+using static Chartboost.Utilities.Constants;
 
 namespace Chartboost.Utilities
 {
@@ -52,14 +53,15 @@ namespace Chartboost.Utilities
             return lp;
         }
 
-        public static int? GetFixedSize(this ChartboostMediationBannerAdSize size)
+        public static Vector2 Size(this ChartboostMediationBannerSizeType sizeType)
         {
-            if (size.Name == ChartboostMediationBannerName.Adaptive)
+            return sizeType switch
             {
-                return null;
-            }
-
-            return (int)size.Name;
+                ChartboostMediationBannerSizeType.Standard => new Vector2(BannerSize.STANDARD.Item1, BannerSize.STANDARD.Item2),
+                ChartboostMediationBannerSizeType.Medium => new Vector2(BannerSize.MEDIUM.Item1, BannerSize.MEDIUM.Item2),
+                ChartboostMediationBannerSizeType.Leaderboard => new Vector2(BannerSize.LEADERBOARD.Item1, BannerSize.LEADERBOARD.Item2),
+                _ => Vector2.zero
+            };
         }
     }
 }

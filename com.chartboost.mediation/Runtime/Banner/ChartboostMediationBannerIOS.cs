@@ -17,12 +17,7 @@ namespace Chartboost.Banner
         public ChartboostMediationBannerIOS(string placement, ChartboostMediationBannerAdSize size) : base(placement, size)
         {
             LogTag = "ChartboostMediation Banner (iOS)";
-
-            var fixedSize = size.GetFixedSize();
-            if(fixedSize == null)
-                return;
-
-            _uniqueId = _chartboostMediationGetBannerAd(placement, fixedSize);
+            _uniqueId = _chartboostMediationGetBannerAd(placement, (int)size.SizeType);
         }
 
         internal override bool IsValid { get; set; } = true;

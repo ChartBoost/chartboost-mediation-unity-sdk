@@ -34,7 +34,7 @@ namespace Chartboost.AdFormats.Banner.Unity
 
             // If no size is provided use Standard size as default
             var containerSize = size ?? ChartboostMediationBannerAdSize.Standard;
-            unityBannerAd.SetSizeName(containerSize.Name);
+            unityBannerAd.SetSizeType(containerSize.SizeType);
             
             var canvasScale = canvas.transform.localScale.x;
             var width = ChartboostMediationConverters.NativeToPixels(containerSize.Width)/canvasScale;

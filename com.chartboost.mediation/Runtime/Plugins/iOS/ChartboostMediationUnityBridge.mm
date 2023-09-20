@@ -936,11 +936,11 @@ const void* _chartboostMediationLoadBannerView(ChartboostMediationBannerAdDragEv
     return (__bridge void*)wrapper;
 }
 
-void _chartboostMediationBannerViewLoadAdWithScreenPos(const void *uniqueId, const char *placementName, long sizeName, float width, float height, long screenLocation, int hashCode, ChartboostMediationBannerAdLoadResultEvent callback) {
+void _chartboostMediationBannerViewLoadAdWithScreenPos(const void *uniqueId, const char *placementName, long sizeType, float width, float height, long screenLocation, int hashCode, ChartboostMediationBannerAdLoadResultEvent callback) {
     ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
 
     ChartboostMediationBannerSize *size;    
-    switch(sizeName){
+    switch(sizeType){
         case -1 : size = [ChartboostMediationBannerSize adaptiveWithWidth:width maxHeight:height]; break;
         case 0 : size = [ChartboostMediationBannerSize standard]; break;
         case 1 : size = [ChartboostMediationBannerSize medium]; break;
@@ -969,11 +969,11 @@ void _chartboostMediationBannerViewLoadAdWithScreenPos(const void *uniqueId, con
     }];    
 }
 
-void _chartboostMediationBannerViewLoadAdWithXY(const void *uniqueId, const char *placementName, long sizeName, float width, float height, float x, float y, int hashCode, ChartboostMediationBannerAdLoadResultEvent callback) {
+void _chartboostMediationBannerViewLoadAdWithXY(const void *uniqueId, const char *placementName, long sizeType, float width, float height, float x, float y, int hashCode, ChartboostMediationBannerAdLoadResultEvent callback) {
     ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
 
     ChartboostMediationBannerSize *size;
-    switch(sizeName){
+    switch(sizeType){
             case -1 : size = [ChartboostMediationBannerSize adaptiveWithWidth:width maxHeight:height]; break;
             case 0 : size = [ChartboostMediationBannerSize standard]; break;
             case 1 : size = [ChartboostMediationBannerSize medium]; break;
@@ -1016,21 +1016,21 @@ const char * _chartboostMediationBannerViewGetSize(const void* uniqueId){
     NSString * heightKey = @"height"; NSString * heightValue = [NSString stringWithFormat:@"%f", bannerView.size.size.height];
     NSString * typeKey = @"type"; NSString * typeValue = [NSString stringWithFormat:@"%d", (int)bannerView.size.type];
     
-    NSString *nameKey = @"name";
-    NSString *nameValue = @"";
+    NSString *sizeTypeKey = @"sizeType";
+    NSString *sizeTypeValue = @"";
     if(bannerView.size.type == 0) {  // Fixed
         int width = bannerView.size.size.width;
         switch (width) {
-            case 320: nameValue = [NSString stringWithFormat:@"%d", 0]; break;
-            case 300: nameValue = [NSString stringWithFormat:@"%d", 1]; break;
-            case 728: nameValue = [NSString stringWithFormat:@"%d", 2]; break;
+            case 320: sizeTypeValue = [NSString stringWithFormat:@"%d", 0]; break;
+            case 300: sizeTypeValue = [NSString stringWithFormat:@"%d", 1]; break;
+            case 728: sizeTypeValue = [NSString stringWithFormat:@"%d", 2]; break;
             default:break;
         }
     }
     else{
-        nameValue = [NSString stringWithFormat:@"%d", -1];
+        sizeTypeValue = [NSString stringWithFormat:@"%d", -1];
     }
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:nameValue,nameKey,aspectRatioValue,aspectRatioKey,widthValue,widthKey,heightValue,heightKey,typeValue, typeKey, nil];
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:sizeTypeValue,sizeTypeKey,aspectRatioValue,aspectRatioKey,widthValue,widthKey,heightValue,heightKey,typeValue, typeKey, nil];
 
     return dictionaryToJSON(dict);
 }
