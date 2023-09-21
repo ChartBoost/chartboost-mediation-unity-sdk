@@ -68,7 +68,7 @@ namespace Chartboost.AdFormats.Banner
             protected set { }
         }
 
-        public override ChartboostMediationBannerAdSize AdSize
+        public override ChartboostMediationBannerAdSize? AdSize
         {
             get
             {

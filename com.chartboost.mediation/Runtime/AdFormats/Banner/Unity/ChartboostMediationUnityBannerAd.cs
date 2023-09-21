@@ -243,11 +243,8 @@ namespace Chartboost.AdFormats.Banner.Unity
         private void Resize()
         {
             // Cannot resize until BannerView is loaded with Ad
-            if(BannerView == null || AdSize == null)
-                return;
-            
             var adSize = AdSize ?? ChartboostMediationBannerAdSize.Adaptive(0, 0);
-            if (adSize.BannerType == ChartboostMediationBannerType.Fixed || adSize is { Width: 0, Height: 0 })
+            if (Request?.Size.BannerType == ChartboostMediationBannerType.Fixed || adSize is { Width: 0, Height: 0 })
                 return;
 
             var rect = GetComponent<RectTransform>();

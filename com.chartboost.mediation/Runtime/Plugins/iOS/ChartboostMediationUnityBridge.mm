@@ -938,8 +938,8 @@ const void* _chartboostMediationLoadBannerView(ChartboostMediationBannerAdDragEv
 
 void _chartboostMediationBannerViewLoadAdWithScreenPos(const void *uniqueId, const char *placementName, long sizeType, float width, float height, long screenLocation, int hashCode, ChartboostMediationBannerAdLoadResultEvent callback) {
     ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
-
-    ChartboostMediationBannerSize *size;    
+    
+    ChartboostMediationBannerSize *size;
     switch(sizeType){
         case -1 : size = [ChartboostMediationBannerSize adaptiveWithWidth:width maxHeight:height]; break;
         case 0 : size = [ChartboostMediationBannerSize standard]; break;
@@ -970,21 +970,19 @@ void _chartboostMediationBannerViewLoadAdWithScreenPos(const void *uniqueId, con
     
     bannerView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:1 alpha:0.5];
     
-    ChartboostMediationBannerAdWrapper * bannerWrapper = (__bridge ChartboostMediationBannerAdWrapper*)uniqueId;
-    [bannerWrapper createBannerRequestContainer:size.size.width height:size.size.height];
 }
 
-void _chartboostMediationBannerViewLoadAdWithXY(const void *uniqueId, const char *placementName, long sizeType, float width, float height, float x, float y, int hashCode, ChartboostMediationBannerAdLoadResultEvent callback) {
+void _chartboostMediationBannerViewLoadAdWithXY(const void *uniqueId, const char *placementName, int sizeType, float width, float height, float x, float y, int hashCode, ChartboostMediationBannerAdLoadResultEvent callback) {
     ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
 
     ChartboostMediationBannerSize *size;
     switch(sizeType){
-            case -1 : size = [ChartboostMediationBannerSize adaptiveWithWidth:width maxHeight:height]; break;
-            case 0 : size = [ChartboostMediationBannerSize standard]; break;
-            case 1 : size = [ChartboostMediationBannerSize medium]; break;
-            case 2 : size = [ChartboostMediationBannerSize leaderboard]; break;
-            default: size =  [ChartboostMediationBannerSize standard]; break;
-        }
+        case -1 : size = [ChartboostMediationBannerSize adaptiveWithWidth:width maxHeight:height]; break;
+        case 0 : size = [ChartboostMediationBannerSize standard]; break;
+        case 1 : size = [ChartboostMediationBannerSize medium]; break;
+        case 2 : size = [ChartboostMediationBannerSize leaderboard]; break;
+        default: size =  [ChartboostMediationBannerSize standard]; break;
+    }
     
     ChartboostMediationBannerLoadRequest *loadRequest = [[ChartboostMediationBannerLoadRequest alloc] initWithPlacement:GetStringParam(placementName) size:size];
     UIViewController* viewController = [[ChartboostMediationObserver sharedObserver] getBannerViewController:bannerView size:size.size x:x y:y];
@@ -1005,11 +1003,6 @@ void _chartboostMediationBannerViewLoadAdWithXY(const void *uniqueId, const char
         const char *metricsJson = dictionaryToJSON([adLoadResult metrics]);
         callback(hashCode, uniqueId, loadId, metricsJson, "", "");
     }];
-    
-    bannerView.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:0.5];
-    
-    ChartboostMediationBannerAdWrapper * bannerWrapper = (__bridge ChartboostMediationBannerAdWrapper*)uniqueId;
-    [bannerWrapper createBannerRequestContainerWithXY:x y:y width:size.size.width height:size.size.height];
 }
 
 void _chartboostMediationBannerViewSetKeywords(const void* uniqueId, const char * keywords){
@@ -1034,7 +1027,7 @@ const char * _chartboostMediationBannerViewGetSize(const void* uniqueId){
             case 320: sizeTypeValue = [NSString stringWithFormat:@"%d", 0]; break;
             case 300: sizeTypeValue = [NSString stringWithFormat:@"%d", 1]; break;
             case 728: sizeTypeValue = [NSString stringWithFormat:@"%d", 2]; break;
-            default:break;
+            default: sizeTypeValue = [NSString stringWithFormat:@"%d", -1];break;
         }
     }
     else{
