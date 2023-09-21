@@ -47,6 +47,7 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
             ) {
                 thisWrapper.loadId = loadId
                 thisWrapper.winningBidInfo = winningBidInfo
+
                 error?.let { err ->
                     thisListener?.onAdCached(thisWrapper, err.message)
                 } ?: run {
@@ -200,7 +201,6 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
         }
 
         val json = JSONObject()
-
         json.put("sizeType", when(size?.name) {
             "ADAPTIVE" -> -1
             "STANDARD" -> 0

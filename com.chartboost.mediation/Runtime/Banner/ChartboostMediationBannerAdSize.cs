@@ -1,8 +1,6 @@
 using System;
 using Chartboost.Utilities;
 using Newtonsoft.Json;
-using UnityEngine;
-using static Chartboost.Utilities.Constants;
 
 namespace Chartboost.Banner
 {

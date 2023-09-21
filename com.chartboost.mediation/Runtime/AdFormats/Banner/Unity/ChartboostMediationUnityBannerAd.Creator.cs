@@ -1,8 +1,8 @@
+using System;
 using Chartboost.Banner;
 using Chartboost.Utilities;
 using UnityEditor;
 using UnityEngine;
-using static Chartboost.Utilities.Constants;
 
 namespace Chartboost.AdFormats.Banner.Unity
 {

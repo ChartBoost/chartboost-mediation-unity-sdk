@@ -936,7 +936,7 @@ const void* _chartboostMediationLoadBannerView(ChartboostMediationBannerAdDragEv
     return (__bridge void*)wrapper;
 }
 
-void _chartboostMediationBannerViewLoadAdWithScreenPos(const void *uniqueId, const char *placementName, long sizeType, float width, float height, long screenLocation, int hashCode, ChartboostMediationBannerAdLoadResultEvent callback) {
+void _chartboostMediationBannerViewLoadAdWithScreenPos(const void *uniqueId, const char *placementName, int sizeType, float width, float height, long screenLocation, int hashCode, ChartboostMediationBannerAdLoadResultEvent callback) {
     ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
     
     ChartboostMediationBannerSize *size;
@@ -950,7 +950,7 @@ void _chartboostMediationBannerViewLoadAdWithScreenPos(const void *uniqueId, con
     
     ChartboostMediationBannerLoadRequest *loadRequest = [[ChartboostMediationBannerLoadRequest alloc] initWithPlacement:GetStringParam(placementName) size:size];
     UIViewController* viewController = [[ChartboostMediationObserver sharedObserver] getBannerViewController:bannerView size:size.size screenLocation:screenLocation];
-                
+    
     // Load
     [bannerView loadWith:loadRequest viewController:viewController completion:^(ChartboostMediationBannerLoadResult *adLoadResult) {
         ChartboostMediationError *error = [adLoadResult error];
@@ -1002,7 +1002,7 @@ void _chartboostMediationBannerViewLoadAdWithXY(const void *uniqueId, const char
         const char *loadId = [[adLoadResult loadID] UTF8String];
         const char *metricsJson = dictionaryToJSON([adLoadResult metrics]);
         callback(hashCode, uniqueId, loadId, metricsJson, "", "");
-    }];
+    }];    
 }
 
 void _chartboostMediationBannerViewSetKeywords(const void* uniqueId, const char * keywords){
@@ -1031,9 +1031,9 @@ const char * _chartboostMediationBannerViewGetSize(const void* uniqueId){
         }
     }
     else{
-        sizeTypeValue = [NSString stringWithFormat:@"%d", -1];
+        nameValue = @"ADAPTIVE";
     }
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:sizeTypeValue,sizeTypeKey,aspectRatioValue,aspectRatioKey,widthValue,widthKey,heightValue,heightKey,typeValue, typeKey, nil];
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:nameValue,nameKey,aspectRatioValue,aspectRatioKey,widthValue,widthKey,heightValue,heightKey,typeValue, typeKey, nil];
 
     return dictionaryToJSON(dict);
 }
