@@ -293,12 +293,14 @@ namespace Chartboost.AdFormats.Banner.Unity
 
         private async void AutoLoadOnInit()
         {
+            // if this gameobject is enabled/started after sdk is already initialized
             if (ChartboostMediationExternal.IsInitialized)
             {
                 await Load();
             }
             else
             {
+                // If not, wait for sdk to be initialized
                 ChartboostMediation.DidStart += async error =>
                 {
                     if (string.IsNullOrEmpty(error))

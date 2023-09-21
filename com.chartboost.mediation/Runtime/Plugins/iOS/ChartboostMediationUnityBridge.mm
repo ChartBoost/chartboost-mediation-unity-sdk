@@ -598,6 +598,11 @@ void _chartboostMediationSetTestMode(BOOL isTestModeEnabled)
     function([ChartboostMediationObserver sharedObserver], implementation.selector, isTestModeEnabled);
 }
 
+void _chartboostMediationDiscardOversizedAds(BOOL shouldDiscard)
+{
+    [[Helium sharedHelium] setDiscardOversizedAds:shouldDiscard];
+}
+
 void * _chartboostMediationGetInterstitialAd(const char *placementName)
 {
     id<HeliumInterstitialAd> ad = [[Helium sharedHelium] interstitialAdProviderWithDelegate: [ChartboostMediationObserver sharedObserver] andPlacementName: GetStringParam(placementName)];
@@ -967,9 +972,6 @@ void _chartboostMediationBannerViewLoadAdWithScreenPos(const void *uniqueId, con
         const char *metricsJson = dictionaryToJSON([adLoadResult metrics]);
         callback(hashCode, uniqueId, loadId, metricsJson, "", "");
     }];
-    
-    bannerView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:1 alpha:0.5];
-    
 }
 
 void _chartboostMediationBannerViewLoadAdWithXY(const void *uniqueId, const char *placementName, int sizeType, float width, float height, float x, float y, int hashCode, ChartboostMediationBannerAdLoadResultEvent callback) {
@@ -1031,21 +1033,25 @@ const char * _chartboostMediationBannerViewGetSize(const void* uniqueId){
         }
     }
     else{
-        nameValue = @"ADAPTIVE";
+        sizeTypeValue = [NSString stringWithFormat:@"%d", -1];
     }
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:nameValue,nameKey,aspectRatioValue,aspectRatioKey,widthValue,widthKey,heightValue,heightKey,typeValue, typeKey, nil];
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:sizeTypeValue,sizeTypeKey,aspectRatioValue,aspectRatioKey,widthValue,widthKey,heightValue,heightKey,typeValue, typeKey, nil];
 
     return dictionaryToJSON(dict);
 }
 
 const char * _chartboostMediationBannerViewGetWinningBidInfo(const void* uniqueId){
     ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
-    return dictionaryToJSON(bannerView.winningBidInfo);
+    if(bannerView.winningBidInfo != nil)
+        return dictionaryToJSON(bannerView.winningBidInfo);
+    return NULL;
 }
 
 const char * _chartboostMediationBannerViewGetLoadMetrics(const void* uniqueId){
     ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
-    return dictionaryToJSON(bannerView.loadMetrics);
+    if(bannerView.loadMetrics != nil)
+        return dictionaryToJSON(bannerView.loadMetrics);
+    return NULL;
 }
 
 void _chartboostMediationBannerViewSetHorizontalAlignment(const void* uniqueId, int horizontalAlignment){

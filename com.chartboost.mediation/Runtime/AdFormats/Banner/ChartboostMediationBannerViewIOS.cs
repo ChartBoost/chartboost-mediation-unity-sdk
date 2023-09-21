@@ -53,8 +53,8 @@ namespace Chartboost.AdFormats.Banner
         public override string LoadId
         {
             // TODO: why metrics is a list ?
-            get => LoadMetrics?.metrics.FirstOrDefault().loadId; 
-            protected set {} 
+            get => LoadMetrics?.metrics != null ? LoadMetrics?.metrics.FirstOrDefault().loadId : "";
+            protected set {}
         }
 
         public override Metrics? LoadMetrics
