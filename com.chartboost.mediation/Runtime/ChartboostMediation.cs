@@ -237,8 +237,7 @@ namespace Chartboost
             unityBannerAd.PlacementName = placementName;
             return unityBannerAd;
         }
-        
-        
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Init()
         {
@@ -267,5 +266,6 @@ namespace Chartboost
         public static void SetUserIdentifier(string userIdentifier) => _chartboostMediationExternal.SetUserIdentifier(userIdentifier);
         public static string GetUserIdentifier() => _chartboostMediationExternal.GetUserIdentifier();
         public static void SetTestMode(bool testModeEnabled) => _chartboostMediationExternal.SetTestMode(testModeEnabled);
+        public static void DiscardOversizedAds(bool shouldDiscard) => _chartboostMediationExternal.DiscardOversizedAds(shouldDiscard);
     }
 }

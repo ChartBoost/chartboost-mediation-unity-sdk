@@ -128,6 +128,13 @@ namespace Chartboost.Platforms.Android
             nativeSDK.CallStatic("setTestMode", testModeEnabled);
         }
 
+        public override void DiscardOversizedAds(bool shouldDiscard)
+        {
+            base.DiscardOversizedAds(shouldDiscard);
+            using var nativeSDK = GetNativeSDK();
+            nativeSDK.CallStatic("setShouldDiscardOversizedAds", shouldDiscard);
+        }
+
         public override void Destroy()
         {
             if (!CheckInitialized())
