@@ -17,9 +17,8 @@
     [self.bannerView addGestureRecognizer:self.panGesture];
         
     self.dragListener = dragListener;
-    self.canDrag = true;    // default is true
+    self.canDrag = false;
     
-    NSLog(@"Wrapper created");
     return self;
 }
 

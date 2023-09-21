@@ -23,7 +23,7 @@ class BannerLayout : RelativeLayout {
         bannerView.isClickable = true;
     }
 
-    var canDrag: Boolean = true
+    var canDrag: Boolean = false
     private val dragThresholdDistance = 10 // in pixels
 
     private var startX: Int = 0

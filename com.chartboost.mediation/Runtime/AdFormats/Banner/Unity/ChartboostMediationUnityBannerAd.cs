@@ -39,7 +39,7 @@ namespace Chartboost.AdFormats.Banner.Unity
         [SerializeField] 
         private string placementName;
         [SerializeField] 
-        private bool draggable = true;
+        private bool draggable;
         
         [SerializeField][HideInInspector]
         private ChartboostMediationBannerSizeType sizeType;
@@ -283,7 +283,6 @@ namespace Chartboost.AdFormats.Banner.Unity
                     _bannerView.DidRecordImpression += OnRecordImpression;
                     _bannerView.DidDrag += OnDrag;
                     
-                    _bannerView.SetVisibility(gameObject.activeSelf);
                     _bannerView.SetDraggability(Draggable);
                 }
         
