@@ -118,7 +118,7 @@ namespace Chartboost.AdFormats.Banner
         // x,y is Native
         public override async Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, float x, float y)
         {
-            await base.Load(request, x,y);
+            await base.Load(request, x, y);
             Request = request;
 
             if (LoadRequest != null)

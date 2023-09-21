@@ -264,11 +264,6 @@ public class Demo : MonoBehaviour
         // Resize
         _bannerAd.ResizeOption = (ResizeOption)resizeDropdown.value;
 
-        // TODO: Debug mode (Remove)
-        var image =_bannerAd.gameObject.AddComponent<Image>();
-        image.color = new Color(0.25f,1,0.25f, .25f);
-        image.raycastTarget = false;
-        
         var result = await _bannerAd.Load();
         Log(result.Error == null ? "Successfully loaded banner" : result.Error?.Message);
     }
