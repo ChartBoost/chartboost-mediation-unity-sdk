@@ -44,7 +44,7 @@ namespace Chartboost.AdFormats.Banner.Unity
         [SerializeField][HideInInspector]
         private ChartboostMediationBannerSizeType sizeType;
         [SerializeField][HideInInspector]
-        private ResizeOption resizeOption = ResizeOption.NoResize;
+        private ResizeOption resizeOption = ResizeOption.FitBoth;
         [SerializeField][HideInInspector] 
         private ChartboostMediationBannerHorizontalAlignment horizontalAlignment = ChartboostMediationBannerHorizontalAlignment.Center;
         [SerializeField][HideInInspector] 
