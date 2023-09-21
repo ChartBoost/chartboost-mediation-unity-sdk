@@ -17,7 +17,7 @@ using UnityEngine.UI;
 public class Demo : MonoBehaviour
 {
     private const string DefaultPlacementFullscreen = "CBRewarded";
-    private const string DefaultPlacementBanner = "ACAdaptiveBanner";
+    private const string DefaultPlacementBanner = "AllNetworkBanner";
     private const string DefaultUserIdentifier = "123456";
     private const string DefaultFullscreenAdCustomData = "{\"testkey\":\"testvalue\"}";
 
