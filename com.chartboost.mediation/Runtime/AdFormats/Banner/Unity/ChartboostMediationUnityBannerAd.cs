@@ -35,8 +35,6 @@ namespace Chartboost.AdFormats.Banner.Unity
         public ChartboostMediationUnityBannerAdDragEvent DidDrag;
         
         [SerializeField] 
-        private bool autoLoadOnInit = false;
-        [SerializeField] 
         private string placementName;
         [SerializeField] 
         private bool draggable;
@@ -58,11 +56,6 @@ namespace Chartboost.AdFormats.Banner.Unity
             if (sizeType != ChartboostMediationBannerSizeType.Adaptive)
             {
                 LockToFixedSize(sizeType);
-            }
-
-            if (autoLoadOnInit)
-            {
-                AutoLoadOnInit();
             }
         }
 
@@ -290,26 +283,6 @@ namespace Chartboost.AdFormats.Banner.Unity
             }
         }
 
-        private async void AutoLoadOnInit()
-        {
-            // if this gameobject is enabled/started after sdk is already initialized
-            if (ChartboostMediationExternal.IsInitialized)
-            {
-                await Load();
-            }
-            else
-            {
-                // If not, wait for sdk to be initialized
-                ChartboostMediation.DidStart += async error =>
-                {
-                    if (string.IsNullOrEmpty(error))
-                    {
-                        await Load();
-                    }
-                };
-            }
-        }
-        
         private async Task<ChartboostMediationBannerAdSize> GetAdaptiveSize()
         {
             var recTransform = GetComponent<RectTransform>();

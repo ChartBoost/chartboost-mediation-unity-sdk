@@ -3,7 +3,6 @@ package com.chartboost.mediation.unity
 import android.app.Activity
 import android.graphics.Color
 import android.graphics.PointF
-import android.os.Build
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.Size
