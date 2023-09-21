@@ -251,25 +251,19 @@ public class Demo : MonoBehaviour
         _bannerAd.DidRecordImpression += DidRecordImpressionBanner;
         _bannerAd.DidDrag += DidDragBanner;
 
+        // keywords
         var keywords = _bannerAd.Keywords ??= new Dictionary<string, string>();
         keywords.Add("bnr_keyword1", "bnr_value1"); 
         keywords.Add("bnr_keyword2", "bnr_value2");
         _bannerAd.Keywords = keywords;
 
+        // Alignment
         _bannerAd.VerticalAlignment = (ChartboostMediationBannerVerticalAlignment)verticalAlignmentDropdown.value;
         _bannerAd.HorizontalAlignment = (ChartboostMediationBannerHorizontalAlignment)horizontalAlignmentDropdown.value;
         
-        var resizeAxis = resizeDropdown.value switch
-        {
-            0 => ChartboostMediationBannerResizeAxis.Horizontal,
-            1 => ChartboostMediationBannerResizeAxis.Vertical,
-            _ => ChartboostMediationBannerResizeAxis.Both
-        };
+        // Resize
+        _bannerAd.ResizeOption = (ResizeOption)resizeDropdown.value;
 
-        var shouldResize = resizeDropdown.value != 3;   // 3 => "No Resize"
-        _bannerAd.ResizeAxis = resizeAxis;
-        _bannerAd.ResizeToFit = shouldResize;
-        
         // TODO: Debug mode (Remove)
         var image =_bannerAd.gameObject.AddComponent<Image>();
         image.color = new Color(0.25f,1,0.25f, .25f);
@@ -292,6 +286,14 @@ public class Demo : MonoBehaviour
         if (_bannerAd != null)
         {
             _bannerAd.VerticalAlignment = (ChartboostMediationBannerVerticalAlignment)verticalAlignmentDropdown.value;
+        }
+    }
+
+    public void OnResizeOptionChange()
+    {
+        if (_bannerAd != null)
+        {
+            _bannerAd.ResizeOption = (ResizeOption)resizeDropdown.value;
         }
     }
 

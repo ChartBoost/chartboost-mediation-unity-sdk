@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Chartboost.Banner;
+using Chartboost.Platforms;
 using Chartboost.Requests;
 using Chartboost.Results;
 using Chartboost.Utilities;
@@ -16,6 +17,14 @@ namespace Chartboost.AdFormats.Banner.Unity
     public delegate void ChartboostMediationUnityBannerAdEvent();
 
     public delegate void ChartboostMediationUnityBannerAdDragEvent(float x, float y);
+
+    public enum ResizeOption
+    {
+        FitHorizontal,
+        FitVertical,
+        FitBoth,
+        NoResize
+    }
     
     [RequireComponent(typeof(RectTransform))]
     public partial class ChartboostMediationUnityBannerAd : MonoBehaviour
@@ -26,18 +35,16 @@ namespace Chartboost.AdFormats.Banner.Unity
         public ChartboostMediationUnityBannerAdDragEvent DidDrag;
         
         [SerializeField] 
-        private bool autoLoadOnInit = true;
+        private bool autoLoadOnInit = false;
         [SerializeField] 
         private string placementName;
         [SerializeField] 
         private bool draggable = true;
         
-        [SerializeField][HideInInspector][InspectorName("Size")] 
+        [SerializeField][HideInInspector]
         private ChartboostMediationBannerSizeType sizeType;
-        [SerializeField][HideInInspector] 
-        private bool resizeToFit = false;
-        [SerializeField][HideInInspector] 
-        private ChartboostMediationBannerResizeAxis resizeAxis;
+        [SerializeField][HideInInspector]
+        private ResizeOption resizeOption = ResizeOption.NoResize;
         [SerializeField][HideInInspector] 
         private ChartboostMediationBannerHorizontalAlignment horizontalAlignment = ChartboostMediationBannerHorizontalAlignment.Center;
         [SerializeField][HideInInspector] 
@@ -52,8 +59,11 @@ namespace Chartboost.AdFormats.Banner.Unity
             {
                 LockToFixedSize(sizeType);
             }
-            
-            ChartboostMediation.DidStart += ChartboostMediationOnDidStart;
+
+            if (autoLoadOnInit)
+            {
+                AutoLoadOnInit();
+            }
         }
 
         private void OnEnable() => BannerView?.SetVisibility(true);
@@ -79,10 +89,16 @@ namespace Chartboost.AdFormats.Banner.Unity
                 draggable = value;
             }
         }
-
-        public bool ResizeToFit { get => resizeToFit; set => resizeToFit = value; }
         
-        public ChartboostMediationBannerResizeAxis ResizeAxis { get => resizeAxis; set => resizeAxis = value; }
+        public ResizeOption ResizeOption
+        {
+            get => resizeOption;
+            set
+            {
+                resizeOption = value;
+                Resize();
+            }
+        }
         
         public async Task<ChartboostMediationBannerAdLoadResult> Load()
         {
@@ -122,14 +138,15 @@ namespace Chartboost.AdFormats.Banner.Unity
 
         public string LoadId => BannerView?.LoadId;
 
-        public ChartboostMediationBannerAdSize AdSize => BannerView?.AdSize ?? ChartboostMediationBannerAdSize.Adaptive(0,0);
+        public ChartboostMediationBannerAdSize? AdSize => BannerView?.AdSize;
 
         public ChartboostMediationBannerHorizontalAlignment HorizontalAlignment
         {
             get => horizontalAlignment;
             set
             {
-                BannerView.HorizontalAlignment = value;
+                if(BannerView != null)
+                    BannerView.HorizontalAlignment = value;
                 horizontalAlignment = value;
             }
         }
@@ -139,12 +156,13 @@ namespace Chartboost.AdFormats.Banner.Unity
             get => verticalAlignment;
             set
             {
-                BannerView.VerticalAlignment = value;
+                if(BannerView != null)
+                    BannerView.VerticalAlignment = value;
                 verticalAlignment = value;
             }
         }
 
-        public void ResetAd() => BannerView.Reset();
+        public void ResetAd() => BannerView?.Reset();
         
         #endregion
         
@@ -189,48 +207,11 @@ namespace Chartboost.AdFormats.Banner.Unity
         }
 
         #region Events
-        
-        private async void ChartboostMediationOnDidStart(string error)
-        {
-            if (string.IsNullOrEmpty(error))
-            {
-                if (autoLoadOnInit)
-                {
-                    await Load();
-                }
-            }
-        }
 
         private void OnLoad(IChartboostMediationBannerView bannerView)
         {
             DidLoad?.Invoke();
-
-            if (ResizeToFit)
-            {
-                var rect = GetComponent<RectTransform>();
-                
-                var canvasScale = GetComponentInParent<Canvas>().transform.localScale.x;
-                var width = ChartboostMediationConverters.NativeToPixels(AdSize.Width)/canvasScale;
-                var height = ChartboostMediationConverters.NativeToPixels(AdSize.Height)/canvasScale;
-                switch (resizeAxis)
-                {
-                    case ChartboostMediationBannerResizeAxis.Horizontal:
-                        rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
-                        BannerView.VerticalAlignment = verticalAlignment;
-                        break;
-                    case ChartboostMediationBannerResizeAxis.Vertical:
-                        rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
-                        BannerView.HorizontalAlignment = horizontalAlignment;
-                        break;
-                    case ChartboostMediationBannerResizeAxis.Both:
-                    default:
-                        rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
-                        rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
-                        break;
-                }
-                
-                BannerView?.ResizeToFit(resizeAxis, rect.pivot);
-            }
+            Resize();
         }
 
         private void OnRecordImpression(IChartboostMediationBannerView bannerView) => DidRecordImpression?.Invoke();
@@ -258,6 +239,40 @@ namespace Chartboost.AdFormats.Banner.Unity
         {
             this.sizeType = sizeType;
         }
+        
+        private void Resize()
+        {
+            // Cannot resize until BannerView is loaded with Ad
+            if(BannerView == null || AdSize == null)
+                return;
+            
+            var adSize = AdSize ?? ChartboostMediationBannerAdSize.Adaptive(0, 0);
+            if (adSize.BannerType == ChartboostMediationBannerType.Fixed || adSize is { Width: 0, Height: 0 })
+                return;
+
+            var rect = GetComponent<RectTransform>();
+            var canvasScale = GetComponentInParent<Canvas>().transform.localScale.x;
+            var width = ChartboostMediationConverters.NativeToPixels(adSize.Width)/canvasScale;
+            var height = ChartboostMediationConverters.NativeToPixels(adSize.Height)/canvasScale;
+            switch (resizeOption)
+            {
+                case ResizeOption.FitHorizontal:
+                    rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
+                    break;
+                case ResizeOption.FitVertical:
+                    rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+                    break;
+                case ResizeOption.FitBoth:
+                    rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
+                    rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+                    break;
+                case ResizeOption.NoResize:
+                default:
+                    return;
+            }
+                
+            BannerView?.ResizeToFit((ChartboostMediationBannerResizeAxis)resizeOption, rect.pivot);
+        }
 
         private IChartboostMediationBannerView BannerView
         {
@@ -279,6 +294,24 @@ namespace Chartboost.AdFormats.Banner.Unity
             }
         }
 
+        private async void AutoLoadOnInit()
+        {
+            if (ChartboostMediationExternal.IsInitialized)
+            {
+                await Load();
+            }
+            else
+            {
+                ChartboostMediation.DidStart += async error =>
+                {
+                    if (string.IsNullOrEmpty(error))
+                    {
+                        await Load();
+                    }
+                };
+            }
+        }
+        
         private async Task<ChartboostMediationBannerAdSize> GetAdaptiveSize()
         {
             var recTransform = GetComponent<RectTransform>();

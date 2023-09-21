@@ -72,11 +72,13 @@ namespace Chartboost.AdFormats.Banner
             protected set { }
         }
 
-        public override ChartboostMediationBannerAdSize AdSize
+        public override ChartboostMediationBannerAdSize? AdSize
         {
             get
             {
                 var sizeJson = _bannerAd.Call<string>("getAdSize");
+                if (string.IsNullOrEmpty(sizeJson))
+                    return null;
                 return JsonConvert.DeserializeObject<ChartboostMediationBannerAdSize>(sizeJson);
             }
             protected set { }
