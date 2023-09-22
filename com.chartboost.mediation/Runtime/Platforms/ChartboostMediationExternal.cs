@@ -81,8 +81,10 @@ namespace Chartboost.Platforms
         
         public virtual void SetTestMode(bool testModeEnabled) 
             => Logger.Log(LogTag, $"SetTestMode {testModeEnabled}");
-        
 
+        public virtual void DiscardOversizedAds(bool shouldDiscard)
+            => Logger.Log(LogTag, $"DiscardOversizedAds : {shouldDiscard}");
+        
         public virtual void Destroy() 
             => Logger.Log(LogTag, "Destroy");
 

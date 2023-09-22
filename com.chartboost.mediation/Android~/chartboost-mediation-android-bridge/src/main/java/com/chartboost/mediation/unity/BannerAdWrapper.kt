@@ -24,7 +24,6 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
 
     var winningBidInfo: Map<String, String>? = null
     var loadId: String = ""
-
     var horizontalGravity = Gravity.CENTER_HORIZONTAL
     var verticalGravity = Gravity.CENTER_VERTICAL
 
@@ -197,9 +196,7 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
     fun getAdSize(): String {
         val size = ad.getSize()
         val creativeSize = partnerAd?.let {
-            Size(
-                (it.width / displayDensity).toInt(), (it.height / displayDensity).toInt()
-            )
+            Size((it.width / displayDensity).toInt(), (it.height / displayDensity).toInt())
         }
 
         val json = JSONObject()
@@ -211,8 +208,8 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
             else -> 0
         })
         json.put("aspectRatio", size?.aspectRatio)
-        json.put("width", creativeSize?.width ?: { size?.width })
-        json.put("height", creativeSize?.height ?: { size?.height })
+        json.put("width", creativeSize?.width ?: 0)
+        json.put("height", creativeSize?.height ?: 0)
         json.put("type", size?.isAdaptive)
 
         return json.toString()
@@ -394,6 +391,7 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
                 bannerViewListener?.onAdDrag(this@BannerAdWrapper, x, y)
             }
         })
+        layout.setBackgroundColor(Color.TRANSPARENT)
         usesGravity = false
 
         // Attach the banner layout to the activity.

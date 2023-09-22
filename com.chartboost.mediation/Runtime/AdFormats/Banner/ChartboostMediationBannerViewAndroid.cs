@@ -50,7 +50,11 @@ namespace Chartboost.AdFormats.Banner
 
         public override BidInfo WinningBidInfo
         {
-            get => _bannerAd.Get<AndroidJavaObject>("winningBidInfo").MapToWinningBidInfo();
+            get
+            {
+                var winningBidInfo = _bannerAd.Get<AndroidJavaObject>("winningBidInfo");
+                return winningBidInfo?.MapToWinningBidInfo() ?? new BidInfo();
+            }
             protected set { }
         }
 
@@ -68,11 +72,13 @@ namespace Chartboost.AdFormats.Banner
             protected set { }
         }
 
-        public override ChartboostMediationBannerAdSize AdSize
+        public override ChartboostMediationBannerAdSize? AdSize
         {
             get
             {
                 var sizeJson = _bannerAd.Call<string>("getAdSize");
+                if (string.IsNullOrEmpty(sizeJson))
+                    return null;
                 return JsonConvert.DeserializeObject<ChartboostMediationBannerAdSize>(sizeJson);
             }
             protected set { }
@@ -93,6 +99,7 @@ namespace Chartboost.AdFormats.Banner
         public override async Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, ChartboostMediationBannerAdScreenLocation screenLocation)
         {
             await base.Load(request, screenLocation);
+            Request = request;
 
             if (LoadRequest != null)
             {
@@ -112,6 +119,7 @@ namespace Chartboost.AdFormats.Banner
         public override async Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, float x, float y)
         {
             await base.Load(request, x, y);
+            Request = request;
 
             if (LoadRequest != null)
             {
@@ -127,6 +135,13 @@ namespace Chartboost.AdFormats.Banner
             var result = await LoadRequest;
             LoadRequest = null;
             return result;
+        }
+
+        public override void ResizeToFit(ChartboostMediationBannerResizeAxis axis = ChartboostMediationBannerResizeAxis.Both,
+            Vector2 pivot = default)
+        {
+            base.ResizeToFit(axis, pivot);
+            _bannerAd.Call("resizeToFit", (int)axis, pivot.x, 1 - pivot.y);
         }
 
         public override void SetDraggability(bool canDrag)

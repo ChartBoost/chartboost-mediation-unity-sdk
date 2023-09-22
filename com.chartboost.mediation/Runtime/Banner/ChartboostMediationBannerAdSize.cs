@@ -1,8 +1,6 @@
 using System;
 using Chartboost.Utilities;
 using Newtonsoft.Json;
-using UnityEngine;
-using static Chartboost.Utilities.Constants;
 
 namespace Chartboost.Banner
 {
@@ -14,10 +12,11 @@ namespace Chartboost.Banner
     
     public enum ChartboostMediationBannerSizeType
     {
-        Adaptive,
-        Standard,
-        Medium,
-        Leaderboard
+        Unknown = -1,
+        Standard = 0,
+        Medium = 1,
+        Leaderboard = 2,
+        Adaptive = 3,
     }
 
     /// <summary>

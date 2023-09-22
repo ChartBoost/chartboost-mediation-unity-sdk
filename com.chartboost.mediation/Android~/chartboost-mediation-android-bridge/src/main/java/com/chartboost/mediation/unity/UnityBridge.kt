@@ -173,8 +173,7 @@ class UnityBridge {
         @JvmStatic
         fun getBannerAd(placementName: String, size: Int): AdWrapper {
             // default to standard
-            val wantedSize =
-            when (size) {
+            val wantedSize = when (size) {
                 0 -> HeliumBannerAd.HeliumBannerSize.STANDARD
                 1 -> HeliumBannerAd.HeliumBannerSize.MEDIUM
                 2 -> HeliumBannerAd.HeliumBannerSize.LEADERBOARD

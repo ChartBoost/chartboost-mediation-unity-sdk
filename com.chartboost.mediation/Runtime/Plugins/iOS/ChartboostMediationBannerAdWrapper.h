@@ -17,16 +17,17 @@
 
 typedef void (*ChartboostMediationBannerAdDragEvent)(void* uniqueId, float x, float y);
 
-
 @interface ChartboostMediationBannerAdWrapper : NSObject
 
 @property ChartboostMediationBannerView* bannerView;
 @property ChartboostMediationBannerAdDragEvent dragListener;
 @property UIPanGestureRecognizer *panGesture;
 @property BOOL canDrag;
+@property BOOL usesConstraints;
 
 - (instancetype)initWithBannerView: (ChartboostMediationBannerView*) bannerView andDragListener:(ChartboostMediationBannerAdDragEvent) dragListener;
 - (void)setDraggable:(BOOL)canDrag;
+- (void) resize:(int)axis pivotX:(float) pivotX pivotY:(float)pivotY;
 
 @end
 #endif /* ChartboostMediationBannerAdWrapper_h */

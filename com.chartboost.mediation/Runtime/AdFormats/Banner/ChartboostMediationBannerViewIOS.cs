@@ -1,14 +1,10 @@
 #if UNITY_IPHONE
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Chartboost.Banner;
-using Chartboost.Platforms;
 using Chartboost.Requests;
 using Chartboost.Results;
 using Chartboost.Utilities;
@@ -57,8 +53,8 @@ namespace Chartboost.AdFormats.Banner
         public override string LoadId
         {
             // TODO: why metrics is a list ?
-            get => LoadMetrics?.metrics.FirstOrDefault().loadId; 
-            protected set {} 
+            get => LoadMetrics?.metrics != null ? LoadMetrics?.metrics.FirstOrDefault().loadId : "";
+            protected set {}
         }
 
         public override Metrics? LoadMetrics
@@ -72,7 +68,7 @@ namespace Chartboost.AdFormats.Banner
             protected set { }
         }
 
-        public override ChartboostMediationBannerAdSize AdSize
+        public override ChartboostMediationBannerAdSize? AdSize
         {
             get
             {
@@ -97,6 +93,7 @@ namespace Chartboost.AdFormats.Banner
 
         public override async Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, ChartboostMediationBannerAdScreenLocation screenLocation)
         {
+            Request = request;
             await base.Load(request, screenLocation);
             
             var (proxy, hashCode) = _setupProxy<ChartboostMediationBannerAdLoadResult>();
@@ -115,7 +112,9 @@ namespace Chartboost.AdFormats.Banner
 
         public override async Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, float x, float y)
         {
+            Request = request;
             await base.Load(request, x, y);
+            
             var (proxy, hashCode) = _setupProxy<ChartboostMediationBannerAdLoadResult>();
             CacheManager.TrackBannerAdLoadRequest(hashCode, request);
 
@@ -129,6 +128,13 @@ namespace Chartboost.AdFormats.Banner
             
             var result = await proxy;
             return result;
+        }
+
+        public override void ResizeToFit(ChartboostMediationBannerResizeAxis axis = ChartboostMediationBannerResizeAxis.Both,
+            Vector2 pivot = default)
+        {
+            base.ResizeToFit(axis, pivot);
+            _chartboostMediationBannerViewResizeToFit(UniqueId, (int)axis, pivot.x, 1-pivot.y);
         }
 
         public override void SetDraggability(bool canDrag)
@@ -186,6 +192,9 @@ namespace Chartboost.AdFormats.Banner
         
         [DllImport("__Internal")]
         private static extern int _chartboostMediationBannerViewGetVerticalAlignment(IntPtr uniqueId);
+        
+        [DllImport("__Internal")]
+        private static extern void _chartboostMediationBannerViewResizeToFit(IntPtr uniqueId, int axis, float pivotX, float pivotY );
         
         [DllImport("__Internal")]
         private static extern void _chartboostMediationBannerViewSetDraggability(IntPtr uniqueId, bool canDrag );

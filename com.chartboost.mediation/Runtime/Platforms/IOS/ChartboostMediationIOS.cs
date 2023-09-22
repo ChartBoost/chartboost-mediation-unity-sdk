@@ -40,6 +40,9 @@ namespace Chartboost.Platforms.IOS
 
         [DllImport("__Internal")]
         private static extern void _chartboostMediationSetTestMode(bool isTestMode);
+        
+        [DllImport("__Internal")]
+        private static extern void _chartboostMediationDiscardOversizedAds(bool shouldDiscard);
 
         [DllImport("__Internal")]
         private static extern float _chartboostMediationGetUIScaleFactor();
@@ -145,6 +148,12 @@ namespace Chartboost.Platforms.IOS
         {
             base.SetTestMode(testModeEnabled);
             _chartboostMediationSetTestMode(testModeEnabled);
+        }
+
+        public override void DiscardOversizedAds(bool shouldDiscard)
+        {
+            base.DiscardOversizedAds(shouldDiscard);
+            _chartboostMediationDiscardOversizedAds(shouldDiscard);
         }
 
         public static float GetUIScaleFactor()

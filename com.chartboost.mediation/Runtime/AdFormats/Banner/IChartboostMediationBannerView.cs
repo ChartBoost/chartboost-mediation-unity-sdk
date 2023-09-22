@@ -5,6 +5,7 @@ using Chartboost.Banner;
 using Chartboost.Events;
 using Chartboost.Requests;
 using Chartboost.Results;
+using UnityEngine;
 
 namespace Chartboost.AdFormats.Banner
 {
@@ -31,11 +32,12 @@ namespace Chartboost.AdFormats.Banner
         abstract ChartboostMediationBannerAdLoadRequest Request { get; }
         abstract BidInfo WinningBidInfo { get; }
         abstract string LoadId { get; }
-        abstract ChartboostMediationBannerAdSize AdSize { get; }
+        abstract ChartboostMediationBannerAdSize? AdSize { get; }
         abstract ChartboostMediationBannerHorizontalAlignment HorizontalAlignment { get; set; }
         abstract ChartboostMediationBannerVerticalAlignment VerticalAlignment { get; set; }
         abstract Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, ChartboostMediationBannerAdScreenLocation screenLocation);
         abstract Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, float x, float y);
+        abstract void ResizeToFit(ChartboostMediationBannerResizeAxis axis = ChartboostMediationBannerResizeAxis.Both, Vector2 pivot = default);
         abstract void SetDraggability(bool canDrag);
         abstract void SetVisibility(bool visibility);
         abstract void Reset();

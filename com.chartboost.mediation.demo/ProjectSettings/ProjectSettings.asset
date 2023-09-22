@@ -688,7 +688,7 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
   scriptingDefineSymbols:
-    4: UNITY_ANDROID
+    4: 
     7: 
   additionalCompilerArguments: {}
   platformArchitecture: {}

@@ -6,6 +6,7 @@ using Chartboost.Platforms;
 using Chartboost.Requests;
 using Chartboost.Results;
 using Chartboost.Utilities;
+using UnityEngine;
 using Logger = Chartboost.Utilities.Logger;
 
 namespace Chartboost.AdFormats.Banner
@@ -32,9 +33,10 @@ namespace Chartboost.AdFormats.Banner
         public abstract BidInfo WinningBidInfo { get; protected set; }
         public abstract string LoadId { get; protected set; }
         public abstract Metrics? LoadMetrics { get; protected set; }
-        public abstract ChartboostMediationBannerAdSize AdSize { get; protected set; }
+        public abstract ChartboostMediationBannerAdSize? AdSize { get; protected set; }
         public abstract ChartboostMediationBannerHorizontalAlignment HorizontalAlignment { get; set; }
         public abstract ChartboostMediationBannerVerticalAlignment VerticalAlignment { get; set; }
+        
         public virtual Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, ChartboostMediationBannerAdScreenLocation screenLocation)
         {
             Request = request;
@@ -50,6 +52,7 @@ namespace Chartboost.AdFormats.Banner
 
         public virtual Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, float x, float y)
         {
+            Request = request;
             if (!CanFetchAd(request.PlacementName))
             {
                 var error = new ChartboostMediationError("Chartboost Mediation is not ready or placement is invalid.");
@@ -59,10 +62,19 @@ namespace Chartboost.AdFormats.Banner
             Logger.Log(LogTag, $"Loading banner ad for placement {request.PlacementName} and size {request.Size.SizeType} at ({x}, {y})");
             return Task.FromResult<ChartboostMediationBannerAdLoadResult>(null);
         }
-
-        public virtual void SetDraggability(bool canDrag) => Logger.Log(LogTag, $"Setting Draggability to {canDrag}");
-        public virtual void SetVisibility(bool visibility) => Logger.Log(LogTag, $"Setting Visibility to {visibility}");
-        public virtual void Reset() => Logger.Log(LogTag, $"Resetting banner ad");
+        
+        public virtual void ResizeToFit(ChartboostMediationBannerResizeAxis axis = ChartboostMediationBannerResizeAxis.Both, Vector2 pivot = default)
+            => Logger.Log(LogTag, $"Resizing at axis {axis} with pivot {pivot}");
+        
+        public virtual void SetDraggability(bool canDrag) 
+            => Logger.Log(LogTag, $"Setting Draggability to {canDrag}");
+        
+        public virtual void SetVisibility(bool visibility) 
+            => Logger.Log(LogTag, $"Setting Visibility to {visibility}");
+        
+        public virtual void Reset() 
+            => Logger.Log(LogTag, $"Resetting banner ad");
+        
         public virtual void Destroy()
         {
             Logger.Log(LogTag, $"Removing/Destroying banner ad");

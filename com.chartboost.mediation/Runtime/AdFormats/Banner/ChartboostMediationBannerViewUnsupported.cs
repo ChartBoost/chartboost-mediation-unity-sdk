@@ -19,7 +19,7 @@ namespace Chartboost.AdFormats.Banner
         public override BidInfo WinningBidInfo { get; protected set; }
         public override string LoadId { get; protected set; }
         public override Metrics? LoadMetrics { get; protected set; }
-        public override ChartboostMediationBannerAdSize AdSize { get; protected set; }
+        public override ChartboostMediationBannerAdSize? AdSize { get; protected set; }
         public override ChartboostMediationBannerHorizontalAlignment HorizontalAlignment { get; set; }
         public override ChartboostMediationBannerVerticalAlignment VerticalAlignment { get; set; }
         public override Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, ChartboostMediationBannerAdScreenLocation screenLocation)

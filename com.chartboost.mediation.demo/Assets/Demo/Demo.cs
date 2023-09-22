@@ -35,6 +35,7 @@ public class Demo : MonoBehaviour
     public Dropdown bannerLocationDropdown;
     public Dropdown horizontalAlignmentDropdown;
     public Dropdown verticalAlignmentDropdown;
+    public Dropdown resizeDropdown;
 
     public ScrollRect outputTextScrollRect;
     public Text outputText;
@@ -249,14 +250,19 @@ public class Demo : MonoBehaviour
         _bannerAd.DidRecordImpression += DidRecordImpressionBanner;
         _bannerAd.DidDrag += DidDragBanner;
 
+        // keywords
         var keywords = _bannerAd.Keywords ??= new Dictionary<string, string>();
         keywords.Add("bnr_keyword1", "bnr_value1"); 
         keywords.Add("bnr_keyword2", "bnr_value2");
         _bannerAd.Keywords = keywords;
 
+        // Alignment
         _bannerAd.VerticalAlignment = (ChartboostMediationBannerVerticalAlignment)verticalAlignmentDropdown.value;
         _bannerAd.HorizontalAlignment = (ChartboostMediationBannerHorizontalAlignment)horizontalAlignmentDropdown.value;
-  
+        
+        // Resize
+        _bannerAd.ResizeOption = (ResizeOption)resizeDropdown.value;
+
         var result = await _bannerAd.Load();
         Log(result.Error == null ? "Successfully loaded banner" : result.Error?.Message);
     }
@@ -274,6 +280,14 @@ public class Demo : MonoBehaviour
         if (_bannerAd != null)
         {
             _bannerAd.VerticalAlignment = (ChartboostMediationBannerVerticalAlignment)verticalAlignmentDropdown.value;
+        }
+    }
+
+    public void OnResizeOptionChange()
+    {
+        if (_bannerAd != null)
+        {
+            _bannerAd.ResizeOption = (ResizeOption)resizeDropdown.value;
         }
     }
 
