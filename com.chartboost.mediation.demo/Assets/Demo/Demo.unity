@@ -7075,7 +7075,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1132835359}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.113390036
+  m_Size: 0.1173932
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -10776,7 +10776,7 @@ MonoBehaviour:
       m_Image: {fileID: 0}
     - m_Text: Fit Both
       m_Image: {fileID: 0}
-    - m_Text: No Resize
+    - m_Text: Disabled
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:

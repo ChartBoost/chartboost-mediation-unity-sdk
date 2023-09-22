@@ -15,7 +15,7 @@ namespace Chartboost.Editor
         private SerializedProperty _verticalAlignmentSP;
 
         private ChartboostMediationBannerSizeType _sizeType = ChartboostMediationBannerSizeType.Standard;
-        private ResizeOption _resizeOption = ResizeOption.NoResize;
+        private ResizeOption _resizeOption = ResizeOption.Disabled;
         private ChartboostMediationBannerHorizontalAlignment _horizontalAlignment = ChartboostMediationBannerHorizontalAlignment.Center;
         private ChartboostMediationBannerVerticalAlignment _verticalAlignment = ChartboostMediationBannerVerticalAlignment.Center;
 

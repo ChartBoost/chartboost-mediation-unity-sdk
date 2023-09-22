@@ -23,7 +23,7 @@ namespace Chartboost.AdFormats.Banner.Unity
         FitHorizontal,
         FitVertical,
         FitBoth,
-        NoResize
+        Disabled
     }
     
     [RequireComponent(typeof(RectTransform))]
@@ -237,7 +237,8 @@ namespace Chartboost.AdFormats.Banner.Unity
         {
             // Cannot resize until BannerView is loaded with Ad
             var adSize = AdSize ?? ChartboostMediationBannerAdSize.Adaptive(0, 0);
-            if (Request?.Size.BannerType == ChartboostMediationBannerType.Fixed || adSize is { Width: 0, Height: 0 })
+            if (Request?.Size.BannerType == ChartboostMediationBannerType.Fixed || adSize.SizeType == ChartboostMediationBannerSizeType.Unknown ||
+                adSize is { Width: 0, Height: 0 })
                 return;
 
             var rect = GetComponent<RectTransform>();
@@ -256,7 +257,7 @@ namespace Chartboost.AdFormats.Banner.Unity
                     rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
                     rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
                     break;
-                case ResizeOption.NoResize:
+                case ResizeOption.Disabled:
                 default:
                     return;
             }

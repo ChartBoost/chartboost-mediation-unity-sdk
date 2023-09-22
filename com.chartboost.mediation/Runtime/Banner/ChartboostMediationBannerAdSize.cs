@@ -12,10 +12,11 @@ namespace Chartboost.Banner
     
     public enum ChartboostMediationBannerSizeType
     {
-        Adaptive = -1,
+        Unknown = -1,
         Standard = 0,
         Medium = 1,
-        Leaderboard = 2
+        Leaderboard = 2,
+        Adaptive = 3,
     }
 
     /// <summary>

@@ -946,11 +946,11 @@ void _chartboostMediationBannerViewLoadAdWithScreenPos(const void *uniqueId, con
     
     ChartboostMediationBannerSize *size;
     switch(sizeType){
-        case -1 : size = [ChartboostMediationBannerSize adaptiveWithWidth:width maxHeight:height]; break;
         case 0 : size = [ChartboostMediationBannerSize standard]; break;
         case 1 : size = [ChartboostMediationBannerSize medium]; break;
         case 2 : size = [ChartboostMediationBannerSize leaderboard]; break;
-        default: size =  [ChartboostMediationBannerSize standard]; break;
+        case 3 : size = [ChartboostMediationBannerSize adaptiveWithWidth:width maxHeight:height]; break;
+        default: size =  [ChartboostMediationBannerSize adaptiveWithWidth:0 maxHeight:0]; break;
     }
     
     ChartboostMediationBannerLoadRequest *loadRequest = [[ChartboostMediationBannerLoadRequest alloc] initWithPlacement:GetStringParam(placementName) size:size];
@@ -978,12 +978,12 @@ void _chartboostMediationBannerViewLoadAdWithXY(const void *uniqueId, const char
     ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
 
     ChartboostMediationBannerSize *size;
-    switch(sizeType){
-        case -1 : size = [ChartboostMediationBannerSize adaptiveWithWidth:width maxHeight:height]; break;
+    switch(sizeType){        
         case 0 : size = [ChartboostMediationBannerSize standard]; break;
         case 1 : size = [ChartboostMediationBannerSize medium]; break;
         case 2 : size = [ChartboostMediationBannerSize leaderboard]; break;
-        default: size =  [ChartboostMediationBannerSize standard]; break;
+        case 3 : size = [ChartboostMediationBannerSize adaptiveWithWidth:width maxHeight:height]; break;
+        default: size =  [ChartboostMediationBannerSize adaptiveWithWidth:0 maxHeight:0]; break;
     }
     
     ChartboostMediationBannerLoadRequest *loadRequest = [[ChartboostMediationBannerLoadRequest alloc] initWithPlacement:GetStringParam(placementName) size:size];
@@ -1026,14 +1026,14 @@ const char * _chartboostMediationBannerViewGetSize(const void* uniqueId){
     if(bannerView.size.type == 0) {  // Fixed
         int width = bannerView.size.size.width;
         switch (width) {
-            case 320: sizeTypeValue = [NSString stringWithFormat:@"%d", 0]; break;
-            case 300: sizeTypeValue = [NSString stringWithFormat:@"%d", 1]; break;
-            case 728: sizeTypeValue = [NSString stringWithFormat:@"%d", 2]; break;
-            default: sizeTypeValue = [NSString stringWithFormat:@"%d", -1];break;
+            case 320: sizeTypeValue = [NSString stringWithFormat:@"%d", 0]; break;  // Standard
+            case 300: sizeTypeValue = [NSString stringWithFormat:@"%d", 1]; break;  // Medium
+            case 728: sizeTypeValue = [NSString stringWithFormat:@"%d", 2]; break;  // Leaderboard
+            default: sizeTypeValue = [NSString stringWithFormat:@"%d", -1];break;   // Unknown
         }
     }
     else{
-        sizeTypeValue = [NSString stringWithFormat:@"%d", -1];
+        sizeTypeValue = [NSString stringWithFormat:@"%d", 3];   // Adaptive
     }
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:sizeTypeValue,sizeTypeKey,aspectRatioValue,aspectRatioKey,widthValue,widthKey,heightValue,heightKey,typeValue, typeKey, nil];
 
