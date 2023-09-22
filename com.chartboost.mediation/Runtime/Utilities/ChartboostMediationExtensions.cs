@@ -1,5 +1,5 @@
 using System;
-using Chartboost.Banner;
+using Chartboost.AdFormats.Banner;
 using Newtonsoft.Json;
 using UnityEngine;
 using static Chartboost.Utilities.Constants;

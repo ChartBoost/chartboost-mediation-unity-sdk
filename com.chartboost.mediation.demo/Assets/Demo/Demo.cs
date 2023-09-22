@@ -43,7 +43,7 @@ public class Demo : MonoBehaviour
     
     private bool _bannerAdIsVisible = true;
     private bool _bannerAdIsDraggable = true;
-    private ChartboostMediationBannerAdSize[] _bannerSizes;
+    private ChartboostMediationBannerSize[] _bannerSizes;
     private ChartboostMediationBannerAdScreenLocation[] _screenLocations;
     private ChartboostMediationUnityBannerAd _bannerAd;
 
@@ -63,22 +63,22 @@ public class Demo : MonoBehaviour
         _bannerSizes = new[]
         {
             // Fixed
-            ChartboostMediationBannerAdSize.Standard,
-            ChartboostMediationBannerAdSize.MediumRect,
-            ChartboostMediationBannerAdSize.Leaderboard,
+            ChartboostMediationBannerSize.Standard,
+            ChartboostMediationBannerSize.MediumRect,
+            ChartboostMediationBannerSize.Leaderboard,
 
             // Horizontal
-            ChartboostMediationBannerAdSize.Adaptive2X1(screenWidthNative),
-            ChartboostMediationBannerAdSize.Adaptive4X1(screenWidthNative),
-            ChartboostMediationBannerAdSize.Adaptive6X1(screenWidthNative),
-            ChartboostMediationBannerAdSize.Adaptive8X1(screenWidthNative),
-            ChartboostMediationBannerAdSize.Adaptive10X1(screenWidthNative),
+            ChartboostMediationBannerSize.Adaptive2X1(screenWidthNative),
+            ChartboostMediationBannerSize.Adaptive4X1(screenWidthNative),
+            ChartboostMediationBannerSize.Adaptive6X1(screenWidthNative),
+            ChartboostMediationBannerSize.Adaptive8X1(screenWidthNative),
+            ChartboostMediationBannerSize.Adaptive10X1(screenWidthNative),
 
             // Vertical
-            ChartboostMediationBannerAdSize.Adaptive1X2(screenWidthNative),
-            ChartboostMediationBannerAdSize.Adaptive1X4(screenWidthNative),
-            ChartboostMediationBannerAdSize.Adaptive1X3(screenWidthNative),
-            ChartboostMediationBannerAdSize.Adaptive9X16(screenWidthNative),
+            ChartboostMediationBannerSize.Adaptive1X2(screenWidthNative),
+            ChartboostMediationBannerSize.Adaptive1X4(screenWidthNative),
+            ChartboostMediationBannerSize.Adaptive1X3(screenWidthNative),
+            ChartboostMediationBannerSize.Adaptive9X16(screenWidthNative),
         };
 
         _screenLocations = new[]
@@ -237,7 +237,7 @@ public class Demo : MonoBehaviour
             Destroy(_bannerAd.gameObject);
 
         var size = bannerSizeDropdown.value >= 0 && bannerSizeDropdown.value < _bannerSizes.Length
-            ? _bannerSizes[bannerSizeDropdown.value] : ChartboostMediationBannerAdSize.Standard;
+            ? _bannerSizes[bannerSizeDropdown.value] : ChartboostMediationBannerSize.Standard;
         
         var screenPos = bannerLocationDropdown.value >= 0 && bannerLocationDropdown.value < _screenLocations.Length
             ? _screenLocations[bannerLocationDropdown.value] : ChartboostMediationBannerAdScreenLocation.Center; 

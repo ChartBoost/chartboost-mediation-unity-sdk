@@ -1,4 +1,3 @@
-using System;
 using Chartboost.Banner;
 using Chartboost.Utilities;
 using UnityEditor;
@@ -19,7 +18,7 @@ namespace Chartboost.AdFormats.Banner.Unity
 
         internal static ChartboostMediationUnityBannerAd Instantiate(
             Canvas canvas = null,
-            ChartboostMediationBannerAdSize? size = null,
+            ChartboostMediationBannerSize? size = null,
             ChartboostMediationBannerAdScreenLocation screenLocation = ChartboostMediationBannerAdScreenLocation.Center)
         {
             canvas ??= ChartboostMediationUtils.GetCanvas();
@@ -33,7 +32,7 @@ namespace Chartboost.AdFormats.Banner.Unity
             bannerTransform.localScale = Vector3.one;
 
             // If no size is provided use Standard size as default
-            var containerSize = size ?? ChartboostMediationBannerAdSize.Standard;
+            var containerSize = size ?? ChartboostMediationBannerSize.Standard;
             unityBannerAd.SetSizeType(containerSize.SizeType);
             
             var canvasScale = canvas.transform.localScale.x;

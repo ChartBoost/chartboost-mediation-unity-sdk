@@ -68,12 +68,12 @@ namespace Chartboost.AdFormats.Banner
             protected set { }
         }
 
-        public override ChartboostMediationBannerAdSize? AdSize
+        public override ChartboostMediationBannerSize? AdSize
         {
             get
             {
                 var sizeJson = _chartboostMediationBannerViewGetSize(UniqueId);
-                var size = string.IsNullOrEmpty(sizeJson) ? new ChartboostMediationBannerAdSize(): JsonConvert.DeserializeObject<ChartboostMediationBannerAdSize>(sizeJson);
+                var size = string.IsNullOrEmpty(sizeJson) ? new ChartboostMediationBannerSize(): JsonConvert.DeserializeObject<ChartboostMediationBannerSize>(sizeJson);
                 return size;
             }
             protected set { }

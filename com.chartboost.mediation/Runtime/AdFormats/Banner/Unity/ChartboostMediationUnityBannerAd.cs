@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Chartboost.Banner;
-using Chartboost.Platforms;
 using Chartboost.Requests;
 using Chartboost.Results;
 using Chartboost.Utilities;
@@ -104,9 +102,9 @@ namespace Chartboost.AdFormats.Banner.Unity
             
             var containerSize = sizeType switch
             {
-                ChartboostMediationBannerSizeType.Standard => ChartboostMediationBannerAdSize.Standard,
-                ChartboostMediationBannerSizeType.Medium => ChartboostMediationBannerAdSize.MediumRect,
-                ChartboostMediationBannerSizeType.Leaderboard => ChartboostMediationBannerAdSize.Leaderboard,
+                ChartboostMediationBannerSizeType.Standard => ChartboostMediationBannerSize.Standard,
+                ChartboostMediationBannerSizeType.Medium => ChartboostMediationBannerSize.MediumRect,
+                ChartboostMediationBannerSizeType.Leaderboard => ChartboostMediationBannerSize.Leaderboard,
                 _ => await GetAdaptiveSize()
             };
             var loadRequest = new ChartboostMediationBannerAdLoadRequest(placementName, containerSize);
@@ -131,7 +129,7 @@ namespace Chartboost.AdFormats.Banner.Unity
 
         public string LoadId => BannerView?.LoadId;
 
-        public ChartboostMediationBannerAdSize? AdSize => BannerView?.AdSize;
+        public ChartboostMediationBannerSize? AdSize => BannerView?.AdSize;
 
         public ChartboostMediationBannerHorizontalAlignment HorizontalAlignment
         {
@@ -236,7 +234,7 @@ namespace Chartboost.AdFormats.Banner.Unity
         private void Resize()
         {
             // Cannot resize until BannerView is loaded with Ad
-            var adSize = AdSize ?? ChartboostMediationBannerAdSize.Adaptive(0, 0);
+            var adSize = AdSize ?? ChartboostMediationBannerSize.Adaptive(0, 0);
             if (Request?.Size.BannerType == ChartboostMediationBannerType.Fixed || adSize.SizeType == ChartboostMediationBannerSizeType.Unknown ||
                 adSize is { Width: 0, Height: 0 })
                 return;
@@ -284,7 +282,7 @@ namespace Chartboost.AdFormats.Banner.Unity
             }
         }
 
-        private async Task<ChartboostMediationBannerAdSize> GetAdaptiveSize()
+        private async Task<ChartboostMediationBannerSize> GetAdaptiveSize()
         {
             var recTransform = GetComponent<RectTransform>();
             var layoutParams = recTransform.LayoutParams();
@@ -302,7 +300,7 @@ namespace Chartboost.AdFormats.Banner.Unity
             var width = ChartboostMediationConverters.PixelsToNative(layoutParams.width);
             var height = ChartboostMediationConverters.PixelsToNative(layoutParams.height);
 
-            return ChartboostMediationBannerAdSize.Adaptive(width, height);
+            return ChartboostMediationBannerSize.Adaptive(width, height);
         }
         
     }
