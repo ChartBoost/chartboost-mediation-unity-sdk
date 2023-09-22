@@ -122,7 +122,6 @@ public class Demo : MonoBehaviour
         ChartboostMediation.SetSubjectToGDPR(false);
         ChartboostMediation.SetSubjectToCoppa(false);
         ChartboostMediation.SetUserHasGivenConsent(true);
-        ChartboostMediation.SetTestMode(true);
     }
 
     private void DidReceiveImpressionLevelRevenueData(string placement, Hashtable impressionData)
