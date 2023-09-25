@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Chartboost.Banner;
-using Chartboost.Events;
 using Chartboost.Requests;
 using Chartboost.Results;
 using UnityEngine;
@@ -32,7 +30,7 @@ namespace Chartboost.AdFormats.Banner
         abstract ChartboostMediationBannerAdLoadRequest Request { get; }
         abstract BidInfo WinningBidInfo { get; }
         abstract string LoadId { get; }
-        abstract ChartboostMediationBannerAdSize? AdSize { get; }
+        abstract ChartboostMediationBannerSize? AdSize { get; }
         abstract ChartboostMediationBannerHorizontalAlignment HorizontalAlignment { get; set; }
         abstract ChartboostMediationBannerVerticalAlignment VerticalAlignment { get; set; }
         abstract Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, ChartboostMediationBannerAdScreenLocation screenLocation);

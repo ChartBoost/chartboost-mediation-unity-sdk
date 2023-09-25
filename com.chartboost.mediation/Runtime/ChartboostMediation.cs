@@ -231,7 +231,7 @@ namespace Chartboost
         /// <param name="size">size of the gameobject</param>
         /// <param name="screenLocation">pre-defined location on screen where this gameobject will be created</param>
         /// <returns></returns>
-        public static ChartboostMediationUnityBannerAd GetUnityBannerAd(string placementName, Canvas canvas, ChartboostMediationBannerAdSize? size = null, ChartboostMediationBannerAdScreenLocation screenLocation = ChartboostMediationBannerAdScreenLocation.Center)
+        public static ChartboostMediationUnityBannerAd GetUnityBannerAd(string placementName, Canvas canvas, ChartboostMediationBannerSize? size = null, ChartboostMediationBannerAdScreenLocation screenLocation = ChartboostMediationBannerAdScreenLocation.Center)
         {
             var unityBannerAd = ChartboostMediationUnityBannerAd.Instantiate(canvas, size, screenLocation);
             unityBannerAd.PlacementName = placementName;

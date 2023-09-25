@@ -4,7 +4,6 @@ using Chartboost.Interfaces;
 using Chartboost.Platforms.Android;
 using Chartboost.Utilities;
 using UnityEngine;
-using Logger = Chartboost.Utilities.Logger;
 
 namespace Chartboost.Banner
 {
@@ -19,9 +18,8 @@ namespace Chartboost.Banner
         public ChartboostMediationBannerAndroid(string placementName, ChartboostMediationBannerAdSize size) : base(placementName, size)
         {
             LogTag = "ChartboostMediationBanner (Android)";
-
             using var unityBridge = ChartboostMediationAndroid.GetUnityBridge();
-            _androidAd = unityBridge.CallStatic<AndroidJavaObject>("getBannerAd", placementName, (int)size.SizeType);
+            _androidAd = unityBridge.CallStatic<AndroidJavaObject>("getBannerAd", placementName, (int)size);
             _uniqueId = _androidAd.HashCode();
         }
 
