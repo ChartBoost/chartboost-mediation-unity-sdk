@@ -199,14 +199,19 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
             Size((it.width / displayDensity).toInt(), (it.height / displayDensity).toInt())
         }
 
+        // if partnerAd is not available then adSize is unknown
+        val sizeType = partnerAd?.let {
+            when (size?.name) {
+                "STANDARD" -> 0
+                "MEDIUM" -> 1
+                "LEADERBOARD" -> 2
+                "ADAPTIVE" -> 3
+                else -> -1
+            }
+        }?: run { -1 }  // -1 => Unknown
+
         val json = JSONObject()
-        json.put("sizeType", when(size?.name) {
-            "ADAPTIVE" -> -1
-            "STANDARD" -> 0
-            "MEDIUM" -> 1
-            "LEADERBOARD" -> 2
-            else -> 0
-        })
+        json.put("sizeType", sizeType)
         json.put("aspectRatio", size?.aspectRatio)
         json.put("width", creativeSize?.width ?: 0)
         json.put("height", creativeSize?.height ?: 0)
@@ -420,13 +425,13 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
     private fun getSizeFromSizeType(sizeType: Int, sizeWidth: Float, sizeHeight: Float): HeliumBannerAd.HeliumBannerSize {
         var size:HeliumBannerAd.HeliumBannerSize = HeliumBannerAd.HeliumBannerSize.bannerSize(0,0);
         when (sizeType) {
-            -1 -> size = HeliumBannerAd.HeliumBannerSize.bannerSize(
-                sizeWidth.roundToInt(),
-                sizeHeight.roundToInt()
-            )
             0 -> size = HeliumBannerAd.HeliumBannerSize.STANDARD
             1 -> size = HeliumBannerAd.HeliumBannerSize.MEDIUM
             2 -> size = HeliumBannerAd.HeliumBannerSize.LEADERBOARD
+            3 -> size = HeliumBannerAd.HeliumBannerSize.bannerSize(
+                sizeWidth.roundToInt(),
+                sizeHeight.roundToInt()
+            )
         }
         return size;
     }
