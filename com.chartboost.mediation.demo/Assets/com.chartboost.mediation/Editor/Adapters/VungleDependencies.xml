@@ -2,11 +2,10 @@
 <dependencies>
     <androidPackages>
         <!-- Android Adapter -->
-        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-vungle:4.6.12.1+@aar"/>
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-vungle:4.7.0.0+@aar"/>
 
         <!-- Partner Android SDK Dependencies-->
-        <androidPackage spec="com.vungle:publisher-sdk-android:6.12.1"/>
-        <androidPackage spec="androidx.core:core:1.2.0"/>
+        <androidPackage spec="com.vungle:vungle-ads:7.0.0"/>
     </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->

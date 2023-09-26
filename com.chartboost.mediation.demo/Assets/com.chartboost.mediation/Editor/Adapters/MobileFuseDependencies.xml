@@ -2,16 +2,16 @@
 <dependencies>
     <androidPackages>
         <!-- Android Adapter -->
-        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-mobilefuse:4.1.4.4+@aar"/>
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-mobilefuse:4.1.6.0+@aar"/>
 
         <!-- Partner Android SDK Dependencies-->
-        <androidPackage spec="com.mobilefuse.sdk:mobilefuse-sdk-core:1.4.4"/>
+        <androidPackage spec="com.mobilefuse.sdk:mobilefuse-sdk-core:1.6.0"/>
     </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->
-        <iosPod name="ChartboostMediationAdapterMobileFuse" version="~> 4.1.4.4"/>
+        <iosPod name="ChartboostMediationAdapterMobileFuse" version="~> 4.1.6.0"/>
 
         <!-- Partner iOS SDK-->
-        <iosPod name="MobileFuseSDK" version="~> 1.4.4" addToAllTargets="true"/>
+        <iosPod name="MobileFuseSDK" version="~> 1.6.0" addToAllTargets="true"/>
     </iosPods>
 </dependencies>
