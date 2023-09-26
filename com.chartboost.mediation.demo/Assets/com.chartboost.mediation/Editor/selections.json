@@ -1,5 +1,5 @@
 {
-  "mediationVersion": "4.5.0",
+  "mediationVersion": "4.6.0",
   "adapterSelections": [
     {
       "id": "adcolony",
@@ -8,48 +8,48 @@
     },
     {
       "id": "admob",
-      "android": "22.2.0",
-      "ios": "10.9.0"
+      "android": "22.3.0",
+      "ios": "10.10.0"
     },
     {
       "id": "aps",
-      "android": "9.8.2",
+      "android": "9.8.5",
       "ios": "4.7.0"
     },
     {
       "id": "applovin",
-      "android": "11.10.1",
-      "ios": "11.10.0"
+      "android": "11.11.2",
+      "ios": "11.11.0"
     },
     {
       "id": "chartboost",
-      "android": "9.4.0",
+      "android": "9.4.1",
       "ios": "9.4.0"
     },
     {
       "id": "digitalturbine",
-      "android": "8.2.3",
+      "android": "8.2.4",
       "ios": "8.2.1"
     },
     {
       "id": "googlebidding",
-      "android": "22.2.0",
-      "ios": "10.9.0"
+      "android": "22.3.0",
+      "ios": "10.10.0"
     },
     {
       "id": "inmobi",
-      "android": "10.5.5",
-      "ios": "10.5.0"
+      "android": "10.5.7",
+      "ios": "10.5.6"
     },
     {
       "id": "ironsource",
-      "android": "7.3.1.0",
-      "ios": "7.3.1.0"
+      "android": "7.5.1.0",
+      "ios": "7.4.0.0"
     },
     {
       "id": "meta",
-      "android": "6.14.0",
-      "ios": "6.12.0"
+      "android": "6.16.0",
+      "ios": "6.14.0"
     },
     {
       "id": "mintegral",
@@ -73,7 +73,7 @@
     },
     {
       "id": "vungle",
-      "android": "6.12.1",
+      "android": "7.0.0",
       "ios": "7.0.0"
     },
     {
@@ -93,8 +93,8 @@
     },
     {
       "id": "mobilefuse",
-      "android": "1.4.4",
-      "ios": "1.4.4"
+      "android": "1.6.0",
+      "ios": "1.6.0"
     }
   ]
 }

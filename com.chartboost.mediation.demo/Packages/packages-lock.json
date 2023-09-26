@@ -9,7 +9,7 @@
       }
     },
     "com.google.external-dependency-manager": {
-      "version": "file:../GooglePackages/com.google.external-dependency-manager-1.2.175.tgz",
+      "version": "file:../GooglePackages/com.google.external-dependency-manager-1.2.177.tgz",
       "depth": 0,
       "source": "local-tarball",
       "dependencies": {}
