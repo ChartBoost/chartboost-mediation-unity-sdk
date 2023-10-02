@@ -8,7 +8,6 @@ namespace Chartboost.AdFormats.Banner.Unity
     public partial class ChartboostMediationUnityBannerAd : MonoBehaviour
     {
 #if UNITY_EDITOR
-        [MenuItem("Chartboost Mediation/UnityBannerAd/Create New")]
         [MenuItem("GameObject/Chartboost Mediation/UnityBannerAd")]
         public static void CreateAd()
         {
