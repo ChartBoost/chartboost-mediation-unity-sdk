@@ -7,6 +7,7 @@ namespace Chartboost.Banner
     /// <summary>
     /// Chartboost Mediation banner base structure.
     /// </summary>
+    [Obsolete("ChartboostMediationBannerBase has been deprecated, use the new ChartboostMediationBannerView API instead.")]
     public abstract class ChartboostMediationBannerBase : IChartboostMediationAd, IChartboostMediationBannerAd
     {
         protected static string LogTag = "ChartboostMediationBanner (Base)";
