@@ -62,6 +62,7 @@ namespace Chartboost.Banner
     /// <summary>
     /// Chartboost Mediation banner object for unsupported platforms.
     /// </summary>
+    [Obsolete("ChartboostMediationBannerUnsupported has been deprecated, use the new ChartboostMediationBannerView API instead.")]
     public sealed class ChartboostMediationBannerUnsupported : ChartboostMediationBannerBase
     {
         public ChartboostMediationBannerUnsupported(string placementName, ChartboostMediationBannerAdSize size) : base(placementName, size) 
