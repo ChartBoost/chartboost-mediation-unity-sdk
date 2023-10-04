@@ -2,7 +2,6 @@ package com.chartboost.mediation.unity
 
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import android.view.DisplayCutout
 import android.view.MotionEvent
 import android.widget.RelativeLayout
@@ -50,7 +49,6 @@ class BannerLayout
                     safeAreaLeft = displayCutout.safeInsetLeft
                     safeAreaRight = displayCutout.safeInsetRight
                     safeAreaBottom = displayCutout.safeInsetBottom
-                    Log.d("Unity", "Safe area listener")
                 }
             }
             windowInsets
