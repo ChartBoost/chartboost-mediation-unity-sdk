@@ -40,13 +40,14 @@
     if(self.usesConstraints){
         switch (axis) {
             case 0: // Horizontal
-                frame.size.width = newSize.width;
+                [NSLayoutConstraint activateConstraints:@[[_bannerView.widthAnchor constraintEqualToConstant:newSize.width]]];
                 break;
             case 1: // Vertical
-                frame.size.height = newSize.height;
+                [NSLayoutConstraint activateConstraints:@[[_bannerView.heightAnchor constraintEqualToConstant:newSize.height]]];
                 break;
             default: // both
-                frame.size = newSize;
+                [NSLayoutConstraint activateConstraints:@[[_bannerView.widthAnchor constraintEqualToConstant:newSize.width]]];
+                [NSLayoutConstraint activateConstraints:@[[_bannerView.heightAnchor constraintEqualToConstant:newSize.height]]];
                 break;
             }
     }
@@ -81,15 +82,16 @@
                 break;
         }
     }
-    NSLog(@"Final Frame => origin : (%f, %f), size : (%f, %f)", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
     _bannerView.frame = frame;
+    NSLog(@"Final Frame => origin : (%f, %f), size : (%f, %f)", _bannerView.frame.origin.x, _bannerView.frame.origin.y, _bannerView.frame.size.width, _bannerView.frame.size.height);
+
 }
 
 - (void)handlePan:(UIPanGestureRecognizer *)gr{
     if(!self.canDrag)
             return;
             
-    CGPoint translation = [gr translationInView:gr.view.superview];
+    CGPoint translation = [gr translationInView:gr.view];
     CGPoint center = gr.view.center;
     
     float newX = center.x + translation.x;
@@ -109,7 +111,6 @@
     }
     
     CGRect safeFrame = UIEdgeInsetsInsetRect(gr.view.superview.bounds, safeAreaInsets);
-    CGRect viewFrame = CGRectMake(newX, newY, gr.view.frame.size.width, gr.view.frame.size.height);
 
     // do not move any part of the banner out of the safe area
     if(left < safeFrame.origin.x || right > safeFrame.origin.x + safeFrame.size.width ||
@@ -123,7 +124,7 @@
     center.y = newY;
     
     gr.view.center = center;
-    [gr setTranslation:CGPointZero inView:gr.view.superview];
+    [gr setTranslation:CGPointZero inView:gr.view];
         
     float scale = UIScreen.mainScreen.scale;
     float x = gr.view.frame.origin.x * scale;
