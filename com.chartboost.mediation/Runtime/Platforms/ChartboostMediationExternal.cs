@@ -126,14 +126,18 @@ namespace Chartboost.Platforms
             }
         }
         
+ #pragma warning disable CS0618
         public ChartboostMediationBannerAd GetBannerAd(string placementName, ChartboostMediationBannerAdSize size)
+ #pragma warning restore CS0618
         {
             Logger.Log(LogTag, $"GetBannerAd at placement: {placementName}");
             if (!CanFetchAd(placementName))
                 return null;
             try
             {
+ #pragma warning disable CS0618
                 return new ChartboostMediationBannerAd(placementName, size);
+ #pragma warning restore CS0618
             }
             catch (Exception e)
             {
