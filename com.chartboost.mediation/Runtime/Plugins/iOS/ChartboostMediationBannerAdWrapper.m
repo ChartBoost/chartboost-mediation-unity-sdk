@@ -87,12 +87,41 @@
 
 - (void)handlePan:(UIPanGestureRecognizer *)gr{
     if(!self.canDrag)
-        return;
-        
+            return;
+            
     CGPoint translation = [gr translationInView:gr.view.superview];
     CGPoint center = gr.view.center;
-    center.x += translation.x;
-    center.y += translation.y;
+    
+    float newX = center.x + translation.x;
+    float newY = center.y + translation.y;
+    
+    float left = newX - gr.view.frame.size.width/2;
+    float right = newX + gr.view.frame.size.width/2;
+    float top = newY - gr.view.frame.size.height/2;
+    float bottom = newY + gr.view.frame.size.height/2;
+
+    // Get safe area insets
+    UIEdgeInsets safeAreaInsets;
+    if (@available(iOS 11.0, *)) {
+        safeAreaInsets = gr.view.superview.safeAreaInsets;
+    } else {
+        safeAreaInsets = UIEdgeInsetsZero;
+    }
+    
+    CGRect safeFrame = UIEdgeInsetsInsetRect(gr.view.superview.bounds, safeAreaInsets);
+    CGRect viewFrame = CGRectMake(newX, newY, gr.view.frame.size.width, gr.view.frame.size.height);
+
+    // do not move any part of the banner out of the safe area
+    if(left < safeFrame.origin.x || right > safeFrame.origin.x + safeFrame.size.width ||
+       top < safeFrame.origin.y || bottom > safeFrame.origin.y + safeFrame.size.height)
+    {
+        NSLog(@"outside safe area");
+        return;
+    }
+    
+    center.x = newX;
+    center.y = newY;
+    
     gr.view.center = center;
     [gr setTranslation:CGPointZero inView:gr.view.superview];
         
