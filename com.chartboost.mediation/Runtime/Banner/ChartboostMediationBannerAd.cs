@@ -33,6 +33,7 @@ namespace Chartboost.Banner
     /// <summary>
     /// Chartboost Mediation banner ad object.
     /// </summary>
+    [Obsolete("ChartboostMediationBannerAd has been deprecated, use the new ChartboostMediationBannerView API instead.")]
     public sealed class ChartboostMediationBannerAd : ChartboostMediationBannerBase
     {
         private readonly ChartboostMediationBannerBase _platformBanner;

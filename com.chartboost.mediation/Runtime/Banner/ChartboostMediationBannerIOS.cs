@@ -7,6 +7,7 @@ namespace Chartboost.Banner
     /// <summary>
     /// Chartboost Mediation banner object for iOS.
     /// </summary>
+    [Obsolete("ChartboostMediationBannerIOS has been deprecated, use the new ChartboostMediationBannerView API instead.")]
     public sealed class ChartboostMediationBannerIOS : ChartboostMediationBannerBase
     {
         private readonly IntPtr _uniqueId;

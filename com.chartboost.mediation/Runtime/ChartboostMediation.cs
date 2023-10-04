@@ -162,6 +162,7 @@ namespace Chartboost
 
         #region Banner Callbacks
         /// <inheritdoc cref="IChartboostMediationBannerEvents.DidLoadBanner"/>>
+        [Obsolete("DidLoadBanner has been deprecated, use the new ChartboostMediationBannerView API instead.")]
         public static event ChartboostMediationPlacementLoadEvent DidLoadBanner
         {
             add => _chartboostMediationExternal.DidLoadBanner += value;
@@ -169,6 +170,7 @@ namespace Chartboost
         }
 
         /// <inheritdoc cref="IChartboostMediationBannerEvents.DidClickBanner"/>>
+        [Obsolete("DidClickBanner has been deprecated, use the new ChartboostMediationBannerView API instead.")]
         public static event ChartboostMediationPlacementEvent DidClickBanner
         {
             add => _chartboostMediationExternal.DidClickBanner += value;
@@ -176,6 +178,7 @@ namespace Chartboost
         }
         
         /// <inheritdoc cref="IChartboostMediationBannerEvents.DidRecordImpressionBanner"/>>
+        [Obsolete("DidRecordImpressionBanner has been deprecated, use the new ChartboostMediationBannerView API instead.")]
         public static event ChartboostMediationPlacementEvent DidRecordImpressionBanner
         {
             add => _chartboostMediationExternal.DidRecordImpressionBanner += value;

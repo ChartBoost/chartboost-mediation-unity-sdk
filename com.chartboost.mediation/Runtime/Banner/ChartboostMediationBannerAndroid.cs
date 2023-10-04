@@ -10,6 +10,7 @@ namespace Chartboost.Banner
     /// <summary>
     /// Chartboost Mediation banner object for Android.
     /// </summary>
+    [Obsolete("ChartboostMediationBannerAndroid has been deprecated, use the new ChartboostMediationBannerView API instead.")]
     public sealed class ChartboostMediationBannerAndroid : ChartboostMediationBannerBase
     {
         private readonly AndroidJavaObject _androidAd;
