@@ -50,40 +50,46 @@ namespace Chartboost.AdFormats.Banner.Unity
         private static void PlaceUnityBannerAd(ChartboostMediationUnityBannerAd unityBannerAd,
             ChartboostMediationBannerAdScreenLocation screenLocation)
         {
-            var anchor = Vector2.zero;
+            var left = Screen.safeArea.xMin / Screen.width;
+            var right = Screen.safeArea.xMax / Screen.width;
+            var top = Screen.safeArea.yMax / Screen.height;
+            var bottom = Screen.safeArea.yMin / Screen.height;
+            var center = 0.5f;
+            
             var pivot = Vector2.zero;
+            var anchor = Vector2.zero;
             switch (screenLocation)
             {
                 case ChartboostMediationBannerAdScreenLocation.TopLeft:
-                    anchor = new Vector2(0, 1);
+                    anchor = new Vector2(left, top);
                     pivot = new Vector2(0, 1);
                     break;
                 case ChartboostMediationBannerAdScreenLocation.TopCenter:
-                    anchor = new Vector2(0.5f, 1);
+                    anchor = new Vector2(center, top);
                     pivot = new Vector2(0.5f, 1);
                     break;
                 case ChartboostMediationBannerAdScreenLocation.TopRight:
-                    anchor = new Vector2(1, 1);
+                    anchor = new Vector2(right, top);
                     pivot = new Vector2(1, 1);
                     break;
                 case ChartboostMediationBannerAdScreenLocation.Center:
-                    anchor = new Vector2(0.5f, .5f);
+                    anchor = new Vector2(center, center);
                     pivot = new Vector2(0.5f, 0.5f);
                     break;
                 case ChartboostMediationBannerAdScreenLocation.BottomLeft:
-                    anchor = new Vector2(0, 0);
+                    anchor = new Vector2(left, bottom);
                     pivot = new Vector2(0, 0);
                     break;
                 case ChartboostMediationBannerAdScreenLocation.BottomCenter:
-                    anchor = new Vector2(0.5f, 0);
+                    anchor = new Vector2(center, bottom);
                     pivot = new Vector2(0.5f, 0);
                     break;
                 case ChartboostMediationBannerAdScreenLocation.BottomRight:
-                    anchor = new Vector2(1, 0);
+                    anchor = new Vector2(right, bottom);
                     pivot = new Vector2(1, 0);
                     break;
             }
-
+            
             var rect = unityBannerAd.GetComponent<RectTransform>();
 
             rect.anchorMin = rect.anchorMax = anchor;
