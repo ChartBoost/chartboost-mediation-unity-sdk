@@ -22,7 +22,7 @@ namespace Chartboost.Utilities
         public static void LogError(string tag, string error)
         {
             if (ChartboostMediationSettings.IsLoggingEnabled)
-                Debug.Log( $"{tag}/{error}");
+                Debug.LogError( $"{tag}/{error}");
         }
     }
 }
