@@ -9,6 +9,7 @@ namespace Chartboost.Platforms
     internal class ChartboostMediationUnsupported : ChartboostMediationExternal
     {
         private static string _userIdentifier;
+        private static string _initializationError = "Chartboost Mediation is only supported in Android & iOS platforms.";
         
         public ChartboostMediationUnsupported()
         {
@@ -26,12 +27,14 @@ namespace Chartboost.Platforms
         {
             base.InitWithAppIdAndSignature(appId, appSignature);
             IsInitialized = true;
+            DidStart?.Invoke(_initializationError);
         }
 
         public override void StartWithOptions(string appId, string appSignature, string[] initializationOptions = null)
         {
             base.StartWithOptions(appId, appSignature, initializationOptions);
             IsInitialized = true;
+            DidStart?.Invoke(_initializationError);
         }
 
         public override void SetUserIdentifier(string userIdentifier)
@@ -53,6 +56,7 @@ namespace Chartboost.Platforms
         {
             return new ChartboostMediationBannerViewUnsupported();
         }
-        
+
+        public override event ChartboostMediationEvent DidStart;
     }
 }
