@@ -2,10 +2,12 @@ package com.chartboost.mediation.unity
 
 import android.content.Context
 import android.os.Build
+import android.util.DisplayMetrics
 import android.view.DisplayCutout
 import android.view.MotionEvent
 import android.widget.RelativeLayout
 import com.chartboost.heliumsdk.ad.HeliumBannerAd
+import com.unity3d.player.UnityPlayer
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -16,6 +18,7 @@ class BannerLayout
     private var dragListener: IBannerDragListener
 ) : RelativeLayout(context) {
 
+    var canDrag: Boolean = false
     private var safeAreaTop:Int = 0
     private var safeAreaLeft:Int = 0 
     private var safeAreaRight:Int = 0
@@ -23,7 +26,6 @@ class BannerLayout
     private var screenWidth = 0;
     private var screenHeight = 0;
 
-    var canDrag: Boolean = false
     private val dragThresholdDistance = 10 // in pixels
 
     private var startX: Int = 0
@@ -35,9 +37,17 @@ class BannerLayout
         // making it clickable here allows onInterceptTouchEvent to intercept touch events on bannerView
         bannerView.isClickable = true
 
-        screenWidth = context.resources.displayMetrics.widthPixels
-        screenHeight = context.resources.displayMetrics.heightPixels
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val bounds = UnityPlayer.currentActivity.windowManager.currentWindowMetrics.bounds
+            screenWidth = bounds.width()
+            screenHeight = bounds.height()
+        }
+        else {
+            val metrics = DisplayMetrics();
+            UnityPlayer.currentActivity.windowManager.defaultDisplay.getRealMetrics(metrics);
+            screenWidth = metrics.widthPixels;
+            screenHeight = metrics.heightPixels
+        }
 
         // Get safe area insets
         setOnApplyWindowInsetsListener { _, windowInsets -> run {
@@ -55,7 +65,6 @@ class BannerLayout
         }
         }
     }
-
 
     override fun onInterceptTouchEvent(event: MotionEvent?): Boolean {
 

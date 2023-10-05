@@ -229,9 +229,9 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
                 // so we don't make any adjustments in container's position
                 if (usesGravity) {
                     when (axis) {
-                        0 -> ad.layoutParams = ViewGroup.LayoutParams(newSize.width, ad.layoutParams.height)
-                        1 -> ad.layoutParams = ViewGroup.LayoutParams(ad.layoutParams.width, newSize.height)
-                        else -> ad.layoutParams = ViewGroup.LayoutParams(newSize.width, newSize.height)
+                        0 -> ad.layoutParams = RelativeLayout.LayoutParams(newSize.width, ad.layoutParams.height)
+                        1 -> ad.layoutParams = RelativeLayout.LayoutParams(ad.layoutParams.width, newSize.height)
+                        else -> ad.layoutParams = RelativeLayout.LayoutParams(newSize.width, newSize.height)
                     }
                     return@runTaskOnUiThread
                 }
@@ -273,6 +273,7 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
                 }
         }
     }
+    
 
     fun setDraggability(canDrag: Boolean) {
         runTaskOnUiThread {
