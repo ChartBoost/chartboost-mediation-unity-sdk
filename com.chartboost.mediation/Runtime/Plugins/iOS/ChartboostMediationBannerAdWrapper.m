@@ -84,7 +84,6 @@
     }
     _bannerView.frame = frame;
     NSLog(@"Final Frame => origin : (%f, %f), size : (%f, %f)", _bannerView.frame.origin.x, _bannerView.frame.origin.y, _bannerView.frame.size.width, _bannerView.frame.size.height);
-
 }
 
 - (void)handlePan:(UIPanGestureRecognizer *)gr{
