@@ -5,12 +5,13 @@ import android.os.Build
 import android.util.DisplayMetrics
 import android.view.DisplayCutout
 import android.view.MotionEvent
+import android.view.WindowInsets
 import android.widget.RelativeLayout
 import com.chartboost.heliumsdk.ad.HeliumBannerAd
 import com.unity3d.player.UnityPlayer
 import kotlin.math.pow
 import kotlin.math.sqrt
-
+    
 class BannerLayout
     (
     context: Context,
@@ -44,26 +45,25 @@ class BannerLayout
         }
         else {
             val metrics = DisplayMetrics();
-            UnityPlayer.currentActivity.windowManager.defaultDisplay.getRealMetrics(metrics);
-            screenWidth = metrics.widthPixels;
+            UnityPlayer.currentActivity.windowManager.defaultDisplay.getRealMetrics(metrics)
+            screenWidth = metrics.widthPixels
             screenHeight = metrics.heightPixels
         }
+    }
 
+    override fun onApplyWindowInsets(insets: WindowInsets?): WindowInsets {
         // Get safe area insets
-        setOnApplyWindowInsetsListener { _, windowInsets -> run {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                val displayCutout: DisplayCutout? = windowInsets.displayCutout
-                if (displayCutout != null) {
-                    // Get safe area insets
-                    safeAreaTop = displayCutout.safeInsetTop
-                    safeAreaLeft = displayCutout.safeInsetLeft
-                    safeAreaRight = displayCutout.safeInsetRight
-                    safeAreaBottom = displayCutout.safeInsetBottom
-                }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val displayCutout: DisplayCutout? = insets?.displayCutout
+            if (displayCutout != null) {
+                // Get safe area insets
+                safeAreaTop = displayCutout.safeInsetTop
+                safeAreaLeft = displayCutout.safeInsetLeft
+                safeAreaRight = displayCutout.safeInsetRight
+                safeAreaBottom = displayCutout.safeInsetBottom
             }
-            windowInsets
         }
-        }
+        return super.onApplyWindowInsets(insets)
     }
 
     override fun onInterceptTouchEvent(event: MotionEvent?): Boolean {
