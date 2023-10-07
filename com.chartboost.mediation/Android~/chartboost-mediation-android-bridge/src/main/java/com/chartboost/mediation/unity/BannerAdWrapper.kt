@@ -3,9 +3,11 @@ package com.chartboost.mediation.unity
 import android.app.Activity
 import android.graphics.Color
 import android.graphics.PointF
+import android.os.Build
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.Size
+import android.view.DisplayCutout
 import android.view.Gravity
 import android.view.View
 import android.view.View.OnLayoutChangeListener
@@ -353,6 +355,8 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
         layout.gravity = bannerGravityPosition
         usesGravity = true
 
+        keepWithinSafeArea(screenLocation)
+
         // Attach the banner layout to the activity.
         val density = displayDensity
         try {
@@ -446,6 +450,55 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
 
     private fun getBannerLayoutParams(pixels: Float, width: Int, height: Int): ViewGroup.LayoutParams {
         return ViewGroup.LayoutParams((pixels * width).toInt(), (pixels * height).toInt())
+    }
+
+    private fun keepWithinSafeArea(screenLocation: Int) {
+        ad.setOnApplyWindowInsetsListener { _, windowInsets ->
+            run {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    val displayCutout: DisplayCutout? = windowInsets.displayCutout
+                    if (displayCutout != null) {
+                        var x = 0
+                        var y = 0
+                        when(screenLocation) {
+                            // Top-left
+                            0 -> {
+                                x= displayCutout.safeInsetLeft
+                                y = displayCutout.safeInsetTop
+                            }
+                            // Top-center
+                            1 -> {
+                                y = displayCutout.safeInsetTop
+                            }
+                            // Top-right
+                            2 -> {
+                                x= displayCutout.safeInsetRight
+                                y = displayCutout.safeInsetTop
+                            }
+                            // center
+                            3 -> {}
+                            // bottom-left
+                            4 -> {
+                                x= displayCutout.safeInsetLeft
+                                y = displayCutout.safeInsetBottom
+                            }
+                            // bottom-center
+                            5 -> {
+                                y = displayCutout.safeInsetBottom
+                            }
+                            // bottom-right
+                            6 -> {
+                                x= displayCutout.safeInsetRight
+                                y = displayCutout.safeInsetBottom
+                            }
+                        }
+                        ad.x = x.toFloat()
+                        ad.y = y.toFloat()
+                    }
+                }
+                windowInsets
+            }
+        }
     }
 
     private val displayDensity: Float

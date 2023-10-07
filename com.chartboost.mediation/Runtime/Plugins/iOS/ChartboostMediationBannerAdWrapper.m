@@ -14,6 +14,8 @@
     self.bannerView = bannerView;
     
     self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+    self.panGesture.delegate = self;
+
     [self.bannerView addGestureRecognizer:self.panGesture];
         
     self.dragListener = dragListener;
@@ -130,5 +132,9 @@
     float y = gr.view.frame.origin.y * scale;
         
     self.dragListener((__bridge void*)self, x, y);
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return true;
 }
 @end
