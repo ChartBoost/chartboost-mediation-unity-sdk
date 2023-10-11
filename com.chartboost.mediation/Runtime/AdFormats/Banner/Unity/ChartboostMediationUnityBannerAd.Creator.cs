@@ -11,49 +11,51 @@ namespace Chartboost.AdFormats.Banner.Unity
         [MenuItem("GameObject/Chartboost Mediation/UnityBannerAd")]
         public static void CreateAd()
         {
-            Instantiate();
+            Instantiate(Selection.activeTransform);
         }
 #endif
 
         internal static ChartboostMediationUnityBannerAd Instantiate(
-            Canvas canvas = null,
+            Transform parent = null,
             ChartboostMediationBannerSize? size = null,
-            ChartboostMediationBannerAdScreenLocation screenLocation = ChartboostMediationBannerAdScreenLocation.Center)
+            ChartboostMediationBannerAdScreenLocation screenLocation = ChartboostMediationBannerAdScreenLocation.Center, 
+            bool conformToSafeArea = false)
         {
-            canvas ??= ChartboostMediationUtils.GetCanvas();
+            parent ??= ChartboostMediationUtils.GetCanvas().transform;
             
             // Instantiate inside this canvas
             var unityBannerAd = new GameObject("ChartboostMediationUnityBannerAd")
                 .AddComponent<ChartboostMediationUnityBannerAd>();
             
             var bannerTransform = unityBannerAd.transform;
-            bannerTransform.parent = canvas.transform;
+            bannerTransform.SetParent(parent);
             bannerTransform.localScale = Vector3.one;
 
             // If no size is provided use Standard size as default
             var containerSize = size ?? ChartboostMediationBannerSize.Standard;
             unityBannerAd.SetSizeType(containerSize.SizeType);
             
-            var canvasScale = canvas.transform.localScale.x;
+            var canvasScale = parent.localScale.x;
             var width = ChartboostMediationConverters.NativeToPixels(containerSize.Width)/canvasScale;
             var height = ChartboostMediationConverters.NativeToPixels(containerSize.Height)/canvasScale;
             
             var rectTransform = unityBannerAd.gameObject.GetComponent<RectTransform>();
             rectTransform.anchoredPosition = Vector2.zero;
             rectTransform.sizeDelta = new Vector2(width, height);
-
-            PlaceUnityBannerAd(unityBannerAd, screenLocation);
+            
+            PlaceUnityBannerAd(unityBannerAd, screenLocation, conformToSafeArea);
             
             return unityBannerAd;
         }
         
         private static void PlaceUnityBannerAd(ChartboostMediationUnityBannerAd unityBannerAd,
-            ChartboostMediationBannerAdScreenLocation screenLocation)
+            ChartboostMediationBannerAdScreenLocation screenLocation, bool useSafeArea = false)
         {
-            var left = Screen.safeArea.xMin / Screen.width;
-            var right = Screen.safeArea.xMax / Screen.width;
-            var top = Screen.safeArea.yMax / Screen.height;
-            var bottom = Screen.safeArea.yMin / Screen.height;
+            var left = useSafeArea ? Screen.safeArea.xMin / Screen.width : 0;
+            var right = useSafeArea ? Screen.safeArea.xMax / Screen.width : 1;
+            var top = useSafeArea ? Screen.safeArea.yMax / Screen.height : 1;
+            var bottom = useSafeArea ? Screen.safeArea.yMin / Screen.height : 0;
+            
             var center = 0.5f;
             
             var pivot = Vector2.zero;

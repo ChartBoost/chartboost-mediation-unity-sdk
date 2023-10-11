@@ -1113,6 +1113,17 @@ void _chartboostMediationBannerViewDestroy(const void * uniqueId)
     });
 }
 
-
+void _chartboostMediationBannerViewMoveTo(const void * uniqueId, float x, float y)
+{
+    sendToMain(^(){
+        ChartboostMediationBannerView* bannerView = _getBannerView(uniqueId);
+        CGRect frame = bannerView.frame;
+        CGPoint origin = bannerView.frame.origin;
+        origin.x = x;
+        origin.y = y;
+        frame.origin = origin;
+        bannerView.frame = frame;
+    });
+}
 
 }
