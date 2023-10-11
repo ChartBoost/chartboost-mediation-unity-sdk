@@ -47,10 +47,13 @@ namespace Chartboost.AdFormats.Banner.Unity
         private ChartboostMediationBannerVerticalAlignment verticalAlignment = ChartboostMediationBannerVerticalAlignment.Center;
         
         private IChartboostMediationBannerView _bannerView;
+        private Vector2 _lastPosition;
+        private RectTransform _rectTransform;
 
         # region Unity Lifecycle
         private void Start()
         {
+            _rectTransform = GetComponent<RectTransform>();
             if (sizeType != ChartboostMediationBannerSizeType.Adaptive)
             {
                 LockToFixedSize(sizeType);
@@ -58,6 +61,24 @@ namespace Chartboost.AdFormats.Banner.Unity
         }
 
         private void OnEnable() => BannerView?.SetVisibility(true);
+
+        private void Update()
+        {
+            if (Draggable)
+                return;
+            
+            // if this gameobject is moved by any other means except drag then
+            // we should also move the corresponding view on native
+            var distance = Vector2.Distance(_lastPosition, transform.position);
+            if (distance > 0)
+            {
+                var x = ChartboostMediationConverters.PixelsToNative(_rectTransform.LayoutParams().x);
+                var y = ChartboostMediationConverters.PixelsToNative(_rectTransform.LayoutParams().y);
+                ((ChartboostMediationBannerViewBase)BannerView)?.MoveTo(x, y);
+            }
+            
+            _lastPosition = transform.position;
+        }
 
         private void OnDisable() => BannerView?.SetVisibility(false);
 
@@ -154,7 +175,7 @@ namespace Chartboost.AdFormats.Banner.Unity
         }
 
         public void ResetAd() => BannerView?.Reset();
-        
+
         #endregion
         
         public void LockToFixedSize(ChartboostMediationBannerSizeType sizeType)

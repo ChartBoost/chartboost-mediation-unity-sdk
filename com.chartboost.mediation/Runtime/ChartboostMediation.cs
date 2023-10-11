@@ -230,15 +230,19 @@ namespace Chartboost
         /// Returns a new gameobject that can be used to load and display banner ads.
         /// </summary>
         /// <param name="placementName">The placement name for this banner ad</param>
-        /// <param name="canvas">Canvas under which this gameobject will be created</param>
+        /// <param name="parent">The parent transform under which this gameobject will be created</param>
         /// <param name="size">size of the gameobject</param>
         /// <param name="screenLocation">pre-defined location on screen where this gameobject will be created</param>
+        /// <param name="conformToSafeArea"> If true, this gameobject will be created within the safe area of screen</param>
         /// <returns></returns>
-        public static ChartboostMediationUnityBannerAd GetUnityBannerAd(string placementName, Canvas canvas, ChartboostMediationBannerSize? size = null, ChartboostMediationBannerAdScreenLocation screenLocation = ChartboostMediationBannerAdScreenLocation.Center)
+        public static ChartboostMediationUnityBannerAd GetUnityBannerAd(string placementName, Transform parent,
+            ChartboostMediationBannerSize? size = null,
+            ChartboostMediationBannerAdScreenLocation screenLocation = ChartboostMediationBannerAdScreenLocation.Center,
+            bool conformToSafeArea = false)
         {
-            var unityBannerAd = ChartboostMediationUnityBannerAd.Instantiate(canvas, size, screenLocation);
+            var unityBannerAd = ChartboostMediationUnityBannerAd.Instantiate(parent, size, screenLocation, conformToSafeArea);
             unityBannerAd.PlacementName = placementName;
-            return unityBannerAd;
+            return unityBannerAd; 
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]

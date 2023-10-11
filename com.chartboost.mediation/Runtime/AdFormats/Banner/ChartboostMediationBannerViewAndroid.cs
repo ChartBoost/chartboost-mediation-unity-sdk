@@ -169,6 +169,13 @@ namespace Chartboost.AdFormats.Banner
             _bannerAd.Dispose();
             AndroidAdStore.ReleaseBannerAd(UniqueId.ToInt32());
         }
+
+        internal override void MoveTo(float x, float y)
+        {
+            base.MoveTo(x,y);
+            y = ChartboostMediationConverters.PixelsToNative(Screen.height) - y;
+            _bannerAd.Call("moveTo", x, y);
+        }
     }
 }
 

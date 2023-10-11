@@ -304,6 +304,13 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
         }
     }
 
+    fun moveTo(x: Float, y:Float){
+        runTaskOnUiThread {
+            ad.x = x * displayDensity
+            ad.y = y * displayDensity
+        }
+    }
+
     private fun createBannerLayout(size: HeliumBannerAd.HeliumBannerSize, screenLocation: Int) {
         if (activity == null) {
             Log.w(TAG, "Activity not found")
