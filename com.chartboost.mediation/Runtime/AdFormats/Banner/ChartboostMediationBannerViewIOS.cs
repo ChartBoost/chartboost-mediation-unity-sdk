@@ -180,6 +180,13 @@ namespace Chartboost.AdFormats.Banner
             _chartboostMediationBannerViewDestroy(UniqueId);   
         }
 
+        internal override void MoveTo(float x, float y)
+        {
+            base.MoveTo(x,y);
+            y = ChartboostMediationConverters.PixelsToNative(Screen.height) - y;
+            _chartboostMediationBannerViewMoveTo(UniqueId, x, y);   
+        }
+
         #region Native
         
         [DllImport("__Internal")]
@@ -226,6 +233,9 @@ namespace Chartboost.AdFormats.Banner
         
         [DllImport("__Internal")]
         private static extern void _chartboostMediationBannerViewDestroy(IntPtr uniqueId);
+
+        [DllImport("__Internal")]
+        private static extern void _chartboostMediationBannerViewMoveTo(IntPtr uniqueId, float x, float y);   
         
         #endregion
     }

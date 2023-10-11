@@ -111,6 +111,8 @@ namespace Chartboost.AdFormats.Banner
             CacheManager.ReleaseBannerAd(UniqueId.ToInt64());
         }
 
+        internal virtual void MoveTo(float x, float y) {  }
+        
         internal virtual void OnBannerDidLoad(IChartboostMediationBannerView bannerView) => DidLoad?.Invoke(bannerView);
 
         internal virtual void OnBannerClick(IChartboostMediationBannerView bannerView) => DidClick?.Invoke(bannerView);
