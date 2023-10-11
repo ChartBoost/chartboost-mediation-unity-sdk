@@ -1,8 +1,16 @@
-namespace Chartboost.Results
+namespace Chartboost.Requests
 {
+    /// <summary>
+    /// The Chartboost Mediation Banner ad load result.
+    /// </summary>
     public class ChartboostMediationBannerAdLoadResult 
     {
-        
+        /// <summary>
+        /// Constructor for successful loads
+        /// </summary>
+        /// <param name="loadId"></param>
+        /// <param name="metrics"></param>
+        /// <param name="error"></param>
         public ChartboostMediationBannerAdLoadResult(string loadId, Metrics? metrics, ChartboostMediationError? error)
         {
             LoadId = loadId;
