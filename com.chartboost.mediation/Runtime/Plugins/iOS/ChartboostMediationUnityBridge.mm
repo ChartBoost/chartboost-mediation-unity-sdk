@@ -1098,7 +1098,7 @@ void _chartboostMediationBannerViewSetVisibility(const void* uniqueId, BOOL visi
 }
 
 void _chartboostMediationBannerViewReset(const void* uniqueId){
-    ChartboostMediationBannerView *bannerView =(__bridge ChartboostMediationBannerView*)uniqueId;
+    ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
     [bannerView reset];
 }
 
