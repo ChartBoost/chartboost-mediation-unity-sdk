@@ -1,6 +1,24 @@
 # Changelog
 All notable changes to this project will be documented in this file using the standards as defined at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0).
 
+### Version 4.6.0 *(2023-10-12)*
+Improvements:
+- Added a new `ChartboostMediationBannerView` API for banner ads which supports adaptive banners.
+- Added a new `ChartboostMediationUnityBannerAd` API which allows creating and loading of banner ads using Unity gameobjects.
+- EDM updated to version 1.2.177.
+
+Bug Fixes:
+- Initialization on unsupported platform now triggers `DidStart` with error.
+- Logger.Logerror now calls Debug.Logerror instead of Debug.Log.
+
+API Changes:
+- Marked `ChartboostMediationBannerAd`as deprecated. Use `ChartboostMediationBannerView` instead.
+
+
+### Version 4.5.0 *(2023-08-31)*
+- Fixed a typo in ad-adapters.md
+- Updated native dependencies to support native SDKs for Chartboost Mediation SDK.
+
 ### Version 4.4.0 *(2023-07-27)*
 Improvements:
 - Added new SDK initialization method `ChartboostMediation.StartWithOptions`.
