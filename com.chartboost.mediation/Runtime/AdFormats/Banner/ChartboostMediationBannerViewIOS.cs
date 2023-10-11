@@ -1,4 +1,4 @@
-#if UNITY_IPHONE
+#if UNITY_IOS
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +15,9 @@ using static Chartboost.Platforms.IOS.ChartboostMediationIOS;
 
 namespace Chartboost.AdFormats.Banner
 {
+    /// <summary>
+    /// IOS implementation of ChartboostMediationBannerViewBase
+    /// </summary>
     internal class ChartboostMediationBannerViewIOS : ChartboostMediationBannerViewBase
     {
         private Dictionary<string, string> _keywords = new Dictionary<string, string>();
@@ -24,6 +27,7 @@ namespace Chartboost.AdFormats.Banner
             LogTag = "ChartboostMediationBanner (IOS)";
         }
         
+        /// <inheritdoc cref="ChartboostMediationBannerViewBase.Keywords"/>
         public override Dictionary<string, string> Keywords
         {
             get => _keywords;
@@ -37,8 +41,11 @@ namespace Chartboost.AdFormats.Banner
                 _keywords = value;
             }
         }
+
+        /// <inheritdoc cref="ChartboostMediationBannerViewBase.Request"/>
         public override ChartboostMediationBannerAdLoadRequest Request { get; protected set; }
 
+        /// <inheritdoc cref="ChartboostMediationBannerViewBase.WinningBidInfo"/>
         public override BidInfo WinningBidInfo
         {
             get
@@ -50,6 +57,7 @@ namespace Chartboost.AdFormats.Banner
             protected set { }
         }
 
+        /// <inheritdoc cref="ChartboostMediationBannerViewBase.LoadId"/>
         public override string LoadId
         {
             // TODO: why metrics is a list ?
@@ -57,6 +65,7 @@ namespace Chartboost.AdFormats.Banner
             protected set {}
         }
 
+        /// <inheritdoc cref="ChartboostMediationBannerViewBase.LoadMetrics"/>
         public override Metrics? LoadMetrics
         {
             get
@@ -68,6 +77,7 @@ namespace Chartboost.AdFormats.Banner
             protected set { }
         }
 
+        /// <inheritdoc cref="ChartboostMediationBannerViewBase.AdSize"/>
         public override ChartboostMediationBannerSize? AdSize
         {
             get
@@ -79,18 +89,21 @@ namespace Chartboost.AdFormats.Banner
             protected set { }
         }
 
+        /// <inheritdoc cref="ChartboostMediationBannerViewBase.HorizontalAlignment"/>
         public override ChartboostMediationBannerHorizontalAlignment HorizontalAlignment
         {
             get =>  (ChartboostMediationBannerHorizontalAlignment)_chartboostMediationBannerViewGetHorizontalAlignment(UniqueId);
             set => _chartboostMediationBannerViewSetHorizontalAlignment(UniqueId, (int)value);
         }
 
+        /// <inheritdoc cref="ChartboostMediationBannerViewBase.VerticalAlignment"/>
         public override ChartboostMediationBannerVerticalAlignment VerticalAlignment
         {
             get =>  (ChartboostMediationBannerVerticalAlignment)_chartboostMediationBannerViewGetVerticalAlignment(UniqueId);
             set => _chartboostMediationBannerViewSetVerticalAlignment(UniqueId, (int)value);
         }
 
+        /// <inheritdoc cref="ChartboostMediationBannerViewBase.Load(Chartboost.Requests.ChartboostMediationBannerAdLoadRequest,Chartboost.Banner.ChartboostMediationBannerAdScreenLocation)"/>
         public override async Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, ChartboostMediationBannerAdScreenLocation screenLocation)
         {
             Request = request;
@@ -110,6 +123,7 @@ namespace Chartboost.AdFormats.Banner
             return result;
         }
 
+        /// <inheritdoc cref="ChartboostMediationBannerViewBase.Load(Chartboost.Requests.ChartboostMediationBannerAdLoadRequest,float, float)"/>
         public override async Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, float x, float y)
         {
             Request = request;
@@ -130,6 +144,7 @@ namespace Chartboost.AdFormats.Banner
             return result;
         }
 
+        /// <inheritdoc cref="ChartboostMediationBannerViewBase.ResizeToFit"/>
         public override void ResizeToFit(ChartboostMediationBannerResizeAxis axis = ChartboostMediationBannerResizeAxis.Both,
             Vector2 pivot = default)
         {
@@ -137,24 +152,28 @@ namespace Chartboost.AdFormats.Banner
             _chartboostMediationBannerViewResizeToFit(UniqueId, (int)axis, pivot.x, 1-pivot.y);
         }
 
+        /// <inheritdoc cref="ChartboostMediationBannerViewBase.SetDraggability"/>
         public override void SetDraggability(bool canDrag)
         {
             base.SetDraggability(canDrag);
             _chartboostMediationBannerViewSetDraggability(UniqueId, canDrag);
         }
 
+        /// <inheritdoc cref="ChartboostMediationBannerViewBase.SetVisibility"/>
         public override void SetVisibility(bool visibility)
         {
             base.SetVisibility(visibility);
             _chartboostMediationBannerViewSetVisibility(UniqueId, visibility);
         }
 
+        /// <inheritdoc cref="ChartboostMediationBannerViewBase.Reset"/>
         public override void Reset()
         {
             base.Reset();
             _chartboostMediationBannerViewReset(UniqueId);
         }
 
+        /// <inheritdoc cref="ChartboostMediationBannerViewBase.Destroy"/>
         public override void Destroy()
         {
             base.Destroy();

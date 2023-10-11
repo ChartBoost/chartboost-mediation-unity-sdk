@@ -53,17 +53,17 @@ namespace Chartboost.AdFormats.Banner
         abstract ChartboostMediationBannerAdLoadRequest Request { get; }
         
         /// <summary>
-        /// The winning bid info for the ad. Note that this will change with auto-refresh and will be notified in <see cref="DidLoad"/>>
+        /// The winning bid info for the ad. Note that this will change with auto-refresh and will be notified in <see cref="DidLoad"/>
         /// </summary>
         abstract BidInfo WinningBidInfo { get; }
         
         /// <summary>
-        /// The identifier for this load call. Note that this will change with auto-refresh and will be notified in <see cref="DidLoad"/>>
+        /// The identifier for this load call. Note that this will change with auto-refresh and will be notified in <see cref="DidLoad"/>
         /// </summary>
         abstract string LoadId { get; }
         
         /// <summary>
-        /// The size of the loaded ad. Note that this will change with auto-refresh and will be notified in <see cref="DidLoad"/>>
+        /// The size of the loaded ad. Note that this will change with auto-refresh and will be notified in <see cref="DidLoad"/>
         /// </summary>
         abstract ChartboostMediationBannerSize? AdSize { get; }
         
@@ -134,7 +134,7 @@ namespace Chartboost.AdFormats.Banner
         abstract event ChartboostMediationBannerEvent DidClick;
         
         /// <summary>
-        /// Called when the ad impression occurs. This signal is when Chartboost Mediation fires an impression and is independent of any partner impression.
+        /// Called when the ad impression occurs.
         /// </summary>
         abstract event ChartboostMediationBannerEvent DidRecordImpression;
         

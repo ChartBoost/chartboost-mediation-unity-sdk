@@ -40,10 +40,16 @@ private void OnDestroy()
         _fullscreenPlacement.Invalidate();
         Debug.Log("Invalidated an existing fullscreen");
     }
-    if (_bannerAd != null)
+    if (_bannerView != null)
     {
-        _bannerAd.ClearLoaded();
-        _bannerAd.Destroy();
+        _bannerView.Reset();
+        _bannerView.Destroy();
+        Debug.Log("Destroyed an existing banner");
+    }
+    if(_unityBannerAd != null)
+    {       
+        _unityBannerAd.Reset();
+        Destroy(_unityBannerAd.gameobject);
         Debug.Log("Destroyed an existing banner");
     }
 }

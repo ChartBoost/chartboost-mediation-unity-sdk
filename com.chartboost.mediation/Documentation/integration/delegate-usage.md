@@ -27,11 +27,6 @@ private void OnEnable() {
 
     // Error Handling Delegate
     ChartboostMediation.UnexpectedSystemErrorDidOccur += UnexpectedSystemErrorDidOccur;
-
-    // Banner Ad Delegates
-    ChartboostMediation.DidLoadBanner += DidLoadBanner;
-    ChartboostMediation.DidClickBanner += DidClickBanner;
-    ChartboostMediation.DidRecordImpressionBanner += DidRecordImpressionBanner;
 }
 ```
 
@@ -61,11 +56,6 @@ private void OnDisable() {
 
     // Error Handling Delegate
     ChartboostMediation.UnexpectedSystemErrorDidOccur -= UnexpectedSystemErrorDidOccur;
-
-    // Banner Ad Delegates
-    ChartboostMediation.DidLoadBanner -= DidLoadBanner;
-    ChartboostMediation.DidClickBanner -= DidClickBanner;
-    ChartboostMediation.DidRecordImpressionBanner -= DidRecordImpressionBanner;
 }
 ```
 
@@ -100,20 +90,3 @@ private static void UnexpectedSystemErrorDidOccur(string error)
 }
 ```
 
-### Banner Ad delegates
-```c#
-private void DidLoadBanner(string placementName, string loadId, BidInfo info, string error)
-{
-    Debug.Log($"DidLoadBanner{placementName}, {placementName}, Price: ${info.Price:F4}, Auction Id: {info.AuctionId}, Partner Id: {info.PartnerId}. {error}");
-}
-
-private void DidClickBanner(string placementName, string error)
-{
-    Debug.Log($"DidClickBanner {placementName}: {error}");
-}
-
-private void DidRecordImpressionBanner(string placementName, string error)
-{
-    Log($"DidRecordImpressionBanner {placementName}: {error}");
-}
-```

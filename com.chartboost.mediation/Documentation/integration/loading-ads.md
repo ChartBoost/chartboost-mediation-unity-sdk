@@ -59,35 +59,35 @@ Debug.Log($"Fullscreen Placement Loaded with PlacementName: {placementName}")
 
 ## Creating Banner Ad Objects
 
-To show a banner ad, first declare a variable to hold a reference to the Banner Ad. Supply the corresponding Placement Name and the Banner Size.
+Since Chartboost Mediation Unity SDK 4.6.X we have deprecated the previous approach for loading banner placements. A new Banner API `ChartboostMedaitionBannerView` has been provided which makes use of C# asycn/await methods in order to await for load and show and also provides support to load adaptive size banners.
 
-> **Note** \
-> The following banner sizes can be passed down. Some partners may not fill for some banner sizes.
+Another API `ChartboostMediationUnityBannerAd` is also provided which allows usage of unity gameobjects to load a banner ad within it.
 
-| Banner Enum   | Dimensions (Width x Height) |
-| :---          | :---                        |
-| `Standard`    | 320 x 50                    |
-| `Medium`      | 300 x 250                   |
-| `Leaderboard` | 728 x 90                    |
+A detailed example on the load logic for both of these APIs can be found below :
+
+###  Using `ChartboostMediationBannerView` API
 
 ```c#
-private ChartboostMediationBannerAd _bannerAd;
+// Get a bannerView
+ChartboostMediationBannerView bannerView = ChartboostMediation.GetBannerView();
 
-if (_bannerAd != null)
-  return;
+// Determine the maximum size to load using width and height
+var size = ChartboostMediationBannerSize.Adaptive(width, height);
 
-/*
-  The following Banner enum Sizes can be passed down:
-  ChartboostMediationBannerAdSize.Standard
-  ChartboostMediationBannerAdSize.MediumRect
-  ChartboostMediationBannerAdSize.Leaderboard
-*/
-ChartboostMediationBannerAdSize BANNER_SIZE = ChartboostMediationBannerAdSize.Standard;
-_bannerAd = ChartboostMediation.GetBannerAd(PLACEMENT_BANNER, BANNER_SIZE);
+// create a load request with size and your placementName
+var loadRequest = new ChartboostMediationBannerAdLoadRequest(placementName, size)
+
+// Determine where on the screen you want to place this bannerView
+var screenLocation = ChartboostMediationAdScreenLocation.TopRight;
+
+// Load the banner ad
+var loadResult = await bannerView.Load(loadRequest, screenLocation);
+if(!loadResult.Error.HasValue)
+{
+    // loaded successfullly
+}
 ```
-
-Banners are now shown automatically after load, as such you will need to pass a `ChartboostMediationBannerAdScreenLocation` position when calling the load method:
-
+Banners are now shown automatically after load, you may choose to use a different `ChartboostMediationBannerAdScreenLocation` position when calling the load method:
 
 | Banner Ad Location Enum                                  | Enum Value | Position                                                        |
 |:---------------------------------------------------------| :---       | :---                                                            |
@@ -99,28 +99,51 @@ Banners are now shown automatically after load, as such you will need to pass a 
 | `ChartboostMediationBannerAdScreenLocation.BottomCenter` | 5          | Positions the banner to the bottom-center screen of the device. |
 | `ChartboostMediationBannerAdScreenLocation.BottomRight`  | 6          | Positions the banner to the bottom-right screen of the device.  |
 
-If you enable auto-refresh for a banner placement in the dashboard, then the Chartboost Mediation Unity SDK will apply that setting when the placement is shown.
 
-> **Note** \
-> Any auto refresh changes made on the dashboard will take approximately one hour to take effect and the SDK must be rebooted in order to pick up the changes once they are available.
+If you want to place the bannerView using a custom screen location then you can do so by providing a screen co-ordinate(x, y) which denotes where the top-left corner of this bannerView will be placed
+```C#
+// 400 pixels from left
+float x = ChartboostMediationConverters.PixelsToNative(400); 
+// 200 pixels from bottom
+float y = ChartboostMediationConverters.PixelsToNative(200); 
 
-You will need to create an instance for each Placement Name you want to use. Finally, make the call to load the ad:
+// Load the banner ad
+await bannerView.Load(loadRequest, x, y);
+```
 
-```c#
+### Using `ChartboostMediationUnityBannerAd` API
 
-/* All possible banner locations
- * ChartboostMediationBannerAdScreenLocation.TopLeft,
- * ChartboostMediationBannerAdScreenLocation.TopCenter,
- * ChartboostMediationBannerAdScreenLocation.TopRight,
- * ChartboostMediationBannerAdScreenLocation.Center,
- * ChartboostMediationBannerAdScreenLocation.BottomLeft,
- * ChartboostMediationBannerAdScreenLocation.BottomCenter,
- * ChartboostMediationBannerAdScreenLocation.BottomRight,
- * ChartboostMediationBannerAdScreenLocation.TopCenter
- */
+`ChartboostMediationUnityBannerAd` API enables loading of a bannerAd within a unity gameobject. 
+To create such gameobject you can simply right-click in hierarchy window and select `Chartboost Mediation/UnityBannerAd`
+![Creating UnityBannerAd](../images/create-unity-banner-ad.png)
 
-// Load a banner on the top center location
-_bannerAd.Load(ChartboostMediationBannerAdScreenLocation.TopCenter);
+
+```C#
+// Get reference to ChartboostMediationUnityBannerAd created in Editor
+public ChartboostMediationUnityBannerAd unityBannerAd;
+
+// Load the banner ad inside this gameobject
+var loadResult = await unityBannerAd.Load();
+
+if(!loadResult.Error.HasValue)
+{
+    // loaded successfullly
+}
+```
+If you want to create this gameobject at runtime you can make use of `ChartboostMediation.GetUnityBannerAd()` 
+```C#
+// Get new unityBannerAd created as a child of provided canvas
+var canvas = FindObjectOfType<Canvas>(); 
+ChartboostMediationUnityBannerAd unityBannerAd = ChartboostMediation.GetUnityBannerAd(placementName, canvas.transform);
+
+// Load the banner ad inside this gameobject
+var loadResult = await unityBannerAd.Load();
+
+if(!loadResult.Error.HasValue)
+{
+    // loaded successfullly
+}
+
 ```
 
 You can implement delegates in your class to receive notifications about the success or failure of the ad loading process for Banner formats. See section [Delegate Usage](delegate-usage.md) for more details.
@@ -140,6 +163,13 @@ _bannerAd.ClearLoaded();
 ```c#
 /// New fullscreen API
 _fullscreenPlacement.Invalidate();
+
+/// New bannerView API
+_bannerView.Reset();
+
+/// New unityBannerAd API
+_unityBannerAd.Reset()
+
 ```
 
 > **Warning** \
