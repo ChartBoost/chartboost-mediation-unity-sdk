@@ -14,7 +14,6 @@ Bug Fixes:
 API Changes:
 - Marked `ChartboostMediationBannerAd`as deprecated. Use `ChartboostMediationBannerView` instead.
 
-
 ### Version 4.5.0 *(2023-08-31)*
 - Fixed a typo in ad-adapters.md
 - Updated native dependencies to support native SDKs for Chartboost Mediation SDK.
