@@ -100,7 +100,7 @@ Banners are now shown automatically after load, you may choose to use a differen
 | `ChartboostMediationBannerAdScreenLocation.BottomRight`  | 6          | Positions the banner to the bottom-right screen of the device.  |
 
 
-If you want to place the bannerView using a custom screen location then you can do so by providing a screen co-ordinate(x, y) which denotes where the top-left corner of this bannerView will be placed
+To place the `bannerView` using a custom screen location, provide a screen coordinate (x, y) which denotes where the top-left corner of this bannerView will be placed.
 ```C#
 // 400 pixels from left
 float x = ChartboostMediationConverters.PixelsToNative(400); 
@@ -114,7 +114,7 @@ await bannerView.Load(loadRequest, x, y);
 ### Using `ChartboostMediationUnityBannerAd` API
 
 `ChartboostMediationUnityBannerAd` API enables loading of a bannerAd within a unity gameobject. 
-To create such gameobject you can simply right-click in hierarchy window and select `Chartboost Mediation/UnityBannerAd`
+To create this gameobject, right-click in the hierarchy window and select `Chartboost Mediation/UnityBannerAd`
 ![Creating UnityBannerAd](../images/create-unity-banner-ad.png)
 
 
