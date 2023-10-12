@@ -59,7 +59,7 @@ Debug.Log($"Fullscreen Placement Loaded with PlacementName: {placementName}")
 
 ## Banner Ad Objects
 
-Mediation SDK 4.6.0 introduces a new [Adaptive Banner](/en/mediation/ad-types/#adaptive-banner/) ad format, capable of serving flexible and fixed sized ads in the placement. The new [Adaptive Banner](/en/mediation/ad-types/#adaptive-banner/) ad format has the following features:
+Mediation SDK 4.6.0 introduces a new [Adaptive Banner](https://docs.chartboost.com/en/mediation/ad-types/#adaptive-banner/) ad format, capable of serving flexible and fixed sized ads in the placement. The new [Adaptive Banner]([/en/mediation/ad-types/#adaptive-banner/](https://docs.chartboost.com/en/mediation/ad-types/#adaptive-banner/)) ad format has the following features:
 - Publishers can choose whether to use Adaptive Ads or Fixed Ads in a given placement
 - Fixed Ads are supported in Adaptive Ad placements (backwards compatible)
 - Publishers should know whether an ad is fixed or flexible and receive the dimensions of fixed ads
