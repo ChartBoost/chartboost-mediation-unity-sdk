@@ -60,14 +60,18 @@ Debug.Log($"Fullscreen Placement Loaded with PlacementName: {placementName}")
 ## Banner Ad Objects
 
 Mediation SDK 4.6.0 introduces a new [Adaptive Banner](https://docs.chartboost.com/en/mediation/ad-types/#adaptive-banner/) ad format, capable of serving flexible and fixed sized ads in the placement. The new [Adaptive Banner]([/en/mediation/ad-types/#adaptive-banner/](https://docs.chartboost.com/en/mediation/ad-types/#adaptive-banner/)) ad format has the following features:
-- Publishers can choose whether to use Adaptive Ads or Fixed Ads in a given placement
-- Fixed Ads are supported in Adaptive Ad placements (backwards compatible)
-- Publishers should know whether an ad is fixed or flexible and receive the dimensions of fixed ads
-- Publishers can align the ad horizontally and/or vertically
+- Publishers can choose whether to use Adaptive Ads or Fixed Ads in a given placement.
+- Fixed Ads are supported in Adaptive Ad placements (backwards compatible).
+- Publishers should know whether an ad is fixed or flexible and receive the dimensions of fixed ads.
+- Publishers can align the ad horizontally and/or vertically.
 - Publishers can resize the ad container to fit the ad or optionally discard oversized ads that are rendered in the container.
 - The ad container can be in-line or on top of publisher content.
 
 To use this new ad format, Publishers will need to create a new Adaptive Banner placement in their platform and integrate with the new Adaptive Banner APIs.
+
+> **Caution** \
+> Google Bidding does not support 0 height adaptive banner sizes and will result in no fill.
+
 
 We have added a new Banner API `ChartboostMedaitionBannerView` to allow usage of adaptive banners. The previous `ChartboostMedaitionBannerAd` API has now been deprecated.
 
@@ -86,7 +90,7 @@ The API class `ChartboostMediationBannerSize` will support both fixed and adapti
 |`float Height`|The height of the ad.|
 |`float AspectRatio`|The aspect ratio of the ad. This can be derived from the size. Will be 0 if either the width or the height are <= 0.|
 |`static ChartboostMediationBannerSize Adaptive(float width)`|Creates a flexible/adaptive banner size with 0 height.|
-|`static ChartboostMediationBannerSize Adaptive(float width, float height)`|Creates a flexible/adaptive banner size with a width and max height. Used either when the height of an inline ad should be capped, or when requesting an anchored banner. Could alternatively take a size instead of width/maxHeight, however width/maxHeight mimics Google’s methods.|
+|`static ChartboostMediationBannerSize Adaptive(float width, float height)`|Creates a flexible/adaptive banner size with a width and max height. Used either when the height of an inline ad should be capped, or when requesting an anchored banner.|
 |`<additional conveniences>`|This provides additional conveniences to create sizes based on the IAB ratios (e.g. 6:1, 1:1) with a width. For example, using the 6:1 convenience with a 600 width would return a size of 600x100. Note that these are max sizes, therefore smaller sizes or other aspect ratios may be served.|
 
 
