@@ -14,6 +14,8 @@
     self.bannerView = bannerView;
     
     self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+    self.panGesture.delegate = self;
+
     [self.bannerView addGestureRecognizer:self.panGesture];
         
     self.dragListener = dragListener;
@@ -40,13 +42,14 @@
     if(self.usesConstraints){
         switch (axis) {
             case 0: // Horizontal
-                frame.size.width = newSize.width;
+                [NSLayoutConstraint activateConstraints:@[[_bannerView.widthAnchor constraintEqualToConstant:newSize.width]]];
                 break;
             case 1: // Vertical
-                frame.size.height = newSize.height;
+                [NSLayoutConstraint activateConstraints:@[[_bannerView.heightAnchor constraintEqualToConstant:newSize.height]]];
                 break;
             default: // both
-                frame.size = newSize;
+                [NSLayoutConstraint activateConstraints:@[[_bannerView.widthAnchor constraintEqualToConstant:newSize.width]]];
+                [NSLayoutConstraint activateConstraints:@[[_bannerView.heightAnchor constraintEqualToConstant:newSize.height]]];
                 break;
             }
     }
@@ -81,25 +84,57 @@
                 break;
         }
     }
-    NSLog(@"Final Frame => origin : (%f, %f), size : (%f, %f)", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
     _bannerView.frame = frame;
+    NSLog(@"Final Frame => origin : (%f, %f), size : (%f, %f)", _bannerView.frame.origin.x, _bannerView.frame.origin.y, _bannerView.frame.size.width, _bannerView.frame.size.height);
 }
 
 - (void)handlePan:(UIPanGestureRecognizer *)gr{
     if(!self.canDrag)
-        return;
-        
-    CGPoint translation = [gr translationInView:gr.view.superview];
+            return;
+            
+    CGPoint translation = [gr translationInView:gr.view];
     CGPoint center = gr.view.center;
-    center.x += translation.x;
-    center.y += translation.y;
+    
+    float newX = center.x + translation.x;
+    float newY = center.y + translation.y;
+    
+    float left = newX - gr.view.frame.size.width/2;
+    float right = newX + gr.view.frame.size.width/2;
+    float top = newY - gr.view.frame.size.height/2;
+    float bottom = newY + gr.view.frame.size.height/2;
+
+    // Get safe area insets
+    UIEdgeInsets safeAreaInsets;
+    if (@available(iOS 11.0, *)) {
+        safeAreaInsets = gr.view.superview.safeAreaInsets;
+    } else {
+        safeAreaInsets = UIEdgeInsetsZero;
+    }
+    
+    CGRect safeFrame = UIEdgeInsetsInsetRect(gr.view.superview.bounds, safeAreaInsets);
+
+    // do not move any part of the banner out of the safe area
+    if(left < safeFrame.origin.x || right > safeFrame.origin.x + safeFrame.size.width ||
+       top < safeFrame.origin.y || bottom > safeFrame.origin.y + safeFrame.size.height)
+    {
+        NSLog(@"outside safe area");
+        return;
+    }
+    
+    center.x = newX;
+    center.y = newY;
+    
     gr.view.center = center;
-    [gr setTranslation:CGPointZero inView:gr.view.superview];
+    [gr setTranslation:CGPointZero inView:gr.view];
         
     float scale = UIScreen.mainScreen.scale;
     float x = gr.view.frame.origin.x * scale;
     float y = gr.view.frame.origin.y * scale;
         
     self.dragListener((__bridge void*)self, x, y);
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    return true;
 }
 @end

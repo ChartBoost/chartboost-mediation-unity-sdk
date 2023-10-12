@@ -3,9 +3,11 @@ package com.chartboost.mediation.unity
 import android.app.Activity
 import android.graphics.Color
 import android.graphics.PointF
+import android.os.Build
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.Size
+import android.view.DisplayCutout
 import android.view.Gravity
 import android.view.View
 import android.view.View.OnLayoutChangeListener
@@ -199,14 +201,19 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
             Size((it.width / displayDensity).toInt(), (it.height / displayDensity).toInt())
         }
 
+        // if partnerAd is not available then adSize is unknown
+        val sizeType = partnerAd?.let {
+            when (size?.name) {
+                "STANDARD" -> 0
+                "MEDIUM" -> 1
+                "LEADERBOARD" -> 2
+                "ADAPTIVE" -> 3
+                else -> -1
+            }
+        }?: run { -1 }  // -1 => Unknown
+
         val json = JSONObject()
-        json.put("sizeType", when(size?.name) {
-            "ADAPTIVE" -> -1
-            "STANDARD" -> 0
-            "MEDIUM" -> 1
-            "LEADERBOARD" -> 2
-            else -> 0
-        })
+        json.put("sizeType", sizeType)
         json.put("aspectRatio", size?.aspectRatio)
         json.put("width", creativeSize?.width ?: 0)
         json.put("height", creativeSize?.height ?: 0)
@@ -224,9 +231,9 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
                 // so we don't make any adjustments in container's position
                 if (usesGravity) {
                     when (axis) {
-                        0 -> ad.layoutParams = ViewGroup.LayoutParams(newSize.width, ad.layoutParams.height)
-                        1 -> ad.layoutParams = ViewGroup.LayoutParams(ad.layoutParams.width, newSize.height)
-                        else -> ad.layoutParams = ViewGroup.LayoutParams(newSize.width, newSize.height)
+                        0 -> ad.layoutParams = RelativeLayout.LayoutParams(newSize.width, ad.layoutParams.height)
+                        1 -> ad.layoutParams = RelativeLayout.LayoutParams(ad.layoutParams.width, newSize.height)
+                        else -> ad.layoutParams = RelativeLayout.LayoutParams(newSize.width, newSize.height)
                     }
                     return@runTaskOnUiThread
                 }
@@ -268,6 +275,7 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
                 }
         }
     }
+    
 
     fun setDraggability(canDrag: Boolean) {
         runTaskOnUiThread {
@@ -293,6 +301,13 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
         runTaskOnUiThread {
             destroyBannerLayout()
             ad.destroy()
+        }
+    }
+
+    fun moveTo(x: Float, y:Float){
+        runTaskOnUiThread {
+            ad.x = x * displayDensity
+            ad.y = y * displayDensity
         }
     }
 
@@ -346,6 +361,8 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
 
         layout.gravity = bannerGravityPosition
         usesGravity = true
+
+        keepWithinSafeArea(screenLocation)
 
         // Attach the banner layout to the activity.
         val density = displayDensity
@@ -420,13 +437,13 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
     private fun getSizeFromSizeType(sizeType: Int, sizeWidth: Float, sizeHeight: Float): HeliumBannerAd.HeliumBannerSize {
         var size:HeliumBannerAd.HeliumBannerSize = HeliumBannerAd.HeliumBannerSize.bannerSize(0,0);
         when (sizeType) {
-            -1 -> size = HeliumBannerAd.HeliumBannerSize.bannerSize(
-                sizeWidth.roundToInt(),
-                sizeHeight.roundToInt()
-            )
             0 -> size = HeliumBannerAd.HeliumBannerSize.STANDARD
             1 -> size = HeliumBannerAd.HeliumBannerSize.MEDIUM
             2 -> size = HeliumBannerAd.HeliumBannerSize.LEADERBOARD
+            3 -> size = HeliumBannerAd.HeliumBannerSize.bannerSize(
+                sizeWidth.roundToInt(),
+                sizeHeight.roundToInt()
+            )
         }
         return size;
     }
@@ -440,6 +457,55 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
 
     private fun getBannerLayoutParams(pixels: Float, width: Int, height: Int): ViewGroup.LayoutParams {
         return ViewGroup.LayoutParams((pixels * width).toInt(), (pixels * height).toInt())
+    }
+
+    private fun keepWithinSafeArea(screenLocation: Int) {
+        ad.setOnApplyWindowInsetsListener { _, windowInsets ->
+            run {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    val displayCutout: DisplayCutout? = windowInsets.displayCutout
+                    if (displayCutout != null) {
+                        var x = 0
+                        var y = 0
+                        when(screenLocation) {
+                            // Top-left
+                            0 -> {
+                                x= displayCutout.safeInsetLeft
+                                y = displayCutout.safeInsetTop
+                            }
+                            // Top-center
+                            1 -> {
+                                y = displayCutout.safeInsetTop
+                            }
+                            // Top-right
+                            2 -> {
+                                x= displayCutout.safeInsetRight
+                                y = displayCutout.safeInsetTop
+                            }
+                            // center
+                            3 -> {}
+                            // bottom-left
+                            4 -> {
+                                x= displayCutout.safeInsetLeft
+                                y = displayCutout.safeInsetBottom
+                            }
+                            // bottom-center
+                            5 -> {
+                                y = displayCutout.safeInsetBottom
+                            }
+                            // bottom-right
+                            6 -> {
+                                x= displayCutout.safeInsetRight
+                                y = displayCutout.safeInsetBottom
+                            }
+                        }
+                        ad.x = x.toFloat()
+                        ad.y = y.toFloat()
+                    }
+                }
+                windowInsets
+            }
+        }
     }
 
     private val displayDensity: Float

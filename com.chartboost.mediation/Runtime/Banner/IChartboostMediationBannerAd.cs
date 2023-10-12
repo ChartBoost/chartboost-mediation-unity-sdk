@@ -5,6 +5,7 @@ namespace Chartboost.Banner
     /// <summary>
     /// Interface implemented by all Chartboost Mediation banners. 
     /// </summary>
+    [Obsolete("IChartboostMediationBannerAd has been deprecated, use the new ChartboostMediationBannerView API instead.")]
     public interface IChartboostMediationBannerAd
     {
         /// <summary>

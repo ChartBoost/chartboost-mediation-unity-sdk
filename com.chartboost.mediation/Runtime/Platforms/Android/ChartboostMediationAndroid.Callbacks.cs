@@ -156,17 +156,9 @@ namespace Chartboost.Platforms.Android
                     return;
                 }
 
-                ChartboostMediationBannerAdLoadResult loadResult;
-                if (!string.IsNullOrEmpty(error))
-                {
-                    loadResult = new ChartboostMediationBannerAdLoadResult(new ChartboostMediationError(error));
-                }
-                else
-                {
-                    loadResult = new ChartboostMediationBannerAdLoadResult(bannerView.LoadId, null, null);
-                    EventProcessor.ProcessChartboostMediationBannerEvent(ad.HashCode(),
-                        (int)EventProcessor.BannerAdEvents.Load);
-                }
+                var loadResult = !string.IsNullOrEmpty(error) 
+                    ? new ChartboostMediationBannerAdLoadResult(new ChartboostMediationError(error)) 
+                    : new ChartboostMediationBannerAdLoadResult(bannerView.LoadId, null, null);
 
                 androidBannerView.LoadRequest.Complete(loadResult);
             }

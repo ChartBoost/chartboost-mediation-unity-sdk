@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Chartboost.Banner;
-using Chartboost.Platforms;
 using Chartboost.Requests;
 using Chartboost.Results;
 using Chartboost.Utilities;
@@ -18,6 +16,9 @@ namespace Chartboost.AdFormats.Banner.Unity
 
     public delegate void ChartboostMediationUnityBannerAdDragEvent(float x, float y);
 
+    /// <summary>
+    /// The ResizeOption enum 
+    /// </summary>
     public enum ResizeOption
     {
         FitHorizontal,
@@ -29,9 +30,24 @@ namespace Chartboost.AdFormats.Banner.Unity
     [RequireComponent(typeof(RectTransform))]
     public partial class ChartboostMediationUnityBannerAd : MonoBehaviour
     {
+        /// <summary>
+        /// Called when ad is loaded within this gameobject. This will be called for each refresh when auto-refresh is enabled.
+        /// </summary>
         public ChartboostMediationUnityBannerAdEvent DidLoad;
+        
+        /// <summary>
+        /// Called when the ad executes its click-through. This may happen multiple times for the same ad.
+        /// </summary>
         public ChartboostMediationUnityBannerAdEvent DidClick;
+        
+        /// <summary>
+        /// Called when the ad impression occurs.
+        /// </summary>
         public ChartboostMediationUnityBannerAdEvent DidRecordImpression;
+        
+        /// <summary>
+        ///  Called when this gameobject is dragged on screen.
+        /// </summary>
         public ChartboostMediationUnityBannerAdDragEvent DidDrag;
         
         [SerializeField] 
@@ -49,10 +65,13 @@ namespace Chartboost.AdFormats.Banner.Unity
         private ChartboostMediationBannerVerticalAlignment verticalAlignment = ChartboostMediationBannerVerticalAlignment.Center;
         
         private IChartboostMediationBannerView _bannerView;
+        private Vector2 _lastPosition;
+        private RectTransform _rectTransform;
 
         # region Unity Lifecycle
         private void Start()
         {
+            _rectTransform = GetComponent<RectTransform>();
             if (sizeType != ChartboostMediationBannerSizeType.Adaptive)
             {
                 LockToFixedSize(sizeType);
@@ -61,18 +80,42 @@ namespace Chartboost.AdFormats.Banner.Unity
 
         private void OnEnable() => BannerView?.SetVisibility(true);
 
+        private void Update()
+        {
+            if (Draggable)
+                return;
+            
+            // if this gameobject is moved by any other means except drag then
+            // we should also move the corresponding view on native
+            var distance = Vector2.Distance(_lastPosition, transform.position);
+            if (distance > 0)
+            {
+                var x = ChartboostMediationConverters.PixelsToNative(_rectTransform.LayoutParams().x);
+                var y = ChartboostMediationConverters.PixelsToNative(_rectTransform.LayoutParams().y);
+                ((ChartboostMediationBannerViewBase)BannerView)?.MoveTo(x, y);
+            }
+            
+            _lastPosition = transform.position;
+        }
+
         private void OnDisable() => BannerView?.SetVisibility(false);
 
         public void OnDestroy() => BannerView?.Destroy();
         
         #endregion
         
+        /// <summary>
+        /// The placement name for the ad.
+        /// </summary>
         public string PlacementName
         {
             get => placementName;
             internal set => placementName = value;
         }
-
+        
+        /// <summary>
+        /// The ability of this gameobject to drag
+        /// </summary>
         public bool Draggable
         {
             get => draggable;
@@ -83,6 +126,9 @@ namespace Chartboost.AdFormats.Banner.Unity
             }
         }
         
+        /// <summary>
+        /// The resize option for this gameobject
+        /// </summary>
         public ResizeOption ResizeOption
         {
             get => resizeOption;
@@ -93,6 +139,10 @@ namespace Chartboost.AdFormats.Banner.Unity
             }
         }
         
+        /// <summary>
+        /// Loads an ad inside this gameobject
+        /// </summary>
+        /// <returns></returns>
         public async Task<ChartboostMediationBannerAdLoadResult> Load()
         {
             if (string.IsNullOrEmpty(placementName))
@@ -104,9 +154,9 @@ namespace Chartboost.AdFormats.Banner.Unity
             
             var containerSize = sizeType switch
             {
-                ChartboostMediationBannerSizeType.Standard => ChartboostMediationBannerAdSize.Standard,
-                ChartboostMediationBannerSizeType.Medium => ChartboostMediationBannerAdSize.MediumRect,
-                ChartboostMediationBannerSizeType.Leaderboard => ChartboostMediationBannerAdSize.Leaderboard,
+                ChartboostMediationBannerSizeType.Standard => ChartboostMediationBannerSize.Standard,
+                ChartboostMediationBannerSizeType.Medium => ChartboostMediationBannerSize.MediumRect,
+                ChartboostMediationBannerSizeType.Leaderboard => ChartboostMediationBannerSize.Leaderboard,
                 _ => await GetAdaptiveSize()
             };
             var loadRequest = new ChartboostMediationBannerAdLoadRequest(placementName, containerSize);
@@ -119,20 +169,38 @@ namespace Chartboost.AdFormats.Banner.Unity
         
         #region BannerView Wrap
         
+        /// <summary>
+        /// The keywords targeted for the ad.
+        /// </summary>
         public Dictionary<string, string> Keywords
         {
             get => BannerView?.Keywords;
             set => BannerView.Keywords = value;
         }
 
+        /// <summary>
+        /// The publisher supplied request that was used to load the ad.
+        /// </summary>
         public ChartboostMediationBannerAdLoadRequest Request => BannerView?.Request;
 
+        /// <summary>
+        /// The winning bid info for the ad. Note that this will change with auto-refresh and will be notified in <see cref="DidLoad"/>
+        /// </summary>
         public BidInfo? WinningBidInfo => BannerView?.WinningBidInfo;
 
+        /// <summary>
+        /// The identifier for this load call. Note that this will change with auto-refresh and will be notified in <see cref="DidLoad"/>
+        /// </summary>
         public string LoadId => BannerView?.LoadId;
 
-        public ChartboostMediationBannerAdSize? AdSize => BannerView?.AdSize;
+        /// <summary>
+        /// The size of the loaded ad. Note that this will change with auto-refresh and will be notified in <see cref="DidLoad"/>
+        /// </summary>
+        public ChartboostMediationBannerSize? AdSize => BannerView?.AdSize;
 
+        /// <summary>
+        /// The horizontal alignment of the ad within this gameobject.
+        /// </summary>
         public ChartboostMediationBannerHorizontalAlignment HorizontalAlignment
         {
             get => horizontalAlignment;
@@ -143,7 +211,10 @@ namespace Chartboost.AdFormats.Banner.Unity
                 horizontalAlignment = value;
             }
         }
-
+        
+        /// <summary>
+        /// The vertical alignment of the ad within this gameobject.
+        /// </summary>
         public ChartboostMediationBannerVerticalAlignment VerticalAlignment
         {
             get => verticalAlignment;
@@ -155,10 +226,17 @@ namespace Chartboost.AdFormats.Banner.Unity
             }
         }
 
+        /// <summary>
+        /// Clears the loaded ad
+        /// </summary>
         public void ResetAd() => BannerView?.Reset();
-        
+
         #endregion
         
+        /// <summary>
+        /// Locks the size of this gameobject based on the provided fixed type. Works only for fixed size types (Standard, Medium, Leaderboard)  
+        /// </summary>
+        /// <param name="sizeType"></param>
         public void LockToFixedSize(ChartboostMediationBannerSizeType sizeType)
         {
             // ReSharper disable once PossibleNullReferenceException
@@ -193,6 +271,9 @@ namespace Chartboost.AdFormats.Banner.Unity
             rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
         }
         
+        /// <summary>
+        /// Returns json representation of current state of the object
+        /// </summary>
         public override string ToString()
         {
             base.ToString();
@@ -236,7 +317,7 @@ namespace Chartboost.AdFormats.Banner.Unity
         private void Resize()
         {
             // Cannot resize until BannerView is loaded with Ad
-            var adSize = AdSize ?? ChartboostMediationBannerAdSize.Adaptive(0, 0);
+            var adSize = AdSize ?? ChartboostMediationBannerSize.Adaptive(0, 0);
             if (Request?.Size.BannerType == ChartboostMediationBannerType.Fixed || adSize.SizeType == ChartboostMediationBannerSizeType.Unknown ||
                 adSize is { Width: 0, Height: 0 })
                 return;
@@ -284,7 +365,7 @@ namespace Chartboost.AdFormats.Banner.Unity
             }
         }
 
-        private async Task<ChartboostMediationBannerAdSize> GetAdaptiveSize()
+        private async Task<ChartboostMediationBannerSize> GetAdaptiveSize()
         {
             var recTransform = GetComponent<RectTransform>();
             var layoutParams = recTransform.LayoutParams();
@@ -302,7 +383,7 @@ namespace Chartboost.AdFormats.Banner.Unity
             var width = ChartboostMediationConverters.PixelsToNative(layoutParams.width);
             var height = ChartboostMediationConverters.PixelsToNative(layoutParams.height);
 
-            return ChartboostMediationBannerAdSize.Adaptive(width, height);
+            return ChartboostMediationBannerSize.Adaptive(width, height);
         }
         
     }

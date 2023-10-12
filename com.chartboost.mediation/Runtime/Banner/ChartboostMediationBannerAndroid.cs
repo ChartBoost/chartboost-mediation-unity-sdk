@@ -4,13 +4,13 @@ using Chartboost.Interfaces;
 using Chartboost.Platforms.Android;
 using Chartboost.Utilities;
 using UnityEngine;
-using Logger = Chartboost.Utilities.Logger;
 
 namespace Chartboost.Banner
 {
     /// <summary>
     /// Chartboost Mediation banner object for Android.
     /// </summary>
+    [Obsolete("ChartboostMediationBannerAndroid has been deprecated, use the new ChartboostMediationBannerView API instead.")]
     public sealed class ChartboostMediationBannerAndroid : ChartboostMediationBannerBase
     {
         private readonly AndroidJavaObject _androidAd;
@@ -19,9 +19,8 @@ namespace Chartboost.Banner
         public ChartboostMediationBannerAndroid(string placementName, ChartboostMediationBannerAdSize size) : base(placementName, size)
         {
             LogTag = "ChartboostMediationBanner (Android)";
-
             using var unityBridge = ChartboostMediationAndroid.GetUnityBridge();
-            _androidAd = unityBridge.CallStatic<AndroidJavaObject>("getBannerAd", placementName, (int)size.SizeType);
+            _androidAd = unityBridge.CallStatic<AndroidJavaObject>("getBannerAd", placementName, (int)size);
             _uniqueId = _androidAd.HashCode();
         }
 

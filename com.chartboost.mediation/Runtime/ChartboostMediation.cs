@@ -162,6 +162,7 @@ namespace Chartboost
 
         #region Banner Callbacks
         /// <inheritdoc cref="IChartboostMediationBannerEvents.DidLoadBanner"/>>
+        [Obsolete("DidLoadBanner has been deprecated, use the new ChartboostMediationBannerView API instead.")]
         public static event ChartboostMediationPlacementLoadEvent DidLoadBanner
         {
             add => _chartboostMediationExternal.DidLoadBanner += value;
@@ -169,6 +170,7 @@ namespace Chartboost
         }
 
         /// <inheritdoc cref="IChartboostMediationBannerEvents.DidClickBanner"/>>
+        [Obsolete("DidClickBanner has been deprecated, use the new ChartboostMediationBannerView API instead.")]
         public static event ChartboostMediationPlacementEvent DidClickBanner
         {
             add => _chartboostMediationExternal.DidClickBanner += value;
@@ -176,6 +178,7 @@ namespace Chartboost
         }
         
         /// <inheritdoc cref="IChartboostMediationBannerEvents.DidRecordImpressionBanner"/>>
+        [Obsolete("DidRecordImpressionBanner has been deprecated, use the new ChartboostMediationBannerView API instead.")]
         public static event ChartboostMediationPlacementEvent DidRecordImpressionBanner
         {
             add => _chartboostMediationExternal.DidRecordImpressionBanner += value;
@@ -227,15 +230,19 @@ namespace Chartboost
         /// Returns a new gameobject that can be used to load and display banner ads.
         /// </summary>
         /// <param name="placementName">The placement name for this banner ad</param>
-        /// <param name="canvas">Canvas under which this gameobject will be created</param>
+        /// <param name="parent">The parent transform under which this gameobject will be created</param>
         /// <param name="size">size of the gameobject</param>
         /// <param name="screenLocation">pre-defined location on screen where this gameobject will be created</param>
+        /// <param name="conformToSafeArea"> If true, this gameobject will be created within the safe area of screen</param>
         /// <returns></returns>
-        public static ChartboostMediationUnityBannerAd GetUnityBannerAd(string placementName, Canvas canvas, ChartboostMediationBannerAdSize? size = null, ChartboostMediationBannerAdScreenLocation screenLocation = ChartboostMediationBannerAdScreenLocation.Center)
+        public static ChartboostMediationUnityBannerAd GetUnityBannerAd(string placementName, Transform parent,
+            ChartboostMediationBannerSize? size = null,
+            ChartboostMediationBannerAdScreenLocation screenLocation = ChartboostMediationBannerAdScreenLocation.Center,
+            bool conformToSafeArea = false)
         {
-            var unityBannerAd = ChartboostMediationUnityBannerAd.Instantiate(canvas, size, screenLocation);
+            var unityBannerAd = ChartboostMediationUnityBannerAd.Instantiate(parent, size, screenLocation, conformToSafeArea);
             unityBannerAd.PlacementName = placementName;
-            return unityBannerAd;
+            return unityBannerAd; 
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]

@@ -17,7 +17,7 @@
 
 typedef void (*ChartboostMediationBannerAdDragEvent)(void* uniqueId, float x, float y);
 
-@interface ChartboostMediationBannerAdWrapper : NSObject
+@interface ChartboostMediationBannerAdWrapper : NSObject<UIGestureRecognizerDelegate>
 
 @property ChartboostMediationBannerView* bannerView;
 @property ChartboostMediationBannerAdDragEvent dragListener;

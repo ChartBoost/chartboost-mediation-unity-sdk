@@ -2,16 +2,16 @@
 <dependencies>
     <androidPackages>
         <!-- Android Adapter -->
-        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-meta-audience-network:4.6.14.0+@aar"/>
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-meta-audience-network:4.6.16.0+@aar"/>
 
         <!-- Partner Android SDK Dependencies-->
-        <androidPackage spec="com.facebook.android:audience-network-sdk:6.14.0"/>
+        <androidPackage spec="com.facebook.android:audience-network-sdk:6.16.0"/>
     </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->
-        <iosPod name="ChartboostMediationAdapterMetaAudienceNetwork" version="~> 4.6.12.0"/>
+        <iosPod name="ChartboostMediationAdapterMetaAudienceNetwork" version="~> 4.6.14.0"/>
 
         <!-- Partner iOS SDK-->
-        <iosPod name="FBAudienceNetwork" version="~> 6.12.0" addToAllTargets="false"/>
+        <iosPod name="FBAudienceNetwork" version="~> 6.14.0" addToAllTargets="false"/>
     </iosPods>
 </dependencies>

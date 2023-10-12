@@ -972,6 +972,9 @@ void _chartboostMediationBannerViewLoadAdWithScreenPos(const void *uniqueId, con
         const char *metricsJson = dictionaryToJSON([adLoadResult metrics]);
         callback(hashCode, uniqueId, loadId, metricsJson, "", "");
     }];
+    
+    ChartboostMediationBannerAdWrapper *bannerWrapper = (__bridge ChartboostMediationBannerAdWrapper *)uniqueId;
+    bannerWrapper.usesConstraints = true;
 }
 
 void _chartboostMediationBannerViewLoadAdWithXY(const void *uniqueId, const char *placementName, int sizeType, float width, float height, float x, float y, int hashCode, ChartboostMediationBannerAdLoadResultEvent callback) {
@@ -1005,6 +1008,9 @@ void _chartboostMediationBannerViewLoadAdWithXY(const void *uniqueId, const char
         const char *metricsJson = dictionaryToJSON([adLoadResult metrics]);
         callback(hashCode, uniqueId, loadId, metricsJson, "", "");
     }];    
+    
+    ChartboostMediationBannerAdWrapper *bannerWrapper = (__bridge ChartboostMediationBannerAdWrapper *)uniqueId;
+    bannerWrapper.usesConstraints = false;
 }
 
 void _chartboostMediationBannerViewSetKeywords(const void* uniqueId, const char * keywords){
@@ -1092,7 +1098,7 @@ void _chartboostMediationBannerViewSetVisibility(const void* uniqueId, BOOL visi
 }
 
 void _chartboostMediationBannerViewReset(const void* uniqueId){
-    ChartboostMediationBannerView *bannerView =(__bridge ChartboostMediationBannerView*)uniqueId;
+    ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
     [bannerView reset];
 }
 
@@ -1107,6 +1113,17 @@ void _chartboostMediationBannerViewDestroy(const void * uniqueId)
     });
 }
 
-
+void _chartboostMediationBannerViewMoveTo(const void * uniqueId, float x, float y)
+{
+    sendToMain(^(){
+        ChartboostMediationBannerView* bannerView = _getBannerView(uniqueId);
+        CGRect frame = bannerView.frame;
+        CGPoint origin = bannerView.frame.origin;
+        origin.x = x;
+        origin.y = y;
+        frame.origin = origin;
+        bannerView.frame = frame;
+    });
+}
 
 }

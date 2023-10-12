@@ -1,15 +1,13 @@
 #if UNITY_IOS
 using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
-using Chartboost.Utilities;
-using Newtonsoft.Json;
 
 namespace Chartboost.Banner
 {
     /// <summary>
     /// Chartboost Mediation banner object for iOS.
     /// </summary>
+    [Obsolete("ChartboostMediationBannerIOS has been deprecated, use the new ChartboostMediationBannerView API instead.")]
     public sealed class ChartboostMediationBannerIOS : ChartboostMediationBannerBase
     {
         private readonly IntPtr _uniqueId;
@@ -17,7 +15,7 @@ namespace Chartboost.Banner
         public ChartboostMediationBannerIOS(string placement, ChartboostMediationBannerAdSize size) : base(placement, size)
         {
             LogTag = "ChartboostMediation Banner (iOS)";
-            _uniqueId = _chartboostMediationGetBannerAd(placement, (int)size.SizeType);
+            _uniqueId = _chartboostMediationGetBannerAd(placement, (int)size);
         }
 
         internal override bool IsValid { get; set; } = true;
