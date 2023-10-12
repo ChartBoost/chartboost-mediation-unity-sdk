@@ -57,15 +57,43 @@ Debug.Log($"Fullscreen Placement Loaded with PlacementName: {placementName}")
 > **Warning** \
 > The new fullscreen API utilizes instance based callbacks to notify information regarding the advertisement life-cycle. You must take this into account when migrating from the old API static callbacks.
 
-## Creating Banner Ad Objects
+## Banner Ad Objects
 
-Since Chartboost Mediation Unity SDK 4.6.X we have deprecated the previous approach for loading banner placements. A new Banner API `ChartboostMedaitionBannerView` has been provided which makes use of C# asycn/await methods in order to await for load and show and also provides support to load adaptive size banners.
+Mediation SDK 4.6.0 introduces a new [Adaptive Banner](/en/mediation/ad-types/#adaptive-banner/) ad format, capable of serving flexible and fixed sized ads in the placement. The new [Adaptive Banner](/en/mediation/ad-types/#adaptive-banner/) ad format has the following features:
+- Publishers can choose whether to use Adaptive Ads or Fixed Ads in a given placement
+- Fixed Ads are supported in Adaptive Ad placements (backwards compatible)
+- Publishers should know whether an ad is fixed or flexible and receive the dimensions of fixed ads
+- Publishers can align the ad horizontally and/or vertically
+- Publishers can resize the ad container to fit the ad or optionally discard oversized ads that are rendered in the container.
+- The ad container can be in-line or on top of publisher content.
+
+To use this new ad format, Publishers will need to create a new Adaptive Banner placement in their platform and integrate with the new Adaptive Banner APIs.
+
+We have added a new Banner API `ChartboostMedaitionBannerView` to allow usage of adaptive banners. The previous `ChartboostMedaitionBannerAd` API has now been deprecated.
+
 
 Another API `ChartboostMediationUnityBannerAd` is also provided which allows usage of unity gameobjects to load a banner ad within it.
 
+The API class `ChartboostMediationBannerSize` will support both fixed and adaptive banners:
+
+|Field|Description|
+|--|--|
+|`static ChartboostMediationBannerSize Standard`|Static constant that returns a fixed `STANDARD` banner with a size of 320x50.|
+|`static ChartboostMediationBannerSize MediumRect`|Static constant that returns a fixed MREC `MEDIUM` banner with a size of 300x250.|
+|`static ChartboostMediationBannerSize Leaderboard`|Static constant that returns a fixed `LEADERBOARD` banner with a size of 728x90.|
+|`ChartboostMediationBannerType BannerType`|An enum specifying that the ad size is fixed (size cannot change), or adaptive (size can change but must maintain aspectRatio). This is an integer based enum.|
+|`float Width`|The width of the ad.|
+|`float Height`|The height of the ad.|
+|`float AspectRatio`|The aspect ratio of the ad. This can be derived from the size. Will be 0 if either the width or the height are <= 0.|
+|`static ChartboostMediationBannerSize Adaptive(float width)`|Creates a flexible/adaptive banner size with 0 height.|
+|`static ChartboostMediationBannerSize Adaptive(float width, float height)`|Creates a flexible/adaptive banner size with a width and max height. Used either when the height of an inline ad should be capped, or when requesting an anchored banner. Could alternatively take a size instead of width/maxHeight, however width/maxHeight mimics Google’s methods.|
+|`<additional conveniences>`|This provides additional conveniences to create sizes based on the IAB ratios (e.g. 6:1, 1:1) with a width. For example, using the 6:1 convenience with a 600 width would return a size of 600x100. Note that these are max sizes, therefore smaller sizes or other aspect ratios may be served.|
+
+
+### Loading Banner ads
 A detailed example on the load logic for both of these APIs can be found below :
 
-###  Using `ChartboostMediationBannerView` API
+####  Using `ChartboostMediationBannerView` API
 
 ```c#
 // Get a bannerView
@@ -111,7 +139,7 @@ float y = ChartboostMediationConverters.PixelsToNative(200);
 await bannerView.Load(loadRequest, x, y);
 ```
 
-### Using `ChartboostMediationUnityBannerAd` API
+#### Using `ChartboostMediationUnityBannerAd` API
 
 `ChartboostMediationUnityBannerAd` API enables loading of a bannerAd within a unity gameobject. 
 To create this gameobject, right-click in the hierarchy window and select `Chartboost Mediation/UnityBannerAd`
@@ -147,6 +175,43 @@ if(!loadResult.Error.HasValue)
 ```
 
 You can implement delegates in your class to receive notifications about the success or failure of the ad loading process for Banner formats. See section [Delegate Usage](delegate-usage.md) for more details.
+
+### Resizing Adaptive Banner Container
+
+#### Using `ChartboostMediationBannerView` API
+
+```C#
+bannerView.DidLoad += (banner) => 
+{
+    // Determine the axis on which you want the bannerView to resize
+    var resizeAxis = ChartboostMediationBannerResizeAxis.Vertical; 
+    
+    // Make the resize call
+    bannerView.ResizeToFit(resizeAxis);
+}
+
+```
+
+#### Using `ChartboostMediationunityBannerAd` API
+```C#
+// Determine the resizeOption you want to set on this gameobject
+ResizeOption resizeOption = ResizeOption.FitVertical;
+
+// Update the resizeOption 
+unityBannerAd.ResizeOption = resizeOption
+
+```
+
+### Discarding Oversized Ads
+
+```C#
+// To drop oversized ads
+ChartboostMediation.DiscardOversizedAds(true)
+
+// To allow oversized ads
+ChartboostMediation.DiscardOversizedAds(false)
+
+```
 
 ## Clearing Loaded Ads
 
