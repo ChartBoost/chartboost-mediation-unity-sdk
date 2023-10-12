@@ -196,7 +196,7 @@ bannerView.DidLoad += (banner) =>
 
 ```
 
-#### Using `ChartboostMediationunityBannerAd` API
+#### Using `ChartboostMediationUnityBannerAd` API
 ```C#
 // Determine the resizeOption you want to set on this gameobject
 ResizeOption resizeOption = ResizeOption.FitVertical;
