@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace Chartboost.FullScreen.Rewarded
 {
+    [Obsolete("ChartboostMediationRewardedIOS has been deprecated, use the new fullscreen API instead.")]
     internal sealed class ChartboostMediationRewardedIOS : ChartboostMediationRewardedBase
     {
         private readonly IntPtr _uniqueId;

@@ -62,9 +62,8 @@ namespace Chartboost.FullScreen
     /// <summary>
     /// Chartboost Mediation interstitial ad object for unsupported platforms.
     /// </summary>
-    #pragma warning disable CS0618
+    [Obsolete("ChartboostMediationInterstitialUnsupported has been deprecated, use the new fullscreen API instead.")]
     internal class ChartboostMediationInterstitialUnsupported : ChartboostMediationFullScreenBase
-    #pragma warning restore CS0618
     {
         public ChartboostMediationInterstitialUnsupported(string placementName) : base(placementName)
         {

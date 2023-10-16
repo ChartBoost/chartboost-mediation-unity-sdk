@@ -1,4 +1,5 @@
 #if UNITY_ANDROID
+using System;
 using Chartboost.AdFormats.Banner;
 using Chartboost.AdFormats.Fullscreen;
 using Chartboost.Events;
@@ -177,28 +178,6 @@ namespace Chartboost.Platforms.Android
 
         }
 
-        #endregion
-
-        #region Banner Callbacks (deprecated)
-        internal class BannerEventListener : AndroidJavaProxy
-        {
-            private BannerEventListener() : base(GetQualifiedClassName("IBannerEventListener")) { }
-
-            public static readonly BannerEventListener Instance = new BannerEventListener();
-
-            private void DidLoadBanner(string placementName, string loadId, string auctionId, string partnerId, double price, string lineItemName, string lineItemId, string error) 
-                => EventProcessor.ProcessChartboostMediationLoadEvent(placementName,  loadId, auctionId, partnerId, price, lineItemName, lineItemId, error, _instance.DidLoadBanner);
-
-            private void DidClickBanner(string placementName) 
-                => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, null, _instance.DidClickBanner);
-
-            private void DidRecordImpression(string placementName) 
-                => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, null, _instance.DidRecordImpressionBanner);
-        }
-
-        public override event ChartboostMediationPlacementLoadEvent DidLoadBanner;
-        public override event ChartboostMediationPlacementEvent DidClickBanner;
-        public override event ChartboostMediationPlacementEvent DidRecordImpressionBanner;
         #endregion
     }
 }

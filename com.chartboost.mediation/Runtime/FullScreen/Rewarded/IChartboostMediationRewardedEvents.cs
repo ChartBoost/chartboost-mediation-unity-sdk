@@ -5,7 +5,6 @@ namespace Chartboost.FullScreen.Rewarded
     /// <summary>
     /// Interface implemented by Chartboost Mediation rewarded ads. 
     /// </summary>
-    [Obsolete("IChartboostMediationRewardedEvents has been deprecated, use the new fullscreen API instead.")]
     public interface IChartboostMediationRewardedEvents
     {
         /// <summary>

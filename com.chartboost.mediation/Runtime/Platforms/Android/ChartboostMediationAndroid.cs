@@ -1,6 +1,5 @@
 #if UNITY_ANDROID
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Chartboost.AdFormats.Banner;
 using Chartboost.Events;
@@ -43,12 +42,11 @@ namespace Chartboost.Platforms.Android
 
         internal static AndroidJavaClass GetNativeSDK() => new AndroidJavaClass(GetQualifiedNativeClassName("HeliumSdk"));
 
+        [Obsolete("Init has been deprecated and will be removed in future versions of the SDK.")]
         public override void Init()
         {
             base.Init();
-            #pragma warning disable CS0618
             InitWithAppIdAndSignature(ChartboostMediationSettings.AndroidAppId, ChartboostMediationSettings.AndroidAppSignature);
-            #pragma warning restore CS0618
         }
 
         [Obsolete("InitWithAppIdAndSignature has been deprecated, please use StartWithOptions instead")]

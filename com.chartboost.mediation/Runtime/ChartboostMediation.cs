@@ -26,10 +26,14 @@ namespace Chartboost
     /// </summary>
     public sealed class ChartboostMediation
     {
+        
+        #pragma warning disable CS0618
         private static readonly ChartboostMediationExternal _chartboostMediationExternal;
+        #pragma warning restore CS0618
 
         static ChartboostMediation() 
         {
+            #pragma warning disable CS0618
             #if UNITY_EDITOR
             _chartboostMediationExternal = new ChartboostMediationUnsupported();
             #elif UNITY_ANDROID
@@ -39,6 +43,7 @@ namespace Chartboost
             #else
             _chartboostMediationExternal = new ChartboostMediationUnsupported();
             #endif
+            #pragma warning restore CS0618
         }
         
         ~ChartboostMediation()
@@ -81,6 +86,7 @@ namespace Chartboost
 
         #region Interstitial Callbacks
         /// <inheritdoc cref="IChartboostMediationInterstitialEvents.DidLoadInterstitial"/>>
+        [Obsolete("DidLoadInterstitial has been deprecated, use the new fullscreen API instead.")]
         public static event ChartboostMediationPlacementLoadEvent DidLoadInterstitial
         {
             add => _chartboostMediationExternal.DidLoadInterstitial += value;
@@ -88,6 +94,7 @@ namespace Chartboost
         }
 
         /// <inheritdoc cref="IChartboostMediationInterstitialEvents.DidShowInterstitial"/>>
+        [Obsolete("DidShowInterstitial has been deprecated, use the new fullscreen API instead.")]
         public static event ChartboostMediationPlacementEvent DidShowInterstitial
         {
             add => _chartboostMediationExternal.DidShowInterstitial += value;
@@ -95,6 +102,7 @@ namespace Chartboost
         }
         
         /// <inheritdoc cref="IChartboostMediationInterstitialEvents.DidCloseInterstitial"/>>
+        [Obsolete("DidCloseInterstitial has been deprecated, use the new fullscreen API instead.")]
         public static event ChartboostMediationPlacementEvent DidCloseInterstitial
         {
             add => _chartboostMediationExternal.DidCloseInterstitial += value;
@@ -102,6 +110,7 @@ namespace Chartboost
         }
 
         /// <inheritdoc cref="IChartboostMediationInterstitialEvents.DidClickInterstitial"/>>
+        [Obsolete("DidClickInterstitial has been deprecated, use the new fullscreen API instead.")]
         public static event ChartboostMediationPlacementEvent DidClickInterstitial
         {
             add => _chartboostMediationExternal.DidClickInterstitial += value;
@@ -109,6 +118,7 @@ namespace Chartboost
         }
         
         /// <inheritdoc cref="IChartboostMediationInterstitialEvents.DidRecordImpressionInterstitial"/>>
+        [Obsolete("DidRecordImpressionInterstitial has been deprecated, use the new fullscreen API instead.")]
         public static event ChartboostMediationPlacementEvent DidRecordImpressionInterstitial
         {
             add => _chartboostMediationExternal.DidRecordImpressionInterstitial += value;
@@ -118,6 +128,7 @@ namespace Chartboost
 
         #region Rewarded Callbacks
         /// <inheritdoc cref="IChartboostMediationRewardedEvents.DidLoadRewarded"/>>
+        [Obsolete("DidLoadRewarded has been deprecated, use the new fullscreen API instead.")]
         public static event ChartboostMediationPlacementLoadEvent DidLoadRewarded
         {
             add => _chartboostMediationExternal.DidLoadRewarded += value;
@@ -125,6 +136,7 @@ namespace Chartboost
         }
         
         /// <inheritdoc cref="IChartboostMediationRewardedEvents.DidShowRewarded"/>>
+        [Obsolete("DidShowRewarded has been deprecated, use the new fullscreen API instead.")]
         public static event ChartboostMediationPlacementEvent DidShowRewarded
         {
             add => _chartboostMediationExternal.DidShowRewarded += value;
@@ -132,6 +144,7 @@ namespace Chartboost
         }
 
         /// <inheritdoc cref="IChartboostMediationRewardedEvents.DidCloseRewarded"/>>
+        [Obsolete("DidCloseRewarded has been deprecated, use the new fullscreen API instead.")]
         public static event ChartboostMediationPlacementEvent DidCloseRewarded
         {
             add => _chartboostMediationExternal.DidCloseRewarded += value;
@@ -139,6 +152,7 @@ namespace Chartboost
         }
 
         /// <inheritdoc cref="IChartboostMediationRewardedEvents.DidClickRewarded"/>>
+        [Obsolete("DidClickRewarded has been deprecated, use the new fullscreen API instead.")]
         public static event ChartboostMediationPlacementEvent DidClickRewarded
         {
             add => _chartboostMediationExternal.DidClickRewarded += value;
@@ -146,6 +160,7 @@ namespace Chartboost
         }
         
         /// <inheritdoc cref="IChartboostMediationRewardedEvents.DidRecordImpressionRewarded"/>>
+        [Obsolete("DidRecordImpressionRewarded has been deprecated, use the new fullscreen API instead.")]
         public static event ChartboostMediationPlacementEvent DidRecordImpressionRewarded
         {
             add => _chartboostMediationExternal.DidRecordImpressionRewarded += value;
@@ -153,6 +168,7 @@ namespace Chartboost
         }
         
         /// <inheritdoc cref="IChartboostMediationRewardedEvents.DidReceiveReward"/>>
+        [Obsolete("DidReceiveReward has been deprecated, use the new fullscreen API instead.")]
         public static event ChartboostMediationPlacementEvent DidReceiveReward
         {
             add => _chartboostMediationExternal.DidReceiveReward += value;
@@ -244,7 +260,8 @@ namespace Chartboost
             unityBannerAd.PlacementName = placementName;
             return unityBannerAd; 
         }
-
+        
+        [Obsolete("Init has been deprecated and will be removed in future versions of the SDK.")]
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Init()
         {
