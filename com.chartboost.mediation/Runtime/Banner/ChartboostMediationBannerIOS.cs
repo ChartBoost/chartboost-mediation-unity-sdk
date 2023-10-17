@@ -64,6 +64,7 @@ namespace Chartboost.Banner
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerBase.Remove"/>>
+        [Obsolete("Remove has been deprecated, please use Destroy instead.")]
         public override void Remove()
         {
             base.Remove();

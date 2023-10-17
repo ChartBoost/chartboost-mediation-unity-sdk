@@ -690,7 +690,13 @@ PlayerSettings:
   scriptingDefineSymbols:
     4: 
     7: 
-  additionalCompilerArguments: {}
+  additionalCompilerArguments:
+    1:
+    - -warnaserror
+    4:
+    - -warnaserror
+    7:
+    - -warnaserror
   platformArchitecture: {}
   scriptingBackend:
     Android: 1

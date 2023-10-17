@@ -1,4 +1,5 @@
 #if UNITY_ANDROID
+using System;
 using Chartboost.Platforms.Android;
 using Chartboost.Utilities;
 using UnityEngine;
@@ -8,9 +9,8 @@ namespace Chartboost.FullScreen.Rewarded
     /// <summary>
     /// Chartboost Mediation rewarded ad object for Android.
     /// </summary>
-    #pragma warning disable CS0618
+    [Obsolete("ChartboostMediationRewardedBase has been deprecated, use the new fullscreen API instead.")]
     internal sealed class ChartboostMediationRewardedAndroid : ChartboostMediationRewardedBase
-    #pragma warning restore CS0618
     {
         private readonly AndroidJavaObject _androidAd;
         private readonly int _uniqueId;
