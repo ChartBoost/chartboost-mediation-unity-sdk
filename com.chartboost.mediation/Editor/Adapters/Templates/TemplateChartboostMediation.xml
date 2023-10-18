@@ -22,10 +22,6 @@
         <androidPackage spec="com.google.android.gms:play-services-ads-identifier:18.0.1"/>
         <androidPackage spec="com.google.android.gms:play-services-appset:16.0.2"/>
         <androidPackage spec="com.google.android.gms:play-services-basement:18.1.0"/>
-        
-        <!-- Bridge dependencies-->
-        <androidPackage spec="com.google.code.gson:gson:2.10.1"/>
-        
     </androidPackages>
     <iosPods>
         <!-- Chartboost Mediation iOS SDK -->
