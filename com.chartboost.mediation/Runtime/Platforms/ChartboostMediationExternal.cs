@@ -84,6 +84,12 @@ namespace Chartboost.Platforms
 
         public virtual void DiscardOversizedAds(bool shouldDiscard)
             => Logger.Log(LogTag, $"DiscardOversizedAds : {shouldDiscard}");
+
+        public virtual ChartboostMediationAdapterInfo[] InitializedAdaptersInfo()
+        {
+            Logger.Log(LogTag, "InitializedAdaptersInfo");
+            return Array.Empty<ChartboostMediationAdapterInfo>();
+        }
         
         public virtual void Destroy() 
             => Logger.Log(LogTag, "Destroy");
@@ -203,5 +209,6 @@ namespace Chartboost.Platforms
         public virtual event ChartboostMediationPlacementEvent DidClickBanner;
         public virtual event ChartboostMediationPlacementEvent DidRecordImpressionBanner;
 #pragma warning restore 67
+        
     }
 }

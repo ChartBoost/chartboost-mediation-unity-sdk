@@ -274,5 +274,11 @@ namespace Chartboost
         public static string GetUserIdentifier() => _chartboostMediationExternal.GetUserIdentifier();
         public static void SetTestMode(bool testModeEnabled) => _chartboostMediationExternal.SetTestMode(testModeEnabled);
         public static void DiscardOversizedAds(bool shouldDiscard) => _chartboostMediationExternal.DiscardOversizedAds(shouldDiscard);
+        
+        /// <summary>
+        /// Returns an array of all initialized adapters, or an empty array if the SDK is not initialized.
+        /// </summary>
+        /// <returns></returns>
+        public static ChartboostMediationAdapterInfo[] InitializedAdaptersInfo() => _chartboostMediationExternal.InitializedAdaptersInfo();
     }
 }

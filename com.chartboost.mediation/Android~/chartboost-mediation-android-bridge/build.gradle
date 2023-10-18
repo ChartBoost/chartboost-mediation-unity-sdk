@@ -53,6 +53,7 @@ dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     implementation chartboostMediationDependency
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation("com.google.code.gson:gson:2.10.1")
 }
 
 task assembleForPlugin(type: Jar, dependsOn: 'bundleLibRuntimeToJarRelease') {

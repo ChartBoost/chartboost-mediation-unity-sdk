@@ -11,6 +11,7 @@ import com.chartboost.mediation.unity.EventProcessor.LoadEventConsumer
 import com.chartboost.mediation.unity.EventProcessor.serializeEvent
 import com.chartboost.mediation.unity.EventProcessor.serializeEventWithException
 import com.chartboost.mediation.unity.EventProcessor.serializeLoadEvent
+import com.google.gson.Gson
 import com.unity3d.player.UnityPlayer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
@@ -38,6 +39,11 @@ class UnityBridge {
         @JvmStatic
         fun toInitializationOptions(default: String, options: Array<String>) : HeliumInitializationOptions =
             HeliumInitializationOptions(options.toSet())
+
+        @JvmStatic
+        fun adapterInfo(): String {
+            return Gson().toJson(HeliumSdk.adapterInfo)
+        }
 
         @JvmStatic
         fun loadFullscreenAd(adRequest: ChartboostMediationAdLoadRequest, adLoadResultHandler: ChartboostMediationFullscreenAdLoadListener, fullscreenAdListener: ChartboostMediationFullscreenAdListener) {

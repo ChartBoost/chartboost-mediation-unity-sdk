@@ -603,6 +603,38 @@ void _chartboostMediationDiscardOversizedAds(BOOL shouldDiscard)
     [[Helium sharedHelium] setDiscardOversizedAds:shouldDiscard];
 }
 
+const char * _chartboostMediationInitializedAdaptersInfo() {
+    
+    NSMutableArray * jsonArray = [NSMutableArray array];
+    
+    NSArray<HeliumAdapterInfo*> * adapters =  [[Helium sharedHelium] initializedAdapterInfo];
+    for (HeliumAdapterInfo *adapter in adapters) {
+        NSString * partnerVersionKey        = @"partnerVersion";      NSString * partnerVersionValue     = adapter.partnerVersion;
+        NSString * adapterVersionKey        = @"adapterVersion";      NSString * adapterVersionValue     = adapter.adapterVersion;
+        NSString * partnerIdentifierKey     = @"partnerIdentifier";   NSString * partnerIdentifierValue  = adapter.partnerIdentifier;
+        NSString * partnerDisplayNameKey    = @"partnerDisplayName";  NSString * partnerDisplayNameValue = adapter.partnerDisplayName;
+
+        NSDictionary *adapterDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+          partnerVersionValue,partnerVersionKey,
+          adapterVersionValue,adapterVersionKey,
+          partnerIdentifierValue,partnerIdentifierKey,
+          partnerDisplayNameValue,partnerDisplayNameKey,
+          nil
+        ];
+    
+        [jsonArray addObject:adapterDictionary];
+    }
+    
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonArray options:0 error:&error];
+    if (! jsonData) {
+        NSLog(@"%s: error: %@", __func__, error.localizedDescription);
+        return "";
+     }
+    NSString *json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    return getCStringOrNull(json);
+}
+
 void * _chartboostMediationGetInterstitialAd(const char *placementName)
 {
     id<HeliumInterstitialAd> ad = [[Helium sharedHelium] interstitialAdProviderWithDelegate: [ChartboostMediationObserver sharedObserver] andPlacementName: GetStringParam(placementName)];

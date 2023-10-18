@@ -7,6 +7,8 @@ using Chartboost.Events;
 using Chartboost.Requests;
 using Chartboost.Results;
 using Chartboost.Utilities;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using UnityEngine;
 // ReSharper disable StringLiteralTypo
 // ReSharper disable InconsistentNaming
@@ -133,6 +135,15 @@ namespace Chartboost.Platforms.Android
             base.DiscardOversizedAds(shouldDiscard);
             using var nativeSDK = GetNativeSDK();
             nativeSDK.CallStatic("setShouldDiscardOversizedAds", shouldDiscard);
+        }
+
+        public override ChartboostMediationAdapterInfo[] InitializedAdaptersInfo()
+        {
+            base.InitializedAdaptersInfo();
+            using var unityBridge = GetUnityBridge();
+            var json = unityBridge.CallStatic<string>("adapterInfo");
+            var adapterInfo = JsonConvert.DeserializeObject<ChartboostMediationAdapterInfo[]>(json);
+            return adapterInfo;
         }
 
         public override void Destroy()
