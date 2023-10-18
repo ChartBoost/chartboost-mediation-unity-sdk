@@ -11,11 +11,12 @@ import com.chartboost.mediation.unity.EventProcessor.LoadEventConsumer
 import com.chartboost.mediation.unity.EventProcessor.serializeEvent
 import com.chartboost.mediation.unity.EventProcessor.serializeEventWithException
 import com.chartboost.mediation.unity.EventProcessor.serializeLoadEvent
-import com.google.gson.Gson
 import com.unity3d.player.UnityPlayer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
+import org.json.JSONArray
+import org.json.JSONObject
 
 class UnityBridge {
 
@@ -42,7 +43,19 @@ class UnityBridge {
 
         @JvmStatic
         fun adapterInfo(): String {
-            return Gson().toJson(HeliumSdk.adapterInfo)
+            val jsonArray = JSONArray()
+            for (adapter in HeliumSdk.adapterInfo){
+                val json = JSONObject()
+
+                json.put("adapterVersion", adapter.partnerVersion)
+                json.put("partnerVersion", adapter.partnerVersion)
+                json.put("partnerIdentifier", adapter.partnerId)
+                json.put("partnerDisplayName", adapter.partnerDisplayName)
+
+                jsonArray.put(json)
+            }
+
+            return jsonArray.toString()
         }
 
         @JvmStatic

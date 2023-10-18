@@ -13,8 +13,5 @@ namespace Chartboost
         public string PartnerVersion { get; set; }
         public string PartnerDisplayName { get; set; }
         public string PartnerIdentifier { get; set; }
-        
-        // Android uses "PartnerId", iOS uses "PartnerIdentifier"
-        public string PartnerId {set => PartnerIdentifier = value; }
     }
 }
