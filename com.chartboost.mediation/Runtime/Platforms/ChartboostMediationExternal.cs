@@ -15,9 +15,7 @@ using Logger = Chartboost.Utilities.Logger;
 
 namespace Chartboost.Platforms
 {
-    #pragma warning disable CS0618
     internal abstract class ChartboostMediationExternal : IChartboostMediationLifeCycle, IChartboostMediationInterstitialEvents, IChartboostMediationRewardedEvents, IChartboostMediationBannerEvents
-    #pragma warning restore CS0618
     {
         public static bool IsInitialized { get; protected set; }
         
@@ -44,6 +42,7 @@ namespace Chartboost.Platforms
         
         /// Initializes the Chartboost Mediation plugin.
         /// This must be called before using any other Chartboost Mediation features.
+        [Obsolete("Init has been deprecated and will be removed in future versions of the SDK.")]
         public virtual void Init() 
             => Logger.Log(LogTag, "Init - Attempting to Initialize Chartboost Mediation SDK from ChartboostMediationSettings.");
 
@@ -132,18 +131,15 @@ namespace Chartboost.Platforms
             }
         }
         
- #pragma warning disable CS0618
+        [Obsolete("GetBannerAd has been deprecated and will be removed in future versions, use GetBannerView instead.")]
         public ChartboostMediationBannerAd GetBannerAd(string placementName, ChartboostMediationBannerAdSize size)
- #pragma warning restore CS0618
         {
             Logger.Log(LogTag, $"GetBannerAd at placement: {placementName}");
             if (!CanFetchAd(placementName))
                 return null;
             try
             {
- #pragma warning disable CS0618
                 return new ChartboostMediationBannerAd(placementName, size);
- #pragma warning restore CS0618
             }
             catch (Exception e)
             {
@@ -152,7 +148,7 @@ namespace Chartboost.Platforms
             }
         }
         
-        [Obsolete]
+        [Obsolete("GetInitializationOptions has been deprecated and replaced with StartWithOptions.")]
         protected static string[] GetInitializationOptions()
         {
             string GetEnumDescription(Enum value)
@@ -183,32 +179,45 @@ namespace Chartboost.Platforms
             return initOptions;
         }
 
-#pragma warning disable 67
+        #pragma warning disable 67
         // Life-cycle
         public virtual event ChartboostMediationEvent DidStart;
         public virtual event ChartboostMediationILRDEvent DidReceiveImpressionLevelRevenueData;
         public virtual event ChartboostMediationPartnerInitializationEvent DidReceivePartnerInitializationData;
         
         // Interstitials
+        [Obsolete("DidLoadInterstitial has been deprecated, use the new fullscreen API instead.")]
         public virtual event ChartboostMediationPlacementLoadEvent DidLoadInterstitial;
+        [Obsolete("DidShowInterstitial has been deprecated, use the new fullscreen API instead.")]
         public virtual event ChartboostMediationPlacementEvent DidShowInterstitial;
+        [Obsolete("DidCloseInterstitial has been deprecated, use the new fullscreen API instead.")]
         public virtual event ChartboostMediationPlacementEvent DidCloseInterstitial;
+        [Obsolete("DidClickInterstitial has been deprecated, use the new fullscreen API instead.")]
         public virtual event ChartboostMediationPlacementEvent DidClickInterstitial;
+        [Obsolete("DidRecordImpressionInterstitial has been deprecated, use the new fullscreen API instead.")]
         public virtual event ChartboostMediationPlacementEvent DidRecordImpressionInterstitial;
 
         // Rewarded Videos
+        [Obsolete("DidLoadRewarded has been deprecated, use the new fullscreen API instead.")]
         public virtual event ChartboostMediationPlacementLoadEvent DidLoadRewarded;
+        [Obsolete("DidShowRewarded has been deprecated, use the new fullscreen API instead.")]
         public virtual event ChartboostMediationPlacementEvent DidShowRewarded;
+        [Obsolete("DidCloseRewarded has been deprecated, use the new fullscreen API instead.")]
         public virtual event ChartboostMediationPlacementEvent DidCloseRewarded;
+        [Obsolete("DidClickRewarded has been deprecated, use the new fullscreen API instead.")]
         public virtual event ChartboostMediationPlacementEvent DidClickRewarded;
+        [Obsolete("DidRecordImpressionRewarded has been deprecated, use the new fullscreen API instead.")]
         public virtual event ChartboostMediationPlacementEvent DidRecordImpressionRewarded;
+        [Obsolete("DidReceiveReward has been deprecated, use the new fullscreen API instead.")]
         public virtual event ChartboostMediationPlacementEvent DidReceiveReward;
 
         // Banners
+        [Obsolete("DidLoadBanner has been deprecated, use the new ChartboostMediationBannerView API instead.")]
         public virtual event ChartboostMediationPlacementLoadEvent DidLoadBanner;
+        [Obsolete("DidClickBanner has been deprecated, use the new ChartboostMediationBannerView API instead.")]
         public virtual event ChartboostMediationPlacementEvent DidClickBanner;
+        [Obsolete("DidRecordImpressionBanner has been deprecated, use the new ChartboostMediationBannerView API instead.")]
         public virtual event ChartboostMediationPlacementEvent DidRecordImpressionBanner;
-#pragma warning restore 67
-        
+        #pragma warning restore 67
     }
 }

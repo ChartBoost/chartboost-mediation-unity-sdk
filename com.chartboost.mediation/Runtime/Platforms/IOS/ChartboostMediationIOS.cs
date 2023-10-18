@@ -85,12 +85,14 @@ namespace Chartboost.Platforms.IOS
             _setBannerAdCallbacks(BannerAdEvents);
         }
 
+        [Obsolete("Init has been deprecated and will be removed in future versions of the SDK.")]
         public override void Init()
         {
             base.Init();
             InitWithAppIdAndSignature(ChartboostMediationSettings.IOSAppId, ChartboostMediationSettings.IOSAppSignature);
         }
 
+        [Obsolete("InitWithAppIdAndSignature has been deprecated, please use StartWithOptions instead")]
         public override void InitWithAppIdAndSignature(string appId, string appSignature)
         {
             base.InitWithAppIdAndSignature(appId, appSignature);

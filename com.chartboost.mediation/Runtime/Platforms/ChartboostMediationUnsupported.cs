@@ -6,6 +6,7 @@ using Chartboost.Results;
 
 namespace Chartboost.Platforms
 {
+    [Obsolete("IChartboostMediationInterstitialEvents, IChartboostMediationRewardedEvents, IChartboostMediationBannerEvents has been deprecated, use the new fullscreen API instead.")]
     internal class ChartboostMediationUnsupported : ChartboostMediationExternal
     {
         private static string _userIdentifier;
@@ -16,6 +17,7 @@ namespace Chartboost.Platforms
             LogTag = "ChartboostMediation (Unsupported)";
         }
 
+        [Obsolete("Init has been deprecated and will be removed in future versions of the SDK.")]
         public override void Init()
         {
             base.Init();

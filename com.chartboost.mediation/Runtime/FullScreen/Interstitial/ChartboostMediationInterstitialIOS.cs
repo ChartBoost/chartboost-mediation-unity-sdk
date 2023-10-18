@@ -7,6 +7,7 @@ namespace Chartboost.FullScreen.Interstitial
     /// <summary>
     /// Chartboost Mediation interstitial object for iOS.
     /// </summary>
+    [Obsolete("ChartboostMediationInterstitialIOS has been deprecated, use the new fullscreen API instead.")]
     internal sealed class ChartboostMediationInterstitialIOS : ChartboostMediationFullScreenBase
     {
         private readonly IntPtr _uniqueId;

@@ -58,10 +58,6 @@ namespace Chartboost.Platforms.IOS
         [DllImport("__Internal")]
         private static extern void _setBannerAdCallbacks(ExternChartboostMediationBannerAdEvent bannerAdEvents);
 
-        
-        [DllImport("__Internal")]
-        private static extern void _setBannerCallbacks(ExternChartboostMediationPlacementLoadEvent DidLoadCallback, ExternChartboostMediationPlacementEvent DidRecordImpression, ExternChartboostMediationPlacementEvent DidClickCallback);
-
         #region LifeCycle Callbacks
         [MonoPInvokeCallback(typeof(ExternChartboostMediationEvent))]
         private static void ExternDidStart(string error) 
@@ -127,26 +123,8 @@ namespace Chartboost.Platforms.IOS
         private static void FullscreenAdEvents(long adHashCode, int eventType, string code, string message) 
             => EventProcessor.ProcessFullscreenEvent(adHashCode, eventType, code, message);
         #endregion
-        
-        #region Banner Callbacks (deprecated)
-        [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementLoadEvent))]
-        private static void ExternDidLoadBanner(string placementName, string loadId, string auctionId, string partnerId, double price, string lineItemName, string lineItemId, string error) 
-            => EventProcessor.ProcessChartboostMediationLoadEvent(placementName, loadId, auctionId, partnerId, price, lineItemName, lineItemId, error, _instance.DidLoadBanner);
 
-        [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementEvent))]
-        private static void ExternDidClickBanner(string placementName, string error) 
-            => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error, _instance.DidClickBanner);
-        
-        [MonoPInvokeCallback(typeof(ExternChartboostMediationPlacementEvent))]
-        private static void ExternDidRecordImpressionBanner(string placementName, string error) 
-            => EventProcessor.ProcessChartboostMediationPlacementEvent(placementName, error,  _instance.DidRecordImpressionBanner);
-
-        public override event ChartboostMediationPlacementLoadEvent DidLoadBanner;
-        public override event ChartboostMediationPlacementEvent DidClickBanner;
-        public override event ChartboostMediationPlacementEvent DidRecordImpressionBanner;
-        #endregion
-
-        #region Baner Callbacks
+        #region Banner Callbacks
         public delegate void ExternChartboostMediationBannerAdLoadResultEvent(int hashCode, IntPtr adHashCode, string loadId, string metricsJson, string code, string message);
         
         [MonoPInvokeCallback(typeof(ExternChartboostMediationBannerAdLoadResultEvent))]
