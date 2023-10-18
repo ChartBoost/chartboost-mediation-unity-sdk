@@ -68,7 +68,7 @@ const char * getCStringOrNull(NSString* nsString) {
     return cString;
 }
 
-const char* dictionaryToJSON(NSDictionary *data)
+const char * toJSON(id _Nonnull data)
 {
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:&error];
@@ -78,6 +78,11 @@ const char* dictionaryToJSON(NSDictionary *data)
      }
     NSString *json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     return getCStringOrNull(json);
+}
+
+const char* dictionaryToJSON(NSDictionary *data)
+{
+    return toJSON(data);
 }
 
 const void serializeEvent(ChartboostMediationError *error, ChartboostMediationEvent event)
@@ -603,8 +608,8 @@ void _chartboostMediationDiscardOversizedAds(BOOL shouldDiscard)
     [[Helium sharedHelium] setDiscardOversizedAds:shouldDiscard];
 }
 
-const char * _chartboostMediationInitializedAdaptersInfo() {
-    
+const char * _chartboostMediationInitializedAdaptersInfo()
+{
     NSMutableArray * jsonArray = [NSMutableArray array];
     
     NSArray<HeliumAdapterInfo*> * adapters =  [[Helium sharedHelium] initializedAdapterInfo];
@@ -624,15 +629,8 @@ const char * _chartboostMediationInitializedAdaptersInfo() {
     
         [jsonArray addObject:adapterDictionary];
     }
-    
-    NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonArray options:0 error:&error];
-    if (! jsonData) {
-        NSLog(@"%s: error: %@", __func__, error.localizedDescription);
-        return "";
-     }
-    NSString *json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    return getCStringOrNull(json);
+
+    return toJSON(jsonArray);
 }
 
 void * _chartboostMediationGetInterstitialAd(const char *placementName)
