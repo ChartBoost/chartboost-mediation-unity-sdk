@@ -68,7 +68,7 @@ const char * getCStringOrNull(NSString* nsString) {
     return cString;
 }
 
-const char* dictionaryToJSON(NSDictionary *data)
+const char * toJSON(id _Nonnull data)
 {
     NSError *error;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:&error];
@@ -78,6 +78,11 @@ const char* dictionaryToJSON(NSDictionary *data)
      }
     NSString *json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     return getCStringOrNull(json);
+}
+
+const char* dictionaryToJSON(NSDictionary *data)
+{
+    return toJSON(data);
 }
 
 const void serializeEvent(ChartboostMediationError *error, ChartboostMediationEvent event)
@@ -601,6 +606,31 @@ void _chartboostMediationSetTestMode(BOOL isTestModeEnabled)
 void _chartboostMediationDiscardOversizedAds(BOOL shouldDiscard)
 {
     [[Helium sharedHelium] setDiscardOversizedAds:shouldDiscard];
+}
+
+const char * _chartboostMediationInitializedAdaptersInfo()
+{
+    NSMutableArray * jsonArray = [NSMutableArray array];
+    
+    NSArray<HeliumAdapterInfo*> * adapters =  [[Helium sharedHelium] initializedAdapterInfo];
+    for (HeliumAdapterInfo *adapter in adapters) {
+        NSString * partnerVersionKey        = @"partnerVersion";      NSString * partnerVersionValue     = adapter.partnerVersion;
+        NSString * adapterVersionKey        = @"adapterVersion";      NSString * adapterVersionValue     = adapter.adapterVersion;
+        NSString * partnerIdentifierKey     = @"partnerIdentifier";   NSString * partnerIdentifierValue  = adapter.partnerIdentifier;
+        NSString * partnerDisplayNameKey    = @"partnerDisplayName";  NSString * partnerDisplayNameValue = adapter.partnerDisplayName;
+
+        NSDictionary *adapterDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+          partnerVersionValue,partnerVersionKey,
+          adapterVersionValue,adapterVersionKey,
+          partnerIdentifierValue,partnerIdentifierKey,
+          partnerDisplayNameValue,partnerDisplayNameKey,
+          nil
+        ];
+    
+        [jsonArray addObject:adapterDictionary];
+    }
+
+    return toJSON(jsonArray);
 }
 
 void * _chartboostMediationGetInterstitialAd(const char *placementName)
