@@ -93,6 +93,19 @@ namespace Chartboost.AdFormats.Banner
             protected set { }
         }
 
+        /// <inheritdoc cref="ChartboostMediationBannerViewBase.ContainerSize"/>
+        public override ChartboostMediationBannerSize? ContainerSize
+        {
+            get
+            {
+                var sizeJson = _bannerAd.Call<string>("getContainerSize");
+                if (string.IsNullOrEmpty(sizeJson))
+                    return null;
+                return JsonConvert.DeserializeObject<ChartboostMediationBannerSize>(sizeJson);
+            }
+            protected set { }
+        }
+
         /// <inheritdoc cref="ChartboostMediationBannerViewBase.HorizontalAlignment"/>
         public override ChartboostMediationBannerHorizontalAlignment HorizontalAlignment
         {

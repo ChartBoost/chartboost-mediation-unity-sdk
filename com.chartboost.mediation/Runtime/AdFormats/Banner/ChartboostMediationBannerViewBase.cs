@@ -54,6 +54,9 @@ namespace Chartboost.AdFormats.Banner
         /// <inheritdoc cref="IChartboostMediationBannerView.AdSize"/>
         public abstract ChartboostMediationBannerSize? AdSize { get; protected set; }
         
+        /// <inheritdoc cref="IChartboostMediationBannerView.ContainerSize"/>
+        public abstract ChartboostMediationBannerSize? ContainerSize { get; protected set; }
+
         /// <inheritdoc cref="IChartboostMediationBannerView.HorizontalAlignment"/>
         public abstract ChartboostMediationBannerHorizontalAlignment HorizontalAlignment { get; set; }
         

@@ -222,6 +222,26 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
         return json.toString()
     }
 
+    fun getContainerSize(): String {
+        val size = ad.getSize()
+        val sizeType = when (size?.name) {
+            "STANDARD" -> 0
+            "MEDIUM" -> 1
+            "LEADERBOARD" -> 2
+            "ADAPTIVE" -> 3
+            else -> -1
+        }
+
+        val json = JSONObject()
+        json.put("sizeType", sizeType)
+        json.put("aspectRatio", size?.aspectRatio)
+        json.put("width", (size?.width ?: 0) / displayDensity)
+        json.put("height", (size?.height ?: 0) / displayDensity)
+        json.put("type", size?.isAdaptive)
+
+        return json.toString()
+    }
+
     fun resizeToFit(axis: Int, pivotX: Float, pivotY: Float) {
         runTaskOnUiThread {
             partnerAd?.let {

@@ -85,6 +85,32 @@ const char* dictionaryToJSON(NSDictionary *data)
     return toJSON(data);
 }
 
+const char * sizeToJSON(ChartboostMediationBannerSize* size)
+{
+    NSString * aspectRatioKey =@"aspectRatio"; NSString * aspectRatioValue = [NSString stringWithFormat:@"%f", size.aspectRatio];
+    NSString * widthKey = @"width"; NSString * widthValue = [NSString stringWithFormat:@"%f", size.size.width];
+    NSString * heightKey = @"height"; NSString * heightValue = [NSString stringWithFormat:@"%f", size.size.height];
+    NSString * typeKey = @"type"; NSString * typeValue = [NSString stringWithFormat:@"%d", (int)size.type];
+    
+    NSString *sizeTypeKey = @"sizeType";
+    NSString *sizeTypeValue = @"";
+    if(size.type == 0) {  // Fixed
+        int width = size.size.width;
+        switch (width) {
+            case 320: sizeTypeValue = [NSString stringWithFormat:@"%d", 0]; break;  // Standard
+            case 300: sizeTypeValue = [NSString stringWithFormat:@"%d", 1]; break;  // Medium
+            case 728: sizeTypeValue = [NSString stringWithFormat:@"%d", 2]; break;  // Leaderboard
+            default: sizeTypeValue = [NSString stringWithFormat:@"%d", -1];break;   // Unknown
+        }
+    }
+    else{
+        sizeTypeValue = [NSString stringWithFormat:@"%d", 3];   // Adaptive
+    }
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:sizeTypeValue,sizeTypeKey,aspectRatioValue,aspectRatioKey,widthValue,widthKey,heightValue,heightKey,typeValue, typeKey, nil];
+
+    return dictionaryToJSON(dict);
+}
+
 const void serializeEvent(ChartboostMediationError *error, ChartboostMediationEvent event)
 {
     if (event == nil)
@@ -367,7 +393,6 @@ struct Implementation {
     
     return unityVC;
 }
-
 
 #pragma mark HeliumSdkDelegate
 - (void)heliumDidStartWithError:(ChartboostMediationError *)error;
@@ -1049,31 +1074,21 @@ void _chartboostMediationBannerViewSetKeywords(const void* uniqueId, const char 
     ad.keywords = formattedKeywords;
 }
 
-const char * _chartboostMediationBannerViewGetSize(const void* uniqueId){
+const char * _chartboostMediationBannerViewGetAdSize(const void* uniqueId){
     ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
+    return sizeToJSON(bannerView.size);
+}
 
-    NSString * aspectRatioKey =@"aspectRatio"; NSString * aspectRatioValue = [NSString stringWithFormat:@"%f", bannerView.size.aspectRatio];
-    NSString * widthKey = @"width"; NSString * widthValue = [NSString stringWithFormat:@"%f", bannerView.size.size.width];
-    NSString * heightKey = @"height"; NSString * heightValue = [NSString stringWithFormat:@"%f", bannerView.size.size.height];
-    NSString * typeKey = @"type"; NSString * typeValue = [NSString stringWithFormat:@"%d", (int)bannerView.size.type];
+const char * _chartboostMediationBannerViewGetContainerSize(const void* uniqueId){
+    ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
     
-    NSString *sizeTypeKey = @"sizeType";
-    NSString *sizeTypeValue = @"";
-    if(bannerView.size.type == 0) {  // Fixed
-        int width = bannerView.size.size.width;
-        switch (width) {
-            case 320: sizeTypeValue = [NSString stringWithFormat:@"%d", 0]; break;  // Standard
-            case 300: sizeTypeValue = [NSString stringWithFormat:@"%d", 1]; break;  // Medium
-            case 728: sizeTypeValue = [NSString stringWithFormat:@"%d", 2]; break;  // Leaderboard
-            default: sizeTypeValue = [NSString stringWithFormat:@"%d", -1];break;   // Unknown
-        }
-    }
-    else{
-        sizeTypeValue = [NSString stringWithFormat:@"%d", 3];   // Adaptive
-    }
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:sizeTypeValue,sizeTypeKey,aspectRatioValue,aspectRatioKey,widthValue,widthKey,heightValue,heightKey,typeValue, typeKey, nil];
-
-    return dictionaryToJSON(dict);
+    // fixed
+    if(bannerView.size.type == 0)
+        return sizeToJSON(bannerView.request.size);
+    
+    // Adaptive
+    ChartboostMediationBannerSize *size = [ChartboostMediationBannerSize adaptiveWithWidth:bannerView.frame.size.width maxHeight:bannerView.frame.size.height];
+    return sizeToJSON(size);
 }
 
 const char * _chartboostMediationBannerViewGetWinningBidInfo(const void* uniqueId){
