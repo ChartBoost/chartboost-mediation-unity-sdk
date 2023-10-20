@@ -96,6 +96,7 @@ namespace Chartboost.AdFormats.Banner
             {
                 var sizeJson = _chartboostMediationBannerViewGetContainerSize(UniqueId);
                 var size = string.IsNullOrEmpty(sizeJson) ? new ChartboostMediationBannerSize(): JsonConvert.DeserializeObject<ChartboostMediationBannerSize>(sizeJson);
+                size.BannerType = Request.Size.BannerType;
                 return size;
             }
             protected set { }

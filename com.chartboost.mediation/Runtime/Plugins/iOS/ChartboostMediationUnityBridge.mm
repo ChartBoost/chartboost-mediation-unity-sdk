@@ -1082,12 +1082,13 @@ const char * _chartboostMediationBannerViewGetAdSize(const void* uniqueId){
 const char * _chartboostMediationBannerViewGetContainerSize(const void* uniqueId){
     ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
     
-    // fixed
-    if(bannerView.size.type == 0)
-        return sizeToJSON(bannerView.request.size);
+    // Note : `bannerView.size.type` is always 0 even if load request was made with adaptive size
+    // Therefore, we always set it to adaptive here and let Unity updated it based on size type at load request
+    // if(bannerView.size.type == 0)    // Fixed
+    //      return sizeToJSON(bannerView.request.size);
     
     // Adaptive
-    ChartboostMediationBannerSize *size = [ChartboostMediationBannerSize adaptiveWithWidth:bannerView.frame.size.width maxHeight:bannerView.frame.size.height];
+    ChartboostMediationBannerSize *size = [ChartboostMediationBannerSize adaptiveWithWidth:bannerView.frame.size.width maxHeight:bannerView.frame.size.height];    
     return sizeToJSON(size);
 }
 
