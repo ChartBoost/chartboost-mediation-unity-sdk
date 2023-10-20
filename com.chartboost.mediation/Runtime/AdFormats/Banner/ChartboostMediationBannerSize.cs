@@ -31,7 +31,7 @@ namespace Chartboost.AdFormats.Banner
     public struct ChartboostMediationBannerSize
     {
         [JsonProperty("sizeType")]
-        public ChartboostMediationBannerSizeType SizeType { get; private set; }
+        public ChartboostMediationBannerSizeType SizeType { get; internal set; }
         [JsonProperty("aspectRatio")]
         public float AspectRatio;
         [JsonProperty("width")]

@@ -83,26 +83,14 @@ namespace Chartboost.AdFormats.Banner
         /// <inheritdoc cref="ChartboostMediationBannerViewBase.AdSize"/>
         public override ChartboostMediationBannerSize? AdSize
         {
-            get
-            {
-                var sizeJson = _bannerAd.Call<string>("getAdSize");
-                if (string.IsNullOrEmpty(sizeJson))
-                    return null;
-                return JsonConvert.DeserializeObject<ChartboostMediationBannerSize>(sizeJson);
-            }
+            get => _bannerAd.Call<AndroidJavaObject>("getAdSize").ToChartboostMediationBannerSize();
             protected set { }
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerViewBase.ContainerSize"/>
         public override ChartboostMediationBannerSize? ContainerSize
         {
-            get
-            {
-                var sizeJson = _bannerAd.Call<string>("getContainerSize");
-                if (string.IsNullOrEmpty(sizeJson))
-                    return null;
-                return JsonConvert.DeserializeObject<ChartboostMediationBannerSize>(sizeJson);
-            }
+            get => _bannerAd.Call<AndroidJavaObject>("getContainerSize").ToChartboostMediationBannerSize();
             protected set { }
         }
 
