@@ -1,5 +1,7 @@
 #if UNITY_ANDROID
+using System;
 using System.Collections.Generic;
+using Chartboost.AdFormats.Banner;
 using Chartboost.Events;
 using Chartboost.Platforms.Android;
 using Newtonsoft.Json;
@@ -36,6 +38,30 @@ namespace Chartboost.Utilities
             return biddingInfo;
         }
 
+        public static ChartboostMediationBannerSize ToChartboostMediationBannerSize(this AndroidJavaObject source)
+        {
+            if (source == null)
+                return new ChartboostMediationBannerSize();
+            
+            var name = source.Get<string>("name");
+            var width = source.Get<int>("width");
+            var height = source.Get<int>("height");
+            var size = name switch
+            {
+                "STANDARD" => ChartboostMediationBannerSize.Standard, 
+                "MEDIUM" => ChartboostMediationBannerSize.MediumRect,
+                "LEADERBOARD" => ChartboostMediationBannerSize.Leaderboard,
+                "ADAPTIVE" => ChartboostMediationBannerSize.Adaptive(width, height),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
+            // if we get adaptive size of size 0X0 then it is undefined/unknown
+            if (size is { SizeType: ChartboostMediationBannerSizeType.Adaptive, Width: 0, Height: 0 })
+                size.SizeType = ChartboostMediationBannerSizeType.Unknown;
+            
+            return size;
+        }
+        
         public static string ImpressionDataToJsonString(this AndroidJavaObject impressionData)
         {
             var placementName = impressionData.Get<string>("placementId");

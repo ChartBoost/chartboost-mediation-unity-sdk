@@ -195,32 +195,22 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
         }
     }
 
-    fun getAdSize(): String {
-        val size = ad.getSize()
-        val creativeSize = partnerAd?.let {
-            Size((it.width / displayDensity).toInt(), (it.height / displayDensity).toInt())
-        }
-
-        // if partnerAd is not available then adSize is unknown
-        val sizeType = partnerAd?.let {
-            when (size?.name) {
-                "STANDARD" -> 0
-                "MEDIUM" -> 1
-                "LEADERBOARD" -> 2
-                "ADAPTIVE" -> 3
-                else -> -1
+    fun getAdSize(): HeliumBannerAd.HeliumBannerSize {
+        val width = partnerAd?.let { (it.width/displayDensity).toInt() } ?: run { 0 }
+        val height = partnerAd?.let { (it.height/displayDensity).toInt() } ?: run { 0 }
+        return  when (ad.getSize()?.name) {
+            "STANDARD" -> HeliumBannerAd.HeliumBannerSize.STANDARD
+            "MEDIUM" -> HeliumBannerAd.HeliumBannerSize.MEDIUM
+            "LEADERBOARD" -> HeliumBannerAd.HeliumBannerSize.LEADERBOARD
+            "ADAPTIVE" -> HeliumBannerAd.HeliumBannerSize.bannerSize(width, height)
+            else -> {
+                Log.w(TAG, "Size not defined, set to ADAPTIVE(0x0) by default")
+                HeliumBannerAd.HeliumBannerSize.bannerSize(0,0)
             }
-        }?: run { -1 }  // -1 => Unknown
-
-        val json = JSONObject()
-        json.put("sizeType", sizeType)
-        json.put("aspectRatio", size?.aspectRatio)
-        json.put("width", creativeSize?.width ?: 0)
-        json.put("height", creativeSize?.height ?: 0)
-        json.put("type", size?.isAdaptive)
-
-        return json.toString()
+        }
     }
+
+    fun getContainerSize(): HeliumBannerAd.HeliumBannerSize? = ad.getSize()
 
     fun resizeToFit(axis: Int, pivotX: Float, pivotY: Float) {
         runTaskOnUiThread {

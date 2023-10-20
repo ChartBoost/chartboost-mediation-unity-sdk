@@ -82,8 +82,21 @@ namespace Chartboost.AdFormats.Banner
         {
             get
             {
-                var sizeJson = _chartboostMediationBannerViewGetSize(UniqueId);
+                var sizeJson = _chartboostMediationBannerViewGetAdSize(UniqueId);
                 var size = string.IsNullOrEmpty(sizeJson) ? new ChartboostMediationBannerSize(): JsonConvert.DeserializeObject<ChartboostMediationBannerSize>(sizeJson);
+                return size;
+            }
+            protected set { }
+        }
+
+        /// <inheritdoc cref="ChartboostMediationBannerViewBase.ContainerSize"/>
+        public override ChartboostMediationBannerSize? ContainerSize
+        {
+            get
+            {
+                var sizeJson = _chartboostMediationBannerViewGetContainerSize(UniqueId);
+                var size = string.IsNullOrEmpty(sizeJson) ? new ChartboostMediationBannerSize(): JsonConvert.DeserializeObject<ChartboostMediationBannerSize>(sizeJson);
+                size.BannerType = Request.Size.BannerType;
                 return size;
             }
             protected set { }
@@ -199,7 +212,10 @@ namespace Chartboost.AdFormats.Banner
         private static extern void _chartboostMediationBannerViewSetKeywords(IntPtr uniqueId, string keywords);
 
         [DllImport("__Internal")]
-        private static extern string _chartboostMediationBannerViewGetSize(IntPtr uniqueId);
+        private static extern string _chartboostMediationBannerViewGetAdSize(IntPtr uniqueId);
+
+        [DllImport("__Internal")]
+        private static extern string _chartboostMediationBannerViewGetContainerSize(IntPtr uniqueId);
 
         [DllImport("__Internal")] [CanBeNull]
         private static extern string _chartboostMediationBannerViewGetWinningBidInfo(IntPtr uniqueId);

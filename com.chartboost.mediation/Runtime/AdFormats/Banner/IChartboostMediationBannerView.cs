@@ -68,6 +68,11 @@ namespace Chartboost.AdFormats.Banner
         abstract ChartboostMediationBannerSize? AdSize { get; }
         
         /// <summary>
+        /// The size of container. Note that this may change if <see cref="ResizeToFit"/> is called
+        /// </summary>
+        abstract ChartboostMediationBannerSize? ContainerSize { get; }
+        
+        /// <summary>
         /// The horizontal alignment of the ad within its container.
         /// </summary>
         abstract ChartboostMediationBannerHorizontalAlignment HorizontalAlignment { get; set; }
