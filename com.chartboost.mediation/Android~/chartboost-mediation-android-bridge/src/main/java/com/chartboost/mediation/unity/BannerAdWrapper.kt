@@ -19,7 +19,6 @@ import com.chartboost.heliumsdk.ad.HeliumBannerAdListener
 import com.chartboost.heliumsdk.domain.ChartboostMediationAdException
 import com.chartboost.heliumsdk.domain.Keywords
 import com.unity3d.player.UnityPlayer
-import org.json.JSONObject
 import kotlin.math.roundToInt
 
 class BannerAdWrapper(private val ad: HeliumBannerAd) {
@@ -265,7 +264,6 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
                 }
         }
     }
-    
 
     fun setDraggability(canDrag: Boolean) {
         runTaskOnUiThread {
@@ -454,43 +452,13 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
             run {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     val displayCutout: DisplayCutout? = windowInsets.displayCutout
-                    if (displayCutout != null) {
-                        var x = 0
-                        var y = 0
-                        when(screenLocation) {
-                            // Top-left
-                            0 -> {
-                                x= displayCutout.safeInsetLeft
-                                y = displayCutout.safeInsetTop
-                            }
-                            // Top-center
-                            1 -> {
-                                y = displayCutout.safeInsetTop
-                            }
-                            // Top-right
-                            2 -> {
-                                x= displayCutout.safeInsetRight
-                                y = displayCutout.safeInsetTop
-                            }
-                            // center
-                            3 -> {}
-                            // bottom-left
-                            4 -> {
-                                x= displayCutout.safeInsetLeft
-                                y = displayCutout.safeInsetBottom
-                            }
-                            // bottom-center
-                            5 -> {
-                                y = displayCutout.safeInsetBottom
-                            }
-                            // bottom-right
-                            6 -> {
-                                x= displayCutout.safeInsetRight
-                                y = displayCutout.safeInsetBottom
-                            }
-                        }
-                        ad.x = x.toFloat()
-                        ad.y = y.toFloat()
+                    displayCutout?.let{
+                        bannerLayout?.setPadding(
+                            it.safeInsetLeft,
+                            it.safeInsetTop,
+                            it.safeInsetRight,
+                            it.safeInsetBottom
+                        )
                     }
                 }
                 windowInsets
