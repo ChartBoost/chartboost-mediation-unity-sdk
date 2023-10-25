@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Chartboost.Editor.Adapters;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -20,9 +21,6 @@ namespace Chartboost.Editor.Settings
                 var settingsWindow = GetWindow<SettingsWindow>("Settings", typeof(AdaptersWindow));
                 settingsWindow.minSize = Constants.MinWindowSize;
                 _instance = settingsWindow;
-                var scriptableInstance = ChartboostMediationSettings.Instance == null;
-                if (!scriptableInstance)
-                    Debug.LogWarning($"[Settings Window] Could not fetch ChartboostMediationSettings instance.");
                 return _instance;
             }
         }
@@ -38,6 +36,21 @@ namespace Chartboost.Editor.Settings
             var scrollView = new ScrollView();
             scrollView.contentContainer.style.flexDirection = FlexDirection.Column;
             scrollView.contentContainer.style.flexWrap = Wrap.NoWrap;
+
+            var objectField = new ObjectField {
+                objectType = typeof(ChartboostMediationSettings),
+                value = ChartboostMediationSettings.Instance
+            };
+
+            objectField.RegisterValueChangedCallback(value =>
+            {
+                ChartboostMediationSettings.Instance = value.newValue as ChartboostMediationSettings;
+                root.Clear();
+                Initialize();
+            });
+            
+            scrollView.Add(objectField);
+            
             
             var settingsLabel = new Label("SDK Integration Settings") {
                 name = "title",

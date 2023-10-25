@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using UnityEngine;
 using System.IO;
+using UnityEngine.Scripting;
 using UnityEngine.Serialization;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -41,6 +42,7 @@ namespace Chartboost
     /// <summary>
     /// Chartboost Mediation Unity SDK Settings as an scriptable object with accessors
     /// </summary>
+    [CreateAssetMenu(fileName = "ChartboostMediationSettings", menuName = "Chartboost Mediation/Create ChartboostMediationSettings")]
     public class ChartboostMediationSettings : ScriptableObject
     {
         private const string Package = "com.chartboost.mediation";
@@ -99,6 +101,8 @@ namespace Chartboost
 #endif
                 return _instance;
             }
+            [Preserve]
+            set => _instance = value;
         }
 
 #if UNITY_EDITOR
@@ -120,7 +124,7 @@ namespace Chartboost
         [SerializeField] private bool isAutomaticInitEnabled;
         [SerializeField] private bool isSkAdNetworkResolutionEnabled;
         #pragma warning disable CS0618
-        [SerializeField] private ChartboostMediationPartners partnerKillSwitch = ChartboostMediationPartners.None;
+        private ChartboostMediationPartners _partnerKillSwitch = ChartboostMediationPartners.None;
         #pragma warning restore CS0618
         [SerializeField] private bool disableBitcode = false;
         [SerializeField] private string applovinSDKKey = DefaultSDKKeyValue; 
@@ -133,8 +137,8 @@ namespace Chartboost
         [Obsolete("PartnerKillSwitch has been deprecated and will be removed in future versions, please use StartWithOptions instead.")]
         public static ChartboostMediationPartners PartnerKillSwitch
         {
-            get => Instance.partnerKillSwitch;
-            set => Instance.partnerKillSwitch = value;
+            get => Instance._partnerKillSwitch;
+            set => Instance._partnerKillSwitch = value;
         }
 
         /// <summary>
