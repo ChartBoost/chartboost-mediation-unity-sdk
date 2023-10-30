@@ -178,7 +178,8 @@ namespace Chartboost.Editor.Adapters
                 Instance.rootVisualElement.Clear();
             _mediationPackage = Utilities.FindPackage(AdapterWindowConstants.ChartboostMediationPackageName);
             AdapterDataSource.Update();
-            Instance.CreateGUI();
+            if (Instance != null)
+                Instance.CreateGUI();
             if (!Application.isBatchMode|| !ignore)
                 EditorUtility.DisplayDialog("Chartboost Mediation", "Adapter update completed.", "ok");
         }

@@ -6,7 +6,6 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Chartboost.Banner;
 using Chartboost.Requests;
-using Chartboost.Results;
 using Chartboost.Utilities;
 using JetBrains.Annotations;
 using Newtonsoft.Json;

@@ -198,10 +198,10 @@ namespace Chartboost.Editor
                 firstWindow.Show();
             }
 
-            await Task.Delay(5);
 
             for (var i = 1; i < sortedWindows.Count; i++)
             {
+                await Task.Delay(3);
                 var type = sortedWindows[i].Type;
                 var nextWindowName = type.Name.Replace("Window", "");
                 var priority = sortedWindows[i].Priority;
