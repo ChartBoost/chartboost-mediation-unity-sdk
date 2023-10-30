@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Chartboost.Banner;
 using Chartboost.Requests;
-using Chartboost.Results;
 
 namespace Chartboost.AdFormats.Banner
 {
@@ -41,18 +40,11 @@ namespace Chartboost.AdFormats.Banner
         public override ChartboostMediationBannerVerticalAlignment VerticalAlignment { get; set; }
         
         /// <inheritdoc cref="ChartboostMediationBannerViewBase.Load(Chartboost.Requests.ChartboostMediationBannerAdLoadRequest,Chartboost.Banner.ChartboostMediationBannerAdScreenLocation)"/>
-        public override Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, ChartboostMediationBannerAdScreenLocation screenLocation)
-        {
-            base.Load(request, screenLocation);
-            return Task.FromResult(new ChartboostMediationBannerAdLoadResult(new ChartboostMediationError("Unsupported Platform")));
-        }
+        public override Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, ChartboostMediationBannerAdScreenLocation screenLocation) 
+            => Task.FromResult(new ChartboostMediationBannerAdLoadResult(new ChartboostMediationError("Unsupported Platform")));
 
         /// <inheritdoc cref="ChartboostMediationBannerViewBase.Load(Chartboost.Requests.ChartboostMediationBannerAdLoadRequest,float, float)"/>
-        public override Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, float x, float y)
-        {
-            base.Load(request, x, y);
-            return Task.FromResult(new ChartboostMediationBannerAdLoadResult(new ChartboostMediationError("Unsupported Platform")));
-        }
-
+        public override Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, float x, float y) 
+            => Task.FromResult(new ChartboostMediationBannerAdLoadResult(new ChartboostMediationError("Unsupported Platform")));
     }
 }

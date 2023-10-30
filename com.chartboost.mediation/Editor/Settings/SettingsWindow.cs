@@ -1,30 +1,17 @@
+#if !NO_SETTINGS_WINDOW
 using System;
 using System.Linq;
-using Chartboost.Editor.Adapters;
-using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Chartboost.Editor.Settings
 {
-    public class SettingsWindow : EditorWindow
+    [CustomEditorWindow(typeof(SettingsWindow), WindowPriority)]
+    public class SettingsWindow : CustomEditorWindow<SettingsWindow>
     {
-        private static SettingsWindow _instance;
-        
-        internal static SettingsWindow Instance {
-            get
-            {
-                if (_instance != null)
-                    return _instance;
-                
-                var settingsWindow = GetWindow<SettingsWindow>("Settings", typeof(AdaptersWindow));
-                settingsWindow.minSize = Constants.MinWindowSize;
-                _instance = settingsWindow;
-                return _instance;
-            }
-        }
-        
+        private const int WindowPriority = 1;
+
         public void CreateGUI() => Initialize();
 
         private void Initialize()
@@ -235,3 +222,4 @@ namespace Chartboost.Editor.Settings
         }
     }
 }
+#endif

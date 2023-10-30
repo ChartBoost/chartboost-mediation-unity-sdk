@@ -8,8 +8,13 @@ namespace Chartboost.Requests
     /// </summary>
     public sealed class ChartboostMediationFullscreenAdLoadRequest : ChartboostMediationAdLoadRequest
     {
-        public ChartboostMediationFullscreenAdLoadRequest(string placementName, Dictionary<string, string> keywords) : base(placementName, keywords) { }
+        public ChartboostMediationFullscreenAdLoadRequest(string placementName, Dictionary<string, string> keywords) : base(placementName) => Keywords = keywords;
 
+        /// <summary>
+        /// The keywords targeted for the ad.
+        /// </summary>
+        public Dictionary<string, string> Keywords { get;  }
+        
         /// <summary>
         /// Called when the ad executes its click-through. This may happen multiple times for the same ad.
         /// </summary>

@@ -1,3 +1,4 @@
+#if !NO_ADAPTERS_WINDOW
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -177,7 +178,7 @@ namespace Chartboost.Editor.Adapters
                 Instance.rootVisualElement.Clear();
             _mediationPackage = Utilities.FindPackage(AdapterWindowConstants.ChartboostMediationPackageName);
             AdapterDataSource.Update();
-            Initialize();
+            Instance.CreateGUI();
             if (!Application.isBatchMode|| !ignore)
                 EditorUtility.DisplayDialog("Chartboost Mediation", "Adapter update completed.", "ok");
         }
@@ -188,7 +189,7 @@ namespace Chartboost.Editor.Adapters
 
             if (Application.isBatchMode)
                 return same;
-
+            
             var root = Instance.rootVisualElement;
             switch (same)
             {
@@ -228,3 +229,4 @@ namespace Chartboost.Editor.Adapters
         }
     }
 }
+#endif

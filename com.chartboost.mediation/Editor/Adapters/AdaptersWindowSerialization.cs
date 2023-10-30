@@ -1,3 +1,4 @@
+#if !NO_ADAPTERS_WINDOW
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -268,3 +269,4 @@ namespace Chartboost.Editor.Adapters
         }
     }
 }
+#endif

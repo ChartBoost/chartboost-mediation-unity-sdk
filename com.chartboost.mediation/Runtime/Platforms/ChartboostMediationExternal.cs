@@ -8,7 +8,6 @@ using Chartboost.Banner;
 using Chartboost.FullScreen.Interstitial;
 using Chartboost.FullScreen.Rewarded;
 using Chartboost.Requests;
-using Chartboost.Results;
 using Newtonsoft.Json;
 using UnityEngine;
 using Logger = Chartboost.Utilities.Logger;

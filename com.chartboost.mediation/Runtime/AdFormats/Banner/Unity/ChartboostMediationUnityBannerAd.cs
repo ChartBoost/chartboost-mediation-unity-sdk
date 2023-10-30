@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Chartboost.Requests;
-using Chartboost.Results;
 using Chartboost.Utilities;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -12,9 +11,9 @@ using Logger = Chartboost.Utilities.Logger;
 
 namespace Chartboost.AdFormats.Banner.Unity
 {
-    public delegate void ChartboostMediationUnityBannerAdEvent();
+    public delegate void ChartboostMediationUnityBannerAdEvent(ChartboostMediationUnityBannerAd unityBannerAd);
 
-    public delegate void ChartboostMediationUnityBannerAdDragEvent(float x, float y);
+    public delegate void ChartboostMediationUnityBannerAdDragEvent(ChartboostMediationUnityBannerAd unityBannerAd, float x, float y);
 
     /// <summary>
     /// The ResizeOption enum 
@@ -31,24 +30,24 @@ namespace Chartboost.AdFormats.Banner.Unity
     public partial class ChartboostMediationUnityBannerAd : MonoBehaviour
     {
         /// <summary>
-        /// Called when ad is loaded within this gameobject. This will be called for each refresh when auto-refresh is enabled.
+        /// Called when ad is loaded within this GameObject. This will be called for each refresh when auto-refresh is enabled.
         /// </summary>
-        public ChartboostMediationUnityBannerAdEvent DidLoad;
+        public event ChartboostMediationUnityBannerAdEvent DidLoad;
         
         /// <summary>
         /// Called when the ad executes its click-through. This may happen multiple times for the same ad.
         /// </summary>
-        public ChartboostMediationUnityBannerAdEvent DidClick;
+        public event ChartboostMediationUnityBannerAdEvent DidClick;
         
         /// <summary>
         /// Called when the ad impression occurs.
         /// </summary>
-        public ChartboostMediationUnityBannerAdEvent DidRecordImpression;
+        public event ChartboostMediationUnityBannerAdEvent DidRecordImpression;
         
         /// <summary>
-        ///  Called when this gameobject is dragged on screen.
+        ///  Called when this GameObject is dragged on screen.
         /// </summary>
-        public ChartboostMediationUnityBannerAdDragEvent DidDrag;
+        public event ChartboostMediationUnityBannerAdDragEvent DidDrag;
         
         [SerializeField] 
         private string placementName;
@@ -234,7 +233,7 @@ namespace Chartboost.AdFormats.Banner.Unity
         #endregion
         
         /// <summary>
-        /// Locks the size of this gameobject based on the provided fixed type. Works only for fixed size types (Standard, Medium, Leaderboard)  
+        /// Locks the size of this GameObject based on the provided fixed type. Works only for fixed size types (Standard, Medium, Leaderboard)  
         /// </summary>
         /// <param name="sizeType"></param>
         public void LockToFixedSize(ChartboostMediationBannerSizeType sizeType)
@@ -274,23 +273,19 @@ namespace Chartboost.AdFormats.Banner.Unity
         /// <summary>
         /// Returns json representation of current state of the object
         /// </summary>
-        public override string ToString()
-        {
-            base.ToString();
-            return JsonConvert.SerializeObject(BannerView);
-        }
+        public override string ToString() => JsonConvert.SerializeObject(BannerView);
 
         #region Events
 
         private void OnLoad(IChartboostMediationBannerView bannerView)
         {
-            DidLoad?.Invoke();
+            DidLoad?.Invoke(this);
             Resize();
         }
 
-        private void OnRecordImpression(IChartboostMediationBannerView bannerView) => DidRecordImpression?.Invoke();
+        private void OnRecordImpression(IChartboostMediationBannerView bannerView) => DidRecordImpression?.Invoke(this);
 
-        private void OnClick(IChartboostMediationBannerView bannerView) => DidClick?.Invoke();
+        private void OnClick(IChartboostMediationBannerView bannerView) => DidClick?.Invoke(this);
 
         private void OnDrag(IChartboostMediationBannerView bannerView, float x, float y)
         {
@@ -304,7 +299,7 @@ namespace Chartboost.AdFormats.Banner.Unity
             y -= heightInPixels - heightInPixels * pivot.y;
 
             transform.position = new Vector3(x, y, 0);
-            DidDrag?.Invoke(x, y);
+            DidDrag?.Invoke(this, x, y);
         }
 
         #endregion

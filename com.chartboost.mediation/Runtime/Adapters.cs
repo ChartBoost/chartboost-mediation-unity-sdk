@@ -1,5 +1,8 @@
 namespace Chartboost
 {
+    /// <summary>
+    /// List of Adapter identifiers to be utilized when calling <see cref="ChartboostMediation.StartWithOptions"/>
+    /// </summary>
     public static class Adapters
     {
         public const string AdColony = "adcolony";

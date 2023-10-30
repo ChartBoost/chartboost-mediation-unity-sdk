@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Chartboost.Banner;
 using Chartboost.Events;
 using Chartboost.Requests;
-using Chartboost.Results;
 using Chartboost.Utilities;
 using Newtonsoft.Json;
 using UnityEngine;

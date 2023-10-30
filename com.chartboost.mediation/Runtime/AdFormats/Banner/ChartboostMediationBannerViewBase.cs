@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Chartboost.Banner;
 using Chartboost.Platforms;
 using Chartboost.Requests;
-using Chartboost.Results;
 using Chartboost.Utilities;
 using UnityEngine;
 using Logger = Chartboost.Utilities.Logger;
@@ -67,28 +66,28 @@ namespace Chartboost.AdFormats.Banner
         public virtual Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, ChartboostMediationBannerAdScreenLocation screenLocation)
         {
             Request = request;
+            var error = new ChartboostMediationError("Chartboost Mediation is not ready or placement is invalid.");
+            var adLoadResult = new ChartboostMediationBannerAdLoadResult(error);
+
             if (!CanFetchAd(request.PlacementName))
-            {
-                var error = new ChartboostMediationError("Chartboost Mediation is not ready or placement is invalid.");
-                var adLoadResult = new ChartboostMediationBannerAdLoadResult(error);
                 return Task.FromResult(adLoadResult);
-            }
+            
             Logger.Log(LogTag, $"Loading banner ad for placement {request.PlacementName} and size {request.Size.SizeType} at {screenLocation}");
-            return Task.FromResult<ChartboostMediationBannerAdLoadResult>(null);
+            return Task.FromResult(adLoadResult);
         }
 
         /// <inheritdoc cref="IChartboostMediationBannerView.Load(Chartboost.Requests.ChartboostMediationBannerAdLoadRequest,float, float)"/>
         public virtual Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, float x, float y)
         {
             Request = request;
+            var error = new ChartboostMediationError("Chartboost Mediation is not ready or placement is invalid.");
+            var adLoadResult = new ChartboostMediationBannerAdLoadResult(error);
+            
             if (!CanFetchAd(request.PlacementName))
-            {
-                var error = new ChartboostMediationError("Chartboost Mediation is not ready or placement is invalid.");
-                var adLoadResult = new ChartboostMediationBannerAdLoadResult(error);
                 return Task.FromResult(adLoadResult);
-            }
+            
             Logger.Log(LogTag, $"Loading banner ad for placement {request.PlacementName} and size {request.Size.SizeType} at ({x}, {y})");
-            return Task.FromResult<ChartboostMediationBannerAdLoadResult>(null);
+            return Task.FromResult(adLoadResult);
         }
         
         /// <inheritdoc cref="IChartboostMediationBannerView.ResizeToFit"/>

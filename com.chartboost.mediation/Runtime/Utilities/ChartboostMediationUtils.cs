@@ -8,6 +8,8 @@ namespace Chartboost.Utilities
 {
     public static class ChartboostMediationUtils
     {
+        private const string CanvasName = "Canvas";
+        
         public static Canvas GetCanvas()
         {
             // Find the root-level canvas with highest sorting order
@@ -21,7 +23,7 @@ namespace Chartboost.Utilities
             if (canvas == null)
             {
                 // This canvas is similar to the default canvas that unity creates when we try to add an UI element with no canvas in scene
-                canvas = new GameObject("Canvas").AddComponent<Canvas>();
+                canvas = new GameObject(CanvasName).AddComponent<Canvas>();
                 canvas.renderMode = RenderMode.ScreenSpaceOverlay;
                 
                 canvas.gameObject.AddComponent<CanvasScaler>().uiScaleMode = CanvasScaler.ScaleMode.ConstantPixelSize;

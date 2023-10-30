@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Chartboost.Banner;
 using Chartboost.Requests;
-using Chartboost.Results;
 using UnityEngine;
 
 namespace Chartboost.AdFormats.Banner

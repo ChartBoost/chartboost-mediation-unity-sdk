@@ -1,7 +1,7 @@
+#if !NO_ADAPTERS_WINDOW
 using System;
 using System.Collections.Generic;
 using Chartboost.Editor.Adapters.Serialization;
-using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -9,7 +9,8 @@ using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 namespace Chartboost.Editor.Adapters
 {
-    public partial class AdaptersWindow : EditorWindow
+    [CustomEditorWindow(typeof(AdaptersWindow), 0)]
+    public partial class AdaptersWindow : CustomEditorWindow<AdaptersWindow>
     {
         /// <summary>
         /// Currently loaded partner networks versions.
@@ -36,28 +37,10 @@ namespace Chartboost.Editor.Adapters
         
         private static PackageInfo ChartboostMediationPackage => _mediationPackage ??= Utilities.FindPackage(AdapterWindowConstants.ChartboostMediationPackageName);
         private static PackageInfo _mediationPackage;
-        
-        internal static AdaptersWindow Instance {
-            get
-            {
-                if (_instance != null)
-                    return _instance;
-                
-                var adaptersWindow = GetWindow<AdaptersWindow>("Adapters");
-                adaptersWindow.minSize = Constants.MinWindowSize;
-                _instance = adaptersWindow;
-                return _instance;
-            }
-        }
 
-        private static AdaptersWindow _instance;
+        private static VisualElement _root;
 
-        public void CreateGUI() => Initialize();
-
-        /// <summary>
-        /// Initializes GUIComponents
-        /// </summary>
-        private static void Initialize()
+        public void CreateGUI()
         {
             PartnerSDKVersions.Clear();
             UserSelectedVersions.Clear();
@@ -66,7 +49,7 @@ namespace Chartboost.Editor.Adapters
             LoadSelections();
             
             // Each editor window contains a root VisualElement object
-            var root = Instance.rootVisualElement;
+            var root = rootVisualElement;
             root.styleSheets.Add(AdapterWindowConstants.StyleSheet.LoadAsset<StyleSheet>());
             root.name = "body";
             
@@ -277,3 +260,4 @@ namespace Chartboost.Editor.Adapters
         }
     }
 }
+#endif

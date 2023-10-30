@@ -8,7 +8,6 @@ using Chartboost.FullScreen.Interstitial;
 using Chartboost.FullScreen.Rewarded;
 using Chartboost.Platforms;
 using Chartboost.Requests;
-using Chartboost.Results;
 #if UNITY_ANDROID
 using Chartboost.Platforms.Android;
 #elif UNITY_IOS

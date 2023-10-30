@@ -335,22 +335,22 @@ public class Demo : MonoBehaviour
 
     }
 
-    private void DidLoadBanner()
+    private void DidLoadBanner(ChartboostMediationUnityBannerAd unityBannerAd)
     {
-        Log($"DidLoadBanner {_bannerAd}");
+        Log($"DidLoadBanner {unityBannerAd}");
     }
     
-    private void DidRecordImpressionBanner()
+    private void DidRecordImpressionBanner(ChartboostMediationUnityBannerAd unityBannerAd)
     {
-        Log($"DidRecordImpressionBanner {_bannerAd}");
+        Log($"DidRecordImpressionBanner {unityBannerAd}");
     }
 
-    private void DidClickBanner()
+    private void DidClickBanner(ChartboostMediationUnityBannerAd unityBannerAd)
     {
-        Log($"DidClickBanner {_bannerAd}");
+        Log($"DidClickBanner {unityBannerAd}");
     }
     
-    private void DidDragBanner(float x, float y)
+    private void DidDragBanner(ChartboostMediationUnityBannerAd unityBannerAd, float x, float y)
     {
         // This gets called for each frame whenever the banner is dragged on screen
     }

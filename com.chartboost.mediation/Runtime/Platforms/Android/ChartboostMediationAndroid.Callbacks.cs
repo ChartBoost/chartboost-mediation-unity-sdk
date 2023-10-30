@@ -4,7 +4,6 @@ using Chartboost.AdFormats.Banner;
 using Chartboost.AdFormats.Fullscreen;
 using Chartboost.Events;
 using Chartboost.Requests;
-using Chartboost.Results;
 using Chartboost.Utilities;
 using UnityEngine;
 // ReSharper disable InconsistentNaming
