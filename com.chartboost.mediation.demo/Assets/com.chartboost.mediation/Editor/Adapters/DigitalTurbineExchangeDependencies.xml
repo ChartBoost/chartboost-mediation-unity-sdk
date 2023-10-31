@@ -15,3 +15,4 @@
         <iosPod name="Fyber_Marketplace_SDK" version="~> 8.2.1" addToAllTargets="true"/>
     </iosPods>
 </dependencies>
+

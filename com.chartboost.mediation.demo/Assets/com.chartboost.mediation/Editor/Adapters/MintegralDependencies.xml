@@ -30,3 +30,4 @@
         <iosPod name="MintegralAdSDK" version="~> 7.3.0" addToAllTargets="false"/>
     </iosPods>
 </dependencies>
+

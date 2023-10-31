@@ -15,3 +15,4 @@
         <iosPod name="HyprMX" version="~> 6.2.0" addToAllTargets="true"/>
     </iosPods>
 </dependencies>
+

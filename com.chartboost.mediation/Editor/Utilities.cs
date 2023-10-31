@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEditor.PackageManager;
+using UnityEngine;
 using Object = UnityEngine.Object;
 using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
@@ -26,7 +27,6 @@ namespace Chartboost.Editor
         public static string RemoveWhitespace(this string source) 
             => string.IsNullOrEmpty(source) ? source : SWhitespace.Replace(source, string.Empty);
 
-        public static T LoadAsset<T>(this string path) where T : Object => path.FileExist() ? AssetDatabase.LoadAssetAtPath<T>(path) : null;
         public static string ReadAllText(this string path) => !path.FileExist() ? null : File.ReadAllText(path);
 
         public static string[] ReadAllLines(this string path) => !path.FileExist() ? null : File.ReadAllLines(path);
