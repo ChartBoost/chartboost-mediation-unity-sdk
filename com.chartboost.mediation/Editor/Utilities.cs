@@ -13,15 +13,6 @@ namespace Chartboost.Editor
 {
     public static class Utilities
     {
-        public static PackageInfo FindPackage(string packageName)
-        {
-            var packages = Client.List(false, false);
-            while (!packages.IsCompleted) { }
-            var packageInfos = packages.Result.ToList();
-            var desiredPackage = packageInfos.Find(x => x.name == packageName);
-            return desiredPackage;
-        }
-
         private static readonly Regex SWhitespace = new Regex(@"\s+");
 
         public static string RemoveWhitespace(this string source) 

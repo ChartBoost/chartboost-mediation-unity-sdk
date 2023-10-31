@@ -28,7 +28,7 @@ namespace Chartboost.Editor.EditorWindows.Adapters
 
             if (selections == null)
             {
-                MediationSelection = ChartboostMediationPackage.version;
+                MediationSelection = ChartboostMediation.Version;
                 UpdateSavedVersions();
                 return;
             }

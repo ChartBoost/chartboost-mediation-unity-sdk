@@ -124,17 +124,16 @@ namespace Chartboost.Editor.EditorWindows.Adapters
             if (!Application.isBatchMode && _warningButton != null)
                 _warningButton.RemoveFromHierarchy();
 
-            if (!string.IsNullOrEmpty(MediationSelection) && ChartboostMediationPackage != null)
+            if (!string.IsNullOrEmpty(MediationSelection))
             {
                 var version = new Version(MediationSelection);
-                var packageVersion = new Version(ChartboostMediationPackage.version);
+                var packageVersion = new Version(ChartboostMediation.Version);
                 
                 if (PathToMainDependency.FileExist() && version == packageVersion)
                     return false;
             }
 
-            if (ChartboostMediationPackage != null)
-                MediationSelection = ChartboostMediationPackage.version;
+            MediationSelection = ChartboostMediation.Version;
             GenerateChartboostMediationDependency();
             return true;
         }
@@ -176,7 +175,6 @@ namespace Chartboost.Editor.EditorWindows.Adapters
         {
             if (!Application.isBatchMode)
                 Instance.rootVisualElement.Clear();
-            _mediationPackage = Utilities.FindPackage(ChartboostMediationPackageName);
             AdapterDataSource.Update();
             if (Instance != null)
                 Instance.CreateGUI();

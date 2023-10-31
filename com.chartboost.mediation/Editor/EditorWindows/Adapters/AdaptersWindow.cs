@@ -35,9 +35,6 @@ namespace Chartboost.Editor.EditorWindows.Adapters
         private static Button _saveButton;
         private static Button _warningButton;
         
-        private static PackageInfo ChartboostMediationPackage => _mediationPackage ??= Utilities.FindPackage(ChartboostMediationPackageName);
-        private static PackageInfo _mediationPackage;
-
         private static VisualElement _root;
 
         public void CreateGUI()
@@ -74,13 +71,13 @@ namespace Chartboost.Editor.EditorWindows.Adapters
             
             if (string.IsNullOrEmpty(MediationSelection) || !PathToMainDependency.FileExist())
             {
-                _warningButton.tooltip = $"Dependencies for Chartboost Mediation {ChartboostMediationPackage.version} have not been found. Press to add.";
+                _warningButton.tooltip = $"Dependencies for Chartboost Mediation {ChartboostMediation.Version} have not been found. Press to add.";
                 root.Add(_warningButton);
                 return;
             }
             
             var version = new Version(MediationSelection);
-            var packageVersion = new Version(ChartboostMediationPackage.version);
+            var packageVersion = new Version(ChartboostMediation.Version);
 
             if (version.Minor != packageVersion.Minor)
             {
