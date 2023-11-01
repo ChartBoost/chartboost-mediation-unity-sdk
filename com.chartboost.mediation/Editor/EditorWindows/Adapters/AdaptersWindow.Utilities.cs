@@ -173,7 +173,7 @@ namespace Chartboost.Editor.EditorWindows.Adapters
         
         private static void Refresh(bool ignore = true)
         {
-            if (!Application.isBatchMode)
+            if (!Application.isBatchMode && Instance != null)
                 Instance.rootVisualElement.Clear();
             AdapterDataSource.Update();
             if (Instance != null)
@@ -186,7 +186,7 @@ namespace Chartboost.Editor.EditorWindows.Adapters
         {
             var same = new DictionaryComparer<string, AdapterSelection>(new AdapterSelectionComparer()).Equals(UserSelectedVersions, SavedVersions);
 
-            if (Application.isBatchMode)
+            if (Application.isBatchMode || Instance == null)
                 return same;
             
             var root = Instance.rootVisualElement;
