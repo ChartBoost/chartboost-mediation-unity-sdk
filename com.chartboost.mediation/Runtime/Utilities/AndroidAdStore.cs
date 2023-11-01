@@ -1,19 +1,21 @@
-using System;
 using Chartboost.Events;
 using UnityEngine;
 
 namespace Chartboost.Utilities
 {
-    public static class AndroidAdStore 
+    /// <summary>
+    /// C# equivalent of AdStore. Allows to release unmanaged references to ads from any thread.
+    /// </summary>
+    internal static class AndroidAdStore
     {
-        private const string QualifiedAdStoreName = "com.chartboost.mediation.unity.AdStore";
+        private static AndroidJavaObject GetAdStore() => new AndroidJavaObject(AndroidConstants.ClassAdStore);
         
         public static void ReleaseLegacyAd(int uniqueId)
         {
             EventProcessor.ProcessEvent(() =>
             {
-                using var adStore = new AndroidJavaClass(QualifiedAdStoreName);
-                adStore.CallStatic("releaseLegacyAd", uniqueId);
+                using var adStore = GetAdStore();
+                adStore.CallStatic(AndroidConstants.FunReleaseLegacyAd, uniqueId);
             });
         }
 
@@ -21,31 +23,31 @@ namespace Chartboost.Utilities
         {
             EventProcessor.ProcessEvent(() =>
             {
-                using var adStore = new AndroidJavaClass(QualifiedAdStoreName);
-                adStore.CallStatic("trackBannerAd", bannerAd);
+                using var adStore = GetAdStore();
+                adStore.CallStatic(AndroidConstants.FunTrackBannerAd, bannerAd);
             });
         }
         
         public static void ReleaseFullscreenAd(int uniqueId)
         {
             EventProcessor.ProcessEvent(() => { 
-                using var adStore = new AndroidJavaClass(QualifiedAdStoreName);
-                adStore.CallStatic("releaseFullscreenAd", uniqueId);
+                using var adStore = GetAdStore();
+                adStore.CallStatic(AndroidConstants.FunReleaseFullscreenAd, uniqueId);
             });
         }
         
         public static void ReleaseBannerAd(int uniqueId)
         {
             EventProcessor.ProcessEvent(() => { 
-                using var adStore = new AndroidJavaClass(QualifiedAdStoreName);
-                adStore.CallStatic("releaseBannerAd", uniqueId);
+                using var adStore = GetAdStore();
+                adStore.CallStatic(AndroidConstants.FunReleaseBannerAd, uniqueId);
             });
         }
 
         public static string AdStoreInfo()
         {
-            using var adStore = new AndroidJavaClass(QualifiedAdStoreName);
-            return adStore.CallStatic<string>("storeInfo");
+            using var adStore = GetAdStore();
+            return adStore.CallStatic<string>(AndroidConstants.FunAdStoreInfo);
         }
     }
 }

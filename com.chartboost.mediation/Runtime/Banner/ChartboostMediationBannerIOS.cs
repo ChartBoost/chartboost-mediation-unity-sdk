@@ -1,6 +1,7 @@
 #if UNITY_IOS
 using System;
 using System.Runtime.InteropServices;
+using Chartboost.Utilities;
 
 namespace Chartboost.Banner
 {
@@ -72,21 +73,21 @@ namespace Chartboost.Banner
         }
 
         #region External Methods
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern IntPtr _chartboostMediationGetBannerAd(string placementName, int size);
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern bool _chartboostMediationBannerSetKeyword(IntPtr uniqueId, string keyword, string value);
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern string _chartboostMediationBannerRemoveKeyword(IntPtr uniqueID, string keyword);
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationBannerAdLoad(IntPtr uniqueID, int screenLocation);
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationBannerClearLoaded(IntPtr uniqueID);
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationBannerRemove(IntPtr uniqueID);
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern bool _chartboostMediationBannerSetVisibility(IntPtr uniqueID, bool isVisible);
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationFreeAdObject(IntPtr uniqueID, string placementName, bool multiPlacementSupport);
         #endregion
     }

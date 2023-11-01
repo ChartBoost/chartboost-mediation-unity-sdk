@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using Chartboost.AdFormats.Banner;
 using Chartboost.Requests;
-using Chartboost.Results;
 
 namespace Chartboost.Platforms
 {

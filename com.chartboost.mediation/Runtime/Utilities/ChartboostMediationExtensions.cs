@@ -2,7 +2,6 @@ using System;
 using Chartboost.AdFormats.Banner;
 using Newtonsoft.Json;
 using UnityEngine;
-using static Chartboost.Utilities.Constants;
 
 namespace Chartboost.Utilities
 {
@@ -17,6 +16,13 @@ namespace Chartboost.Utilities
         [JsonIgnore]public Vector2 bottomLeft;
         [JsonIgnore]public Vector2 topRight;
         [JsonIgnore]public Vector2 bottomRight;
+    }
+    
+    public static class BannerSize
+    {
+        public static readonly (float, float) STANDARD = (320, 50);
+        public static readonly (float, float) MEDIUM = (300, 250);
+        public static readonly (float, float) LEADERBOARD = (728, 90);
     }
     
     public static class ChartboostMediationExtensions

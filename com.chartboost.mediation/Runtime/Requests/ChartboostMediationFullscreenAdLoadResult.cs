@@ -1,6 +1,6 @@
 using Chartboost.AdFormats.Fullscreen;
 
-namespace Chartboost.Results
+namespace Chartboost.Requests
 {
     #nullable enable
     /// <summary>

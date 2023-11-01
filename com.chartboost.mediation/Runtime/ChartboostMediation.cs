@@ -8,10 +8,9 @@ using Chartboost.FullScreen.Interstitial;
 using Chartboost.FullScreen.Rewarded;
 using Chartboost.Platforms;
 using Chartboost.Requests;
-using Chartboost.Results;
-#if UNITY_ANDROID
+#if UNITY_ANDROID && !UNITY_EDITOR
 using Chartboost.Platforms.Android;
-#elif UNITY_IOS
+#elif UNITY_IOS && !UNITY_EDITOR
 using Chartboost.Platforms.IOS;
 #endif
 using UnityEngine;
@@ -206,6 +205,8 @@ namespace Chartboost
         // Functions for showing ads
         //////////////////////////////////////////////////////
 
+        public static string Version => "4.6.0";
+        
         /// <summary>
         /// Load a fullscreen ad (interstitial, rewarded video, rewarded interstitial).
         /// </summary>

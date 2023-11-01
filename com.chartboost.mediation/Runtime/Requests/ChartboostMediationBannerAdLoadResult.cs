@@ -3,7 +3,7 @@ namespace Chartboost.Requests
     /// <summary>
     /// The Chartboost Mediation Banner ad load result.
     /// </summary>
-    public class ChartboostMediationBannerAdLoadResult 
+    public struct ChartboostMediationBannerAdLoadResult 
     {
         /// <summary>
         /// Constructor for successful loads

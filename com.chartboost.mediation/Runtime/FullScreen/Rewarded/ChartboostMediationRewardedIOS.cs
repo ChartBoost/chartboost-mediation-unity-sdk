@@ -1,6 +1,7 @@
 #if UNITY_IOS
 using System;
 using System.Runtime.InteropServices;
+using Chartboost.Utilities;
 
 namespace Chartboost.FullScreen.Rewarded
 {
@@ -74,23 +75,23 @@ namespace Chartboost.FullScreen.Rewarded
         }
 
         #region External Methods
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern IntPtr _chartboostMediationGetRewardedAd(string placementName);
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern bool _chartboostMediationRewardedSetKeyword(IntPtr uniqueID, string keyword, string value);
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern string _chartboostMediationRewardedRemoveKeyword(IntPtr uniqueID, string keyword);
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationRewardedAdLoad(IntPtr uniqueID);
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationRewardedClearLoaded(IntPtr uniqueID);
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationRewardedAdShow(IntPtr uniqueID);
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern bool _chartboostMediationRewardedAdReadyToShow(IntPtr uniqueID);
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationRewardedAdSetCustomData(IntPtr uniqueID, string customData);
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationFreeAdObject(IntPtr uniqueID, string placementName, bool multiPlacementSupport);
         #endregion
     }

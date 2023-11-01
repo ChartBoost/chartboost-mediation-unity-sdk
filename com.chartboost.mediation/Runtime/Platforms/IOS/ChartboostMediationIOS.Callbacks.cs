@@ -3,11 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using AOT;
-using Chartboost.AdFormats.Banner;
 using Chartboost.AdFormats.Fullscreen;
 using Chartboost.Events;
 using Chartboost.Requests;
-using Chartboost.Results;
 using Chartboost.Utilities;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -48,14 +46,14 @@ namespace Chartboost.Platforms.IOS
             WaitingProxies.Remove(hashCode);
         }
         
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _setLifeCycleCallbacks(ExternChartboostMediationEvent DidStartCallback,
             ExternChartboostMediationILRDEvent DidReceiveILRDCallback, ExternChartboostMediationPartnerInitializationDataEvent DidReceivePartnerInitializationDataCallback);
 
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _setFullscreenCallbacks(ExternChartboostMediationFullscreenAdEvent fullscreenAdEvents);
 
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _setBannerAdCallbacks(ExternChartboostMediationBannerAdEvent bannerAdEvents);
 
         #region LifeCycle Callbacks

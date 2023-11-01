@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Chartboost.AdFormats.Banner;
 using Chartboost.Requests;
-using Chartboost.Results;
 using Chartboost.Utilities;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -17,37 +16,37 @@ namespace Chartboost.Platforms.IOS
     internal sealed partial class ChartboostMediationIOS : ChartboostMediationExternal
     {
         #region Objective-C Extern Members
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationInit(string appId, string appSignature, string unityVersion, string[] initializationOptions, int initializationOptionsSize);
 
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationSetSubjectToCoppa(bool isSubject);
 
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationSetSubjectToGDPR(bool isSubject);
 
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationSetUserHasGivenConsent(bool hasGivenConsent);
 
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationSetCCPAConsent(bool hasGivenConsent);
 
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationSetUserIdentifier(string userIdentifier);
 
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern string _chartboostMediationGetUserIdentifier();
 
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationSetTestMode(bool isTestMode);
         
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationDiscardOversizedAds(bool shouldDiscard);
 
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern string _chartboostMediationInitializedAdaptersInfo();
 
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern float _chartboostMediationGetUIScaleFactor();
         
         #endregion
@@ -199,11 +198,11 @@ namespace Chartboost.Platforms.IOS
             return new ChartboostMediationBannerViewIOS(uniqueId);
         }
 
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationLoadFullscreenAd(string placementName, string keywords, int hashCode, ExternChartboostMediationFullscreenAdLoadResultEvent callback);
         #endregion
         
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern IntPtr _chartboostMediationLoadBannerView(ExternChartboostMediationBannerAdDragEvent dragListener);
     }
 }

@@ -20,3 +20,4 @@
         <iosPod name="Yahoo-Mobile-SDK" version="~> 1.4.0" addToAllTargets="false"/>
     </iosPods>
 </dependencies>
+

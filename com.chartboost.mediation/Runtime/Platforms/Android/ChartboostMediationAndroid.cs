@@ -4,10 +4,8 @@ using System.Threading.Tasks;
 using Chartboost.AdFormats.Banner;
 using Chartboost.Events;
 using Chartboost.Requests;
-using Chartboost.Results;
 using Chartboost.Utilities;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using UnityEngine;
 // ReSharper disable StringLiteralTypo
 // ReSharper disable InconsistentNaming
@@ -17,12 +15,13 @@ namespace Chartboost.Platforms.Android
     internal sealed partial class ChartboostMediationAndroid : ChartboostMediationExternal
     {
         #region Chartboost Mediation
-        private const string ChartboostMediationSDK = "com.chartboost.mediation";
-        private const string NativeChartboostMediationSDK = "com.chartboost.heliumsdk";
-        internal static string GetQualifiedClassName(string nativeClass)
-            => $"{ChartboostMediationSDK}.unity.{nativeClass}";
-        internal static string GetQualifiedNativeClassName(string nativeClass, bool isAdClass = false)
-            => isAdClass? $"{NativeChartboostMediationSDK}.ad.{nativeClass}" : $"{NativeChartboostMediationSDK}.{nativeClass}";
+        private const string ErrorNotReady = "Chartboost Mediation is not ready or placement is invalid.";
+
+        private static string GetQualifiedClassName(string nativeClass)
+            => $"{AndroidConstants.NamespaceChartboostMediationBridge}.unity.{nativeClass}";
+
+        private static string GetQualifiedNativeClassName(string nativeClass, bool isAdClass = false)
+            => isAdClass? $"{AndroidConstants.NamespaceNativeChartboostMediationSDK}.ad.{nativeClass}" : $"{AndroidConstants.NamespaceNativeChartboostMediationSDK}.{nativeClass}";
 
         private static ChartboostMediationAndroid _instance;
         private static AndroidJavaObject _unityBridge;
@@ -32,7 +31,7 @@ namespace Chartboost.Platforms.Android
             _instance = this;
             LogTag = "ChartboostMediation (Android)";
             using var unityBridge = GetUnityBridge();
-            unityBridge.CallStatic("setupEventListeners",
+            unityBridge.CallStatic(AndroidConstants.FunSetupEventListeners,
                 InterstitialEventListener.Instance,
                 RewardedVideoEventListener.Instance,
                 BannerEventListener.Instance);
@@ -40,9 +39,9 @@ namespace Chartboost.Platforms.Android
 
         // Initialize the android bridge
         internal static AndroidJavaObject GetUnityBridge()
-            => new AndroidJavaClass(GetQualifiedClassName("UnityBridge"));
+            => new AndroidJavaClass(GetQualifiedClassName(AndroidConstants.ClassUnityBridge));
 
-        internal static AndroidJavaClass GetNativeSDK() => new AndroidJavaClass(GetQualifiedNativeClassName("HeliumSdk"));
+        private static AndroidJavaClass GetNativeSDK() => new AndroidJavaClass(GetQualifiedNativeClassName(AndroidConstants.ClassHeliumSdk));
 
         [Obsolete("Init has been deprecated and will be removed in future versions of the SDK.")]
         public override void Init()
@@ -58,10 +57,10 @@ namespace Chartboost.Platforms.Android
             ChartboostMediationSettings.AndroidAppId = appId;
             ChartboostMediationSettings.AndroidAppSignature = appSignature;
             using var nativeSDK = GetNativeSDK();
-            using var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-            using var activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+            using var unityPlayer = new AndroidJavaClass(AndroidConstants.ClassUnityPlayer);
+            using var activity = unityPlayer.GetStatic<AndroidJavaObject>(AndroidConstants.PropertyCurrentActivity);
             var initializationOptions = GetInitializationOptions().ArrayToInitializationOptions();
-            nativeSDK.CallStatic("start", activity, appId, appSignature, initializationOptions,  new ChartboostMediationSDKListener());
+            nativeSDK.CallStatic(AndroidConstants.FunStart, activity, appId, appSignature, initializationOptions,  new ChartboostMediationSDKListener());
             IsInitialized = true;
         }
 
@@ -73,9 +72,9 @@ namespace Chartboost.Platforms.Android
             initializationOptions ??= Array.Empty<string>();
             var nativeOptions = initializationOptions.ArrayToInitializationOptions();
             using var nativeSDK = GetNativeSDK();
-            using var unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-            using var activity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-            nativeSDK.CallStatic("start", activity, appId, appSignature, nativeOptions,  new ChartboostMediationSDKListener());
+            using var unityPlayer = new AndroidJavaClass(AndroidConstants.ClassUnityPlayer);
+            using var activity = unityPlayer.GetStatic<AndroidJavaObject>(AndroidConstants.PropertyCurrentActivity);
+            nativeSDK.CallStatic(AndroidConstants.FunStart, activity, appId, appSignature, nativeOptions,  new ChartboostMediationSDKListener());
             IsInitialized = true;
         }
 
@@ -83,63 +82,63 @@ namespace Chartboost.Platforms.Android
         {
             base.SetSubjectToCoppa(isSubject);
             using var nativeSDK = GetNativeSDK();
-            nativeSDK.CallStatic("setSubjectToCoppa", isSubject);
+            nativeSDK.CallStatic(AndroidConstants.FunSetSubjectToCoppa, isSubject);
         }
 
         public override void SetSubjectToGDPR(bool isSubject)
         {
             base.SetSubjectToGDPR(isSubject);
             using var nativeSDK = GetNativeSDK();
-            nativeSDK.CallStatic("setSubjectToGDPR", isSubject);
+            nativeSDK.CallStatic(AndroidConstants.FunSetSubjectToGDPR, isSubject);
         }
 
         public override void SetUserHasGivenConsent(bool hasGivenConsent)
         {
             base.SetUserHasGivenConsent(hasGivenConsent);
             using var nativeSDK = GetNativeSDK();
-            nativeSDK.CallStatic("setUserHasGivenConsent", hasGivenConsent);
+            nativeSDK.CallStatic(AndroidConstants.FunSetUserHasGivenConsent, hasGivenConsent);
         }
 
         public override void SetCCPAConsent(bool hasGivenConsent)
         {
             base.SetCCPAConsent(hasGivenConsent);
             using var nativeSDK = GetNativeSDK();
-            nativeSDK.CallStatic("setCCPAConsent", hasGivenConsent);
+            nativeSDK.CallStatic(AndroidConstants.FunSetCCPAConsent, hasGivenConsent);
         }
 
         public override void SetUserIdentifier(string userIdentifier)
         {
             base.SetUserIdentifier(userIdentifier);
             using var nativeSDK = GetNativeSDK();
-            nativeSDK.CallStatic("setUserIdentifier", userIdentifier);
+            nativeSDK.CallStatic(AndroidConstants.FunSetUserIdentifier, userIdentifier);
         }
 
         public override string GetUserIdentifier()
         {
             base.GetUserIdentifier();
             using var nativeSDK = GetNativeSDK();
-            return nativeSDK.CallStatic<string>("getUserIdentifier");
+            return nativeSDK.CallStatic<string>(AndroidConstants.FunGetUserIdentifier);
         }
         
         public override void SetTestMode(bool testModeEnabled)
         {
             base.SetTestMode(testModeEnabled);
             using var nativeSDK = GetNativeSDK();
-            nativeSDK.CallStatic("setTestMode", testModeEnabled);
+            nativeSDK.CallStatic(AndroidConstants.FunSetTestMode, testModeEnabled);
         }
 
         public override void DiscardOversizedAds(bool shouldDiscard)
         {
             base.DiscardOversizedAds(shouldDiscard);
             using var nativeSDK = GetNativeSDK();
-            nativeSDK.CallStatic("setShouldDiscardOversizedAds", shouldDiscard);
+            nativeSDK.CallStatic(AndroidConstants.FunSetShouldDiscardOversizedAds, shouldDiscard);
         }
 
         public override ChartboostMediationAdapterInfo[] InitializedAdaptersInfo()
         {
             base.InitializedAdaptersInfo();
             using var unityBridge = GetUnityBridge();
-            var json = unityBridge.CallStatic<string>("adapterInfo");
+            var json = unityBridge.CallStatic<string>(AndroidConstants.FunAdapterInfo);
             var adapterInfo = JsonConvert.DeserializeObject<ChartboostMediationAdapterInfo[]>(json);
             return adapterInfo;
         }
@@ -150,7 +149,7 @@ namespace Chartboost.Platforms.Android
                 return;
             base.Destroy();
             using var nativeSDK = GetNativeSDK();
-            nativeSDK.CallStatic("unsubscribeILRDObserver", ILRDObserver.Instance);
+            nativeSDK.CallStatic(AndroidConstants.FunUnsubscribeILRDObserver, ILRDObserver.Instance);
             IsInitialized = false;
         }
 
@@ -158,7 +157,7 @@ namespace Chartboost.Platforms.Android
         {
             if (!CanFetchAd(request.PlacementName))
             {
-                var error = new ChartboostMediationError("Chartboost Mediation is not ready or placement is invalid.");
+                var error = new ChartboostMediationError(ErrorNotReady);
                 var adLoadResult = new ChartboostMediationFullscreenAdLoadResult(error);
                 return await Task.FromResult(adLoadResult);
             }
@@ -167,9 +166,9 @@ namespace Chartboost.Platforms.Android
             try
             {
                 CacheManager.TrackFullscreenAdLoadRequest(adLoadListenerAwaitableProxy.hashCode(), request);
-                using var nativeAdRequest = new AndroidJavaObject(GetQualifiedNativeClassName("ChartboostMediationAdLoadRequest", true), request.PlacementName, request.Keywords.ToKeywords());
+                using var nativeAdRequest = new AndroidJavaObject(GetQualifiedNativeClassName(AndroidConstants.ClassChartboostMediationAdLoadRequest, true), request.PlacementName, request.Keywords.ToKeywords());
                 using var bridge = GetUnityBridge();
-                bridge.CallStatic("loadFullscreenAd", nativeAdRequest, adLoadListenerAwaitableProxy, ChartboostMediationFullscreenAdListener.Instance);
+                bridge.CallStatic(AndroidConstants.FunLoadFullscreenAd, nativeAdRequest, adLoadListenerAwaitableProxy, ChartboostMediationFullscreenAdListener.Instance);
             }
             catch (NullReferenceException exception)
             {
@@ -181,14 +180,14 @@ namespace Chartboost.Platforms.Android
         public override IChartboostMediationBannerView GetBannerView()
         {
             using var unityBridge = GetUnityBridge();
-            var bannerAd = unityBridge.CallStatic<AndroidJavaObject>("loadBannerAd", new ChartboostMediationBannerViewListener());
+            var bannerAd = unityBridge.CallStatic<AndroidJavaObject>(AndroidConstants.FunLoadBannerAd, new ChartboostMediationBannerViewListener());
             return new ChartboostMediationBannerViewAndroid(bannerAd);
         }
 
         public static float GetUIScaleFactor()
         {
             using var unityBridge = GetUnityBridge();
-            return unityBridge.CallStatic<float>("getUIScaleFactor");
+            return unityBridge.CallStatic<float>(AndroidConstants.FunGetUIScaleFactor);
         }
         
         #endregion

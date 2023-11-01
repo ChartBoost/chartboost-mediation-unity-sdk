@@ -1,10 +1,8 @@
 #if UNITY_ANDROID
-using System;
 using Chartboost.AdFormats.Banner;
 using Chartboost.AdFormats.Fullscreen;
 using Chartboost.Events;
 using Chartboost.Requests;
-using Chartboost.Results;
 using Chartboost.Utilities;
 using UnityEngine;
 // ReSharper disable InconsistentNaming
@@ -17,22 +15,22 @@ namespace Chartboost.Platforms.Android
         #region LifeCycle Callbacks
         internal class ChartboostMediationSDKListener : AndroidJavaProxy
         {
-            public ChartboostMediationSDKListener() : base(GetQualifiedNativeClassName("HeliumSdk$HeliumSdkListener")) { }
+            public ChartboostMediationSDKListener() : base(GetQualifiedNativeClassName(AndroidConstants.ClassHeliumSDKListener)) { }
 
             private void didInitialize(AndroidJavaObject error)
             {
                 EventProcessor.ProcessEvent(() => {
                     if (error != null)
                     {
-                        var message = error.Call<string>("toString");
+                        var message = error.Call<string>(AndroidConstants.FunToString);
                         EventProcessor.ProcessChartboostMediationEvent(message, _instance.DidStart);
                         return;
                     }
                     
                     using var nativeSDK = GetNativeSDK();
-                    nativeSDK.CallStatic("setGameEngine", "unity", Application.unityVersion);
-                    nativeSDK.CallStatic("subscribeIlrd", ILRDObserver.Instance);
-                    nativeSDK.CallStatic("subscribeInitializationResults", new PartnerInitializationResultsObserver());
+                    nativeSDK.CallStatic(AndroidConstants.FunSetGameEngine, AndroidConstants.GameEngine, Application.unityVersion);
+                    nativeSDK.CallStatic(AndroidConstants.FunSubscribeIlrd, ILRDObserver.Instance);
+                    nativeSDK.CallStatic(AndroidConstants.FunSubscribeInitializationResults, new PartnerInitializationResultsObserver());
                     EventProcessor.ProcessChartboostMediationEvent(null, _instance.DidStart);
                 });
             }
@@ -40,16 +38,16 @@ namespace Chartboost.Platforms.Android
 
         internal class ILRDObserver : AndroidJavaProxy
         {
-            private ILRDObserver() : base(GetQualifiedNativeClassName("HeliumIlrdObserver")) { }
+            private ILRDObserver() : base(GetQualifiedNativeClassName(AndroidConstants.ClassHeliumIlrdObserver)) { }
             public static readonly ILRDObserver Instance = new ILRDObserver();
 
             private void onImpression(AndroidJavaObject impressionData) 
                 => EventProcessor.ProcessEventWithILRD(impressionData.ImpressionDataToJsonString(), _instance.DidReceiveImpressionLevelRevenueData);
         }
-
+        
         internal class PartnerInitializationResultsObserver : AndroidJavaProxy
         {
-            public PartnerInitializationResultsObserver() : base(GetQualifiedNativeClassName("PartnerInitializationResultsObserver")) { }
+            public PartnerInitializationResultsObserver() : base(GetQualifiedNativeClassName(AndroidConstants.ClassPartnerInitializationResultsObserver)) { }
             
             private void onPartnerInitializationResultsReady(AndroidJavaObject data) 
                 => EventProcessor.ProcessEventWithPartnerInitializationData(data.PartnerInitializationDataToJsonString(), _instance.DidReceivePartnerInitializationData);
@@ -63,7 +61,7 @@ namespace Chartboost.Platforms.Android
         #region Fullscreen Callbacks
         internal class ChartboostMediationFullscreenAdLoadListener : AwaitableAndroidJavaProxy<ChartboostMediationFullscreenAdLoadResult>
         {
-            public ChartboostMediationFullscreenAdLoadListener() : base(GetQualifiedNativeClassName("ChartboostMediationFullscreenAdLoadListener", true)) { }
+            public ChartboostMediationFullscreenAdLoadListener() : base(GetQualifiedNativeClassName(AndroidConstants.ClassChartboostMediationFullscreenAdLoadListener, true)) { }
 
             private void onAdLoaded(AndroidJavaObject result)
             {
@@ -77,10 +75,10 @@ namespace Chartboost.Platforms.Android
                         return;
                     }
 
-                    var nativeAd = result.Get<AndroidJavaObject>("ad");
+                    var nativeAd = result.Get<AndroidJavaObject>(AndroidConstants.PropertyAd);
                     var ad = new ChartboostMediationFullscreenAdAndroid(nativeAd, CacheManager.GetFullScreenAdLoadRequest(hashCode()));
-                    var loadId = result.Get<string>("loadId");
-                    var metrics = result.Get<AndroidJavaObject>("metrics").JsonObjectToMetrics();
+                    var loadId = result.Get<string>(AndroidConstants.PropertyLoadId);
+                    var metrics = result.Get<AndroidJavaObject>(AndroidConstants.PropertyMetrics).JsonObjectToMetrics();
                     _complete(new ChartboostMediationFullscreenAdLoadResult(ad, loadId, metrics));
                 });
             }
@@ -88,7 +86,7 @@ namespace Chartboost.Platforms.Android
         
         internal class ChartboostMediationFullscreenAdShowListener : AwaitableAndroidJavaProxy<ChartboostMediationAdShowResult>
         {
-            public ChartboostMediationFullscreenAdShowListener() : base(GetQualifiedNativeClassName("ChartboostMediationFullscreenAdShowListener", true)) { } 
+            public ChartboostMediationFullscreenAdShowListener() : base(GetQualifiedNativeClassName(AndroidConstants.ClassChartboostMediationFullscreenAdShowListener, true)) { } 
             
             private void onAdShown(AndroidJavaObject result)
             {
@@ -99,7 +97,7 @@ namespace Chartboost.Platforms.Android
                         _complete(new ChartboostMediationAdShowResult(error.Value));
                         return;
                     }
-                    var metrics = result.Get<AndroidJavaObject>("metrics").JsonObjectToMetrics();
+                    var metrics = result.Get<AndroidJavaObject>(AndroidConstants.PropertyMetrics).JsonObjectToMetrics();
                     _complete(new ChartboostMediationAdShowResult(metrics));
                 });
             }
@@ -109,7 +107,7 @@ namespace Chartboost.Platforms.Android
         {
             internal static readonly ChartboostMediationFullscreenAdListener Instance = new ChartboostMediationFullscreenAdListener();
 
-            private ChartboostMediationFullscreenAdListener() : base(GetQualifiedNativeClassName("ChartboostMediationFullscreenAdListener", true)) { }
+            private ChartboostMediationFullscreenAdListener() : base(GetQualifiedNativeClassName(AndroidConstants.ClassChartboostMediationFullscreenAdListener, true)) { }
 
             private void onAdClicked(AndroidJavaObject ad) 
                 => EventProcessor.ProcessFullscreenEvent(ad.HashCode(), (int)EventProcessor.FullscreenAdEvents.Click, null, null);
@@ -119,11 +117,11 @@ namespace Chartboost.Platforms.Android
                 string code = null;
                 string message = null;
 
-                var mediationError = error?.Get<AndroidJavaObject>("chartboostMediationError");
+                var mediationError = error?.Get<AndroidJavaObject>(AndroidConstants.PropertyChartboostMediationError);
                 if (mediationError != null)
                 {
-                    code = error.Get<string>("code");
-                    message = error.Call<string>("toString");
+                    code = error.Get<string>(AndroidConstants.PropertyCode);
+                    message = error.Call<string>(AndroidConstants.FunToString);
                 }
                 
                 EventProcessor.ProcessFullscreenEvent(ad.HashCode(), (int)EventProcessor.FullscreenAdEvents.Close, code, message);
@@ -141,9 +139,10 @@ namespace Chartboost.Platforms.Android
         #endregion
         
         #region Banner Callbacks
+
         internal class ChartboostMediationBannerViewListener : AndroidJavaProxy
         {
-            public ChartboostMediationBannerViewListener() : base(GetQualifiedClassName("ChartboostMediationBannerViewListener")) {}
+            public ChartboostMediationBannerViewListener() : base(GetQualifiedClassName(AndroidConstants.ClassChartboostMediationBannerViewListener)) {}
             
             private void onAdCached(AndroidJavaObject ad, string error)
             {

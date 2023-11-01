@@ -1,6 +1,6 @@
-#if UNITY_ANDROID
+#if UNITY_ANDROID && !UNITY_EDITOR
 using Chartboost.Platforms.Android;
-#elif UNITY_IPHONE
+#elif UNITY_IPHONE && !UNITY_EDITOR
 using Chartboost.Platforms.IOS;
 #endif
 using UnityEngine;
@@ -9,6 +9,11 @@ namespace Chartboost.Utilities
 {
     public static class ChartboostMediationConverters
     {
+        /// <summary>
+        /// Multiplication factor that can be applied to native unit (dips in Android and points in iOS) to get the value in pixels.
+        /// </summary>
+        public static readonly float EditorUIScaleFactor = 2.5f;
+        
         private static float? _scaleFactor = null;
         
         public static float NativeToPixels(float native)
@@ -36,7 +41,7 @@ namespace Chartboost.Utilities
             get
             {
                 #if UNITY_EDITOR
-                return _scaleFactor ??= Constants.EditorUIScaleFactor;
+                return _scaleFactor ??= EditorUIScaleFactor;
                 #elif UNITY_ANDROID
                 return _scaleFactor ??= ChartboostMediationAndroid.GetUIScaleFactor();
                 #elif UNITY_IPHONE

@@ -11,7 +11,7 @@ namespace Chartboost.AdFormats.Fullscreen
     /// <summary>
     /// IOS implementation of IChartboostMediationFullscreenAd
     /// </summary>
-    public class ChartboostMediationFullscreenAdIOS : ChartboostMediationFullscreenAdBase
+    internal sealed class ChartboostMediationFullscreenAdIOS : ChartboostMediationFullscreenAdBase
     {
         public ChartboostMediationFullscreenAdIOS(IntPtr uniqueID, string loadId, ChartboostMediationFullscreenAdLoadRequest request, BidInfo winningBid) : base(uniqueId: uniqueID)
         {
@@ -66,9 +66,9 @@ namespace Chartboost.AdFormats.Fullscreen
 
         ~ChartboostMediationFullscreenAdIOS() => Invalidate(true);
 
-        [DllImport("__Internal")] private static extern void _chartboostMediationFullscreenSetCustomData(IntPtr uniqueId, string customData);
-        [DllImport("__Internal")] private static extern void _chartboostMediationInvalidateFullscreenAd(IntPtr uniqueId);
-        [DllImport("__Internal")] private static extern void _chartboostMediationShowFullscreenAd(IntPtr uniqueId, int hashCode, ChartboostMediationIOS.ExternChartboostMediationFullscreenAdShowResultEvent callback);
+        [DllImport(IOSConstants.Internal)] private static extern void _chartboostMediationFullscreenSetCustomData(IntPtr uniqueId, string customData);
+        [DllImport(IOSConstants.Internal)] private static extern void _chartboostMediationInvalidateFullscreenAd(IntPtr uniqueId);
+        [DllImport(IOSConstants.Internal)] private static extern void _chartboostMediationShowFullscreenAd(IntPtr uniqueId, int hashCode, ChartboostMediationIOS.ExternChartboostMediationFullscreenAdShowResultEvent callback);
     }
 }
 #endif

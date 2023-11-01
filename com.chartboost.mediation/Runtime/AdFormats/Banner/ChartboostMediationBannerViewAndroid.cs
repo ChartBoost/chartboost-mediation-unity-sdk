@@ -5,9 +5,7 @@ using System.Threading.Tasks;
 using Chartboost.Banner;
 using Chartboost.Events;
 using Chartboost.Requests;
-using Chartboost.Results;
 using Chartboost.Utilities;
-using Newtonsoft.Json;
 using UnityEngine;
 using Logger = Chartboost.Utilities.Logger;
 
@@ -16,12 +14,14 @@ namespace Chartboost.AdFormats.Banner
     /// <summary>
     /// Android implementation of ChartboostMediationBannerViewBase
     /// </summary>
-    internal class ChartboostMediationBannerViewAndroid : ChartboostMediationBannerViewBase
+    internal sealed class ChartboostMediationBannerViewAndroid : ChartboostMediationBannerViewBase
     {
         private readonly AndroidJavaObject _bannerAd;
         internal Later<ChartboostMediationBannerAdLoadResult> LoadRequest;
 
         private Dictionary<string, string> _keywords = new Dictionary<string, string>();
+        
+        private const string WarningOverlapLoad = "A new load is triggered while the previous load is not yet complete. Discarding previous load.";
 
         public ChartboostMediationBannerViewAndroid(AndroidJavaObject bannerAd) : base(new IntPtr(bannerAd.HashCode()))
         {
@@ -40,7 +40,7 @@ namespace Chartboost.AdFormats.Banner
             {
                 try
                 {
-                    _bannerAd.Call("setKeywords", value.ToKeywords());
+                    _bannerAd.Call(AndroidConstants.FunSetKeywords, value.ToKeywords());
                     _keywords = value;
                 }
                 catch (Exception e)
@@ -58,7 +58,7 @@ namespace Chartboost.AdFormats.Banner
         {
             get
             {
-                var winningBidInfo = _bannerAd.Get<AndroidJavaObject>("winningBidInfo");
+                var winningBidInfo = _bannerAd.Get<AndroidJavaObject>(AndroidConstants.PropertyWinningBidInfo);
                 return winningBidInfo?.MapToWinningBidInfo() ?? new BidInfo();
             }
             protected set { }
@@ -67,7 +67,7 @@ namespace Chartboost.AdFormats.Banner
         /// <inheritdoc cref="ChartboostMediationBannerViewBase.LoadId"/>
         public override string LoadId
         {
-            get => _bannerAd.Get<string>("loadId");
+            get => _bannerAd.Get<string>(AndroidConstants.PropertyLoadId);
             protected set { }
         }
 
@@ -83,29 +83,29 @@ namespace Chartboost.AdFormats.Banner
         /// <inheritdoc cref="ChartboostMediationBannerViewBase.AdSize"/>
         public override ChartboostMediationBannerSize? AdSize
         {
-            get => _bannerAd.Call<AndroidJavaObject>("getAdSize").ToChartboostMediationBannerSize();
+            get => _bannerAd.Call<AndroidJavaObject>(AndroidConstants.FunGetAdSize).ToChartboostMediationBannerSize();
             protected set { }
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerViewBase.ContainerSize"/>
         public override ChartboostMediationBannerSize? ContainerSize
         {
-            get => _bannerAd.Call<AndroidJavaObject>("getContainerSize").ToChartboostMediationBannerSize();
+            get => _bannerAd.Call<AndroidJavaObject>(AndroidConstants.FunGetContainerSize).ToChartboostMediationBannerSize();
             protected set { }
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerViewBase.HorizontalAlignment"/>
         public override ChartboostMediationBannerHorizontalAlignment HorizontalAlignment
         {
-            get => (ChartboostMediationBannerHorizontalAlignment)_bannerAd.Call<int>("getHorizontalAlignment");
-            set => _bannerAd.Call("setHorizontalAlignment", (int)value);
+            get => (ChartboostMediationBannerHorizontalAlignment)_bannerAd.Call<int>(AndroidConstants.FunGetHorizontalAlignment);
+            set => _bannerAd.Call(AndroidConstants.FunSetHorizontalAlignment, (int)value);
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerViewBase.VerticalAlignment"/>
         public override ChartboostMediationBannerVerticalAlignment VerticalAlignment
         {
-            get => (ChartboostMediationBannerVerticalAlignment)_bannerAd.Call<int>("getVerticalAlignment");
-            set => _bannerAd.Call("setVerticalAlignment", (int)value);
+            get => (ChartboostMediationBannerVerticalAlignment)_bannerAd.Call<int>(AndroidConstants.FunGetVerticalAlignment);
+            set => _bannerAd.Call(AndroidConstants.FunSetVerticalAlignment, (int)value);
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerViewBase.Load(Chartboost.Requests.ChartboostMediationBannerAdLoadRequest,Chartboost.Banner.ChartboostMediationBannerAdScreenLocation)"/>
@@ -116,12 +116,12 @@ namespace Chartboost.AdFormats.Banner
 
             if (LoadRequest != null)
             {
-                Logger.LogWarning(LogTag, "A new load is triggered while the previous load is not yet complete. Discarding previous load.");
+                Logger.LogWarning(LogTag, WarningOverlapLoad);
                 LoadRequest = null;
             }
             
             LoadRequest = new Later<ChartboostMediationBannerAdLoadResult>();
-            _bannerAd.Call("load", request.PlacementName, (int)request.Size.SizeType, request.Size.Width, request.Size.Height, (int)screenLocation);
+            _bannerAd.Call(AndroidConstants.FunLoad, request.PlacementName, (int)request.Size.SizeType, request.Size.Width, request.Size.Height, (int)screenLocation);
             
             var result = await LoadRequest;
             LoadRequest = null;
@@ -136,14 +136,14 @@ namespace Chartboost.AdFormats.Banner
 
             if (LoadRequest != null)
             {
-                Logger.LogWarning(LogTag, "A new load is triggered while the previous load is not yet complete. Discarding previous load.");
+                Logger.LogWarning(LogTag, WarningOverlapLoad);
                 LoadRequest = null;
             }
             
             LoadRequest = new Later<ChartboostMediationBannerAdLoadResult>();
             // y is counted from top in Android whereas Unity counts it from bottom
             y = ChartboostMediationConverters.PixelsToNative(Screen.height) - y;
-            _bannerAd.Call("load", request.PlacementName, (int)request.Size.SizeType, request.Size.Width, request.Size.Height, x, y);
+            _bannerAd.Call(AndroidConstants.FunLoad, request.PlacementName, (int)request.Size.SizeType, request.Size.Width, request.Size.Height, x, y);
 
             var result = await LoadRequest;
             LoadRequest = null;
@@ -155,35 +155,35 @@ namespace Chartboost.AdFormats.Banner
             Vector2 pivot = default)
         {
             base.ResizeToFit(axis, pivot);
-            _bannerAd.Call("resizeToFit", (int)axis, pivot.x, 1 - pivot.y);
+            _bannerAd.Call(AndroidConstants.FunResizeToFit, (int)axis, pivot.x, 1 - pivot.y);
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerViewBase.SetDraggability"/>
         public override void SetDraggability(bool canDrag)
         {
             base.SetDraggability(canDrag);
-            _bannerAd.Call("setDraggability", canDrag);
+            _bannerAd.Call(AndroidConstants.FunSetDraggability, canDrag);
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerViewBase.SetVisibility"/>
         public override void SetVisibility(bool visibility)
         {
             base.SetVisibility(visibility);
-            _bannerAd.Call("setVisibility", visibility);
+            _bannerAd.Call(AndroidConstants.FunSetVisibility, visibility);
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerViewBase.Reset"/>
         public override void Reset()
         {
             base.Reset();
-            _bannerAd.Call("reset");
+            _bannerAd.Call(AndroidConstants.FunReset);
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerViewBase.Destroy"/>
         public override void Destroy()
         {
             base.Destroy();
-            _bannerAd.Call("destroy");
+            _bannerAd.Call(AndroidConstants.FunDestroy);
             _bannerAd.Dispose();
             AndroidAdStore.ReleaseBannerAd(UniqueId.ToInt32());
         }
@@ -192,9 +192,8 @@ namespace Chartboost.AdFormats.Banner
         {
             base.MoveTo(x,y);
             y = ChartboostMediationConverters.PixelsToNative(Screen.height) - y;
-            _bannerAd.Call("moveTo", x, y);
+            _bannerAd.Call(AndroidConstants.FunMoveTo, x, y);
         }
     }
 }
-
 #endif

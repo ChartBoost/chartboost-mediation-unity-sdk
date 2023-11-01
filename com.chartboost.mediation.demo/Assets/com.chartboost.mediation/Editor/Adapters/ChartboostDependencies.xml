@@ -2,10 +2,10 @@
 <dependencies>
     <androidPackages>
         <!-- Android Adapter -->
-        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-chartboost:4.9.4.1+@aar"/>
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-chartboost:4.9.5.0+@aar"/>
 
         <!-- Partner Android SDK Dependencies-->
-        <androidPackage spec="com.chartboost:chartboost-sdk:9.4.1"/>
+        <androidPackage spec="com.chartboost:chartboost-sdk:9.5.0"/>
 
         <!-- Chartboost Android Repositories -->
         <repositories>
@@ -14,9 +14,10 @@
     </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->
-        <iosPod name="ChartboostMediationAdapterChartboost" version="~> 4.9.4.0"/>
+        <iosPod name="ChartboostMediationAdapterChartboost" version="~> 4.9.5.0"/>
 
         <!-- Partner iOS SDK-->
-        <iosPod name="ChartboostSDK" version="~> 9.4.0" addToAllTargets="false"/>
+        <iosPod name="ChartboostSDK" version="~> 9.5.0" addToAllTargets="false"/>
     </iosPods>
 </dependencies>
+
