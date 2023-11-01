@@ -6,7 +6,7 @@ using Chartboost.Requests;
 
 namespace Chartboost.Utilities
 {
-    internal static class CacheManager
+    public static class CacheManager
     {
         /// <summary>
         /// Weak reference cache to fullscreen ads. if publishers do not keep a strong ref, this will make sure they get disposed as needed.
