@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Chartboost.Utilities
 {
-    public class AwaitableAndroidJavaProxy<TResult> : AndroidJavaProxy
+    internal class AwaitableAndroidJavaProxy<TResult> : AndroidJavaProxy
     {
         public TaskAwaiter<TResult> GetAwaiter() 
         {

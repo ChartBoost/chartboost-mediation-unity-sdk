@@ -5,11 +5,12 @@ using Chartboost.Requests;
 
 namespace Chartboost.AdFormats.Fullscreen
 {
-    public abstract class ChartboostMediationFullscreenAdBase : IChartboostMediationFullscreenAd
+    internal abstract class ChartboostMediationFullscreenAdBase : IChartboostMediationFullscreenAd
     {
         protected readonly IntPtr uniqueId;
         protected bool isValid = true;
         protected string customData;
+        private const string InvalidAdError = "Fullscreen Ad is not valid, reference should be disposed.";
 
         protected ChartboostMediationFullscreenAdBase(long uniqueId) => this.uniqueId = new IntPtr(uniqueId);
         protected ChartboostMediationFullscreenAdBase(IntPtr uniqueId) => this.uniqueId = uniqueId;
@@ -31,7 +32,7 @@ namespace Chartboost.AdFormats.Fullscreen
 
         protected static ChartboostMediationAdShowResult GetAdShowResultForInvalidAd()
         {
-            var error = new ChartboostMediationError("Fullscreen Ad is not valid, reference should be disposed.");
+            var error = new ChartboostMediationError(InvalidAdError);
             return new ChartboostMediationAdShowResult(error);
         }
     }

@@ -6,7 +6,6 @@ using Chartboost.Utilities;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
-using static Chartboost.Utilities.Constants;
 using Logger = Chartboost.Utilities.Logger;
 
 namespace Chartboost.AdFormats.Banner.Unity
@@ -27,7 +26,7 @@ namespace Chartboost.AdFormats.Banner.Unity
     }
     
     [RequireComponent(typeof(RectTransform))]
-    public partial class ChartboostMediationUnityBannerAd : MonoBehaviour
+    public sealed partial class ChartboostMediationUnityBannerAd : MonoBehaviour
     {
         /// <summary>
         /// Called when ad is loaded within this GameObject. This will be called for each refresh when auto-refresh is enabled.

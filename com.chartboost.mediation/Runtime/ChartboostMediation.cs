@@ -8,9 +8,9 @@ using Chartboost.FullScreen.Interstitial;
 using Chartboost.FullScreen.Rewarded;
 using Chartboost.Platforms;
 using Chartboost.Requests;
-#if UNITY_ANDROID
+#if UNITY_ANDROID && !UNITY_EDITOR
 using Chartboost.Platforms.Android;
-#elif UNITY_IOS
+#elif UNITY_IOS && !UNITY_EDITOR
 using Chartboost.Platforms.IOS;
 #endif
 using UnityEngine;

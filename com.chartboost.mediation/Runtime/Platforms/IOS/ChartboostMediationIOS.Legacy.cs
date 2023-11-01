@@ -3,23 +3,24 @@ using System;
 using System.Runtime.InteropServices;
 using AOT;
 using Chartboost.Events;
+using Chartboost.Utilities;
 
 // ReSharper disable InconsistentNaming
 namespace Chartboost.Platforms.IOS
 {
     internal sealed partial class ChartboostMediationIOS
     {
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _setInterstitialCallbacks(ExternChartboostMediationPlacementLoadEvent DidLoadCallback,
             ExternChartboostMediationPlacementEvent DidShowCallback, ExternChartboostMediationPlacementEvent DidCloseCallback,
             ExternChartboostMediationPlacementEvent DidClickCallback, ExternChartboostMediationPlacementEvent DidRecordImpression);
 
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _setRewardedCallbacks(ExternChartboostMediationPlacementLoadEvent DidLoadCallback,
             ExternChartboostMediationPlacementEvent DidShowCallback, ExternChartboostMediationPlacementEvent DidCloseCallback, ExternChartboostMediationPlacementEvent DidClickCallback,
             ExternChartboostMediationPlacementEvent DidRecordImpression, ExternChartboostMediationPlacementEvent DidReceiveReward);
         
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _setBannerCallbacks(ExternChartboostMediationPlacementLoadEvent DidLoadCallback, ExternChartboostMediationPlacementEvent DidRecordImpression, ExternChartboostMediationPlacementEvent DidClickCallback);
         
         #region Interstitial Callbacks

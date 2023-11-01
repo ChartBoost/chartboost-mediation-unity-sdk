@@ -1,5 +1,3 @@
-using System;
-
 namespace Chartboost.Interfaces
 {
     #nullable enable

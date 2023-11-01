@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Threading;
 using Chartboost.AdFormats.Banner;
 using Chartboost.Utilities;
-using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 

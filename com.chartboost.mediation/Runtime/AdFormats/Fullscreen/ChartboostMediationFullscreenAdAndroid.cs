@@ -12,18 +12,18 @@ namespace Chartboost.AdFormats.Fullscreen
     /// <summary>
     /// Android implementation of IChartboostMediationFullscreenAd
     /// </summary>
-    public sealed class ChartboostMediationFullscreenAdAndroid : ChartboostMediationFullscreenAdBase
+    internal sealed class ChartboostMediationFullscreenAdAndroid : ChartboostMediationFullscreenAdBase
     {
         private readonly AndroidJavaObject _chartboostMediationFullscreenAd;
 
         public ChartboostMediationFullscreenAdAndroid(AndroidJavaObject fullscreenAd, ChartboostMediationFullscreenAdLoadRequest request) : base(uniqueId: fullscreenAd.HashCode())
         {
             _chartboostMediationFullscreenAd = fullscreenAd;
-            var bidInfoMap = _chartboostMediationFullscreenAd.Get<AndroidJavaObject>("winningBidInfo");
+            var bidInfoMap = _chartboostMediationFullscreenAd.Get<AndroidJavaObject>(AndroidConstants.PropertyWinningBidInfo);
             if (bidInfoMap != null)
                 WinningBidInfo = bidInfoMap.MapToWinningBidInfo();
             Request = request;
-            LoadId = _chartboostMediationFullscreenAd.Get<string>("loadId");
+            LoadId = _chartboostMediationFullscreenAd.Get<string>(AndroidConstants.PropertyLoadId);
             CacheManager.TrackFullscreenAd(uniqueId.ToInt64(), this);
         }
 
@@ -39,7 +39,7 @@ namespace Chartboost.AdFormats.Fullscreen
                 if (!isValid) 
                     return;
                 customData = value;
-                _chartboostMediationFullscreenAd.Set("customData", value);
+                _chartboostMediationFullscreenAd.Set(AndroidConstants.PropertyCustomData, value);
             }
         }
 
@@ -59,7 +59,7 @@ namespace Chartboost.AdFormats.Fullscreen
             try
             {
                 using var unityBridge = ChartboostMediationAndroid.GetUnityBridge();
-                unityBridge.CallStatic("showFullscreenAd", _chartboostMediationFullscreenAd, adShowListenerAwaitableProxy);
+                unityBridge.CallStatic(AndroidConstants.FunShowFullscreenAd, _chartboostMediationFullscreenAd, adShowListenerAwaitableProxy);
             }
             catch (NullReferenceException exception)
             {

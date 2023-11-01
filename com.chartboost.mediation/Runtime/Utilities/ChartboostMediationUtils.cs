@@ -1,5 +1,4 @@
 using System.Linq;
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -33,7 +32,6 @@ namespace Chartboost.Utilities
             return canvas;
         }
 
-        [CanBeNull]
         private static Canvas GetCanvasWithHighestSortingOrder()
         {
             Canvas canvas = null;
@@ -48,7 +46,6 @@ namespace Chartboost.Utilities
             return canvas;
         }
         
-        [CanBeNull]
         private static Canvas GetRootLevelCanvasWithHighestSortingOrder()
         {
             Canvas canvas = null;

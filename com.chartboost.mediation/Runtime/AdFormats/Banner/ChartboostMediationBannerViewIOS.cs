@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Chartboost.Banner;
 using Chartboost.Requests;
 using Chartboost.Utilities;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using UnityEngine;
 using static Chartboost.Platforms.IOS.ChartboostMediationIOS;
@@ -17,7 +16,7 @@ namespace Chartboost.AdFormats.Banner
     /// <summary>
     /// IOS implementation of ChartboostMediationBannerViewBase
     /// </summary>
-    internal class ChartboostMediationBannerViewIOS : ChartboostMediationBannerViewBase
+    internal sealed class ChartboostMediationBannerViewIOS : ChartboostMediationBannerViewBase
     {
         private Dictionary<string, string> _keywords = new Dictionary<string, string>();
 
@@ -200,56 +199,55 @@ namespace Chartboost.AdFormats.Banner
         }
 
         #region Native
-        
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationBannerViewLoadAdWithScreenPos(IntPtr uniqueId, string placementName, int sizeType, float width, float height, int screenLocation, int hashCode, ExternChartboostMediationBannerAdLoadResultEvent callback);
 
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationBannerViewLoadAdWithXY(IntPtr uniqueId, string placementName, int sizeType, float width, float height, float x, float y, int hashCode, ExternChartboostMediationBannerAdLoadResultEvent callback);
 
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationBannerViewSetKeywords(IntPtr uniqueId, string keywords);
 
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern string _chartboostMediationBannerViewGetAdSize(IntPtr uniqueId);
 
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern string _chartboostMediationBannerViewGetContainerSize(IntPtr uniqueId);
 
-        [DllImport("__Internal")] [CanBeNull]
+        [DllImport(IOSConstants.Internal)]
         private static extern string _chartboostMediationBannerViewGetWinningBidInfo(IntPtr uniqueId);
 
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern string _chartboostMediationBannerViewGetLoadMetrics(IntPtr uniqueId);
         
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationBannerViewSetHorizontalAlignment(IntPtr uniqueId, int horizontalAlignment );
         
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern int _chartboostMediationBannerViewGetHorizontalAlignment(IntPtr uniqueId);
         
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationBannerViewSetVerticalAlignment(IntPtr uniqueId, int verticalAlignment );
         
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern int _chartboostMediationBannerViewGetVerticalAlignment(IntPtr uniqueId);
         
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationBannerViewResizeToFit(IntPtr uniqueId, int axis, float pivotX, float pivotY );
         
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationBannerViewSetDraggability(IntPtr uniqueId, bool canDrag );
 
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationBannerViewSetVisibility(IntPtr uniqueId, bool visible );
         
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationBannerViewReset(IntPtr uniqueId);
         
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationBannerViewDestroy(IntPtr uniqueId);
 
-        [DllImport("__Internal")]
+        [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationBannerViewMoveTo(IntPtr uniqueId, float x, float y);   
         
         #endregion
