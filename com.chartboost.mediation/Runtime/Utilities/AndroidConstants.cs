@@ -88,7 +88,7 @@ namespace Chartboost.Utilities
         internal const string PropertyAuctionId = "auction-id";
         internal const string PropertyLineItemId = "line_item_id";
         internal const string PropertyLineItemName = "line_item_name";
-        internal const string PropertyPrice = "line_item_name";
+        internal const string PropertyPrice = "price";
         internal const string PropertyName = "name";
         internal const string PropertyWidth = "width";
         internal const string PropertyHeight = "height";

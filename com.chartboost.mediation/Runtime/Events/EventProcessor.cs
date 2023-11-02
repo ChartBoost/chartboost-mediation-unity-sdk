@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using Chartboost.AdFormats.Banner;
 using Chartboost.Utilities;
 using UnityEditor;
@@ -31,6 +32,7 @@ namespace Chartboost.Events
         }
 
         private static SynchronizationContext _context;
+        private static TaskScheduler _unityScheduler;
         
         /// <summary>
         /// Called when an unexpected system error occurred.
@@ -45,7 +47,42 @@ namespace Chartboost.Events
         [InitializeOnLoadMethod]
         #endif
         [RuntimeInitializeOnLoadMethod]
-        private static void Initialize()=> _context ??= SynchronizationContext.Current;
+        private static void Initialize()
+        {
+            _context ??= SynchronizationContext.Current;
+            _unityScheduler ??= TaskScheduler.FromCurrentSynchronizationContext();
+        }
+        
+        /// <summary>
+        /// Creates a continuation that executes asynchronously, on the Unity main thread, when the target <see cref="Task{T}"/> completes.
+        /// </summary>
+        /// <param name="task">Target <see cref="Task"/>.</param>
+        /// <param name="continuation">An action to run when the <see cref="Task"/> completes. </param>
+        /// <typeparam name="T">The type of the result produced by the <see cref="Task"/>.</typeparam>
+        /// <returns>A new continuation <see cref="Task"/>.</returns>
+        public static Task ContinueWithOnMainThread<T>(this Task<T> task, Action<Task<T>> continuation)
+        {
+            var ret = task.ContinueWith(continuation, CancellationToken.None, TaskContinuationOptions.None, _unityScheduler);
+            ret.AppendExceptionLogging();
+            return ret;
+        }
+
+        /// <summary>
+        /// Creates a continuation that executes asynchronously, on the Unity main thread, when the target <see cref="Task"/> completes.
+        /// </summary>
+        /// <param name="task">Target <see cref="Task"/>.</param>
+        /// <param name="continuation">An action to run when the <see cref="Task"/> completes. </param>
+        /// <typeparam name="T">The type of the result produced by the <see cref="Task"/>.</typeparam>
+        /// <returns>A new continuation <see cref="Task"/>.</returns>
+        public static Task ContinueWithOnMainThread(this Task task, Action<Task> continuation)
+        {
+            var ret = task.ContinueWith(continuation, CancellationToken.None, TaskContinuationOptions.None, _unityScheduler); 
+            ret.AppendExceptionLogging();
+            return ret;
+        }
+        
+        private static void AppendExceptionLogging(this Task inputTask) 
+            => inputTask.ContinueWith(faultedTask => Debug.LogException(faultedTask.Exception), TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously);
 
         public static void ProcessEventWithILRD(string dataString, ChartboostMediationILRDEvent ilrdEvent)
         {
