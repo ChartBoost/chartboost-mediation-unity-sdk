@@ -67,7 +67,7 @@ dependencies {
     implementation 'com.chartboost:chartboost-mediation-adapter-verve:4.2.17.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/VerveDependencies.xml:5
     implementation 'com.chartboost:chartboost-mediation-adapter-vungle:4.7.0.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/VungleDependencies.xml:5
     implementation 'com.chartboost:chartboost-mediation-adapter-yahoo:4.1.4.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/YahooDependencies.xml:5
-    implementation 'com.chartboost:chartboost-mediation-sdk:4.6+' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:10
+    implementation 'com.chartboost:chartboost-mediation-sdk:4.7+' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:10
     implementation 'com.chartboost:chartboost-sdk:9.5.0' // Assets/com.chartboost.mediation/Editor/Adapters/ChartboostDependencies.xml:8
     implementation 'com.facebook.android:audience-network-sdk:6.16.0' // Assets/com.chartboost.mediation/Editor/Adapters/MetaAudienceNetworkDependencies.xml:8
     implementation 'com.fyber:marketplace-sdk:8.2.4' // Assets/com.chartboost.mediation/Editor/Adapters/DigitalTurbineExchangeDependencies.xml:8

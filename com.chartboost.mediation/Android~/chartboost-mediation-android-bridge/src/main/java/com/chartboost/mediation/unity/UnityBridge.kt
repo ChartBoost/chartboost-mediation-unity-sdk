@@ -15,8 +15,6 @@ import com.unity3d.player.UnityPlayer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
-import org.json.JSONArray
-import org.json.JSONObject
 
 class UnityBridge {
 
@@ -60,7 +58,7 @@ class UnityBridge {
             val bannerView = HeliumBannerAd(UnityPlayer.currentActivity, "", size, null)
             val bannerAdWrapper = BannerAdWrapper.wrap(bannerView)
             bannerAdWrapper.setListener(listener)
-//            AdStore.trackBannerAd(bannerAdWrapper);
+            AdStore.trackBannerAd(bannerAdWrapper);
             return bannerAdWrapper
         }
 

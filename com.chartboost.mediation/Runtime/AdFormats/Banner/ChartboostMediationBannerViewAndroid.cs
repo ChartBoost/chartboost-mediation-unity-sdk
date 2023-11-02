@@ -27,9 +27,6 @@ namespace Chartboost.AdFormats.Banner
         {
             LogTag = "ChartboostMediationBanner (Android)";
             _bannerAd = bannerAd;
-            
-            // TODO: this can be also done on bridge?   
-            AndroidAdStore.TrackBannerAd(bannerAd);
         }
 
         /// <inheritdoc cref="ChartboostMediationBannerViewBase.Keywords"/>
