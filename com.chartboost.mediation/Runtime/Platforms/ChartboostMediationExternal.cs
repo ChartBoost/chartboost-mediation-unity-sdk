@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Chartboost.AdFormats.Banner;
 using Chartboost.Banner;
+using Chartboost.Consent;
 using Chartboost.FullScreen.Interstitial;
 using Chartboost.FullScreen.Rewarded;
 using Chartboost.Requests;
@@ -83,12 +84,24 @@ namespace Chartboost.Platforms
         public virtual void DiscardOversizedAds(bool shouldDiscard)
             => Logger.Log(LogTag, $"DiscardOversizedAds : {shouldDiscard}");
 
-        public virtual ChartboostMediationAdapterInfo[] InitializedAdaptersInfo()
+        public virtual ChartboostMediationAdapterInfo[] InitializedAdaptersInfo
         {
-            Logger.Log(LogTag, "InitializedAdaptersInfo");
-            return Array.Empty<ChartboostMediationAdapterInfo>();
+            get
+            {
+                Logger.Log(LogTag, "InitializedAdaptersInfo");
+                return Array.Empty<ChartboostMediationAdapterInfo>();
+            }
         }
-        
+
+        public virtual IPartnerConsent PartnerConsents
+        {
+            get
+            {
+                Logger.Log(LogTag, "PartnerConsents");
+                return null;
+            }
+        }
+
         public virtual void Destroy() 
             => Logger.Log(LogTag, "Destroy");
 

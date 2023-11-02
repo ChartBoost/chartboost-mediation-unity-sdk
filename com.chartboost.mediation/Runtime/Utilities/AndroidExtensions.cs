@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using Chartboost.AdFormats.Banner;
 using Chartboost.Events;
-using Chartboost.Platforms.Android;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -88,7 +87,12 @@ namespace Chartboost.Utilities
         {
             using var iterator = nativeAdapterInfo.Call<AndroidJavaObject>(AndroidConstants.FunIterator);
             var count = nativeAdapterInfo.Call<int>(AndroidConstants.FunSize);
+            
             var ret = new ChartboostMediationAdapterInfo[count];
+
+            if (count == 0)
+                return ret;
+            
             var index = 0;
             
             do {

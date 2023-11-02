@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using Chartboost.AdFormats.Banner;
+using Chartboost.Consent;
 using Chartboost.Events;
 using Chartboost.Requests;
 using Chartboost.Utilities;
@@ -41,7 +42,7 @@ namespace Chartboost.Platforms.Android
         internal static AndroidJavaObject GetUnityBridge()
             => new AndroidJavaClass(GetQualifiedClassName(AndroidConstants.ClassUnityBridge));
 
-        private static AndroidJavaClass GetNativeSDK() => new AndroidJavaClass(GetQualifiedNativeClassName(AndroidConstants.ClassHeliumSdk));
+        internal static AndroidJavaClass GetNativeSDK() => new AndroidJavaClass(GetQualifiedNativeClassName(AndroidConstants.ClassHeliumSdk));
 
         [Obsolete("Init has been deprecated and will be removed in future versions of the SDK.")]
         public override void Init()
@@ -134,12 +135,17 @@ namespace Chartboost.Platforms.Android
             nativeSDK.CallStatic(AndroidConstants.FunSetShouldDiscardOversizedAds, shouldDiscard);
         }
 
-        public override ChartboostMediationAdapterInfo[] InitializedAdaptersInfo()
+        public override ChartboostMediationAdapterInfo[] InitializedAdaptersInfo
         {
-            using var native = GetNativeSDK();
-            using var adaptersInfo = native.CallStatic<AndroidJavaObject>(AndroidConstants.FunAdapterInfo);
-            return adaptersInfo.ToAdapterInfo();
+            get
+            {
+                using var native = GetNativeSDK();
+                using var adaptersInfo = native.CallStatic<AndroidJavaObject>(AndroidConstants.FunAdapterInfo);
+                return adaptersInfo.ToAdapterInfo();
+            }
         }
+
+        public override IPartnerConsent PartnerConsents { get; } = new PartnerConsentAndroid();
 
         public override void Destroy()
         {
