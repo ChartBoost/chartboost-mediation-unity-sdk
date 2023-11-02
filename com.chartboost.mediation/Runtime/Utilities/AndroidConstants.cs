@@ -20,6 +20,8 @@ namespace Chartboost.Utilities
         internal const string ClassChartboostMediationBannerViewListener = "ChartboostMediationBannerViewListener";
         internal const string ClassAdStore = "com.chartboost.mediation.unity.AdStore";
         internal const string ClassKeywords = "com.chartboost.heliumsdk.domain.Keywords";
+        internal const string ClassHashSet = "java.util.HashSet";
+        internal const string ClassHeliumInitializationOptions = "com.chartboost.heliumsdk.HeliumInitializationOptions";
 
         internal const string FunSetKeywords = "setKeywords";
         internal const string FunGetAdSize = "getAdSize";
@@ -62,7 +64,7 @@ namespace Chartboost.Utilities
         internal const string FunHashCode = "hashCode";
         internal const string FunGet = "get";
         internal const string FunSet = "set";
-        internal const string FunToInitializationOptions = "toInitializationOptions";
+        internal const string FunAdd = "add";
         internal const string FunSize = "size";
         internal const string FunAdapterInfo = "getAdapterInfo";
         internal const string FunIterator = "iterator";

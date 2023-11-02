@@ -72,10 +72,36 @@ namespace Chartboost.Utilities
         public static string PartnerInitializationDataToJsonString(this AndroidJavaObject partnerInitializationData) 
             => partnerInitializationData.Get<AndroidJavaObject>(AndroidConstants.PropertyData).Call<string>(AndroidConstants.FunToString);
 
-        public static AndroidJavaObject ArrayToInitializationOptions(this string[] source)
+        public static AndroidJavaObject ToInitializationOptions(this IEnumerable<string> options)
         {
-            using var unityBridge = ChartboostMediationAndroid.GetUnityBridge();
-            return unityBridge.CallStatic<AndroidJavaObject>(AndroidConstants.FunToInitializationOptions, string.Empty, source);
+            using var hashSet = new AndroidJavaObject(AndroidConstants.ClassHashSet);
+            foreach (var option in options)
+            {
+                if (string.IsNullOrEmpty(option))
+                    continue;
+                hashSet.Call<bool>(AndroidConstants.FunAdd, option);
+            }
+            return new AndroidJavaObject(AndroidConstants.ClassHeliumInitializationOptions, hashSet);
+        }
+
+        public static ChartboostMediationAdapterInfo[] ToAdapterInfo(this AndroidJavaObject nativeAdapterInfo)
+        {
+            using var iterator = nativeAdapterInfo.Call<AndroidJavaObject>(AndroidConstants.FunIterator);
+            var count = nativeAdapterInfo.Call<int>(AndroidConstants.FunSize);
+            var ret = new ChartboostMediationAdapterInfo[count];
+            var index = 0;
+            
+            do {
+                using var entry = iterator.Call<AndroidJavaObject>(AndroidConstants.FunNext);
+                var adapterVersion = entry.Call<string>(AndroidConstants.FunGetAdapterVersion);
+                var partnerVersion = entry.Call<string>(AndroidConstants.FunGetPartnerVersion);
+                var partnerId = entry.Call<string>(AndroidConstants.FunGetPartnerId);
+                var partnerDisplayName = entry.Call<string>(AndroidConstants.FunGetPartnerDisplayName);
+                var adapterInfo = new ChartboostMediationAdapterInfo(adapterVersion, partnerVersion, partnerId, partnerDisplayName);
+                ret[index] = adapterInfo;
+                index++;
+            } while (iterator.Call<bool>(AndroidConstants.FunHasNext));
+            return ret;
         }
 
         #nullable enable

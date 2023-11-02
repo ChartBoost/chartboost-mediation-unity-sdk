@@ -59,7 +59,7 @@ namespace Chartboost.Platforms.Android
             using var nativeSDK = GetNativeSDK();
             using var unityPlayer = new AndroidJavaClass(AndroidConstants.ClassUnityPlayer);
             using var activity = unityPlayer.GetStatic<AndroidJavaObject>(AndroidConstants.PropertyCurrentActivity);
-            var initializationOptions = GetInitializationOptions().ArrayToInitializationOptions();
+            using var initializationOptions = GetInitializationOptions().ToInitializationOptions();
             nativeSDK.CallStatic(AndroidConstants.FunStart, activity, appId, appSignature, initializationOptions,  new ChartboostMediationSDKListener());
             IsInitialized = true;
         }
@@ -70,7 +70,7 @@ namespace Chartboost.Platforms.Android
             ChartboostMediationSettings.AndroidAppId = appId;
             ChartboostMediationSettings.AndroidAppSignature = appSignature;
             initializationOptions ??= Array.Empty<string>();
-            var nativeOptions = initializationOptions.ArrayToInitializationOptions();
+            using var nativeOptions = initializationOptions.ToInitializationOptions();
             using var nativeSDK = GetNativeSDK();
             using var unityPlayer = new AndroidJavaClass(AndroidConstants.ClassUnityPlayer);
             using var activity = unityPlayer.GetStatic<AndroidJavaObject>(AndroidConstants.PropertyCurrentActivity);
@@ -136,27 +136,9 @@ namespace Chartboost.Platforms.Android
 
         public override ChartboostMediationAdapterInfo[] InitializedAdaptersInfo()
         {
-            base.InitializedAdaptersInfo();
             using var native = GetNativeSDK();
             using var adaptersInfo = native.CallStatic<AndroidJavaObject>(AndroidConstants.FunAdapterInfo);
-            using var iterator = adaptersInfo.Call<AndroidJavaObject>(AndroidConstants.FunIterator);
-            
-            var count = adaptersInfo.Call<int>(AndroidConstants.FunSize);
-            var ret = new ChartboostMediationAdapterInfo[count];
-            var index = 0;
-            
-            do
-            {
-                using var entry = iterator.Call<AndroidJavaObject>(AndroidConstants.FunNext);
-                var adapterVersion = entry.Call<string>(AndroidConstants.FunGetAdapterVersion);
-                var partnerVersion = entry.Call<string>(AndroidConstants.FunGetPartnerVersion);
-                var partnerId = entry.Call<string>(AndroidConstants.FunGetPartnerId);
-                var partnerDisplayName = entry.Call<string>(AndroidConstants.FunGetPartnerDisplayName);
-                var adapterInfo = new ChartboostMediationAdapterInfo(adapterVersion, partnerVersion, partnerId, partnerDisplayName);
-                ret[index] = adapterInfo;
-                index++;
-            } while (iterator.Call<bool>(AndroidConstants.FunHasNext));
-            return ret;
+            return adaptersInfo.ToAdapterInfo();
         }
 
         public override void Destroy()
