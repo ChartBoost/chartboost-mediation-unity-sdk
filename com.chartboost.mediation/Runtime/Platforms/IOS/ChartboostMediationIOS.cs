@@ -162,10 +162,8 @@ namespace Chartboost.Platforms.IOS
 
         public override ChartboostMediationAdapterInfo[] InitializedAdaptersInfo()
         {
-            base.InitializedAdaptersInfo();
             var adapterInfoNative = _chartboostMediationInitializedAdaptersInfo();
-            var adapterInfo =
-                JsonConvert.DeserializeObject<ChartboostMediationAdapterInfo[]>(adapterInfoNative);
+            var adapterInfo = JsonConvert.DeserializeObject<ChartboostMediationAdapterInfo[]>(adapterInfoNative);
             return adapterInfo;
         }
 

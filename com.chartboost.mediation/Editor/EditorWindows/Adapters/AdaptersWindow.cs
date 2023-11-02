@@ -5,7 +5,6 @@ using Chartboost.Editor.EditorWindows.Adapters.Serialization;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 namespace Chartboost.Editor.EditorWindows.Adapters
 {
@@ -114,7 +113,7 @@ namespace Chartboost.Editor.EditorWindows.Adapters
             };
             refreshImage.AddToClassList(ClassIcon);
 
-            var refreshButton = new Button(() => AdaptersWindow.Refresh(false));
+            var refreshButton = new Button(() => Refresh(false));
             refreshButton.AddToClassList(ClassRefreshButton);
             refreshButton.tooltip = ToolTipRefreshButton;
             refreshButton.Add(refreshImage);

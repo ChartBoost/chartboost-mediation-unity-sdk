@@ -49,7 +49,6 @@ namespace Chartboost.Utilities
         internal const string FunGetUserIdentifier = "getUserIdentifier";
         internal const string FunSetTestMode = "setTestMode";
         internal const string FunSetShouldDiscardOversizedAds = "setShouldDiscardOversizedAds";
-        internal const string FunAdapterInfo = "adapterInfo";
         internal const string FunUnsubscribeILRDObserver = "unsubscribeILRDObserver";
         internal const string FunLoadFullscreenAd = "loadFullscreenAd";
         internal const string FunLoadBannerAd = "loadBannerAd";
@@ -64,6 +63,15 @@ namespace Chartboost.Utilities
         internal const string FunGet = "get";
         internal const string FunSet = "set";
         internal const string FunToInitializationOptions = "toInitializationOptions";
+        internal const string FunSize = "size";
+        internal const string FunAdapterInfo = "getAdapterInfo";
+        internal const string FunIterator = "iterator";
+        internal const string FunNext = "next";
+        internal const string FunHasNext = "hasNext";
+        internal const string FunGetAdapterVersion = "getAdapterVersion";
+        internal const string FunGetPartnerVersion = "getPartnerVersion";
+        internal const string FunGetPartnerId = "getPartnerId";
+        internal const string FunGetPartnerDisplayName = "getPartnerDisplayName";
         
         internal const string PropertyChartboostMediationError = "chartboostMediationError";
         internal const string PropertyAd = "ad";

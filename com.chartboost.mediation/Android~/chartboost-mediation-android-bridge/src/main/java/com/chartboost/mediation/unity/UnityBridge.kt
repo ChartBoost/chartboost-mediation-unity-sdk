@@ -42,23 +42,6 @@ class UnityBridge {
             HeliumInitializationOptions(options.toSet())
 
         @JvmStatic
-        fun adapterInfo(): String {
-            val jsonArray = JSONArray()
-            for (adapter in HeliumSdk.adapterInfo){
-                val json = JSONObject()
-
-                json.put("adapterVersion", adapter.partnerVersion)
-                json.put("partnerVersion", adapter.partnerVersion)
-                json.put("partnerIdentifier", adapter.partnerId)
-                json.put("partnerDisplayName", adapter.partnerDisplayName)
-
-                jsonArray.put(json)
-            }
-
-            return jsonArray.toString()
-        }
-
-        @JvmStatic
         fun loadFullscreenAd(adRequest: ChartboostMediationAdLoadRequest, adLoadResultHandler: ChartboostMediationFullscreenAdLoadListener, fullscreenAdListener: ChartboostMediationFullscreenAdListener) {
             CoroutineScope(Main).launch {
                 val adLoadResult = HeliumSdk.loadFullscreenAd(UnityPlayer.currentActivity, adRequest, fullscreenAdListener)
