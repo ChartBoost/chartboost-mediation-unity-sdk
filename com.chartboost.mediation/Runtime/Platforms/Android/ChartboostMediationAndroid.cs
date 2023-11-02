@@ -59,7 +59,7 @@ namespace Chartboost.Platforms.Android
             using var nativeSDK = GetNativeSDK();
             using var unityPlayer = new AndroidJavaClass(AndroidConstants.ClassUnityPlayer);
             using var activity = unityPlayer.GetStatic<AndroidJavaObject>(AndroidConstants.PropertyCurrentActivity);
-            var initializationOptions = GetInitializationOptions().ArrayToInitializationOptions();
+            using var initializationOptions = GetInitializationOptions().ToInitializationOptions();
             nativeSDK.CallStatic(AndroidConstants.FunStart, activity, appId, appSignature, initializationOptions,  new ChartboostMediationSDKListener());
             IsInitialized = true;
         }
@@ -70,7 +70,7 @@ namespace Chartboost.Platforms.Android
             ChartboostMediationSettings.AndroidAppId = appId;
             ChartboostMediationSettings.AndroidAppSignature = appSignature;
             initializationOptions ??= Array.Empty<string>();
-            var nativeOptions = initializationOptions.ArrayToInitializationOptions();
+            using var nativeOptions = initializationOptions.ToInitializationOptions();
             using var nativeSDK = GetNativeSDK();
             using var unityPlayer = new AndroidJavaClass(AndroidConstants.ClassUnityPlayer);
             using var activity = unityPlayer.GetStatic<AndroidJavaObject>(AndroidConstants.PropertyCurrentActivity);
@@ -136,11 +136,9 @@ namespace Chartboost.Platforms.Android
 
         public override ChartboostMediationAdapterInfo[] InitializedAdaptersInfo()
         {
-            base.InitializedAdaptersInfo();
-            using var unityBridge = GetUnityBridge();
-            var json = unityBridge.CallStatic<string>(AndroidConstants.FunAdapterInfo);
-            var adapterInfo = JsonConvert.DeserializeObject<ChartboostMediationAdapterInfo[]>(json);
-            return adapterInfo;
+            using var native = GetNativeSDK();
+            using var adaptersInfo = native.CallStatic<AndroidJavaObject>(AndroidConstants.FunAdapterInfo);
+            return adaptersInfo.ToAdapterInfo();
         }
 
         public override void Destroy()

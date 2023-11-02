@@ -8,6 +8,7 @@ using Chartboost.FullScreen.Interstitial;
 using Chartboost.FullScreen.Rewarded;
 using Chartboost.Platforms;
 using Chartboost.Requests;
+using Newtonsoft.Json.Utilities;
 #if UNITY_ANDROID && !UNITY_EDITOR
 using Chartboost.Platforms.Android;
 #elif UNITY_IOS && !UNITY_EDITOR
@@ -32,6 +33,7 @@ namespace Chartboost
 
         static ChartboostMediation() 
         {
+            AotHelper.EnsureList<ChartboostMediationAdapterInfo>();
             #pragma warning disable CS0618
             #if UNITY_EDITOR
             _chartboostMediationExternal = new ChartboostMediationUnsupported();
@@ -297,6 +299,6 @@ namespace Chartboost
         /// Returns an array of all initialized adapters, or an empty array if the SDK is not initialized.
         /// </summary>
         /// <returns></returns>
-        public static ChartboostMediationAdapterInfo[] InitializedAdaptersInfo() => _chartboostMediationExternal.InitializedAdaptersInfo();
+        public static ChartboostMediationAdapterInfo[] AdaptersInfo => _chartboostMediationExternal.InitializedAdaptersInfo();
     }
 }

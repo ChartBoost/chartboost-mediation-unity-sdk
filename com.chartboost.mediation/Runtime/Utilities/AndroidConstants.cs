@@ -20,6 +20,8 @@ namespace Chartboost.Utilities
         internal const string ClassChartboostMediationBannerViewListener = "ChartboostMediationBannerViewListener";
         internal const string ClassAdStore = "com.chartboost.mediation.unity.AdStore";
         internal const string ClassKeywords = "com.chartboost.heliumsdk.domain.Keywords";
+        internal const string ClassHashSet = "java.util.HashSet";
+        internal const string ClassHeliumInitializationOptions = "com.chartboost.heliumsdk.HeliumInitializationOptions";
 
         internal const string FunSetKeywords = "setKeywords";
         internal const string FunGetAdSize = "getAdSize";
@@ -49,7 +51,6 @@ namespace Chartboost.Utilities
         internal const string FunGetUserIdentifier = "getUserIdentifier";
         internal const string FunSetTestMode = "setTestMode";
         internal const string FunSetShouldDiscardOversizedAds = "setShouldDiscardOversizedAds";
-        internal const string FunAdapterInfo = "adapterInfo";
         internal const string FunUnsubscribeILRDObserver = "unsubscribeILRDObserver";
         internal const string FunLoadFullscreenAd = "loadFullscreenAd";
         internal const string FunLoadBannerAd = "loadBannerAd";
@@ -63,7 +64,16 @@ namespace Chartboost.Utilities
         internal const string FunHashCode = "hashCode";
         internal const string FunGet = "get";
         internal const string FunSet = "set";
-        internal const string FunToInitializationOptions = "toInitializationOptions";
+        internal const string FunAdd = "add";
+        internal const string FunSize = "size";
+        internal const string FunAdapterInfo = "getAdapterInfo";
+        internal const string FunIterator = "iterator";
+        internal const string FunNext = "next";
+        internal const string FunHasNext = "hasNext";
+        internal const string FunGetAdapterVersion = "getAdapterVersion";
+        internal const string FunGetPartnerVersion = "getPartnerVersion";
+        internal const string FunGetPartnerId = "getPartnerId";
+        internal const string FunGetPartnerDisplayName = "getPartnerDisplayName";
         
         internal const string PropertyChartboostMediationError = "chartboostMediationError";
         internal const string PropertyAd = "ad";
