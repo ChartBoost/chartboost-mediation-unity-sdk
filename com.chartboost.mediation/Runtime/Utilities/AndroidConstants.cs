@@ -81,7 +81,9 @@ namespace Chartboost.Utilities
         internal const string FunGetPartnerConsents = "getPartnerConsents";
         internal const string FunGetPartnerIdToConsentGivenMapCopy = "getPartnerIdToConsentGivenMapCopy";
         internal const string FunSetPartnerConsent = "setPartnerConsent";
-        internal const string FunSetPartnerConsents = "setPartnerConsents";
+        internal const string FunAddPartnerConsents = "addPartnerConsents";
+        internal const string FunReplacePartnerConsents = "replacePartnerConsents";
+        internal const string FunClear = "clear";
         internal const string FunRemovePartnerConsent = "removePartnerConsent";
         internal const string FunBooleanValue = "booleanValue";
         internal const string FunEntrySet = "entrySet";

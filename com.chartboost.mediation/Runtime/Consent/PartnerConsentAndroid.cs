@@ -1,3 +1,4 @@
+#if UNITY_ANDROID
 using System.Collections.Generic;
 using Chartboost.Platforms.Android;
 using Chartboost.Utilities;
@@ -7,7 +8,6 @@ namespace Chartboost.Consent
 {
     public class PartnerConsentAndroid : IPartnerConsent
     {
-        /// <inheritdoc cref="GetNativePartnerConsents"/>
         private static AndroidJavaObject GetNativePartnerConsents()
         {
             using var native = ChartboostMediationAndroid.GetNativeSDK();
@@ -28,13 +28,28 @@ namespace Chartboost.Consent
             using var partnerConsents = GetNativePartnerConsents();
             partnerConsents.Call(AndroidConstants.FunSetPartnerConsent, partnerId, consentGiven);
         }
-
-        /// <inheritdoc cref="SetPartnerConsents"/>
-        public void SetPartnerConsents(IDictionary<string, bool> partnerIdToConsentGivenDictionary)
+        
+        /// <inheritdoc cref="AddPartnerConsents"/>
+        public void AddPartnerConsents(IDictionary<string, bool> partnerIdToConsentGivenDictionary)
         {
             using var consentMap = DictionaryToConsentMap(partnerIdToConsentGivenDictionary);
             using var partnerConsents = GetNativePartnerConsents();
-            partnerConsents.Call(AndroidConstants.FunSetPartnerConsents, consentMap);
+            partnerConsents.Call(AndroidConstants.FunAddPartnerConsents, consentMap);
+        }
+
+        /// <inheritdoc cref="ReplacePartnerConsents"/>
+        public void ReplacePartnerConsents(IDictionary<string, bool> partnerIdToConsentGivenDictionary)
+        {
+            using var newConsentMap = DictionaryToConsentMap(partnerIdToConsentGivenDictionary);
+            using var partnerConsents = GetNativePartnerConsents();
+            partnerConsents.Call(AndroidConstants.FunReplacePartnerConsents, newConsentMap);
+        }
+
+        /// <inheritdoc cref="ClearConsents"/>
+        public void ClearConsents()
+        {
+            using var partnerConsents = GetNativePartnerConsents();
+            partnerConsents.Call(AndroidConstants.FunClear);
         }
 
         /// <inheritdoc cref="RemovePartnerConsent"/>
@@ -82,11 +97,15 @@ namespace Chartboost.Consent
             
             foreach (var kv in source)
             {
-                using var key = new AndroidJavaObject( AndroidConstants.ClassString, kv.Key);
+                var partnerId = kv.Key;
+                if (string.IsNullOrEmpty(partnerId))
+                    continue;
+                using var key = new AndroidJavaObject( AndroidConstants.ClassString, partnerId);
                 using var value = new AndroidJavaObject(AndroidConstants.ClassBoolean, kv.Value);
-                map.Call<AndroidJavaClass>(AndroidConstants.FunPut, key, value);
+                map.Call<AndroidJavaClass>(AndroidConstants.FunPut, partnerId, value);
             }
             return map;
         }
     }
 }
+#endif
