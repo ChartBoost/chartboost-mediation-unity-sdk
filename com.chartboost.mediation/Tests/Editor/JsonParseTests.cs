@@ -1,9 +1,8 @@
+using System.IO;
 using NUnit.Framework;
 using UnityEngine;
-using System.IO;
-using Chartboost;
 
-namespace Chartboost
+namespace Chartboost.Tests.Editor
 {
     /// <summary>
     /// This suite of tests is intended to directly validate the parsing of JSON
