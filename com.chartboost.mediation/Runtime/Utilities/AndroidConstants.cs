@@ -20,8 +20,12 @@ namespace Chartboost.Utilities
         internal const string ClassChartboostMediationBannerViewListener = "ChartboostMediationBannerViewListener";
         internal const string ClassAdStore = "com.chartboost.mediation.unity.AdStore";
         internal const string ClassKeywords = "com.chartboost.heliumsdk.domain.Keywords";
-        internal const string ClassHashSet = "java.util.HashSet";
         internal const string ClassHeliumInitializationOptions = "com.chartboost.heliumsdk.HeliumInitializationOptions";
+
+        internal const string ClassHashSet = "java.util.HashSet";
+        internal const string ClassHashMap = "java.util.HashMap";
+        internal const string ClassString = "java.lang.String";
+        internal const string ClassBoolean = "java.lang.Boolean";
 
         internal const string FunSetKeywords = "setKeywords";
         internal const string FunGetAdSize = "getAdSize";
@@ -56,7 +60,6 @@ namespace Chartboost.Utilities
         internal const string FunLoadBannerAd = "loadBannerAd";
         internal const string FunGetUIScaleFactor = "getUIScaleFactor";
         internal const string FunReleaseLegacyAd = "releaseLegacyAd";
-        internal const string FunTrackBannerAd = "trackBannerAd";
         internal const string FunReleaseFullscreenAd = "releaseFullscreenAd";
         internal const string FunReleaseBannerAd = "releaseBannerAd";
         internal const string FunAdStoreInfo = "storeInfo";
@@ -64,6 +67,7 @@ namespace Chartboost.Utilities
         internal const string FunHashCode = "hashCode";
         internal const string FunGet = "get";
         internal const string FunSet = "set";
+        internal const string FunPut = "put";
         internal const string FunAdd = "add";
         internal const string FunSize = "size";
         internal const string FunAdapterInfo = "getAdapterInfo";
@@ -74,6 +78,17 @@ namespace Chartboost.Utilities
         internal const string FunGetPartnerVersion = "getPartnerVersion";
         internal const string FunGetPartnerId = "getPartnerId";
         internal const string FunGetPartnerDisplayName = "getPartnerDisplayName";
+        internal const string FunGetPartnerConsents = "getPartnerConsents";
+        internal const string FunGetPartnerIdToConsentGivenMapCopy = "getPartnerIdToConsentGivenMapCopy";
+        internal const string FunSetPartnerConsent = "setPartnerConsent";
+        internal const string FunAddPartnerConsents = "addPartnerConsents";
+        internal const string FunReplacePartnerConsents = "replacePartnerConsents";
+        internal const string FunClear = "clear";
+        internal const string FunRemovePartnerConsent = "removePartnerConsent";
+        internal const string FunBooleanValue = "booleanValue";
+        internal const string FunEntrySet = "entrySet";
+        internal const string FunGetKey = "getKey";
+        internal const string FunGetValue = "getValue";
         
         internal const string PropertyChartboostMediationError = "chartboostMediationError";
         internal const string PropertyAd = "ad";

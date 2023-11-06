@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Chartboost.AdFormats.Banner;
 using Chartboost.AdFormats.Banner.Unity;
 using Chartboost.Banner;
+using Chartboost.Consent;
 using Chartboost.Events;
 using Chartboost.FullScreen.Interstitial;
 using Chartboost.FullScreen.Rewarded;
@@ -207,7 +208,7 @@ namespace Chartboost
         // Functions for showing ads
         //////////////////////////////////////////////////////
 
-        public static string Version => "4.6.0";
+        public static string Version => "4.7.0";
         
         /// <summary>
         /// Load a fullscreen ad (interstitial, rewarded video, rewarded interstitial).
@@ -299,6 +300,11 @@ namespace Chartboost
         /// Returns an array of all initialized adapters, or an empty array if the SDK is not initialized.
         /// </summary>
         /// <returns></returns>
-        public static ChartboostMediationAdapterInfo[] AdaptersInfo => _chartboostMediationExternal.InitializedAdaptersInfo();
+        public static ChartboostMediationAdapterInfo[] AdaptersInfo => _chartboostMediationExternal.AdaptersInfo;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public static IPartnerConsent PartnerConsents => _chartboostMediationExternal.PartnerConsents;
     }
 }

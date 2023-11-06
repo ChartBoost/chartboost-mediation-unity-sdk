@@ -19,15 +19,6 @@ namespace Chartboost.Utilities
             });
         }
 
-        public static void TrackBannerAd(AndroidJavaObject bannerAd)
-        {
-            EventProcessor.ProcessEvent(() =>
-            {
-                using var adStore = GetAdStore();
-                adStore.CallStatic(AndroidConstants.FunTrackBannerAd, bannerAd);
-            });
-        }
-        
         public static void ReleaseFullscreenAd(int uniqueId)
         {
             EventProcessor.ProcessEvent(() => { 

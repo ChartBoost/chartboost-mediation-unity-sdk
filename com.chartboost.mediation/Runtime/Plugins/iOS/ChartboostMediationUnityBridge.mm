@@ -554,7 +554,7 @@ void _setRewardedCallbacks(ChartboostMediationPlacementLoadEvent didLoadCallback
 
 void _setBannerCallbacks(ChartboostMediationPlacementLoadEvent didLoadCallback, ChartboostMediationPlacementEvent didRecordImpression, ChartboostMediationPlacementEvent didClickCallback)
 {
-    
+
     [[ChartboostMediationObserver sharedObserver] setBannerDidLoadCallback:didLoadCallback];
     [[ChartboostMediationObserver sharedObserver] setBannerDidRecordImpressionCallback:didRecordImpression];
     [[ChartboostMediationObserver sharedObserver] setBannerDidClickCallback:didClickCallback];
@@ -571,7 +571,7 @@ void _setBannerAdCallbacks(ChartboostMediationBannerAdEvent bannerEvents){
 void _chartboostMediationInit(const char *appId, const char *appSignature, const char *unityVersion, const char** initializationOptions, int initializationOptionsSize)
 {
     HeliumInitializationOptions* heliumInitializationOptions = nil;
-    
+
     if (initializationOptionsSize > 0) {
         NSMutableArray *initializationPartners = [NSMutableArray new];
         for (int x = 0; x < initializationOptionsSize; x++)
@@ -581,7 +581,7 @@ void _chartboostMediationInit(const char *appId, const char *appSignature, const
         }
         heliumInitializationOptions = [[HeliumInitializationOptions alloc] initWithSkippedPartnerIdentifiers:initializationPartners];
     }
-    
+
     [[Helium sharedHelium] startWithAppId:GetStringParam(appId) andAppSignature:GetStringParam(appSignature) options:heliumInitializationOptions delegate:[ChartboostMediationObserver sharedObserver]];
 }
 
@@ -656,7 +656,7 @@ void _chartboostMediationDiscardOversizedAds(BOOL shouldDiscard)
 const char * _chartboostMediationInitializedAdaptersInfo()
 {
     NSMutableArray * jsonArray = [NSMutableArray array];
-    
+
     NSArray<HeliumAdapterInfo*> * adapters =  [[Helium sharedHelium] initializedAdapterInfo];
     for (HeliumAdapterInfo *adapter in adapters) {
         NSString * partnerVersionKey        = @"partnerVersion";      NSString * partnerVersionValue     = adapter.partnerVersion;
@@ -665,13 +665,13 @@ const char * _chartboostMediationInitializedAdaptersInfo()
         NSString * partnerDisplayNameKey    = @"partnerDisplayName";  NSString * partnerDisplayNameValue = adapter.partnerDisplayName;
 
         NSDictionary *adapterDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-          partnerVersionValue,partnerVersionKey,
-          adapterVersionValue,adapterVersionKey,
-          partnerIdentifierValue,partnerIdentifierKey,
-          partnerDisplayNameValue,partnerDisplayNameKey,
-          nil
+                                               partnerVersionValue,partnerVersionKey,
+                                           adapterVersionValue,adapterVersionKey,
+                                           partnerIdentifierValue,partnerIdentifierKey,
+                                           partnerDisplayNameValue,partnerDisplayNameKey,
+                                           nil
         ];
-    
+
         [jsonArray addObject:adapterDictionary];
     }
 
@@ -683,7 +683,7 @@ void * _chartboostMediationGetInterstitialAd(const char *placementName)
     id<HeliumInterstitialAd> ad = [[Helium sharedHelium] interstitialAdProviderWithDelegate: [ChartboostMediationObserver sharedObserver] andPlacementName: GetStringParam(placementName)];
     if (ad == NULL)
         return NULL;
-    
+
     [[ChartboostMediationObserver sharedObserver] storeAd:ad placementName:placementName multiPlacementSupport:false];
     return (__bridge void*)ad;
 }
@@ -735,7 +735,7 @@ void * _chartboostMediationGetRewardedAd(const char *placementName)
     id<HeliumRewardedAd> ad = [[Helium sharedHelium] rewardedAdProviderWithDelegate: [ChartboostMediationObserver sharedObserver] andPlacementName: GetStringParam(placementName)];
     if (ad == NULL)
         return NULL;
-    
+
     [[ChartboostMediationObserver sharedObserver] storeAd:ad placementName:placementName multiPlacementSupport:false];
     return (__bridge void*)ad;
 }
@@ -791,9 +791,9 @@ void _chartboostMediationRewardedAdSetCustomData(const void * uniqueId, const ch
 void _chartboostMediationLoadFullscreenAd(const char *placementName, const char *keywords, int hashCode, ChartboostMediationFullscreenAdLoadResultEvent callback)
 {
     NSDictionary *formattedKeywords = objFromJsonString<NSDictionary *>(keywords);
-    
+
     ChartboostMediationAdLoadRequest *loadRequest = [[ChartboostMediationAdLoadRequest alloc] initWithPlacement:GetStringParam(placementName) keywords:formattedKeywords];
-    
+
     [[Helium sharedHelium] loadFullscreenAdWithRequest:loadRequest completion:^(ChartboostMediationFullscreenAdLoadResult * adLoadResult) {
         ChartboostMediationError *error = [adLoadResult error];
         if (error != nil)
@@ -804,7 +804,7 @@ void _chartboostMediationLoadFullscreenAd(const char *placementName, const char 
             callback(hashCode, NULL, "", "", "", code, message);
             return;
         }
-        
+
         id<ChartboostMediationFullscreenAd> ad = [adLoadResult ad];
         [ad setDelegate:[ChartboostMediationObserver sharedObserver]];
         [[ChartboostMediationObserver sharedObserver] storeAd:ad placementName:placementName multiPlacementSupport:true];
@@ -829,7 +829,7 @@ void _chartboostMediationShowFullscreenAd(const void *uniqueId, int hashCode, Ch
                 callback(hashCode, "", code, message);
                 return;
             }
-        
+
             const char *metricsJson = dictionaryToJSON([adShowResult metrics]);
             UnityPause(true);
             callback(hashCode, metricsJson, "", "");
@@ -866,17 +866,17 @@ void * _chartboostMediationGetBannerAd(const char *placementName, long size)
         case 1:
             cbSize = CHBHBannerSize_Medium;
             break;
-            
+
         default:
             cbSize = CHBHBannerSize_Standard;
             break;
     }
-    
+
     HeliumBannerView *ad = [[Helium sharedHelium] bannerProviderWithDelegate:[ChartboostMediationObserver sharedObserver] andPlacementName:GetStringParam(placementName) andSize:cbSize];
 
     if (ad == NULL)
         return NULL;
-        
+
     [[ChartboostMediationObserver sharedObserver] storeAd:ad placementName:placementName multiPlacementSupport:true];
     return (__bridge void*)ad;
 }
@@ -1005,20 +1005,20 @@ void _chartboostMediationFreeAdObject(const void * uniqueId, const char * placem
 
 
 const void* _chartboostMediationLoadBannerView(ChartboostMediationBannerAdDragEvent dragListener){
-        
+
     ChartboostMediationBannerView *bannerView = [[ChartboostMediationBannerView alloc] init];
     [bannerView setDelegate:[ChartboostMediationObserver sharedObserver]];
-    
+
     ChartboostMediationBannerAdWrapper *wrapper = [[ChartboostMediationBannerAdWrapper alloc] initWithBannerView:bannerView andDragListener:dragListener];
     [[ChartboostMediationObserver sharedObserver] storeAd:wrapper placementName:nil multiPlacementSupport:true];
     [[ChartboostMediationObserver sharedObserver] storeWrapper:wrapper forAd:bannerView];
-    
+
     return (__bridge void*)wrapper;
 }
 
 void _chartboostMediationBannerViewLoadAdWithScreenPos(const void *uniqueId, const char *placementName, int sizeType, float width, float height, long screenLocation, int hashCode, ChartboostMediationBannerAdLoadResultEvent callback) {
     ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
-    
+
     ChartboostMediationBannerSize *size;
     switch(sizeType){
         case 0 : size = [ChartboostMediationBannerSize standard]; break;
@@ -1027,10 +1027,10 @@ void _chartboostMediationBannerViewLoadAdWithScreenPos(const void *uniqueId, con
         case 3 : size = [ChartboostMediationBannerSize adaptiveWithWidth:width maxHeight:height]; break;
         default: size =  [ChartboostMediationBannerSize adaptiveWithWidth:0 maxHeight:0]; break;
     }
-    
+
     ChartboostMediationBannerLoadRequest *loadRequest = [[ChartboostMediationBannerLoadRequest alloc] initWithPlacement:GetStringParam(placementName) size:size];
     UIViewController* viewController = [[ChartboostMediationObserver sharedObserver] getBannerViewController:bannerView size:size.size screenLocation:screenLocation];
-    
+
     // Load
     [bannerView loadWith:loadRequest viewController:viewController completion:^(ChartboostMediationBannerLoadResult *adLoadResult) {
         ChartboostMediationError *error = [adLoadResult error];
@@ -1042,12 +1042,12 @@ void _chartboostMediationBannerViewLoadAdWithScreenPos(const void *uniqueId, con
             callback(hashCode, uniqueId, "", "", code, message);
             return;
         }
-        
+
         const char *loadId = [[adLoadResult loadID] UTF8String];
         const char *metricsJson = dictionaryToJSON([adLoadResult metrics]);
         callback(hashCode, uniqueId, loadId, metricsJson, "", "");
     }];
-    
+
     ChartboostMediationBannerAdWrapper *bannerWrapper = (__bridge ChartboostMediationBannerAdWrapper *)uniqueId;
     bannerWrapper.usesConstraints = true;
 }
@@ -1056,17 +1056,17 @@ void _chartboostMediationBannerViewLoadAdWithXY(const void *uniqueId, const char
     ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
 
     ChartboostMediationBannerSize *size;
-    switch(sizeType){        
+    switch(sizeType){
         case 0 : size = [ChartboostMediationBannerSize standard]; break;
         case 1 : size = [ChartboostMediationBannerSize medium]; break;
         case 2 : size = [ChartboostMediationBannerSize leaderboard]; break;
         case 3 : size = [ChartboostMediationBannerSize adaptiveWithWidth:width maxHeight:height]; break;
         default: size =  [ChartboostMediationBannerSize adaptiveWithWidth:0 maxHeight:0]; break;
     }
-    
+
     ChartboostMediationBannerLoadRequest *loadRequest = [[ChartboostMediationBannerLoadRequest alloc] initWithPlacement:GetStringParam(placementName) size:size];
     UIViewController* viewController = [[ChartboostMediationObserver sharedObserver] getBannerViewController:bannerView size:size.size x:x y:y];
-    
+
     // Load
     [bannerView loadWith:loadRequest viewController:viewController completion:^(ChartboostMediationBannerLoadResult *adLoadResult) {
         ChartboostMediationError *error = [adLoadResult error];
@@ -1078,12 +1078,12 @@ void _chartboostMediationBannerViewLoadAdWithXY(const void *uniqueId, const char
             callback(hashCode, uniqueId, "", "", code, message);
             return;
         }
-        
+
         const char *loadId = [[adLoadResult loadID] UTF8String];
         const char *metricsJson = dictionaryToJSON([adLoadResult metrics]);
         callback(hashCode, uniqueId, loadId, metricsJson, "", "");
-    }];    
-    
+    }];
+
     ChartboostMediationBannerAdWrapper *bannerWrapper = (__bridge ChartboostMediationBannerAdWrapper *)uniqueId;
     bannerWrapper.usesConstraints = false;
 }
@@ -1101,14 +1101,14 @@ const char * _chartboostMediationBannerViewGetAdSize(const void* uniqueId){
 
 const char * _chartboostMediationBannerViewGetContainerSize(const void* uniqueId){
     ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
-    
+
     // Note : `bannerView.size.type` is always 0 even if load request was made with adaptive size
     // Therefore, we always set it to adaptive here and let Unity updated it based on size type at load request
     // if(bannerView.size.type == 0)    // Fixed
     //      return sizeToJSON(bannerView.request.size);
-    
+
     // Adaptive
-    ChartboostMediationBannerSize *size = [ChartboostMediationBannerSize adaptiveWithWidth:bannerView.frame.size.width maxHeight:bannerView.frame.size.height];    
+    ChartboostMediationBannerSize *size = [ChartboostMediationBannerSize adaptiveWithWidth:bannerView.frame.size.width maxHeight:bannerView.frame.size.height];
     return sizeToJSON(size);
 }
 
@@ -1127,7 +1127,7 @@ const char * _chartboostMediationBannerViewGetLoadMetrics(const void* uniqueId){
 }
 
 void _chartboostMediationBannerViewSetHorizontalAlignment(const void* uniqueId, int horizontalAlignment){
-            
+
     ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
     bannerView.horizontalAlignment = (ChartboostMediationBannerHorizontalAlignment)horizontalAlignment;
 }
@@ -1138,7 +1138,7 @@ int _chartboostMediationBannerViewGetHorizontalAlignment(const void* uniqueId){
 }
 
 void _chartboostMediationBannerViewSetVerticalAlignment(const void* uniqueId, int verticalAlignment){
-            
+
     ChartboostMediationBannerView *bannerView = _getBannerView(uniqueId);
     bannerView.verticalAlignment = (ChartboostMediationBannerVerticalAlignment)verticalAlignment;
 }
@@ -1155,7 +1155,7 @@ void _chartboostMediationBannerViewResizeToFit(const void* uniqueId, int axis, f
 
 void _chartboostMediationBannerViewSetDraggability(const void* uniqueId, BOOL canDrag){
     ChartboostMediationBannerAdWrapper *bannerWrapper = (__bridge ChartboostMediationBannerAdWrapper *)uniqueId;
-    [bannerWrapper setDraggable:canDrag];        
+    [bannerWrapper setDraggable:canDrag];
 }
 
 void _chartboostMediationBannerViewSetVisibility(const void* uniqueId, BOOL visible){
@@ -1174,7 +1174,7 @@ void _chartboostMediationBannerViewDestroy(const void * uniqueId)
         ChartboostMediationBannerView* bannerView = _getBannerView(uniqueId);
         [bannerView removeFromSuperview];
         [[ChartboostMediationObserver sharedObserver] releaseAd: [NSNumber numberWithLong:(long)uniqueId] placementName:nil multiPlacementSupport:true];
-                
+
         [[ChartboostMediationObserver sharedObserver] releaseWrapperForAd:[NSNumber numberWithLong:(long)bannerView]];
     });
 }
@@ -1190,6 +1190,51 @@ void _chartboostMediationBannerViewMoveTo(const void * uniqueId, float x, float 
         frame.origin = origin;
         bannerView.frame = frame;
     });
+}
+
+const char * _chartboostMediationGetPartnerConsentDictionary() {
+    NSDictionary<NSString *, NSNumber* >* consents   = [[Helium sharedHelium] partnerConsents];
+    return dictionaryToJSON(consents);
+}
+
+void _chartboostMediationSetPartnerConsent(const char* partnerIdentifier, bool consentGranted){
+    NSString* partnerId = GetStringParam(partnerIdentifier);
+    NSNumber* consentValue = [NSNumber numberWithBool:consentGranted];
+    NSMutableDictionary* mutableCopy  = [[[Helium sharedHelium] partnerConsents] mutableCopy];
+    [mutableCopy setValue:consentValue forKey:partnerId];
+    [[Helium sharedHelium] setPartnerConsents:mutableCopy];
+}
+
+void _chartboostMediationAddPartnerConsents(const char* partnerConsentsJson){
+    NSDictionary* partnerConsents = objFromJsonString<NSDictionary *>(partnerConsentsJson);
+    NSMutableDictionary* mutableCopy  = [[[Helium sharedHelium] partnerConsents] mutableCopy];
+    [mutableCopy addEntriesFromDictionary:partnerConsents];
+    [[Helium sharedHelium] setPartnerConsents:mutableCopy];
+}
+
+void _chartboostMediationReplacePartnerConsents(const char* partnerConsentsJson){
+    NSDictionary* partnerConsents = objFromJsonString<NSDictionary *>(partnerConsentsJson);
+    [[Helium sharedHelium] setPartnerConsents:partnerConsents];
+}
+
+void _chartboostMediationClearConsents()
+{
+    NSDictionary * emptyDictionary = [NSDictionary dictionary];
+    [[Helium sharedHelium] setPartnerConsents:emptyDictionary];
+}
+
+int _chartboostMediationRemovePartnerConsent(const char* partnerIdentifier)
+{
+    NSString* partnerId = GetStringParam(partnerIdentifier);
+    NSMutableDictionary* mutableCopy  = [[[Helium sharedHelium] partnerConsents] mutableCopy];
+    NSNumber* previousValue = [[mutableCopy valueForKey:partnerId] copy];
+
+    if (previousValue == nil)
+        return -1;
+
+    [mutableCopy removeObjectForKey:partnerId];
+    [[Helium sharedHelium] setPartnerConsents:mutableCopy];
+    return [previousValue intValue];
 }
 
 }

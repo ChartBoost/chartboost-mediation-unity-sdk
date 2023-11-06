@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Chartboost.AdFormats.Banner;
+using Chartboost.Consent;
 using Chartboost.Requests;
 
 namespace Chartboost.Platforms
@@ -59,5 +60,7 @@ namespace Chartboost.Platforms
         }
 
         public override event ChartboostMediationEvent DidStart;
+
+        public override IPartnerConsent PartnerConsents { get; } = new PartnerConsentUnsupported();
     }
 }

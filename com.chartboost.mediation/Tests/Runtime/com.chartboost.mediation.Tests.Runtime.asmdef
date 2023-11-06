@@ -1,14 +1,12 @@
 {
-    "name": "com.chartboost.mediation.Tests.Editor",
-    "rootNamespace": "Chartboost.Tests.Editor",
+    "name": "com.chartboost.mediation.Tests.Runtime",
+    "rootNamespace": "Chartboost.Tests.Runtime",
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "com.chartboost.mediation"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": true,
