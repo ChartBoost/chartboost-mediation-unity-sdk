@@ -32,22 +32,22 @@ namespace Chartboost
     public static class Adapters
     {
         public const string AdColony = Partners.AdColony;
-        public const string AdMob = Partners.AdColony;
-        public const string AmazonPublisherServices = Partners.AdColony;
-        public const string AppLovin = Partners.AdColony;
-        public const string DigitalTurbineExchange = Partners.AdColony;
-        public const string GoogleBidding = Partners.AdColony;
-        public const string HyprMX = Partners.AdColony;
-        public const string InMobi = Partners.AdColony;
-        public const string IronSource = Partners.AdColony;
-        public const string MetaAudienceNetwork = Partners.AdColony;
-        public const string Mintegral = Partners.AdColony;
-        public const string MobileFuse = Partners.AdColony;
-        public const string Pangle = Partners.AdColony;
-        public const string Tapjoy = Partners.AdColony;
-        public const string Unity = Partners.AdColony;
-        public const string Verve = Partners.AdColony;
-        public const string Vungle = Partners.AdColony;
-        public const string Yahoo = Partners.AdColony;
+        public const string AdMob = Partners.AdMob;
+        public const string AmazonPublisherServices = Partners.AmazonPublisherServices;
+        public const string AppLovin = Partners.AppLovin;
+        public const string DigitalTurbineExchange = Partners.DigitalTurbineExchange;
+        public const string GoogleBidding = Partners.GoogleBidding;
+        public const string HyprMX = Partners.HyprMX;
+        public const string InMobi = Partners.InMobi;
+        public const string IronSource = Partners.IronSource;
+        public const string MetaAudienceNetwork = Partners.MetaAudienceNetwork;
+        public const string Mintegral = Partners.Mintegral;
+        public const string MobileFuse = Partners.MobileFuse;
+        public const string Pangle = Partners.Pangle;
+        public const string Tapjoy = Partners.Tapjoy;
+        public const string Unity = Partners.Unity;
+        public const string Verve = Partners.Verve;
+        public const string Vungle = Partners.Vungle;
+        public const string Yahoo = Partners.Yahoo;
     }
 }

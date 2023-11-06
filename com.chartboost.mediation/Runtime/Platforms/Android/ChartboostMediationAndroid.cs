@@ -135,7 +135,7 @@ namespace Chartboost.Platforms.Android
             nativeSDK.CallStatic(AndroidConstants.FunSetShouldDiscardOversizedAds, shouldDiscard);
         }
 
-        public override ChartboostMediationAdapterInfo[] InitializedAdaptersInfo
+        public override ChartboostMediationAdapterInfo[] AdaptersInfo
         {
             get
             {

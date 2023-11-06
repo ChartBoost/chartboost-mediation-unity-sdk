@@ -45,7 +45,7 @@ namespace Chartboost.Platforms.IOS
         private static extern void _chartboostMediationDiscardOversizedAds(bool shouldDiscard);
 
         [DllImport(IOSConstants.Internal)]
-        private static extern string _chartboostMediationInitializedAdaptersInfo();
+        private static extern string _chartboostMediationAdaptersInfo();
 
         [DllImport(IOSConstants.Internal)]
         private static extern float _chartboostMediationGetUIScaleFactor();
@@ -161,11 +161,11 @@ namespace Chartboost.Platforms.IOS
             _chartboostMediationDiscardOversizedAds(shouldDiscard);
         }
 
-        public override ChartboostMediationAdapterInfo[] InitializedAdaptersInfo
+        public override ChartboostMediationAdapterInfo[] AdaptersInfo
         {
             get
             {
-                var adapterInfoNative = _chartboostMediationInitializedAdaptersInfo();
+                var adapterInfoNative = _chartboostMediationAdaptersInfo();
                 var adapterInfo = JsonConvert.DeserializeObject<ChartboostMediationAdapterInfo[]>(adapterInfoNative);
                 return adapterInfo;
             }

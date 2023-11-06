@@ -84,11 +84,11 @@ namespace Chartboost.Platforms
         public virtual void DiscardOversizedAds(bool shouldDiscard)
             => Logger.Log(LogTag, $"DiscardOversizedAds : {shouldDiscard}");
 
-        public virtual ChartboostMediationAdapterInfo[] InitializedAdaptersInfo
+        public virtual ChartboostMediationAdapterInfo[] AdaptersInfo
         {
             get
             {
-                Logger.Log(LogTag, "InitializedAdaptersInfo");
+                Logger.Log(LogTag, "AdaptersInfo");
                 return Array.Empty<ChartboostMediationAdapterInfo>();
             }
         }

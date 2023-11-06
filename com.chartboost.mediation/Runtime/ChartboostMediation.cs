@@ -300,7 +300,7 @@ namespace Chartboost
         /// Returns an array of all initialized adapters, or an empty array if the SDK is not initialized.
         /// </summary>
         /// <returns></returns>
-        public static ChartboostMediationAdapterInfo[] AdaptersInfo => _chartboostMediationExternal.InitializedAdaptersInfo;
+        public static ChartboostMediationAdapterInfo[] AdaptersInfo => _chartboostMediationExternal.AdaptersInfo;
         
         /// <summary>
         /// 
