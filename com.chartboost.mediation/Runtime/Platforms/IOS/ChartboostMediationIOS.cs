@@ -3,6 +3,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Chartboost.AdFormats.Banner;
+using Chartboost.Consent;
 using Chartboost.Requests;
 using Chartboost.Utilities;
 using Newtonsoft.Json;
@@ -44,7 +45,7 @@ namespace Chartboost.Platforms.IOS
         private static extern void _chartboostMediationDiscardOversizedAds(bool shouldDiscard);
 
         [DllImport(IOSConstants.Internal)]
-        private static extern string _chartboostMediationInitializedAdaptersInfo();
+        private static extern string _chartboostMediationAdaptersInfo();
 
         [DllImport(IOSConstants.Internal)]
         private static extern float _chartboostMediationGetUIScaleFactor();
@@ -160,19 +161,19 @@ namespace Chartboost.Platforms.IOS
             _chartboostMediationDiscardOversizedAds(shouldDiscard);
         }
 
-        public override ChartboostMediationAdapterInfo[] InitializedAdaptersInfo()
+        public override ChartboostMediationAdapterInfo[] AdaptersInfo
         {
-            base.InitializedAdaptersInfo();
-            var adapterInfoNative = _chartboostMediationInitializedAdaptersInfo();
-            var adapterInfo =
-                JsonConvert.DeserializeObject<ChartboostMediationAdapterInfo[]>(adapterInfoNative);
-            return adapterInfo;
+            get
+            {
+                var adapterInfoNative = _chartboostMediationAdaptersInfo();
+                var adapterInfo = JsonConvert.DeserializeObject<ChartboostMediationAdapterInfo[]>(adapterInfoNative);
+                return adapterInfo;
+            }
         }
 
-        public static float GetUIScaleFactor()
-        {
-            return _chartboostMediationGetUIScaleFactor();
-        }
+        public override IPartnerConsent PartnerConsents { get; } = new PartnerConsentIOS();
+
+        public static float GetUIScaleFactor() => _chartboostMediationGetUIScaleFactor();
 
         public override async Task<ChartboostMediationFullscreenAdLoadResult> LoadFullscreenAd(ChartboostMediationFullscreenAdLoadRequest request)
         {

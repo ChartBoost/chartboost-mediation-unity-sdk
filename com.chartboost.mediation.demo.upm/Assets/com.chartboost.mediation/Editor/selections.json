@@ -1,5 +1,5 @@
 {
-  "mediationVersion": "4.6.0",
+  "mediationVersion": "4.7.0",
   "adapterSelections": [
     {
       "id": "adcolony",
@@ -44,7 +44,7 @@
     {
       "id": "ironsource",
       "android": "7.5.2.0",
-      "ios": "7.5.1.0"
+      "ios": "7.5.0.0"
     },
     {
       "id": "meta",

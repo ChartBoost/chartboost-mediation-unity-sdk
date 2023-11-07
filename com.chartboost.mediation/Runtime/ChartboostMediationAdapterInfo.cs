@@ -1,17 +1,27 @@
+using Newtonsoft.Json;
+
 namespace Chartboost
 {
     /// <summary>
     /// Data class holding Adapter Info
     /// </summary>
-    // Note : Json deserialization (JsonConvert.DeserializeObject<T>) using generics when type argument is value doesn't
-    // work with IL2CPP. Therefore, we use class here instead of struct
-    // https://stackoverflow.com/a/56185978
-    // TODO: As per the above link this is fixed in 2022.2 so we should update this to struct when we update Unity
-    public class ChartboostMediationAdapterInfo
+    public struct ChartboostMediationAdapterInfo
     {
-        public string AdapterVersion { get; set; }
-        public string PartnerVersion { get; set; }
-        public string PartnerDisplayName { get; set; }
-        public string PartnerIdentifier { get; set; }
+        [JsonProperty("adapterVersion")]
+        public readonly string AdapterVersion;
+        [JsonProperty("partnerVersion")]
+        public readonly string PartnerVersion;
+        [JsonProperty("partnerDisplayName")]
+        public readonly string PartnerDisplayName;
+        [JsonProperty("partnerIdentifier")]
+        public readonly string PartnerIdentifier;
+
+        public ChartboostMediationAdapterInfo(string adapterVersion, string partnerVersion, string partnerDisplayName, string partnerIdentifier)
+        {
+            AdapterVersion = adapterVersion;
+            PartnerVersion = partnerVersion;
+            PartnerDisplayName = partnerDisplayName;
+            PartnerIdentifier = partnerIdentifier;
+        }
     }
 }

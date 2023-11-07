@@ -3,11 +3,13 @@ using System.Threading.Tasks;
 using Chartboost.AdFormats.Banner;
 using Chartboost.AdFormats.Banner.Unity;
 using Chartboost.Banner;
+using Chartboost.Consent;
 using Chartboost.Events;
 using Chartboost.FullScreen.Interstitial;
 using Chartboost.FullScreen.Rewarded;
 using Chartboost.Platforms;
 using Chartboost.Requests;
+using Newtonsoft.Json.Utilities;
 #if UNITY_ANDROID && !UNITY_EDITOR
 using Chartboost.Platforms.Android;
 #elif UNITY_IOS && !UNITY_EDITOR
@@ -32,6 +34,7 @@ namespace Chartboost
 
         static ChartboostMediation() 
         {
+            AotHelper.EnsureList<ChartboostMediationAdapterInfo>();
             #pragma warning disable CS0618
             #if UNITY_EDITOR
             _chartboostMediationExternal = new ChartboostMediationUnsupported();
@@ -205,7 +208,7 @@ namespace Chartboost
         // Functions for showing ads
         //////////////////////////////////////////////////////
 
-        public static string Version => "4.6.0";
+        public static string Version => "4.7.0";
         
         /// <summary>
         /// Load a fullscreen ad (interstitial, rewarded video, rewarded interstitial).
@@ -297,6 +300,11 @@ namespace Chartboost
         /// Returns an array of all initialized adapters, or an empty array if the SDK is not initialized.
         /// </summary>
         /// <returns></returns>
-        public static ChartboostMediationAdapterInfo[] InitializedAdaptersInfo() => _chartboostMediationExternal.InitializedAdaptersInfo();
+        public static ChartboostMediationAdapterInfo[] AdaptersInfo => _chartboostMediationExternal.AdaptersInfo;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public static IPartnerConsent PartnerConsents => _chartboostMediationExternal.PartnerConsents;
     }
 }

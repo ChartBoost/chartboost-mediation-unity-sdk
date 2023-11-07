@@ -38,7 +38,7 @@ namespace Chartboost.Editor
             RemoveScriptDefineInAllPlatforms(SettingsWindowDisableScriptingDefineSymbol);
 
         [MenuItem(MenuItemDisableSettingsWindow)]
-        public static void DisableSettingssWindow() =>
+        public static void DisableSettingsWindow() =>
             AddScriptDefineInAllPlatforms(SettingsWindowDisableScriptingDefineSymbol);
 
         public static void AddScriptDefineInAllPlatforms(params string[] symbols)
