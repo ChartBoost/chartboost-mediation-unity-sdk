@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependencies>
+    <androidPackages>
+        <!-- Android Adapter -->
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-digital-turbine-exchange:4.8.2.4+@aar"/>
+
+        <!-- Partner Android SDK Dependencies-->
+        <androidPackage spec="com.fyber:marketplace-sdk:8.2.4"/>
+    </androidPackages>
+    <iosPods>
+        <!-- iOS Adapter -->
+        <iosPod name="ChartboostMediationAdapterDigitalTurbineExchange" version="~> 4.8.2.1"/>
+
+        <!-- Partner iOS SDK-->
+        <iosPod name="Fyber_Marketplace_SDK" version="~> 8.2.1" addToAllTargets="true"/>
+    </iosPods>
+</dependencies>
+

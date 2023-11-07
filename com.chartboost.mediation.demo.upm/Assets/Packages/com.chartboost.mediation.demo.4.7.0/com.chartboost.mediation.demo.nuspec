@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>com.chartboost.mediation.demo</id>
+    <version>4.7.0</version>
+    <title>Chartboost Mediation Demo</title>
+    <authors>Chartboost</authors>
+    <owners>Chartboost</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>http://your_license_url_here/</licenseUrl>
+    <projectUrl>http://your_project_url_here/</projectUrl>
+    <iconUrl>https://www.nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+    <description>The Demo app for Chartboost Mediation Unity SDK.</description>
+    <releaseNotes>Notes for this specific release</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+  </metadata>
+</package>

@@ -1,0 +1,83 @@
+<dependencies>
+  <packages>
+    <package>androidx.core:core:1.2.0</package>
+    <package>androidx.localbroadcastmanager:localbroadcastmanager:1.1.0</package>
+    <package>androidx.multidex:multidex:2.0.1</package>
+    <package>com.adcolony:sdk:4.8.0</package>
+    <package>com.amazon.android:aps-sdk:9.8.5</package>
+    <package>com.applovin:applovin-sdk:11.11.2</package>
+    <package>com.chartboost:chartboost-mediation-adapter-adcolony:4.4.8.0+@aar</package>
+    <package>com.chartboost:chartboost-mediation-adapter-admob:4.22.3.0+@aar</package>
+    <package>com.chartboost:chartboost-mediation-adapter-amazon-publisher-services:4.9.8.5+@aar</package>
+    <package>com.chartboost:chartboost-mediation-adapter-applovin:4.11.11.2+@aar</package>
+    <package>com.chartboost:chartboost-mediation-adapter-chartboost:4.9.4.1+@aar</package>
+    <package>com.chartboost:chartboost-mediation-adapter-digital-turbine-exchange:4.8.2.4+@aar</package>
+    <package>com.chartboost:chartboost-mediation-adapter-google-bidding:4.22.3.0+@aar</package>
+    <package>com.chartboost:chartboost-mediation-adapter-hyprmx:4.6.2.0+@aar</package>
+    <package>com.chartboost:chartboost-mediation-adapter-inmobi:4.10.5.7+@aar</package>
+    <package>com.chartboost:chartboost-mediation-adapter-ironsource:4.7.5.1+@aar</package>
+    <package>com.chartboost:chartboost-mediation-adapter-meta-audience-network:4.6.16.0+@aar</package>
+    <package>com.chartboost:chartboost-mediation-adapter-mintegral:4.16.3.91+@aar</package>
+    <package>com.chartboost:chartboost-mediation-adapter-mobilefuse:4.1.6.0+@aar</package>
+    <package>com.chartboost:chartboost-mediation-adapter-pangle:4.4.9.1.3+@aar</package>
+    <package>com.chartboost:chartboost-mediation-adapter-tapjoy:4.12.11.1+@aar</package>
+    <package>com.chartboost:chartboost-mediation-adapter-unity-ads:4.4.8.0+@aar</package>
+    <package>com.chartboost:chartboost-mediation-adapter-verve:4.2.17.0+@aar</package>
+    <package>com.chartboost:chartboost-mediation-adapter-vungle:4.7.0.0+@aar</package>
+    <package>com.chartboost:chartboost-mediation-adapter-yahoo:4.1.4.0+@aar</package>
+    <package>com.chartboost:chartboost-mediation-sdk:4.6+</package>
+    <package>com.chartboost:chartboost-sdk:9.4.1</package>
+    <package>com.facebook.android:audience-network-sdk:6.16.0</package>
+    <package>com.fyber:marketplace-sdk:8.2.4</package>
+    <package>com.google.android.gms:play-services-ads:22.3.0</package>
+    <package>com.google.android.gms:play-services-ads-identifier:18.0.1</package>
+    <package>com.google.android.gms:play-services-appset:16.0.2</package>
+    <package>com.google.android.gms:play-services-base:18.1.0</package>
+    <package>com.google.android.gms:play-services-basement:18.1.0</package>
+    <package>com.google.guava:guava:31.1-android</package>
+    <package>com.hyprmx.android:HyprMX-SDK:6.2.0</package>
+    <package>com.inmobi.monetization:inmobi-ads-kotlin:10.5.7</package>
+    <package>com.ironsource.sdk:mediationsdk:7.5.1</package>
+    <package>com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0</package>
+    <package>com.mbridge.msdk.oversea:interstitialvideo:16.3.91</package>
+    <package>com.mbridge.msdk.oversea:mbbanner:16.3.91</package>
+    <package>com.mbridge.msdk.oversea:mbbid:16.3.91</package>
+    <package>com.mbridge.msdk.oversea:mbjscommon:16.3.91</package>
+    <package>com.mbridge.msdk.oversea:mbnative:16.3.91</package>
+    <package>com.mbridge.msdk.oversea:nativeex:16.3.91</package>
+    <package>com.mbridge.msdk.oversea:playercommon:16.3.91</package>
+    <package>com.mbridge.msdk.oversea:reward:16.3.91</package>
+    <package>com.mbridge.msdk.oversea:same:16.3.91</package>
+    <package>com.mbridge.msdk.oversea:videocommon:16.3.91</package>
+    <package>com.mbridge.msdk.oversea:videojs:16.3.91</package>
+    <package>com.mobilefuse.sdk:mobilefuse-sdk-core:1.6.0</package>
+    <package>com.pangle.global:ads-sdk:4.9.1.3</package>
+    <package>com.squareup.okhttp3:logging-interceptor:4.10.0</package>
+    <package>com.squareup.okhttp3:okhttp:4.10.0</package>
+    <package>com.squareup.retrofit2:converter-scalars:2.9.0</package>
+    <package>com.squareup.retrofit2:retrofit:2.9.0</package>
+    <package>com.tapjoy:tapjoy-android-sdk:12.11.1</package>
+    <package>com.unity3d.ads:unity-ads:4.8.0</package>
+    <package>com.vungle:vungle-ads:7.0.0</package>
+    <package>com.yahoo.mobile.ads:android-yahoo-mobile-sdk:1.4.0</package>
+    <package>net.pubnative:hybid.sdk:2.17.0</package>
+    <package>org.jetbrains.kotlin:kotlin-reflect:1.7.20</package>
+    <package>org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1</package>
+  </packages>
+  <files />
+  <settings>
+    <setting name="androidAbis" value="arm64-v8a,armeabi-v7a" />
+    <setting name="bundleId" value="com.chartboost.HeliumUnitySDKDemo" />
+    <setting name="explodeAars" value="True" />
+    <setting name="gradleBuildEnabled" value="True" />
+    <setting name="gradlePropertiesTemplateEnabled" value="True" />
+    <setting name="gradleTemplateEnabled" value="True" />
+    <setting name="installAndroidPackages" value="True" />
+    <setting name="localMavenRepoDir" value="Assets/GeneratedLocalRepo" />
+    <setting name="packageDir" value="Assets/Plugins/Android" />
+    <setting name="patchAndroidManifest" value="True" />
+    <setting name="patchMainTemplateGradle" value="True" />
+    <setting name="projectExportEnabled" value="False" />
+    <setting name="useJetifier" value="True" />
+  </settings>
+</dependencies>
