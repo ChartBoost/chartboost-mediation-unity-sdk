@@ -653,7 +653,7 @@ void _chartboostMediationDiscardOversizedAds(BOOL shouldDiscard)
     [[Helium sharedHelium] setDiscardOversizedAds:shouldDiscard];
 }
 
-const char * _chartboostMediationInitializedAdaptersInfo()
+const char * _chartboostMediationAdaptersInfo()
 {
     NSMutableArray * jsonArray = [NSMutableArray array];
 
