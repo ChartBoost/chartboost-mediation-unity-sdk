@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>Chartboost.CSharp.Mediation.Unity</id>
+    <version>4.7.0</version>
+    <title>Chartboost Mediation</title>
+    <description>The Chartboost Mediation Unity SDK. Better monetization powered by bidding</description>
+    <authors>Chartboost</authors>
+    <owners>Chartboost</owners>
+    <licenseUrl>https://answers.chartboost.com/child_article/legal</licenseUrl>
+    <projectUrl>https://www.chartboost.com/mediate</projectUrl>
+    <iconUrl>https://www.nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+    <releaseNotes>Notes for this specific release</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <repository type="git" url="https://github.com/ChartBoost/chartboost-mediation-unity-sdk.git" commit="8ac0b5922b5fc334e12205c2e5529f769adb2613"/>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="13.0.2" />
+    </dependencies>
+  </metadata>
+</package>
