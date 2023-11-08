@@ -22,7 +22,13 @@ Visit the [CHANGELOG](com.chartboost.mediation/CHANGELOG.md) to reference change
 
 ### Integrating the Chartboost Mediation Unity SDK
 
-Chartboost Mediation Unity SDK is distributed using the public [npm registry](https://www.npmjs.com/search?q=com.chartboost.mediation) as such it is compatible with the Unity Package Manager (UPM). In order to add the Chartboost Mediation Unity SDK to your project, just add the following to your Unity Project's ***manifest.json*** file. The scoped registry section is required in order to fetch packages from the NpmJS registry.
+Chartboost Mediation Unity SDK is distributed using both [NPM](https://www.npmjs.com/) and [NuGet](https://www.nuget.org/) distribution. 
+
+To install this sdk using either of these distribution channels follow the steps below : 
+
+#### Using the public [npm registry](https://www.npmjs.com/search?q=com.chartboost.mediation)
+
+In order to add the Chartboost Mediation Unity SDK to your project using the npm package, add the following to your Unity Project's ***manifest.json*** file. The scoped registry section is required in order to fetch packages from the NpmJS registry.
 
 ```json
   "dependencies": {
@@ -39,6 +45,22 @@ Chartboost Mediation Unity SDK is distributed using the public [npm registry](ht
     }
   ]
 ```
+
+#### Using the public [nuget package]()
+
+To add the Chartboost Mediation Unity to your project using the nuget package, you will first need to add the [NugetForUnity](https://github.com/GlitchEnzo/NuGetForUnity) package into your Unity Project. 
+
+This can be done by adding the following to your Unity Project's ***manifest.json***
+
+```json
+  "dependencies": {
+    "com.github-glitchenzo.nugetforunity": "https://github.com/GlitchEnzo/NuGetForUnity.git?path=/src/NuGetForUnity",
+    ...
+  },
+```
+
+Once <code>NugetForUnity</code> is installed, search for "Chartboost.CSharp.Mediation.Unity" in the search bar of Nuget Explorer window(Nuget -> Manage Nuget Packages).
+You should be able to see the `Chartboost.CSharp.Mediation.Unity` package. Choose the appropriate version and install. 
 
 In order to better understand the Chartboost Mediation Unity SDK, documentation has been split between Setup and Integration Steps:
 
