@@ -10,8 +10,10 @@ namespace Chartboost.Consent
     {
         private static AndroidJavaObject GetNativePartnerConsents()
         {
+            using var unityPlayer = new AndroidJavaClass(AndroidConstants.ClassUnityPlayer);
+            using var activity = unityPlayer.GetStatic<AndroidJavaObject>(AndroidConstants.PropertyCurrentActivity);
             using var native = ChartboostMediationAndroid.GetNativeSDK();
-            return native.CallStatic<AndroidJavaObject>(AndroidConstants.FunGetPartnerConsents);
+            return native.CallStatic<AndroidJavaObject>(AndroidConstants.FunGetPartnerConsents, activity);
         }
 
         /// <inheritdoc cref="GetPartnerIdToConsentGivenDictionaryCopy"/>
