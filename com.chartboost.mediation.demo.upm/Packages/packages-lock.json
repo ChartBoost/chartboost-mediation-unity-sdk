@@ -9,7 +9,7 @@
       }
     },
     "com.chartboost.mediation.demo": {
-      "version": "file:/Users/kushagra.gupta/Documents/Chartboost/Repositories/Unity/helium-unity-sdk/com.chartboost.mediation.demo",
+      "version": "file:../../com.chartboost.mediation.demo",
       "depth": 0,
       "source": "local",
       "dependencies": {}

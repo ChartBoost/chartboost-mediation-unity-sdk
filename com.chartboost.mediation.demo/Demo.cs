@@ -117,7 +117,7 @@ public class Demo : MonoBehaviour
         ChartboostMediation.SetUserIdentifier(DefaultUserIdentifier);
 
         Log($"User Identifier Set: {ChartboostMediation.GetUserIdentifier()}");
-        Debug.Log($"Initialized adapters : \n {JsonConvert.SerializeObject(ChartboostMediation.InitializedAdaptersInfo())}");
+        Debug.Log($"Initialized adapters : \n {JsonConvert.SerializeObject(ChartboostMediation.AdaptersInfo)}");
         if (error != null) return;
         ChartboostMediation.SetSubjectToGDPR(false);
         ChartboostMediation.SetSubjectToCoppa(false);
