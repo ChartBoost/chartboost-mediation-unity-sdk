@@ -76,6 +76,7 @@ jobs:
       run : nuget pack ./com.chartboost.mediation/Chartboost.CSharp.Mediation.Unity.nuspec  -OutputDirectory ./Nuget -OutputFileNamesWithoutVersion
 
     - name: Upload Nuget Package
+      continue-on-error: true      
       run : |
         git add Nuget/Chartboost.CSharp.Mediation.Unity.nupkg
         git commit -m "Updating Chartboost.CSharp.Mediation.Unity.nupkg"
