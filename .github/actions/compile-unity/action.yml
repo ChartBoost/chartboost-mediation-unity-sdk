@@ -21,7 +21,6 @@ runs:
     - name: Setup Unity Editor
       id: unity-install
       uses: ./.github/actions/chartboost-mediation-unity-ci/setup-unity
-      timeout-minutes: 60
       with:
         unity-version: ${{ env.UNITY_VERSION }}
         unity-version-changeset: 8c66806a0c04
@@ -87,7 +86,7 @@ runs:
       id: unity-cleanup
       uses: ./.github/actions/chartboost-mediation-unity-ci/cleanup-unity
       with:
-        setup-pass: ${{ secrets.SETUP_PASS }}
+        setup-pass: ${{ inputs.setup_pass }}
 
     - name: Return Unity License
       if: always()
