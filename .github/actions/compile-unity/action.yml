@@ -33,7 +33,7 @@ runs:
       uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
       with:
         unity-executable-path: ${{ env.UNITY_EXE_PATH }}
-        setup-pass: ${{ inputs.setup-pass }}
+        # setup-pass: ${{ inputs.setup-pass }}
         serial: ${{ inputs.unity-serial }}
         username: ${{ inputs.unity-username }}
         password: ${{ inputs.unity-password }}
@@ -86,7 +86,7 @@ runs:
       id: unity-cleanup
       uses: ./.github/actions/chartboost-mediation-unity-ci/cleanup-unity
       with:
-        setup-pass: ${{ inputs.setup_pass }}
+        # setup-pass: ${{ inputs.setup_pass }}
 
     - name: Return Unity License
       if: always()
@@ -94,7 +94,7 @@ runs:
       uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
       with:
         unity-executable-path: ${{ env.UNITY_EXE_PATH }}
-        setup-pass: ${{ inputs.setup-pass }}
+        # setup-pass: ${{ inputs.setup-pass }}
         username: ${{ inputs.unity-username }}
         password: ${{ inputs.unity-password }}
         return-license: true
