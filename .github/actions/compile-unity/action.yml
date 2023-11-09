@@ -85,7 +85,7 @@ runs:
       if: always()
       id: unity-cleanup
       uses: ./.github/actions/chartboost-mediation-unity-ci/cleanup-unity
-      with:
+      # with:
         # setup-pass: ${{ inputs.setup_pass }}
 
     - name: Return Unity License
