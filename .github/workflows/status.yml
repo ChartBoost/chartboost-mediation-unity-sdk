@@ -68,7 +68,7 @@ jobs:
         git config user.name ${{ secrets.GIT_USER }}
         git config user.email ${{ secrets.GIT_EMAIL }}
         git add com.chartboost.mediation/Runtime/Plugins/Android/chartboost-mediation-android-bridge.jar
-        git commit -m "Updating Chartboost Mediation Unity SDK Android Bridge .jar"
+        git commit -m "Updating Chartboost Mediation Unity SDK Android Bridge.jar"
         git push --force
   
   nuget:
