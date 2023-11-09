@@ -47,7 +47,6 @@ jobs:
       uses: actions/checkout@v3
       with:
         ref: ${{ steps.extract_branch.outputs.branch }}
-        submodules: recursive
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Set Up JDK 11
@@ -92,7 +91,6 @@ jobs:
       uses: actions/checkout@v3
       with:
         ref: ${{ steps.extract_branch.outputs.branch }}
-        submodules: recursive
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Generate Nuget Package
