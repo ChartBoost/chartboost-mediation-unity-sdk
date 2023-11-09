@@ -9,12 +9,6 @@ runs:
   using: "composite"
   
   steps:
-    - name: Checkout Branch
-      uses: actions/checkout@v3
-      with:
-        submodules: recursive
-        token: ${{ secrets.GITHUBSERVICETOKEN }}
-
     - name: Setup Unity Editor
       id: unity-install
       uses: ./.github/actions/chartboost-mediation-unity-ci/setup-unity

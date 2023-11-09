@@ -88,6 +88,12 @@ jobs:
     needs: compile
 
     steps:
+    - name: Checkout Branch
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        token: ${{ secrets.GITHUBSERVICETOKEN }}
+        
     - name: compile-unity
       uses: ./actions/compile-unity
 
