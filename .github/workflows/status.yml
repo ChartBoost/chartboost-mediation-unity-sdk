@@ -76,13 +76,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Extract branch name
+      id: extract_branch
+      shell: bash
+      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT      
+    
     - name: Checkout Branch
+      if: github.event
       uses: actions/checkout@v3
       with:
-        ref: ${{ github.ref_name }}
+        ref: ${{ steps.extract_branch.outputs.branch }}
         submodules: recursive
         token: ${{ secrets.GITHUBSERVICETOKEN }}
-        
+
     - name: Generate Nuget Package
       run : nuget pack ./com.chartboost.mediation/Chartboost.CSharp.Mediation.Unity.nuspec  -OutputDirectory ./Nuget -NoDefaultExcludes
 
