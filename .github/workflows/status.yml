@@ -33,7 +33,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  compile:
+  android-bridge:
     name: Compile Android Bridge
     runs-on: ubuntu-latest
 
@@ -79,6 +79,7 @@ jobs:
     - name: Checkout Branch
       uses: actions/checkout@v3
       with:
+        ref: ${{ github.ref_name }}
         submodules: recursive
         token: ${{ secrets.GITHUBSERVICETOKEN }}
         
@@ -97,7 +98,7 @@ jobs:
   compile-unity-upm:
     name: Compile UPM unity project
     runs-on: macos-latest
-    needs: compile
+    needs: android-bridge
 
     steps:
     - name: Checkout Branch
@@ -120,7 +121,7 @@ jobs:
   compile-unity-nuget:
     name: Compile Nuget unity project
     runs-on: macos-latest
-    needs: [compile, nuget]
+    needs: [android-bridge, nuget]
 
     steps:
     - name: Checkout Branch
