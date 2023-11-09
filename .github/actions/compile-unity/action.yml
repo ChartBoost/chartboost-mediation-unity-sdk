@@ -5,14 +5,18 @@ inputs:
     description: Setup password for required permissions. Using Github actions secrets is recommended.
     required: true
   serial:
+    description: Unity license serial number. Use only if activating license. Using Github actions secrets is recommended.
     required: true
   username:
+    description: Unity account username associated with license serial number. Use only if activating or returning license. Using Github actions secrets is recommended.
     required: true
   password:
+    description: Unity account password associated with license serial number. Use only if activating or returning license. Using Github actions secrets is recommended.
     required: true
   slack-webhook:
+    description: Webhook url for posting on slack. Using Github actions secrets is recommended.
     required: true
-    
+  
 
 runs:
   using: "composite"
@@ -34,9 +38,9 @@ runs:
       with:
         unity-executable-path: ${{ env.UNITY_EXE_PATH }}
         # setup-pass: ${{ inputs.setup-pass }}
-        serial: ${{ inputs.unity-serial }}
-        username: ${{ inputs.unity-username }}
-        password: ${{ inputs.unity-password }}
+        serial: ${{ inputs.serial }}
+        username: ${{ inputs.username }}
+        password: ${{ inputs.password }}
     
     # Once we add mor platforms maybe we can run this in a matrix? this is fine for now.
     - name: Check for Compiler Errors in Standalone
@@ -95,8 +99,8 @@ runs:
       with:
         unity-executable-path: ${{ env.UNITY_EXE_PATH }}
         # setup-pass: ${{ inputs.setup-pass }}
-        username: ${{ inputs.unity-username }}
-        password: ${{ inputs.unity-password }}
+        username: ${{ inputs.username }}
+        password: ${{ inputs.password }}
         return-license: true
 
     - name: Notify Slack on failure
