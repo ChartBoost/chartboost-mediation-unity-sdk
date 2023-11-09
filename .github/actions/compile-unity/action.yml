@@ -4,11 +4,11 @@ inputs:
   setup-pass:
     description: Setup password for required permissions. Using Github actions secrets is recommended.
     required: true
-  unity-serial:
+  serial:
     required: true
-  unity-username:
+  username:
     required: true
-  unity-password:
+  password:
     required: true
   slack-webhook:
     required: true
