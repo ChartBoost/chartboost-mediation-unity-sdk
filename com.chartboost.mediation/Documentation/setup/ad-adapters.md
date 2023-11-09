@@ -240,6 +240,9 @@ foreach (var adapter in ChartboostMediation.AdaptersInfo)
 ```
 
 > **Note** \
+> ChartboostMediation.AdaptersInfo is only available after initialization. Subscribe to ChartboostMediation.DidReceivePartnerInitializationData to know exactly when this data will be available.
+
+> **Warning** \
 > The code block above is a mere example of what can be done with the APIs, user consent should be managed with care.
 
 ### Disabling Adapters Window
