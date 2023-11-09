@@ -48,7 +48,7 @@ jobs:
       with:
         ref: ${{ steps.extract_branch.outputs.branch }}
         submodules: recursive
-        token: ${{ secrets.GITHUBSERVICETOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Set Up JDK 11
       uses: actions/setup-java@v3
@@ -93,7 +93,7 @@ jobs:
       with:
         ref: ${{ steps.extract_branch.outputs.branch }}
         submodules: recursive
-        token: ${{ secrets.GITHUBSERVICETOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Generate Nuget Package
       run : nuget pack ./com.chartboost.mediation/Chartboost.CSharp.Mediation.Unity.nuspec  -OutputDirectory ./Nuget -NoDefaultExcludes
