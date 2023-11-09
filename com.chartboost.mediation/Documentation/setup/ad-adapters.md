@@ -64,7 +64,7 @@ Adapter information is fetched automatically on Unity Editor's startup. If you w
 
 Using the refresh button will check for new adapter releases, update your cached adapter info, and repaint the Adapters Window if necessary.
 
-## C# Utility API
+## Adapters Window Unity Editor C# API
 
 Along with the Editor Window, we have exposed a few C# methods that can be utilized in a CI/CD environment to keep your adapters up to date.
 
@@ -126,3 +126,118 @@ AdaptersWindow.AddNewNetworks(Platform.Android | Platform.IOS, CustomCondition);
 // Another example, adding only brand new networks for Android
 AdaptersWindow.AddNewNetworks(Platform.Android, CustomCondition);
 ```
+
+## Adapters Related Runtime C# APIs
+
+Starting Chartboost Mediation 4.7.0 we have included a few APIs pertinent to ad adapter partners. See below for integration details:
+
+### Partner Consent
+
+Consent now can be set on an case by case basis, to do so refer to the `Partners.cs` data class containing an up to date group of all of the supported Partner ids. If you do not see your Partner there contact support for details. 
+
+#### Setting Partner Consents
+Partner consent can be set on an individual basis using the following API:
+
+```csharp
+// In this example we set AdMob's Consent to True. Granted!
+ChartboostMediation.PartnerConsents.SetPartnerConsent(Partners.AdMob, true);
+
+// Set AdColony's Consent to False. Denied!
+ChartboostMediation.PartnerConsents.SetPartnerConsent(Partners.AdColony, false);
+```
+
+Partner consent can also be set as a predefined collection using the following API:
+
+```csharp
+var consents = new Dictionary<string, bool>
+{
+    { Partners.AdMob, true },
+    { Partners.AdColony, false }
+};
+ChartboostMediation.PartnerConsents.AddPartnerConsents(consents);
+```
+
+> **Note** \
+> Both examples above achieve the same result.
+
+#### Getting Current Partner Consents
+
+Consents can be fetched utilzing the following API.
+
+```csharp
+var consents = ChartboostMediation.PartnerConsents.GetPartnerIdToConsentGivenDictionaryCopy();
+// Base on the examples provided before, this would outout "Current Consent: { "admob" : "true", "adcolony" : "false" }".
+Debug.Log($"Current Consent: {JsonConvert.SerializeObject(consents)}");
+```
+
+> **Note** \
+> Partner consent persists across sessions.
+
+### Removing Partner Consents
+
+Consent can be removed on a case by case basis with the following API:
+
+```csharp
+// Remove AdMob Consent, RemovePartnerConsent returns the value attached to the Partner. Base on the previous examples this would be `true`.
+var adMobConsent = ChartboostMediation.PartnerConsents.RemovePartnerConsent(Partners.AdMob);
+
+// Remove AdColony Consent, RemovePartnerConsent returns the value attached to the Partner. Base on the previous examples this would be `false`.
+var adColonyConsent = ChartboostMediation.PartnerConsents.RemovePartnerConsent(Partners.AdColony);
+
+// Removing consent for a network without consent set returns `null`.
+var vungleConsent = ChartboostMediation.PartnerConsents.RemovePartnerConsent(Partners.Vungle);
+```
+
+If you wish to remove consent for all partners, please use:
+
+```csharp
+ChartboostMediation.PartnerConsents.ClearConsents();
+```
+
+### Replacing Consent
+
+If you wish to replace consent with an entirely new set of values , use:
+
+```csharp
+var consents = new Dictionary<string, bool>
+{
+    { Partners.Vungle, true },
+    { Partners.Mintegral, true }
+};
+
+ChartboostMediation.PartnerConsents.ReplacePartnerConsents(consents);
+
+var consents = ChartboostMediation.PartnerConsents.GetPartnerIdToConsentGivenDictionaryCopy();
+// Base on the examples provided before, the new output would be "Current Consent: { "vungle" : "true", "mintegra" : "true" }".
+Debug.Log($"Current Consent: {JsonConvert.SerializeObject(consents)}");
+```
+
+### Adapters Information
+
+Partners ad adapter information can now be fetched utilizing the following API:
+
+```csharp
+
+// Adapter information is conformed to the `AdapterInfo.cs` data class.
+Debug.Log($"Current Adapters: {JsonConvert.SerializeObject(ChartboostMediation.AdaptersInfo)}");
+
+// Logging each adapter information.
+foreach (var adapter in ChartboostMediation.AdaptersInfo)
+{
+    Debug.Log($"Logging Adapter v-{adapter.AdapterVersion}, partner v-{adapter.PartnerVersion}, partner id:{adapter.PartnerIdentifier}, partner display:{adapter.PartnerDisplayName}");
+}
+```
+
+You can use the two APIs above to manage your consent easily, for example:
+
+```csharp
+
+// Get your current user consent status.
+var myUserConsentStatus = FetchUserConsent();
+
+foreach (var adapter in ChartboostMediation.AdaptersInfo)
+    ChartboostMediation.PartnerConsents.SetPartnerConsent(adapter.PartnerIdentifier, myUserConsentStatus);
+```
+
+> **Note** \
+> The code block above is a mere example of what can be done with the APIs, user consent should be managed with care.

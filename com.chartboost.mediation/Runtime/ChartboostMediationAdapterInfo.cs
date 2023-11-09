@@ -16,7 +16,7 @@ namespace Chartboost
         [JsonProperty("partnerIdentifier")]
         public readonly string PartnerIdentifier;
 
-        public ChartboostMediationAdapterInfo(string adapterVersion, string partnerVersion, string partnerDisplayName, string partnerIdentifier)
+        public ChartboostMediationAdapterInfo(string adapterVersion, string partnerVersion, string partnerIdentifier, string partnerDisplayName)
         {
             AdapterVersion = adapterVersion;
             PartnerVersion = partnerVersion;

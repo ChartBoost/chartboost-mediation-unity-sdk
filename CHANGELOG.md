@@ -7,6 +7,7 @@ Chartboost Mediation Unity SDK 4.7.0 is the last release for 2023. As such, we s
 Improvements:
 - Added `AdaptersInfo` data class to Chartboost Mediation Unity SDK. Integrated ad adapter information can be fetched using `ChartboostMediation.AdaptersInfo`.
 - Added per partner consent API. Ad partner consent can be set individually utilizing the new consent API.
+- `Adapters.cs` has been deprecated and replaced by `Partners.cs`.
 - Added `ContainerSize` property to the new `IChartboostMediationBannerView`, allowing developers to o get the size of the banner container.
 - Added an setter to `ChartboostMediationSettings` to allow developers to set their own instance of the scriptable object.
 - Converted hard coded strings into constants across the codebase.
