@@ -76,6 +76,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout Branch
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        token: ${{ secrets.GITHUBSERVICETOKEN }}
+        
     - name: Generate Nuget Package
       run : nuget pack ./com.chartboost.mediation/Chartboost.CSharp.Mediation.Unity.nuspec  -OutputDirectory ./Nuget -NoDefaultExcludes
 
