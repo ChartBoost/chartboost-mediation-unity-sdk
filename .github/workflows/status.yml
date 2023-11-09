@@ -85,7 +85,7 @@ jobs:
   tests:
     name: Unity Actions & Unit Testing
     runs-on: macos-latest
-    needs: compile
+    # needs: compile
 
     steps:
     - name: Checkout Branch
