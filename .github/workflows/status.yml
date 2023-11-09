@@ -92,7 +92,7 @@ jobs:
         git config user.email ${{ secrets.GIT_EMAIL }}
         git add Nuget/Chartboost.CSharp.Mediation.Unity*.nupkg   
         git commit -m "Updating Chartboost.CSharp.Mediation.Unity.nupkg"
-        git push
+        git push --force
     
   compile-unity-upm:
     name: Compile UPM unity project
