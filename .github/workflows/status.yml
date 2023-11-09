@@ -96,4 +96,10 @@ jobs:
         
     - name: compile-unity
       uses: ./.github/actions/compile-unity
+      with:
+        setup-pass: ${{ secrets.SETUP_PASS }}
+        serial: ${{ secrets.UNITY_SERIAL }}
+        username: ${{ secrets.UNITY_USERNAME }}
+        password: ${{ secrets.UNITY_PASSWORD }}
+        slack-webhook: ${{ secrets.SLACK_NOTIFY_HELIUM_UNITY_SDK_WEBHOOK }}
 
