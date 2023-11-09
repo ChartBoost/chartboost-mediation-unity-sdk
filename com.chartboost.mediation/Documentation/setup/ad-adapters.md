@@ -241,3 +241,17 @@ foreach (var adapter in ChartboostMediation.AdaptersInfo)
 
 > **Note** \
 > The code block above is a mere example of what can be done with the APIs, user consent should be managed with care.
+
+### Disabling Adapters Window
+If you are utilizing Chartboost Mediation SDK to create your own ad mediation solution and you wish to disable the adapters window to users, you can do so by using the following APIs:
+
+```csharp
+// Disables adapters window for all available platforms.
+ChartboostEditorConfiguration.DisableAdaptersWindow();
+
+// Enables adapters window for all available platforms.
+ChartboostEditorConfiguration.EnableAdaptersWindow();
+
+// Disables MenuItems to configure Chartboost Mediation Unity SDK, while keeping the APIs compiled. This will be called automatically if all configuration windows are disabled.
+ChartboostEditorConfiguration.DisableConfigurability();
+```
