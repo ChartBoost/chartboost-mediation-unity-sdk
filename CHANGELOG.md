@@ -2,25 +2,28 @@
 All notable changes to this project will be documented in this file using the standards as defined at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0).
 
 ### Version 4.7.0 *(2023-11-14)*
-Chartboost Mediation Unity SDK 4.7.0 is the last release for 2023. As such, we strive to make as many improvements and bug fixes as possible. There are some small breaking changes on this release; however, we have included them here to make an easier transition to Chartboost Mediation 5.X in 2024. 
+Chartboost Mediation Unity SDK 4.7.0 is the last release for 2023. As such, we strive to make as many improvements and bug fixes as possible. However, there are a few breaking changes with this release in preperation for an easier transition to Chartboost Mediation 5.X in 2024.
 
 Improvements:
 - Added `AdaptersInfo` data class to Chartboost Mediation Unity SDK. Integrated ad adapter information can be fetched using `ChartboostMediation.AdaptersInfo`.
 - Added per partner consent API. Ad partner consent can be set individually utilizing the new consent API.
 - `Adapters.cs` has been deprecated and replaced by `Partners.cs`.
-- Added `ContainerSize` property to the new `IChartboostMediationBannerView`, allowing developers to o get the size of the banner container.
-- Added an setter to `ChartboostMediationSettings` to allow developers to set their own instance of the scriptable object.
+- Added `ContainerSize` property to the new `IChartboostMediationBannerView`, allowing developers to get the size of the banner container.
+- Added a setter to `ChartboostMediationSettings` which allow developers to set their own instance of the scriptable object.
 - Converted hard coded strings into constants across the codebase.
-- Editor Windows `Adapters` and `Settings` have been modularized, and can be enabled or disabled as needed.
+- Editor Windows `Adapters` and `Settings` have been modularized and can be enabled or disabled as needed.
+- Added a main thread task continuation extension. Please use this if you would like to call asynchronous APIs from a synchronous code and want to handle results.
+- Added distribution of package through Nuget.
+
+The following improvements will cause breaking changes:
 - `ChartboostMediationUnityBannerAdEvent` has been modified and now passes the associated instance into delegates as a parameter.
 - Moved `ChartboostMediationFullscreenAdLoadResult.cs` from `Chartboost.Results` to `Chartboost.Requests` namespace.
 - Removed `Chartboost.Results` namespace.
-- Added a main thread task continuation extension. Please use this if you would like to call asynchronous APIs from a synchronous code and want to handle results.
 
 Bug Fixes:
-- Fixed compiler warnings for deprecated API calls for all platforms have been fixed. Compiler flag `-warnaserror` has been added to test projects to avoid future similar issues.
+- Fixed compiler warnings for deprecated API calls on all platforms. Compiler flag `-warnaserror` has been added to test projects to avoid future similar issues.
 - Updated Usage of Getting Screen Scale on iOS 17+. `UIScreen.Main.Scale` has been deprecated.
-- Fixed an issue on Android where Banner ads utilizing the new BannerView API would always load on the `top-left` location regardless of the selected location.
+- Fixed the issue on Android where banner ads utilizing the new `BannerView API` would always load on the `top-left` location regardless of the selected location.
 
 ### Version 4.6.0 *(2023-10-12)*
 Improvements:
