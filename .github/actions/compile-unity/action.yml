@@ -3,7 +3,16 @@ description: 'Compiles Unity on Standalone, Android and IOS platforms'
 inputs:
   setup-pass:
     description: Setup password for required permissions. Using Github actions secrets is recommended.
-    required: false
+    required: true
+  unity-serial:
+    required: true
+  unity-username:
+    required: true
+  unity-password:
+    required: true
+  slack-webhook:
+    required: true
+    
 
 runs:
   using: "composite"
@@ -25,10 +34,10 @@ runs:
       uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
       with:
         unity-executable-path: ${{ env.UNITY_EXE_PATH }}
-        setup-pass: ${{ secrets.SETUP_PASS }}
-        serial: ${{ secrets.UNITY_SERIAL }}
-        username: ${{ secrets.UNITY_USERNAME }}
-        password: ${{ secrets.UNITY_PASSWORD }}
+        setup-pass: ${{ inputs.setup-pass }}
+        serial: ${{ inputs.unity-serial }}
+        username: ${{ inputs.unity-username }}
+        password: ${{ inputs.unity-password }}
     
     # Once we add mor platforms maybe we can run this in a matrix? this is fine for now.
     - name: Check for Compiler Errors in Standalone
@@ -86,9 +95,9 @@ runs:
       uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
       with:
         unity-executable-path: ${{ env.UNITY_EXE_PATH }}
-        setup-pass: ${{ secrets.SETUP_PASS }}
-        username: ${{ secrets.UNITY_USERNAME }}
-        password: ${{ secrets.UNITY_PASSWORD }}
+        setup-pass: ${{ inputs.setup-pass }}
+        username: ${{ inputs.unity-username }}
+        password: ${{ inputs.unity-password }}
         return-license: true
 
     - name: Notify Slack on failure
@@ -96,7 +105,7 @@ runs:
       id: notify-slack
       uses: ./.github/actions/chartboost-mediation-unity-ci/notify-slack
       with:
-        slack-webhook-url: ${{ secrets.SLACK_NOTIFY_HELIUM_UNITY_SDK_WEBHOOK }}
+        slack-webhook-url: ${{ inputs.slack-webhook }}
         workflow-run-id: ${{ github.run_id }}
         workflow-name: ${{ github.workflow }}
         workflow-url: "https://github.com/${{ github.repository }}/actions/runs/${{github.run_id}}"
