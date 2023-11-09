@@ -11,9 +11,6 @@
     <projectUrl>https://www.chartboost.com/mediate</projectUrl>
     <copyright>Copyright 2017</copyright>
     <tags>Chartboost, Ads, Mediation, Unity, cs</tags>
-    <repository type="git" url="https://github.com/ChartBoost/chartboost-mediation-unity-sdk.git" branch="release/4.7.0" commit="8ac0b5922b5fc334e12205c2e5529f769adb2613"/>
-    <dependencies>
-      <dependency id="Newtonsoft.Json" version="13.0.2" />
-    </dependencies>
+    <repository type="git" url="https://github.com/ChartBoost/chartboost-mediation-unity-sdk.git"/>
   </metadata>
 </package>

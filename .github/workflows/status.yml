@@ -66,19 +66,19 @@ jobs:
     - name: Upload Android Bridge Changes
       continue-on-error: true
       run: |
-        git config user.name ${{ secrets.GIT_USER }}
+        git config user.name ${{ secrets.GIT_USER } }
         git config user.email ${{ secrets.GIT_EMAIL }}
         git add com.chartboost.mediation/Runtime/Plugins/Android/chartboost-mediation-android-bridge.jar
         git commit -m "Updating Chartboost Mediation Unity SDK Android Bridge .jar"
         git push
         
     - name: Generate Nuget Package
-      run : nuget pack ./com.chartboost.mediation/Chartboost.CSharp.Mediation.Unity.nuspec  -OutputDirectory ./Nuget -OutputFileNamesWithoutVersion
+      run : nuget pack ./com.chartboost.mediation/Chartboost.CSharp.Mediation.Unity.nuspec  -OutputDirectory ./Nuget -NoDefaultExcludes
 
     - name: Upload Nuget Package
       continue-on-error: true      
       run : |
-        git add Nuget/Chartboost.CSharp.Mediation.Unity.nupkg
+        git add Nuget/Chartboost.CSharp.Mediation.Unity*.nupkg   
         git commit -m "Updating Chartboost.CSharp.Mediation.Unity.nupkg"
         git push
     
