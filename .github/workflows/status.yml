@@ -94,6 +94,6 @@ jobs:
         submodules: recursive
         token: ${{ secrets.GITHUBSERVICETOKEN }}
         
-    # - name: compile-unity
-    #   uses: ./actions/compile-unity
+    - name: compile-unity
+      uses: ./actions/compile-unity
 
