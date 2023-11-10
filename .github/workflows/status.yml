@@ -116,7 +116,7 @@ jobs:
   
     
   compile-unity-upm:
-    name: Compile UPM unity project
+    name: Compile UPM Unity Project
     timeout-minutes: 60
     runs-on: macos-latest
     needs: android-bridge
@@ -141,7 +141,7 @@ jobs:
 
   
   compile-unity-nuget:
-    name: Compile Nuget unity project
+    name: Compile Nuget Unity Project
     timeout-minutes: 60
     runs-on: macos-latest
     needs: [android-bridge, nuget]
@@ -153,16 +153,16 @@ jobs:
         submodules: recursive
         token: ${{ secrets.GITHUBSERVICETOKEN }}
 
-    - name: Setup Dotnet
+    - name: Setup DotNet
       uses: actions/setup-dotnet@v3
 
-    - name: Install/Restore Chartboost Mediation Unity SDK Nuget package
+    - name: Install/Restore Chartboost Mediation Unity SDK Nuget Package
       run : |
         dotnet new tool-manifest
         dotnet tool install NuGetForUnity.Cli
         dotnet nugetforunity restore com.chartboost.mediation.demo.nuget
         
-    - name: compile-unity
+    - name: Compile Unity Project
       uses: ./.github/actions/compile-unity
       env:
         PROJECT_PATH: com.chartboost.mediation.demo.nuget
