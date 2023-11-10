@@ -27,7 +27,7 @@ runs:
       uses: ./.github/actions/chartboost-mediation-unity-ci/setup-unity
       with:
         unity-version: ${{ env.UNITY_VERSION }}
-        unity-version-changeset: {{ env.UNITY_VERSION_CHANGESET }}
+        unity-version-changeset: ${{ env.UNITY_VERSION_CHANGESET }}
         unity-modules:
           android
           ios
