@@ -158,7 +158,7 @@ jobs:
     - name: Install Nuget package
       run : |
         dotnet new tool-manifest
-        dotnet tool install MuGetForUnity.Cli
+        dotnet tool install NuGetForUnity.Cli
         dotnet nugetforunity restore com.chartboost.mediation.demo.nuget
         
     - name: compile-unity
