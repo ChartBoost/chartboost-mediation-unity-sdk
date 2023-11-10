@@ -113,14 +113,7 @@ jobs:
         git add Nuget/Chartboost.CSharp.Mediation.Unity*.nupkg   
         git commit -m "Updating Chartboost.CSharp.Mediation.Unity.nupkg"
         git push --force
-        
-    - name: Install Nuget package
-      uses: actions/setup-dotnet@v3
-      run : |
-        dotnet new tool-manifest
-        dotnet tool install MuGetForUnity.Cli
-        dotnet nugetforunity restore com.chartboost.mediation.demo.nuget
-      
+  
     
   compile-unity-upm:
     name: Compile UPM unity project
@@ -144,6 +137,7 @@ jobs:
         username: ${{ secrets.UNITY_USERNAME }}
         password: ${{ secrets.UNITY_PASSWORD }}
         slack-webhook: ${{ secrets.SLACK_NOTIFY_HELIUM_UNITY_SDK_WEBHOOK }}      
+
   
   compile-unity-nuget:
     name: Compile Nuget unity project
@@ -157,11 +151,15 @@ jobs:
       with:
         submodules: recursive
         token: ${{ secrets.GITHUBSERVICETOKEN }}
-        
-    - name: Setup dotnet
+
+    - name: Setup Dotnet
       uses: actions/setup-dotnet@v3
-      run: |
-        dotnet 
+
+    - name: Install Nuget package
+      run : |
+        dotnet new tool-manifest
+        dotnet tool install MuGetForUnity.Cli
+        dotnet nugetforunity restore com.chartboost.mediation.demo.nuget
         
     - name: compile-unity
       timeout-minutes: 25
