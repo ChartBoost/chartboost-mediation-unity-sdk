@@ -129,11 +129,11 @@ AdaptersWindow.AddNewNetworks(Platform.Android, CustomCondition);
 
 ## Adapters Related Runtime C# APIs
 
-Starting Chartboost Mediation 4.7.0 we have included a few APIs pertinent to ad adapter partners. See below for integration details:
+Starting Chartboost Mediation 4.7.0, we have included APIs pertinent to ad adapter partner consents.
 
 ### Partner Consent
 
-Consent now can be set on an case by case basis, to do so refer to the `Partners.cs` data class containing an up to date group of all of the supported Partner ids. If you do not see your Partner there contact support for details. 
+Consent can now be set on a case by case basis. The `Partners.cs` data class contains all of the supported Partner IDs. If you do not see your Partner there contact support for details. 
 
 #### Setting Partner Consents
 Partner consent can be set on an individual basis using the following API:
@@ -162,14 +162,13 @@ ChartboostMediation.PartnerConsents.AddPartnerConsents(consents);
 
 #### Getting Current Partner Consents
 
-Consents can be fetched utilzing the following API.
+Consents can be fetched utilzing the following API:
 
 ```csharp
 var consents = ChartboostMediation.PartnerConsents.GetPartnerIdToConsentGivenDictionaryCopy();
 // Base on the examples provided before, this would outout "Current Consent: { "admob" : "true", "adcolony" : "false" }".
 Debug.Log($"Current Consent: {JsonConvert.SerializeObject(consents)}");
 ```
-
 > **Note** \
 > Partner consent persists across sessions.
 
@@ -188,7 +187,7 @@ var adColonyConsent = ChartboostMediation.PartnerConsents.RemovePartnerConsent(P
 var vungleConsent = ChartboostMediation.PartnerConsents.RemovePartnerConsent(Partners.Vungle);
 ```
 
-If you wish to remove consent for all partners, please use:
+To remove consent for all partners:
 
 ```csharp
 ChartboostMediation.PartnerConsents.ClearConsents();
@@ -196,7 +195,7 @@ ChartboostMediation.PartnerConsents.ClearConsents();
 
 ### Replacing Consent
 
-If you wish to replace consent with an entirely new set of values , use:
+To replace consent with an entirely new set of values:
 
 ```csharp
 var consents = new Dictionary<string, bool>
@@ -214,7 +213,7 @@ Debug.Log($"Current Consent: {JsonConvert.SerializeObject(consents)}");
 
 ### Adapters Information
 
-Partners ad adapter information can now be fetched utilizing the following API:
+Partner ad adapter information can now be fetched utilizing the following API:
 
 ```csharp
 
@@ -228,7 +227,7 @@ foreach (var adapter in ChartboostMediation.AdaptersInfo)
 }
 ```
 
-You can use the two APIs above to manage your consent easily, for example:
+The above APIs allows you to manage consent details more effectively. The following example shows another variation of using the APIs. Please note that user consent should be managed with care.
 
 ```csharp
 
@@ -242,11 +241,8 @@ foreach (var adapter in ChartboostMediation.AdaptersInfo)
 > **Note** \
 > ChartboostMediation.AdaptersInfo is only available after initialization. Subscribe to ChartboostMediation.DidReceivePartnerInitializationData to know exactly when this data will be available.
 
-> **Warning** \
-> The code block above is a mere example of what can be done with the APIs, user consent should be managed with care.
-
 ### Disabling Adapters Window
-If you are utilizing Chartboost Mediation SDK to create your own ad mediation solution and you wish to disable the adapters window to users, you can do so by using the following APIs:
+If you are utilizing Chartboost Mediation SDK to create your own ad mediation solution and want to disable the adapters window to users, use the following APIs:
 
 ```csharp
 // Disables adapters window for all available platforms.
