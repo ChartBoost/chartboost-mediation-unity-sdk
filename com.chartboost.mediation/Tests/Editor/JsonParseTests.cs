@@ -1,4 +1,5 @@
 using System.IO;
+using Chartboost.Utilities;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -42,18 +43,12 @@ namespace Chartboost.Tests.Editor
 
         private string[] _testFiles;
 
-        private string JsonTestLocation =>
-            // TODO: Find a better way 
-            Directory.Exists("Packages/com.chartboost.mediation") ?
-            // UPM
-            "Packages/com.chartboost.mediation/Tests/TestJSON" :
-            // Nuget
-            $"Assets/Packages/Chartboost.CSharp.Mediation.Unity.{ChartboostMediation.Version}/Tests/TestJSON";
+        private readonly string _jsonTestLocation = $"{ChartboostMediationUtils.ChartboostMediationPackageLocation}/Tests/TestJSON";
 
         [SetUp]
         public void Setup()
         {
-            _testFiles = Directory.GetFiles(JsonTestLocation, "*.json");
+            _testFiles = Directory.GetFiles(_jsonTestLocation, "*.json");
         }
 
         [TearDown]

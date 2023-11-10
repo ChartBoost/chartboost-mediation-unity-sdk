@@ -1,3 +1,4 @@
+using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,8 +8,25 @@ namespace Chartboost.Utilities
 {
     public static class ChartboostMediationUtils
     {
-        private const string CanvasName = "Canvas";
+        private const string ChartboostMediationUPMPackageName = "com.chartboost.mediation";
+        private const string ChartboostMediationNugetPackageName = "Chartboost.CSharp.Mediation.Unity";
         
+        private const string CanvasName = "Canvas";
+        private const string UPMPackagesPath = "Packages";
+        private const string NugetPackagesPath = "Assets/Packages";
+        private static readonly string ChartboostMediationUPMPackagePath = $"{UPMPackagesPath}/{ChartboostMediationUPMPackageName}";
+        private static readonly string ChartboostMediationNugetPackagePath = $"{NugetPackagesPath}/{ChartboostMediationNugetPackageName}.{ChartboostMediation.Version}";
+
+        /// <summary>
+        /// Gets the location where Chartboost Mediation Unity SDK Package is installed
+        /// </summary>
+        public static string ChartboostMediationPackageLocation => Directory.Exists(ChartboostMediationUPMPackagePath) ?
+            // UPM
+            ChartboostMediationUPMPackagePath :
+            // Nuget
+            ChartboostMediationNugetPackagePath;
+
+
         public static Canvas GetCanvas()
         {
             // Find the root-level canvas with highest sorting order
