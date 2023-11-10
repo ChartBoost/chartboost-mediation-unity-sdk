@@ -68,7 +68,7 @@ runs:
         target-platform: ios
 
     - name: Run Unity Editmode Unit Tests 
-      id: unity-unit-tests
+      id: unity-unit-tests-editor
       uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
       with:
         unity-executable-path: ${{ env.UNITY_EXE_PATH }}
@@ -79,7 +79,7 @@ runs:
         quit: false
 
     - name: Run Unity Playmode Unit Tests 
-      id: unity-unit-tests
+      id: unity-unit-tests-play
       uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
       with:
         unity-executable-path: ${{ env.UNITY_EXE_PATH }}
