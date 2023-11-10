@@ -92,7 +92,6 @@ jobs:
       run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT      
     
     - name: Checkout Branch
-      if: github.event
       uses: actions/checkout@v3
       with:
         ref: ${{ steps.extract_branch.outputs.branch }}
@@ -114,6 +113,14 @@ jobs:
         git add Nuget/Chartboost.CSharp.Mediation.Unity*.nupkg   
         git commit -m "Updating Chartboost.CSharp.Mediation.Unity.nupkg"
         git push --force
+        
+    - name: Install Nuget package
+      uses: actions/setup-dotnet@v3
+      run : |
+        dotnet new tool-manifest
+        dotnet tool install MuGetForUnity.Cli
+        dotnet nugetforunity restore com.chartboost.mediation.demo.nuget
+      
     
   compile-unity-upm:
     name: Compile UPM unity project
@@ -150,6 +157,11 @@ jobs:
       with:
         submodules: recursive
         token: ${{ secrets.GITHUBSERVICETOKEN }}
+        
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v3
+      run: |
+        dotnet 
         
     - name: compile-unity
       timeout-minutes: 25
