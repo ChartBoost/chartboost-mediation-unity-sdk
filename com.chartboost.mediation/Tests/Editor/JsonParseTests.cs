@@ -42,7 +42,13 @@ namespace Chartboost.Tests.Editor
 
         private string[] _testFiles;
 
-        private const string JsonTestLocation = "Packages/com.chartboost.mediation/Tests/TestJSON";
+        private string JsonTestLocation =>
+            // TODO: Find a better way 
+            Directory.Exists("Packages/com.chartboost.mediation") ?
+            // UPM
+            "Packages/com.chartboost.mediation/Tests/TestJSON" :
+            // Nuget
+            $"Assets/Packages/Chartboost.CSharp.Mediation.Unity.{ChartboostMediation.Version}/Tests/TestJSON";
 
         [SetUp]
         public void Setup()
