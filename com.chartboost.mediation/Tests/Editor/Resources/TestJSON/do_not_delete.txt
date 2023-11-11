@@ -1,0 +1,1 @@
+This file is intentionally left here to retrieve path using Resources API. Do not delete this file
