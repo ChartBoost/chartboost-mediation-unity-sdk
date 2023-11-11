@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using Chartboost.Utilities;
 using NUnit.Framework;
 using UnityEngine;
@@ -46,7 +47,7 @@ namespace Chartboost.Tests.Editor
         [SetUp]
         public void Setup()
         {
-            var jsonFile = Resources.Load("TestJSON/do_not_delete");
+            var jsonFile = Resources.LoadAll("TestJSON").First();
             var jsonFilePath = UnityEditor.AssetDatabase.GetAssetPath(jsonFile);
             var jsonTestsDirectory = Path.GetDirectoryName(jsonFilePath);
 
