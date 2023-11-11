@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:   
-    - name: Extract branch name
+    - name: Extract Branch Name
       id: extract_branch
       shell: bash
       run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT    
@@ -103,18 +103,17 @@ jobs:
         # https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow
         token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Generate Nuget Package
-      run : nuget pack ./com.chartboost.mediation/Chartboost.CSharp.Mediation.Unity.nuspec  -OutputDirectory ./Nuget -NoDefaultExcludes
+    - name: Generate NuGet Package
+      run : nuget pack ./com.chartboost.mediation/Chartboost.CSharp.Mediation.Unity.nuspec  -OutputDirectory ./NuGet -NoDefaultExcludes
 
-    - name: Upload Nuget Package
+    - name: Upload NuGet Package
       continue-on-error: true      
       run : |
         git config user.name ${{ secrets.GIT_USER }}
         git config user.email ${{ secrets.GIT_EMAIL }}
-        git add Nuget/Chartboost.CSharp.Mediation.Unity*.nupkg   
+        git add NuGet/Chartboost.CSharp.Mediation.Unity*.nupkg   
         git commit -m "Updating Chartboost.CSharp.Mediation.Unity.nupkg"
         git push --force
-  
     
   compile-unity-upm:
     name: Compile UPM Unity Project
@@ -129,7 +128,7 @@ jobs:
         submodules: recursive
         token: ${{ secrets.GITHUBSERVICETOKEN }}
         
-    - name: compile-unity
+    - name: Compile Unity Project
       uses: ./.github/actions/compile-unity
       env:
         PROJECT_PATH: com.chartboost.mediation.demo.upm
@@ -142,7 +141,7 @@ jobs:
 
   
   compile-unity-nuget:
-    name: Compile Nuget Unity Project
+    name: Compile NuGet Unity Project
     timeout-minutes: 60
     runs-on: macos-latest
     needs: [android-bridge, nuget]
@@ -157,7 +156,7 @@ jobs:
     - name: Setup DotNet
       uses: actions/setup-dotnet@v3
 
-    - name: Install/Restore Chartboost Mediation Unity SDK Nuget Package
+    - name: Install/Restore Chartboost Mediation Unity SDK NuGet Package
       run : |
         dotnet new tool-manifest
         dotnet tool install NuGetForUnity.Cli

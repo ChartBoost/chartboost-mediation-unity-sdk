@@ -16,7 +16,6 @@ inputs:
   slack-webhook:
     description: Webhook url for posting on slack. Using Github actions secrets is recommended.
     required: true
-  
 
 runs:
   using: "composite"
@@ -123,6 +122,4 @@ runs:
         workflow-run-id: ${{ github.run_id }}
         workflow-name: ${{ github.workflow }}
         workflow-url: "https://github.com/${{ github.repository }}/actions/runs/${{github.run_id}}"
-
-
         
