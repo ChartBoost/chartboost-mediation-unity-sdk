@@ -1,3 +1,4 @@
+using UnityEngine;
 using UnityEditor;
 using UnityEditor.PackageManager;
 
@@ -10,10 +11,11 @@ namespace Dependencies
     [InitializeOnLoad]
     public static class ChartboostMediationDependencyPackageInstaller
     {
-        private const string NewtonSoftJsonDependency = "com.unity.nuget.newtonsoft-json@3.2.1";
+        private const string NewtonSoftJsonDependency = "com.unity.nuget.newtonsoft-json";
+        private const string NewtonSoftJsonVersion = "3.2.1";
 
         private static readonly string[] DependencyPackages = {
-            NewtonSoftJsonDependency
+            $"{NewtonSoftJsonDependency}@{NewtonSoftJsonVersion}"
         };
         
         static ChartboostMediationDependencyPackageInstaller()
