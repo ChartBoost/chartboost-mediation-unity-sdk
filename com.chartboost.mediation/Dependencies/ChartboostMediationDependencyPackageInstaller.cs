@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEditor.PackageManager;
 
-namespace Dependency
+namespace Dependencies
 {
     /// <summary>
     /// Helper class that allows installation of any additional dependencies that are available to install using Unity Package Manager(UPM)
