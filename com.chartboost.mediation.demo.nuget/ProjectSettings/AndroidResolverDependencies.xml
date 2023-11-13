@@ -14,7 +14,7 @@
     <package>com.chartboost:chartboost-mediation-adapter-digital-turbine-exchange:4.8.2.4+@aar</package>
     <package>com.chartboost:chartboost-mediation-adapter-google-bidding:4.22.3.0+@aar</package>
     <package>com.chartboost:chartboost-mediation-adapter-hyprmx:4.6.2.0+@aar</package>
-    <package>com.chartboost:chartboost-mediation-adapter-inmobi:4.10.5.7+@aar</package>
+    <package>com.chartboost:chartboost-mediation-adapter-inmobi:4.10.6.1+@aar</package>
     <package>com.chartboost:chartboost-mediation-adapter-ironsource:4.7.5.2+@aar</package>
     <package>com.chartboost:chartboost-mediation-adapter-meta-audience-network:4.6.16.0+@aar</package>
     <package>com.chartboost:chartboost-mediation-adapter-mintegral:4.16.3.91+@aar</package>
@@ -36,7 +36,7 @@
     <package>com.google.android.gms:play-services-basement:18.1.0</package>
     <package>com.google.guava:guava:31.1-android</package>
     <package>com.hyprmx.android:HyprMX-SDK:6.2.0</package>
-    <package>com.inmobi.monetization:inmobi-ads-kotlin:10.5.7</package>
+    <package>com.inmobi.monetization:inmobi-ads-kotlin:10.6.1</package>
     <package>com.ironsource.sdk:mediationsdk:7.5.2</package>
     <package>com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0</package>
     <package>com.mbridge.msdk.oversea:interstitialvideo:16.3.91</package>
