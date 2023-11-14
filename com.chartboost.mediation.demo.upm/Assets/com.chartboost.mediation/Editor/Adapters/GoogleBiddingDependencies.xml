@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependencies>
+    <androidPackages>
+        <!-- Android Adapter -->
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-google-bidding:4.22.3.0+@aar"/>
+
+        <!-- Partner Android SDK Dependencies-->
+        <androidPackage spec="com.google.android.gms:play-services-ads:22.3.0"/>
+        <androidPackage spec="com.google.guava:guava:31.1-android"/>
+    </androidPackages>
+    <iosPods>
+        <!-- iOS Adapter -->
+        <iosPod name="ChartboostMediationAdapterGoogleBidding" version="~> 4.10.12.0"/>
+
+        <!-- Partner iOS SDK-->
+        <iosPod name="Google-Mobile-Ads-SDK" version="~> 10.12.0" addToAllTargets="false"/>
+    </iosPods>
+</dependencies>
+

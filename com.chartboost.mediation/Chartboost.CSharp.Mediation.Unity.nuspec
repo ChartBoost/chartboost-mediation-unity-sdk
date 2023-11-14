@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>Chartboost.CSharp.Mediation.Unity</id>
+    <version>4.7.0</version>
+    <title>Chartboost Mediation</title>
+    <description>The Chartboost Mediation Unity SDK. Better monetization powered by bidding</description>
+    <authors>Chartboost</authors>
+    <owners>Chartboost</owners>
+    <licenseUrl>https://answers.chartboost.com/child_article/legal</licenseUrl>
+    <projectUrl>https://www.chartboost.com/mediate</projectUrl>
+    <copyright>Copyright 2017</copyright>
+    <tags>Chartboost, Ads, Mediation, Unity, cs</tags>
+    <repository type="git" url="https://github.com/ChartBoost/chartboost-mediation-unity-sdk.git"/>
+  </metadata>
+</package>

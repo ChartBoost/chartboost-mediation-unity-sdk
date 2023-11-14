@@ -1,0 +1,19 @@
+{
+  "name": "com.chartboost.mediation.demo",
+  "version": "4.7.0",
+  "displayName": "Chartboost Mediation Demo",
+  "description": "The Demo app for Chartboost Mediation Unity SDK",
+  "unity": "2020.3",
+  "unityRelease": "27f1",
+  "documentationUrl": "https://developers.chartboost.com/docs/mediation-unity-get-started",
+  "changelogUrl": "https://developers.chartboost.com/docs/mediation-unity-changelog",
+  "licensesUrl": "https://answers.chartboost.com/child_article/legal",
+  "keywords": [],
+  "author": {
+    "name": "Chartboost",
+    "email": "sales@chartboost.com",
+    "url": "https://www.chartboost.com/mediate"
+  },
+  "hideInEditor": false
+}
+  

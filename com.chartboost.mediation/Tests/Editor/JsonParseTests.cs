@@ -1,4 +1,6 @@
 using System.IO;
+using System.Linq;
+using Chartboost.Utilities;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -41,13 +43,16 @@ namespace Chartboost.Tests.Editor
         };
 
         private string[] _testFiles;
-
-        private const string JsonTestLocation = "Packages/com.chartboost.mediation/Tests/TestJSON";
-
+        
         [SetUp]
         public void Setup()
         {
-            _testFiles = Directory.GetFiles(JsonTestLocation, "*.json");
+            var jsonFile = Resources.LoadAll("TestJSON").First();
+            var jsonFilePath = UnityEditor.AssetDatabase.GetAssetPath(jsonFile);
+            var jsonTestsDirectory = Path.GetDirectoryName(jsonFilePath);
+
+            // ReSharper disable once AssignNullToNotNullAttribute
+            _testFiles = Directory.GetFiles(jsonTestsDirectory, "*.json");
         }
 
         [TearDown]

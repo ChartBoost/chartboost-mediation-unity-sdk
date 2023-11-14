@@ -25,8 +25,8 @@ on:
         default: 'false'
 env:
   UNITY_VERSION: 2020.3.37f1
+  UNITY_VERSION_CHANGESET: 8c66806a0c04
   UNITY_EXE_PATH: /Applications/Unity/Hub/Editor/2020.3.37f1/Unity.app/Contents/MacOS/Unity
-  PROJECT_PATH: com.chartboost.mediation.demo
 
 # Cancels any queued or in-progress runs for this branch.
 concurrency:
@@ -34,16 +34,26 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  compile:
+  android-bridge:
     name: Compile Android Bridge
     runs-on: ubuntu-latest
 
-    steps:
+    steps:   
+    - name: Extract Branch Name
+      id: extract_branch
+      shell: bash
+      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT    
+                
     - name: Checkout Branch
       uses: actions/checkout@v3
       with:
-        submodules: recursive
-        token: ${{ secrets.GITHUBSERVICETOKEN }}
+        ref: ${{ steps.extract_branch.outputs.branch }}
+        # Using `secrets.GITHUB_TOKEN` ensures that any commit(s) pushed from within this workflow will not 
+        # trigger another workflow and thus avoid recursive workflow trigger
+        # If we use `secrets.GITHUBSERVICETOKEN` instead it will overwrite the above behaviour and will not prevent
+        # recursive workflow
+        # https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Set Up JDK 11
       uses: actions/setup-java@v3
@@ -69,13 +79,72 @@ jobs:
         git config user.name ${{ secrets.GIT_USER }}
         git config user.email ${{ secrets.GIT_EMAIL }}
         git add com.chartboost.mediation/Runtime/Plugins/Android/chartboost-mediation-android-bridge.jar
-        git commit -m "Updating Chastboost Mediation Unity SDK Android Bridge .jar"
-        git push
+        git commit -m "Updating Chartboost Mediation Unity SDK Android Bridge.jar"
+        git push --force
+  
+  nuget:
+    name: Build Nuget Package
+    runs-on: ubuntu-latest
 
-  tests:
-    name: Unity Actions & Unit Testing
+    steps:
+    - name: Extract Branch Name
+      id: extract_branch
+      shell: bash
+      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT      
+    
+    - name: Checkout Branch
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ steps.extract_branch.outputs.branch }}
+        # Using `secrets.GITHUB_TOKEN` ensures that any commit(s) pushed from within this workflow will not 
+        # trigger another workflow and thus avoid recursive workflow trigger
+        # If we use `secrets.GITHUBSERVICETOKEN` instead it will overwrite the above behaviour and will not prevent
+        # recursive workflow
+        # https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Generate NuGet Package
+      run : nuget pack ./com.chartboost.mediation/Chartboost.CSharp.Mediation.Unity.nuspec  -OutputDirectory ./NuGet -NoDefaultExcludes
+
+    - name: Upload NuGet Package
+      continue-on-error: true      
+      run : |
+        git config user.name ${{ secrets.GIT_USER }}
+        git config user.email ${{ secrets.GIT_EMAIL }}
+        git add NuGet/Chartboost.CSharp.Mediation.Unity*.nupkg   
+        git commit -m "Updating Chartboost.CSharp.Mediation.Unity.nupkg"
+        git push --force
+    
+  compile-unity-upm:
+    name: Compile UPM Unity Project
+    timeout-minutes: 60
     runs-on: macos-latest
-    needs: compile
+    needs: android-bridge
+
+    steps:
+    - name: Checkout Branch
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        token: ${{ secrets.GITHUBSERVICETOKEN }}
+        
+    - name: Compile Unity Project
+      uses: ./.github/actions/compile-unity
+      env:
+        PROJECT_PATH: com.chartboost.mediation.demo.upm
+      with:
+        setup-pass: ${{ secrets.SETUP_PASS }}
+        serial: ${{ secrets.UNITY_SERIAL }}
+        username: ${{ secrets.UNITY_USERNAME }}
+        password: ${{ secrets.UNITY_PASSWORD }}
+        slack-webhook: ${{ secrets.SLACK_NOTIFY_HELIUM_UNITY_SDK_WEBHOOK }}      
+
+  
+  compile-unity-nuget:
+    name: Compile NuGet Unity Project
+    timeout-minutes: 60
+    runs-on: macos-latest
+    needs: [android-bridge, nuget]
 
     steps:
     - name: Checkout Branch
@@ -84,95 +153,23 @@ jobs:
         submodules: recursive
         token: ${{ secrets.GITHUBSERVICETOKEN }}
 
-    - name: Setup Unity Editor
-      id: unity-install
-      uses: ./.github/actions/chartboost-mediation-unity-ci/setup-unity
-      timeout-minutes: 60
-      with:
-        unity-version: ${{ env.UNITY_VERSION }}
-        unity-version-changeset: 8c66806a0c04
-        unity-modules:
-          android
-          ios
+    - name: Setup DotNet
+      uses: actions/setup-dotnet@v3
 
-    - name: Activate Unity License
-      id: activate-unity
-      uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
+    - name: Install/Restore Chartboost Mediation Unity SDK NuGet Package
+      run : |
+        dotnet new tool-manifest
+        dotnet tool install NuGetForUnity.Cli
+        dotnet nugetforunity restore com.chartboost.mediation.demo.nuget
+        
+    - name: Compile Unity Project
+      uses: ./.github/actions/compile-unity
+      env:
+        PROJECT_PATH: com.chartboost.mediation.demo.nuget
       with:
-        unity-executable-path: ${{ env.UNITY_EXE_PATH }}
         setup-pass: ${{ secrets.SETUP_PASS }}
         serial: ${{ secrets.UNITY_SERIAL }}
         username: ${{ secrets.UNITY_USERNAME }}
         password: ${{ secrets.UNITY_PASSWORD }}
-
-    # Once we add mor platforms maybe we can run this in a matrix? this is fine for now.
-    - name: Check for Compiler Errors in Standalone
-      id: unity-compile-standalone
-      uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
-      with:
-        unity-executable-path: ${{ env.UNITY_EXE_PATH }}
-        project-path: ${{ env.PROJECT_PATH }}
-        target-platform: standalone
-
-    - name: Check for Compiler Errors in Android
-      id: unity-compile-android
-      uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
-      with:
-        unity-executable-path: ${{ env.UNITY_EXE_PATH }}
-        project-path: ${{ env.PROJECT_PATH }}
-        target-platform: android
-
-    - name: Check for Compiler Errors in iOS
-      id: unity-compile-ios
-      uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
-      with:
-        unity-executable-path: ${{ env.UNITY_EXE_PATH }}
-        project-path: ${{ env.PROJECT_PATH }}
-        target-platform: ios
-
-    - name: Run Unity Unit Tests
-      id: unity-unit-tests
-      uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
-      with:
-        unity-executable-path: ${{ env.UNITY_EXE_PATH }}
-        project-path: ${{ env.PROJECT_PATH }}
-        run-tests: true
-        test-results: test-results/results.xml
-        test-platform: EditMode
-        quit: false
-
-    - name: Publish Test Results
-      id: publish-test-results
-      uses: EnricoMi/publish-unit-test-result-action/composite@v2
-      with:
-        files: |
-          **/results.xml
-          
-    - name: Cleanup Unity Generated Files
-      if: always()
-      id: unity-cleanup
-      uses: ./.github/actions/chartboost-mediation-unity-ci/cleanup-unity
-      with:
-        setup-pass: ${{ secrets.SETUP_PASS }}
-
-    - name: Return Unity License
-      if: always()
-      id: return-unity
-      uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
-      with:
-        unity-executable-path: ${{ env.UNITY_EXE_PATH }}
-        setup-pass: ${{ secrets.SETUP_PASS }}
-        username: ${{ secrets.UNITY_USERNAME }}
-        password: ${{ secrets.UNITY_PASSWORD }}
-        return-license: true
-    
-    - name : Notify Slack on failure
-      if : ${{ failure() }}
-      id : notify-slack
-      uses: ./.github/actions/chartboost-mediation-unity-ci/notify-slack
-      with:
-        slack-webhook-url: ${{ secrets.SLACK_NOTIFY_HELIUM_UNITY_SDK_WEBHOOK }}
-        workflow-run-id: ${{ github.run_id }}
-        workflow-name: ${{ github.workflow }}
-        workflow-url: "https://github.com/${{ github.repository }}/actions/runs/${{github.run_id}}"
+        slack-webhook: ${{ secrets.SLACK_NOTIFY_HELIUM_UNITY_SDK_WEBHOOK }}
 
