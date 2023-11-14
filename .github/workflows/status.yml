@@ -105,6 +105,7 @@ jobs:
       
     - name: Check if NuGet Package was Generated From Previous Commit
       id: nuget-temp-file
+      continue-on-error: true
       # if .nupkg was generated from previous commit then this file will exist
       if: ${{ hashFiles('.nuget_temp') != '' }}
       run : rm -f .nuget_temp
