@@ -111,6 +111,8 @@ jobs:
       run : |
         nuget pack ./com.chartboost.mediation/Chartboost.CSharp.Mediation.Unity.nuspec  -OutputDirectory ./NuGet -NoDefaultExcludes
         touch .nuget_temp        
+        git config user.name ${{ secrets.GIT_USER }}
+        git config user.email ${{ secrets.GIT_EMAIL }}
         git add NuGet/Chartboost.CSharp.Mediation.Unity*.nupkg   
         git add .nuget_temp
         git commit -m "Updating Chartboost.CSharp.Mediation.Unity.nupkg"
