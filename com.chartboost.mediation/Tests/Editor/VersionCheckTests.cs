@@ -1,10 +1,8 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Xml;
 using NUnit.Framework;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 namespace Chartboost.Tests.Editor
@@ -46,7 +44,7 @@ namespace Chartboost.Tests.Editor
             // UPM
             $"Packages/{ChartboostMediationUPMPackageName}" :
             // Nuget
-            $"Assets/Packages/{ChartboostMediationNuGetPackageName}";
+            $"Assets/Packages/{ChartboostMediationNuGetPackageName}.{ChartboostMediation.Version}";
         
         private static string GetUPMVersion(string filePath)
         {
@@ -68,14 +66,25 @@ namespace Chartboost.Tests.Editor
         {
             Debug.Log($"NuGet path : {filePath}");
             var xmlDoc = new XmlDocument();
-
+            
             try
             {
                 xmlDoc.Load(filePath);
+                XmlNode versionNode;
                 
-                // Assuming the version is specified in the metadata section
-                var versionNode = xmlDoc.SelectSingleNode("/package/metadata/version");
-                
+                if (!string.IsNullOrEmpty(xmlDoc.DocumentElement?.NamespaceURI))
+                {
+                    // Create an XmlNamespaceManager to handle namespaces
+                    // https://stackoverflow.com/a/1089210
+                    var namespaceManager = new XmlNamespaceManager(xmlDoc.NameTable);
+                    namespaceManager.AddNamespace("ns", xmlDoc.DocumentElement.NamespaceURI);
+                    versionNode = xmlDoc.SelectSingleNode("/ns:package/ns:metadata/ns:version", namespaceManager);
+                }
+                else
+                {
+                    versionNode = xmlDoc.SelectSingleNode("/package/metadata/version");    
+                }
+
                 if (versionNode != null)
                 {
                     return versionNode.InnerText.Trim();
