@@ -1,10 +1,8 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Xml;
 using NUnit.Framework;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 namespace Chartboost.Tests.Editor
@@ -13,6 +11,9 @@ namespace Chartboost.Tests.Editor
     {
         private const string ChartboostMediationUPMPackageName = "com.chartboost.mediation";
         private const string ChartboostMediationNuGetPackageName = "Chartboost.CSharp.Mediation.Unity";
+        private const string NuGetVersionXPath = "/package/metadata/version";
+        private const string NuGetXmlNamespace = "ns";
+        private static readonly string NuGetVersionXPathWithNameSpace = $"/{NuGetXmlNamespace}:package/{NuGetXmlNamespace}:metadata/{NuGetXmlNamespace}:version";
 
         [SetUp]
         public void Setup()
@@ -23,6 +24,7 @@ namespace Chartboost.Tests.Editor
         [Test]
         public void CompareUPMVersionWithSDKVersion()
         {
+            Debug.Log($"ChartboostMediationPackageLocation => {ChartboostMediationPackageLocation}");
             var packageJson = Directory.GetFiles(ChartboostMediationPackageLocation, "*.json").First();
             var upmVersion = GetUPMVersion(packageJson);
             
@@ -34,6 +36,7 @@ namespace Chartboost.Tests.Editor
         [Test]
         public void CompareNuGetVersionWithSDKVersion()
         {
+            Debug.Log($"ChartboostMediationPackageLocation => {ChartboostMediationPackageLocation}");
             var nuspec = Directory.GetFiles(ChartboostMediationPackageLocation, "*.nuspec").First();
             var nuGetVersion = GetNuGetVersion(nuspec);
             
@@ -46,7 +49,7 @@ namespace Chartboost.Tests.Editor
             // UPM
             $"Packages/{ChartboostMediationUPMPackageName}" :
             // Nuget
-            $"Assets/Packages/{ChartboostMediationNuGetPackageName}";
+            $"Assets/Packages/{ChartboostMediationNuGetPackageName}.{ChartboostMediation.Version}";
         
         private static string GetUPMVersion(string filePath)
         {
@@ -68,14 +71,25 @@ namespace Chartboost.Tests.Editor
         {
             Debug.Log($"NuGet path : {filePath}");
             var xmlDoc = new XmlDocument();
-
+            
             try
             {
                 xmlDoc.Load(filePath);
+                XmlNode versionNode;
                 
-                // Assuming the version is specified in the metadata section
-                var versionNode = xmlDoc.SelectSingleNode("/package/metadata/version");
-                
+                if (!string.IsNullOrEmpty(xmlDoc.DocumentElement?.NamespaceURI))
+                {
+                    // Create an XmlNamespaceManager to handle namespaces
+                    // https://stackoverflow.com/a/1089210
+                    var namespaceManager = new XmlNamespaceManager(xmlDoc.NameTable);
+                    namespaceManager.AddNamespace(NuGetXmlNamespace, xmlDoc.DocumentElement.NamespaceURI);
+                    versionNode = xmlDoc.SelectSingleNode(NuGetVersionXPathWithNameSpace, namespaceManager);
+                }
+                else
+                {
+                    versionNode = xmlDoc.SelectSingleNode(NuGetVersionXPath);    
+                }
+
                 if (versionNode != null)
                 {
                     return versionNode.InnerText.Trim();
