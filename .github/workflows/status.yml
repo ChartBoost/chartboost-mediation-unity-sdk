@@ -101,19 +101,26 @@ jobs:
         # If we use `secrets.GITHUBSERVICETOKEN` instead it will overwrite the above behaviour and will not prevent
         # recursive workflow
         # https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow
-        token: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Generate NuGet Package
-      run : nuget pack ./com.chartboost.mediation/Chartboost.CSharp.Mediation.Unity.nuspec  -OutputDirectory ./NuGet -NoDefaultExcludes
-
-    - name: Upload NuGet Package
-      continue-on-error: true      
+        token: ${{ secrets.GITHUBSERVICETOKEN }}
+      
+    - name: Check if NuGet Package was Generated From Previous Commit
+      id: nuget-temp-file
+      # if .nupkg was generated from previous commit then this file will exist
+      if: ${{ hashFiles('.nuget_temp') != '' }}
+      run : rm -f .nuget_temp
+        
+    - name: Generate and Upload NuGet Package
+      # if .nupkg was not generated from previous commit then generate and upload 
+      if: steps.nuget-temp-file.outcome == 'failure'
       run : |
+        nuget pack ./com.chartboost.mediation/Chartboost.CSharp.Mediation.Unity.nuspec  -OutputDirectory ./NuGet -NoDefaultExcludes
+        touch .nuget_temp
         git config user.name ${{ secrets.GIT_USER }}
         git config user.email ${{ secrets.GIT_EMAIL }}
         git add NuGet/Chartboost.CSharp.Mediation.Unity*.nupkg   
+        git add .nuget_temp
         git commit -m "Updating Chartboost.CSharp.Mediation.Unity.nupkg"
-        git push --force
+        git push --force        
     
   compile-unity-upm:
     name: Compile UPM Unity Project
@@ -126,7 +133,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         submodules: recursive
-        token: ${{ secrets.GITHUBSERVICETOKEN }}
+        token: ${{ secrets.GITHUBSERVICETOKEN }}          
         
     - name: Compile Unity Project
       uses: ./.github/actions/compile-unity
