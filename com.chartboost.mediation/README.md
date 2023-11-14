@@ -32,7 +32,7 @@ In order to add the Chartboost Mediation Unity SDK to your project using the npm
 
 ```json
   "dependencies": {
-    "com.chartboost.mediation": "4.4.0",
+    "com.chartboost.mediation": "4.7.0",
     ...
   },
   "scopedRegistries": [
@@ -46,7 +46,7 @@ In order to add the Chartboost Mediation Unity SDK to your project using the npm
   ]
 ```
 
-#### Using the public [nuget package]()
+#### Using the public [nuget package](https://www.nuget.org/packages/Chartboost.CSharp.Mediation.Unity)
 
 To add the Chartboost Mediation Unity to your project using the nuget package, you will first need to add the [NugetForUnity](https://github.com/GlitchEnzo/NuGetForUnity) package into your Unity Project. 
 
