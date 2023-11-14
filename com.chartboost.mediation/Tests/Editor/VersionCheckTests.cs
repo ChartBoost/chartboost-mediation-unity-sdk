@@ -11,6 +11,9 @@ namespace Chartboost.Tests.Editor
     {
         private const string ChartboostMediationUPMPackageName = "com.chartboost.mediation";
         private const string ChartboostMediationNuGetPackageName = "Chartboost.CSharp.Mediation.Unity";
+        private const string NuGetVersionXPath = "/package/metadata/version";
+        private const string NuGetXmlNamespace = "ns";
+        private static readonly string NuGetVersionXPathWithNameSpace = $"/{NuGetXmlNamespace}:package/{NuGetXmlNamespace}:metadata/{NuGetXmlNamespace}:version";
 
         [SetUp]
         public void Setup()
@@ -79,12 +82,12 @@ namespace Chartboost.Tests.Editor
                     // Create an XmlNamespaceManager to handle namespaces
                     // https://stackoverflow.com/a/1089210
                     var namespaceManager = new XmlNamespaceManager(xmlDoc.NameTable);
-                    namespaceManager.AddNamespace("ns", xmlDoc.DocumentElement.NamespaceURI);
-                    versionNode = xmlDoc.SelectSingleNode("/ns:package/ns:metadata/ns:version", namespaceManager);
+                    namespaceManager.AddNamespace(NuGetXmlNamespace, xmlDoc.DocumentElement.NamespaceURI);
+                    versionNode = xmlDoc.SelectSingleNode(NuGetVersionXPathWithNameSpace, namespaceManager);
                 }
                 else
                 {
-                    versionNode = xmlDoc.SelectSingleNode("/package/metadata/version");    
+                    versionNode = xmlDoc.SelectSingleNode(NuGetVersionXPath);    
                 }
 
                 if (versionNode != null)
