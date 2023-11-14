@@ -21,6 +21,7 @@ namespace Chartboost.Tests.Editor
         [Test]
         public void CompareUPMVersionWithSDKVersion()
         {
+            Debug.Log($"ChartboostMediationPackageLocation => {ChartboostMediationPackageLocation}");
             var packageJson = Directory.GetFiles(ChartboostMediationPackageLocation, "*.json").First();
             var upmVersion = GetUPMVersion(packageJson);
             
@@ -32,6 +33,7 @@ namespace Chartboost.Tests.Editor
         [Test]
         public void CompareNuGetVersionWithSDKVersion()
         {
+            Debug.Log($"ChartboostMediationPackageLocation => {ChartboostMediationPackageLocation}");
             var nuspec = Directory.GetFiles(ChartboostMediationPackageLocation, "*.nuspec").First();
             var nuGetVersion = GetNuGetVersion(nuspec);
             
