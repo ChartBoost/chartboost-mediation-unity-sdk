@@ -112,7 +112,7 @@ jobs:
         
     - name: Generate and Upload NuGet Package
       # if .nupkg was not generated from previous commit then generate and upload 
-      if: failure() && steps.nuget-temp-file.outcome == 'success'
+      if: steps.nuget-temp-file.outcome == 'skipped'
       run : |
         nuget pack ./com.chartboost.mediation/Chartboost.CSharp.Mediation.Unity.nuspec  -OutputDirectory ./NuGet -NoDefaultExcludes
         touch .nuget_temp
