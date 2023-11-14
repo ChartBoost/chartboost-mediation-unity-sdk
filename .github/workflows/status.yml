@@ -83,7 +83,7 @@ jobs:
         git push --force
   
   nuget:
-    name: Build Nuget package
+    name: Build Nuget Package
     runs-on: ubuntu-latest
 
     steps:
