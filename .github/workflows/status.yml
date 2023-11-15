@@ -96,14 +96,19 @@ jobs:
       - name: Generate and Upload NuGet Package
         if: vars.BUILD_NUGET_PACKAGE == 'true'
         run : |
-          nuget pack ./com.chartboost.mediation/Chartboost.CSharp.Mediation.Unity.nuspec  -OutputDirectory ./NuGet -NoDefaultExcludes
-          echo "BUILD_NUGET_PACKAGE=false" >> "$GITHUB_ENV"
-          echo "BUILD_NUGET_PACKAGE = $vars.BUILD_NUGET_PACKAGE"
+          nuget pack ./com.chartboost.mediation/Chartboost.CSharp.Mediation.Unity.nuspec  -OutputDirectory ./NuGet -NoDefaultExcludes          
           git config user.name ${{ secrets.GIT_USER }}
           git config user.email ${{ secrets.GIT_EMAIL }}
           git add NuGet/Chartboost.CSharp.Mediation.Unity*.nupkg   
           git commit -m "Updating Chartboost.CSharp.Mediation.Unity.nupkg"
           git push                  
+      
+      - name: Update BUILD_NUGET_PACKAGE repository variable
+        if: vars.BUILD_NUGET_PACKAGE == 'true'
+        run: |
+          gh variable list
+          gh variable set BUILD_NUGET_PACKAGE --body "false"
+          gh variable list
   
   compile-unity-upm:
     name: Compile UPM Unity Project
@@ -161,8 +166,11 @@ jobs:
           serial: ${{ secrets.UNITY_SERIAL }}
           username: ${{ secrets.UNITY_USERNAME }}
           password: ${{ secrets.UNITY_PASSWORD }}
-          slack-webhook: ${{ secrets.SLACK_NOTIFY_HELIUM_UNITY_SDK_WEBHOOK }}
-        
-      - name: Cleanup
-        run : echo "BUILD_NUGET_PACKAGE=true" >> "$GITHUB_ENV"
-
+          slack-webhook: ${{ secrets.SLACK_NOTIFY_HELIUM_UNITY_SDK_WEBHOOK }}        
+      
+      - name: Update BUILD_NUGET_PACKAGE repository variable
+        if: vars.BUILD_NUGET_PACKAGE == 'true'
+        run: |
+          gh variable list
+          gh variable set BUILD_NUGET_PACKAGE --body "true"
+          gh variable list          
