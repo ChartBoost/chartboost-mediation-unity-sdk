@@ -105,6 +105,7 @@ jobs:
           git config user.email ${{ secrets.GIT_EMAIL }}
           git add .nuget_temp
           git commit -m "Removing .nuget_temp"
+          git push
           echo "need_new_nuget_build=no" >> $GITHUB_OUTPUT      
     
     outputs: 
