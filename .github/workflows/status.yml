@@ -101,9 +101,9 @@ jobs:
           git config user.email ${{ secrets.GIT_EMAIL }}
           git add NuGet/Chartboost.CSharp.Mediation.Unity*.nupkg   
           git commit -m "Updating Chartboost.CSharp.Mediation.Unity.nupkg"
-          git push                  
-      
-      - name: Update BUILD_NUGET_PACKAGE repository variable
+          git push                                
+            
+      - name: Set BUILD_NUGET_PACKAGE to false
         if: vars.BUILD_NUGET_PACKAGE == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUBSERVICETOKEN }}
@@ -111,6 +111,16 @@ jobs:
           gh variable list
           gh variable set BUILD_NUGET_PACKAGE --body "false"
           gh variable list
+          
+      - name: Set BUILD_NUGET_PACKAGE to true
+        if: vars.BUILD_NUGET_PACKAGE == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUBSERVICETOKEN }}
+        run: |
+          gh variable list
+          gh variable set BUILD_NUGET_PACKAGE --body "true"
+          gh variable list          
+  
   
   compile-unity-upm:
     name: Compile UPM Unity Project
