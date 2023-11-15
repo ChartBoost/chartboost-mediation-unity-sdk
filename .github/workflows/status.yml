@@ -97,12 +97,13 @@ jobs:
         if: vars.BUILD_NUGET_PACKAGE == 'true'
         run : |
           nuget pack ./com.chartboost.mediation/Chartboost.CSharp.Mediation.Unity.nuspec  -OutputDirectory ./NuGet -NoDefaultExcludes
+          echo "BUILD_NUGET_PACKAGE=false" >> "$GITHUB_ENV"
+          echo "BUILD_NUGET_PACKAGE = $vars.BUILD_NUGET_PACKAGE"
           git config user.name ${{ secrets.GIT_USER }}
           git config user.email ${{ secrets.GIT_EMAIL }}
           git add NuGet/Chartboost.CSharp.Mediation.Unity*.nupkg   
           git commit -m "Updating Chartboost.CSharp.Mediation.Unity.nupkg"
-          git push        
-          echo "BUILD_NUGET_PACKAGE=false" >> "$GITHUB_ENV"
+          git push                  
   
   compile-unity-upm:
     name: Compile UPM Unity Project
