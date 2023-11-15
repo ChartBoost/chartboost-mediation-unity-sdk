@@ -113,6 +113,7 @@ jobs:
               gh variable set BUILD_NUGET_PACKAGE --body "false"
           else
               gh variable set BUILD_NUGET_PACKAGE --body "true"
+          fi
           gh variable list
   
   
