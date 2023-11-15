@@ -106,7 +106,7 @@ jobs:
       - name: Update BUILD_NUGET_PACKAGE repository variable
         if: vars.BUILD_NUGET_PACKAGE == 'true'
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh variable list
           gh variable set BUILD_NUGET_PACKAGE --body "false"
@@ -173,7 +173,7 @@ jobs:
       - name: Update BUILD_NUGET_PACKAGE repository variable
         if: vars.BUILD_NUGET_PACKAGE == 'true'
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh variable list
           gh variable set BUILD_NUGET_PACKAGE --body "true"
