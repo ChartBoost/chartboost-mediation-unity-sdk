@@ -82,39 +82,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Extract Branch Name
-        id: extract_branch
-        shell: bash
-        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+    - name: Extract Branch Name
+      id: extract_branch
+      shell: bash
+      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
 
-      - name: Checkout Branch
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ steps.extract_branch.outputs.branch }}
-          token: ${{ secrets.GITHUBSERVICETOKEN }}
-          
-      - name: Generate and Upload NuGet Package
-        if: vars.BUILD_NUGET_PACKAGE == 'true'
-        run : |
-          nuget pack ./com.chartboost.mediation/Chartboost.CSharp.Mediation.Unity.nuspec  -OutputDirectory ./NuGet -NoDefaultExcludes          
-          git config user.name ${{ secrets.GIT_USER }}
-          git config user.email ${{ secrets.GIT_EMAIL }}
-          git add NuGet/Chartboost.CSharp.Mediation.Unity*.nupkg   
-          git commit -m "Updating Chartboost.CSharp.Mediation.Unity.nupkg"
-          git push                                
-          
-      - name: Toggle BUILD_NUGET_PACKAGE Repository Variable
-        env:
-          GH_TOKEN: ${{ secrets.GITHUBSERVICETOKEN }}
-        run: |
-          gh variable list
-          if ${{ vars.BUILD_NUGET_PACKAGE == 'true' }}
-          then
-              gh variable set BUILD_NUGET_PACKAGE --body "false"
-          else
-              gh variable set BUILD_NUGET_PACKAGE --body "true"
-          fi
-          gh variable list
+    - name: Checkout Branch
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ steps.extract_branch.outputs.branch }}
+        token: ${{ secrets.GITHUBSERVICETOKEN }}
+        
+    - name: Generate and Upload NuGet Package
+      if: vars.BUILD_NUGET_PACKAGE == 'true'
+      run : |
+        nuget pack ./com.chartboost.mediation/Chartboost.CSharp.Mediation.Unity.nuspec  -OutputDirectory ./NuGet -NoDefaultExcludes          
+        git config user.name ${{ secrets.GIT_USER }}
+        git config user.email ${{ secrets.GIT_EMAIL }}
+        git add NuGet/Chartboost.CSharp.Mediation.Unity*.nupkg   
+        git commit -m "Updating Chartboost.CSharp.Mediation.Unity.nupkg"
+        git push                                
+        
+    - name: Toggle BUILD_NUGET_PACKAGE Repository Variable
+      env:
+        GH_TOKEN: ${{ secrets.GITHUBSERVICETOKEN }}
+      run: |
+        gh variable list
+        if ${{ vars.BUILD_NUGET_PACKAGE == 'true' }}
+        then
+            gh variable set BUILD_NUGET_PACKAGE --body "false"
+        else
+            gh variable set BUILD_NUGET_PACKAGE --body "true"
+        fi
+        gh variable list
   
   
   compile-unity-upm:
