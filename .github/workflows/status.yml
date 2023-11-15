@@ -94,7 +94,7 @@ jobs:
           # use `GITHUB_TOKEN` here to avoid re-triggering of workflow on git push
           token: ${{ secrets.GITHUB_TOKEN }}
           
-      - name: If NuGet Package was Generated From Previous Commit
+      - name: Check if NuGet Package was Generated From Previous Commit
         id: nuget-temp-file
         continue-on-error: true
         # if .nupkg was generated from previous commit then this file will exist
@@ -112,13 +112,17 @@ jobs:
       needs-new-nuget-build: ${{ steps.nuget-temp-file.outputs.need_new_nuget_build }}
         
   nuget-build:
-    name: Build NuGet Package
-    # if .nupkg was not generated from previous commit then generate and upload 
-    if: needs.nuget-validate.outputs.needs-new-nuget-build != 'no'
+    name: Build NuGet Package    
     needs: nuget-validate    
     runs-on: ubuntu-latest
 
     steps:
+    - name : Check
+      # The if condition here can also be set directly on the job itself but since the `compile-unity-nuget`  
+      # job depends on this job to complete we let the job run and cancel/skip in the steps   
+      if: needs.nuget-validate.outputs.needs-new-nuget-build != 'no'
+      run: echo "Building NuGet Package"
+      
     - name: Extract Branch Name
       id: extract_branch
       shell: bash
