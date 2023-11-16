@@ -38,86 +38,85 @@ jobs:
     name: Compile Android Bridge
     runs-on: ubuntu-latest
 
-    steps:   
-    - name: Extract Branch Name
-      id: extract_branch
-      shell: bash
-      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT    
-                
-    - name: Checkout Branch
-      uses: actions/checkout@v3
-      with:
-        ref: ${{ steps.extract_branch.outputs.branch }}
-        token: ${{ secrets.GITHUBSERVICETOKEN }}
+    steps:
+      - name: Extract Branch Name
+        id: extract_branch
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
 
-    - name: Set Up JDK 11
-      uses: actions/setup-java@v3
-      with:
-        java-version: '11'
-        distribution: 'temurin'
-        cache: gradle
+      - name: Checkout Branch
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ steps.extract_branch.outputs.branch }}
+          token: ${{ secrets.GITHUBSERVICETOKEN }}
 
-    - name: Grant Execute Permission for Gradlew
-      run: chmod +x ./com.chartboost.mediation/Android~/gradlew
+      - name: Set Up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: gradle
 
-    - name: Build Android Bridge
-      run: ./com.chartboost.mediation/Android~/gradlew -p ./com.chartboost.mediation/Android~ githubScript
-      env:
-        CHARTBOOST_MEDIATION_VERSION: ${{ github.event.inputs.chartboost_mediation_bridge_version }}
-        ONLY_PUBLIC: ${{ github.event.inputs.only_public }}
-        JFROG_USER: ${{ secrets.JFROG_USER }}
-        JFROG_PASS: ${{ secrets.JFROG_PASS }}
+      - name: Grant Execute Permission for Gradlew
+        run: chmod +x ./com.chartboost.mediation/Android~/gradlew
 
-    - name: Upload Android Bridge Changes
-      continue-on-error: true
-      run: |
-        git config user.name ${{ secrets.GIT_USER }}
-        git config user.email ${{ secrets.GIT_EMAIL }}
-        git add com.chartboost.mediation/Runtime/Plugins/Android/chartboost-mediation-android-bridge.jar
-        git commit -m "Updating Chartboost Mediation Unity SDK Android Bridge.jar"
-        git push --force
+      - name: Build Android Bridge
+        run: ./com.chartboost.mediation/Android~/gradlew -p ./com.chartboost.mediation/Android~ githubScript
+        env:
+          CHARTBOOST_MEDIATION_VERSION: ${{ github.event.inputs.chartboost_mediation_bridge_version }}
+          ONLY_PUBLIC: ${{ github.event.inputs.only_public }}
+          JFROG_USER: ${{ secrets.JFROG_USER }}
+          JFROG_PASS: ${{ secrets.JFROG_PASS }}
+
+      - name: Upload Android Bridge Changes
+        continue-on-error: true
+        run: |
+          git config user.name ${{ secrets.GIT_USER }}
+          git config user.email ${{ secrets.GIT_EMAIL }}
+          git add com.chartboost.mediation/Runtime/Plugins/Android/chartboost-mediation-android-bridge.jar
+          git commit -m "Updating Chartboost Mediation Unity SDK Android Bridge.jar"
+          git push --force
   
   nuget:
     name: Build NuGet Package
     runs-on: ubuntu-latest
 
     steps:
-    - name: Extract Branch Name
-      id: extract_branch
-      shell: bash
-      run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT      
-    
-    - name: Checkout Branch
-      uses: actions/checkout@v3
-      with:
-        ref: ${{ steps.extract_branch.outputs.branch }}
-        token: ${{ secrets.GITHUBSERVICETOKEN }}
-      
-    - name: Check if NuGet Package was Generated From Previous Commit
-      id: nuget-temp-file
-      continue-on-error: true
-      # if .nupkg was generated from previous commit then this file will exist
-      if: ${{ hashFiles('.nuget_temp') != '' }}
-      run : |
-        rm -f .nuget_temp
-        git config user.name ${{ secrets.GIT_USER }}
-        git config user.email ${{ secrets.GIT_EMAIL }}
-        git add .nuget_temp
-        git commit -m "Removing .nuget_temp"
-        
-    - name: Generate and Upload NuGet Package 
-      # if .nupkg was not generated from previous commit then generate and upload 
-      if: steps.nuget-temp-file.outcome == 'skipped'
-      run : |
-        nuget pack ./com.chartboost.mediation/Chartboost.CSharp.Mediation.Unity.nuspec  -OutputDirectory ./NuGet -NoDefaultExcludes
-        touch .nuget_temp        
-        git config user.name ${{ secrets.GIT_USER }}
-        git config user.email ${{ secrets.GIT_EMAIL }}
-        git add NuGet/Chartboost.CSharp.Mediation.Unity*.nupkg   
-        git add .nuget_temp
-        git commit -m "Updating Chartboost.CSharp.Mediation.Unity.nupkg"
-        git push --force        
-    
+      - name: Extract Branch Name
+        id: extract_branch
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+
+      - name: Checkout Branch
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ steps.extract_branch.outputs.branch }}
+          token: ${{ secrets.GITHUBSERVICETOKEN }}
+          
+      - name: Generate and Upload NuGet Package
+        if: vars.BUILD_NUGET_PACKAGE == 'true'
+        run : |
+          nuget pack ./com.chartboost.mediation/Chartboost.CSharp.Mediation.Unity.nuspec  -OutputDirectory ./NuGet -NoDefaultExcludes          
+          git config user.name ${{ secrets.GIT_USER }}
+          git config user.email ${{ secrets.GIT_EMAIL }}
+          git add NuGet/Chartboost.CSharp.Mediation.Unity*.nupkg   
+          git commit -m "Updating Chartboost.CSharp.Mediation.Unity.nupkg"
+          git push                                
+          
+      - name: Toggle BUILD_NUGET_PACKAGE Repository Variable
+        env:
+          GH_TOKEN: ${{ secrets.GITHUBSERVICETOKEN }}
+        run: |
+          gh variable list
+          if ${{ vars.BUILD_NUGET_PACKAGE == 'true' }}
+          then
+              gh variable set BUILD_NUGET_PACKAGE --body "false"
+          else
+              gh variable set BUILD_NUGET_PACKAGE --body "true"
+          fi
+          gh variable list
+  
+  
   compile-unity-upm:
     name: Compile UPM Unity Project
     timeout-minutes: 60
@@ -125,23 +124,23 @@ jobs:
     needs: android-bridge
 
     steps:
-    - name: Checkout Branch
-      uses: actions/checkout@v3
-      with:
-        submodules: recursive
-        token: ${{ secrets.GITHUBSERVICETOKEN }}          
-        
-    - name: Compile Unity Project
-      uses: ./.github/actions/compile-unity
-      env:
-        PROJECT_PATH: com.chartboost.mediation.demo.upm
-      with:
-        setup-pass: ${{ secrets.SETUP_PASS }}
-        serial: ${{ secrets.UNITY_SERIAL }}
-        username: ${{ secrets.UNITY_USERNAME }}
-        password: ${{ secrets.UNITY_PASSWORD }}
-        slack-webhook: ${{ secrets.SLACK_NOTIFY_HELIUM_UNITY_SDK_WEBHOOK }}      
+      - name: Checkout Branch
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          token: ${{ secrets.GITHUBSERVICETOKEN }}
 
+      - name: Compile Unity Project
+        uses: ./.github/actions/compile-unity
+        env:
+          PROJECT_PATH: com.chartboost.mediation.demo.upm
+        with:
+          setup-pass: ${{ secrets.SETUP_PASS }}
+          serial: ${{ secrets.UNITY_SERIAL }}
+          username: ${{ secrets.UNITY_USERNAME }}
+          password: ${{ secrets.UNITY_PASSWORD }}
+          slack-webhook: ${{ secrets.SLACK_NOTIFY_HELIUM_UNITY_SDK_WEBHOOK }}
+  
   
   compile-unity-nuget:
     name: Compile NuGet Unity Project
@@ -150,29 +149,37 @@ jobs:
     needs: [android-bridge, nuget]
 
     steps:
-    - name: Checkout Branch
-      uses: actions/checkout@v3
-      with:
-        submodules: recursive
-        token: ${{ secrets.GITHUBSERVICETOKEN }}
+      - name: Checkout Branch
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          token: ${{ secrets.GITHUBSERVICETOKEN }}
 
-    - name: Setup DotNet
-      uses: actions/setup-dotnet@v3
+      - name: Setup DotNet
+        uses: actions/setup-dotnet@v3
 
-    - name: Install/Restore Chartboost Mediation Unity SDK NuGet Package
-      run : |
-        dotnet new tool-manifest
-        dotnet tool install NuGetForUnity.Cli
-        dotnet nugetforunity restore com.chartboost.mediation.demo.nuget
-        
-    - name: Compile Unity Project
-      uses: ./.github/actions/compile-unity
-      env:
-        PROJECT_PATH: com.chartboost.mediation.demo.nuget
-      with:
-        setup-pass: ${{ secrets.SETUP_PASS }}
-        serial: ${{ secrets.UNITY_SERIAL }}
-        username: ${{ secrets.UNITY_USERNAME }}
-        password: ${{ secrets.UNITY_PASSWORD }}
-        slack-webhook: ${{ secrets.SLACK_NOTIFY_HELIUM_UNITY_SDK_WEBHOOK }}
+      - name: Install/Restore Chartboost Mediation Unity SDK NuGet Package
+        run : |
+          dotnet new tool-manifest
+          dotnet tool install NuGetForUnity.Cli
+          dotnet nugetforunity restore com.chartboost.mediation.demo.nuget
 
+      - name: Compile Unity Project
+        uses: ./.github/actions/compile-unity
+        env:
+          PROJECT_PATH: com.chartboost.mediation.demo.nuget
+        with:
+          setup-pass: ${{ secrets.SETUP_PASS }}
+          serial: ${{ secrets.UNITY_SERIAL }}
+          username: ${{ secrets.UNITY_USERNAME }}
+          password: ${{ secrets.UNITY_PASSWORD }}
+          slack-webhook: ${{ secrets.SLACK_NOTIFY_HELIUM_UNITY_SDK_WEBHOOK }}        
+      
+      - name: Update BUILD_NUGET_PACKAGE repository variable
+        if: vars.BUILD_NUGET_PACKAGE == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUBSERVICETOKEN }}
+        run: |
+          gh variable list
+          gh variable set BUILD_NUGET_PACKAGE --body "true"
+          gh variable list          
