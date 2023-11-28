@@ -1,13 +1,12 @@
 {
   "dependencies": {
     "com.chartboost.mediation": {
-      "version": "https://github.com/ChartBoost/helium-unity-sdk.git?path=/com.chartboost.mediation",
+      "version": "file:../../com.chartboost.mediation",
       "depth": 0,
-      "source": "git",
+      "source": "local",
       "dependencies": {
         "com.unity.nuget.newtonsoft-json": "3.2.1"
-      },
-      "hash": "16dc5182958dc0eca75f82e261be52e0e85ab866"
+      }
     },
     "com.google.external-dependency-manager": {
       "version": "file:../../GooglePackages/com.google.external-dependency-manager-1.2.177.tgz",
