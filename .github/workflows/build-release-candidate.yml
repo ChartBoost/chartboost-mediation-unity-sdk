@@ -1,0 +1,224 @@
+name: Build Release Candidate
+
+on:
+  workflow_dispatch:
+    inputs:
+      rc_version:
+        description: 'Release Candidate'
+        required: true
+        default: '4.8.0-rc1'
+
+env:
+  UNITY_VERSION: 2021.3.28f1
+  UNITY_VERSION_CHANGESET: 232e59c3f087
+  UNITY_EXE_PATH: /Applications/Unity/Hub/Editor/2021.3.28f1/Unity.app/Contents/MacOS/Unity
+  PROJECT_PATH: com.chartboost.mediation.canary
+  ANDROID_BUILD_NAME: Builds/Canary.apk
+  IOS_BUILD_NAME: Builds/Canary
+  APP_STORE_CONNECT_API_KEY_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY_ID }}
+  APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
+  APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY }}
+  APP_STORE_CONNECT_API_KEY_IS_KEY_CONTENT_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_IS_KEY_CONTENT_BASE64 }}
+  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+  MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+  XCODE_VERSION_CANARY: "15"
+
+# Cancels any queued or in-progress runs for this branch.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build Chartboost Mediation Unity Canary Release
+    runs-on: m1
+    env:
+      JFROG_USER: ${{ secrets.JFROG_USER }}
+      JFROG_PASS: ${{ secrets.JFROG_PASS }}
+
+    steps:
+    - name: "Set Build Path"
+      run: |
+        echo "ANDROID_BUILD_PATH=${{ env.PROJECT_PATH }}/${{ env.ANDROID_BUILD_NAME }}" >> $GITHUB_ENV
+        echo "IOS_BUILD_PATH=${{ env.PROJECT_PATH }}/${{ env.IOS_BUILD_NAME }}" >> $GITHUB_ENV
+
+    - name: Checkout Branch
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        token: ${{ secrets.GITHUBSERVICETOKEN }}
+
+    - name: Setup Unity Editor
+      id: unity-install
+      uses: ./.github/actions/chartboost-mediation-unity-ci/setup-unity
+      timeout-minutes: 60
+      with:
+        unity-version: ${{ env.UNITY_VERSION }}
+        unity-version-changeset: ${{ env.UNITY_VERSION_CHANGESET }}
+        unity-modules:
+          android
+          ios
+
+    - name: Activate Unity License
+      id: activate-unity
+      uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
+      with:
+        unity-executable-path: ${{ env.UNITY_EXE_PATH }}        
+        serial: ${{ secrets.UNITY_SERIAL }}
+        username: ${{ secrets.UNITY_USERNAME }}
+        password: ${{ secrets.UNITY_PASSWORD }}
+
+    - name: Build Chartboost Mediation Canary Unity Android Smoke Run
+      id: unity-android-build-smoke
+      uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
+      with:
+        unity-executable-path: ${{ env.UNITY_EXE_PATH }}        
+        project-path: ${{ env.PROJECT_PATH }}
+        target-platform: Android
+        execute-method: Editor.Builder.BuildAndroid
+        execute-method-args: |
+         -private_maven_repository private-chartboost-mediation
+         -package_id com.chartboost.mediation 
+         -build_name ${{ env.ANDROID_BUILD_NAME }} 
+         -rc_version ${{ github.event.inputs.rc_version }} 
+         -package_git_location https://${{ secrets.GITHUBSERVICETOKEN }}@github.com/ChartBoost/chartboost-mediation-unity-sdk-private.git?path=/com.chartboost.mediation
+         -update_package true
+
+    - name: Build Chartboost Mediation Canary Unity Android
+      id: unity-android-build
+      uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
+      with:
+        unity-executable-path: ${{ env.UNITY_EXE_PATH }}        
+        project-path: ${{ env.PROJECT_PATH }}
+        target-platform: Android
+        execute-method: Editor.Builder.BuildAndroid
+        execute-method-args: | 
+         -private_maven_repository private-chartboost-mediation
+         -package_id com.chartboost.mediation 
+         -build_name ${{ env.ANDROID_BUILD_NAME }} 
+         -rc_version ${{ github.event.inputs.rc_version }} 
+         -package_git_location https://${{ secrets.GITHUBSERVICETOKEN }}@github.com/ChartBoost/chartboost-mediation-unity-sdk-private.git?path=/com.chartboost.mediation
+
+    - name: Build Chartboost Mediation Canary Unity IOS Smoke Run
+      id: unity-ios-build-smoke
+      uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
+      with:
+        unity-executable-path: ${{ env.UNITY_EXE_PATH }}        
+        project-path: ${{ env.PROJECT_PATH }}
+        target-platform: iOS
+        execute-method: Editor.Builder.BuildIOS
+        execute-method-args: |
+         -github_token ${{ secrets.GITHUBSERVICETOKEN }} 
+         -package_id com.chartboost.mediation 
+         -build_name ${{ env.IOS_BUILD_NAME }}
+         -rc_version ${{ github.event.inputs.rc_version }} 
+         -package_git_location https://${{ secrets.GITHUBSERVICETOKEN }}@github.com/ChartBoost/chartboost-mediation-unity-sdk-private.git?path=/com.chartboost.mediation
+         -update_package true
+
+    - name: Build Chartboost Mediation Canary Unity IOS
+      id: unity-ios-build
+      uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
+      with:
+        unity-executable-path: ${{ env.UNITY_EXE_PATH }}        
+        project-path: ${{ env.PROJECT_PATH }}
+        target-platform: iOS
+        execute-method: Editor.Builder.BuildIOS
+        execute-method-args: |
+         -github_token ${{ secrets.GITHUBSERVICETOKEN }} 
+         -package_id com.chartboost.mediation 
+         -build_name ${{ env.IOS_BUILD_NAME }}
+         -rc_version ${{ github.event.inputs.rc_version }} 
+         -package_git_location https://${{ secrets.GITHUBSERVICETOKEN }}@github.com/ChartBoost/chartboost-mediation-unity-sdk-private.git?path=/com.chartboost.mediation
+
+    - name: Return Unity License
+      if: always()
+      id: return-unity
+      uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
+      with:
+        unity-executable-path: ${{ env.UNITY_EXE_PATH }}        
+        username: ${{ secrets.UNITY_USERNAME }}
+        password: ${{ secrets.UNITY_PASSWORD }}
+        return-license: true
+
+    # Setup the CI/CD environment
+    - name: Setup IOS CI/CD environment
+      id: ci-setup
+      uses: ./.github/actions/chartboost-mediation-unity-ci/setup-environment-ios
+      with:
+        token: ${{ secrets.GITHUBSERVICETOKEN }}
+        working-directory: ${{ env.IOS_BUILD_PATH }}
+
+    # Update Cocoapods repositories to make sure we capture all the latest changes
+    # before generating builds.
+    # ⚠️ This step should only be performed when running on a self-hosted runner
+    # due to how long this step takes and generally hosted runners will not need
+    # this step since Github keeps their VMs up to date.
+    - name: Update Cocoapods Repositories
+      if: steps.ci-setup.outputs.is-local-runner
+      timeout-minutes: 5
+      run: pod repo update
+      shell: bash
+
+    # Update Cocoapods
+    - name: Update Cocoapods
+      if: steps.ci-setup.outputs.cocoapods-cached != 'true'
+      run:  pod install --project-directory=${{ env.IOS_BUILD_PATH }}
+      shell: bash
+
+    - name: Install Fastlane Dependencies
+      run: bundle install
+      shell: bash
+   
+    - name: Distribute Chartboost Mediation Canary Unity IOS
+      run: bundle exec fastlane ios distribute
+      shell: bash
+      env:
+        FIREBASE_IOS_APP_ID: ${{ secrets.FIREBASE_IOS_APP_ID }}
+        FIREBASE_CI_TOKEN: ${{ secrets.FIREBASE_CI_TOKEN }}
+        RC: ${{ github.event.inputs.rc_version }}
+        BUILD_TYPE: SDK_RELEASE
+        BUILD_PATH: ${{ env.IOS_BUILD_PATH }}
+
+    - name: Distribute Chartboost Mediation Canary Unity Android
+      run: bundle exec fastlane android distribute
+      shell: bash
+      env:
+        FIREBASE_ANDROID_APP_ID: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
+        FIREBASE_CI_TOKEN: ${{ secrets.FIREBASE_CI_TOKEN }}
+        RC: ${{ github.event.inputs.rc_version }}
+        BUILD_TYPE: SDK_RELEASE
+        BUILD_PATH: ${{ env.ANDROID_BUILD_PATH }}
+
+    - name: Upload Canary Integration Changes
+      continue-on-error: true
+      run: |
+        git config user.name ${{ secrets.GIT_USER }}
+        git config user.email ${{ secrets.GIT_EMAIL }}
+        git add ${{ env.PROJECT_PATH }}/Assets/Resources/5a4e797538a5f00cf60738d6.json
+        git add ${{ env.PROJECT_PATH }}/Assets/Resources/5a4e797538a5f00cf60738d6.json.meta
+        git add ${{ env.PROJECT_PATH }}/Assets/Resources/59c04299d989d60fc5d2c782.json
+        git add ${{ env.PROJECT_PATH }}/Assets/Resources/59c04299d989d60fc5d2c782.json.meta
+        git add ${{ env.PROJECT_PATH }}/Assets/com.chartboost.mediation/Editor/Adapters
+        git add ${{ env.PROJECT_PATH }}/Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml
+        git add ${{ env.PROJECT_PATH }}/Assets/com.chartboost.mediation/Editor/selections.json
+        git add ${{ env.PROJECT_PATH }}/Assets/Plugins/Android/mainTemplate.gradle
+        git add ${{ env.PROJECT_PATH }}/ProjectSettings/AndroidResolverDependencies.xml
+        git commit -m "Updating Canary Integration"
+        git push --force  
+
+    - name: Cleanup Unity Generated Files
+      if: always()
+      id: unity-cleanup
+      uses: ./.github/actions/chartboost-mediation-unity-ci/cleanup-unity
+      with:
+        setup-pass: ${{ secrets.SETUP_PASS }}
+    
+    - name : Notify Slack on Failure
+      if : ${{ failure() }}
+      id : notify-slack
+      uses: ./.github/actions/chartboost-mediation-unity-ci/notify-slack
+      with:
+        slack-webhook-url: ${{ secrets.SLACK_NOTIFY_CHARTBOOST_MEDIATION_UNITY_WEBHOOK }}
+        workflow-run-id: ${{ github.run_id }}
+        workflow-name: ${{ github.workflow }}
+        workflow-url: "https://github.com/${{ github.repository }}/actions/runs/${{github.run_id}}"

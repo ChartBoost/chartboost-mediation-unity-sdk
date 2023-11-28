@@ -1,0 +1,287 @@
+# General Variables
+FIREBASE_CI_TOKEN = ENV["FIREBASE_CI_TOKEN"]
+FIREBASE_DISTRIBUTION_GROUPS_RELEASE_CANDIDATE = "helium-qa, indium-qa, developers"
+FIREBASE_DISTRIBUTION_GROUPS = "helium-qa, developers"
+FIREBASE_DISTRIBUTION_DEBUG = "false"
+PRODUCT_NAME = "Mediation"
+BUILD_NAME = "Canary"
+RELEASE_CANDIDATE_TAG = ENV["RC"]
+BUILD_TYPE = ENV["BUILD_TYPE"]
+
+# Android Variables
+FIREBASE_ANDROID_APP_ID = ENV["FIREBASE_ANDROID_APP_ID"]
+ARTIFACT_TYPE = "APK"
+BUILD_PATH = ENV["BUILD_PATH"]
+
+# iOS Variables
+FIREBASE_IOS_APP_ID = ENV["FIREBASE_IOS_APP_ID"]
+IPA_NAME = "#{BUILD_NAME}.ipa"
+XCODE_SCHEME_NAME = "Unity-iPhone"
+XCODE_PROJECT_NAME = "Unity-iPhone.xcodeproj"
+XCODE_WORKSPACE_NAME = "Unity-iPhone.xcworkspace"
+CANARY_EXPORT_METHOD = "development"
+CANARY_CONFIGURATION = "Release"
+CODE_SIGNING_IDENTITY = "Apple Development"
+PROFILE_NAME = "match Development #{CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)}"
+XCODE_VERSION_CANARY = ENV['XCODE_VERSION_CANARY']
+ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "120"
+
+platform :android do
+  lane :distribute do
+      release_notes = make_android_release_notes()
+
+      distribution_group = FIREBASE_DISTRIBUTION_GROUPS;
+      if RELEASE_CANDIDATE_TAG
+        distribution_group = FIREBASE_DISTRIBUTION_GROUPS_RELEASE_CANDIDATE;
+      end
+
+      # build_android_app is a built-in fastlane action.
+      firebase_app_distribution(
+          app: FIREBASE_ANDROID_APP_ID,
+          firebase_cli_token: FIREBASE_CI_TOKEN,
+          android_artifact_type: ARTIFACT_TYPE,
+          android_artifact_path: BUILD_PATH,
+          groups: distribution_group,
+          debug: FIREBASE_DISTRIBUTION_DEBUG,
+          release_notes: release_notes
+      )
+    end
+
+  # Generates a release notes string (maximum 65000 characters)
+  # @return [String] Release notes
+  desc "Generates a release notes string (maximum 65000 characters)"
+  lane :make_android_release_notes do
+    # Generate the release notes text.
+    release_notes = "Chartboost Mediation Unity Canary\n"
+
+    # Add build type for automation and black box testers to 
+    # better identify what kind of testing each binary needs
+    release_notes += "Build Type: #{BUILD_TYPE}\n";
+
+    # Add release candidate tag if found
+    if RELEASE_CANDIDATE_TAG
+      release_notes += "Release Candidate: #{RELEASE_CANDIDATE_TAG}\n"
+    end
+
+    # Release notes should always list which branch this Canary app is referring to.
+    branch = git_branch()
+    release_notes += "BRANCH: #{branch}\n\n"
+    
+    # Copy updated adapter changes into release notes
+    if BUILD_TYPE == "ADAPTER_CERTIFICATION"
+        adapter_update_path = File.join(pwd(), "adapter_updates.txt")
+        content = "ADAPTER UPDATES: \n"        
+        content += File.open(adapter_update_path) { |f| f.read }
+        release_notes += content
+    end
+
+    # Return the release notes
+    release_notes
+  end
+end
+
+platform :ios do
+  lane :distribute do
+    setup_ci
+
+    xcodes(version: XCODE_VERSION_CANARY, select_for_current_build_only: true)
+    # Obtain the AppStore Connect API key for the session.
+    api_key = app_store_connect_api_key()
+
+    # Synchronize Canary certificates and provisioning using the default login.keychain information.
+    match(
+      api_key: api_key,
+      type: CANARY_EXPORT_METHOD
+    )
+
+    current_path = pwd()
+    build_directory = File.join(current_path, BUILD_PATH)
+
+    # Generate the Chartboost Mediation Canary ipa
+    ipa = make_canary_ipa(
+      api_key: api_key,
+      build_dir: build_directory,
+    )
+
+    deploy_to_firebase(
+      ipa: ipa
+    )
+  end
+
+  lane :make_canary_ipa do |options|
+    build_dir = options[:build_dir]
+    project = File.join(build_dir, XCODE_PROJECT_NAME)
+    workspace = File.join(build_dir, XCODE_WORKSPACE_NAME)
+    output_name = IPA_NAME
+    output_ipa = File.join(build_dir, output_name)
+
+    # Update the code signing settings
+    update_code_signing_settings(
+      code_sign_identity: CODE_SIGNING_IDENTITY,
+      path: project,
+      targets: XCODE_SCHEME_NAME,
+      profile_name: PROFILE_NAME,
+      team_id: CredentialsManager::AppfileConfig.try_fetch_value(:team_id),
+      use_automatic_signing: false
+    )
+
+    # Build the Chartboost Mediation Canary app now.
+    build_app(
+      clean: true,
+      configuration: CANARY_CONFIGURATION,
+      export_method: CANARY_EXPORT_METHOD,
+      output_directory: build_dir,
+      output_name: output_name,
+      include_bitcode: false,
+      workspace: workspace,
+      scheme: XCODE_SCHEME_NAME
+    )
+
+    output_ipa
+  end
+
+  # Uploads the Canary ipa to Firebase
+  # @param ipa [String] Path to the IPA to upload.
+  # @param release_notes [String] Optional release notes to include with the upload (maximum 65,000 characters).
+  desc "Uploads the Canary ipa to Firebase"
+  lane :deploy_to_firebase do |options|
+    ipa = options[:ipa]
+    # release_notes      = options[:release_notes]
+
+    UI.user_error!("No 'ipa' specified") unless ipa
+    UI.user_error!("#{ipa} could not be found.") unless File.exists?(ipa)
+
+    # Assumes that the IPA's dsym is adjacent to it.
+    dsym = ipa.gsub(".ipa", ".app.dSYM.zip")
+    UI.user_error!("#{dsym} could not be found.") unless File.exists?(dsym)
+
+    # Firebase PLIST entry must exist
+    current_path = pwd()
+    gsp_path = File.join(current_path, BUILD_PATH, "GoogleService-Info.plist")
+    UI.user_error!("#{gsp_path} could not be found.") unless File.exists?(gsp_path)
+
+    release_notes = make_ios_release_notes()
+
+    distribution_group = FIREBASE_DISTRIBUTION_GROUPS;
+    if RELEASE_CANDIDATE_TAG
+      distribution_group = FIREBASE_DISTRIBUTION_GROUPS_RELEASE_CANDIDATE;
+    end
+
+    # Upload the Canary app to Firebase
+    firebase_app_distribution(
+      app: FIREBASE_IOS_APP_ID,
+      groups: distribution_group,
+      firebase_cli_token: FIREBASE_CI_TOKEN,
+      ipa_path: ipa,
+      release_notes: release_notes,
+      debug: FIREBASE_DISTRIBUTION_DEBUG
+    )
+
+    # Firebase Upload Symbols Script Location
+    binary_path = File.join(current_path, BUILD_PATH, "Pods", "FirebaseCrashlytics", "upload-symbols")
+
+    # Upload the dsym to Crashlytics
+    upload_symbols_to_crashlytics(
+      app_id: FIREBASE_IOS_APP_ID,
+      dsym_path: dsym,
+      gsp_path: gsp_path,
+      binary_path: binary_path
+    )
+  end
+
+  # Generates a release notes string (maximum 65000 characters)
+  # @return [String] Release notes
+  desc "Generates a release notes string (maximum 65000 characters)"
+  lane :make_ios_release_notes do
+    # Generate the release notes text.
+    release_notes = "Chartboost Mediation Unity Canary\n"
+
+    # Add build type for automation and black box testers to 
+    # better identify what kind of testing each binary needs
+    release_notes += "Build Type: #{BUILD_TYPE}\n";
+    
+    # Add release candidate tag if found
+    if RELEASE_CANDIDATE_TAG
+      release_notes += "Release Candidate: #{RELEASE_CANDIDATE_TAG}\n"
+    end
+
+    # Release notes should always list which branch this Canary app is referring to.
+    branch = git_branch()
+    release_notes += "BRANCH: #{branch}\n\n"
+    
+    if BUILD_TYPE == "ADAPTER_CERTIFICATION"
+        adapter_update_path = File.join(pwd(), "adapter_updates.txt")
+        content = "ADAPTER UPDATES: \n"        
+        content += File.open(adapter_update_path) { |f| f.read }        
+        release_notes += content
+    end
+
+    current_path = pwd()
+    pod_path = File.join(current_path, BUILD_PATH, "Podfile.lock")
+
+    # Capture the Podfile.lock since the pod versions may help in debugging issues in QA
+    contents = File.open(pod_path) { |f| f.read }
+    contents = contents.slice!(/PODS:([\S\s]*?)(?=\nDEPENDENCIES:)/)
+    release_notes += contents
+
+    # Return the release notes
+    release_notes
+  end
+
+  desc "Performs a Canary release precheck that ensures all the expected ENV variables are set and the user has all the credentials needed to complete the release."
+  lane :release_canary_precheck do |options|
+    # Flag indicating that all prechecks have passed.
+    precheck_success = true
+
+    # Check required ENV variables
+    if ENV['APP_STORE_CONNECT_API_KEY_KEY_ID']
+      UI.important("✅ ENV key 'APP_STORE_CONNECT_API_KEY_KEY_ID' exists.")
+    else
+      UI.important("❌ ENV key 'APP_STORE_CONNECT_API_KEY_KEY_ID' doesn't exist.")
+      precheck_success = false
+    end
+
+    if ENV['APP_STORE_CONNECT_API_KEY_ISSUER_ID']
+      UI.important("✅ ENV key 'APP_STORE_CONNECT_API_KEY_ISSUER_ID' exists.")
+    else
+      UI.important("❌ ENV key 'APP_STORE_CONNECT_API_KEY_ISSUER_ID' doesn't exist.")
+      precheck_success = false
+    end
+
+    if ENV['APP_STORE_CONNECT_API_KEY_KEY']
+      UI.important("✅ ENV key 'APP_STORE_CONNECT_API_KEY_KEY' exists.")
+    else
+      UI.important("❌ ENV key 'APP_STORE_CONNECT_API_KEY_KEY' doesn't exist.")
+      precheck_success = false
+    end
+
+    if ENV['FIREBASE_CI_TOKEN']
+      UI.important("✅ ENV key 'FIREBASE_CI_TOKEN' exists.")
+    else
+      UI.important("❌ ENV key 'FIREBASE_CI_TOKEN' doesn't exist.")
+      precheck_success = false
+    end
+
+    if ENV['MATCH_PASSWORD']
+      UI.important("✅ ENV key 'MATCH_PASSWORD' exists.")
+    else
+      UI.important("❌ ENV key 'MATCH_PASSWORD' doesn't exist.")
+      precheck_success = false
+    end
+
+    UI.error("🚨 Failed release precheck.") unless precheck_success
+  end
+
+  # The current path that is not the fastlane directory.
+  # @return [String] The current path
+  def pwd
+    # Strip off the trailing /fastlane path component if it's there since that
+    # indicates that it is being run from the command line.
+    path = Pathname.new(Dir.pwd)
+    if path.basename.to_path == "fastlane"
+      path = path.parent
+    end
+
+    return path.to_s
+  end
+end

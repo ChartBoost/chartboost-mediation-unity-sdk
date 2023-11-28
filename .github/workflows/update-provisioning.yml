@@ -1,0 +1,34 @@
+name : Update Fastlane Match Provisioning
+
+on : workflow_dispatch
+
+# Setup environment variables required by Fastlane.
+env:
+  APP_STORE_CONNECT_API_KEY_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY_ID }}
+  APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
+  APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY }}
+  APP_STORE_CONNECT_API_KEY_IS_KEY_CONTENT_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_IS_KEY_CONTENT_BASE64 }}
+  MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+
+jobs :
+  update-provisioning:
+    name: Update Unity Canary Provisioning Profiles
+    runs-on: self-hosted
+
+    steps:
+    # update provisioning profiles
+    - name: Update Provisioning Profiles
+      run: bundle exec fastlane update_provisioning
+      shell: bash
+
+    - name : Notify Slack on Failure
+      if : ${{ failure() }}
+      id : notify-slack
+      uses: ./.github/actions/chartboost-mediation-unity-ci/notify-slack
+      with:
+        slack-webhook-url: ${{ secrets.SLACK_NOTIFY_CHARTBOOST_MEDIATION_UNITY_WEBHOOK }}
+        workflow-run-id: ${{ github.run_id }}
+        workflow-name: ${{ github.workflow }}
+        workflow-url: "https://github.com/${{ github.repository }}/actions/runs/${{github.run_id}}"
+

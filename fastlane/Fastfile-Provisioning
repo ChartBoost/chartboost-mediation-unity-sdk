@@ -1,0 +1,22 @@
+desc "Updates the Fastlane Match provisioning profiles with the current set of registered devices"
+lane :update_provisioning do
+    # Obtain the AppStore Connect API key for the session.
+    api_key = app_store_connect_api_key()
+    match(
+        api_key: api_key,
+        force_for_new_devices: true,
+        type: "adhoc"
+    )
+
+    match(
+        api_key: api_key,
+        force_for_new_devices: true,
+        type: "appstore"
+    )
+
+    match(
+        api_key: api_key,
+        force_for_new_devices: true,
+        type: "development"
+    )
+end

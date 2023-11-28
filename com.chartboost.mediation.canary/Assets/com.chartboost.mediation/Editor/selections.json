@@ -1,0 +1,100 @@
+{
+  "mediationVersion": "4.7.0",
+  "adapterSelections": [
+    {
+      "id": "adcolony",
+      "android": "4.8.0",
+      "ios": "4.9.0"
+    },
+    {
+      "id": "applovin",
+      "android": "12.0.0",
+      "ios": "12.0.0"
+    },
+    {
+      "id": "admob",
+      "android": "22.3.0",
+      "ios": "10.13.0"
+    },
+    {
+      "id": "aps",
+      "android": "9.8.6",
+      "ios": "4.7.0"
+    },
+    {
+      "id": "chartboost",
+      "android": "9.5.0",
+      "ios": "9.5.0"
+    },
+    {
+      "id": "digitalturbine",
+      "android": "8.2.4",
+      "ios": "8.2.1"
+    },
+    {
+      "id": "googlebidding",
+      "android": "22.3.0",
+      "ios": "10.13.0"
+    },
+    {
+      "id": "inmobi",
+      "android": "10.6.2",
+      "ios": "10.6.0"
+    },
+    {
+      "id": "mintegral",
+      "android": "16.3.91",
+      "ios": "7.3.0"
+    },
+    {
+      "id": "ironsource",
+      "android": "7.5.2.0",
+      "ios": "7.5.1.0"
+    },
+    {
+      "id": "pangle",
+      "android": "5.5.0.3",
+      "ios": "5.5.0.0"
+    },
+    {
+      "id": "tapjoy",
+      "android": "13.0.0",
+      "ios": "13.0.0"
+    },
+    {
+      "id": "unityads",
+      "android": "4.9.1",
+      "ios": "4.9.0"
+    },
+    {
+      "id": "vungle",
+      "android": "7.0.0",
+      "ios": "7.1.0"
+    },
+    {
+      "id": "yahoo",
+      "android": "1.4.0",
+      "ios": "1.4.0"
+    },
+    {
+      "id": "meta",
+      "android": "6.16.0",
+      "ios": "6.14.0"
+    },
+    {
+      "id": "hyprmx",
+      "android": "6.2.0",
+      "ios": "6.3.0"
+    },
+    {
+      "id": "mobilefuse",
+      "android": "1.6.0",
+      "ios": "1.6.0"
+    },
+    {
+      "id": "verve",
+      "android": "2.17.0",
+      "ios": "2.18.1"
+    }
+  ]
+}

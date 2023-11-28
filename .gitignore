@@ -1,4 +1,14 @@
 # General
 .DS_Store
 
-
+com.chartboost.mediation.canary/Library
+com.chartboost.mediation.canary/Temp
+com.chartboost.mediation.canary/UserSettings
+com.chartboost.mediation.canary/Logs
+com.chartboost.mediation.canary/*.csproj
+com.chartboost.mediation.canary/*.sln
+com.chartboost.mediation.canary/.idea
+com.chartboost.mediation.canary/Builds
+com.chartboost.mediation.canary/obj
+com.chartboost.mediation.canary/Assets/Resources/buildcode.txt
+com.chartboost.mediation.canary/Assets/Resources/buildcode.txt.meta

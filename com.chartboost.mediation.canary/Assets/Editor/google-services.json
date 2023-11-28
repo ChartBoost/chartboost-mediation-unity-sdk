@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "983003802362",
+    "project_id": "helium-sdk",
+    "storage_bucket": "helium-sdk.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:983003802362:android:337539465f05dfa2837743",
+        "android_client_info": {
+          "package_name": "com.chartboost.HeliumUnityCanary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "983003802362-ddjpd2odbcmfnctlr1qq3dir9vq6ka9n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBthIOsQ04gZtIIkgggNqbwQt77dYHsAxQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "983003802362-ddjpd2odbcmfnctlr1qq3dir9vq6ka9n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "983003802362-8jhtvnther5ruuii55v7t3c13mrmakmo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.chartboost.HeliumUnitySDKDemo"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

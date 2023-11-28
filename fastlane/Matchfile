@@ -1,0 +1,14 @@
+# The Matchfile is configured to exclusively work with the Helium suite of apps.
+# The docs are available on https://docs.fastlane.tools/actions/match
+
+# Git repo storing the mobile provisioning profiles.
+git_url("https://github.com/ChartBoost/helium-mobile-provisioning.git")
+git_branch("main")
+storage_mode("git")
+
+# Helium apps.
+app_identifier("com.chartboost.HeliumUnityCanary")
+team_id("F38H382JLK")
+
+# Deployment of the Helium Canary app should only be performed by the service account.
+username("helium-service@chartboost.com")

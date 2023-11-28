@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Tht-l2-7f7">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Code Scanner View Controller-->
+        <scene sceneID="CVn-Pu-ZVR">
+            <objects>
+                <viewController id="Tht-l2-7f7" customClass="QRCodeScannerViewController" customModule="UnityFramework" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ajo-4m-kMW">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="42q-mY-LCn" customClass="QRCodeScannerView" customModule="UnityFramework" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g2L-9W-SKQ">
+                                <rect key="frame" x="343" y="67" width="42" height="42"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="42" id="19m-Bb-Y2f"/>
+                                    <constraint firstAttribute="width" constant="42" id="ofE-4v-JQs"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal">
+                                    <imageReference key="image" image="xmark" catalog="system" symbolScale="large"/>
+                                </state>
+                                <connections>
+                                    <action selector="closeButtonPushed" destination="Tht-l2-7f7" eventType="touchUpInside" id="6Kt-Qt-vQ1"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="ZtK-sl-D94"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="42q-mY-LCn" firstAttribute="top" secondItem="ajo-4m-kMW" secondAttribute="top" id="DkC-LR-gbb"/>
+                            <constraint firstItem="42q-mY-LCn" firstAttribute="leading" secondItem="ZtK-sl-D94" secondAttribute="leading" id="VyM-87-uxr"/>
+                            <constraint firstItem="g2L-9W-SKQ" firstAttribute="top" secondItem="ZtK-sl-D94" secondAttribute="top" constant="8" id="XMP-Tg-hFg"/>
+                            <constraint firstItem="ZtK-sl-D94" firstAttribute="trailing" secondItem="42q-mY-LCn" secondAttribute="trailing" id="f6b-fR-KTY"/>
+                            <constraint firstAttribute="bottom" secondItem="42q-mY-LCn" secondAttribute="bottom" id="gKv-wr-S0V"/>
+                            <constraint firstItem="ZtK-sl-D94" firstAttribute="trailing" secondItem="g2L-9W-SKQ" secondAttribute="trailing" constant="8" id="rWS-Le-3eQ"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="qrCodeScannerView" destination="42q-mY-LCn" id="iOk-s7-aKr"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ZQV-fZ-YcL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="686" y="-39"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="xmark" catalog="system" width="128" height="113"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

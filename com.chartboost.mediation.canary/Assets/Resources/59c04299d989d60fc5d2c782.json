@@ -1,0 +1,959 @@
+{
+    "placements": [
+        {
+            "placement": "ACHybridBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "ACHybridInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "ACHybridRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "ACNonProAdaptiveBanner",
+            "type": "adaptive_banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "ACNonProBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "ACNonProInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "ACNonProInterstitial::B",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "ACNonProRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "ACNonProRewarded::B",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "ALAdaptiveBanner",
+            "type": "adaptive_banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "ALBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "ALInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "ALInterstitial::B",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "ALRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "AMBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "AMInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "AMInterstitial::B",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "AMNonProAdaptiveBanner",
+            "type": "adaptive_banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "AMRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "AMRewardedInterstitial",
+            "type": "rewarded_interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "AMTestBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "AllNetworkAdaptiveBanner",
+            "type": "adaptive_banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "AllNetworkBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "AllNetworkInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "AllNetworkInterstitial::B",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "AllNetworkRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "AllNonProBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "AllNonProInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "AllNonProRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "BMNonProInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "CBHybridBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "CBHybridInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "CBHybridRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "CBNonProBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "CBNonProInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "CBNonProRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "FYBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "FYInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "FYMRECBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "FYNonProAdaptiveBanner",
+            "type": "adaptive_banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "FYRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "GBAMBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "GBAMInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "GBAMRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "GBfaketest",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "HMXNonProAdaptiveBanner",
+            "type": "adaptive_banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "HMXNonProBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "HMXNonProInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "HMXNonProRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "IMBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "IMInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "IMNonProAdaptiveBanner",
+            "type": "adaptive_banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "IMRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "ISInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "ISInterstitial2",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "ISRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "ISRewarded2",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "MGHybridBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "MGHybridInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "MGHybridRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "MGNonProAdaptiveBanner",
+            "type": "adaptive_banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "MGNonProBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "MGNonProInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "MGNonProRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "PGBannerMedium",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "PGBannerStandard",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "PGInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "PGNonProAdaptiveBanner",
+            "type": "adaptive_banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "PGRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "TJNonProInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "TJNonProRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "Test_Main_e3",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "Test_Main_e3::B",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "UABanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "UAInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "UANonProAdaptiveBanner",
+            "type": "adaptive_banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "UARewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "VHybridBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "VHybridInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "VHybridRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "VNonProAdaptiveBanner",
+            "type": "adaptive_banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "VNonProBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "VNonProIntersitialHigh",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "VNonProInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "VNonProInterstitialLow",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "VNonProInterstitialMed",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "VNonProMRECBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "VNonProRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "VNonProRewardedHigh",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "VNonProRewardedInterstitial",
+            "type": "rewarded_interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "VNonProRewardedLow",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "VNonProRewardedMed",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "VRVNonProAdaptiveBanner",
+            "type": "adaptive_banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "VRVNonProBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "VRVNonProInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "VRVNonProMediumRectangle",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "VRVNonProRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "YBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "YInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "YRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "adcolony-sdktest",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "adcolony-sdktest::B",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "interstitial_mediation",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "rewarded_mediation::B",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "ACAdaptiveBanner",
+            "type": "adaptive_banner",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "ACBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "ACInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "ACInterstitial::B",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "ACRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "APSAdaptiveBanner",
+            "type": "adaptive_banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "APSBannerLeaderboard",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "APSBannerMedium",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "APSBannerStandard",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "APSInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "APSInterstitialVideo",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "APSMultiFormatInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "APSRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "APSTestBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "AllProBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "AllProInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "AllProRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "BMBanner",
+            "type": "banner",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "BMInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "BMRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "CBBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "CBBanner-Mock",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "CBInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "CBInterstitial-Mock",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "CBInterstitial-Test",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "CBRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "CBRewarded-Mock",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "CBvsACInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "CBvsACRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "CBvsFBInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "CBvsFBRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "CBvsFBvsACInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "CBvsFBvsACRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "CBvsTJInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "CBvsTJInterstitial::B",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "CBvsTJRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "CBvsTJvsACInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "CBvsTJvsACRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "CBvsTJvsFBInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "CBvsTJvsFBRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "CHvsACPro15S",
+            "type": "banner",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "FBAdaptiveBanner",
+            "type": "adaptive_banner",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "FBBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "FBInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "FBRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "FBRewardedInterstitial",
+            "type": "rewarded_interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "FBTestBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "FBvsACInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "FBvsACRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "GBAdaptiveBanner",
+            "type": "adaptive_banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "GBBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "GBInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "GBRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "MFProBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "MFProInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "MFProLeaderboard",
+            "type": "banner",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "MFProMediumRectangle",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "MFProRewardedInterstitial",
+            "type": "rewarded_interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "MGAdaptiveBanner",
+            "type": "adaptive_banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "MGBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "MGInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "MGRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "REFBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "REFInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "REFRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "Startup",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "Startup-Banner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "Startup-Rewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "Startup::B",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "TJInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "TJRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "TJvsACInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "TJvsACRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "TJvsFBvsACInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "TJvsFBvsACRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "VAdaptiveBanner",
+            "type": "adaptive_banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "VBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "VInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "VProRewardedInterstitial",
+            "type": "rewarded_interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "VRVBanner",
+            "type": "banner",
+            "autoRefreshRate": 30
+        },
+        {
+            "placement": "VRVInterstitial",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "VRVRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "VRewarded",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "aaaadevon",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "aagooglebiddingprod",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "adcolony-interstitial-sdktest",
+            "type": "interstitial",
+            "autoRefreshRate": 0
+        },
+        {
+            "placement": "adcolony-rewarded-sdktest",
+            "type": "rewarded",
+            "autoRefreshRate": 0
+        }
+    ]
+}

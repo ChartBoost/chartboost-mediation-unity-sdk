@@ -73,7 +73,7 @@ runs:
         unity-executable-path: ${{ env.UNITY_EXE_PATH }}
         project-path: ${{ env.PROJECT_PATH }}
         run-tests: true
-        test-results: test-results/results.xml
+        test-results: test-results/editor_results.xml
         test-platform: EditMode
         quit: false
 
@@ -84,7 +84,7 @@ runs:
         unity-executable-path: ${{ env.UNITY_EXE_PATH }}
         project-path: ${{ env.PROJECT_PATH }}
         run-tests: true
-        test-results: test-results/results.xml
+        test-results: test-results/play_results.xml
         test-platform: PlayMode
         quit: false
 
@@ -93,7 +93,8 @@ runs:
       uses: EnricoMi/publish-unit-test-result-action/composite@v2
       with:
         files: |
-          **/results.xml
+          **/play_results.xml
+          **/editor_results.xml
 
     - name: Cleanup Unity Generated Files
       if: always()

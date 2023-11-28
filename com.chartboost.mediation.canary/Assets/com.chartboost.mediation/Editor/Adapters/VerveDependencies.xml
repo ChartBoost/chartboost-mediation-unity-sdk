@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependencies>
+    <androidPackages>
+        <!-- Android Adapter -->
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-verve:4.2.17.0+@aar"/>
+
+        <!-- Partner Android SDK Dependencies-->
+        <androidPackage spec="net.pubnative:hybid.sdk:2.17.0"/>
+
+        <!-- Verve Android Repositories -->
+        <repositories>
+          <repository>https://verve.jfrog.io/artifactory/verve-gradle-release</repository>
+        </repositories>
+    </androidPackages>
+    <iosPods>
+        <!-- iOS Adapter -->
+        <iosPod name="ChartboostMediationAdapterVerve" version="~> 4.2.18.1"/>
+
+        <!-- Partner iOS SDK-->
+        <iosPod name="HyBid" version="~> 2.18.1" addToAllTargets="true"/>
+    </iosPods>
+</dependencies>
+

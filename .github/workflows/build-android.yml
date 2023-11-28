@@ -1,0 +1,146 @@
+name: Build Android
+
+on:
+  schedule:
+    # Scheduled to run Monday - Friday at 10AM UTC which is 3AM PST.
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '0 10 * * 1-5'
+  workflow_dispatch:              
+
+env:
+  UNITY_VERSION: 2021.3.28f1
+  UNITY_VERSION_CHANGESET: 232e59c3f087
+  UNITY_EXE_PATH: /Applications/Unity/Hub/Editor/2021.3.28f1/Unity.app/Contents/MacOS/Unity
+  PROJECT_PATH: com.chartboost.mediation.canary
+  BUILD_NAME: Builds/Canary.apk
+
+# Cancels any queued or in-progress runs for this branch.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build Chartboost Mediation Unity Canary Android
+    runs-on: m1
+    env:
+      JFROG_USER: ${{ secrets.JFROG_USER }}
+      JFROG_PASS: ${{ secrets.JFROG_PASS }}
+
+    steps:
+    - name: "Set Build Path"
+      run: |
+        echo "BUILD_PATH=${{ env.PROJECT_PATH }}/${{ env.BUILD_NAME }}" >> $GITHUB_ENV
+
+    - name: Checkout Branch
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        token: ${{ secrets.GITHUBSERVICETOKEN }}
+        lfs: true
+
+    - name: Setup Unity Editor
+      id: unity-install
+      uses: ./.github/actions/chartboost-mediation-unity-ci/setup-unity
+      timeout-minutes: 60
+      with:
+        unity-version: ${{ env.UNITY_VERSION }}
+        unity-version-changeset: ${{ env.UNITY_VERSION_CHANGESET }}
+        unity-modules:
+          android
+          ios
+
+    - name: Activate Unity License
+      id: activate-unity
+      uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
+      with:
+        unity-executable-path: ${{ env.UNITY_EXE_PATH }}        
+        serial: ${{ secrets.UNITY_SERIAL }}
+        username: ${{ secrets.UNITY_USERNAME }}
+        password: ${{ secrets.UNITY_PASSWORD }}
+
+    - name: Build Chartboost Mediation Canary Unity Android
+      id: unity-android-build
+      uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
+      with:
+        unity-executable-path: ${{ env.UNITY_EXE_PATH }}        
+        project-path: ${{ env.PROJECT_PATH }}
+        target-platform: Android
+        execute-method: Editor.Builder.BuildAndroid
+        execute-method-args: | 
+          -package_id com.chartboost.mediation 
+          -build_name ${{ env.BUILD_NAME }} 
+          -package_git_location https://${{ secrets.GITHUBSERVICETOKEN }}@github.com/ChartBoost/chartboost-mediation-unity-sdk-private.git?path=/com.chartboost.mediation
+          -private_maven_repository private-chartboost-mediation
+
+    - name: Return Unity License
+      if: always()
+      id: return-unity
+      uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
+      with:
+        unity-executable-path: ${{ env.UNITY_EXE_PATH }}        
+        username: ${{ secrets.UNITY_USERNAME }}
+        password: ${{ secrets.UNITY_PASSWORD }}
+        return-license: true
+
+    - name: Upload Canary Integration Changes
+      continue-on-error: true
+      run: |
+        git config user.name ${{ secrets.GIT_USER }}
+        git config user.email ${{ secrets.GIT_EMAIL }}
+        git add ${{ env.PROJECT_PATH }}/Assets/Resources/5a4e797538a5f00cf60738d6.json
+        git add ${{ env.PROJECT_PATH }}/Assets/Resources/5a4e797538a5f00cf60738d6.json.meta
+        git add ${{ env.PROJECT_PATH }}/Assets/Resources/59c04299d989d60fc5d2c782.json
+        git add ${{ env.PROJECT_PATH }}/Assets/Resources/59c04299d989d60fc5d2c782.json.meta
+        git add ${{ env.PROJECT_PATH }}/Assets/com.chartboost.mediation/Editor/Adapters
+        git add ${{ env.PROJECT_PATH }}/Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml
+        git add ${{ env.PROJECT_PATH }}/Assets/com.chartboost.mediation/Editor/selections.json
+        git add ${{ env.PROJECT_PATH }}/Assets/Plugins/Android/mainTemplate.gradle
+        git add ${{ env.PROJECT_PATH }}/ProjectSettings/AndroidResolverDependencies.xml
+        git commit -m "Updating Canary Integration"
+        git push --force
+
+    - name: Set Build Type
+      run: |
+        # check if "adapter_updates.txt" file exists. This file is created only when adapters are updated
+        if test -f adapter_updates.txt
+        then 
+          echo "adapters updated"
+          echo "BUILD_TYPE=ADAPTER_CERTIFICATION" >> "$GITHUB_ENV"
+        else
+          echo "adapters not updated"
+          if ${{ github.event_name == 'schedule' }}
+          then
+            echo "BUILD_TYPE=NIGHTLY_BUILD" >> "$GITHUB_ENV"
+          else
+            echo "BUILD_TYPE=AD_HOC" >> "$GITHUB_ENV"
+          fi
+        fi
+
+    - name: Install Fastlane Dependencies
+      run: bundle install
+      shell: bash
+
+    - name: Distribute Build 
+      run: bundle exec fastlane android distribute
+      shell: bash
+      env:
+        FIREBASE_ANDROID_APP_ID: ${{ secrets.FIREBASE_ANDROID_APP_ID }}
+        FIREBASE_CI_TOKEN: ${{ secrets.FIREBASE_CI_TOKEN }}
+        BUILD_TYPE: ${{ env.BUILD_TYPE }}  
+
+    - name: Cleanup Unity Generated Files
+      if: always()
+      id: unity-cleanup
+      uses: ./.github/actions/chartboost-mediation-unity-ci/cleanup-unity
+      with:
+        setup-pass: ${{ secrets.SETUP_PASS }}
+
+    - name : Notify Slack on Failure
+      if : ${{ failure() }}
+      uses: ./.github/actions/chartboost-mediation-unity-ci/notify-slack
+      with:
+        slack-webhook-url: ${{ secrets.SLACK_NOTIFY_CHARTBOOST_MEDIATION_UNITY_WEBHOOK }}
+        workflow-run-id: ${{ github.run_id }}
+        workflow-name: ${{ github.workflow }}
+        workflow-url: "https://github.com/${{ github.repository }}/actions/runs/${{github.run_id}}"
