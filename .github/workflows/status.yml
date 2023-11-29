@@ -123,7 +123,7 @@ jobs:
           lfs: true
 
       - name: Compile Unity Project
-        uses: ./.github/actions/compile-unity
+        uses: ./chartboost-unity-ci/compile-unity
         env:
           PROJECT_PATH: com.chartboost.mediation.demo.upm
         with:
@@ -166,7 +166,7 @@ jobs:
 
       - name: Compile Unity Project
         id: compile-unity-project
-        uses: ./.github/actions/compile-unity
+        uses: ./chartboost-unity-ci/compile-unity
         env:
           PROJECT_PATH: com.chartboost.mediation.demo.nuget
         with:
@@ -235,7 +235,7 @@ jobs:
           lfs: true
 
       - name: Compile Unity Project
-        uses: ./.github/actions/compile-unity
+        uses: ./chartboost-unity-ci/compile-unity
         env:
           PROJECT_PATH: com.chartboost.mediation.canary
         with:

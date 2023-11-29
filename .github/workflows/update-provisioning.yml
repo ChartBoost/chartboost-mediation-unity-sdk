@@ -14,7 +14,7 @@ env:
 jobs :
   update-provisioning:
     name: Update Unity Canary Provisioning Profiles
-    runs-on: self-hosted
+    runs-on: m1
 
     steps:
     # update provisioning profiles
@@ -25,7 +25,7 @@ jobs :
     - name : Notify Slack on Failure
       if : ${{ failure() }}
       id : notify-slack
-      uses: ./.github/actions/chartboost-mediation-unity-ci/notify-slack
+      uses: ./chartboost-unity-ci/notify-slack
       with:
         slack-webhook-url: ${{ secrets.SLACK_NOTIFY_CHARTBOOST_MEDIATION_UNITY_WEBHOOK }}
         workflow-run-id: ${{ github.run_id }}

@@ -45,7 +45,7 @@ jobs:
 
     - name: Setup Unity Editor
       id: unity-install
-      uses: ./.github/actions/chartboost-mediation-unity-ci/setup-unity
+      uses: ./chartboost-unity-ci/setup-unity
       timeout-minutes: 60
       with:
         unity-version: ${{ env.UNITY_VERSION }}
@@ -56,7 +56,7 @@ jobs:
 
     - name: Activate Unity License
       id: activate-unity
-      uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
+      uses: ./chartboost-unity-ci/run-unity
       with:
         unity-executable-path: ${{ env.UNITY_EXE_PATH }}
         serial: ${{ secrets.UNITY_SERIAL }}
@@ -65,7 +65,7 @@ jobs:
 
     - name: Build Chartboost Mediation Canary Unity IOS
       id: unity-android-build
-      uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
+      uses: ./chartboost-unity-ci/run-unity
       with:
         unity-executable-path: ${{ env.UNITY_EXE_PATH }}
         project-path: ${{ env.PROJECT_PATH }}
@@ -80,7 +80,7 @@ jobs:
     - name: Return Unity License
       if: always()
       id: return-unity
-      uses: ./.github/actions/chartboost-mediation-unity-ci/run-unity
+      uses: ./chartboost-unity-ci/run-unity
       with:
         unity-executable-path: ${{ env.UNITY_EXE_PATH }}
         username: ${{ secrets.UNITY_USERNAME }}
@@ -90,7 +90,7 @@ jobs:
     # Setup the CI/CD environment
     - name: Setup IOS CI/CD environment
       id: ci-setup
-      uses: ./.github/actions/chartboost-mediation-unity-ci/setup-environment-ios
+      uses: ./chartboost-unity-ci/setup-environment-ios
       with:
         token: ${{ secrets.GITHUBSERVICETOKEN }}
         working-directory: ${{ env.BUILD_PATH }}
@@ -161,14 +161,14 @@ jobs:
     - name: Cleanup Unity Generated Files
       if: always()
       id: unity-cleanup
-      uses: ./.github/actions/chartboost-mediation-unity-ci/cleanup-unity
+      uses: ./chartboost-unity-ci/cleanup-unity
       with:
         setup-pass: ${{ secrets.SETUP_PASS }}
 
     - name : Notify Slack on Failure
       if : ${{ failure() }}
       id : notify-slack
-      uses: ./.github/actions/chartboost-mediation-unity-ci/notify-slack
+      uses: ./chartboost-unity-ci/notify-slack
       with:
         slack-webhook-url: ${{ secrets.SLACK_NOTIFY_CHARTBOOST_MEDIATION_UNITY_WEBHOOK }}
         workflow-run-id: ${{ github.run_id }}
