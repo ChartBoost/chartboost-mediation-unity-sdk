@@ -18,13 +18,15 @@ jobs:
         with:
           repository: Chartboost/chartboost-mediation-unity-sdk-private
           token: ${{ secrets.GITHUBSERVICETOKEN }}
+          path: chartboost-mediation-unity-sdk-private
           ref: "${{ inputs.branch-name }}"
 
       - name: Checkout Public Repo Branch
         uses: actions/checkout@v3
-        with:
+        with:          
           repository: Chartboost/chartboost-mediation-unity-sdk
           token: ${{ secrets.GITHUBSERVICETOKEN }}
+          path: chartboost-mediation-unity-sdk
             
             
         # Adjust the exclusion list as needed
@@ -39,7 +41,7 @@ jobs:
           echo -e "chartboost-unity-ci\n" >> exclude.txt
           echo -e "com.chartboost.mediation.canary\n" >> exclude.txt
           echo -e "fastlane\n" >> exclude.txt
-          echo -e "Gemfile\n" >> exclude.txt
+          echo -e "Gemfile*\n" >> exclude.txt
           echo -e "manifest.json\n" >> exclude.txt
           echo -e "packages-lock.json\n" >> exclude.txt
           
