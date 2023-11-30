@@ -1,0 +1,60 @@
+name: Rsync Private Mediation SDK to Public Mediation SDK
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch-name:
+        description: Branch on private repo that needs to be synced to public repo. If public repo does not have this branch then a new branch will be created.
+        required: true
+
+jobs:
+  rsync:
+    name: Rsync Private Mediation SDK to Public Mediation SDK
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Private Repo Branch
+        uses: actions/checkout@v3
+        with:
+          repository: Chartboost/chartboost-mediation-unity-sdk-private
+          token: ${{ secrets.GITHUBSERVICETOKEN }}
+          ref: "${{ inputs.branch-name }}"
+
+      - name: Checkout Public Repo Branch
+        uses: actions/checkout@v3
+        with:
+          repository: Chartboost/chartboost-mediation-unity-sdk
+          token: ${{ secrets.GITHUBSERVICETOKEN }}
+            
+            
+        # Adjust the exclusion list as needed
+      - name: Create Rsync Exclude File
+        run: |
+          echo -e ".git\n" > exclude.txt
+          echo -e ".github\n" >> exclude.txt
+          echo -e ".gitignore\n" >> exclude.txt
+          echo -e ".gitmodules\n" >> exclude.txt
+          echo -e ".gitattributes\n" >> exclude.txt
+          echo -e "GooglePackages\n" >> exclude.txt
+          echo -e "chartboost-unity-ci\n" >> exclude.txt
+          echo -e "com.chartboost.mediation.canary\n" >> exclude.txt
+          echo -e "fastlane\n" >> exclude.txt
+          echo -e "Gemfile\n" >> exclude.txt
+          echo -e "manifest.json\n" >> exclude.txt
+          echo -e "packages-lock.json\n" >> exclude.txt
+          
+      - name: Sync Files Using Rsync
+        run : |
+          rsync -av --progress $GITHUB_WORKSPACE/chartboost-mediation-unity-sdk-private/ $GITHUB_WORKSPACE/chartboost-mediation-unity-sdk/ --exclude-from='exclude.txt' 
+
+      - name: Update Public Repo
+        run: |
+          cd $GITHUB_WORKSPACE/chartboost-mediation-unity-sdk
+          git fetch
+          git checkout "${{ inputs.branch-name }}" || git checkout -b "${{ inputs.branch-name }}"
+          git config user.name ${{ secrets.GIT_USER }}
+          git config user.email ${{ secrets.GIT_EMAIL }}
+          git add .          
+          git commit -m "Syncing changes from private repository" || echo "No changes to commit"
+          git push origin "${{ inputs.branch-name }}"
+
