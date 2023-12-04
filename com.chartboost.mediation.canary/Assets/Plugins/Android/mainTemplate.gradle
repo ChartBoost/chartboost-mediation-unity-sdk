@@ -49,12 +49,12 @@ dependencies {
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:11
     implementation 'androidx.multidex:multidex:2.0.1' // Assets/Editor/MultidexDependencies.xml:4
     implementation 'com.adcolony:sdk:4.8.0' // Assets/com.chartboost.mediation/Editor/Adapters/AdColonyDependencies.xml:8
-    implementation 'com.amazon.android:aps-sdk:9.8.6' // Assets/com.chartboost.mediation/Editor/Adapters/AmazonPublisherServicesDependencies.xml:8
+    implementation 'com.amazon.android:aps-sdk:9.8.8' // Assets/com.chartboost.mediation/Editor/Adapters/AmazonPublisherServicesDependencies.xml:8
     implementation 'com.android.support.constraint:constraint-layout:1.1.3' // Assets/Editor/InternalDependencies.xml:6
     implementation 'com.applovin:applovin-sdk:12.0.0' // Assets/com.chartboost.mediation/Editor/Adapters/AppLovinDependencies.xml:8
     implementation 'com.chartboost:chartboost-mediation-adapter-adcolony:4.4.8.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/AdColonyDependencies.xml:5
     implementation 'com.chartboost:chartboost-mediation-adapter-admob:4.22.3.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/AdMobDependencies.xml:5
-    implementation 'com.chartboost:chartboost-mediation-adapter-amazon-publisher-services:4.9.8.6+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/AmazonPublisherServicesDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-amazon-publisher-services:4.9.8.8+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/AmazonPublisherServicesDependencies.xml:5
     implementation 'com.chartboost:chartboost-mediation-adapter-applovin:4.12.0.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/AppLovinDependencies.xml:5
     implementation 'com.chartboost:chartboost-mediation-adapter-chartboost:4.9.5.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/ChartboostDependencies.xml:5
     implementation 'com.chartboost:chartboost-mediation-adapter-digital-turbine-exchange:4.8.2.4+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/DigitalTurbineExchangeDependencies.xml:5
