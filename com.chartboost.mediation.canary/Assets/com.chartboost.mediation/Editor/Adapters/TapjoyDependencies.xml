@@ -2,10 +2,10 @@
 <dependencies>
     <androidPackages>
         <!-- Android Adapter -->
-        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-tapjoy:4.13.0.0+@aar"/>
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-tapjoy:4.13.3.0+@aar"/>
 
         <!-- Partner Android SDK Dependencies-->
-        <androidPackage spec="com.tapjoy:tapjoy-android-sdk:13.0.0"/>
+        <androidPackage spec="com.tapjoy:tapjoy-android-sdk:13.3.0"/>
 
         <!-- Tapjoy Android Repositories -->
         <repositories>

@@ -66,7 +66,7 @@ dependencies {
     implementation 'com.chartboost:chartboost-mediation-adapter-mintegral:4.16.3.91+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/MintegralDependencies.xml:5
     implementation 'com.chartboost:chartboost-mediation-adapter-mobilefuse:4.1.6.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/MobileFuseDependencies.xml:5
     implementation 'com.chartboost:chartboost-mediation-adapter-pangle:4.5.5.0.3+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/PangleDependencies.xml:5
-    implementation 'com.chartboost:chartboost-mediation-adapter-tapjoy:4.13.0.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/TapjoyDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-tapjoy:4.13.3.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/TapjoyDependencies.xml:5
     implementation 'com.chartboost:chartboost-mediation-adapter-unity-ads:4.4.9.1+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/UnityAdsDependencies.xml:5
     implementation 'com.chartboost:chartboost-mediation-adapter-verve:4.2.17.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/VerveDependencies.xml:5
     implementation 'com.chartboost:chartboost-mediation-adapter-vungle:4.7.0.0+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/VungleDependencies.xml:5
@@ -109,7 +109,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.10.0' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:15
     implementation 'com.squareup.retrofit2:converter-scalars:2.9.0' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:17
     implementation 'com.squareup.retrofit2:retrofit:2.9.0' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:18
-    implementation 'com.tapjoy:tapjoy-android-sdk:13.0.0' // Assets/com.chartboost.mediation/Editor/Adapters/TapjoyDependencies.xml:8
+    implementation 'com.tapjoy:tapjoy-android-sdk:13.3.0' // Assets/com.chartboost.mediation/Editor/Adapters/TapjoyDependencies.xml:8
     implementation 'com.unity3d.ads:unity-ads:4.9.1' // Assets/com.chartboost.mediation/Editor/Adapters/UnityAdsDependencies.xml:8
     implementation 'com.vungle:vungle-ads:7.0.0' // Assets/com.chartboost.mediation/Editor/Adapters/VungleDependencies.xml:8
     implementation 'com.yahoo.mobile.ads:android-yahoo-mobile-sdk:1.4.0' // Assets/com.chartboost.mediation/Editor/Adapters/YahooDependencies.xml:8

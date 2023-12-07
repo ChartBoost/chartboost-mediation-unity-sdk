@@ -21,7 +21,7 @@
     <package>com.chartboost:chartboost-mediation-adapter-mintegral:4.16.3.91+@aar</package>
     <package>com.chartboost:chartboost-mediation-adapter-mobilefuse:4.1.6.0+@aar</package>
     <package>com.chartboost:chartboost-mediation-adapter-pangle:4.5.5.0.3+@aar</package>
-    <package>com.chartboost:chartboost-mediation-adapter-tapjoy:4.13.0.0+@aar</package>
+    <package>com.chartboost:chartboost-mediation-adapter-tapjoy:4.13.3.0+@aar</package>
     <package>com.chartboost:chartboost-mediation-adapter-unity-ads:4.4.9.1+@aar</package>
     <package>com.chartboost:chartboost-mediation-adapter-verve:4.2.17.0+@aar</package>
     <package>com.chartboost:chartboost-mediation-adapter-vungle:4.7.0.0+@aar</package>
@@ -64,7 +64,7 @@
     <package>com.squareup.okhttp3:okhttp:4.10.0</package>
     <package>com.squareup.retrofit2:converter-scalars:2.9.0</package>
     <package>com.squareup.retrofit2:retrofit:2.9.0</package>
-    <package>com.tapjoy:tapjoy-android-sdk:13.0.0</package>
+    <package>com.tapjoy:tapjoy-android-sdk:13.3.0</package>
     <package>com.unity3d.ads:unity-ads:4.9.1</package>
     <package>com.vungle:vungle-ads:7.0.0</package>
     <package>com.yahoo.mobile.ads:android-yahoo-mobile-sdk:1.4.0</package>
