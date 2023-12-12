@@ -14,7 +14,7 @@
     {
       "id": "admob",
       "android": "22.3.0",
-      "ios": "10.13.0"
+      "ios": "10.14.0"
     },
     {
       "id": "aps",
@@ -34,7 +34,7 @@
     {
       "id": "googlebidding",
       "android": "22.3.0",
-      "ios": "10.13.0"
+      "ios": "10.14.0"
     },
     {
       "id": "inmobi",
