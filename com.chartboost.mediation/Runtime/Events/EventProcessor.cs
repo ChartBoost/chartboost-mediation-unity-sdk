@@ -62,7 +62,12 @@ namespace Chartboost.Events
         /// <returns>A new continuation <see cref="Task"/>.</returns>
         public static Task ContinueWithOnMainThread<T>(this Task<T> task, Action<Task<T>> continuation)
         {
-            var ret = task.ContinueWith(continuation, CancellationToken.None, TaskContinuationOptions.None, _unityScheduler);
+            var ret = Task.Factory.StartNew(async () =>
+            {
+                await task;
+                continuation.Invoke(task);
+            }, CancellationToken.None, TaskCreationOptions.None, _unityScheduler).Unwrap();
+            
             ret.AppendExceptionLogging();
             return ret;
         }
@@ -76,7 +81,11 @@ namespace Chartboost.Events
         /// <returns>A new continuation <see cref="Task"/>.</returns>
         public static Task ContinueWithOnMainThread(this Task task, Action<Task> continuation)
         {
-            var ret = task.ContinueWith(continuation, CancellationToken.None, TaskContinuationOptions.None, _unityScheduler); 
+            var ret = Task.Factory.StartNew(async () =>
+            {
+                await task;
+                continuation.Invoke(task);
+            }, CancellationToken.None, TaskCreationOptions.None, _unityScheduler).Unwrap();
             ret.AppendExceptionLogging();
             return ret;
         }
