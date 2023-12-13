@@ -848,10 +848,8 @@ void _chartboostMediationInvalidateFullscreenAd(const void *uniqueId)
 
 void _chartboostMediationFullscreenSetCustomData(const void *uniqueId, const char *customData)
 {
-    sendToMain(^() {
-        id<ChartboostMediationFullscreenAd> ad = (__bridge id<ChartboostMediationFullscreenAd>)uniqueId;
-        [ad setCustomData:GetStringParam(customData)];
-    });
+    id<ChartboostMediationFullscreenAd> ad = (__bridge id<ChartboostMediationFullscreenAd>)uniqueId;
+    [ad setCustomData:GetStringParam(customData)];
 }
 
 
