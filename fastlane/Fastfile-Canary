@@ -7,6 +7,7 @@ PRODUCT_NAME = "Mediation"
 BUILD_NAME = "Canary"
 RELEASE_CANDIDATE_TAG = ENV["RC"]
 BUILD_TYPE = ENV["BUILD_TYPE"]
+PROJECT_PATH = ENV["PROJECT_PATH"]
 
 # Android Variables
 FIREBASE_ANDROID_APP_ID = ENV["FIREBASE_ANDROID_APP_ID"]
@@ -69,7 +70,8 @@ platform :android do
     
     # Copy updated adapter changes into release notes
     if BUILD_TYPE == "ADAPTER_CERTIFICATION"
-        adapter_update_path = File.join(pwd(), "adapter_updates.txt")
+        current_path = pwd()
+        adapter_update_path = File.join(current_path, PROJECT_PATH, "adapter_updates.txt")
         content = "ADAPTER UPDATES: \n"        
         content += File.open(adapter_update_path) { |f| f.read }
         release_notes += content

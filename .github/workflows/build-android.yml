@@ -103,7 +103,7 @@ jobs:
     - name: Set Build Type
       run: |
         # check if "adapter_updates.txt" file exists. This file is created only when adapters are updated
-        if test -f adapter_updates.txt
+        if test -f ${{ env.PROJECT_PATH }}/adapter_updates.txt
         then 
           echo "adapters updated"
           echo "BUILD_TYPE=ADAPTER_CERTIFICATION" >> "$GITHUB_ENV"
