@@ -14,10 +14,10 @@
     </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->
-        <!-- IOS BidMachine Adapter has not been selected. Choose a version to fill this field -->
+        <iosPod name="ChartboostMediationAdapterBidMachine" version="~> 4.2.4.0.0"/>
 
         <!-- Partner iOS SDK-->
-        <!-- IOS BidMachine Adapter has not been selected. Choose a version to fill this field -->
+        <iosPod name="BidMachine" version="~> 2.4.0.0" addToAllTargets="true"/>
     </iosPods>
 </dependencies>
 

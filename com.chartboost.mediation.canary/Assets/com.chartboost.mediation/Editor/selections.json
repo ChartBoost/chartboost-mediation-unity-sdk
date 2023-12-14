@@ -24,7 +24,7 @@
     {
       "id": "chartboost",
       "android": "9.6.0",
-      "ios": "9.5.0"
+      "ios": "9.6.0"
     },
     {
       "id": "digitalturbine",
@@ -69,7 +69,7 @@
     {
       "id": "vungle",
       "android": "7.1.0",
-      "ios": "7.1.0"
+      "ios": "7.2.0"
     },
     {
       "id": "yahoo",
@@ -99,7 +99,7 @@
     {
       "id": "bidmachine",
       "android": "2.4.0",
-      "ios": "Unselected"
+      "ios": "2.4.0.0"
     }
   ]
 }
