@@ -23,7 +23,7 @@
     },
     {
       "id": "chartboost",
-      "android": "9.5.0",
+      "android": "9.6.0",
       "ios": "9.5.0"
     },
     {
@@ -68,7 +68,7 @@
     },
     {
       "id": "vungle",
-      "android": "7.0.0",
+      "android": "7.1.0",
       "ios": "7.1.0"
     },
     {
@@ -88,13 +88,18 @@
     },
     {
       "id": "mobilefuse",
-      "android": "1.6.0",
+      "android": "1.6.5",
       "ios": "1.6.0"
     },
     {
       "id": "verve",
       "android": "2.17.0",
       "ios": "2.18.1"
+    },
+    {
+      "id": "bidmachine",
+      "android": "2.4.0",
+      "ios": "Unselected"
     }
   ]
 }

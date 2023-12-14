@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependencies>
+    <androidPackages>
+        <!-- Android Adapter -->
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-bidmachine:4.2.4.0+@aar"/>
+
+        <!-- Partner Android SDK Dependencies-->
+        <androidPackage spec="io.bidmachine:ads:2.4.0"/>
+
+        <!-- BidMachine Android Repositories -->
+        <repositories>
+          <repository>https://artifactory.bidmachine.io/bidmachine</repository>
+        </repositories>
+    </androidPackages>
+    <iosPods>
+        <!-- iOS Adapter -->
+        <!-- IOS BidMachine Adapter has not been selected. Choose a version to fill this field -->
+
+        <!-- Partner iOS SDK-->
+        <!-- IOS BidMachine Adapter has not been selected. Choose a version to fill this field -->
+    </iosPods>
+</dependencies>
+

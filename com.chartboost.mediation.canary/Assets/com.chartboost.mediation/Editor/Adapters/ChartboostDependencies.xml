@@ -2,10 +2,10 @@
 <dependencies>
     <androidPackages>
         <!-- Android Adapter -->
-        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-chartboost:4.9.5.0+@aar"/>
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-chartboost:4.9.6.0+@aar"/>
 
         <!-- Partner Android SDK Dependencies-->
-        <androidPackage spec="com.chartboost:chartboost-sdk:9.5.0"/>
+        <androidPackage spec="com.chartboost:chartboost-sdk:9.6.0"/>
 
         <!-- Chartboost Android Repositories -->
         <repositories>
