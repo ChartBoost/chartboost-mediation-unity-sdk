@@ -9,10 +9,10 @@
     </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->
-        <iosPod name="ChartboostMediationAdapterHyprMX" version="~> 4.6.2.0"/>
+        <iosPod name="ChartboostMediationAdapterHyprMX" version="~> 4.6.3.0"/>
 
         <!-- Partner iOS SDK-->
-        <iosPod name="HyprMX" version="~> 6.2.0" addToAllTargets="true"/>
+        <iosPod name="HyprMX" version="~> 6.3.0" addToAllTargets="true"/>
     </iosPods>
 </dependencies>
 

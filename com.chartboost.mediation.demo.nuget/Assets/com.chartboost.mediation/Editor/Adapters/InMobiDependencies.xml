@@ -2,17 +2,17 @@
 <dependencies>
     <androidPackages>
         <!-- Android Adapter -->
-        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-inmobi:4.10.6.1+@aar"/>
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-inmobi:4.10.6.2+@aar"/>
 
         <!-- Partner Android SDK Dependencies-->
-        <androidPackage spec="com.inmobi.monetization:inmobi-ads-kotlin:10.6.1"/>
+        <androidPackage spec="com.inmobi.monetization:inmobi-ads-kotlin:10.6.2"/>
     </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->
-        <iosPod name="ChartboostMediationAdapterInMobi" version="~> 4.10.5.6"/>
+        <iosPod name="ChartboostMediationAdapterInMobi" version="~> 4.10.6.0"/>
 
         <!-- Partner iOS SDK-->
-        <iosPod name="InMobiSDK" version="~> 10.5.6" addToAllTargets="false"/>
+        <iosPod name="InMobiSDK" version="~> 10.6.0" addToAllTargets="false"/>
     </iosPods>
 </dependencies>
 

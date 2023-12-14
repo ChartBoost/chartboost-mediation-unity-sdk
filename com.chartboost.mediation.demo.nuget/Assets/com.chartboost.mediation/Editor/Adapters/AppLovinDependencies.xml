@@ -2,17 +2,17 @@
 <dependencies>
     <androidPackages>
         <!-- Android Adapter -->
-        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-applovin:4.11.11.3+@aar"/>
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-applovin:4.12.0.0+@aar"/>
 
         <!-- Partner Android SDK Dependencies-->
-        <androidPackage spec="com.applovin:applovin-sdk:11.11.3"/>
+        <androidPackage spec="com.applovin:applovin-sdk:12.0.0"/>
     </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->
-        <iosPod name="ChartboostMediationAdapterAppLovin" version="~> 4.11.11.0"/>
+        <iosPod name="ChartboostMediationAdapterAppLovin" version="~> 4.12.0.0"/>
 
         <!-- Partner iOS SDK-->
-        <iosPod name="AppLovinSDK" version="~> 11.11.0" addToAllTargets="false"/>
+        <iosPod name="AppLovinSDK" version="~> 12.0.0" addToAllTargets="false"/>
     </iosPods>
 </dependencies>
 
