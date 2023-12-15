@@ -212,7 +212,8 @@ platform :ios do
     release_notes += "BRANCH: #{branch}\n\n"
     
     if BUILD_TYPE == "ADAPTER_CERTIFICATION"
-        adapter_update_path = File.join(pwd(), "adapter_updates.txt")
+        current_path = pwd()
+        adapter_update_path = File.join(current_path, PROJECT_PATH, "adapter_updates.txt")
         content = "ADAPTER UPDATES: \n"        
         content += File.open(adapter_update_path) { |f| f.read }        
         release_notes += content
