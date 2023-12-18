@@ -3,13 +3,28 @@ using UnityEngine.UI;
 
 public class SettingsKillSwitchTogglesItem : MonoBehaviour
 {
+    private const string PartnerKillPpKeyBase = "com.chartboost.mediation.canary.partnerKill";
+    
     public Toggle noneToggle;
 
     public Toggle[] partnerToggles;
 
-    private void Start()
+    private void Awake()
     {
         ChartboostMediationInitializer.Instance.InitializationOptions.Clear();
+        
+        // Note : If this is done in `Start()` then there is a chance that these toggles
+        // may not be applied during automatic initialization since automatic initialization 
+        // is also called from Start
+        foreach (var partnerToggle in partnerToggles)
+        {
+            partnerToggle.SetIsOnWithoutNotify(PlayerPrefs.GetInt($"{PartnerKillPpKeyBase}.{partnerToggle.name}", 0) == 1);
+            SetInitializationOptions(partnerToggle.name, partnerToggle.isOn);
+        }
+    }
+
+    private void Start()
+    {
         noneToggle.onValueChanged.AddListener(delegate {
             OnNoneChanged(noneToggle);
         });
@@ -36,14 +51,24 @@ public class SettingsKillSwitchTogglesItem : MonoBehaviour
     private void OnPartnerChanged(Toggle toggle)
     {
         var partnerName = toggle.name;
+        SetInitializationOptions(partnerName, toggle.isOn);
+    }
 
-        if (toggle.isOn)
+    private void SetInitializationOptions(string partnerName, bool shouldKill)
+    {
+        var initializationOptions = ChartboostMediationInitializer.Instance.InitializationOptions;
+        if (shouldKill)
         {
-            ChartboostMediationInitializer.Instance.InitializationOptions.Remove(partnerName);
+            if (!initializationOptions.Contains(partnerName))
+                initializationOptions.Add(partnerName);
             noneToggle.isOn = false;
         }
+        else
+        {
+            if (initializationOptions.Contains(partnerName))
+                initializationOptions.Remove(partnerName);
+        }
 
-        if (!ChartboostMediationInitializer.Instance.InitializationOptions.Contains(partnerName))
-            ChartboostMediationInitializer.Instance.InitializationOptions.Add(partnerName);
+        PlayerPrefs.SetInt($"{PartnerKillPpKeyBase}.{partnerName}", shouldKill ? 1 : 0);
     }
 }
