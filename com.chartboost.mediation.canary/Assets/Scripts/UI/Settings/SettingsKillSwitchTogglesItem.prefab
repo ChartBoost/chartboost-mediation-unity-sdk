@@ -3132,7 +3132,7 @@ GameObject:
   - component: {fileID: 4187678136210897397}
   - component: {fileID: 2613660701648286509}
   m_Layer: 5
-  m_Name: pangel
+  m_Name: pangle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -25,8 +25,7 @@ public class ChartboostMediationInitializer : SimpleSingleton<ChartboostMediatio
     /// Helium Initialization Status
     /// </summary>
     public bool Initialized { get; private set; }
-
-    public List<string> InitializationOptions { get; } = new List<string>();
+    
 
     /// <summary>
     /// Standard Unity Awake handler.
@@ -57,9 +56,13 @@ public class ChartboostMediationInitializer : SimpleSingleton<ChartboostMediatio
     {
         if (Initialized) 
             return;
+        
         var appId = Environment.AppIdentifier;
-        ChartboostMediationPlacementDataSource.Instance.LoadPlacementCache(appId);        
-        ChartboostMediation.StartWithOptions(Environment.AppIdentifier, Environment.AppSignature, InitializationOptions.ToArray());
+        ChartboostMediationPlacementDataSource.Instance.LoadPlacementCache(appId);
+        
+        ChartboostMediationPartnerSkipper.Initialize();
+        var initializationOptions = ChartboostMediationPartnerSkipper.SkippedPartners.ToArray();
+        ChartboostMediation.StartWithOptions(Environment.AppIdentifier, Environment.AppSignature, initializationOptions);
     }
 
     /// <summary>
@@ -97,4 +100,5 @@ public class ChartboostMediationInitializer : SimpleSingleton<ChartboostMediatio
         DataVisualizer.Instance.UpdateContents("Partner Initialization Data", partnerInitializationEventData);
         DataVisualizer.Instance.OpenVisualizer();
     }
+
 }
