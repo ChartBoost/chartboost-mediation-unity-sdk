@@ -43,7 +43,7 @@
     },
     {
       "id": "ironsource",
-      "android": "7.5.2.0",
+      "android": "7.7.0.0",
       "ios": "7.5.1.0"
     },
     {
@@ -78,7 +78,7 @@
     },
     {
       "id": "mobilefuse",
-      "android": "1.6.5",
+      "android": "1.7.0",
       "ios": "1.6.5"
     },
     {
@@ -88,7 +88,7 @@
     },
     {
       "id": "bidmachine",
-      "android": "2.4.0",
+      "android": "2.4.1",
       "ios": "2.4.0.0"
     }
   ]

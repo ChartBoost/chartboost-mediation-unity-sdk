@@ -2,10 +2,10 @@
 <dependencies>
     <androidPackages>
         <!-- Android Adapter -->
-        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-mobilefuse:4.1.6.5+@aar"/>
+        <androidPackage spec="com.chartboost:chartboost-mediation-adapter-mobilefuse:4.1.7.0+@aar"/>
 
         <!-- Partner Android SDK Dependencies-->
-        <androidPackage spec="com.mobilefuse.sdk:mobilefuse-sdk-core:1.6.5"/>
+        <androidPackage spec="com.mobilefuse.sdk:mobilefuse-sdk-core:1.7.0"/>
     </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->
