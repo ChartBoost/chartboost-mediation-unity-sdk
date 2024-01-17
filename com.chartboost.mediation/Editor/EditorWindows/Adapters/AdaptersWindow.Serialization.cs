@@ -89,14 +89,13 @@ namespace Chartboost.Editor.EditorWindows.Adapters
                 Debug.LogError("[Chartboost Mediation] Unable to Load Adapters information, make sure you have an active internet connection");
                 return;
             }
-
-
+            
             
             foreach (var adapter in adapters)
             {
                 if (UserSelectedVersions.ContainsKey(adapter.id)) 
                     continue;
-                
+
                 var pathToAdapter = Path.Combine(PathToAdaptersDirectory, $"{adapter.name.RemoveWhitespace()}Dependencies.xml");
                 pathToAdapter.DeleteFileWithMeta();
             }
@@ -108,7 +107,11 @@ namespace Chartboost.Editor.EditorWindows.Adapters
                 if (!PathToSelectionsFile.FileExist() && !PathToMainDependency.FileExist())
                     PathToEditorInGeneratedFiles.DeleteDirectoryWithMeta();
             }
-            
+
+            var currentSelections = UserSelectedVersions.ToDictionary(kv => kv.Key, kv => kv.Value);
+            foreach (var adapterId in currentSelections.Select(selection => selection.Key))
+                AdapterDeletionDialog(adapterId);
+
             foreach (var selection in UserSelectedVersions)
             {
                 var template = new List<string>(defaultTemplateContents);

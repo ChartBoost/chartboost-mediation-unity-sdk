@@ -102,9 +102,14 @@ namespace Editor
             var secondsSinceEpoch = (int)t.TotalSeconds;
             var isRcBuildOrNightly = false;
             
-            if (!args.TryGetValue(ArgBuildName, out var buildName))
+            if (!args.TryGetValue(ArgBuildName, out var buildName) && Application.isBatchMode)
                 ExitEditorWithResult(BuildResult.Failed);
-            
+            else
+            {
+                Debug.LogError("Cannot Build, Parameters Are Missing");
+                return;
+            }
+
             var packageId = args[ArgPackageId];
             
             if (args.TryGetValue(ArgRCVersion, out var rcVersionInput)) 
