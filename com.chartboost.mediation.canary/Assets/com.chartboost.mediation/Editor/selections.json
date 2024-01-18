@@ -1,5 +1,5 @@
 {
-  "mediationVersion": "4.7.0",
+  "mediationVersion": "4.8.0",
   "adapterSelections": [
     {
       "id": "applovin",
