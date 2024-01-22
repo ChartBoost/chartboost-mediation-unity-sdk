@@ -101,10 +101,11 @@ jobs:
         env:
           token: ${{ secrets.GITHUBSERVICETOKEN }}
         run: |
+          rm -rf ./NuGet/* 
           nuget pack ./com.chartboost.mediation/Chartboost.CSharp.Mediation.Unity.nuspec  -OutputDirectory ./NuGet -NoDefaultExcludes          
           git config user.name ${{ secrets.GIT_USER }}
           git config user.email ${{ secrets.GIT_EMAIL }}
-          git add NuGet/Chartboost.CSharp.Mediation.Unity*.nupkg   
+          git add -A NuGet/   
           git commit -m "Updating Chartboost.CSharp.Mediation.Unity.nupkg"
           git push
   
