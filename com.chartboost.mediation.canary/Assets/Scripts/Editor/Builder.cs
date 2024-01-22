@@ -197,7 +197,7 @@ namespace Editor
             var bOptions = BuildOptions.None;
             bOptions |= BuildOptions.CompressWithLz4HC;
             bOptions |= BuildOptions.Development;
-            
+
             if (!Application.isBatchMode)
                 bOptions |= BuildOptions.ShowBuiltPlayer;
             
