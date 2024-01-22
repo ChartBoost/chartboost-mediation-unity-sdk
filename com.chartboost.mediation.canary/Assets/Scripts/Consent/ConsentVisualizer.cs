@@ -10,7 +10,6 @@ public class ConsentVisualizer : SimpleSingleton<ConsentVisualizer>
     [SerializeField] private PartnerConsentHandler partnerConsentHandlerPrefab;
 
     private readonly string[] _allPartners = {
-        Partners.AdColony,
         Partners.AdMob,
         Partners.AmazonPublisherServices,
         Partners.AppLovin,
@@ -23,11 +22,9 @@ public class ConsentVisualizer : SimpleSingleton<ConsentVisualizer>
         Partners.Mintegral,
         Partners.MobileFuse,
         Partners.Pangle,
-        Partners.Tapjoy,
         Partners.Unity,
         Partners.Verve,
         Partners.Vungle,
-        Partners.Yahoo,
     };
 
     public void OpenVisualizer()
