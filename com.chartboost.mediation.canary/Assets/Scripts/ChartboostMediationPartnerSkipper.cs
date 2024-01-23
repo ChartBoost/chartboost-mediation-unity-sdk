@@ -8,7 +8,6 @@ public static class ChartboostMediationPartnerSkipper
     // https://docs.chartboost.com/en/mediation/integrate/unity/initialize-mediation/#network-adapter-identifiers
     private static readonly string[] Partners =
     {
-        "adcolony",
         "admob", 
         "amazon_aps",
         "applovin",
@@ -19,10 +18,8 @@ public static class ChartboostMediationPartnerSkipper
         "ironsource",
         "mintegral",
         "pangle",
-        "tapjoy",
         "unity",
         "vungle",
-        "yahoo",
         "mobilefuse",
         "verve",
         "hyprmx"
