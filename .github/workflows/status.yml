@@ -96,8 +96,8 @@ jobs:
 
       - name: Generate and Upload NuGet Package
         id: upload-package
-        # only run this step on non-protected branches and only if commit is manually pushed 
-        if: steps.extract_branch.outputs.branch != 'develop' && steps.extract_branch.outputs.branch != 'main' && !startsWith(steps.extract_branch.outputs.branch, 'release') && github.actor != 'helium-service'
+        # only run this step on PRs on non-protected branches and only if commit is manually pushed 
+        if: github.ref_type != 'tag' && steps.extract_branch.outputs.branch != 'develop' && steps.extract_branch.outputs.branch != 'main' && !startsWith(steps.extract_branch.outputs.branch, 'release') && github.actor != 'helium-service'
         env:
           token: ${{ secrets.GITHUBSERVICETOKEN }}
         run: |
