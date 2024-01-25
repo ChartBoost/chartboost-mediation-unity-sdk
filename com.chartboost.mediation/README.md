@@ -32,7 +32,7 @@ In order to add the Chartboost Mediation Unity SDK to your project using the npm
 
 ```json
   "dependencies": {
-    "com.chartboost.mediation": "4.7.0",
+    "com.chartboost.mediation": "4.8.0",
     ...
   },
   "scopedRegistries": [
