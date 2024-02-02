@@ -9,10 +9,10 @@
     </androidPackages>
     <iosPods>
         <!-- iOS Adapter -->
-        <iosPod name="ChartboostMediationAdapterMobileFuse" version="~> 4.1.6.5"/>
+        <iosPod name="ChartboostMediationAdapterMobileFuse" version="~> 4.1.7.0"/>
 
         <!-- Partner iOS SDK-->
-        <iosPod name="MobileFuseSDK" version="~> 1.6.5" addToAllTargets="true"/>
+        <iosPod name="MobileFuseSDK" version="~> 1.7.0" addToAllTargets="true"/>
     </iosPods>
 </dependencies>
 
