@@ -1,8 +1,9 @@
 package com.chartboost.mediation.canary.unity
 
+import android.content.Context
 import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
-import android.preference.PreferenceManager
 import com.amazon.device.ads.AdRegistration
 import com.applovin.sdk.AppLovinSdk
 import com.facebook.ads.AdSettings
@@ -76,8 +77,11 @@ class CanaryUnityBridge {
         @JvmStatic
         fun setTcString(value: String) {
             UnityPlayer.currentActivity?.let {
-                val defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(it)
-                defaultSharedPreferences.edit().putString(TC_STRING, value)
+                val sharedPreferences = 
+                    it.getSharedPreferences(
+                        "${it.packageName}_preferences", 
+                        Context.MODE_PRIVATE)
+                sharedPreferences.edit().putString(TC_STRING, value)
                         .apply()
             }
         }

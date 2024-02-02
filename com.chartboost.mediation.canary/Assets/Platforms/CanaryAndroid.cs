@@ -76,7 +76,7 @@ namespace Canary.Platforms
         /// default, it is necessary to do this in the bridge.
         /// </summary>
         /// <param name="value">TCFv2 string value.</param>
-        public void SetTCString(string value)
+        public override void SetTCString(string value)
         {
             base.SetTCString(value);
             using var canaryBridge = GetCanaryBridge();
