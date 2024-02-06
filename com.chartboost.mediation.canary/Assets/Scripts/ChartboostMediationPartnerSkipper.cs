@@ -22,7 +22,9 @@ public static class ChartboostMediationPartnerSkipper
         "vungle",
         "mobilefuse",
         "verve",
-        "hyprmx"
+        "hyprmx",
+        "chartboost",
+        "bidmachine"
     };
     
     /// <summary>
