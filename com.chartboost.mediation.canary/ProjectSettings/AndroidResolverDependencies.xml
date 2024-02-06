@@ -3,11 +3,11 @@
     <package>androidx.core:core:1.2.0</package>
     <package>androidx.localbroadcastmanager:localbroadcastmanager:1.1.0</package>
     <package>androidx.multidex:multidex:2.0.1</package>
-    <package>com.amazon.android:aps-sdk:9.8.8</package>
+    <package>com.amazon.android:aps-sdk:9.8.10</package>
     <package>com.android.support.constraint:constraint-layout:1.1.3</package>
     <package>com.applovin:applovin-sdk:12.1.0</package>
     <package>com.chartboost:chartboost-mediation-adapter-admob:4.22.3.0+@aar</package>
-    <package>com.chartboost:chartboost-mediation-adapter-amazon-publisher-services:4.9.8.8+@aar</package>
+    <package>com.chartboost:chartboost-mediation-adapter-amazon-publisher-services:4.9.8.10+@aar</package>
     <package>com.chartboost:chartboost-mediation-adapter-applovin:4.12.1.0+@aar</package>
     <package>com.chartboost:chartboost-mediation-adapter-bidmachine:4.2.4.1+@aar</package>
     <package>com.chartboost:chartboost-mediation-adapter-chartboost:4.9.6.1+@aar</package>
