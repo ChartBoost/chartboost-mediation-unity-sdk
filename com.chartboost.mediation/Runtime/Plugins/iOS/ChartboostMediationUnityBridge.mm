@@ -642,7 +642,10 @@ float _chartboostMediationGetUIScaleFactor() {
 
 void _chartboostMediationSetTestMode(BOOL isTestModeEnabled)
 {
-    Helium.isTestModeEnabled = isTestModeEnabled;
+    Implementation implementation = [[ChartboostMediationObserver sharedObserver] getImplementationFromClassNamed:@"CHBHTestModeHelper" selectorName:@"setIsTestModeEnabled_isForcedOn:"];
+    typedef void (*Signature)(id, SEL, BOOL);
+    Signature function = (Signature)implementation.imp;
+    function([ChartboostMediationObserver sharedObserver], implementation.selector, isTestModeEnabled);
 }
 
 void _chartboostMediationDiscardOversizedAds(BOOL shouldDiscard)
