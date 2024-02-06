@@ -100,7 +100,8 @@ namespace Editor
             var timeFormatted = now.ToString(DateFormat);
             var t = now - new DateTime(1970, 1, 1);
             var secondsSinceEpoch = (int)t.TotalSeconds;
-            var isRcBuildOrNightly = false;
+            var isRcBuild = false;
+            var isNightly = false;
 
             if (!args.TryGetValue(ArgBuildName, out var buildName))
             {
@@ -122,7 +123,7 @@ namespace Editor
                     // Building Release Candidate
                     if (Regex.IsMatch(rcVersionInput, ReleaseCandidateRegex))
                     {
-                        isRcBuildOrNightly = true;
+                        isRcBuild = true;
 
                         if (args.ContainsKey(ArgUpdatePackage) && args.TryGetValue(ArgPackageGitLocation, out var gitPackageLocation))
                         {
@@ -162,16 +163,16 @@ namespace Editor
             else
             {
                 PlayerSettings.bundleVersion = timeFormatted;
-                isRcBuildOrNightly = true;
+                isNightly = true;
             }
-            Debug.Log($"Is Nightly Build? {isRcBuildOrNightly}");
+            Debug.Log($"Is Nightly Build? {isNightly}");
 
             switch (target)
             {
                 case BuildTarget.Android:
                     PlayerSettings.Android.bundleVersionCode = secondsSinceEpoch;
                     PlayerSettings.SetScriptingBackend(targetGroup, ScriptingImplementation.IL2CPP);
-                    if (isRcBuildOrNightly)
+                    if (isRcBuild || isNightly)
                     {
                         var privateRepository = args[ArgPrivateMavenRepository];
                         UpdateMainTemplate(privateRepository);
@@ -180,8 +181,8 @@ namespace Editor
                 case BuildTarget.iOS:
                     PlayerSettings.iOS.buildNumber = secondsSinceEpoch.ToString();
                     PlayerSettings.SetScriptingBackend(targetGroup, ScriptingImplementation.IL2CPP);
-                    if (isRcBuildOrNightly)
-                        UpdateCocoaPodRepos();
+                    if (isRcBuild || isNightly)
+                        UpdateCocoaPodRepos(isNightly);
                     break;
             }
 
@@ -368,10 +369,11 @@ namespace Editor
             AssetDatabase.Refresh();
         }
 
-        private static void UpdateCocoaPodRepos()
+        private static void UpdateCocoaPodRepos(bool isNightlyBuild = true)
         {
             UpdateCocoaPodsRepo("chartboost-pods.git", "<!-- Private Cocoapods Repo -->");
-            UpdateCocoaPodsRepo("helium-ios-sdk-nightly.git", "<!-- Nightly Cocoapods Repo -->");
+            if(isNightlyBuild)
+                UpdateCocoaPodsRepo("helium-ios-sdk-nightly.git", "<!-- Nightly Cocoapods Repo -->");
             AssetDatabase.Refresh();
         }
         
