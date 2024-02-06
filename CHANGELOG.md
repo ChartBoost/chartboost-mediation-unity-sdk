@@ -9,7 +9,6 @@ The following ad networks have been deprecated:
 
 Improvements:
 - New Chartboost Mediation Unity SDK demo app.
-- `ChartboostMediation.SetTestMode` now utilizes a public iOS Native flag instead of reflection.
 
 Bug Fixes:
 - Fixed an issue with incorrect order of callbacks when `ContinueWithOnMainThread` Task extension is used.

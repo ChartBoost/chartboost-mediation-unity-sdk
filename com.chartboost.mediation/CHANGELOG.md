@@ -1,6 +1,21 @@
 # Changelog
 All notable changes to this project will be documented in this file using the standards as defined at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0).
 
+### Version 4.8.0 *(2024-02-08)*
+The following ad networks have been deprecated:
+- AdColony
+- TapJoy
+- Yahoo
+
+Improvements:
+- New Chartboost Mediation Unity SDK demo app.
+
+Bug Fixes:
+- Fixed an issue with incorrect order of callbacks when `ContinueWithOnMainThread` Task extension is used.
+- Fixed an issue where `CustomData` would always be null for iOS fullscreen placements.
+- Fixed an issue where `SKAdNetwork` utilities would fail to account for JSON parsing issues.
+- Fixed an issue where `AdapterWindows` utilities would fail to account for deprecated ad networks.
+  
 ### Version 4.7.0 *(2023-11-14)*
 Chartboost Mediation Unity SDK 4.7.0 is the last release for 2023. As such, we strive to make as many improvements and bug fixes as possible. However, there are a few breaking changes with this release in preperation for an easier transition to Chartboost Mediation 5.X in 2024.
 
