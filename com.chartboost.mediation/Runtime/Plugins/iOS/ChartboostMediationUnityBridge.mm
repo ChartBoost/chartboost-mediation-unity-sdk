@@ -28,7 +28,7 @@ typedef void (*ChartboostMediationFullscreenAdEvent)(long hashCode, int eventTyp
 
 // Banner Events
 typedef void (*ChartboostMediationBannerAdEvent)(long hashCode, int eventType);
-typedef void (*ChartboostMediationBannerAdLoadResultEvent)(int hashCode, const void* adHashCode, const char *loadId, const char *metricsJson, const char *code, const char *message);
+typedef void (*ChartboostMediationBannerAdLoadResultEvent)(int hashCode, const void* adHashCode, const char *loadId, const char *metricsJson, float width, float height, const char *code, const char *message);
 
 
 typedef void (^block)(void);
@@ -1037,13 +1037,15 @@ void _chartboostMediationBannerViewLoadAdWithScreenPos(const void *uniqueId, con
             ChartboostMediationErrorCode codeInt = [error chartboostMediationCode];
             const char *code = [[NSString stringWithFormat:@"CM_%ld", codeInt] UTF8String];
             const char *message = [[error localizedDescription] UTF8String];
-            callback(hashCode, uniqueId, "", "", code, message);
+            callback(hashCode, uniqueId, "", "", 0, 0, code, message);
             return;
         }
 
         const char *loadId = [[adLoadResult loadID] UTF8String];
-        const char *metricsJson = dictionaryToJSON([adLoadResult metrics]);
-        callback(hashCode, uniqueId, loadId, metricsJson, "", "");
+        const char *metricsJson = dictionaryToJSON([adLoadResult metrics]);        
+        float width = adLoadResult.size.size.width;
+        float height = adLoadResult.size.size.height;
+        callback(hashCode, uniqueId, loadId, metricsJson, width, height, "", "");
     }];
 
     ChartboostMediationBannerAdWrapper *bannerWrapper = (__bridge ChartboostMediationBannerAdWrapper *)uniqueId;
@@ -1073,13 +1075,15 @@ void _chartboostMediationBannerViewLoadAdWithXY(const void *uniqueId, const char
             ChartboostMediationErrorCode codeInt = [error chartboostMediationCode];
             const char *code = [[NSString stringWithFormat:@"CM_%ld", codeInt] UTF8String];
             const char *message = [[error localizedDescription] UTF8String];
-            callback(hashCode, uniqueId, "", "", code, message);
+            callback(hashCode, uniqueId, "", "", 0, 0, code, message);
             return;
         }
 
         const char *loadId = [[adLoadResult loadID] UTF8String];
-        const char *metricsJson = dictionaryToJSON([adLoadResult metrics]);
-        callback(hashCode, uniqueId, loadId, metricsJson, "", "");
+        const char *metricsJson = dictionaryToJSON([adLoadResult metrics]);        
+        float width = adLoadResult.size.size.width;
+        float height = adLoadResult.size.size.height;
+        callback(hashCode, uniqueId, loadId, metricsJson, width, height, "", "");
     }];
 
     ChartboostMediationBannerAdWrapper *bannerWrapper = (__bridge ChartboostMediationBannerAdWrapper *)uniqueId;

@@ -5,6 +5,7 @@ using Chartboost.AdFormats.Banner.Unity;
 using Chartboost.Banner;
 using Chartboost.Requests;
 using Chartboost.Utilities;
+using Newtonsoft.Json;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -144,6 +145,8 @@ namespace AdController.BannerAd
                 var container = sticky ? stickyBannerContainer : adaptiveBannerContainer;
                 loadResult = await BannerControllerAd.Load(loadRequest, container);
             }
+            
+            Log(" LoadResult size ",$" {JsonConvert.SerializeObject(loadResult.Size)}");
             
             if (loadResult.Error.HasValue)
             {

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using AOT;
+using Chartboost.AdFormats.Banner;
 using Chartboost.AdFormats.Fullscreen;
 using Chartboost.Events;
 using Chartboost.Requests;
@@ -123,10 +124,10 @@ namespace Chartboost.Platforms.IOS
         #endregion
 
         #region Banner Callbacks
-        public delegate void ExternChartboostMediationBannerAdLoadResultEvent(int hashCode, IntPtr adHashCode, string loadId, string metricsJson, string code, string message);
+        public delegate void ExternChartboostMediationBannerAdLoadResultEvent(int hashCode, IntPtr adHashCode, string loadId, string metricsJson, float sizeWidth, float sizeHeight, string code, string message);
         
         [MonoPInvokeCallback(typeof(ExternChartboostMediationBannerAdLoadResultEvent))]
-        internal static void BannerAdLoadResultCallbackProxy(int hashCode, IntPtr adHashCode, string loadId, string metricsJson, string code, string message)
+        internal static void BannerAdLoadResultCallbackProxy(int hashCode, IntPtr adHashCode, string loadId, string metricsJson, float sizeWidth, float sizeHeight, string code, string message)
         {
             EventProcessor.ProcessEvent(() => { 
                 ChartboostMediationBannerAdLoadResult adLoadResult;
@@ -139,7 +140,8 @@ namespace Chartboost.Platforms.IOS
                     return;
                 }
                 var metrics = string.IsNullOrEmpty(metricsJson)? new Metrics() : JsonConvert.DeserializeObject<Metrics>(metricsJson);
-                adLoadResult = new ChartboostMediationBannerAdLoadResult(loadId, metrics, null);
+                var size = ChartboostMediationBannerSize.Adaptive(sizeWidth, sizeHeight);
+                adLoadResult = new ChartboostMediationBannerAdLoadResult(loadId, metrics, null, size);
                 ResolveCallbackProxy(hashCode, adLoadResult);
                 CacheManager.ReleaseBannerAdLoadRequest(hashCode);
             });
