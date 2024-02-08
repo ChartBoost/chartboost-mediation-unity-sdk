@@ -1,9 +1,9 @@
 {
-  "mediationVersion": "4.7.0",
+  "mediationVersion": "4.8.0",
   "adapterSelections": [
     {
       "id": "chartboost",
-      "android": "9.6.0",
+      "android": "9.6.1",
       "ios": "9.6.0"
     }
   ]

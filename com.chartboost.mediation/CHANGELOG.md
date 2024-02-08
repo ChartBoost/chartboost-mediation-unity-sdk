@@ -11,7 +11,6 @@ Improvements:
 - New Chartboost Mediation Unity SDK demo app.
 - Add `Size` to `ChartboostMediationBannerAdLoadResult`.
 
-
 Bug Fixes:
 - Fixed an issue with incorrect order of callbacks when `ContinueWithOnMainThread` Task extension is used.
 - Fixed an issue where `CustomData` would always be null for iOS fullscreen placements.

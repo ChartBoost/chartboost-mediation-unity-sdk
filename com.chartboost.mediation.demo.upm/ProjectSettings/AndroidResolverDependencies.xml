@@ -1,10 +1,11 @@
 <dependencies>
   <packages>
+    <package>androidx.lifecycle:lifecycle-common:2.5.1</package>
+    <package>androidx.lifecycle:lifecycle-extensions:2.2.0</package>
     <package>androidx.localbroadcastmanager:localbroadcastmanager:1.1.0</package>
-    <package>androidx.multidex:multidex:2.0.1</package>
-    <package>com.chartboost:chartboost-mediation-adapter-chartboost:4.9.6.0+@aar</package>
-    <package>com.chartboost:chartboost-mediation-sdk:4.7+</package>
-    <package>com.chartboost:chartboost-sdk:9.6.0</package>
+    <package>com.chartboost:chartboost-mediation-adapter-chartboost:4.9.6.1+@aar</package>
+    <package>com.chartboost:chartboost-mediation-sdk:4.8+</package>
+    <package>com.chartboost:chartboost-sdk:9.6.1</package>
     <package>com.google.android.gms:play-services-ads-identifier:18.0.1</package>
     <package>com.google.android.gms:play-services-appset:16.0.2</package>
     <package>com.google.android.gms:play-services-base:18.1.0</package>
@@ -30,7 +31,7 @@
     <setting name="packageDir" value="Assets/Plugins/Android" />
     <setting name="patchAndroidManifest" value="True" />
     <setting name="patchMainTemplateGradle" value="True" />
-    <setting name="projectExportEnabled" value="False" />
+    <setting name="projectExportEnabled" value="True" />
     <setting name="useFullCustomMavenRepoPathWhenExport" value="True" />
     <setting name="useFullCustomMavenRepoPathWhenNotExport" value="False" />
     <setting name="useJetifier" value="True" />
