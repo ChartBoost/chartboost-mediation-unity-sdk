@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/com.chartboost.mediation.demo/Demo.unity
+    path: Packages/com.chartboost.mediation.demo/Runtime/Scenes/Demo.unity
     guid: 5a62aeba8c00e4ee3a10d58cef88d579
   m_configObjects: {}

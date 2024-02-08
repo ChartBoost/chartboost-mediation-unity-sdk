@@ -1,0 +1,16 @@
+{
+    "name": "com.chartboost.mediation.demo",
+    "rootNamespace": "Chartboost.Mediation.Demo",
+    "references": [
+        "GUID:1fa23cf67f36740369216fe6b6716e5a"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -60,23 +60,25 @@ For more information on how to corroborate partner initialization data visit [De
 
 #### Network Adapter Identifiers
 
-| Network                     | Identifier            |
-|-----------------------------|-----------------------|
-| AdColony                    | adcolony              |
-| AdMob                       | admob                 |
-| Amazon Publisher Services   | amazon_aps            |
-| AppLovin                    | applovin              |
-| Meta Audience Network       | facebook              |
-| Digital Turbine Exchange    | fyber                 |
-| Google Bidding              | google_googlebidding  |
-| InMobi                      | inmobi                |
-| IronSource                  | ironsource            |
-| Mintegral                   | mintegral             |
-| Pangle                      | pangle                |
-| Tapjoy                      | tapjoy                |
-| Unity                       | unity                 |
-| Vungle                      | vungle                |
-| Yahoo                       | yahoo                 |
-| MobileFuse                  | mobilefuse            |
-| Verve                       | verve                 |
-| HyprMX                      | hyprmx                |
+| Network                   | Identifier           |
+|---------------------------|----------------------|
+| AdColony                  | adcolony             |
+| AdMob                     | admob                |
+| Amazon Publisher Services | amazon_aps           |
+| AppLovin                  | applovin             |
+| Meta Audience Network     | facebook             |
+| Digital Turbine Exchange  | fyber                |
+| Google Bidding            | google_googlebidding |
+| InMobi                    | inmobi               |
+| IronSource                | ironsource           |
+| Mintegral                 | mintegral            |
+| Pangle                    | pangle               |
+| Tapjoy                    | tapjoy               |
+| Unity                     | unity                |
+| Vungle                    | vungle               |
+| Yahoo                     | yahoo                |
+| MobileFuse                | mobilefuse           |
+| Verve                     | verve                |
+| HyprMX                    | hyprmx               |
+| Chartboost                | chartboost           |
+| BidMachine                | bidmachine           |

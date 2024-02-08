@@ -144,7 +144,7 @@ namespace Chartboost.Platforms.Android
         {
             public ChartboostMediationBannerViewListener() : base(GetQualifiedClassName(AndroidConstants.ClassChartboostMediationBannerViewListener)) {}
             
-            private void onAdCached(AndroidJavaObject ad, string error)
+            private void onAdCached(AndroidJavaObject ad, AndroidJavaObject size, string error)
             {
                 var bannerView = CacheManager.GetBannerAd(ad.HashCode());
                 if (!(bannerView is ChartboostMediationBannerViewAndroid androidBannerView)) 
@@ -158,7 +158,7 @@ namespace Chartboost.Platforms.Android
 
                 var loadResult = !string.IsNullOrEmpty(error) 
                     ? new ChartboostMediationBannerAdLoadResult(new ChartboostMediationError(error)) 
-                    : new ChartboostMediationBannerAdLoadResult(bannerView.LoadId, null, null);
+                    : new ChartboostMediationBannerAdLoadResult(bannerView.LoadId, null, null, size.ToChartboostMediationBannerSize());
 
                 androidBannerView.LoadRequest.Complete(loadResult);
             }

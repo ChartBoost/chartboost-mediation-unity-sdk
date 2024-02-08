@@ -32,7 +32,7 @@ namespace Chartboost.AdFormats.Fullscreen
             {
                 customData = value;
                 if (isValid)
-                    _chartboostMediationFullscreenSetCustomData(uniqueId, customData);
+                    _chartboostMediationFullscreenSetCustomData(uniqueId, value);
             }
         }
 

@@ -101,7 +101,7 @@ A detailed example on the load logic for both of these APIs can be found below :
 
 ```c#
 // Get a bannerView
-ChartboostMediationBannerView bannerView = ChartboostMediation.GetBannerView();
+IChartboostMediationBannerView bannerView = ChartboostMediation.GetBannerView();
 
 // Determine the maximum size to load using width and height
 var size = ChartboostMediationBannerSize.Adaptive(width, height);
@@ -110,7 +110,7 @@ var size = ChartboostMediationBannerSize.Adaptive(width, height);
 var loadRequest = new ChartboostMediationBannerAdLoadRequest(placementName, size)
 
 // Determine where on the screen you want to place this bannerView
-var screenLocation = ChartboostMediationAdScreenLocation.TopRight;
+var screenLocation = ChartboostMediationBannerAdScreenLocation.TopRight;
 
 // Load the banner ad
 var loadResult = await bannerView.Load(loadRequest, screenLocation);

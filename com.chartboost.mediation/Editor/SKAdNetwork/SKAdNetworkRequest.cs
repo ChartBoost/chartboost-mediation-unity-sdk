@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 
 namespace Chartboost.Editor.SKAdNetwork
 {
-    public class SKAdNetworkRequest
+    public sealed class SKAdNetworkRequest
     {
         public static IEnumerable<string> GetSKAdNetworkIds()
         {
@@ -125,7 +125,7 @@ namespace Chartboost.Editor.SKAdNetwork
 
             if (skanIdsRequest.error != null)
             {
-                Debug.Log($"SKAdNetworkRequest failed with error: {skanIdsRequest.error}");
+                LogNetworkFailureMessage(skanIdsRequest);
                 return new SKAdNetworkIds();
             }
 
@@ -134,9 +134,9 @@ namespace Chartboost.Editor.SKAdNetwork
                 var skanIds = JsonUtility.FromJson<SKAdNetworkIds>(skanIdsRequest.downloadHandler.text);
                 return skanIds;
             }
-            catch (NullReferenceException e)
+            catch (Exception e)
             {
-                Debug.Log($"SKAdNetworkRequest failed to parse json due to exception {e}");
+                LogSKAdNetworkRequestExceptionMessage(url, e);
                 return new SKAdNetworkIds();
             }
         }
@@ -150,38 +150,41 @@ namespace Chartboost.Editor.SKAdNetwork
             
             var ret = new SKAdNetworkIds
             {
-                company_name = "Unity",
+                company_name = SKAdNetworkConstants.NetworkUnity,
                 skadnetwork_ids = new List<IdEntry>()
             };
 
             if (skanIdsRequest.error != null)
             {
-                Debug.Log($"SkAdNetworkRequestUnity failed with error: {skanIdsRequest.error}");
+                LogNetworkFailureMessage(skanIdsRequest);
                 return ret;
             }
 
             var contents = JsonConvert.DeserializeObject(skanIdsRequest.downloadHandler.text);
             
             if (!(contents is JArray asArray)) return ret;
-
-
+            
             try
             {
                 foreach (var element in asArray)
                 {
-                    var id = element["skadnetwork_id"];
+                    var id = element[SKAdNetworkConstants.SKAdNetworkId];
                     if (id != null)
                         ret.skadnetwork_ids.Add( new IdEntry { skadnetwork_id = id.ToString()});
                 }
-
                 return ret;
             }
-            catch (NullReferenceException e)
+            catch (Exception e)
             {
-                Debug.Log($"SkAdNetworkRequestUnity failed to parse json due to exception {e}");
+                LogSKAdNetworkRequestExceptionMessage(url, e);
                 return ret;
             }
         }
+
+        private static void LogNetworkFailureMessage(UnityWebRequest request) 
+            => Debug.LogWarning($"SKAdNetworkRequest failed with error: {request.error}");
         
+        private static void LogSKAdNetworkRequestExceptionMessage(string url, Exception e)
+            => Debug.LogWarning($"SKAdNetworkRequest failed to parse json for: {url} due to exception {e}");
     }
 }

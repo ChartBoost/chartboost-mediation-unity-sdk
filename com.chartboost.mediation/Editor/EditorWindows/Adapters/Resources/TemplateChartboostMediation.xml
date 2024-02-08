@@ -16,6 +16,8 @@
         <androidPackage spec="com.squareup.okhttp3:logging-interceptor:4.10.0" />
         <androidPackage spec="com.squareup.retrofit2:converter-scalars:2.9.0" />
         <androidPackage spec="com.squareup.retrofit2:retrofit:2.9.0" />
+        <androidPackage spec="androidx.lifecycle:lifecycle-common:2.5.1" />
+        <androidPackage spec="androidx.lifecycle:lifecycle-extensions:2.2.0" />
 
         <!-- Google Play Services dependencies -->
         <androidPackage spec="com.google.android.gms:play-services-base:18.1.0"/>

@@ -1,6 +1,6 @@
 {
   "name": "com.chartboost.mediation",
-  "version": "4.7.0",
+  "version": "4.8.0",
   "displayName": "Chartboost Mediation",
   "description": "The Chartboost Mediation Unity SDK. Better monetization powered by bidding",
   "unity": "2020.3",
