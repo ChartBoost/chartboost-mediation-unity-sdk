@@ -208,7 +208,7 @@ namespace Chartboost
         // Functions for showing ads
         //////////////////////////////////////////////////////
 
-        public static string Version => "4.7.0";
+        public static string Version => "4.8.0";
         
         /// <summary>
         /// Load a fullscreen ad (interstitial, rewarded video, rewarded interstitial).

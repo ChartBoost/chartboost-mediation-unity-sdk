@@ -1,0 +1,19 @@
+{
+    "name": "com.chartboost.mediation.demo.Editor",
+    "rootNamespace": "Chartboost.Editor",
+    "references": [
+        "GUID:1fa23cf67f36740369216fe6b6716e5a",
+        "GUID:309de467e3a614ee7bcaee4545b1d288"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

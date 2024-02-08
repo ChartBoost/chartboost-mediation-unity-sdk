@@ -47,11 +47,25 @@ class BannerAdWrapper(private val ad: HeliumBannerAd) {
             ) {
                 thisWrapper.loadId = loadId
                 thisWrapper.winningBidInfo = winningBidInfo
+                // We use the other `onAdCached` override for Unity since it includes the banner size
+            }
 
+            override fun onAdCached(
+                placementName: String,
+                loadId: String,
+                winningBidInfo: Map<String, String>,
+                error: ChartboostMediationAdException?,
+                bannerSize: Size
+            ) {
+                thisWrapper.loadId = loadId
+                thisWrapper.winningBidInfo = winningBidInfo
+                Log.d(TAG, "Banner Size : ${bannerSize.width}, ${bannerSize.height}")
+                val size =
+                    HeliumBannerAd.HeliumBannerSize.bannerSize(bannerSize.width, bannerSize.height);
                 error?.let { err ->
-                    thisListener?.onAdCached(thisWrapper, err.message)
+                    thisListener?.onAdCached(thisWrapper, size, err.message)
                 } ?: run {
-                    thisListener?.onAdCached(thisWrapper, "")
+                    thisListener?.onAdCached(thisWrapper, size, "")
                 }
             }
 

@@ -92,7 +92,9 @@ namespace Chartboost.Editor.EditorWindows.Adapters
             foreach (var selection in currentSelections)
             {
                 var adapterId = selection.Key;
-                
+               if (AdapterDeletionDialog(adapterId))
+                   continue;
+               
                 var updateAndroid = new Action(() => UpdateSelection(PartnerSDKVersions[adapterId].android, selectionChanges,  adapterId, selection.Value.android, Platform.Android));;
                 var updateIOS = new Action(() => UpdateSelection(PartnerSDKVersions[adapterId].ios, selectionChanges, adapterId, selection.Value.ios, Platform.IOS));
 
@@ -225,6 +227,18 @@ namespace Chartboost.Editor.EditorWindows.Adapters
                     "No adapters updated, everything is already up to date!\n\n Do you think this is incorrect? Try using the refresh button.",
                     "Ok");
             }
+        }
+
+        private static bool AdapterDeletionDialog(string adapterId)
+        {
+            if (PartnerSDKVersions.ContainsKey(adapterId)) 
+                return false;
+            UserSelectedVersions.Remove(adapterId);
+            var message = $"Adapter: {adapterId} has been deprecated and removed from selections, please delete dependencies as needed.";
+            Debug.Log(message);
+            if (!Application.isBatchMode) 
+                EditorUtility.DisplayDialog("Chartboost Mediation", message, "Ok");
+            return true;
         }
     }
 }

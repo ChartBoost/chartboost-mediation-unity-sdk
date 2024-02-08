@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf2f8a4ebf2214f869e82e211b89fe04, type: 3}
   m_Name: ChartboostMediationSettings
   m_EditorClassIdentifier: 
-  iOSAppId: HE_IOS_APP_ID
-  iOSAppSignature: HE_IOS_APP_SIGNATURE
-  androidAppId: HE_ANDROID_APP_ID
-  androidAppSignature: HE_ANDROID_APP_SIGNATURE
-  isLoggingEnabled: 0
+  iOSAppId: 59c2b75ed7d75f0da04c452f
+  iOSAppSignature: dff3b4e9ed03e10b8d10e71cc101f0f485ec94ff
+  androidAppId: 5ce82fbffde3570afb4647bc
+  androidAppSignature: fd8002155dcc6f161e41a62bce49250141b1876b
+  isLoggingEnabled: 1
   isAutomaticInitEnabled: 0
-  isSkAdNetworkResolutionEnabled: 0
-  disableBitcode: 0
+  isSkAdNetworkResolutionEnabled: 1
+  disableBitcode: 1
   applovinSDKKey: Fill to enable build-processing features.
   androidGoogleAppId: Fill to enable build-processing features.
   iOSGoogleAppId: Fill to enable build-processing features.

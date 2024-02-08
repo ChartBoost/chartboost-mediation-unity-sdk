@@ -1,7 +1,10 @@
 package com.chartboost.mediation.unity
 
+import android.util.Size
+import com.chartboost.heliumsdk.ad.HeliumBannerAd
+
 interface ChartboostMediationBannerViewListener {
-    public abstract fun onAdCached(ad: BannerAdWrapper, error: String)
+    public abstract fun onAdCached(ad: BannerAdWrapper, size:HeliumBannerAd.HeliumBannerSize, error: String)
 
     public abstract fun onAdViewAdded(ad: BannerAdWrapper)
 

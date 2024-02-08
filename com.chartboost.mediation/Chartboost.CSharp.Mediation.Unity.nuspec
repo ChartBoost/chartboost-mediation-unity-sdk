@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>Chartboost.CSharp.Mediation.Unity</id>
-    <version>4.7.0</version>
+    <version>4.8.0</version>
     <title>Chartboost Mediation</title>
     <icon>icon.png</icon>
     <description>The Chartboost Mediation Unity SDK. Better monetization powered by bidding</description>
