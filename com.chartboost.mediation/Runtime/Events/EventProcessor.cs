@@ -1,12 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Chartboost.AdFormats.Banner;
+using Chartboost.AdFormats.Fullscreen;
+using Chartboost.AdFormats.Fullscreen.Queue;
+using Chartboost.Requests;
 using Chartboost.Utilities;
-using UnityEditor;
-using UnityEngine;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo
@@ -30,75 +29,25 @@ namespace Chartboost.Events
             RecordImpression = 2,
             Drag = 3
         }
-
-        private static SynchronizationContext _context;
-        private static TaskScheduler _unityScheduler;
         
+        internal enum FullscreenAdQueueEvents
+        {
+            Update = 0,
+            RemoveExpiredAd = 1
+        }
+
         /// <summary>
         /// Called when an unexpected system error occurred.
         /// </summary>
         // ReSharper disable once InconsistentNaming
         public static event ChartboostMediationEvent UnexpectedSystemErrorDidOccur;
-
-        /// <summary>
-        /// Initializes Chartboost Mediation Event Processor, must be called from main thread.
-        /// </summary>
-        #if UNITY_EDITOR
-        [InitializeOnLoadMethod]
-        #endif
-        [RuntimeInitializeOnLoadMethod]
-        private static void Initialize()
-        {
-            _context ??= SynchronizationContext.Current;
-            _unityScheduler ??= TaskScheduler.FromCurrentSynchronizationContext();
-        }
         
-        /// <summary>
-        /// Creates a continuation that executes asynchronously, on the Unity main thread, when the target <see cref="Task{T}"/> completes.
-        /// </summary>
-        /// <param name="task">Target <see cref="Task"/>.</param>
-        /// <param name="continuation">An action to run when the <see cref="Task"/> completes. </param>
-        /// <typeparam name="T">The type of the result produced by the <see cref="Task"/>.</typeparam>
-        /// <returns>A new continuation <see cref="Task"/>.</returns>
-        public static Task ContinueWithOnMainThread<T>(this Task<T> task, Action<Task<T>> continuation)
-        {
-            var ret = Task.Factory.StartNew(async () =>
-            {
-                await task;
-                continuation.Invoke(task);
-            }, CancellationToken.None, TaskCreationOptions.None, _unityScheduler).Unwrap();
-            
-            ret.AppendExceptionLogging();
-            return ret;
-        }
-
-        /// <summary>
-        /// Creates a continuation that executes asynchronously, on the Unity main thread, when the target <see cref="Task"/> completes.
-        /// </summary>
-        /// <param name="task">Target <see cref="Task"/>.</param>
-        /// <param name="continuation">An action to run when the <see cref="Task"/> completes. </param>
-        /// <typeparam name="T">The type of the result produced by the <see cref="Task"/>.</typeparam>
-        /// <returns>A new continuation <see cref="Task"/>.</returns>
-        public static Task ContinueWithOnMainThread(this Task task, Action<Task> continuation)
-        {
-            var ret = Task.Factory.StartNew(async () =>
-            {
-                await task;
-                continuation.Invoke(task);
-            }, CancellationToken.None, TaskCreationOptions.None, _unityScheduler).Unwrap();
-            ret.AppendExceptionLogging();
-            return ret;
-        }
-        
-        private static void AppendExceptionLogging(this Task inputTask) 
-            => inputTask.ContinueWith(faultedTask => Debug.LogException(faultedTask.Exception), TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously);
-
         public static void ProcessEventWithILRD(string dataString, ChartboostMediationILRDEvent ilrdEvent)
         {
             if (ilrdEvent == null)
                 return;
             
-            _context.Post(o =>
+            MainThreadDispatcher.Post(o =>
             {
                 try
                 {
@@ -112,7 +61,7 @@ namespace Chartboost.Events
                 {
                     ReportUnexpectedSystemError(e.ToString());
                 }
-            }, null);
+            });
         }
 
         public static void ProcessEventWithPartnerInitializationData(string dataString, ChartboostMediationPartnerInitializationEvent partnerInitializationEvent)
@@ -120,7 +69,7 @@ namespace Chartboost.Events
             if (partnerInitializationEvent == null)
                 return;
             
-            _context.Post(o =>
+            MainThreadDispatcher.Post(o =>
             {
                 try
                 {
@@ -130,7 +79,7 @@ namespace Chartboost.Events
                 {
                     ReportUnexpectedSystemError(e.ToString());
                 }
-            }, null);
+            });
         }
 
         public static void ProcessChartboostMediationEvent(string error, ChartboostMediationEvent chartboostMediationEvent)
@@ -138,7 +87,7 @@ namespace Chartboost.Events
             if (chartboostMediationEvent == null)
                 return;
             
-            _context.Post(o =>
+            MainThreadDispatcher.Post(o =>
             {
                 try
                 {
@@ -148,7 +97,7 @@ namespace Chartboost.Events
                 {
                     ReportUnexpectedSystemError(e.ToString());
                 }
-            }, null);
+            });
         }
         
         public static void ProcessChartboostMediationPlacementEvent(string placementName, string error, ChartboostMediationPlacementEvent placementEvent)
@@ -156,7 +105,7 @@ namespace Chartboost.Events
             if (placementEvent == null)
                 return;
             
-            _context.Post(o =>
+            MainThreadDispatcher.Post(o =>
             {
                 try
                 {
@@ -166,7 +115,7 @@ namespace Chartboost.Events
                 {
                     ReportUnexpectedSystemError(e.ToString());
                 }
-            }, null);
+            });
         }
 
         public static void ProcessChartboostMediationLoadEvent(string placementName, string loadId, string auctionId, string partnerId, double price, string lineItemName, string lineItemId, string error, ChartboostMediationPlacementLoadEvent bidEvent)
@@ -174,7 +123,7 @@ namespace Chartboost.Events
             if (bidEvent == null)
                 return;
             
-            _context.Post(o =>
+            MainThreadDispatcher.Post(o =>
             {
                 try
                 {
@@ -185,12 +134,12 @@ namespace Chartboost.Events
                 {
                     ReportUnexpectedSystemError(e.ToString());
                 }
-            }, null);
+            });
         }
 
         public static void ProcessChartboostMediationBannerEvent(long adHashCode, int eventType, float x = default, float y = default)
         {
-            _context.Post(o =>
+            MainThreadDispatcher.Post(o =>
             {
                 try
                 {
@@ -222,20 +171,20 @@ namespace Chartboost.Events
                 {
                     ReportUnexpectedSystemError(e.ToString());
                 }
-            }, null);
+            });
         }
         
         public static void ProcessEvent(Action customEvent)
         {
-            _context.Post(o =>
+            MainThreadDispatcher.Post(o =>
             {
                 customEvent?.Invoke();
-            }, null);   
+            });   
         }
         
         public static void ProcessFullscreenEvent(long adHashCode, int eventType, string code, string message)
         {
-            _context.Post(o =>
+            MainThreadDispatcher.Post(o =>
             {
                 var ad = CacheManager.GetFullscreenAd(adHashCode);
 
@@ -253,28 +202,57 @@ namespace Chartboost.Events
                 {
                     case FullscreenAdEvents.RecordImpression:
                         ad.Request?.OnRecordImpression(ad);
+                        ((ChartboostMediationFullscreenAdBase)ad).OnRecordImpression(ad);
                         break;
                     case FullscreenAdEvents.Click:
                         ad.Request?.OnClick(ad);
+                        ((ChartboostMediationFullscreenAdBase)ad).OnClick(ad);
                         break;
                     case FullscreenAdEvents.Reward:
                         ad.Request?.OnReward(ad);
+                        ((ChartboostMediationFullscreenAdBase)ad).OnReward(ad);
                         break;
                     case FullscreenAdEvents.Expire:
                         ad.Request?.OnExpire(ad);
+                        ((ChartboostMediationFullscreenAdBase)ad).OnExpire(ad);
                         CacheManager.ReleaseFullscreenAd(adHashCode);
                         break;
                     case FullscreenAdEvents.Close:
+                        ((ChartboostMediationFullscreenAdBase)ad).OnClose(ad, error);
                         ad.Request?.OnClose(ad, error);
                         CacheManager.ReleaseFullscreenAd(adHashCode);
                         break;
                     default:
                         return;
                 }
-            }, null);
+            });
+        }
+        
+        public static void ProcessFullscreenAdQueueEvent(long queueHashCode, int eventType, ChartboostMediationAdLoadResult adLoadResult, int numberOfAdsReady)
+        {
+            MainThreadDispatcher.Post(o =>
+            {
+                var queue = CacheManager.GetFullscreenAdQueue(queueHashCode);
+
+                // Queue event was fired but no reference for it exists. Developer did not set strong reference to it so it was gc.
+                if (queue == null)
+                    return;
+
+                switch ((FullscreenAdQueueEvents)eventType)
+                {
+                    case FullscreenAdQueueEvents.Update :
+                        ((ChartboostMediationFullscreenAdQueueBase)queue).OnFullscreenAdQueueUpdated(queue, adLoadResult, numberOfAdsReady);
+                        break;
+                    case FullscreenAdQueueEvents.RemoveExpiredAd:
+                        ((ChartboostMediationFullscreenAdQueueBase)queue).OnFullscreenAdQueueDidRemoveExpiredAd(queue, numberOfAdsReady);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(eventType), eventType, null);
+                }
+            });
         }
 
         internal static void ReportUnexpectedSystemError(string message) 
-            => _context.Post(o => UnexpectedSystemErrorDidOccur?.Invoke(message), null);
+            => MainThreadDispatcher.Post(o => UnexpectedSystemErrorDidOccur?.Invoke(message));
     }
 }

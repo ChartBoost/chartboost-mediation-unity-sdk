@@ -45,7 +45,6 @@ namespace Chartboost.Editor
          PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android, ApplicationBundleIdentifier);
          PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.iOS, ApplicationBundleIdentifier);
          PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Standalone, ApplicationBundleIdentifier);
-         PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Unknown, ApplicationBundleIdentifier);
 
          PlayerSettings.SetAdditionalCompilerArgumentsForGroup(BuildTargetGroup.Android, CompilerFlags);
          PlayerSettings.SetAdditionalCompilerArgumentsForGroup(BuildTargetGroup.iOS, CompilerFlags);

@@ -75,14 +75,14 @@ namespace Chartboost.Platforms.IOS
                 ExternDidClickRewarded,
                 ExternDidRecordImpressionRewarded, 
                 ExternDidReceiveReward);
-            
-            _setFullscreenCallbacks(FullscreenAdEvents);
-            
+
             _setBannerCallbacks(ExternDidLoadBanner,
                 ExternDidRecordImpressionBanner, 
                 ExternDidClickBanner);
             
+            _setFullscreenCallbacks(FullscreenAdEvents);
             _setBannerAdCallbacks(BannerAdEvents);
+            _setFullscreenAdQueueCallbacks(FullscreenAdQueueUpdateEvent, FullscreenAdQueueRemoveExpiredAdEvent);
         }
 
         [Obsolete("Init has been deprecated and will be removed in future versions of the SDK.")]
@@ -184,7 +184,7 @@ namespace Chartboost.Platforms.IOS
                 return await Task.FromResult(adLoadResult);
             }
 
-            var (proxy, hashCode) = _setupProxy<ChartboostMediationFullscreenAdLoadResult>();
+            var (proxy, hashCode) = AwaitableProxies.SetupProxy<ChartboostMediationFullscreenAdLoadResult>();
             CacheManager.TrackFullscreenAdLoadRequest(hashCode, request);
             var keywordsJson = string.Empty;
             if (request.Keywords.Count > 0)

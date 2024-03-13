@@ -178,6 +178,27 @@ namespace Chartboost.Platforms.Android
         }
 
         #endregion
+        
+        #region FullscreenAd Queue
+        internal class ChartboostMediationFullscreenAdQueueListener : AndroidJavaProxy
+        {
+            internal static readonly ChartboostMediationFullscreenAdQueueListener Instance = new ChartboostMediationFullscreenAdQueueListener();
+            private ChartboostMediationFullscreenAdQueueListener() : base(GetQualifiedNativeClassName(AndroidConstants.ClassFullscreenAdQueueListener, true)) {}
+
+            private void onFullScreenAdQueueUpdated(AndroidJavaObject adQueue, AndroidJavaObject adLoadResult, int numberOfAdsReady)
+            {
+                var error = adLoadResult.ToChartboostMediationError();
+                var loadId = adLoadResult.Get<string>(AndroidConstants.PropertyLoadId);
+                var metrics = adLoadResult.Get<AndroidJavaObject>(AndroidConstants.PropertyMetrics).JsonObjectToMetrics();
+                var loadResult = new ChartboostMediationAdLoadResult(loadId, metrics, error);
+                
+                EventProcessor.ProcessFullscreenAdQueueEvent(adQueue.HashCode(), (int)EventProcessor.FullscreenAdQueueEvents.Update, loadResult, numberOfAdsReady);
+            }
+            
+            private void onFullscreenAdQueueExpiredAdRemoved(AndroidJavaObject adQueue, int numberOfAdsReady)
+                => EventProcessor.ProcessFullscreenAdQueueEvent(adQueue.HashCode(), (int)EventProcessor.FullscreenAdQueueEvents.RemoveExpiredAd, null, numberOfAdsReady);
+        }
+        #endregion
     }
 }
 #endif

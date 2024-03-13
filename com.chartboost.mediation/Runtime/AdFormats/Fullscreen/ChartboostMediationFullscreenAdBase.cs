@@ -21,6 +21,11 @@ namespace Chartboost.AdFormats.Fullscreen
         public abstract BidInfo WinningBidInfo { get; }
         public abstract Task<ChartboostMediationAdShowResult> Show();
         public abstract void Invalidate();
+        public event ChartboostMediationFullscreenAdEvent DidClick;
+        public event ChartboostMediationFullscreenAdEventWithError DidClose;
+        public event ChartboostMediationFullscreenAdEvent DidExpire;
+        public event ChartboostMediationFullscreenAdEvent DidRecordImpression;
+        public event ChartboostMediationFullscreenAdEvent DidReward;
 
         protected void Invalidate(bool isCollected)
         {
@@ -35,5 +40,15 @@ namespace Chartboost.AdFormats.Fullscreen
             var error = new ChartboostMediationError(InvalidAdError);
             return new ChartboostMediationAdShowResult(error);
         }
+        
+        internal void OnClick(IChartboostMediationFullscreenAd ad) => DidClick?.Invoke(ad);
+
+        internal void OnClose(IChartboostMediationFullscreenAd ad, ChartboostMediationError? error) => DidClose?.Invoke(ad, error);
+
+        internal void OnRecordImpression(IChartboostMediationFullscreenAd ad) => DidRecordImpression?.Invoke(ad);
+
+        internal void OnExpire(IChartboostMediationFullscreenAd ad) => DidExpire?.Invoke(ad);
+
+        internal void OnReward(IChartboostMediationFullscreenAd ad) => DidReward?.Invoke(ad);
     }
 }

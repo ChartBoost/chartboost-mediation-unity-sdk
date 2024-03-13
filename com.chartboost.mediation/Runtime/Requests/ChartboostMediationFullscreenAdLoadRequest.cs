@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Chartboost.AdFormats.Fullscreen;
 
@@ -18,26 +19,31 @@ namespace Chartboost.Requests
         /// <summary>
         /// Called when the ad executes its click-through. This may happen multiple times for the same ad.
         /// </summary>
+        [Obsolete("Events on `ChartboostMediationFullscreenAdLoadRequest` are deprecated. Use DidClick event from `IChartboostMediationFullscreenAd` object instead")]
         public event ChartboostMediationFullscreenAdEvent DidClick;
 
         /// <summary>
         /// Called when the ad is closed.
         /// </summary>
+        [Obsolete("Events on `ChartboostMediationFullscreenAdLoadRequest` are deprecated. Use DidClose event from `IChartboostMediationFullscreenAd` object instead")]
         public event ChartboostMediationFullscreenAdEventWithError DidClose;
         
         /// <summary>
         /// Called when the ad is expired by the partner SDK/adapter.
         /// </summary>
+        [Obsolete("Events on `ChartboostMediationFullscreenAdLoadRequest` are deprecated. Use DidExpire event from `IChartboostMediationFullscreenAd` object instead")]
         public event ChartboostMediationFullscreenAdEvent DidExpire;
         
         /// <summary>
         /// Called when an ad impression occurs. This signal is when Chartboost Mediation fires an impression and is independent of any partner impression.
         /// </summary>
+        [Obsolete("Events on `ChartboostMediationFullscreenAdLoadRequest` are deprecated. Use DidRecordImpression event from `IChartboostMediationFullscreenAd` object instead")]
         public event ChartboostMediationFullscreenAdEvent DidRecordImpression;
         
         /// <summary>
         /// Called when the user should receive the reward associated with this rewarded ad.
         /// </summary>
+        [Obsolete("Events on `ChartboostMediationFullscreenAdLoadRequest` are deprecated. Use DidReward event from `IChartboostMediationFullscreenAd` object instead")]
         public event ChartboostMediationFullscreenAdEvent DidReward;
 
         internal void OnClick(IChartboostMediationFullscreenAd ad) => DidClick?.Invoke(ad);

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Chartboost.AdFormats.Banner;
 using Chartboost.AdFormats.Fullscreen;
+using Chartboost.AdFormats.Fullscreen.Queue;
 using Chartboost.Requests;
 
 namespace Chartboost.Utilities
@@ -28,6 +29,11 @@ namespace Chartboost.Utilities
         /// </summary>
         private static readonly Dictionary<long, ChartboostMediationBannerAdLoadRequest> BannerAdLoadRequests;
 
+        /// <summary>
+        /// Weak reference cache to fullscreen ad queues. if publishers do not keep a strong ref, this will make sure they get disposed as needed.
+        /// </summary>
+        private static readonly Dictionary<long, WeakReference<ChartboostMediationFullscreenAdQueue>> FullscreenAdQueueCache;
+
         static CacheManager()
         {
             FullscreenCache = new Dictionary<long, WeakReference<IChartboostMediationFullscreenAd>>();
@@ -35,6 +41,8 @@ namespace Chartboost.Utilities
 
             BannerCache = new Dictionary<long, WeakReference<IChartboostMediationBannerView>>();
             BannerAdLoadRequests = new Dictionary<long, ChartboostMediationBannerAdLoadRequest>();
+
+            FullscreenAdQueueCache = new Dictionary<long, WeakReference<ChartboostMediationFullscreenAdQueue>>();
         }
 
         #region Fullscreen
@@ -181,8 +189,43 @@ namespace Chartboost.Utilities
 
         #endregion
         
+        #region Fullscreen Ad Queue
+        /// <summary>
+        /// Keeps track of a <see cref="ChartboostMediationFullscreenAdQueue"/> with a weak reference so it can be disposed by GC.
+        /// </summary>
+        /// <param name="hashCode">Associated hashCode.</param>
+        /// <param name="queue">Fullscreen ad to cache.</param>
+        public static void TrackFullscreenAdQueue(long hashCode, ChartboostMediationFullscreenAdQueue queue) 
+            => FullscreenAdQueueCache[hashCode] = new WeakReference<ChartboostMediationFullscreenAdQueue>(queue, false);
+
+        /// <summary>
+        /// Retrieves a <see cref="ChartboostMediationFullscreenAdQueue"/> by hashcode if any.
+        /// </summary>
+        /// <param name="hashCode">Associated hashCode.</param>
+        /// <returns>Cached <see cref="ChartboostMediationFullscreenAdQueue"/>.</returns>
+        public static ChartboostMediationFullscreenAdQueue GetFullscreenAdQueue(long hashCode)
+        {
+            if (!FullscreenAdQueueCache.ContainsKey(hashCode))
+                return null;
+            
+            var queue = FullscreenAdQueueCache[hashCode].TryGetTarget(out var fullscreenAdQueue);
+            return queue ? fullscreenAdQueue : null;
+        }
+
+        /// <summary>
+        /// Releases a <see cref="ChartboostMediationFullscreenAdQueue"/> from the cache.
+        /// </summary>
+        /// <param name="hashCode">Associated hashCode.</param>
+        public static void ReleaseFullscreenAdQueue(long hashCode)
+        {
+            if (FullscreenAdQueueCache.ContainsKey(hashCode))
+                FullscreenAdQueueCache.Remove(hashCode);
+        }
+        #endregion
+        
         public static string CacheInfo() => $"CacheManager : \n" +
             $"Fullscreen Cache: {FullscreenCache.Count}, FullscreenAdLoadRequest: {FullscreenAdLoadRequests.Count}\n" +
-            $"Banner Cache: {BannerCache.Count}, BannerAdLoadRequest: {BannerAdLoadRequests.Count}\n";
+            $"Banner Cache: {BannerCache.Count}, BannerAdLoadRequest: {BannerAdLoadRequests.Count}\n" +
+            $"Fullscreen Ad Queue Cache: {FullscreenAdQueueCache.Count}\n";
     }
 }

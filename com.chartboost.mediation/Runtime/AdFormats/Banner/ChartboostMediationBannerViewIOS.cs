@@ -120,7 +120,7 @@ namespace Chartboost.AdFormats.Banner
             Request = request;
             await base.Load(request, screenLocation);
             
-            var (proxy, hashCode) = _setupProxy<ChartboostMediationBannerAdLoadResult>();
+            var (proxy, hashCode) = AwaitableProxies.SetupProxy<ChartboostMediationBannerAdLoadResult>();
             CacheManager.TrackBannerAdLoadRequest(hashCode, request);
 
             var placement = request.PlacementName;
@@ -140,7 +140,7 @@ namespace Chartboost.AdFormats.Banner
             Request = request;
             await base.Load(request, x, y);
             
-            var (proxy, hashCode) = _setupProxy<ChartboostMediationBannerAdLoadResult>();
+            var (proxy, hashCode) = AwaitableProxies.SetupProxy<ChartboostMediationBannerAdLoadResult>();
             CacheManager.TrackBannerAdLoadRequest(hashCode, request);
 
             var placement = request.PlacementName;

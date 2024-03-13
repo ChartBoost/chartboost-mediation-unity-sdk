@@ -18,12 +18,6 @@ namespace Chartboost.Mediation.Demo.AdControllers
 
             var fullscreenAdRequest = new ChartboostMediationFullscreenAdLoadRequest(PlacementIdentifier, DefaultKeywords);
 
-            fullscreenAdRequest.DidRecordImpression += OnDidRecordImpression;
-            fullscreenAdRequest.DidClick += OnDidClick;
-            fullscreenAdRequest.DidReward += OnDidReward;
-            fullscreenAdRequest.DidExpire += OnDidExpire;
-            fullscreenAdRequest.DidClose += OnDidClose;
-            
             LoadingOverlay.Instance.ToggleLoadingOverlay(true);
             var adLoadResult = await ChartboostMediation.LoadFullscreenAd(fullscreenAdRequest);
             LoadingOverlay.Instance.ToggleLoadingOverlay(false);
@@ -35,6 +29,12 @@ namespace Chartboost.Mediation.Demo.AdControllers
             }
 
             _fullscreenPlacement = adLoadResult.Ad;
+            _fullscreenPlacement.DidRecordImpression += OnDidRecordImpression;
+            _fullscreenPlacement.DidClick += OnDidClick;
+            _fullscreenPlacement.DidReward += OnDidReward;
+            _fullscreenPlacement.DidExpire += OnDidExpire;
+            _fullscreenPlacement.DidClose += OnDidClose;
+            
             Debug.Log("Fullscreen Loaded!");
         }
 
