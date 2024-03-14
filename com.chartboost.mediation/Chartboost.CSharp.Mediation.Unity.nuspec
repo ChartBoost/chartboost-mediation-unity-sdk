@@ -8,7 +8,7 @@
     <description>The Chartboost Mediation Unity SDK. Better monetization powered by bidding</description>
     <authors>Chartboost</authors>
     <owners>Chartboost</owners>
-    <licenseUrl>https://github.com/ChartBoost/chartboost-mediation-unity-sdk/blob/develop/LICENSE.md</licenseUrl>
+    <license type="file">LICENSE.md</license>
     <readme>README.md</readme>
     <projectUrl>https://www.chartboost.com/mediate</projectUrl>
     <copyright>Copyright 2023</copyright>

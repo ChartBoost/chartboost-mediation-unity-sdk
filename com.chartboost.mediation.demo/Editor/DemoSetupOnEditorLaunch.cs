@@ -21,7 +21,7 @@ namespace Chartboost.Editor
       [MenuItem("Chartboost Mediation/Setup Demo")]
       private static void SetupDemoApp()
       {
-         Debug.Log("Configuring Chartboost Mediation SDK Unity Demo App.");
+         Debug.Log($"Configuring {ProductName}.");
          
          PlayerSettings.companyName = CompanyName;
          PlayerSettings.productName = ProductName;
