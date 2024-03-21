@@ -7,7 +7,7 @@
         </repositories>
 
         <!-- Chartboost Mediation Android SDK -->
-        <androidPackage spec="com.chartboost:chartboost-mediation-sdk:4.8+" />
+        <androidPackage spec="com.chartboost:chartboost-mediation-sdk:4.9+" />
         <androidPackage spec="androidx.localbroadcastmanager:localbroadcastmanager:1.1.0" />
         <androidPackage spec="com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0" />
         <androidPackage spec="org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1" />
@@ -27,7 +27,7 @@
     </androidPackages>
     <iosPods>
         <!-- Chartboost Mediation iOS SDK -->
-        <iosPod name="ChartboostMediationSDK" version="~> 4.8.0">
+        <iosPod name="ChartboostMediationSDK" version="~> 4.9.0">
             <sources>
                 <source>https://github.com/CocoaPods/Specs</source>
             </sources>

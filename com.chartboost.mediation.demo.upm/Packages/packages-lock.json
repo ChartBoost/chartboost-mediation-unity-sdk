@@ -5,11 +5,27 @@
       "depth": 0,
       "source": "local",
       "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "3.2.1"
+        "com.unity.nuget.newtonsoft-json": "3.2.1",
+        "com.chartboost.unity.threading": "1.0.0",
+        "com.chartboost.unity.utilities": "1.0.0"
       }
     },
     "com.chartboost.mediation.demo": {
       "version": "file:../../com.chartboost.mediation.demo",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
+    "com.chartboost.unity.threading": {
+      "version": "file:../../com.chartboost.unity.threading",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.chartboost.unity.utilities": "1.0.0"
+      }
+    },
+    "com.chartboost.unity.utilities": {
+      "version": "file:../../com.chartboost.unity.utilities",
       "depth": 0,
       "source": "local",
       "dependencies": {}
@@ -28,7 +44,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.rider": {
-      "version": "3.0.21",
+      "version": "3.0.27",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -37,7 +53,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.18",
+      "version": "2.0.22",
       "depth": 0,
       "source": "registry",
       "dependencies": {

@@ -1,9 +1,12 @@
 #if !NO_ADAPTERS_WINDOW
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Chartboost.Editor.EditorWindows.Adapters.Comparers;
 using Chartboost.Editor.EditorWindows.Adapters.Serialization;
+using Newtonsoft.Json;
+using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
 
@@ -18,7 +21,7 @@ namespace Chartboost.Editor.EditorWindows.Adapters
         /// <param name="selections">current selections</param>
         /// <returns></returns>
         private static bool DefaultAddCondition(string id, Dictionary<string, AdapterSelection> selections) => !selections.ContainsKey(id) || selections[id].android == Unselected || selections[id].ios == Unselected;
-
+        
         /// <summary>
         /// Adds adapter networks to user selections.
         /// </summary>
@@ -94,6 +97,45 @@ namespace Chartboost.Editor.EditorWindows.Adapters
                 var adapterId = selection.Key;
                if (AdapterDeletionDialog(adapterId))
                    continue;
+               
+                var updateAndroid = new Action(() => UpdateSelection(PartnerSDKVersions[adapterId].android, selectionChanges,  adapterId, selection.Value.android, Platform.Android));;
+                var updateIOS = new Action(() => UpdateSelection(PartnerSDKVersions[adapterId].ios, selectionChanges, adapterId, selection.Value.ios, Platform.IOS));
+
+                switch (platform)
+                {
+                    case Platform.Android | Platform.IOS:
+                        updateAndroid();
+                        updateIOS();
+                        break;
+                    case Platform.Android:
+                        updateAndroid();
+                        break;
+                    default:
+                        updateIOS();
+                        break;
+                }
+            }
+
+            NoChangesDialog();
+            return selectionChanges;
+        }
+
+        public static List<AdapterChange> UpdateAdapters(string[] adapters, Platform platform)
+        {
+            var selectionChanges = new List<AdapterChange>();
+            if (!WarningDialog())
+                return selectionChanges;
+
+            var currentSelections = UserSelectedVersions.ToDictionary(kv => kv.Key, kv => kv.Value);
+            
+            foreach (var selection in currentSelections)
+            {
+                if(!adapters.Contains(selection.Key))
+                    continue;
+
+                var adapterId = selection.Key;
+                if (AdapterDeletionDialog(adapterId))
+                    continue;
                
                 var updateAndroid = new Action(() => UpdateSelection(PartnerSDKVersions[adapterId].android, selectionChanges,  adapterId, selection.Value.android, Platform.Android));;
                 var updateIOS = new Action(() => UpdateSelection(PartnerSDKVersions[adapterId].ios, selectionChanges, adapterId, selection.Value.ios, Platform.IOS));

@@ -5,25 +5,19 @@ using UnityEngine;
 
 namespace Chartboost.Mediation.Demo.AdControllers
 {
-    public sealed class FullscreenAdController : SimpleAdController
+    public class FullscreenAdController : SimpleAdController
     {
-        public FullscreenAdController(string placementIdentifier) : base(placementIdentifier) { }
+        protected IChartboostMediationFullscreenAd FullscreenPlacement;
 
-        private IChartboostMediationFullscreenAd _fullscreenPlacement;
+        public FullscreenAdController(string placementIdentifier) : base(placementIdentifier) { }
 
         public override async void Load()
         {
-            if (_fullscreenPlacement != null)
+            if (FullscreenPlacement != null)
                 Invalidate();
 
             var fullscreenAdRequest = new ChartboostMediationFullscreenAdLoadRequest(PlacementIdentifier, DefaultKeywords);
 
-            fullscreenAdRequest.DidRecordImpression += OnDidRecordImpression;
-            fullscreenAdRequest.DidClick += OnDidClick;
-            fullscreenAdRequest.DidReward += OnDidReward;
-            fullscreenAdRequest.DidExpire += OnDidExpire;
-            fullscreenAdRequest.DidClose += OnDidClose;
-            
             LoadingOverlay.Instance.ToggleLoadingOverlay(true);
             var adLoadResult = await ChartboostMediation.LoadFullscreenAd(fullscreenAdRequest);
             LoadingOverlay.Instance.ToggleLoadingOverlay(false);
@@ -34,14 +28,23 @@ namespace Chartboost.Mediation.Demo.AdControllers
                 return;
             }
 
-            _fullscreenPlacement = adLoadResult.Ad;
+            FullscreenPlacement = adLoadResult.Ad;
+
+            if (FullscreenPlacement != null)
+            {
+                FullscreenPlacement.DidRecordImpression += OnDidRecordImpression;
+                FullscreenPlacement.DidClick += OnDidClick;
+                FullscreenPlacement.DidReward += OnDidReward;
+                FullscreenPlacement.DidExpire += OnDidExpire;
+                FullscreenPlacement.DidClose += OnDidClose;
+            }
+
             Debug.Log("Fullscreen Loaded!");
         }
 
-
         public override async void Show()
         {
-            var adShowResult = await _fullscreenPlacement.Show();
+            var adShowResult = await FullscreenPlacement.Show();
 
             if (adShowResult.Error.HasValue)
             {
@@ -54,33 +57,33 @@ namespace Chartboost.Mediation.Demo.AdControllers
 
         public override void Invalidate()
         {
-            _fullscreenPlacement.Invalidate();
-            _fullscreenPlacement = null;
+            FullscreenPlacement?.Invalidate();
+            FullscreenPlacement = null;
         }
 
         #region Fullscreen Callbacks
 
-        private void OnDidRecordImpression(IChartboostMediationFullscreenAd ad)
+        protected void OnDidRecordImpression(IChartboostMediationFullscreenAd ad)
         {
             Debug.Log("Fullscreen RecordImpression!");
         }
 
-        private void OnDidClick(IChartboostMediationFullscreenAd ad)
+        protected void OnDidClick(IChartboostMediationFullscreenAd ad)
         {
             Debug.Log("Fullscreen Clicked!");
         }
 
-        private void OnDidReward(IChartboostMediationFullscreenAd ad)
+        protected void OnDidReward(IChartboostMediationFullscreenAd ad)
         {
             Debug.Log("Fullscreen Rewarded!");
         }
 
-        private void OnDidExpire(IChartboostMediationFullscreenAd ad)
+        protected void OnDidExpire(IChartboostMediationFullscreenAd ad)
         {
             Debug.Log("Fullscreen Expired!");
         }
 
-        private void OnDidClose(IChartboostMediationFullscreenAd ad, ChartboostMediationError? error)
+        protected void OnDidClose(IChartboostMediationFullscreenAd ad, ChartboostMediationError? error)
         {
             Debug.Log("Fullscreen Close!");
         }

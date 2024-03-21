@@ -6,7 +6,7 @@ namespace Chartboost.Utilities
 
         internal const string NamespaceChartboostMediationBridge = "com.chartboost.mediation";
         internal const string NamespaceNativeChartboostMediationSDK = "com.chartboost.heliumsdk";
-        
+
         internal const string ClassUnityBridge = "UnityBridge";
         internal const string ClassHeliumSdk = "HeliumSdk";
         internal const string ClassUnityPlayer = "com.unity3d.player.UnityPlayer";
@@ -45,8 +45,10 @@ namespace Chartboost.Utilities
         internal const string FunSubscribeIlrd = "subscribeIlrd";
         internal const string FunSubscribeInitializationResults = "subscribeInitializationResults";
         internal const string FunShowFullscreenAd = "showFullscreenAd";
+        internal const string FunGetFullscreenAdQueue = "getFullscreenAdQueue";
         internal const string FunSetupEventListeners = "setupEventListeners";
         internal const string FunStart = "start";
+        internal const string FunSetCapacity = "setCapacity";
         internal const string FunSetSubjectToCoppa = "setSubjectToCoppa";
         internal const string FunSetSubjectToGDPR = "setSubjectToGDPR";
         internal const string FunSetUserHasGivenConsent = "setUserHasGivenConsent";
@@ -89,7 +91,7 @@ namespace Chartboost.Utilities
         internal const string FunEntrySet = "entrySet";
         internal const string FunGetKey = "getKey";
         internal const string FunGetValue = "getValue";
-        
+
         internal const string PropertyChartboostMediationError = "chartboostMediationError";
         internal const string PropertyAd = "ad";
         internal const string PropertyMetrics = "metrics";
@@ -115,5 +117,17 @@ namespace Chartboost.Utilities
         internal const string BannerSizeMedium = "MEDIUM";
         internal const string BannerSizeLeaderboard = "LEADERBOARD";
         internal const string BannerSizeAdaptive = "ADAPTIVE";
+
+        internal const string PropertyQueueCapacity = "queueCapacity";
+        internal const string PropertyNumberOfAdsReady = "getNumberOfAdsReady";
+        internal const string PropertyIsRunning = "isRunning";
+        internal const string FunHasNextAd = "hasNextAd";
+        internal const string FunStop = "stop";
+        internal const string FunGetNextAd = "getNextAd";
+        internal const string PropertyKeywords = "keywords";
+        internal const string PropertyRequest = "request";
+        internal const string PropertyPlacementName = "placementName";
+        internal const string ClassFullscreenAdQueueListener = "ChartboostMediationFullscreenAdQueueListener";
+        internal const string FunChartboostMediationFullscreenAdListener = "setListener";
     }
 }

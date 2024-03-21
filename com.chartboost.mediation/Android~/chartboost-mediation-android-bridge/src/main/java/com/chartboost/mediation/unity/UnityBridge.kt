@@ -63,6 +63,13 @@ class UnityBridge {
         }
 
         @JvmStatic
+        fun getFullscreenAdQueue(placementName: String, fullscreenAdQueueListener: ChartboostMediationFullscreenAdQueueListener) : ChartboostMediationFullscreenAdQueue {
+            val queue = ChartboostMediationFullscreenAdQueueManager.queue(UnityPlayer.currentActivity, placementName)
+            queue.adQueueListener = fullscreenAdQueueListener
+            return queue
+        }
+
+        @JvmStatic
         fun getUIScaleFactor(): Float {
             return UnityPlayer.currentActivity.resources?.displayMetrics?.density ?: DisplayMetrics.DENSITY_DEFAULT.toFloat()
         }

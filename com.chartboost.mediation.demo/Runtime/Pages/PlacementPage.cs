@@ -42,10 +42,14 @@ namespace Chartboost.Mediation.Demo.Pages
         [SerializeField] private Button showButton;
         [SerializeField] private Button backButton;
         
+        [Header("Queueing")]
+        [SerializeField] private Text queuePreparationText;
+        [SerializeField] private Button queueButton;
+        [SerializeField] private Toggle queueToggle;
         
         private Placement _currentPlacement;
         private SimpleAdController _currentController;
-
+        
         private void Awake()
         {
             backButton.onClick.AddListener(MoveToAdFormats);
@@ -64,18 +68,19 @@ namespace Chartboost.Mediation.Demo.Pages
             _currentController?.Invalidate();
         }
 
-        public void Configure(Placement placement, string preparationTextContents, string loadCompletionTextContents)
+        public void Configure(Placement placement, string preparationTextContents, string loadCompletionTextContents, string queuePreparationTextContents = null)
         {
             var placementType = placement.placementType;
             placementTypeText.text = placementType.ToString();
             placementIcon.sprite = placement.placementSprite;
             preparationText.text = preparationTextContents;
+            queuePreparationText.text = queuePreparationTextContents;
             loadCompletionText.text = loadCompletionTextContents;
 
             _currentController = placementType switch
             {
-                PlacementType.Interstitial => new FullscreenAdController(placement.placementIdentifier),
-                PlacementType.Rewarded => new FullscreenAdController(placement.placementIdentifier),
+                PlacementType.Interstitial => new FullscreenAdControllerWithQueue(placement.placementIdentifier, queueToggle, queueButton, loadButton),
+                PlacementType.Rewarded => new FullscreenAdControllerWithQueue(placement.placementIdentifier, queueToggle, queueButton, loadButton),
                 PlacementType.Banner => new BannerAdController(placement.placementIdentifier),
                 _ => new UnityBannerAdController(placement.placementIdentifier)
             };
@@ -86,6 +91,7 @@ namespace Chartboost.Mediation.Demo.Pages
                 showButton.onClick.AddListener(_currentController.Show);
             }
 
+            queueToggle.gameObject.SetActive(placementType == PlacementType.Interstitial || placementType == PlacementType.Rewarded);
             showButton.gameObject.SetActive(placementType == PlacementType.Interstitial || placementType == PlacementType.Rewarded);
             unityIcon.gameObject.SetActive(placementType == PlacementType.UnityBanner);
         }

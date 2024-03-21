@@ -4,7 +4,9 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "com.chartboost.mediation"
+        "com.chartboost.mediation",
+        "Chartboost.Threading",
+        "Chartboost.Utilities.Editor"
     ],
     "includePlatforms": [
         "Editor"

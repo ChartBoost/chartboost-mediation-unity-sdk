@@ -1,7 +1,9 @@
 {
     "name": "com.chartboost.mediation",
     "rootNamespace": "Chartboost",
-    "references": [],
+    "references": [
+        "Chartboost.Threading"
+    ],
     "includePlatforms": [
         "Android",
         "Editor",

@@ -29,24 +29,6 @@ namespace Chartboost.Platforms.IOS
         private delegate void ExternChartboostMediationPlacementEvent(string placementName, string error);
         private delegate void ExternChartboostMediationPlacementLoadEvent(string placementName, string loadId, string auctionId, string partnerId, double price, string lineItemName, string lineItemId, string error);
         
-        private static readonly Dictionary<int, ILater> WaitingProxies = new Dictionary<int, ILater>();
-        
-        internal static (Later<TResult> proxy, int hashCode) _setupProxy<TResult>() {
-            var proxy    = new Later<TResult>();
-            var hashCode = proxy.GetHashCode();
-            WaitingProxies[hashCode] = proxy;
-            return (proxy, hashCode);
-        }
-        private static void ResolveCallbackProxy<TResponse>(int hashCode, TResponse response) {
-            if (!WaitingProxies.ContainsKey(hashCode))
-                return;
-            
-            if (WaitingProxies[hashCode] is Later<TResponse> later)
-                later.Complete(response);
-            
-            WaitingProxies.Remove(hashCode);
-        }
-        
         [DllImport(IOSConstants.Internal)]
         private static extern void _setLifeCycleCallbacks(ExternChartboostMediationEvent DidStartCallback,
             ExternChartboostMediationILRDEvent DidReceiveILRDCallback, ExternChartboostMediationPartnerInitializationDataEvent DidReceivePartnerInitializationDataCallback);
@@ -56,6 +38,9 @@ namespace Chartboost.Platforms.IOS
 
         [DllImport(IOSConstants.Internal)]
         private static extern void _setBannerAdCallbacks(ExternChartboostMediationBannerAdEvent bannerAdEvents);
+        
+        [DllImport(IOSConstants.Internal)]
+        private static extern void _setFullscreenAdQueueCallbacks(ExternChartboostMediationFullscreenAdQueueUpdateEvent updateEvent, ExternChartboostMediationFullscreenAdQueueRemoveExpiredAdEvent removeExpiredAdEvent);
 
         #region LifeCycle Callbacks
         [MonoPInvokeCallback(typeof(ExternChartboostMediationEvent))]
@@ -86,15 +71,15 @@ namespace Chartboost.Platforms.IOS
                     var error = new ChartboostMediationError(code, message);
                     adLoadResult = new ChartboostMediationFullscreenAdLoadResult(error);
                     CacheManager.ReleaseFullscreenAdLoadRequest(hashCode);
-                    ResolveCallbackProxy(hashCode, adLoadResult);
+                    AwaitableProxies.ResolveCallbackProxy(hashCode, adLoadResult);
                     return;
                 }
 
                 var winningBid = string.IsNullOrEmpty(winningBidJson) ? new BidInfo() : JsonConvert.DeserializeObject<BidInfo>(winningBidJson);
                 var metrics = string.IsNullOrEmpty(metricsJson)? new Metrics() : JsonConvert.DeserializeObject<Metrics>(metricsJson);
-                var iosAd = new ChartboostMediationFullscreenAdIOS(adHashCode, loadId, CacheManager.GetFullScreenAdLoadRequest(hashCode), winningBid);
+                var iosAd = new ChartboostMediationFullscreenAdIOS(adHashCode, CacheManager.GetFullScreenAdLoadRequest(hashCode));
                 adLoadResult = new ChartboostMediationFullscreenAdLoadResult(iosAd, loadId, metrics);
-                ResolveCallbackProxy(hashCode, adLoadResult);
+                AwaitableProxies.ResolveCallbackProxy(hashCode, adLoadResult);
             });
         }
 
@@ -108,13 +93,13 @@ namespace Chartboost.Platforms.IOS
                 {
                     var error = new ChartboostMediationError(code, message);
                     adShowResult = new ChartboostMediationAdShowResult(error);
-                    ResolveCallbackProxy(hashCode, adShowResult);
+                    AwaitableProxies.ResolveCallbackProxy(hashCode, adShowResult);
                     return;
                 }
                 
                 var metrics = JsonConvert.DeserializeObject<Metrics>(metricsJson);
                 adShowResult = new ChartboostMediationAdShowResult(metrics);
-                ResolveCallbackProxy(hashCode, adShowResult);
+                AwaitableProxies.ResolveCallbackProxy(hashCode, adShowResult);
             });
         }
 
@@ -135,14 +120,14 @@ namespace Chartboost.Platforms.IOS
                 {
                     var error = new ChartboostMediationError(code, message);
                     adLoadResult = new ChartboostMediationBannerAdLoadResult(error);
-                    ResolveCallbackProxy(hashCode, adLoadResult);
+                    AwaitableProxies.ResolveCallbackProxy(hashCode, adLoadResult);
                     CacheManager.ReleaseBannerAdLoadRequest(hashCode);
                     return;
                 }
                 var metrics = string.IsNullOrEmpty(metricsJson)? new Metrics() : JsonConvert.DeserializeObject<Metrics>(metricsJson);
                 var size = ChartboostMediationBannerSize.Adaptive(sizeWidth, sizeHeight);
                 adLoadResult = new ChartboostMediationBannerAdLoadResult(loadId, metrics, null, size);
-                ResolveCallbackProxy(hashCode, adLoadResult);
+                AwaitableProxies.ResolveCallbackProxy(hashCode, adLoadResult);
                 CacheManager.ReleaseBannerAdLoadRequest(hashCode);
             });
         }
@@ -163,8 +148,41 @@ namespace Chartboost.Platforms.IOS
             EventProcessor.ProcessChartboostMediationBannerEvent(adHashCode,(int)EventProcessor.BannerAdEvents.Drag, x, Screen.height - y);
         }
         
-
         #endregion
+
+        #region Fullscreen Ad Queue
+        private delegate void ExternChartboostMediationFullscreenAdQueueUpdateEvent(long hashCode, string loadId, string metricsJson, string code, string message, int numberOfAdsReady);
+        private delegate void ExternChartboostMediationFullscreenAdQueueRemoveExpiredAdEvent(long hashCode, int numberOfAdsReady);
+
+        [MonoPInvokeCallback(typeof(ExternChartboostMediationFullscreenAdQueueUpdateEvent))]
+        internal static void FullscreenAdQueueUpdateEvent(long hashCode, string loadId, string metricsJson, string code, string message,
+            int numberOfAdsReady)
+        {
+            ChartboostMediationAdLoadResult loadResult;
+
+                if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(message))
+                {
+                    var error = new ChartboostMediationError(code, message);
+                    loadResult = new ChartboostMediationAdLoadResult(error);
+                }
+                else
+                {
+                    var metrics = string.IsNullOrEmpty(metricsJson) ? new Metrics() : JsonConvert.DeserializeObject<Metrics>(metricsJson);
+                    loadResult = new ChartboostMediationAdLoadResult(loadId, metrics, null);
+                }
+
+                EventProcessor.ProcessFullscreenAdQueueEvent(hashCode, (int)EventProcessor.FullscreenAdQueueEvents.Update, loadResult,
+                    numberOfAdsReady);
+        }
+
+        [MonoPInvokeCallback(typeof(ExternChartboostMediationFullscreenAdQueueRemoveExpiredAdEvent))]
+        internal static void FullscreenAdQueueRemoveExpiredAdEvent(long hashCode, int numberOfAdsReady)
+        {
+            EventProcessor.ProcessFullscreenAdQueueEvent(hashCode, (int)EventProcessor.FullscreenAdQueueEvents.RemoveExpiredAd, null,
+                numberOfAdsReady);
+        }
+        #endregion
+
     }
 }
 #endif
