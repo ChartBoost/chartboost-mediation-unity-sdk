@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Chartboost.Platforms.IOS;
 using Chartboost.Requests;
 using Chartboost.Utilities;
+using Newtonsoft.Json;
 
 namespace Chartboost.AdFormats.Fullscreen
 {
@@ -13,16 +14,34 @@ namespace Chartboost.AdFormats.Fullscreen
     /// </summary>
     internal sealed class ChartboostMediationFullscreenAdIOS : ChartboostMediationFullscreenAdBase
     {
-        public ChartboostMediationFullscreenAdIOS(IntPtr uniqueID, string loadId, ChartboostMediationFullscreenAdLoadRequest request, BidInfo winningBid) : base(uniqueId: uniqueID)
+        private ChartboostMediationFullscreenAdLoadRequest _request;
+        private string _loadId;
+        private BidInfo? _winningBidInfo;
+
+        public ChartboostMediationFullscreenAdIOS(IntPtr uniqueID) : base(uniqueID)
         {
-            LoadId = loadId;
-            Request = request;
-            WinningBidInfo = winningBid;
+            CacheManager.TrackFullscreenAd(uniqueID.ToInt64(), this);
+        }
+        
+        public ChartboostMediationFullscreenAdIOS(IntPtr uniqueID, ChartboostMediationFullscreenAdLoadRequest request) : base(uniqueId: uniqueID)
+        {
+            _request = request;
             CacheManager.TrackFullscreenAd(uniqueID.ToInt64(), this);
         }
 
         /// <inheritdoc cref="IChartboostMediationFullscreenAd.Request"/>
-        public override ChartboostMediationFullscreenAdLoadRequest Request { get; }
+        public override ChartboostMediationFullscreenAdLoadRequest Request
+        {
+            get
+            {
+                if (_request != null)
+                    return _request;
+
+                var requestJson = _chartboostMediationFullscreenAdRequest(uniqueId);
+                _request = JsonConvert.DeserializeObject<ChartboostMediationFullscreenAdLoadRequest>(requestJson);
+                return _request;
+            }
+        }
 
         /// <inheritdoc cref="IChartboostMediationFullscreenAd.CustomData"/>
         public override string CustomData
@@ -37,10 +56,21 @@ namespace Chartboost.AdFormats.Fullscreen
         }
 
         /// <inheritdoc cref="IChartboostMediationFullscreenAd.LoadId"/>
-        public override string LoadId { get; }
+        public override string LoadId => _chartboostMediationFullscreenAdLoadId(uniqueId);
 
         /// <inheritdoc cref="IChartboostMediationFullscreenAd.WinningBidInfo"/>
-        public override BidInfo WinningBidInfo { get; }
+        public override BidInfo WinningBidInfo
+        {
+            get
+            {
+                if (_winningBidInfo != null)
+                    return _winningBidInfo.Value;
+                
+                var winningBidInfoJson = _chartboostMediationFullscreenAdWinningBidInfo(uniqueId);
+                _winningBidInfo = JsonConvert.DeserializeObject<BidInfo>(winningBidInfoJson);
+                return _winningBidInfo.Value;
+            }
+        }
 
         /// <inheritdoc cref="IChartboostMediationFullscreenAd.Show"/>
         public override async Task<ChartboostMediationAdShowResult> Show()
@@ -48,7 +78,7 @@ namespace Chartboost.AdFormats.Fullscreen
             if (!isValid)
                 return GetAdShowResultForInvalidAd();
 
-            var (proxy, hashCode) = ChartboostMediationIOS._setupProxy<ChartboostMediationAdShowResult>();
+            var (proxy, hashCode) = AwaitableProxies.SetupProxy<ChartboostMediationAdShowResult>();
             _chartboostMediationShowFullscreenAd(uniqueId, hashCode, ChartboostMediationIOS.FullscreenAdShowResultCallbackProxy);
             return await proxy;
         }
@@ -69,6 +99,9 @@ namespace Chartboost.AdFormats.Fullscreen
         [DllImport(IOSConstants.Internal)] private static extern void _chartboostMediationFullscreenSetCustomData(IntPtr uniqueId, string customData);
         [DllImport(IOSConstants.Internal)] private static extern void _chartboostMediationInvalidateFullscreenAd(IntPtr uniqueId);
         [DllImport(IOSConstants.Internal)] private static extern void _chartboostMediationShowFullscreenAd(IntPtr uniqueId, int hashCode, ChartboostMediationIOS.ExternChartboostMediationFullscreenAdShowResultEvent callback);
+        [DllImport(IOSConstants.Internal)] private static extern string _chartboostMediationFullscreenAdLoadId(IntPtr uniqueId);
+        [DllImport(IOSConstants.Internal)] private static extern string _chartboostMediationFullscreenAdWinningBidInfo(IntPtr uniqueId);
+        [DllImport(IOSConstants.Internal)] private static extern string _chartboostMediationFullscreenAdRequest(IntPtr uniqueId);
     }
 }
 #endif

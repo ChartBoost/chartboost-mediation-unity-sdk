@@ -1,6 +1,20 @@
 # Changelog
 All notable changes to this project will be documented in this file using the standards as defined at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0).
 
+### Version 4.9.0 *(2024-03-21)*
+The following new dependencies are added :
+
+`"com.chartboost.unity.threading": "1.0.0"`<br>
+`"com.chartboost.unity.utilities": "1.0.0"`
+
+Improvements:
+- Added support for Ad Queueing. Ad Queueing is a new feature that builds upon the existing Fullscreen ad experience that allows Publishers to queue up multiple Fullscreen ads and show them in succession.
+
+API Changes:
+- Added Fullscreen Ad related events to `IChartboostMediationFullscreenAd` object.
+- Marked events in `ChartboostMediationFullscreenAdLoadRequest` as deprecated. Use events from `IChartboostMediationFullscreenAd` instead.
+
+
 ### Version 4.8.0 *(2024-02-08)*
 The following ad networks have been deprecated:
 - AdColony

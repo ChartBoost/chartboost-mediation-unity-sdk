@@ -21,6 +21,7 @@ namespace Chartboost.Mediation.Demo.Pages
         private const string UnityBannerPreparationText = "A UnityBanner advertisement must first be loaded.";
         private const string InterstitialPreparationText = "A fullscreen Interstitial advertisement must first be loaded.";
         private const string RewardedPreparationText = "A fullscreen Rewarded advertisement must first be loaded.";
+        private const string FullscreenQueuePreparationText = "A fullscreen advertisement queue must first be started to allow loading from queue.";
         
         private const string FullscreenLoadCompletionText = "After it has been successfully loaded it can then be shown.";
         private const string BannerLoadCompletionText = "After it has been successfully loaded it will then be automatically shown in the specified location.";
@@ -45,11 +46,11 @@ namespace Chartboost.Mediation.Demo.Pages
         
         private void MoveToUnityBannerPlacement() => MoveToPlacementPage(unityBannerPlacement, UnityBannerPreparationText, BannerLoadCompletionText);
 
-        private void MoveToInterstitialPlacement() => MoveToPlacementPage(interstitialPlacement, InterstitialPreparationText, FullscreenLoadCompletionText);
+        private void MoveToInterstitialPlacement() => MoveToPlacementPage(interstitialPlacement, InterstitialPreparationText, FullscreenLoadCompletionText, FullscreenQueuePreparationText);
 
-        private void MoveToRewardedPlacement() => MoveToPlacementPage(rewardedPlacement, RewardedPreparationText, FullscreenLoadCompletionText);
+        private void MoveToRewardedPlacement() => MoveToPlacementPage(rewardedPlacement, RewardedPreparationText, FullscreenLoadCompletionText, FullscreenQueuePreparationText);
 
-        private void MoveToPlacementPage(Placement placement, string preparationText, string loadCompletionText)
+        private void MoveToPlacementPage(Placement placement, string preparationText, string loadCompletionText, string queuePreparationText = null)
         {
             var pageInstanceGameObject = PageController.MoveToPage(PageType.Placement);
             var placementPageInstance = pageInstanceGameObject.GetComponent<PlacementPage>();
@@ -57,7 +58,7 @@ namespace Chartboost.Mediation.Demo.Pages
             if (placementPageInstance == null) 
                 Debug.LogError("PlacementPage instance was not found.");
             
-            placementPageInstance.Configure(placement,preparationText, loadCompletionText);
+            placementPageInstance.Configure(placement,preparationText, loadCompletionText, queuePreparationText);
         }
     }
 }

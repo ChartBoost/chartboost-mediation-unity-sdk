@@ -28,16 +28,14 @@ namespace Chartboost.Editor.SKAdNetwork
 
             // json compatible SkAdNetworkFetching
             var appLovinIds = Request(SKAdNetworkConstants.AppLovin);
-            var adColonyIds = Request(SKAdNetworkConstants.AdColony);
             var chartboostIds = Request(SKAdNetworkConstants.Chartboost);
             var fyberIds = Request(SKAdNetworkConstants.Fyber);
             var inMobiIds = Request(SKAdNetworkConstants.InMobi);
-            var tapJoyIds = Request(SKAdNetworkConstants.TapJoy);
             var vungleIds = Request(SKAdNetworkConstants.Vungle);
             var unityIds = RequestUnity(SKAdNetworkConstants.Unity);
             
             // merge all ids
-            MergeIDs(appLovinIds, adColonyIds, chartboostIds, fyberIds, inMobiIds, tapJoyIds, vungleIds, unityIds);
+            MergeIDs(appLovinIds, chartboostIds, fyberIds, inMobiIds, vungleIds, unityIds);
             
             // SkAdNetwork that does not provide easy json/cvs compatibility
             // 1. Facebook (https://developers.facebook.com/docs/setting-up/platform-setup/ios/SKAdNetwork/)
@@ -182,7 +180,7 @@ namespace Chartboost.Editor.SKAdNetwork
         }
 
         private static void LogNetworkFailureMessage(UnityWebRequest request) 
-            => Debug.LogWarning($"SKAdNetworkRequest failed with error: {request.error}");
+            => Debug.LogWarning($"SKAdNetworkRequest failed for: {request.url} with error: {request.error}");
         
         private static void LogSKAdNetworkRequestExceptionMessage(string url, Exception e)
             => Debug.LogWarning($"SKAdNetworkRequest failed to parse json for: {url} due to exception {e}");

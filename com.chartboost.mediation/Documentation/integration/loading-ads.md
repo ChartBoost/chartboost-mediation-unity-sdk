@@ -57,6 +57,44 @@ Debug.Log($"Fullscreen Placement Loaded with PlacementName: {placementName}")
 > **Warning** \
 > The new fullscreen API utilizes instance based callbacks to notify information regarding the advertisement life-cycle. You must take this into account when migrating from the old API static callbacks.
 
+### Queueing Fullscreen Ads
+Ad queueing is a new feature for SDK 4.9.0+ that builds upon the existing fullscreen ad experience that allows publishers to queue up multiple fullscreen ads and show them in succession. This can reduce and potentially eliminate latency for ad experiences that require showing fullscreen ads back to back. 
+
+
+
+ Queues are a "singleton per placement", meaning that if attempted to create multiple queues with the same placement ID the same object will be returned each time.
+
+```csharp
+
+// Get Queue
+var queue = ChartboostMediationFullscreenAdQueue.Queue("placementName");
+Debug.Log($"Queue capacity : {queue.QueueCapacity}");
+
+// Monitor Queue
+queue.DidUpdate += (adQueue, adLoadResult, numberOfAdsReady)
+     => Debug.Log($"Queue Updated. NumberOfAdsReady : {numberOfAdsReady}");
+ queue.DidRemoveExpiredAd += (adQueue, numberOfAdsReady)
+     => Debug.Log($"Removed expired ad. NumberOfAdsReady : {numberOfAdsReady}");
+
+ // Start queue
+ queue.Start();
+
+// Wait for some time for the queue to load an ad or subscribe to `DidUpdate` event as shown above
+// to be notified when an ad is loaded into queue
+
+// Load an ad from queue
+if (queue.HasNextAd())
+{
+    // removes and returns the oldest ad in the queue 
+    // and starts a new load request
+    var fullscreenAd = queue.GetNextAd();   
+ }
+  
+// Stop queue
+queue.Stop();
+
+```
+
 ## Banner Ad Objects
 
 Mediation SDK 4.6.0 introduces a new [Adaptive Banner](https://docs.chartboost.com/en/mediation/ad-types/#adaptive-banner/) ad format, capable of serving flexible and fixed sized ads in the placement. The new [Adaptive Banner]([/en/mediation/ad-types/#adaptive-banner/](https://docs.chartboost.com/en/mediation/ad-types/#adaptive-banner/)) ad format has the following features:
