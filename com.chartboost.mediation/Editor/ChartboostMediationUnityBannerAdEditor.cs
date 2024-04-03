@@ -1,7 +1,6 @@
 #if UNITY_EDITOR
 using Chartboost.AdFormats.Banner;
 using Chartboost.AdFormats.Banner.Unity;
-using Chartboost.Banner;
 using UnityEditor;
 
 namespace Chartboost.Editor

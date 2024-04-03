@@ -100,43 +100,6 @@ namespace Chartboost.Events
             });
         }
         
-        public static void ProcessChartboostMediationPlacementEvent(string placementName, string error, ChartboostMediationPlacementEvent placementEvent)
-        {
-            if (placementEvent == null)
-                return;
-            
-            MainThreadDispatcher.Post(o =>
-            {
-                try
-                {
-                    placementEvent(placementName, error);
-                }
-                catch (Exception e)
-                {
-                    ReportUnexpectedSystemError(e.ToString());
-                }
-            });
-        }
-
-        public static void ProcessChartboostMediationLoadEvent(string placementName, string loadId, string auctionId, string partnerId, double price, string lineItemName, string lineItemId, string error, ChartboostMediationPlacementLoadEvent bidEvent)
-        {
-            if (bidEvent == null)
-                return;
-            
-            MainThreadDispatcher.Post(o =>
-            {
-                try
-                {
-                    var bidInfo = new BidInfo(auctionId, partnerId, price, lineItemName, lineItemId);
-                    bidEvent(placementName, loadId, bidInfo, error);
-                }
-                catch (Exception e)
-                {
-                    ReportUnexpectedSystemError(e.ToString());
-                }
-            });
-        }
-
         public static void ProcessChartboostMediationBannerEvent(long adHashCode, int eventType, float x = default, float y = default)
         {
             MainThreadDispatcher.Post(o =>

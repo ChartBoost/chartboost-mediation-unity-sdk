@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Chartboost.Banner;
 using Chartboost.Platforms;
 using Chartboost.Requests;
 using Chartboost.Utilities;
@@ -62,7 +61,7 @@ namespace Chartboost.AdFormats.Banner
         /// <inheritdoc cref="IChartboostMediationBannerView.VerticalAlignment"/>
         public abstract ChartboostMediationBannerVerticalAlignment VerticalAlignment { get; set; }
         
-        /// <inheritdoc cref="IChartboostMediationBannerView.Load(Chartboost.Requests.ChartboostMediationBannerAdLoadRequest,Chartboost.Banner.ChartboostMediationBannerAdScreenLocation)"/>
+        /// <inheritdoc cref="IChartboostMediationBannerView.Load(Chartboost.Requests.ChartboostMediationBannerAdLoadRequest,ChartboostMediationBannerAdScreenLocation)"/>
         public virtual Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, ChartboostMediationBannerAdScreenLocation screenLocation)
         {
             Request = request;

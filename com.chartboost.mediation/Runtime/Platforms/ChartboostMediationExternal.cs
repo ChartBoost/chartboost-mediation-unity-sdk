@@ -4,10 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Chartboost.AdFormats.Banner;
-using Chartboost.Banner;
 using Chartboost.Consent;
-using Chartboost.FullScreen.Interstitial;
-using Chartboost.FullScreen.Rewarded;
 using Chartboost.Requests;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -15,7 +12,7 @@ using Logger = Chartboost.Utilities.Logger;
 
 namespace Chartboost.Platforms
 {
-    internal abstract class ChartboostMediationExternal : IChartboostMediationLifeCycle, IChartboostMediationInterstitialEvents, IChartboostMediationRewardedEvents, IChartboostMediationBannerEvents
+    internal abstract class ChartboostMediationExternal : IChartboostMediationLifeCycle
     {
         public static bool IsInitialized { get; protected set; }
         
@@ -52,8 +49,8 @@ namespace Chartboost.Platforms
         public virtual void InitWithAppIdAndSignature(string appId, string appSignature) 
             => Logger.Log(LogTag, $"InitWithAppIdAndSignature {appId}, {appSignature} and version {Application.unityVersion}");
 
-        public virtual void StartWithOptions(string appId, string appSignature, string[] initializationOptions = null) 
-            => Logger.Log(LogTag, $"StartWithOptions {appId}, {appSignature}, options {JsonConvert.SerializeObject(initializationOptions)} and version {Application.unityVersion}");
+        public virtual void StartWithOptions(string appId, string[] initializationOptions = null) 
+            => Logger.Log(LogTag, $"StartWithOptions {appId}, options {JsonConvert.SerializeObject(initializationOptions)} and version {Application.unityVersion}");
 
         public virtual void SetSubjectToCoppa(bool isSubject) 
             => Logger.Log(LogTag, $"SetSubjectToCoppa {isSubject}");
@@ -108,58 +105,7 @@ namespace Chartboost.Platforms
         public abstract Task<ChartboostMediationFullscreenAdLoadResult> LoadFullscreenAd(ChartboostMediationFullscreenAdLoadRequest request);
 
         public abstract IChartboostMediationBannerView GetBannerView();
-      
-        [Obsolete("GetInterstitialAd has been deprecated and will be removed in future versions, use LoadFullscreenAd instead.")]
-        public ChartboostMediationInterstitialAd GetInterstitialAd(string placementName)
-        {
-            Logger.Log(LogTag, $"GetInterstitialAd at placement: {placementName}");
-            if (!CanFetchAd(placementName))
-                return null;
-            try
-            {
-                return new ChartboostMediationInterstitialAd(placementName);
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(LogTag, $"interstitial failed to be obtained {e}");
-                return null;
-            }
-        }
-        
-        [Obsolete("GetRewardedAd has been deprecated and will be removed in future versions, use LoadFullscreenAd instead.")]
-        public ChartboostMediationRewardedAd GetRewardedAd(string placementName)
-        {
-            Logger.Log(LogTag, $"GetRewardedAd at placement: {placementName}");
-            if (!CanFetchAd(placementName))
-                return null;
-            try
-            {
-                return new ChartboostMediationRewardedAd(placementName);
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(LogTag, $"rewarded ad failed to be obtained {e}");
-                return null;
-            }
-        }
-        
-        [Obsolete("GetBannerAd has been deprecated and will be removed in future versions, use GetBannerView instead.")]
-        public ChartboostMediationBannerAd GetBannerAd(string placementName, ChartboostMediationBannerAdSize size)
-        {
-            Logger.Log(LogTag, $"GetBannerAd at placement: {placementName}");
-            if (!CanFetchAd(placementName))
-                return null;
-            try
-            {
-                return new ChartboostMediationBannerAd(placementName, size);
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(LogTag, $"banner ad failed to be obtained {e}");
-                return null;
-            }
-        }
-        
+
         [Obsolete("GetInitializationOptions has been deprecated and replaced with StartWithOptions.")]
         protected static string[] GetInitializationOptions()
         {
@@ -196,40 +142,6 @@ namespace Chartboost.Platforms
         public virtual event ChartboostMediationEvent DidStart;
         public virtual event ChartboostMediationILRDEvent DidReceiveImpressionLevelRevenueData;
         public virtual event ChartboostMediationPartnerInitializationEvent DidReceivePartnerInitializationData;
-        
-        // Interstitials
-        [Obsolete("DidLoadInterstitial has been deprecated, use the new fullscreen API instead.")]
-        public virtual event ChartboostMediationPlacementLoadEvent DidLoadInterstitial;
-        [Obsolete("DidShowInterstitial has been deprecated, use the new fullscreen API instead.")]
-        public virtual event ChartboostMediationPlacementEvent DidShowInterstitial;
-        [Obsolete("DidCloseInterstitial has been deprecated, use the new fullscreen API instead.")]
-        public virtual event ChartboostMediationPlacementEvent DidCloseInterstitial;
-        [Obsolete("DidClickInterstitial has been deprecated, use the new fullscreen API instead.")]
-        public virtual event ChartboostMediationPlacementEvent DidClickInterstitial;
-        [Obsolete("DidRecordImpressionInterstitial has been deprecated, use the new fullscreen API instead.")]
-        public virtual event ChartboostMediationPlacementEvent DidRecordImpressionInterstitial;
-
-        // Rewarded Videos
-        [Obsolete("DidLoadRewarded has been deprecated, use the new fullscreen API instead.")]
-        public virtual event ChartboostMediationPlacementLoadEvent DidLoadRewarded;
-        [Obsolete("DidShowRewarded has been deprecated, use the new fullscreen API instead.")]
-        public virtual event ChartboostMediationPlacementEvent DidShowRewarded;
-        [Obsolete("DidCloseRewarded has been deprecated, use the new fullscreen API instead.")]
-        public virtual event ChartboostMediationPlacementEvent DidCloseRewarded;
-        [Obsolete("DidClickRewarded has been deprecated, use the new fullscreen API instead.")]
-        public virtual event ChartboostMediationPlacementEvent DidClickRewarded;
-        [Obsolete("DidRecordImpressionRewarded has been deprecated, use the new fullscreen API instead.")]
-        public virtual event ChartboostMediationPlacementEvent DidRecordImpressionRewarded;
-        [Obsolete("DidReceiveReward has been deprecated, use the new fullscreen API instead.")]
-        public virtual event ChartboostMediationPlacementEvent DidReceiveReward;
-
-        // Banners
-        [Obsolete("DidLoadBanner has been deprecated, use the new ChartboostMediationBannerView API instead.")]
-        public virtual event ChartboostMediationPlacementLoadEvent DidLoadBanner;
-        [Obsolete("DidClickBanner has been deprecated, use the new ChartboostMediationBannerView API instead.")]
-        public virtual event ChartboostMediationPlacementEvent DidClickBanner;
-        [Obsolete("DidRecordImpressionBanner has been deprecated, use the new ChartboostMediationBannerView API instead.")]
-        public virtual event ChartboostMediationPlacementEvent DidRecordImpressionBanner;
         #pragma warning restore 67
     }
 }

@@ -32,9 +32,9 @@ namespace Chartboost.Platforms
             DidStart?.Invoke(_initializationError);
         }
 
-        public override void StartWithOptions(string appId, string appSignature, string[] initializationOptions = null)
+        public override void StartWithOptions(string appId, string[] initializationOptions = null)
         {
-            base.StartWithOptions(appId, appSignature, initializationOptions);
+            base.StartWithOptions(appId, initializationOptions);
             IsInitialized = true;
             DidStart?.Invoke(_initializationError);
         }

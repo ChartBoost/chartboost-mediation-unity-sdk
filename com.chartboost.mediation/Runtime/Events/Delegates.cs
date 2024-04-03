@@ -24,13 +24,6 @@ namespace Chartboost
     public delegate void ChartboostMediationPlacementEvent(string placement, string error);
 
     /// <summary>
-    /// <param name="placement">The placement name for the placement.</param>
-    /// <param name="loadId">The placement name for the placement.</param>
-    /// <param name="error">The error encountered, if any.</param>
-    /// </summary>
-    public delegate void ChartboostMediationPlacementLoadEvent(string placement, string loadId, BidInfo bidInfo, string error);
-
-    /// <summary>
     /// <param name="ad">The ad triggering the event.</param>
     /// </summary>
     public delegate void ChartboostMediationFullscreenAdEvent(IChartboostMediationFullscreenAd ad);

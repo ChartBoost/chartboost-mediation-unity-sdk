@@ -1,6 +1,5 @@
 using Chartboost.AdFormats.Banner;
 using Chartboost.AdFormats.Banner.Unity;
-using Chartboost.Banner;
 using Chartboost.Mediation.Demo.Loading;
 using Chartboost.Mediation.Demo.Pages;
 using UnityEngine;

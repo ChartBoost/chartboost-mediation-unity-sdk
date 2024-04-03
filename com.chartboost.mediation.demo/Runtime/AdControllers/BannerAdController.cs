@@ -1,5 +1,4 @@
 using Chartboost.AdFormats.Banner;
-using Chartboost.Banner;
 using Chartboost.Mediation.Demo.Loading;
 using Chartboost.Requests;
 using UnityEngine;

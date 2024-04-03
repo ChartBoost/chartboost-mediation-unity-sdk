@@ -95,10 +95,7 @@ namespace Chartboost.Editor.EditorWindows.Settings
             container.Add(CreateIdentifierTableRow(AppIdentifier, 
                 (ChartboostMediationSettings.AndroidAppId, newValue => ChartboostMediationSettings.AndroidAppId = newValue), 
                 (ChartboostMediationSettings.IOSAppId, newValue => ChartboostMediationSettings.IOSAppId = newValue)));
-            container.Add(CreateIdentifierTableRow(AppSignature, 
-                (ChartboostMediationSettings.AndroidAppSignature, newValue => ChartboostMediationSettings.AndroidAppSignature = newValue), 
-                (ChartboostMediationSettings.IOSAppSignature, newValue => ChartboostMediationSettings.IOSAppSignature = newValue)));
-
+            
             return container;
             
             TemplateContainer CreateIdentifierTableRow(string label, (string, Action<string>) onAndroidChange, (string, Action<string>) onIOSChange) 

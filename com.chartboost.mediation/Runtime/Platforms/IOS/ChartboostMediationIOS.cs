@@ -18,7 +18,7 @@ namespace Chartboost.Platforms.IOS
     {
         #region Objective-C Extern Members
         [DllImport(IOSConstants.Internal)]
-        private static extern void _chartboostMediationInit(string appId, string appSignature, string unityVersion, string[] initializationOptions, int initializationOptionsSize);
+        private static extern void _chartboostMediationInit(string appId, string unityVersion, string[] initializationOptions, int initializationOptionsSize);
 
         [DllImport(IOSConstants.Internal)]
         private static extern void _chartboostMediationSetSubjectToCoppa(bool isSubject);
@@ -62,54 +62,18 @@ namespace Chartboost.Platforms.IOS
             _setLifeCycleCallbacks(ExternDidStart, 
                 ExternDidReceiveILRD, 
                 ExternDidReceivePartnerInitializationData);
-            
-            _setInterstitialCallbacks(ExternDidLoadInterstitial, 
-                ExternDidShowInterstitial,
-                ExternDidCloseInterstitial, 
-                ExternDidClickInterstitial, 
-                ExternDidRecordImpressionInterstitial);
-            
-            _setRewardedCallbacks(ExternDidLoadRewarded, 
-                ExternDidShowRewarded,
-                ExternDidCloseRewarded, 
-                ExternDidClickRewarded,
-                ExternDidRecordImpressionRewarded, 
-                ExternDidReceiveReward);
 
-            _setBannerCallbacks(ExternDidLoadBanner,
-                ExternDidRecordImpressionBanner, 
-                ExternDidClickBanner);
-            
             _setFullscreenCallbacks(FullscreenAdEvents);
             _setBannerAdCallbacks(BannerAdEvents);
             _setFullscreenAdQueueCallbacks(FullscreenAdQueueUpdateEvent, FullscreenAdQueueRemoveExpiredAdEvent);
         }
-
-        [Obsolete("Init has been deprecated and will be removed in future versions of the SDK.")]
-        public override void Init()
+        
+        public override void StartWithOptions(string appId, string[] initializationOptions = null)
         {
-            base.Init();
-            InitWithAppIdAndSignature(ChartboostMediationSettings.IOSAppId, ChartboostMediationSettings.IOSAppSignature);
-        }
-
-        [Obsolete("InitWithAppIdAndSignature has been deprecated, please use StartWithOptions instead")]
-        public override void InitWithAppIdAndSignature(string appId, string appSignature)
-        {
-            base.InitWithAppIdAndSignature(appId, appSignature);
+            base.StartWithOptions(appId, initializationOptions);
             ChartboostMediationSettings.IOSAppId = appId;
-            ChartboostMediationSettings.IOSAppSignature = appSignature;
-            var initializationOptions = GetInitializationOptions();
-            _chartboostMediationInit(appId, appSignature, Application.unityVersion, initializationOptions, initializationOptions.Length);
-            IsInitialized = true;
-        }
-
-        public override void StartWithOptions(string appId, string appSignature, string[] initializationOptions = null)
-        {
-            base.StartWithOptions(appId, appSignature, initializationOptions);
-            ChartboostMediationSettings.IOSAppId = appId;
-            ChartboostMediationSettings.IOSAppSignature = appSignature;
             initializationOptions ??= Array.Empty<string>();
-            _chartboostMediationInit(appId, appSignature, Application.unityVersion, initializationOptions, initializationOptions.Length);
+            _chartboostMediationInit(appId, Application.unityVersion, initializationOptions, initializationOptions.Length);
             IsInitialized = true;
         }
 

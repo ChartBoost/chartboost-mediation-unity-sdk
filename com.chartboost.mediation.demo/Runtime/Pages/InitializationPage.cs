@@ -23,7 +23,7 @@ namespace Chartboost.Mediation.Demo.Pages
             ChartboostMediation.DidStart += OnDidStart;
             ChangeInitializationStatusText(InitializationText);
             loadingIconIndicator.ToggleLoadingIcon(true);
-            ChartboostMediation.StartWithOptions(ChartboostMediationSettings.AppId, ChartboostMediationSettings.AppSignature);
+            ChartboostMediation.StartWithOptions(ChartboostMediationSettings.AppId);
         }
 
         private void OnDidStart(string error)
