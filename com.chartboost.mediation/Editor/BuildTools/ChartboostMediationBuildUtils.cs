@@ -33,9 +33,7 @@ namespace Chartboost.Editor.BuildTools
         public static void UpdateAdapters()
         {
             ParseCommandLineArgumentsToUnity(out var args);
-            args[ArgAddNewNetworks] = "true";
-            args[ArgBuildTarget] = "android";
-            
+
             var platform = GetPlatform(args);
             var adapterUpdates = string.Empty;
             if(File.Exists(adapterUpdates))    

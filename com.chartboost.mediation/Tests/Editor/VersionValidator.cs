@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Chartboost.Tests.Editor
 {
-    public class VersionCheckTests
+    public class VersionValidator
     {
         private const string UnityPackageManagerPackageName = "com.chartboost.mediation";
         private const string NuGetPackageName = "Chartboost.CSharp.Mediation.Unity";

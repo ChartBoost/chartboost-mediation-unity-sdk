@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Chartboost.Banner;
 using Chartboost.Events;
 using Chartboost.Requests;
 using Chartboost.Utilities;

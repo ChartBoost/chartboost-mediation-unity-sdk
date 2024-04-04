@@ -1,4 +1,3 @@
-using Chartboost.Banner;
 using Chartboost.Utilities;
 using UnityEditor;
 using UnityEngine;

@@ -12,6 +12,7 @@ namespace Chartboost
         public const string AdMob = "admob";
         public const string AmazonPublisherServices = "amazon_aps";
         public const string AppLovin = "applovin";
+        public const string BidMachine = "bidmachine";
         public const string DigitalTurbineExchange = "fyber";
         public const string GoogleBidding = "google_googlebidding";
         public const string HyprMX = "hyprmx";

@@ -51,9 +51,7 @@ namespace Chartboost.Editor
          PlayerSettings.SetAdditionalCompilerArgumentsForGroup(BuildTargetGroup.Standalone, CompilerFlags);
 
          ChartboostMediationSettings.AndroidAppId = DefaultEnvironment.AndroidAppId;
-         ChartboostMediationSettings.AndroidAppSignature = DefaultEnvironment.AndroidAppSignature;
          ChartboostMediationSettings.IOSAppId = DefaultEnvironment.IOSAppId;
-         ChartboostMediationSettings.IOSAppSignature = DefaultEnvironment.IOSAppSignature;
          ChartboostMediationSettings.IsLoggingEnabled = DefaultEnvironment.IsLoggingEnabled;
          ChartboostMediationSettings.IsSkAdNetworkResolutionEnabled = DefaultEnvironment.IsSkAdNetworkResolutionEnabled;
          ChartboostMediationSettings.DisableBitcode = DefaultEnvironment.DisableBitcode;

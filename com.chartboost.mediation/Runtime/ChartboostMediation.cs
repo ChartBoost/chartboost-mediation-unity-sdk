@@ -2,11 +2,8 @@ using System;
 using System.Threading.Tasks;
 using Chartboost.AdFormats.Banner;
 using Chartboost.AdFormats.Banner.Unity;
-using Chartboost.Banner;
 using Chartboost.Consent;
 using Chartboost.Events;
-using Chartboost.FullScreen.Interstitial;
-using Chartboost.FullScreen.Rewarded;
 using Chartboost.Platforms;
 using Chartboost.Requests;
 using Newtonsoft.Json.Utilities;
@@ -85,125 +82,7 @@ namespace Chartboost
             remove => EventProcessor.UnexpectedSystemErrorDidOccur -= value;
         }
         #endregion
-
-        #region Interstitial Callbacks
-        /// <inheritdoc cref="IChartboostMediationInterstitialEvents.DidLoadInterstitial"/>>
-        [Obsolete("DidLoadInterstitial has been deprecated, use the new fullscreen API instead.")]
-        public static event ChartboostMediationPlacementLoadEvent DidLoadInterstitial
-        {
-            add => _chartboostMediationExternal.DidLoadInterstitial += value;
-            remove => _chartboostMediationExternal.DidLoadInterstitial -= value;
-        }
-
-        /// <inheritdoc cref="IChartboostMediationInterstitialEvents.DidShowInterstitial"/>>
-        [Obsolete("DidShowInterstitial has been deprecated, use the new fullscreen API instead.")]
-        public static event ChartboostMediationPlacementEvent DidShowInterstitial
-        {
-            add => _chartboostMediationExternal.DidShowInterstitial += value;
-            remove => _chartboostMediationExternal.DidShowInterstitial -= value;
-        }
         
-        /// <inheritdoc cref="IChartboostMediationInterstitialEvents.DidCloseInterstitial"/>>
-        [Obsolete("DidCloseInterstitial has been deprecated, use the new fullscreen API instead.")]
-        public static event ChartboostMediationPlacementEvent DidCloseInterstitial
-        {
-            add => _chartboostMediationExternal.DidCloseInterstitial += value;
-            remove => _chartboostMediationExternal.DidCloseInterstitial -= value;
-        }
-
-        /// <inheritdoc cref="IChartboostMediationInterstitialEvents.DidClickInterstitial"/>>
-        [Obsolete("DidClickInterstitial has been deprecated, use the new fullscreen API instead.")]
-        public static event ChartboostMediationPlacementEvent DidClickInterstitial
-        {
-            add => _chartboostMediationExternal.DidClickInterstitial += value;
-            remove => _chartboostMediationExternal.DidClickInterstitial -= value;
-        }
-        
-        /// <inheritdoc cref="IChartboostMediationInterstitialEvents.DidRecordImpressionInterstitial"/>>
-        [Obsolete("DidRecordImpressionInterstitial has been deprecated, use the new fullscreen API instead.")]
-        public static event ChartboostMediationPlacementEvent DidRecordImpressionInterstitial
-        {
-            add => _chartboostMediationExternal.DidRecordImpressionInterstitial += value;
-            remove => _chartboostMediationExternal.DidRecordImpressionInterstitial -= value;
-        }
-        #endregion
-
-        #region Rewarded Callbacks
-        /// <inheritdoc cref="IChartboostMediationRewardedEvents.DidLoadRewarded"/>>
-        [Obsolete("DidLoadRewarded has been deprecated, use the new fullscreen API instead.")]
-        public static event ChartboostMediationPlacementLoadEvent DidLoadRewarded
-        {
-            add => _chartboostMediationExternal.DidLoadRewarded += value;
-            remove => _chartboostMediationExternal.DidLoadRewarded -= value;
-        }
-        
-        /// <inheritdoc cref="IChartboostMediationRewardedEvents.DidShowRewarded"/>>
-        [Obsolete("DidShowRewarded has been deprecated, use the new fullscreen API instead.")]
-        public static event ChartboostMediationPlacementEvent DidShowRewarded
-        {
-            add => _chartboostMediationExternal.DidShowRewarded += value;
-            remove => _chartboostMediationExternal.DidShowRewarded -= value;
-        }
-
-        /// <inheritdoc cref="IChartboostMediationRewardedEvents.DidCloseRewarded"/>>
-        [Obsolete("DidCloseRewarded has been deprecated, use the new fullscreen API instead.")]
-        public static event ChartboostMediationPlacementEvent DidCloseRewarded
-        {
-            add => _chartboostMediationExternal.DidCloseRewarded += value;
-            remove => _chartboostMediationExternal.DidCloseRewarded -= value;
-        }
-
-        /// <inheritdoc cref="IChartboostMediationRewardedEvents.DidClickRewarded"/>>
-        [Obsolete("DidClickRewarded has been deprecated, use the new fullscreen API instead.")]
-        public static event ChartboostMediationPlacementEvent DidClickRewarded
-        {
-            add => _chartboostMediationExternal.DidClickRewarded += value;
-            remove => _chartboostMediationExternal.DidClickRewarded -= value;
-        }
-        
-        /// <inheritdoc cref="IChartboostMediationRewardedEvents.DidRecordImpressionRewarded"/>>
-        [Obsolete("DidRecordImpressionRewarded has been deprecated, use the new fullscreen API instead.")]
-        public static event ChartboostMediationPlacementEvent DidRecordImpressionRewarded
-        {
-            add => _chartboostMediationExternal.DidRecordImpressionRewarded += value;
-            remove => _chartboostMediationExternal.DidRecordImpressionRewarded -= value;
-        }
-        
-        /// <inheritdoc cref="IChartboostMediationRewardedEvents.DidReceiveReward"/>>
-        [Obsolete("DidReceiveReward has been deprecated, use the new fullscreen API instead.")]
-        public static event ChartboostMediationPlacementEvent DidReceiveReward
-        {
-            add => _chartboostMediationExternal.DidReceiveReward += value;
-            remove => _chartboostMediationExternal.DidReceiveReward -= value;
-        }
-        #endregion
-
-        #region Banner Callbacks
-        /// <inheritdoc cref="IChartboostMediationBannerEvents.DidLoadBanner"/>>
-        [Obsolete("DidLoadBanner has been deprecated, use the new ChartboostMediationBannerView API instead.")]
-        public static event ChartboostMediationPlacementLoadEvent DidLoadBanner
-        {
-            add => _chartboostMediationExternal.DidLoadBanner += value;
-            remove => _chartboostMediationExternal.DidLoadBanner -= value;
-        }
-
-        /// <inheritdoc cref="IChartboostMediationBannerEvents.DidClickBanner"/>>
-        [Obsolete("DidClickBanner has been deprecated, use the new ChartboostMediationBannerView API instead.")]
-        public static event ChartboostMediationPlacementEvent DidClickBanner
-        {
-            add => _chartboostMediationExternal.DidClickBanner += value;
-            remove => _chartboostMediationExternal.DidClickBanner -= value;
-        }
-        
-        /// <inheritdoc cref="IChartboostMediationBannerEvents.DidRecordImpressionBanner"/>>
-        [Obsolete("DidRecordImpressionBanner has been deprecated, use the new ChartboostMediationBannerView API instead.")]
-        public static event ChartboostMediationPlacementEvent DidRecordImpressionBanner
-        {
-            add => _chartboostMediationExternal.DidRecordImpressionBanner += value;
-            remove => _chartboostMediationExternal.DidRecordImpressionBanner -= value;
-        }
-        #endregion
-
         //////////////////////////////////////////////////////
         // Functions for showing ads
         //////////////////////////////////////////////////////
@@ -215,31 +94,6 @@ namespace Chartboost
         /// </summary>
         public static async Task<ChartboostMediationFullscreenAdLoadResult> LoadFullscreenAd(ChartboostMediationFullscreenAdLoadRequest loadRequest) 
             => await _chartboostMediationExternal.LoadFullscreenAd(loadRequest);
-
-        /// <summary>
-        /// Returns a new ad unit that can be used to load and display interstitial ads.
-        /// </summary>
-        /// <param name="placementName">The placement ID for the Chartboost Mediation impression type.</param>
-        [Obsolete("GetInterstitialAd has been deprecated and will be removed in future versions, use LoadFullscreenAd instead.")]
-        public static ChartboostMediationInterstitialAd GetInterstitialAd(string placementName) 
-            => _chartboostMediationExternal.GetInterstitialAd(placementName);
-
-        /// <summary>
-        /// Returns a new ad unit that can be used to load and display rewarded video ads.
-        /// </summary>
-        /// <param name="placementName">The placement ID for the Chartboost Mediation impression type.</param>
-        [Obsolete("GetRewardedAd has been deprecated and will be removed in future versions, use LoadFullscreenAd instead.")]
-        public static ChartboostMediationRewardedAd GetRewardedAd(string placementName)
-            => _chartboostMediationExternal.GetRewardedAd(placementName);
-
-        /// <summary>
-        /// Returns a new ad unit that can be used to load and display banner ads.
-        /// </summary>
-        /// <param name="placementName">The placement ID for the Chartboost Mediation impression type.</param>
-        /// <param name="size">The banner size</param>
-        [Obsolete("GetBannerAd has been deprecated and will be removed in future versions, use GetBannerView instead.")]
-        public static ChartboostMediationBannerAd GetBannerAd(string placementName, ChartboostMediationBannerAdSize size)
-            => _chartboostMediationExternal.GetBannerAd(placementName, size);
         
         /// <summary>
         /// Returns a new ad unit that can be used to load and display banner ads.
@@ -280,10 +134,10 @@ namespace Chartboost
                 _chartboostMediationExternal.InitWithAppIdAndSignature(appId, appSignature);
         }
         
-        public static void StartWithOptions(string appId, string appSignature, string[] options = null)
+        public static void StartWithOptions(string appId, string[] options = null)
         {
             if (!ChartboostMediationExternal.IsInitialized)
-                _chartboostMediationExternal.StartWithOptions(appId, appSignature, options);
+                _chartboostMediationExternal.StartWithOptions(appId, options);
         }
 
         public static void SetSubjectToCoppa(bool isSubject) => _chartboostMediationExternal.SetSubjectToCoppa(isSubject);

@@ -50,19 +50,14 @@ namespace Chartboost
         private const string CbSettingsPath = Package + "/Resources";
         private const string CbSettingsAssetExtension = ".asset";
         private const string IOSExampleAppIDLabel = "HE_IOS_APP_ID";
-        private const string IOSExampleAppSignatureLabel = "HE_IOS_APP_SIGNATURE";
         private const string IOSExampleAppID = "59c04299d989d60fc5d2c782";
-        private const string IOSExampleAppSignature = "";
         private const string AndroidExampleAppIDLabel = "HE_ANDROID_APP_ID";
-        private const string AndroidExampleAppSignatureLabel = "HE_ANDROID_APP_SIGNATURE";
         private const string AndroidExampleAppID = "4f7b433509b6025804000002";
-        private const string AndroidExampleAppSignature = "";
         private const string CredentialsWarningDefaultFormat = "You are using the Chartboost Mediation SDK {0} example {1}! Go to the Chartboost Mediation dashboard and replace these with an App ID & App Signature from your account! If you need help, check out answers.chartboost.com";
         private const string CredentialsWarningEmptyFormat = "You are using an empty string for the {0} {1}! Go to the Chartboost Mediation dashboard and replace these with an App ID & App Signature from your account! If you need help, check out answers.chartboost.com";
         private const string CredentialsWarningIOS = "iOS";
         private const string CredentialsWarningAndroid = "Android";
         private const string CredentialsWarningAppID = "App ID";
-        private const string CredentialsWarningAppSignature = "App Signature";
         public const string DefaultSDKKeyValue = "Fill to enable build-processing features.";
 
         private static bool _credentialsWarning = false;
@@ -117,9 +112,7 @@ namespace Chartboost
         #region App Settings
 
         [SerializeField] private string iOSAppId = IOSExampleAppIDLabel;
-        [SerializeField] private string iOSAppSignature = IOSExampleAppSignatureLabel;
         [SerializeField] private string androidAppId = AndroidExampleAppIDLabel;
-        [SerializeField] private string androidAppSignature = AndroidExampleAppSignatureLabel;
         [SerializeField] private bool isLoggingEnabled;
         [SerializeField] private bool isAutomaticInitEnabled;
         [SerializeField] private bool isSkAdNetworkResolutionEnabled;
@@ -168,34 +161,6 @@ namespace Chartboost
                 #endif
             }
         }
-        
-        /// <summary>
-        /// Accessor for AppSignatures regardless of platform
-        /// </summary>
-        public static string AppSignature
-        {
-            get
-            {
-                #if UNITY_ANDROID
-                return AndroidAppSignature;
-                #elif UNITY_IOS
-                return IOSAppSignature;
-                #else
-                return string.Empty;
-                #endif
-            }
-
-            set
-            {
-                #if UNITY_ANDROID
-                AndroidAppSignature = value;
-                #elif UNITY_IOS
-                IOSAppSignature = value;
-                #else
-                Logger.Log("ChartboostMediationSettings",$"(Unsupported Platform) Cannot Set AppSignature Value: {value}");
-                #endif
-            }
-        }
 
         /// <summary>
         /// Accessor for androidAppId.
@@ -212,23 +177,7 @@ namespace Chartboost
                 DirtyEditor();
             }
         }
-
-        /// <summary>
-        /// Accessor for androidAppSignature.
-        /// </summary>
-        public static string AndroidAppSignature
-        {
-            get => EvaluateCredential(Instance.androidAppSignature, AndroidExampleAppSignature,
-                CredentialsWarningAndroid, CredentialsWarningAppSignature);
-            set
-            {
-                if (Instance.androidAppSignature.Equals(value))
-                    return;
-                Instance.androidAppSignature = value;
-                DirtyEditor();
-            }
-        }
-
+        
         /// <summary>
         /// Accessor for iOSAppId.
         /// </summary>
@@ -244,23 +193,7 @@ namespace Chartboost
                 DirtyEditor();
             }
         }
-
-        /// <summary>
-        /// Accessor for iOSAppSignature.
-        /// </summary>
-        public static string IOSAppSignature
-        {
-            get => EvaluateCredential(Instance.iOSAppSignature, IOSExampleAppSignature, CredentialsWarningIOS,
-                CredentialsWarningAppSignature);
-            set
-            {
-                if (Instance.iOSAppSignature.Equals(value))
-                    return;
-                Instance.iOSAppSignature = value;
-                DirtyEditor();
-            }
-        }
-
+        
         /// <summary>
         /// Accessor for isLoggingEnabled.
         /// </summary>

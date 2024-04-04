@@ -31,11 +31,6 @@ namespace Chartboost.Platforms.Android
         {
             _instance = this;
             LogTag = "ChartboostMediation (Android)";
-            using var unityBridge = GetUnityBridge();
-            unityBridge.CallStatic(AndroidConstants.FunSetupEventListeners,
-                InterstitialEventListener.Instance,
-                RewardedVideoEventListener.Instance,
-                BannerEventListener.Instance);
         }
 
         // Initialize the android bridge
@@ -43,39 +38,17 @@ namespace Chartboost.Platforms.Android
             => new AndroidJavaClass(GetQualifiedClassName(AndroidConstants.ClassUnityBridge));
 
         internal static AndroidJavaClass GetNativeSDK() => new AndroidJavaClass(GetQualifiedNativeClassName(AndroidConstants.ClassHeliumSdk));
-
-        [Obsolete("Init has been deprecated and will be removed in future versions of the SDK.")]
-        public override void Init()
+        
+        public override void StartWithOptions(string appId, string[] initializationOptions = null)
         {
-            base.Init();
-            InitWithAppIdAndSignature(ChartboostMediationSettings.AndroidAppId, ChartboostMediationSettings.AndroidAppSignature);
-        }
-
-        [Obsolete("InitWithAppIdAndSignature has been deprecated, please use StartWithOptions instead")]
-        public override void InitWithAppIdAndSignature(string appId, string appSignature)
-        {
-            base.InitWithAppIdAndSignature(appId, appSignature);
+            base.StartWithOptions(appId, initializationOptions);
             ChartboostMediationSettings.AndroidAppId = appId;
-            ChartboostMediationSettings.AndroidAppSignature = appSignature;
-            using var nativeSDK = GetNativeSDK();
-            using var unityPlayer = new AndroidJavaClass(AndroidConstants.ClassUnityPlayer);
-            using var activity = unityPlayer.GetStatic<AndroidJavaObject>(AndroidConstants.PropertyCurrentActivity);
-            using var initializationOptions = GetInitializationOptions().ToInitializationOptions();
-            nativeSDK.CallStatic(AndroidConstants.FunStart, activity, appId, appSignature, initializationOptions,  new ChartboostMediationSDKListener());
-            IsInitialized = true;
-        }
-
-        public override void StartWithOptions(string appId, string appSignature, string[] initializationOptions = null)
-        {
-            base.StartWithOptions(appId, appSignature, initializationOptions);
-            ChartboostMediationSettings.AndroidAppId = appId;
-            ChartboostMediationSettings.AndroidAppSignature = appSignature;
             initializationOptions ??= Array.Empty<string>();
             using var nativeOptions = initializationOptions.ToInitializationOptions();
             using var nativeSDK = GetNativeSDK();
             using var unityPlayer = new AndroidJavaClass(AndroidConstants.ClassUnityPlayer);
             using var activity = unityPlayer.GetStatic<AndroidJavaObject>(AndroidConstants.PropertyCurrentActivity);
-            nativeSDK.CallStatic(AndroidConstants.FunStart, activity, appId, appSignature, nativeOptions,  new ChartboostMediationSDKListener());
+            nativeSDK.CallStatic(AndroidConstants.FunStart, activity, appId, nativeOptions,  new ChartboostMediationSDKListener());
             IsInitialized = true;
         }
 

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Chartboost.Banner;
 using Chartboost.Requests;
 
 namespace Chartboost.AdFormats.Banner
@@ -41,7 +40,7 @@ namespace Chartboost.AdFormats.Banner
         /// <inheritdoc cref="ChartboostMediationBannerViewBase.VerticalAlignment"/>
         public override ChartboostMediationBannerVerticalAlignment VerticalAlignment { get; set; }
         
-        /// <inheritdoc cref="ChartboostMediationBannerViewBase.Load(Chartboost.Requests.ChartboostMediationBannerAdLoadRequest,Chartboost.Banner.ChartboostMediationBannerAdScreenLocation)"/>
+        /// <inheritdoc cref="ChartboostMediationBannerViewBase.Load(Chartboost.Requests.ChartboostMediationBannerAdLoadRequest,ChartboostMediationBannerAdScreenLocation)"/>
         public override Task<ChartboostMediationBannerAdLoadResult> Load(ChartboostMediationBannerAdLoadRequest request, ChartboostMediationBannerAdScreenLocation screenLocation) 
             => Task.FromResult(new ChartboostMediationBannerAdLoadResult(new ChartboostMediationError(UnsupportedPlatform)));
 

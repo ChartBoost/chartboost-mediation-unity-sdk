@@ -3,8 +3,8 @@
   "adapterSelections": [
     {
       "id": "chartboost",
-      "android": "9.6.1",
-      "ios": "9.6.0"
+      "android": "9.7.0",
+      "ios": "9.7.0"
     }
   ]
 }

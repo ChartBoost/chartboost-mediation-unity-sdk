@@ -22,9 +22,9 @@ Visit the [CHANGELOG](com.chartboost.mediation/CHANGELOG.md) to reference change
 
 ### Integrating the Chartboost Mediation Unity SDK
 
-Chartboost Mediation Unity SDK is distributed using both [NPM](https://www.npmjs.com/) and [NuGet](https://www.nuget.org/) distribution. 
+Chartboost Mediation Unity SDK is distributed using both [NPM](https://www.npmjs.com/) and [NuGet](https://www.nuget.org/) distribution.
 
-To install this sdk using either of these distribution channels follow the steps below : 
+To install this sdk using either of these distribution channels follow the steps below :
 
 #### Using the public [npm registry](https://www.npmjs.com/search?q=com.chartboost.mediation)
 
@@ -48,7 +48,7 @@ In order to add the Chartboost Mediation Unity SDK to your project using the npm
 
 #### Using the public [nuget package](https://www.nuget.org/packages/Chartboost.CSharp.Mediation.Unity)
 
-To add the Chartboost Mediation Unity to your project using the nuget package, you will first need to add the [NugetForUnity](https://github.com/GlitchEnzo/NuGetForUnity) package into your Unity Project. 
+To add the Chartboost Mediation Unity to your project using the nuget package, you will first need to add the [NugetForUnity](https://github.com/GlitchEnzo/NuGetForUnity) package into your Unity Project.
 
 This can be done by adding the following to your Unity Project's ***manifest.json***
 
@@ -60,7 +60,7 @@ This can be done by adding the following to your Unity Project's ***manifest.jso
 ```
 
 Once <code>NugetForUnity</code> is installed, search for "Chartboost.CSharp.Mediation.Unity" in the search bar of Nuget Explorer window(Nuget -> Manage Nuget Packages).
-You should be able to see the `Chartboost.CSharp.Mediation.Unity` package. Choose the appropriate version and install. 
+You should be able to see the `Chartboost.CSharp.Mediation.Unity` package. Choose the appropriate version and install.
 
 In order to better understand the Chartboost Mediation Unity SDK, documentation has been split between Setup and Integration Steps:
 

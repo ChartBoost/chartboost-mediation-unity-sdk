@@ -13,8 +13,6 @@
 typedef void (*ChartboostMediationEvent)(const char* error);
 typedef void (*ChartboostMediationILRDEvent)(const char* impressionData);
 typedef void (*ChartboostMediationPartnerInitializationDataEvent)(const char* partnerInitializationData);
-typedef void (*ChartboostMediationPlacementEvent)(const char* placementName, const char* error);
-typedef void (*ChartboostMediationPlacementLoadEvent)(const char* placementName, const char* loadId, const char* auctionId, const char* partnerId, double price, const char* lineItemName, const char* lineItemId, const char* error);
 
 // Fullscreen Events
 typedef void (*ChartboostMediationFullscreenAdLoadResultEvent)(int hashCode, const void* adHashCode, const char *loadId, const char *winningBidJson, const char *metricsJson, const char *code, const char *message);
@@ -75,28 +73,6 @@ const void serializeEvent(ChartboostMediationError *error, ChartboostMediationEv
     event(toCStringOrNull(error.localizedDescription));
 }
 
-const void serializePlacementWithError(NSString *placementName, ChartboostMediationError *error, ChartboostMediationPlacementEvent placementEvent)
-{
-    if (placementEvent == nil)
-        return;
-    
-    placementEvent(toCStringOrNull(placementName), toCStringOrNull(error.localizedDescription));
-}
-
-const void serializePlacementLoadWithError(NSString *placementName, NSString *requestIdentifier, NSDictionary *winningBidInfo, ChartboostMediationError *error, ChartboostMediationPlacementLoadEvent placementLoadEvent)
-{
-    if (placementLoadEvent == nil)
-        return;
-    
-    NSString* partnerId = [winningBidInfo objectForKey:@"partner-id"] ?: @"";
-    NSString* auctionId = [winningBidInfo objectForKey:@"auction-id"] ?: @"";
-    NSNumber* price = [winningBidInfo objectForKey:@"price"] ?: 0;
-    NSString* lineItemName = [winningBidInfo objectForKey:@"line_item_name"] ?: @"";
-    NSString* lineItemId = [winningBidInfo objectForKey:@"line_item_id"] ?: @"";
-    
-    placementLoadEvent(toCStringOrNull(placementName), toCStringOrNull(requestIdentifier), toCStringOrNull(auctionId), toCStringOrNull(partnerId), [price doubleValue], toCStringOrNull(lineItemName), toCStringOrNull(lineItemId), toCStringOrNull([error localizedDescription]));
-}
-
 static ChartboostMediationBannerView * _getBannerView(const void * uniqueId){
     ChartboostMediationBannerAdWrapper *bannerWrapper =(__bridge ChartboostMediationBannerAdWrapper*)uniqueId;
     ChartboostMediationBannerView* bannerView = bannerWrapper.bannerView;
@@ -110,7 +86,7 @@ enum bannerEvents {BannerAppear = 0, BannerClick = 1, BannerRecordImpression = 2
 enum fullscreenQueueEvents { QueueUpdate = 0, QueueRemoveExpiredAd = 1 };
 
 
-@interface ChartboostMediationObserver : NSObject <HeliumSdkDelegate, ChartboostMediationFullscreenAdDelegate, ChartboostMediationBannerViewDelegate, CHBHeliumInterstitialAdDelegate, CHBHeliumRewardedAdDelegate, CHBHeliumBannerAdDelegate, ChartboostMediationFullscreenAdQueueDelegate>
+@interface ChartboostMediationObserver : NSObject <HeliumSdkDelegate, ChartboostMediationFullscreenAdDelegate, ChartboostMediationBannerViewDelegate, ChartboostMediationFullscreenAdQueueDelegate>
 
 + (instancetype) sharedObserver;
 
@@ -118,26 +94,6 @@ enum fullscreenQueueEvents { QueueUpdate = 0, QueueRemoveExpiredAd = 1 };
 @property ChartboostMediationEvent didStartCallback;
 @property ChartboostMediationILRDEvent didReceiveILRDCallback;
 @property ChartboostMediationPartnerInitializationDataEvent didReceivePartnerInitializationDataCallback;
-
-// interstitial callbacks
-@property ChartboostMediationPlacementLoadEvent interstitialDidLoadCallback;
-@property ChartboostMediationPlacementEvent interstitialDidClickCallback;
-@property ChartboostMediationPlacementEvent interstitialDidCloseCallback;
-@property ChartboostMediationPlacementEvent interstitialDidShowCallback;
-@property ChartboostMediationPlacementEvent interstitialDidRecordImpressionCallback;
-
-// rewarded callbacks
-@property ChartboostMediationPlacementLoadEvent rewardedDidLoadCallback;
-@property ChartboostMediationPlacementEvent rewardedDidClickCallback;
-@property ChartboostMediationPlacementEvent rewardedDidCloseCallback;
-@property ChartboostMediationPlacementEvent rewardedDidShowCallback;
-@property ChartboostMediationPlacementEvent rewardedDidRecordImpressionCallback;
-@property ChartboostMediationPlacementEvent rewardedDidReceiveRewardCallback;
-
-// banner callbacks
-@property ChartboostMediationPlacementLoadEvent bannerDidLoadCallback;
-@property ChartboostMediationPlacementEvent bannerDidRecordImpressionCallback;
-@property ChartboostMediationPlacementEvent bannerDidClickCallback;
 
 // fullscreen callbacks
 @property ChartboostMediationFullscreenAdEvent fullscreenAdEvents;
@@ -385,85 +341,6 @@ struct Implementation {
     serializeEvent(error, _didStartCallback);
 }
 
-#pragma mark CHBHeliumInterstitialAdDelegate
-- (void)heliumInterstitialAdWithPlacementName:(NSString*)placementName requestIdentifier:(NSString *) requestIdentifier winningBidInfo:(NSDictionary<NSString *, id> *)winningBidInfo didLoadWithError:(ChartboostMediationError *)error
-{
-    serializePlacementLoadWithError(placementName, requestIdentifier, winningBidInfo, error, _interstitialDidLoadCallback);
-}
-
-- (void)heliumInterstitialAdWithPlacementName:(NSString*)placementName didShowWithError:(ChartboostMediationError *)error
-{
-    serializePlacementWithError(placementName, error, _interstitialDidShowCallback);
-    if (!error)
-        UnityPause(true);
-}
-
-- (void)heliumInterstitialAdWithPlacementName:(NSString*)placementName didCloseWithError:(ChartboostMediationError *)error
-{
-    UnityPause(false);
-    serializePlacementWithError(placementName, error, _interstitialDidCloseCallback);
-}
-
-- (void)heliumInterstitialAdWithPlacementName:(NSString *)placementName didClickWithError:(ChartboostMediationError *)error
-{
-    serializePlacementWithError(placementName, error, _interstitialDidClickCallback);
-}
-
-- (void)heliumInterstitialAdDidRecordImpressionWithPlacementName: (NSString*)placementName
-{
-    serializePlacementWithError(placementName, nil, _interstitialDidRecordImpressionCallback);
-}
-
-#pragma mark CHBHeliumRewardedVideoAdDelegate
-- (void)heliumRewardedAdWithPlacementName:(NSString*)placementName requestIdentifier:(NSString *) requestIdentifier winningBidInfo:(NSDictionary<NSString *, id> *)winningBidInfo didLoadWithError:(ChartboostMediationError *)error
-{
-    serializePlacementLoadWithError(placementName, requestIdentifier, winningBidInfo, error, _rewardedDidLoadCallback);
-}
-
-- (void)heliumRewardedAdWithPlacementName:(NSString*)placementName didShowWithError:(ChartboostMediationError *)error
-{
-    serializePlacementWithError(placementName, error, _rewardedDidShowCallback);
-    if (!error)
-        UnityPause(true);
-}
-
-- (void)heliumRewardedAdWithPlacementName:(NSString*)placementName didCloseWithError:(ChartboostMediationError *)error
-{
-    UnityPause(false);
-    serializePlacementWithError(placementName, error, _rewardedDidCloseCallback);
-}
-
-- (void)heliumRewardedAdWithPlacementName:(NSString*)placementName didClickWithError:(ChartboostMediationError *)error
-{
-    serializePlacementWithError(placementName, error, _rewardedDidClickCallback);
-}
-
-- (void)heliumRewardedAdDidRecordImpressionWithPlacementName: (NSString*)placementName
-{
-    serializePlacementWithError(placementName, nil, _rewardedDidRecordImpressionCallback);
-}
-
-- (void)heliumRewardedAdDidGetRewardWithPlacementName:(NSString *)placementName
-{
-    serializePlacementWithError(placementName, nil, _rewardedDidReceiveRewardCallback);
-}
-
-#pragma mark CHBHeliumBannerAdDelegate
-- (void)heliumBannerAdWithPlacementName:(NSString*)placementName requestIdentifier:(NSString *) requestIdentifier winningBidInfo:(NSDictionary<NSString *, id> *)winningBidInfo didLoadWithError:(ChartboostMediationError *)error
-{
-    serializePlacementLoadWithError(placementName, requestIdentifier, winningBidInfo, error, _bannerDidLoadCallback);
-}
-
-- (void)heliumBannerAdWithPlacementName:(NSString *)placementName didClickWithError:(ChartboostMediationError *)error
-{
-    serializePlacementWithError(placementName, error, _bannerDidClickCallback);
-}
-
-- (void)heliumBannerAdDidRecordImpressionWithPlacementName: (NSString*)placementName
-{
-    serializePlacementWithError(placementName, nil, _bannerDidRecordImpressionCallback);
-}
-
 #pragma mark ChartboostMediationFullscreenAdDelegate
 - (void)didRecordImpressionWithAd:(id <ChartboostMediationFullscreenAd> _Nonnull)ad {
     [self serializeFullscreenEvent:ad fullscreenEvent:RecordImpression error:nil];
@@ -525,33 +402,6 @@ void _setLifeCycleCallbacks(ChartboostMediationEvent didStartCallback, Chartboos
     [[ChartboostMediationObserver sharedObserver] setDidReceivePartnerInitializationDataCallback:didReceivePartnerInitializationDataCallback];
 }
 
-void _setInterstitialCallbacks(ChartboostMediationPlacementLoadEvent didLoadCallback, ChartboostMediationPlacementEvent didShowCallback, ChartboostMediationPlacementEvent didCloseCallback, ChartboostMediationPlacementEvent didClickCallback, ChartboostMediationPlacementEvent didRecordImpression)
-{
-    [[ChartboostMediationObserver sharedObserver] setInterstitialDidLoadCallback:didLoadCallback];
-    [[ChartboostMediationObserver sharedObserver] setInterstitialDidShowCallback:didShowCallback];
-    [[ChartboostMediationObserver sharedObserver] setInterstitialDidCloseCallback:didCloseCallback];
-    [[ChartboostMediationObserver sharedObserver] setInterstitialDidClickCallback:didClickCallback];
-    [[ChartboostMediationObserver sharedObserver] setInterstitialDidRecordImpressionCallback:didRecordImpression];
-}
-
-void _setRewardedCallbacks(ChartboostMediationPlacementLoadEvent didLoadCallback, ChartboostMediationPlacementEvent didShowCallback, ChartboostMediationPlacementEvent didCloseCallback, ChartboostMediationPlacementEvent didClickCallback, ChartboostMediationPlacementEvent didRecordImpression, ChartboostMediationPlacementEvent didReceiveRewardCallback)
-{
-    [[ChartboostMediationObserver sharedObserver] setRewardedDidLoadCallback:didLoadCallback];
-    [[ChartboostMediationObserver sharedObserver] setRewardedDidShowCallback:didShowCallback];
-    [[ChartboostMediationObserver sharedObserver] setRewardedDidCloseCallback:didCloseCallback];
-    [[ChartboostMediationObserver sharedObserver] setRewardedDidClickCallback:didClickCallback];
-    [[ChartboostMediationObserver sharedObserver] setRewardedDidRecordImpressionCallback:didRecordImpression];
-    [[ChartboostMediationObserver sharedObserver] setRewardedDidReceiveRewardCallback:didReceiveRewardCallback];
-}
-
-void _setBannerCallbacks(ChartboostMediationPlacementLoadEvent didLoadCallback, ChartboostMediationPlacementEvent didRecordImpression, ChartboostMediationPlacementEvent didClickCallback)
-{
-
-    [[ChartboostMediationObserver sharedObserver] setBannerDidLoadCallback:didLoadCallback];
-    [[ChartboostMediationObserver sharedObserver] setBannerDidRecordImpressionCallback:didRecordImpression];
-    [[ChartboostMediationObserver sharedObserver] setBannerDidClickCallback:didClickCallback];
-}
-
 void _setFullscreenCallbacks(ChartboostMediationFullscreenAdEvent fullscreenAdEvents){
     [[ChartboostMediationObserver sharedObserver] setFullscreenAdEvents:fullscreenAdEvents];
 }
@@ -565,7 +415,7 @@ void _setFullscreenAdQueueCallbacks(ChartboostMediationFullscreenAdQueueUpdateEv
     [[ChartboostMediationObserver sharedObserver] setFullscreenAdQueueRemoveExpiredAdEvent:removeExpiredAdEvent];
 }
 
-void _chartboostMediationInit(const char *appId, const char *appSignature, const char *unityVersion, const char** initializationOptions, int initializationOptionsSize)
+void _chartboostMediationInit(const char *appId, const char *unityVersion, const char** initializationOptions, int initializationOptionsSize)
 {
     HeliumInitializationOptions* heliumInitializationOptions = nil;
 
@@ -579,7 +429,7 @@ void _chartboostMediationInit(const char *appId, const char *appSignature, const
         heliumInitializationOptions = [[HeliumInitializationOptions alloc] initWithSkippedPartnerIdentifiers:initializationPartners];
     }
 
-    [[Helium sharedHelium] startWithAppId:toNSStringOrEmpty(appId) andAppSignature:toNSStringOrEmpty(appSignature) options:heliumInitializationOptions delegate:[ChartboostMediationObserver sharedObserver]];
+    [[Helium sharedHelium] startWithAppId:toNSStringOrEmpty(appId) options:heliumInitializationOptions delegate:[ChartboostMediationObserver sharedObserver]];
 }
 
 void _chartboostMediationSetSubjectToCoppa(BOOL isSubject)
@@ -672,116 +522,6 @@ const char * _chartboostMediationAdaptersInfo()
     return toJSON(jsonArray);
 }
 
-void * _chartboostMediationGetInterstitialAd(const char *placementName)
-{
-    id<HeliumInterstitialAd> ad = [[Helium sharedHelium] interstitialAdProviderWithDelegate: [ChartboostMediationObserver sharedObserver] andPlacementName: toNSStringOrEmpty(placementName)];
-    if (ad == NULL)
-        return NULL;
-
-    [[ChartboostMediationObserver sharedObserver] storeAd:ad placementName:placementName multiPlacementSupport:false];
-    return (__bridge void*)ad;
-}
-
-BOOL _chartboostMediationInterstitialSetKeyword(const void *uniqueId, const char *keyword, const char *value)
-{
-    id<HeliumInterstitialAd> ad = (__bridge id<HeliumInterstitialAd>)uniqueId;
-    if (ad.keywords == nil)
-        ad.keywords = [[HeliumKeywords alloc] init];
-    return [ad.keywords setKeyword:toNSStringOrEmpty(keyword) value:toNSStringOrEmpty(value)];
-}
-
-const char * _chartboostMediationInterstitialRemoveKeyword(const void *uniqueId, const char *keyword)
-{
-    id<HeliumInterstitialAd> ad = (__bridge id<HeliumInterstitialAd>)uniqueId;
-    return toCStringOrNull([ad.keywords removeKeyword:toNSStringOrEmpty(keyword)]);
-}
-
-void _chartboostMediationInterstitialAdLoad(const void * uniqueId)
-{
-    toMain(^{
-        id<HeliumInterstitialAd> ad = (__bridge id<HeliumInterstitialAd>)uniqueId;
-        [ad loadAd];
-    });
-}
-
-void _chartboostMediationInterstitialClearLoaded(const void * uniqueId)
-{
-    id<HeliumInterstitialAd> ad = (__bridge id<HeliumInterstitialAd>)uniqueId;
-    [ad clearLoadedAd];
-}
-
-void _chartboostMediationInterstitialAdShow(const void * uniqueId)
-{
-    toMain(^{
-        id<HeliumInterstitialAd> ad = (__bridge id<HeliumInterstitialAd>)uniqueId;
-        [ad showAdWithViewController: UnityGetGLViewController()];
-    });
-}
-
-BOOL _chartboostMediationInterstitialAdReadyToShow(const void * uniqueId)
-{
-    id<HeliumInterstitialAd> ad = (__bridge id<HeliumInterstitialAd>)uniqueId;
-    return [ad readyToShow];
-}
-
-void * _chartboostMediationGetRewardedAd(const char *placementName)
-{
-    id<HeliumRewardedAd> ad = [[Helium sharedHelium] rewardedAdProviderWithDelegate: [ChartboostMediationObserver sharedObserver] andPlacementName: toNSStringOrEmpty(placementName)];
-    if (ad == NULL)
-        return NULL;
-
-    [[ChartboostMediationObserver sharedObserver] storeAd:ad placementName:placementName multiPlacementSupport:false];
-    return (__bridge void*)ad;
-}
-
-BOOL _chartboostMediationRewardedSetKeyword(const void *uniqueId, const char *keyword, const char *value)
-{
-    id<HeliumRewardedAd> ad = (__bridge id<HeliumRewardedAd>)uniqueId;
-    if (ad.keywords == nil)
-        ad.keywords = [[HeliumKeywords alloc] init];
-    return [ad.keywords setKeyword:toNSStringOrEmpty(keyword) value:toNSStringOrEmpty(value)];
-}
-
-const char * _chartboostMediationRewardedRemoveKeyword(const void *uniqueId, const char *keyword)
-{
-    id<HeliumRewardedAd> ad = (__bridge id<HeliumRewardedAd>)uniqueId;
-    return toCStringOrNull([ad.keywords removeKeyword:toNSStringOrEmpty(keyword)]);
-}
-
-void _chartboostMediationRewardedAdLoad(const void * uniqueId)
-{
-    toMain(^{
-        id<HeliumRewardedAd> ad = (__bridge id<HeliumRewardedAd>)uniqueId;
-        [ad loadAd];
-    });
-}
-
-void _chartboostMediationRewardedClearLoaded(const void * uniqueId)
-{
-    id<HeliumRewardedAd> ad = (__bridge id<HeliumRewardedAd>)uniqueId;
-    [ad clearLoadedAd];
-}
-
-void _chartboostMediationRewardedAdShow(const void * uniqueId)
-{
-    toMain(^{
-        id<HeliumRewardedAd> ad = (__bridge id<HeliumRewardedAd>)uniqueId;
-        [ad showAdWithViewController: UnityGetGLViewController()];
-    });
-}
-
-BOOL _chartboostMediationRewardedAdReadyToShow(const void * uniqueId)
-{
-    id<HeliumRewardedAd> ad = (__bridge id<HeliumRewardedAd>)uniqueId;
-    return [ad readyToShow];
-}
-
-void _chartboostMediationRewardedAdSetCustomData(const void * uniqueId, const char * customData)
-{
-    id<HeliumRewardedAd> ad = (__bridge id<HeliumRewardedAd>)uniqueId;
-    ad.customData = toNSStringOrNull(customData);
-}
-
 void _chartboostMediationLoadFullscreenAd(const char *placementName, const char *keywords, int hashCode, ChartboostMediationFullscreenAdLoadResultEvent callback)
 {
     NSDictionary *formattedKeywords = objFromJsonString<NSDictionary *>(keywords);
@@ -867,155 +607,6 @@ const char * _chartboostMediationFullscreenAdRequest(const void *uniqueId)
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:placemnentValue,placementKey,keywordsValue,keywordsKey, nil];
     return toJSON(dict);
 }
-
-__deprecated
-void * _chartboostMediationGetBannerAd(const char *placementName, long size)
-{
-    CHBHBannerSize cbSize;
-    switch (size) {
-        case 2:
-            cbSize = CHBHBannerSize_Leaderboard;
-            break;
-        case 1:
-            cbSize = CHBHBannerSize_Medium;
-            break;
-
-        default:
-            cbSize = CHBHBannerSize_Standard;
-            break;
-    }
-
-    HeliumBannerView *ad = [[Helium sharedHelium] bannerProviderWithDelegate:[ChartboostMediationObserver sharedObserver] andPlacementName:toNSStringOrEmpty(placementName) andSize:cbSize];
-
-    if (ad == NULL)
-        return NULL;
-
-    [[ChartboostMediationObserver sharedObserver] storeAd:ad placementName:placementName multiPlacementSupport:true];
-    return (__bridge void*)ad;
-}
-
-__deprecated
-BOOL _chartboostMediationBannerSetKeyword(const void *uniqueId, const char *keyword, const char *value)
-{
-    id<HeliumBannerAd> ad = (__bridge id<HeliumBannerAd>)uniqueId;
-    toMain(^{
-        if (ad.keywords == nil)
-            ad.keywords = [[HeliumKeywords alloc] init];
-    });
-    return [ad.keywords setKeyword:toNSStringOrEmpty(keyword) value:toNSStringOrEmpty(value)];
-}
-
-__deprecated
-const char * _chartboostMediationBannerRemoveKeyword(const void *uniqueId, const char *keyword)
-{
-    id<HeliumBannerAd> ad = (__bridge id<HeliumBannerAd>)uniqueId;
-    return toCStringOrNull([ad.keywords removeKeyword:toNSStringOrEmpty(keyword)]);
-}
-
-__deprecated
-void _chartboostMediationBannerAdLoad(const void * uniqueId, long screenLocation)
-{
-    toMain(^{
-        //     TopLeft = 0,
-        //     TopCenter = 1,
-        //     TopRight = 2,
-        //     Center = 3,
-        //     BottomLeft = 4,
-        //     BottomCenter = 5,
-        //     BottomRight = 6
-        HeliumBannerView* bannerView = (__bridge HeliumBannerView*)uniqueId;
-        //TODO handle the null case
-        UIViewController *unityVC = GetAppController().rootViewController;
-        UILayoutGuide *safeGuide;
-        if (@available(iOS 11.0, *))
-            safeGuide = unityVC.view.safeAreaLayoutGuide;
-        else
-            safeGuide = unityVC.view.layoutMarginsGuide;
-        bannerView.translatesAutoresizingMaskIntoConstraints=NO;
-        [bannerView removeFromSuperview];
-        [unityVC.view  addSubview:bannerView];
-        NSLayoutConstraint *xConstraint;
-
-        switch (screenLocation) // X Constraints
-        {
-            case 1: // Top Center
-            case 3: // Center
-            case 5: // Bottom Center
-                xConstraint = [bannerView.centerXAnchor constraintEqualToAnchor:safeGuide.centerXAnchor];
-                break;
-            case 2: // Top Right
-            case 6: // Bottom Right
-                xConstraint = [bannerView.trailingAnchor constraintEqualToAnchor:safeGuide.trailingAnchor];
-                break;
-            default:
-                xConstraint = [bannerView.leadingAnchor constraintEqualToAnchor:safeGuide.leadingAnchor];
-        }
-
-        NSLayoutConstraint *yConstraint;
-        switch (screenLocation) // Y Constraints
-        {
-            case 0: // Top Left:
-            case 1: // Top Center
-            case 2: // Top
-                yConstraint = [bannerView.topAnchor constraintEqualToAnchor:safeGuide.topAnchor];
-                break;;
-            case 4: // Bottom Left
-            case 5: // Bottom Center
-            case 6: // Bottom Right
-                yConstraint = [bannerView.bottomAnchor constraintEqualToAnchor:safeGuide.bottomAnchor];
-                break;
-            default:
-                yConstraint = [bannerView.centerYAnchor constraintEqualToAnchor:safeGuide.centerYAnchor];
-        }
-
-        [NSLayoutConstraint activateConstraints:@[
-            [bannerView.widthAnchor constraintEqualToConstant:bannerView.frame.size.width],
-            [bannerView.heightAnchor constraintEqualToConstant:bannerView.frame.size.height],
-            xConstraint,
-            yConstraint
-        ]];
-
-        id<HeliumBannerAd> ad = (__bridge id<HeliumBannerAd>)uniqueId;
-        [ad loadAdWithViewController:unityVC];
-    });
-}
-
-__deprecated
-void _chartboostMediationBannerClearLoaded(const void * uniqueId)
-{
-    toMain(^(){
-        id<HeliumBannerAd> ad = (__bridge id<HeliumBannerAd>)uniqueId;
-        [ad clearAd];
-    });
-}
-
-__deprecated
-void _chartboostMediationBannerRemove(const void * uniqueId)
-{
-    toMain(^(){
-        HeliumBannerView* bannerView = (__bridge HeliumBannerView*)uniqueId;
-        [bannerView removeFromSuperview];
-        [[ChartboostMediationObserver sharedObserver] releaseAd: [NSNumber numberWithLong:(long)uniqueId] placementName:nil multiPlacementSupport:true];
-    });
-}
-
-__deprecated
-void _chartboostMediationBannerSetVisibility(const void * uniqueId, BOOL isVisible)
-{
-    toMain(^{
-        HeliumBannerView* bannerView = (__bridge HeliumBannerView*)uniqueId;
-        [bannerView setHidden:!isVisible];
-    });
-}
-
-__deprecated
-void _chartboostMediationFreeAdObject(const void * uniqueId, const char * placementName, bool multiPlacementSupport)
-{
-    toMain(^(){
-        [[ChartboostMediationObserver sharedObserver] releaseAd: [NSNumber numberWithLong:(long)uniqueId] placementName:toNSStringOrEmpty(placementName) multiPlacementSupport:multiPlacementSupport];
-    });
-}
-
 
 const void* _chartboostMediationLoadBannerView(ChartboostMediationBannerAdDragEvent dragListener){
 
