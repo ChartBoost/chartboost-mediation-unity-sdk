@@ -17,18 +17,20 @@
       "dependencies": {}
     },
     "com.chartboost.unity.threading": {
-      "version": "file:../../com.chartboost.unity.threading",
+      "version": "1.0.0",
       "depth": 0,
-      "source": "local",
+      "source": "registry",
       "dependencies": {
         "com.chartboost.unity.utilities": "1.0.0"
-      }
+      },
+      "url": "https://registry.npmjs.org"
     },
     "com.chartboost.unity.utilities": {
-      "version": "file:../../com.chartboost.unity.utilities",
+      "version": "1.0.0",
       "depth": 0,
-      "source": "local",
-      "dependencies": {}
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://registry.npmjs.org"
     },
     "com.google.external-dependency-manager": {
       "version": "file:../../GooglePackages/com.google.external-dependency-manager-1.2.177.tgz",

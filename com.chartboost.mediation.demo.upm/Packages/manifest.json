@@ -2,8 +2,8 @@
   "dependencies": {
     "com.chartboost.mediation": "file:../../com.chartboost.mediation",
     "com.chartboost.mediation.demo": "file:../../com.chartboost.mediation.demo",
-    "com.chartboost.unity.utilities": "file:../../com.chartboost.unity.utilities",
-    "com.chartboost.unity.threading": "file:../../com.chartboost.unity.threading",
+    "com.chartboost.unity.utilities": "1.0.0",
+    "com.chartboost.unity.threading": "1.0.0",
     "com.google.external-dependency-manager": "file:../../GooglePackages/com.google.external-dependency-manager-1.2.177.tgz",
     "com.unity.ide.rider": "3.0.27",
     "com.unity.ide.visualstudio": "2.0.22",
@@ -44,6 +44,15 @@
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
   },
+  "scopedRegistries": [
+    {
+      "name": "Chartboost",
+      "url": "https://registry.npmjs.org",
+      "scopes": [
+        "com.chartboost"
+      ]
+    }
+  ],
   "testables": [
     "com.chartboost.mediation",
     "com.chartboost.unity.threading",
