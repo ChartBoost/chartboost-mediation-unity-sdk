@@ -1,0 +1,22 @@
+{
+    "name": "Chartboost.Mediation.Android",
+    "rootNamespace": "Chartboost.Mediation.Android",
+    "references": [
+        "Chartboost.Mediation",
+        "Chartboost.Utilities.Android",
+        "Chartboost.Threading",
+        "Chartboost.Logging"
+    ],
+    "includePlatforms": [
+        "Android",
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

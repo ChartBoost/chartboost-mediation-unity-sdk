@@ -1,11 +1,30 @@
 # Changelog
 All notable changes to this project will be documented in this file using the standards as defined at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0).
 
+### Version 5.0.0 *(2024-08-08)*
+Improvements:
+- Completed rebranding all APIs to Chartboost Mediation.
+- Initialization of Chartboost Mediation now utilizes Chartboost Core SDK. Please review the [Initialize Mediation](https://docs.chartboost.com/en/mediation/integrate/unity/initialize-mediation/) and [Core SDK](https://docs.chartboost.com/en/mediation/integrate/core/unity/) documentation.
+- Privacy and consent signals are now set through Chartboost Core SDK.
+- Ad Adapter are now distributed in separate independent packages through npm & NuGet.
+- `ChartboostMediationBannerView` is now named `IBannerAd`.
+- `ChartboostMediationUnityBannerAd` is now named `UnityBannerAd`.
+- `ChartboostMediationFullscreenAd` is now named `IFullscreenAd`.
+
+Removed:
+- `ChartboostMediationInterstitialAd`.
+- `ChartboostMediationRewardedAd`.
+- Explicit `ChartboostMediation.DidStart` delegate.
+- Explicit `ChartboostMediation.UnexpectedErrorOccurred` delegate.
+- `AdaptersWindow` type and distribution method of adapters.
+
+Review our [Migration from Mediation 4.x to 5.x](https://docs.chartboost.com/en/mediation/integrate/unity/migration-from-4x-to-5x/) documentation for more information.
+
 ### Version 4.9.0 *(2024-03-21)*
 The following new dependencies are added :
 
-`"com.chartboost.unity.threading": "1.0.0"`<br>
-`"com.chartboost.unity.utilities": "1.0.0"`
+`"com.chartboost.unity.threading": "1.0.1"`<br>
+`"com.chartboost.unity.utilities": "1.0.1"`
 
 Improvements:
 - Added support for Ad Queueing. Ad Queueing is a new feature that builds upon the existing Fullscreen ad experience that allows Publishers to queue up multiple Fullscreen ads and show them in succession.

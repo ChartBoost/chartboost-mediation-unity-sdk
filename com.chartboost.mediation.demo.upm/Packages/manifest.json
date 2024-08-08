@@ -1,11 +1,14 @@
 {
   "dependencies": {
+    "com.chartboost.core": "file:../../com.chartboost.core",
     "com.chartboost.mediation": "file:../../com.chartboost.mediation",
     "com.chartboost.mediation.demo": "file:../../com.chartboost.mediation.demo",
-    "com.chartboost.unity.utilities": "1.0.0",
-    "com.chartboost.unity.threading": "1.0.0",
-    "com.google.external-dependency-manager": "file:../../GooglePackages/com.google.external-dependency-manager-1.2.177.tgz",
-    "com.unity.ide.rider": "3.0.27",
+    "com.chartboost.unity.logging": "file:../../com.chartboost.unity.logging",
+    "com.chartboost.unity.threading": "file:../../com.chartboost.unity.threading",
+    "com.chartboost.unity.utilities": "file:../../com.chartboost.unity.utilities",
+    "com.chartboost.mediation.unity.adapter.chartboost": "file:../../com.chartboost.mediation.adapters/com.chartboost.mediation.unity.adapter.chartboost",
+    "com.google.external-dependency-manager": "1.2.181",
+    "com.unity.ide.rider": "3.0.28",
     "com.unity.ide.visualstudio": "2.0.22",
     "com.unity.ide.vscode": "1.2.5",
     "com.unity.nuget.newtonsoft-json": "3.2.1",
@@ -46,15 +49,24 @@
   },
   "scopedRegistries": [
     {
-      "name": "Chartboost",
+      "name": "NpmJS",
       "url": "https://registry.npmjs.org",
       "scopes": [
         "com.chartboost"
       ]
+    },
+    {
+      "name": "OpenUPM",
+      "url": "https://package.openupm.com",
+      "scopes": [
+        "com.google"
+      ]
     }
   ],
   "testables": [
+    "com.chartboost.core",
     "com.chartboost.mediation",
+    "com.chartboost.mediation.unity.adapter.chartboost",
     "com.chartboost.unity.threading",
     "com.chartboost.unity.utilities"
   ]

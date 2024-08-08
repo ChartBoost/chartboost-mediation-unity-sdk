@@ -37,7 +37,7 @@ namespace Chartboost.Mediation.Demo.Pages
         {
             Instance = this;
             _currentPageData = pages.Find(x => x.type == PageType.Initialization);
-            var instance = GameObject.Instantiate(_currentPageData?.prefab, root);
+            var instance = Instantiate(_currentPageData?.prefab, root);
             PageInstances.Add(PageType.Initialization, instance);
         }
 
@@ -60,7 +60,7 @@ namespace Chartboost.Mediation.Demo.Pages
                 return nextPageInstance;
             }
             
-            var instance = GameObject.Instantiate(_currentPageData?.prefab, Instance.root);
+            var instance = Instantiate(_currentPageData?.prefab, Instance.root);
             PageInstances.Add(type, instance);
             instance.SetActive(true);
             return instance;

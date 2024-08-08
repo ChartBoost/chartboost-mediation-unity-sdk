@@ -1,6 +1,5 @@
-using Chartboost.AdFormats.Banner;
-using Chartboost.AdFormats.Banner.Unity;
-using Chartboost.Banner;
+using Chartboost.Mediation.Ad.Banner;
+using Chartboost.Mediation.Ad.Banner.Unity;
 using Chartboost.Mediation.Demo.Loading;
 using Chartboost.Mediation.Demo.Pages;
 using UnityEngine;
@@ -9,18 +8,18 @@ namespace Chartboost.Mediation.Demo.AdControllers
 {
     public class UnityBannerAdController : SimpleAdController
     {
-        private ChartboostMediationUnityBannerAd _unityBanner;
+        private UnityBannerAd _unityBanner;
 
         public UnityBannerAdController(string placementIdentifier) : base(placementIdentifier) { }
         
         public override async void Load()
         {
             if (_unityBanner != null)
-                Invalidate();
+                Dispose();
 
-            _unityBanner = ChartboostMediation.GetUnityBannerAd(PlacementIdentifier, PageController.Instance.Root, ChartboostMediationBannerSize.Standard, ChartboostMediationBannerAdScreenLocation.BottomCenter);
+            _unityBanner = ChartboostMediation.GetUnityBannerAd(PlacementIdentifier, PageController.Instance.Root);
             _unityBanner.DidRecordImpression += OnDidRecordImpressionBanner;
-            _unityBanner.DidLoad += OnDidLoadBanner;
+            _unityBanner.WillAppear += OnWillAppearBanner;
             _unityBanner.DidClick += OnDidClickBanner;
             _unityBanner.DidDrag += OnDidDragBanner;
             _unityBanner.Keywords = DefaultKeywords;
@@ -31,7 +30,7 @@ namespace Chartboost.Mediation.Demo.AdControllers
             
             if (adLoadResult.Error.HasValue)
             {
-                Debug.LogError($"Ad Failed to Load with Error: {adLoadResult.Error.Value.Message}");
+                Debug.LogError($"Ad Failed to Load with Code: {adLoadResult.Error.Value.Code} Error: {adLoadResult.Error.Value.Message}");
                 return;
             }
 
@@ -43,29 +42,29 @@ namespace Chartboost.Mediation.Demo.AdControllers
             // Do nothing, banners show automatically after load, this button will be hidden for banners.
         }
 
-        public override void Invalidate()
+        public override void Dispose()
         {
-            if (_unityBanner != null && _unityBanner.gameObject != null)
+            if (_unityBanner != null)
                 Object.Destroy(_unityBanner.gameObject);
         }
 
         #region UnityBanner Callbacks
-        private void OnDidRecordImpressionBanner(ChartboostMediationUnityBannerAd unitybannerad)
+        private void OnDidRecordImpressionBanner(UnityBannerAd unityBannerAd)
         {
             Debug.Log("Unity Banner RecordImpression");
         }
 
-        private void OnDidLoadBanner(ChartboostMediationUnityBannerAd unitybannerad)
+        private void OnWillAppearBanner(UnityBannerAd unityBannerAd)
         {
             Debug.Log("Unity Banner Loaded");
         }
 
-        private void OnDidClickBanner(ChartboostMediationUnityBannerAd unitybannerad)
+        private void OnDidClickBanner(UnityBannerAd unityBannerAd)
         {
             Debug.Log("Unity Banner Clicked");
         }
 
-        private void OnDidDragBanner(ChartboostMediationUnityBannerAd unitybannerad, float x, float y)
+        private void OnDidDragBanner(UnityBannerAd unityBannerAd, float x, float y)
         {
             Debug.Log("Unity Banner Drag");
         }

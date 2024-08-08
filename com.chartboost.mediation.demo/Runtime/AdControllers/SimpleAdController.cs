@@ -24,6 +24,6 @@ namespace Chartboost.Mediation.Demo.AdControllers
 
         public abstract void Show();
 
-        public abstract void Invalidate();
+        public abstract void Dispose();
     }
 }

@@ -1,44 +1,13 @@
-// Android Resolver Repos Start
-([rootProject] + (rootProject.subprojects as List)).each { project ->
-    project.repositories {
-        def unityProjectPath = $/file:///**DIR_UNITYPROJECT**/$.replace("\\", "/")
-        maven {
-            url "https://maven.google.com"
-        }
-        maven {
-            url "https://cboost.jfrog.io/artifactory/chartboost-ads/" // Assets/com.chartboost.mediation/Editor/Adapters/ChartboostDependencies.xml:13
-        }
-        maven {
-            url "https://cboost.jfrog.io/artifactory/chartboost-mediation/" // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:7
-        }
-        mavenLocal()
-        mavenCentral()
-    }
-}
-// Android Resolver Repos End
 apply plugin: 'com.android.library'
 **APPLY_PLUGINS**
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 // Android Resolver Dependencies Start
-    implementation 'androidx.lifecycle:lifecycle-common:2.5.1' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:19
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:20
-    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:11
-    implementation 'com.chartboost:chartboost-mediation-adapter-chartboost:4.9.6.1+@aar' // Assets/com.chartboost.mediation/Editor/Adapters/ChartboostDependencies.xml:5
-    implementation 'com.chartboost:chartboost-mediation-sdk:4.9+' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:10
-    implementation 'com.chartboost:chartboost-sdk:9.6.1' // Assets/com.chartboost.mediation/Editor/Adapters/ChartboostDependencies.xml:8
-    implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:24
-    implementation 'com.google.android.gms:play-services-appset:16.0.2' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:25
-    implementation 'com.google.android.gms:play-services-base:18.1.0' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:23
-    implementation 'com.google.android.gms:play-services-basement:18.1.0' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:26
-    implementation 'com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:12
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:16
-    implementation 'com.squareup.okhttp3:okhttp:4.10.0' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:15
-    implementation 'com.squareup.retrofit2:converter-scalars:2.9.0' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:17
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:18
-    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.7.20' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:14
-    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1' // Assets/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:13
+    implementation 'com.chartboost:chartboost-core-sdk:1.0.+' // Packages/com.chartboost.core/Editor/ChartboostCoreDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-adapter-chartboost:5.9.7.+' // Packages/com.chartboost.mediation.unity.adapter.chartboost/Editor/ChartboostAdapterDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-sdk:5.0+' // Packages/com.chartboost.mediation/Editor/ChartboostMediationDependencies.xml:10
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.8.10' // Packages/com.chartboost.core/Editor/ChartboostCoreDependencies.xml:6
 // Android Resolver Dependencies End
 **DEPS**}
 
@@ -54,12 +23,14 @@ android {
 }
 // Android Resolver Exclusions End
 android {
+    ndkPath "**NDKPATH**"
+
     compileSdkVersion **APIVERSION**
     buildToolsVersion '**BUILDTOOLS**'
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     defaultConfig {
@@ -79,9 +50,9 @@ android {
 
     aaptOptions {
         noCompress = **BUILTIN_NOCOMPRESS** + unityStreamingAssets.tokenize(', ')
-        ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~"
+        ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~"
     }**PACKAGING_OPTIONS**
-}**REPOSITORIES**
+}
 **IL_CPP_BUILD_SETUP**
 **SOURCE_BUILD_SETUP**
 **EXTERNAL_SOURCES**

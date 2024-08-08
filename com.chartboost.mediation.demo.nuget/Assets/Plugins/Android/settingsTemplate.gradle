@@ -1,0 +1,36 @@
+pluginManagement {
+    repositories {
+        **ARTIFACTORYREPOSITORY**
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+
+include ':launcher', ':unityLibrary'
+**INCLUDES**
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+    repositories {
+        **ARTIFACTORYREPOSITORY**
+        google()
+        mavenCentral()
+// Android Resolver Repos Start
+        def unityProjectPath = $/file:///**DIR_UNITYPROJECT**/$.replace("\\", "/")
+        maven {
+            url "https://cboost.jfrog.io/artifactory/chartboost-core/" // Assets/Packages/Chartboost.CSharp.Core.Unity.1.0.0/Editor/ChartboostCoreDependencies.xml:9
+        }
+        maven {
+            url "https://cboost.jfrog.io/artifactory/chartboost-mediation/" // Assets/Packages/Chartboost.CSharp.Mediation.Unity.5.0.0/Editor/ChartboostMediationDependencies.xml:7
+        }
+        maven {
+            url "https://cboost.jfrog.io/artifactory/chartboost-ads/" // Assets/Packages/Chartboost.CSharp.Mediation.Unity.Adapter.Chartboost.5.0.0/Editor/ChartboostAdapterDependencies.xml:9
+        }
+        mavenLocal()
+// Android Resolver Repos End
+        flatDir {
+            dirs "${project(':unityLibrary').projectDir}/libs"
+        }
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "name": "Chartboost.Mediation.Editor",
+    "rootNamespace": "Chartboost.Mediation.Editor",
+    "references": [
+        "Chartboost.Mediation",
+        "Chartboost.Logging"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [
+        "UNITY_EDITOR"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

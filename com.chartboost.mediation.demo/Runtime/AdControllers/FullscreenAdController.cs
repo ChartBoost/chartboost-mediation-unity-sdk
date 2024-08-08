@@ -1,22 +1,23 @@
-using Chartboost.AdFormats.Fullscreen;
+using Chartboost.Mediation.Ad.Fullscreen;
 using Chartboost.Mediation.Demo.Loading;
-using Chartboost.Requests;
+using Chartboost.Mediation.Error;
+using Chartboost.Mediation.Requests;
 using UnityEngine;
 
 namespace Chartboost.Mediation.Demo.AdControllers
 {
     public class FullscreenAdController : SimpleAdController
     {
-        protected IChartboostMediationFullscreenAd FullscreenPlacement;
+        protected IFullscreenAd FullscreenPlacement;
 
         public FullscreenAdController(string placementIdentifier) : base(placementIdentifier) { }
 
         public override async void Load()
         {
             if (FullscreenPlacement != null)
-                Invalidate();
+                Dispose();
 
-            var fullscreenAdRequest = new ChartboostMediationFullscreenAdLoadRequest(PlacementIdentifier, DefaultKeywords);
+            var fullscreenAdRequest = new FullscreenAdLoadRequest(PlacementIdentifier, DefaultKeywords);
 
             LoadingOverlay.Instance.ToggleLoadingOverlay(true);
             var adLoadResult = await ChartboostMediation.LoadFullscreenAd(fullscreenAdRequest);
@@ -55,35 +56,35 @@ namespace Chartboost.Mediation.Demo.AdControllers
             Debug.Log("Fullscreen Shown!");
         }
 
-        public override void Invalidate()
+        public override void Dispose()
         {
-            FullscreenPlacement?.Invalidate();
+            FullscreenPlacement?.Dispose();
             FullscreenPlacement = null;
         }
 
         #region Fullscreen Callbacks
 
-        protected void OnDidRecordImpression(IChartboostMediationFullscreenAd ad)
+        protected void OnDidRecordImpression(IFullscreenAd ad)
         {
             Debug.Log("Fullscreen RecordImpression!");
         }
 
-        protected void OnDidClick(IChartboostMediationFullscreenAd ad)
+        protected void OnDidClick(IFullscreenAd ad)
         {
             Debug.Log("Fullscreen Clicked!");
         }
 
-        protected void OnDidReward(IChartboostMediationFullscreenAd ad)
+        protected void OnDidReward(IFullscreenAd ad)
         {
             Debug.Log("Fullscreen Rewarded!");
         }
 
-        protected void OnDidExpire(IChartboostMediationFullscreenAd ad)
+        protected void OnDidExpire(IFullscreenAd ad)
         {
             Debug.Log("Fullscreen Expired!");
         }
 
-        protected void OnDidClose(IChartboostMediationFullscreenAd ad, ChartboostMediationError? error)
+        protected void OnDidClose(IFullscreenAd ad, ChartboostMediationError? error)
         {
             Debug.Log("Fullscreen Close!");
         }

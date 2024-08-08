@@ -1,22 +1,9 @@
 <dependencies>
   <packages>
-    <package>androidx.lifecycle:lifecycle-common:2.5.1</package>
-    <package>androidx.lifecycle:lifecycle-extensions:2.2.0</package>
-    <package>androidx.localbroadcastmanager:localbroadcastmanager:1.1.0</package>
-    <package>com.chartboost:chartboost-mediation-adapter-chartboost:4.9.6.1+@aar</package>
-    <package>com.chartboost:chartboost-mediation-sdk:4.9+</package>
-    <package>com.chartboost:chartboost-sdk:9.6.1</package>
-    <package>com.google.android.gms:play-services-ads-identifier:18.0.1</package>
-    <package>com.google.android.gms:play-services-appset:16.0.2</package>
-    <package>com.google.android.gms:play-services-base:18.1.0</package>
-    <package>com.google.android.gms:play-services-basement:18.1.0</package>
-    <package>com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0</package>
-    <package>com.squareup.okhttp3:logging-interceptor:4.10.0</package>
-    <package>com.squareup.okhttp3:okhttp:4.10.0</package>
-    <package>com.squareup.retrofit2:converter-scalars:2.9.0</package>
-    <package>com.squareup.retrofit2:retrofit:2.9.0</package>
-    <package>org.jetbrains.kotlin:kotlin-reflect:1.7.20</package>
-    <package>org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1</package>
+    <package>com.chartboost:chartboost-core-sdk:1.0.+</package>
+    <package>com.chartboost:chartboost-mediation-adapter-chartboost:5.9.7.+</package>
+    <package>com.chartboost:chartboost-mediation-sdk:5.0+</package>
+    <package>org.jetbrains.kotlin:kotlin-reflect:1.8.10</package>
   </packages>
   <files />
   <settings>

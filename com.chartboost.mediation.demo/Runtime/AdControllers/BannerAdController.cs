@@ -1,7 +1,6 @@
-using Chartboost.AdFormats.Banner;
-using Chartboost.Banner;
+using Chartboost.Mediation.Ad.Banner;
 using Chartboost.Mediation.Demo.Loading;
-using Chartboost.Requests;
+using Chartboost.Mediation.Requests;
 using UnityEngine;
 
 namespace Chartboost.Mediation.Demo.AdControllers
@@ -10,14 +9,14 @@ namespace Chartboost.Mediation.Demo.AdControllers
     {
         public BannerAdController(string placementIdentifier) : base(placementIdentifier) { }
 
-        private IChartboostMediationBannerView _banner;
+        private IBannerAd _banner;
 
         public override async void Load()
         {
             if (_banner != null)
-                Invalidate();
+                Dispose();
 
-            _banner = ChartboostMediation.GetBannerView();
+            _banner = ChartboostMediation.GetBannerAd();
 
             if (_banner == null)
             {
@@ -25,21 +24,25 @@ namespace Chartboost.Mediation.Demo.AdControllers
                 return;
             }
 
-            _banner.DidLoad += OnDidLoad;
+            _banner.WillAppear += OnWillAppear;
             _banner.DidRecordImpression += OnDidRecordImpression;
             _banner.DidClick += OnDidClick;
             _banner.DidDrag += OnDidDrag;
             _banner.Keywords = DefaultKeywords;
 
-            var adLoadRequest = new ChartboostMediationBannerAdLoadRequest(PlacementIdentifier, ChartboostMediationBannerSize.Standard);
+            // Bottom-center
+            _banner.Position = new Vector2(Screen.width / 2f, 0);
+            _banner.Pivot = new Vector2(0.5f, 0);
+
+            var adLoadRequest = new BannerAdLoadRequest(PlacementIdentifier, BannerSize.Standard);
             
             LoadingOverlay.Instance.ToggleLoadingOverlay(true);
-            var adLoadResult = await _banner.Load(adLoadRequest, ChartboostMediationBannerAdScreenLocation.BottomCenter);
+            var adLoadResult = await _banner.Load(adLoadRequest);
             LoadingOverlay.Instance.ToggleLoadingOverlay(false);
             
             if (adLoadResult.Error.HasValue)
             {
-                Debug.LogError($"Ad Failed to Load with Error: {adLoadResult.Error.Value.Message}");
+                Debug.LogError($"Ad Failed to Load with Code: {adLoadResult.Error.Value.Code} Error: {adLoadResult.Error.Value.Message}");
                 return;
             }
 
@@ -52,27 +55,27 @@ namespace Chartboost.Mediation.Demo.AdControllers
             // Do nothing, banners show automatically after load, this button will be hidden for banners.
         }
 
-        public override void Invalidate()
+        public override void Dispose()
         {
-            _banner?.Destroy();
+            _banner?.Dispose();
         }
 
-        private void OnDidLoad(IChartboostMediationBannerView bannerview)
+        private void OnWillAppear(IBannerAd bannerAd)
         {
             Debug.Log("Banner Reloaded!");
         }
 
-        private void OnDidRecordImpression(IChartboostMediationBannerView bannerview)
+        private void OnDidRecordImpression(IBannerAd bannerAd)
         {
             Debug.Log("Banner Record Impression!");
         }
 
-        private void OnDidClick(IChartboostMediationBannerView bannerview)
+        private void OnDidClick(IBannerAd bannerAd)
         {
             Debug.Log("Banner Clicked!");
         }
 
-        private void OnDidDrag(IChartboostMediationBannerView bannerview, float x, float y)
+        private void OnDidDrag(IBannerAd bannerAd, float x, float y)
         {
             Debug.Log("Banner Dragged!");
         }
