@@ -1,25 +1,27 @@
 {
   "dependencies": {
     "com.chartboost.core": {
-      "version": "file:../../com.chartboost.core",
+      "version": "1.0.0",
       "depth": 0,
-      "source": "local",
+      "source": "registry",
       "dependencies": {
         "com.chartboost.unity.threading": "1.0.1",
         "com.chartboost.unity.utilities": "1.0.1",
         "com.chartboost.unity.logging": "1.0.0"
-      }
+      },
+      "url": "https://registry.npmjs.org"
     },
     "com.chartboost.mediation": {
-      "version": "file:../../com.chartboost.mediation",
+      "version": "5.0.0",
       "depth": 0,
-      "source": "local",
+      "source": "registry",
       "dependencies": {
         "com.chartboost.unity.threading": "1.0.1",
         "com.chartboost.unity.utilities": "1.0.1",
         "com.chartboost.unity.logging": "1.0.0",
         "com.chartboost.core": "1.0.0"
-      }
+      },
+      "url": "https://registry.npmjs.org"
     },
     "com.chartboost.mediation.demo": {
       "version": "file:../../com.chartboost.mediation.demo",
@@ -28,39 +30,43 @@
       "dependencies": {}
     },
     "com.chartboost.mediation.unity.adapter.chartboost": {
-      "version": "file:../../com.chartboost.mediation.adapters/com.chartboost.mediation.unity.adapter.chartboost",
+      "version": "5.0.0",
       "depth": 0,
-      "source": "local",
+      "source": "registry",
       "dependencies": {
         "com.chartboost.mediation": "5.0.0",
         "com.chartboost.unity.threading": "1.0.1",
         "com.chartboost.unity.utilities": "1.0.1",
         "com.chartboost.unity.logging": "1.0.0"
-      }
+      },
+      "url": "https://registry.npmjs.org"
     },
     "com.chartboost.unity.logging": {
-      "version": "file:../../com.chartboost.unity.logging",
+      "version": "1.0.0",
       "depth": 0,
-      "source": "local",
-      "dependencies": {}
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://registry.npmjs.org"
     },
     "com.chartboost.unity.threading": {
-      "version": "file:../../com.chartboost.unity.threading",
+      "version": "1.0.1",
       "depth": 0,
-      "source": "local",
+      "source": "registry",
       "dependencies": {
         "com.chartboost.unity.utilities": "1.0.1",
         "com.chartboost.unity.logging": "1.0.0"
-      }
+      },
+      "url": "https://registry.npmjs.org"
     },
     "com.chartboost.unity.utilities": {
-      "version": "file:../../com.chartboost.unity.utilities",
+      "version": "1.0.1",
       "depth": 0,
-      "source": "local",
+      "source": "registry",
       "dependencies": {
         "com.unity.nuget.newtonsoft-json": "3.2.1",
         "com.chartboost.unity.logging": "1.0.0"
-      }
+      },
+      "url": "https://registry.npmjs.org"
     },
     "com.google.external-dependency-manager": {
       "version": "1.2.181",
