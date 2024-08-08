@@ -1,5 +1,8 @@
 using System.Collections;
+using Chartboost.Core;
+using Chartboost.Core.Initialization;
 using Chartboost.Mediation.Demo.Loading;
+using Chartboost.Mediation.Error;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +13,6 @@ namespace Chartboost.Mediation.Demo.Pages
         [SerializeField] private Text initializationStatusText;
         [SerializeField] private LoadingIcon loadingIconIndicator;
         
-        private const string DefaultUserIdentifier = "123456";
         private const string InitializationText = "Initializing the Chartboost Mediation Unity SDK...";
         private const string InitializationSuccessText = "Chartboost Mediation Unity SDK Initialization Completed!";
         private const string InitializationFailedText = "Chartboost Mediation Unity SDK Failed to Initialize with Error:";
@@ -20,31 +22,40 @@ namespace Chartboost.Mediation.Demo.Pages
         private void Awake()
         {
             Application.targetFrameRate = TargetFramerate;
-            ChartboostMediation.DidStart += OnDidStart;
+
+            ChartboostCore.ModuleInitializationCompleted += OnModuleInitializationResult;
             ChangeInitializationStatusText(InitializationText);
             loadingIconIndicator.ToggleLoadingIcon(true);
-            ChartboostMediation.StartWithOptions(ChartboostMediationSettings.AppId, ChartboostMediationSettings.AppSignature);
+
+            var appId = string.Empty;
+            #if UNITY_ANDROID
+            appId = DefaultEnvironment.AndroidAppId;
+            #elif UNITY_IOS
+            appId = DefaultEnvironment.IOSAppId;
+            #endif
+            
+           ChartboostCore.Initialize(new SDKConfiguration(appId, null));
         }
 
-        private void OnDidStart(string error)
+        private void OnModuleInitializationResult(ModuleInitializationResult result)
         {
+            if (result.ModuleId != ChartboostMediation.CoreModuleId)
+                return;
+
+            var error = result.Error;
             loadingIconIndicator.ToggleLoadingIcon(false);
-            ChartboostMediation.SetUserIdentifier(DefaultUserIdentifier);
             
             // If failed to initialize, report and return
-            if (error != null)
+            if (error.HasValue)
             {
-                ChangeInitializationStatusText($"{InitializationFailedText} {error}");
+                ChangeInitializationStatusText($"{InitializationFailedText} {error.Value.Message}");
                 #if UNITY_EDITOR
                 StartCoroutine(MoveToAdFormats());
                 #endif
                 return;
             }
 
-            ChartboostMediation.SetTestMode(true);
-            ChartboostMediation.SetSubjectToGDPR(false);
-            ChartboostMediation.SetSubjectToCoppa(false);
-            ChartboostMediation.SetUserHasGivenConsent(true);
+            ChartboostMediation.TestMode = true;
             ChangeInitializationStatusText(InitializationSuccessText);
             StartCoroutine(MoveToAdFormats());
         }

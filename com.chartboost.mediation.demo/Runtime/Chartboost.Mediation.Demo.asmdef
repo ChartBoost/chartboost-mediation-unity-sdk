@@ -2,7 +2,8 @@
     "name": "Chartboost.Mediation.Demo",
     "rootNamespace": "Chartboost.Mediation.Demo",
     "references": [
-        "GUID:1fa23cf67f36740369216fe6b6716e5a"
+        "Chartboost.Mediation",
+        "Chartboost.Core"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

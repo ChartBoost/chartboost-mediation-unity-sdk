@@ -1,84 +1,54 @@
 # Initialization
 
-## Adding the import header
+## Chartboost Mediation as a Chartboost Core Module
 
-Add the following import header to the top of any class file that will be using a Chartboost Mediation class.
+Starting Chartboost Mediation 5.X series, Chartboost Mediation has become a module for [Chartboost Core Unity SDK](https://github.com/ChartBoost/chartboost-core-unity-sdk). Initialization is automatically handled when `ChartboostCore.Initialize` is called. Please refer to [Chartboost Core README.md](https://github.com/ChartBoost/chartboost-core-unity-sdk) on details for how to manage the Chartboost Core initialization processs.
 
-```c#
-using Chartboost;
+## CoreModuleId
+
+The `ChartboostMediation.CoreModuleId` can be used to identify the Chartboost Mediation Core `Module` initialization status. To be notified of Chartboost's Mediation initialization status, you can utilize the `ChartboostCore.ModuleInitializationCompleted` as seen below:
+
+```csharp
+
+```csharp
+ChartboostCore.ModuleInitializationCompleted += result =>
+{
+    // If not Chartboost' Mediation, then ignore since we only care about CBMediation in this case.
+    if (result.ModuleId != ChartboostMediation.CoreModuleId)
+            return;
+
+    Debug.Log($"Received initialization result for: {result.ModuleId} start:{result.Start}, end:{result.End} with duration: {result.Duration}");
+
+    // Module failed to initialize module
+    if (result.Error.HasValue) 
+        Debug.LogError($"Module: {result.ModuleId} failed to initialize with error: {JsonTools.SerializeObject(result.Error.Value)}");
+    // Modue succeeded to initialize, add to list of modules to skip to pass on the next ChartboostCore.Initialize call.
+    else
+        modulesToSkip.Add(result.ModuleId);
+};
 ```
 
-## Initializing Chartboost Mediation Unity SDK
+## SetPreInitializationConfiguration
 
-In order to initialize the Chartboost Mediation Unity SDK, you will need your Chartboost Mediation App ID & App Signature. This can be obtained in your [Chartboost Mediation Dashboard](https://helium.chartboost.com).
-There are 2 ways you can go about providing your App IDs to the SDK.
+Sets the Chartboost Mediation PreInitialization configuration. Setting this after initialization does nothing and returns an exception. This can be utilized to skip partner initialization, see example below:
 
-### Chartboost Mediation Settings & Automatic Initialization
+```csharp
+// List of partners ids to skip initialization
+HashSet<string> skippablePartnerIds = new HashSet<string>
+{
+    ChartboostAdapter.PartnerIdentifier,
+    MetaAudienceNetworkAdapter.PartnerIdentifier
+};
 
-Visit [Chartboost Mediation Settings](../setup/settings.md) for more information on how to utilize the `ChartboostMediationSettings` `ScriptableObject` settings.
+// Create ChartboostMediationPreInitializationConfiguration object
+ChartboostMediationPreInitializationConfiguration preinitializatioOptions = new ChartboostMediationPreInitializationConfiguration(skippablePartnerIds);
 
-### Manual Initialization
+// Set ChartboostMediationPreInitializationConfiguration object
+ChartboostMediationError? ChartboostMediation.SetPreInitializationConfiguration(preinitializatioOptions);
 
-If you would like to have more control over when to initialize the Chartboost Mediation SDK, call the following on your Awake method.
-
-```c#
-// New Manual Initialization after 4.1.0
-ChartboostMediation.StartWithOptions(ChartboostMediationSettings.AppId, ChartboostMediationSettings.AppSignature);
-
-// Old Style of Manual Initialization Not Using ChartboostMediationSettings Scritable Object
-var appId = "";
-var appSignature = "";
-
-#if UNITY_ANDROID
-appId = "ANDROID_SAMPLE_APP_ID";
-appSignature = "ANDROID_SAMPLE_APP_SIGNATURE";
-#elif UNITY_IOS
-appId = "IOS_SAMPLE_APP_ID";
-appSignature = "IOS_SAMPLE_APP_SIGNATURE";
-#endif
-
-ChartboostMediation.StartWithOptions(appID, appSignature);
+// Report if failed to set ChartboostMediationPreInitializationConfiguration object
+if (error.HasValue) 
+    Debug.LogError($"Failed to set PreInitializationConfiguration: {JsonTools.SerializeObject(error.Value)}");
 ```
 
-This will start the Chartboost Mediation Unity SDK. For delegate information see section [Delegate Usage](delegate-usage.md)
-
-> **Warning** \
-> Failing to remove default values will result in an error.
-
-Once the Chartboost Mediation SDK has successfully started, you can start requesting ads.
-
-### Partner Kill Switch
-The Chartboost Mediation Unity SDK initialization method has been expanded to take in optional initialization parameters. One of those parameters is a set of network adapter identifiers to skip initialization for the session.
-
-
-```c#
-var options = new[]{"network_identifier", "network_identifier2"};
-ChartboostMediation.StartWithOptions(ChartboostMediationSettings.AppId, ChartboostMediationSettings.AppSignature, options);
-```
-
-For more information on how to corroborate partner initialization data visit [Delegate Usage](delegate-usage.md)
-
-#### Network Adapter Identifiers
-
-| Network                   | Identifier           |
-|---------------------------|----------------------|
-| AdColony                  | adcolony             |
-| AdMob                     | admob                |
-| Amazon Publisher Services | amazon_aps           |
-| AppLovin                  | applovin             |
-| Meta Audience Network     | facebook             |
-| Digital Turbine Exchange  | fyber                |
-| Google Bidding            | google_googlebidding |
-| InMobi                    | inmobi               |
-| IronSource                | ironsource           |
-| Mintegral                 | mintegral            |
-| Pangle                    | pangle               |
-| Tapjoy                    | tapjoy               |
-| Unity                     | unity                |
-| Vungle                    | vungle               |
-| Yahoo                     | yahoo                |
-| MobileFuse                | mobilefuse           |
-| Verve                     | verve                |
-| HyprMX                    | hyprmx               |
-| Chartboost                | chartboost           |
-| BidMachine                | bidmachine           |
+In the example above, both `Chartboost` and `MetaAudienceNetwork` adapters are added to the `skippablePartnerIds` object. This will cause initialization for this ad adapters to be skipped. 

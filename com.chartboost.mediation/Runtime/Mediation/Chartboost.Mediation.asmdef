@@ -1,0 +1,19 @@
+{
+    "name": "Chartboost.Mediation",
+    "rootNamespace": "Chartboost.Mediation",
+    "references": [
+        "Chartboost.Threading",
+        "Chartboost.Utilities",
+        "Chartboost.Logging",
+        "Chartboost.Core"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

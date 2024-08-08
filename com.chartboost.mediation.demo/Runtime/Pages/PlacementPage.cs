@@ -65,7 +65,7 @@ namespace Chartboost.Mediation.Demo.Pages
             PageController.MoveToPage(PageType.AdFormats);
             loadButton.onClick.RemoveListener(_currentController.Load);
             showButton.onClick.RemoveListener(_currentController.Show);
-            _currentController?.Invalidate();
+            _currentController?.Dispose();
         }
 
         public void Configure(Placement placement, string preparationTextContents, string loadCompletionTextContents, string queuePreparationTextContents = null)

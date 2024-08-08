@@ -2,9 +2,7 @@
 
 ## Is the minimum iOS version the same for all ad adapters?
 
-No, each adapter might have a different minimum iOS version. Most of them, support iOS 10 as their minimum version. The biggest exception being Amazon Publisher Services, which requires minimum iOS 12. 
-
-Depending on your adapters, you might need to modify this value accordingly. For information on how to set this values for Unity, visit the [Unity Documentation](https://docs.unity3d.com/2017.3/Documentation/Manual/class-PlayerSettingsiOS.html).
+No, each adapter might have a different minimum iOS version. Depending on your adapters, you might need to modify this value accordingly. For information on how to set this values for Unity, visit the [Unity Documentation](https://docs.unity3d.com/Manual/class-PlayerSettingsiOS.html).
 
 ## Encountering duplicate Android libraries
 

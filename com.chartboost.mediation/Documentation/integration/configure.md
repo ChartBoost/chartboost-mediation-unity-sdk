@@ -1,115 +1,102 @@
 # Configure Chartboost Mediation
 
-## Test Mode
-The Chartboost Mediation Unity SDK includes a Test Mode method that will allow you to test your partner integrations and get their test ads. To enable Test Mode, simply set the following method to true after starting the SDK. Remember to remove it or set the method to false before releasing your app.
+## TestMode
+A `bool` flag for setting test mode in Chartboost Mediation. 
 
 ```csharp
-ChartboostMediation.SetTestMode(true);
+ChartboostMediation.TestMode = true;
 // or
-ChartboostMediation.SetTestMode(false);
+ChartboostMediation.TestMode = false;
 ```
 
-## COPPA
-COPPA Settings can be configured utilizing the following method:
+> **Warning** \
+> Do not enable test mode in production builds.
+
+## LogLevel
+Sets the log level. Anything of that log level and lower will be emitted. Set this to `LogLevel.Disabled` for no logs.
 
 ```csharp
-  ChartboostMediation.SetSubjectToCoppa(true);
-  // or
-  ChartboostMediation.SetSubjectToCoppa(false);
+// No Logs
+ChartboostMediation.LogLevel = LogLevel.Disable;
+
+// All Logs
+ChartboostMediation.LogLevel = LogLevel.Verbose;
 ```
 
-* By sending `SetSubjectToCoppa (true)`, you indicate that you want your content treated as child-directed for purposes of COPPA. We will take steps to disable interest-based advertising for such ad requests.
+## DiscardOverSizedAds
+`bool` value indicating that ads returned from adapters that are larger than the requested size should be discarded. An ad is defined as too large if either the width or the height of the resulting ad is larger than the requested ad size unless the height of the requested ad size is 0, as is the case when using `BannerSizeType.Adaptive`, in this case, an error will be returned. This currently only applies to `IBannerAd`. Defaults to `false`.
 
-* By sending `SetSubjectToCoppa (false)`, you indicate that you don't want your content treated as child-directed for purposes of COPPA. You represent and warrant that your applications and services are not directed towards children and that you will not provide any information to Chartboost Mediation from a user under the age of 13.
-
-## GDPR
 ```csharp
-  ChartboostMediation.SetSubjectToGDPR(true);
-  // or
-  ChartboostMediation.SetSubjectToGDPR(false);
+ChartboostMediation.DiscardOverSizedAds = true;
+// or
+ChartboostMediation.DiscardOverSizedAds = false;
 ```
 
-* By sending `SetSubjectToGDPR (true)`, you indicate that GDPR is applied to this user from your application.
-
-* By sending `SetSubjectToGDPR (false)`, you indicate that GDPR is not applied to this user from your application.
+## AdaptersInfo
+An array of all initialized adapters, or an empty array if the SDK is not initialized.
 
 ```csharp
-  ChartboostMediation.SetUserHasGivenConsent(true);
-  // or
-  ChartboostMediation.SetUserHasGivenConsent(false);
+Debug.Log($"Printing Adapter Info: {JsonConvert.SerializeObject(ChartboostMediation.AdaptersInfo, Formatting.Indented)}");
 ```
 
-* By sending `SetUserHasGivenConsent (true)`, you indicate that this user from your application has given consent to share personal data for behavioral targeted advertising.
+## Callbacks
 
-* By sending `SetUserHasGivenConsent (false)`, you indicate that this user from your application has not given consent to use its personal data for behavioral targeted advertising, so only contextual advertising is allowed.
+### DidReceiveImpressionLevelRevenueData
+Event for receiving ILRD(Impression Level Revenue Data) events.
 
-## CCPA
 ```csharp
-  ChartboostMediation.SetCCPAConsent(true);
-  // or
-  ChartboostMediation.SetCCPAConsent(false);
+ChartboostMediation.DidReceiveImpressionLevelRevenueData += (placement, impressionData) => Debug.Log($"Received ILRD for: {placement}, ILRD: {JsonTools.SerializeObject(impressionData, Formatting.Indented)}");
 ```
 
-* By sending `SetCCPAConsent (true)`, you indicate that this user from your application has given consent to share personal data for behavioral targeted advertising under CCPA regulation.
-
-* By sending `SetCCPAConsent (false)`, you indicate that this user from your application has not given consent to allow sharing personal data for behavioral targeted advertising under CCPA regulation.
-
-> **Note** \
-> Chartboost Mediation will send CCPA information to the bidding network and set the CCPA information for the adapters.
-
-## Keywords
-As of Chartboost Mediation 2.9.0, the Chartboost Mediation SDKs introduces keywords: key-value pairs to enable real-time targeting on line items.
-
-### Set Keywords
-To set keywords, you will need to first create a Chartboost Mediation ad object, then use the setKeyword method to add key-value keywords pair.
+### DidReceivePartnerAdapterInitializationData
+Event for receiving partner initialization result events.
 
 ```csharp
-// Create an Ad object.
-ChartboostMediationInterstitialAd interstitialAd = ChartboostMediation.GetInterstitialAd(PLACEMENT_INTERSTITIAL);
+ChartboostMediation.DidReceivePartnerAdapterInitializationData += partnerInitializationData => Debug.Log($"Received Partner Initialization Data {JsonTools.SerializeObject(partnerInitializationData, Formatting.Indented)}");
+```
 
-ChartboostMediationRewardedAd rewardedAd = ChartboostMediation.GetRewardedAd(PLACEMENT_REWARDED);
+#### Banner Ads
 
-ChartboostMediationBannerAd bannerAd = ChartboostMediation.GetBannerAd(PLACEMENT_BANNER, BANNER_SIZE);
+##### IBannerAd
+For `IBannerAd` objects, keywords are set after obtaining the `IBannerAd` object when calling `ChartboostMediation.GetBannerAd`, seen in the example below:
 
-// Set a Keyword
-this.interstitialAd.SetKeyword("i12_keyword1", "i12_value1");
-this.rewardedAd.SetKeyword("rwd_keyword1", "rwd_value1");
-this.bannerAd.SetKeyword("bnr_keyword1", "bnr_value1");
+```csharp
+// Keywords to pass for banner ad
+var keywords = new Dictionary<string, string>
+{
+    { "key", "value" },
+    { "key_2", "value_2" }
+};
+
+// Get banner ad
+IBannerAd bannerAd = ChartboostMediation.GetBannerAd();
+
+// Set keywords
+bannerAd.Keywords = keywords;
+```
+
+##### UnityBannerAd
+
+```csharp
+// Keywords to pass for unity banner ad
+var keywords = new Dictionary<string, string>
+{
+    { "key", "value" },
+    { "key_2", "value_2" }
+};
+
+// Get UnityBannerAd
+UnityBannerAd unityBannerAd = ChartboostMediation.GetUnityBannerAd("PLACEMENT_NAME");
+
+// Set keywords
+unityBannerAd.Keywords = keywords;
 ```
 
 ### Remove Keywords
-To remove keywords, simply use the removeKeyword method and pass the key you would like to remove.
+To remove keywords, simply you will need to pass a new set without the key you want to remove, this is to facilitate the wrapping process between Unity and native platforms.
 
-```csharp
-// Remove Keyword.
-this.interstitialAd.RemoveKeyword("i12_keyword1");
-this.rewardedAd.RemoveKeyword("rwd_keyword1");
-this.bannerAd.RemoveKeyword("bnr_keyword1");
-```
 
 > **Warning** \
 > Keywords has restrictions for setting keys and values. The maximum characters allowed for keys is 64 characters. The maximum characters for values is 256 characters.
 
-### Setting User Identifier
-
-The user identifier property is found on the ChartboostMediation class. This property may be set anytime after SDK initialization.
-
-```csharp
-ChartboostMediation.SetUserIdentifier("user");
-```
-
-### Setting Fullscreen Placements Custom Data
-
-The custom data property is found on the `IChartboostMediationFullscreenAd` instance, and has a maximum character limit of `1000` characters. In the event that the limit is exceeded, the `customData` property will be set to null.
-
-Custom data may be set at any time before calling `Show()`
-
-```csharp
-var loadResult = await ChartboostMediation.LoadFullscreenAd(loadRequest);
-...
-// after checking proper load result
-_fullscreenAd = loadResult.Ad;
-var bytesToEncode = Encoding.UTF8.GetBytes("{\"testkey\":\"testvalue\"}");
-var encodedText = Convert.ToBase64String(bytesToEncode);
-_fullscreenAd.CustomData = encodedText;
 ```

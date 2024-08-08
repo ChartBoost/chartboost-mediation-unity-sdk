@@ -1,5 +1,5 @@
-using Chartboost.AdFormats.Fullscreen.Queue;
-using Chartboost.Requests;
+using Chartboost.Mediation.Ad.Fullscreen.Queue;
+using Chartboost.Mediation.Requests;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,16 +10,15 @@ namespace Chartboost.Mediation.Demo.AdControllers
         private readonly Button _loadButton;
         private readonly Button _queueButton;
         private readonly Toggle _queueToggle;
-        private readonly ChartboostMediationFullscreenAdQueue _queue;
+        private readonly IFullscreenAdQueue _queue;
         
-        public FullscreenAdControllerWithQueue(string placementIdentifier, Toggle queueToggle, Button queueButton, Button loadButton) : base(
-            placementIdentifier)
+        public FullscreenAdControllerWithQueue(string placementIdentifier, Toggle queueToggle, Button queueButton, Button loadButton) : base(placementIdentifier)
         {
             _loadButton = loadButton;
             _queueButton = queueButton;
             _queueToggle = queueToggle;
             
-            _queue = ChartboostMediationFullscreenAdQueue.Queue(placementIdentifier);
+            _queue = ChartboostMediation.GetFullscreenAdQueue(placementIdentifier);
             _queue.DidUpdate += OnQueueUpdated;
             _queue.DidRemoveExpiredAd += OnQueueRemovedExpiredAd;
             
@@ -54,9 +53,9 @@ namespace Chartboost.Mediation.Demo.AdControllers
         }
 
         /// <inheritdoc />
-        public override void Invalidate()
+        public override void Dispose()
         {
-            base.Invalidate();
+            base.Dispose();
             _queueToggle.isOn = false;
             _queue.Stop();
             _queue.DidUpdate -= OnQueueUpdated;
@@ -90,14 +89,14 @@ namespace Chartboost.Mediation.Demo.AdControllers
                 : "Load";
         }
         
-        private void OnQueueUpdated(ChartboostMediationFullscreenAdQueue queue, ChartboostMediationAdLoadResult adLoadResult, int numberOfAdsReady)
+        private void OnQueueUpdated(IFullscreenAdQueue queue, IAdLoadResult adLoadResult, int numberOfAdsReady)
         {
             Debug.Log("Fullscreen Queue Updated !");
             if(_queueToggle.isOn)
                 _loadButton.GetComponentInChildren<Text>().text = $"Load from Queue({_queue.NumberOfAdsReady}/{_queue.QueueCapacity})";
         }
 
-        private void OnQueueRemovedExpiredAd(ChartboostMediationFullscreenAdQueue queue, int numberOfAdsRead)
+        private void OnQueueRemovedExpiredAd(IFullscreenAdQueue queue, int numberOfAdsRead)
         {
             Debug.Log("Fullscreen Queue Removed Expired Ad !");
             if(_queueToggle.isOn)

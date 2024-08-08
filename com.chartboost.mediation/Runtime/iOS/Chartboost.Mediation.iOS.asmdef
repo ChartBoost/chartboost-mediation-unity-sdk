@@ -1,0 +1,22 @@
+{
+    "name": "Chartboost.Mediation.iOS",
+    "rootNamespace": "Chartboost.Mediation.iOS",
+    "references": [
+        "Chartboost.Mediation",
+        "Chartboost.Threading",
+        "Chartboost.Utilities.IOS",
+        "Chartboost.Logging"
+    ],
+    "includePlatforms": [
+        "Editor",
+        "iOS"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
