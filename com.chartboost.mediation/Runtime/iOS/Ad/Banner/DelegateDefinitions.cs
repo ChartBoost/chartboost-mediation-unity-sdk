@@ -12,7 +12,7 @@ namespace Chartboost.Mediation.iOS.Ad.Banner
     /// <summary>
     /// Extern definition for <see cref="BannerAdDragEvent"/>
     /// </summary>
-    internal delegate void ExternBannerAdDragEvent(long adHasCode, float x, float y);
+    internal delegate void ExternBannerAdDragEvent(long adHasCode, int eventType, float x, float y);
     
     /// <summary>
     /// Extern delegate definition for iOS's <see cref="IBannerAd"/> <see cref="BannerAdEvents"/>.

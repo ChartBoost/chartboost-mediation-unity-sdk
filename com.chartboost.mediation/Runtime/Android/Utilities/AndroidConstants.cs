@@ -79,13 +79,9 @@ namespace Chartboost.Mediation.Android.Utilities
         public const string PropertyLineItemName = "line_item_name";
         public const string PropertyPrice = "price";
         public const string PropertyError = "getError";
-        public const string PropertyCode = "code";
-        public const string PropertyMetrics = "metrics";
         public const string PropertyPlacementId = "placementId";
         public const string PropertyIlrdInfo = "ilrdInfo";
         public const string PropertyData = "data";
-        public const string PropertyAd = "ad";
-        public const string PropertyLoadId = "loadId";
         public const string PropertyChartboostMediationError = "getChartboostMediationError";
         public const string PropertyName = "name";
         public const string PropertyWidth = "width";
@@ -111,7 +107,6 @@ namespace Chartboost.Mediation.Android.Utilities
         public static readonly string ClassBannerAdLoadListener = GetNativeSDKAdClass("ChartboostMediationBannerAdLoadListener");
         public static readonly string ClassFullscreenAdQueueListener = GetNativeSDKAdClass("ChartboostMediationFullscreenAdQueueListener");
         public static readonly string ClassChartboostMediationPreInitializationConfiguration = GetNativeSDKClass("ChartboostMediationPreinitializationConfiguration");
-        public static readonly string ClassChartboostMediationIlrdObserver = GetNativeSDKClass("ChartboostMediationIlrdObserver");
         public static readonly string ClassPartnerAdapterInitializationResultsObserver = GetNativeSDKClass("PartnerAdapterInitializationResultsObserver");
         
         public static readonly string ClassUnityBridge = GetBridgeType("BridgeCBM");
@@ -119,6 +114,13 @@ namespace Chartboost.Mediation.Android.Utilities
 
         private const string NamespaceMediationUnity = "com.chartboost.mediation.unity";
         
+        public static readonly string UnityILRDObserver = GetILRDType("UnityILRDObserver");
+        public static readonly string UnityILRDConsumer = GetILRDType("UnityILRDConsumer");
+
+        public const string FunctionSetUnityILRDProxy = "setUnityILRDProxy";
+        public const string FunctionRetrieveImpressionData = "retrieveImpressionData";
+        
+        private static string GetILRDType(string className) => $"{NamespaceMediationUnity}.ilrd.{className}";
         private static string GetBridgeType(string className) => $"{NamespaceMediationUnity}.bridge.{className}";
 
         private static string GetUtilsType(string className) => $"{NamespaceMediationUnity}.utils.{className}";

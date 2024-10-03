@@ -2,13 +2,11 @@
 
 ## Chartboost Mediation as a Chartboost Core Module
 
-Starting Chartboost Mediation 5.X series, Chartboost Mediation has become a module for [Chartboost Core Unity SDK](https://github.com/ChartBoost/chartboost-core-unity-sdk). Initialization is automatically handled when `ChartboostCore.Initialize` is called. Please refer to [Chartboost Core README.md](https://github.com/ChartBoost/chartboost-core-unity-sdk) on details for how to manage the Chartboost Core initialization processs.
+Starting Chartboost Mediation 5.X series, Chartboost Mediation has become a module for [Chartboost Core Unity SDK](https://github.com/ChartBoost/chartboost-core-unity-sdk). Initialization is automatically handled when `ChartboostCore.Initialize` is called. Please refer to [Chartboost Core README.md](https://github.com/ChartBoost/chartboost-core-unity-sdk) on details for how to manage the Chartboost Core initialization process.
 
 ## CoreModuleId
 
 The `ChartboostMediation.CoreModuleId` can be used to identify the Chartboost Mediation Core `Module` initialization status. To be notified of Chartboost's Mediation initialization status, you can utilize the `ChartboostCore.ModuleInitializationCompleted` as seen below:
-
-```csharp
 
 ```csharp
 ChartboostCore.ModuleInitializationCompleted += result =>

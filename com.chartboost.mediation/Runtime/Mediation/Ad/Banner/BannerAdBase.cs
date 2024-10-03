@@ -123,7 +123,13 @@ namespace Chartboost.Mediation.Ad.Banner
         public event BannerAdEvent DidRecordImpression;
         
         /// <inheritdoc />
+        public event BannerAdDragEvent DidBeginDrag;
+        
+        /// <inheritdoc />
         public event BannerAdDragEvent DidDrag;
+
+        /// <inheritdoc />
+        public event BannerAdDragEvent DidEndDrag;
 
         internal void OnWillAppear()
         {
@@ -143,10 +149,22 @@ namespace Chartboost.Mediation.Ad.Banner
             DidRecordImpression?.Invoke(this);
         }
 
+        internal void OnDragBegin(float x, float y)
+        {
+            LogController.Log($"{BannerAd}: {_request?.PlacementName}/{UniqueId} Drag Begin at X:{x} Y:{y}", LogLevel.Debug);
+            DidBeginDrag?.Invoke(this, x, y);
+        }
+        
         internal void OnDrag(float x, float y)
         {
-            LogController.Log($"{BannerAd}: {_request?.PlacementName}/{UniqueId} Drag to X:{x} Y:{y}", LogLevel.Debug);
+            LogController.Log($"{BannerAd}: {_request?.PlacementName}/{UniqueId} Drag to X:{x} Y:{y}", LogLevel.Verbose);
             DidDrag?.Invoke(this, x, y);
+        }
+        
+        internal void OnDragEnd(float x, float y)
+        {
+            LogController.Log($"{BannerAd}: {_request?.PlacementName}/{UniqueId} Drag End at X:{x} Y:{y}", LogLevel.Debug);
+            DidEndDrag?.Invoke(this, x, y);
         }
 
         ~BannerAdBase()

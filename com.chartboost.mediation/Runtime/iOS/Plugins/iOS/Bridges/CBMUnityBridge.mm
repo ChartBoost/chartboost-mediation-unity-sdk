@@ -2,14 +2,9 @@ enum CBCLogLevel : NSInteger;
 #import "CBMDelegates.h"
 #import "CBMUnityObserver.h"
 
+NSString* const CBMUnityBridgeTAG = @"CBMUnityBridge";
+
 extern "C" {
-
-    void _CBMSetLifeCycleCallbacks(CBMExternDataEvent didReceivePartnerInitializationData, CBMExternDataEvent didReceiveImpressionLevelRevenueData){
-        [[CBMUnityObserver sharedObserver] setDidReceivePartnerInitializationData:didReceivePartnerInitializationData];
-        [[CBMUnityObserver sharedObserver] setDidReceiveImpressionLevelRevenueData:didReceiveImpressionLevelRevenueData];
-        [[CBMUnityObserver sharedObserver] subscribeNotificationObservers];
-    }
-
     const char * _CBMCoreModuleId(){
         return toCStringOrNull([ChartboostMediation coreModuleID]);
     }
@@ -18,31 +13,37 @@ extern "C" {
         return toCStringOrNull([ChartboostMediation sdkVersion]);
     }
 
-    bool _CBMGetTestMode() {
-        return [ChartboostMediation isTestModeEnabled];
+    bool _CBMGetTestMode(){
+        bool testMode = [ChartboostMediation isTestModeEnabled];
+        [[CBLUnityLoggingBridge sharedLogger] logWithTag:CBMUnityBridgeTAG log:[NSString stringWithFormat:@"TestMode is %d", testMode] logLevel:CBLLogLevelDebug];
+        return testMode;
     }
 
-    void _CBMSetTestMode(BOOL isTestModeEnabled)
-    {
+    void _CBMSetTestMode(BOOL isTestModeEnabled){
         [ChartboostMediation setIsTestModeEnabled:isTestModeEnabled];
+        [[CBLUnityLoggingBridge sharedLogger] logWithTag:CBMUnityBridgeTAG log:[NSString stringWithFormat:@"TestMode set to %d", isTestModeEnabled] logLevel:CBLLogLevelDebug];
     }
 
     int _CBMGetLogLevel(){
-        return (int)[ChartboostMediation logLevel];
+        int logLevel = (int)[ChartboostMediation logLevel];
+        [[CBLUnityLoggingBridge sharedLogger] logWithTag:CBMUnityBridgeTAG log:[NSString stringWithFormat:@"LogLevel is %d", logLevel] logLevel:CBLLogLevelDebug];
+        return logLevel;
     }
 
-    void _CBMSetLogLevel(int logLevel)
-    {
+    void _CBMSetLogLevel(int logLevel){
+        [[CBLUnityLoggingBridge sharedLogger] logWithTag:CBMUnityBridgeTAG log:[NSString stringWithFormat:@"LogLevel set to %d", logLevel] logLevel:CBLLogLevelDebug];
         [ChartboostMediation setLogLevel:(CBCLogLevel)logLevel];
     }
 
     bool _CBMGetDiscardOverSizedAds(){
-        return [ChartboostMediation discardOversizedAds];
+        bool discardOversizedAds = [ChartboostMediation discardOversizedAds];
+        [[CBLUnityLoggingBridge sharedLogger] logWithTag:CBMUnityBridgeTAG log:[NSString stringWithFormat:@"DiscardOversizedAds is %d", discardOversizedAds] logLevel:CBLLogLevelDebug];
+        return discardOversizedAds;
     }
 
-    void _CBMSetDiscardOverSizedAds(BOOL shouldDiscard)
-    {
+    void _CBMSetDiscardOverSizedAds(BOOL shouldDiscard){
         [ChartboostMediation  setDiscardOversizedAds:shouldDiscard];
+        [[CBLUnityLoggingBridge sharedLogger] logWithTag:CBMUnityBridgeTAG log:[NSString stringWithFormat:@"DiscardOversizedAds set to %d", shouldDiscard] logLevel:CBLLogLevelDebug];
     }
 
     const char * _CBMGetAdaptersInfo(){
@@ -65,6 +66,7 @@ extern "C" {
             [jsonArray addObject:adapterDictionary];
         }
 
+        [[CBLUnityLoggingBridge sharedLogger] logWithTag:CBMUnityBridgeTAG log:[NSString stringWithFormat:@"Parsed %ld adapters info", [adapters count]] logLevel:CBLLogLevelDebug];
         return toJSON(jsonArray);
     }
 
@@ -85,6 +87,7 @@ extern "C" {
                  NSString *code = [NSString stringWithFormat:@"CM_%ld", codeInt];
                  NSString *message = [error localizedDescription];
                  NSDictionary * errorDictionary = [NSDictionary dictionaryWithObjectsAndKeys:code, keyCode, message, keyMessage, nil];
+                 [[CBLUnityLoggingBridge sharedLogger] logWithTag:CBMUnityBridgeTAG log:[NSString stringWithFormat:@"Failed to set PreInitializationConfiguration with error code %ld", codeInt] logLevel:CBLLogLevelDebug];
                  return toJSON(errorDictionary);
              }
          }

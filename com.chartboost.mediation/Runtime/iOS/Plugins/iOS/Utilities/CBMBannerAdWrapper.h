@@ -4,10 +4,6 @@
 #import "CBMUnityObserver.h"
 #import "UnityAppController.h"
 
-
-static NSString *const TAG = @"CBMBannerAdWrapper";
-
-
 @interface CBMBannerAdWrapper : NSObject<UIGestureRecognizerDelegate>
 
 @property CBMBannerAdView* _Nonnull bannerView;
@@ -26,14 +22,13 @@ static NSString *const TAG = @"CBMBannerAdWrapper";
 @property (nonatomic) CBMBannerVerticalAlignment verticalAlignment;
 
 #pragma mark Banner
-@property CBMBannerSize* _Nullable bannerSize;
 @property NSString* _Nullable loadId;
 @property NSDictionary<NSString *, id> *_Nullable loadMetrics;
 @property NSDictionary<NSString *, id> *_Nullable winningBidInfo;
 @property CBMBannerAdLoadRequest* _Nullable request;
 
 - (instancetype _Nonnull )initWithBannerView:(CBMBannerAdView* _Nonnull) bannerView dragListener: (CBMExternBannerAdDragEvent _Nonnull) dragListener;
-- (void) loadWith:(CBMBannerAdLoadRequest *) request viewController:(UIViewController *) viewController completion:(void (^)(CBMBannerAdLoadResult * )) completion;- (void)reset;
+- (void) loadWith:(CBMBannerAdLoadRequest *_Nonnull) request viewController:(UIViewController *_Nonnull) viewController completion:(void (^_Nonnull)(CBMBannerAdLoadResult * _Nonnull )) completion;- (void)reset;
 - (void)destroy;
 
 - (void)updateFrame;

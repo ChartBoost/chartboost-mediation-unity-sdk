@@ -6,14 +6,6 @@
 
 #pragma mark Notifications
 @property CBMExternDataEvent didReceivePartnerInitializationData;
-@property CBMExternDataEvent didReceiveImpressionLevelRevenueData;
-
-@property id partnerInitializationDataObserver;
-@property id impressionLevelRevenueDataObserver;
-
-- (void) subscribeNotificationObservers;
-- (void) addImpressionLevelRevenueDataObserver;
-- (void) addPartnerInitializationDataObserver;
 
 #pragma mark ChartboostMediationFullscreenAdDelegate
 @property CBMExternFullscreenAdEvent didReceiveFullscreenAdEvent;

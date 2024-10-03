@@ -2,21 +2,8 @@
 #import "CBMUnityObserver.h"
 #import "UnityAppController.h"
 
-static CBMFullscreenAd * GetFullscreenAd(const void* uniqueId)
-{
+static CBMFullscreenAd * GetFullscreenAd(const void* uniqueId){
     return (__bridge CBMFullscreenAd*)uniqueId;
-}
-
-template <typename TObj>
-TObj toObjectFromJson(const char* jsonString) {
-    NSData* jsonData = [[NSString stringWithUTF8String:jsonString] dataUsingEncoding:NSUTF8StringEncoding];
-    NSError* error = nil;
-    TObj arr = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
-
-    if (error != nil)
-        return nil;
-
-    return arr;
 }
 
 #pragma mark Extern Methods
@@ -61,7 +48,7 @@ extern "C" {
 
     void _CBMLoadFullscreenAd(const char *placementName, const char *keywordsJson, int hashCode, CBMExternFullscreenAdLoadResultEvent callback)
     {
-        NSDictionary *keywords = toObjectFromJson<NSDictionary *>(keywordsJson);
+        NSDictionary *keywords = toObjectFromJson(keywordsJson);
 
         CBMFullscreenAdLoadRequest *loadRequest = [[CBMFullscreenAdLoadRequest alloc] initWithPlacement:toNSStringOrEmpty(placementName) keywords:keywords];
 

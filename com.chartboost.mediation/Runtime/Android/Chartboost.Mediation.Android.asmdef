@@ -5,7 +5,8 @@
         "Chartboost.Mediation",
         "Chartboost.Utilities.Android",
         "Chartboost.Threading",
-        "Chartboost.Logging"
+        "Chartboost.Logging",
+        "Chartboost.Core"
     ],
     "includePlatforms": [
         "Android",

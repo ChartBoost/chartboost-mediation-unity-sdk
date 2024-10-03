@@ -8,10 +8,12 @@ using Chartboost.Mediation.Ad.Fullscreen.Queue;
 using Chartboost.Mediation.Data;
 using Chartboost.Mediation.Error;
 using Chartboost.Mediation.Initialization;
+using Chartboost.Mediation.iOS.ILRD;
 using Chartboost.Mediation.Requests;
 using Chartboost.Mediation.Utilities;
 using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.Scripting;
 using BannerAd = Chartboost.Mediation.iOS.Ad.Banner.BannerAd;
 using FullscreenAd = Chartboost.Mediation.iOS.Ad.Fullscreen.FullscreenAd;
 using FullscreenAdQueue = Chartboost.Mediation.iOS.Ad.Fullscreen.Queue.FullscreenAdQueue;
@@ -23,6 +25,10 @@ namespace Chartboost.Mediation.iOS
     /// </summary>
     internal sealed partial class ChartboostMediation : ChartboostMediationBase
     {
+        [Preserve]
+        // ReSharper disable once InconsistentNaming
+        internal static readonly UnityILRDConsumer UnityILRDConsumerInstance = new();
+        
         /// <summary>
         /// Registers the class instance on start-up.
         /// </summary>
@@ -33,7 +39,7 @@ namespace Chartboost.Mediation.iOS
                 return;
             
             Chartboost.Mediation.ChartboostMediation.Instance = new ChartboostMediation();
-            _CBMSetLifeCycleCallbacks(ExternDidReceivePartnerInitializationData, ExternDidReceiveImpressionLevelRevenueData);
+            _CBMSetPartnerAdapterInitializationResultsCallback(ExternDidReceivePartnerInitializationData);
             DensityConverters.ScaleFactor = _CBMGetUIScaleFactor();
         }
 

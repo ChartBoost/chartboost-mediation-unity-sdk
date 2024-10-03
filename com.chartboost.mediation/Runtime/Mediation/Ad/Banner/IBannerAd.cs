@@ -130,8 +130,18 @@ namespace Chartboost.Mediation.Ad.Banner
         event BannerAdEvent DidRecordImpression;
         
         /// <summary>
+        /// Called when the ad container has begun dragging on screen.
+        /// </summary>
+        event BannerAdDragEvent DidBeginDrag;
+
+        /// <summary>
         /// Called when the ad container is dragged on screen.
         /// </summary>
         event BannerAdDragEvent DidDrag;
+        
+        /// <summary>
+        /// Called when the ad container has finished dragging on screen.
+        /// </summary>
+        event BannerAdDragEvent DidEndDrag;
     }
 }

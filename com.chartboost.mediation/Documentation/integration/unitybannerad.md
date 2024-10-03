@@ -3,8 +3,6 @@
 The Chartboost Mediation SDK includes UnityBannerAd, a specialized banner API that functions as a `MonoBehaviour`, allowing it to be attached directly to a Unity GameObject.
 This integration enables developers to utilize UnityBannerAd similarly to other GameObjects within Unity, providing a seamless way to load and display banner ads directly within the game environment.
 
-For full details about the ad format always refer to [Chartboost Documentation](https://docs.chartboost.com/en/mediation/integrate/unity/load-ads/#banner-ad-objects).
-
 # `BannerAdLoadRequest`
 
 `BannerAdLoadRequest` objects contains publisher provided configurations for `UnityBannerAd` objects. It is used when calling `UnityBannerAd.Load(loadRequest)`, as seen in the examples below.
@@ -13,6 +11,29 @@ For full details about the ad format always refer to [Chartboost Documentation](
 // Determine the maximum size to load using width and height
 BannerSize size = BannerSize.Adaptive(100, 100);
 BannerAdLoadRequest loadRequest = new BannerAdLoadRequest("BANNER_PLACEMENT_NAME", size);
+```
+
+# Keywords 
+
+Keywords are set after obtaining the `UnityBannerAd` object when calling `ChartboostMediation.GetUnityBannerAd`. To remove keywords, pass a new set without those keywords. The list will be overridden. This is to facilitate the wrapping process between Unity and native platforms.
+
+> **Warning** \
+> Keywords has restrictions for setting keys and values. The maximum characters allowed for keys is 64 characters. The maximum characters for values is 256 characters.
+
+```csharp
+// Keywords to pass for unity banner ad
+var keywords = new Dictionary<string, string>
+{
+    { "key", "value" },
+    { "key_2", "value_2" }
+};
+
+// Get UnityBannerAd
+var canvas = FindObjectOfType<Canvas>(); 
+UnityBannerAd unityBannerAd = ChartboostMediation.GetUnityBannerAd("PLACEMENT_NAME", canvas.transform);
+
+// Set keywords
+unityBannerAd.Keywords = keywords;
 ```
 
 # Using `UnityBannerAd` objects

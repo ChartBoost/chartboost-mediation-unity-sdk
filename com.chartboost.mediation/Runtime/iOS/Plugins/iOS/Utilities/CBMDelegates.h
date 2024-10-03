@@ -3,6 +3,7 @@
 #import <AppTrackingTransparency/AppTrackingTransparency.h>
 #import <ChartboostCoreSDK/ChartboostCoreSDK-Swift.h>
 #import <ChartboostMediationSDK/ChartboostMediationSDK-Swift.h>
+#import "CBLUnityLoggingBridge.h"
 
 #pragma mark Generic Data Delegates
 typedef void (*CBMExternDataEvent)(const char* data);
@@ -19,8 +20,8 @@ typedef void (*CBMExternFullscreenAdQueueRemoveExpiredAdEvent)(long hashCode, in
 #pragma mark Banner Ad Delegates
 typedef void (*CBMExternBannerAdLoadResultEvent)(int hashCode, const void* adHashCode, const char *loadId, const char *metricsJson, const char *bidInfoJson, float width, float height, const char *code, const char *message);
 typedef void (*CBMExternBannerAdEvent)(long hashCode, int eventType);
-typedef void (*CBMExternBannerAdDragEvent)(void * hashCode, float x, float y);
+typedef void (*CBMExternBannerAdDragEvent)(void * hashCode, int eventType, float x, float y);
 
 enum fullscreenAdEvents { FullscreenAdRecordImpression = 0, FullscreenAdClick = 1, FullscreenAdReward = 2, FullscreenAdClose = 3, FullscreenAdExpire = 4};
 enum fullscreenAdQueueEvents { FullscreenAdQueueUpdate = 0, FullscreenAdQueueRemoveExpiredAd = 1 };
-enum bannerAdEvents { BannerAdAppear = 0, BannerAdClick = 1, BannerAdRecordImpression = 2 };
+enum bannerAdEvents { BannerAdAppear = 0, BannerAdClick = 1, BannerAdRecordImpression = 2, BannerAdDragBegin = 3, BannerAdDrag = 4, BannerAdDragEnd = 5 };

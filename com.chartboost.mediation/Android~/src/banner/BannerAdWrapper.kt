@@ -1,3 +1,4 @@
+@file:Suppress("PackageDirectoryMismatch")
 package com.chartboost.mediation.unity.banner
 
 import android.app.Activity
@@ -16,6 +17,8 @@ import com.chartboost.chartboostmediationsdk.ad.ChartboostMediationBannerAdLoadR
 import com.chartboost.chartboostmediationsdk.ad.ChartboostMediationBannerAdView
 import com.chartboost.chartboostmediationsdk.ad.ChartboostMediationBannerAdViewListener
 import com.chartboost.chartboostmediationsdk.domain.Keywords
+import com.chartboost.mediation.unity.logging.LogLevel
+import com.chartboost.mediation.unity.logging.UnityLoggingBridge
 import com.unity3d.player.UnityPlayer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
@@ -79,8 +82,7 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
                 2 -> Gravity.RIGHT
                 else -> Gravity.CENTER_HORIZONTAL
             }
-            Log.d(TAG, "Setting horizontal alignment as ${this.horizontalGravity}")
-
+            UnityLoggingBridge.log(TAG, "Setting horizontal alignment as ${this.horizontalGravity}", LogLevel.DEBUG)
             partnerAd?.let {
                 val layoutParams = it.layoutParams as FrameLayout.LayoutParams
 
@@ -109,8 +111,7 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
                 2 -> Gravity.BOTTOM
                 else -> Gravity.CENTER_VERTICAL
             }
-            Log.d(TAG, "Setting vertical alignment as ${this.verticalGravity}")
-
+            UnityLoggingBridge.log(TAG, "Setting vertical alignment as ${this.verticalGravity}", LogLevel.DEBUG)
             partnerAd?.let {
                 val layoutParams = it.layoutParams as FrameLayout.LayoutParams
 
@@ -140,7 +141,7 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
             "LEADERBOARD" -> ChartboostMediationBannerAdView.ChartboostMediationBannerSize.LEADERBOARD
             "ADAPTIVE" -> ChartboostMediationBannerAdView.ChartboostMediationBannerSize.bannerSize(width, height)
             else -> {
-                Log.w(TAG, "Size not defined, set to ADAPTIVE(0x0) by default")
+                UnityLoggingBridge.log(TAG, "Size not defined, set to ADAPTIVE(0x0) by default", LogLevel.WARNING)
                 ChartboostMediationBannerAdView.ChartboostMediationBannerSize.bannerSize(0,0)
             }
         }
@@ -151,7 +152,7 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
 
             // Fit Both
             if(width == -1 && height == -1){
-                Log.d(TAG, "Setting container size to wrap content");
+                UnityLoggingBridge.log(TAG, "Setting container size to wrap content", LogLevel.DEBUG)
                 ad.layoutParams = RelativeLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
@@ -160,7 +161,7 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
             // Fit Horizontal
 
             else if(width == -1){
-                Log.d(TAG, "Setting container size to wrap horizontal");
+                UnityLoggingBridge.log(TAG,"Setting container size to wrap horizontal", LogLevel.DEBUG)
                 ad.layoutParams = RelativeLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     (height * displayDensity).toInt()
@@ -169,7 +170,7 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
 
             // Fit Vertical
             else if(height == -1){
-                Log.d(TAG,"Setting container size to wrap vertical");
+                UnityLoggingBridge.log(TAG,"Setting container size to wrap vertical", LogLevel.DEBUG)
                 ad.layoutParams = RelativeLayout.LayoutParams(
                     (width * displayDensity).toInt(),
                     ViewGroup.LayoutParams.WRAP_CONTENT
@@ -178,7 +179,7 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
 
             // Fixed size
             else{
-                Log.d(TAG, "Setting container size to fixed size ($width, $height)")
+                UnityLoggingBridge.log(TAG, "Setting container size to fixed size ($width, $height)", LogLevel.DEBUG)
                 ad.layoutParams = RelativeLayout.LayoutParams(
                     (width * displayDensity).toInt(),
                     (height * displayDensity).toInt()
@@ -264,7 +265,7 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
 
     private fun createBannerLayout() {
         if (activity == null) {
-            Log.w(TAG, "Activity not found")
+            UnityLoggingBridge.log(TAG, "Activity not found to create banner layout", LogLevel.WARNING)
             return
         }
 
@@ -281,11 +282,8 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
                 bannerParent.removeView(it)
             }
 
-            layout = BannerLayout(activity, ad, object : IBannerDragListener {
-                override fun onDrag(x: Float, y: Float) {
-                    bannerAdListener?.onAdDrag(this@BannerAdWrapper, x, y)
-                }
-            })
+            // Listen to drag events on BannerLayout
+            layout = BannerLayout(activity, ad, dragListener)
             layout.setBackgroundColor(Color.TRANSPARENT)
 
             // Attach the banner layout to the activity.
@@ -319,12 +317,23 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
                 // set invisible, not setting this to visible here makes the banner not visible.
                 layout.visibility = View.VISIBLE
             } catch (ex: Exception) {
-                Log.w(
-                    TAG,
-                    "Chartboost Mediation encountered an error while creating banner layout - ${ex.message}"
-                )
+                UnityLoggingBridge.logException(TAG, "Chartboost Mediation encountered an error while creating banner layout - $ex")
             }
             bannerLayout = layout
+        }
+    }
+
+    private val dragListener: IBannerDragListener = object : IBannerDragListener {
+
+        override fun onDragBegin(x: Float, y: Float) {
+            bannerAdListener?.onAdDragBegin(this@BannerAdWrapper, x, y)
+        }
+
+        override fun onDrag(x: Float, y: Float) {
+            bannerAdListener?.onAdDrag(this@BannerAdWrapper, x, y)
+        }
+        override fun onDragEnd(x: Float, y: Float) {
+            bannerAdListener?.onAdDragEnd(this@BannerAdWrapper, x, y)
         }
     }
 
@@ -399,7 +408,7 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
                 try {
                     runnable.run()
                 } catch (ex: Exception) {
-                    Log.w(TAG, "Exception found when running on UI Thread: ${ex.message}")
+                    UnityLoggingBridge.logException(TAG, "Exception found when running on UI Thread: $ex")
                 }
             }
         }

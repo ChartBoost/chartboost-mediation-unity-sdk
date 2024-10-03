@@ -54,23 +54,24 @@ Once <code>NugetForUnity</code> is installed, search for `Chartboost.CSharp.Medi
 You should be able to see the `Chartboost.CSharp.Mediation.Unity` package. Choose the appropriate version and install.
 
 # Setup
-1. [Ad Network Adapters](com.chartboost.mediation/Documentation/setup/ad-adapters.md)
-2. [Android Manifest](com.chartboost.mediation/Documentation/setup/androidmanifest.md)
+1. [Ad Network Adapters](Documentation/setup/ad-adapters.md)
+2. [Android Manifest](Documentation/setup/androidmanifest.md)
 3. [Google External Dependency Manager (EDM)](com.chartboost.mediation/Documentation/setup/edm.md)
-4. [Multidex](com.chartboost.mediation/Documentation/setup/multidex.md)
+4. [Multidex](Documentation/setup/multidex.md)
 
 # Integration
 
-1. [Initialization](com.chartboost.mediation/Documentation/integration/initialization.md)
-2. [Configure](com.chartboost.mediation/Documentation/integration/configure.md)
-3. [Fullscreen Ad](com.chartboost.mediation/Documentation/integration/fullscreen.md)
-4. [Fullscreen Ad Queue](com.chartboost.mediation/Documentation/integration/fullscreenadqueue.md)
-5. [Banner Ad](com.chartboost.mediation/Documentation/integration/bannerad.md)
-6. [Error Codes](com.chartboost.mediation/Documentation/integration/error-codes.md)
-7. [Unit Testing](com.chartboost.mediation/Documentation/integration/unit-testing.md)
-8. [FAQ](com.chartboost.mediation/Documentation/faq.md)
+1. [Initialization](Documentation/integration/initialization.md)
+2. [Configure](Documentation/integration/configure.md)
+3. [Fullscreen Ad](Documentation/integration/fullscreen.md)
+4. [Fullscreen Ad Queue](Documentation/integration/fullscreenadqueue.md)
+5. [Banner Ad](Documentation/integration/bannerad.md)
+6. [Unity Banner Ad](Documentation/integration/unitybannerad.md)
+7. [Error Codes](Documentation/integration/error-codes.md)
+8. [Unit Testing](Documentation/integration/unit-testing.md)
+9. [FAQ](Documentation/faq.md)
 
 # Migration Guides
 
-1. [Migration from v4 to v5](com.chartboost.mediation/Documentation/migration/v4tov5.md)
-2. [Migration from v3 to v4](com.chartboost.mediation/Documentation/migration/v3tov4.md)
+1. [Migration from v4 to v5](Documentation/migration/v4tov5.md)
+2. [Migration from v3 to v4](Documentation/migration/v3tov4.md)

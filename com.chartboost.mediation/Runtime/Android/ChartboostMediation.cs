@@ -9,6 +9,7 @@ using Chartboost.Mediation.Ad.Fullscreen.Queue;
 using Chartboost.Mediation.Android.Ad.Banner;
 using Chartboost.Mediation.Android.Ad.Fullscreen;
 using Chartboost.Mediation.Android.Ad.Fullscreen.Queue;
+using Chartboost.Mediation.Android.ILRD;
 using Chartboost.Mediation.Android.Utilities;
 using Chartboost.Mediation.Data;
 using Chartboost.Mediation.Error;
@@ -16,6 +17,7 @@ using Chartboost.Mediation.Initialization;
 using Chartboost.Mediation.Requests;
 using Chartboost.Mediation.Utilities;
 using UnityEngine;
+using UnityEngine.Scripting;
 using DensityConverters = Chartboost.Mediation.Utilities.DensityConverters;
 
 namespace Chartboost.Mediation.Android
@@ -25,6 +27,10 @@ namespace Chartboost.Mediation.Android
     /// </summary>
     internal partial class ChartboostMediation : ChartboostMediationBase
     {
+        [Preserve]
+        // ReSharper disable once InconsistentNaming
+        internal static readonly UnityILRDConsumer UnityILRDConsumerInstance = new();
+        
         /// <summary>
         /// Registers the class instance on start-up.
         /// </summary>
@@ -40,7 +46,7 @@ namespace Chartboost.Mediation.Android
             DensityConverters.ScaleFactor = unityBridge.CallStatic<float>(AndroidConstants.FunctionGetUIScaleFactor);
             
             using var nativeSDK =  AndroidConstants.GetNativeSDK();
-            nativeSDK.CallStatic(AndroidConstants.FunctionSubscribeIlrd, new ImpressionLevelRevenueDataObserver());
+            nativeSDK.CallStatic(AndroidConstants.FunctionSubscribeIlrd, new AndroidJavaObject(AndroidConstants.UnityILRDObserver));
             nativeSDK.CallStatic(AndroidConstants.FunctionSubscribePartnerAdapterInitializationResults, new PartnerAdapterInitializationResultsObserver());
         }
 

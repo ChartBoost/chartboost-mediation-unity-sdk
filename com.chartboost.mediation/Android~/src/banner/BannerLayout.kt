@@ -1,3 +1,4 @@
+@file:Suppress("PackageDirectoryMismatch")
 package com.chartboost.mediation.unity.banner
 
 import android.content.Context
@@ -24,9 +25,10 @@ class BannerLayout
     private var safeAreaLeft:Int = 0 
     private var safeAreaRight:Int = 0
     private var safeAreaBottom:Int = 0
-    private var screenWidth = 0;
-    private var screenHeight = 0;
+    private var screenWidth = 0
+    private var screenHeight = 0
 
+    private var isDragging = false
     private val dragThresholdDistance = 10 // in pixels
 
     private var startX: Int = 0
@@ -44,7 +46,7 @@ class BannerLayout
             screenHeight = bounds.height()
         }
         else {
-            val metrics = DisplayMetrics();
+            val metrics = DisplayMetrics()
             UnityPlayer.currentActivity.windowManager.defaultDisplay.getRealMetrics(metrics)
             screenWidth = metrics.widthPixels
             screenHeight = metrics.heightPixels
@@ -77,6 +79,8 @@ class BannerLayout
 
             lastX = startX
             lastY = startY
+
+            isDragging = false
         }
 
         if (event?.action == MotionEvent.ACTION_MOVE) {
@@ -87,7 +91,13 @@ class BannerLayout
             lastX = event.rawX.toInt()
             lastY = event.rawY.toInt()
 
-            if (hasDragged()) {
+            if(!isDragging && hasDragged())
+            {
+                isDragging = true
+                dragListener.onDragBegin(bannerView.x, bannerView.y)
+            }
+
+            if (isDragging) {
                 val newX = bannerView.x + dx
                 val newY = bannerView.y + dy
                 val safeLeft = safeAreaLeft
@@ -106,7 +116,12 @@ class BannerLayout
         }
 
         if (event?.action == MotionEvent.ACTION_UP) {
-            return hasDragged()
+            val wasDragging = isDragging
+            if (isDragging) {
+                dragListener.onDragEnd(bannerView.x, bannerView.y)
+                isDragging = false
+            }
+            return wasDragging // Return true if the event was a drag, indicating the touch was intercepted
         }
 
         return super.onInterceptTouchEvent(event)
