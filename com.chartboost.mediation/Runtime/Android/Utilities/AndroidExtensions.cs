@@ -14,7 +14,7 @@ namespace Chartboost.Mediation.Android.Utilities
     /// <summary>
     /// <see cref="AndroidJavaObject"/> extensions for Unity C# compatible objects.
     /// </summary>
-    public static class AndroidExtensions 
+    public static class AndroidExtensions
     {
 #nullable enable
         public static ChartboostMediationError? ToChartboostMediationError(this AndroidJavaObject objectWithErrorField, string field = AndroidConstants.PropertyError)
@@ -22,20 +22,20 @@ namespace Chartboost.Mediation.Android.Utilities
             var error = objectWithErrorField.Call<AndroidJavaObject>(field);
             if (error == null)
                 return null;
-            
+
             var code = error.Call<string>(AndroidConstants.FunctionGetCode);
             var message = error.Call<string>(AndroidConstants.FunctionToString);
             return new ChartboostMediationError(code, message);
         }
-        
+
         public static Metrics? JsonObjectToMetrics(this AndroidJavaObject source)
         {
             var jsonString = source.Call<string>(AndroidConstants.FunctionToString);
             var metrics = JsonConvert.DeserializeObject<Metrics>(jsonString);
             return metrics;
         }
-#nullable  disable
-        
+#nullable disable
+
         public static BidInfo MapToWinningBidInfo(this AndroidJavaObject map)
         {
             var partnerId = map.Call<string>(SharedAndroidConstants.FunctionGet, AndroidConstants.PropertyPartnerId);
@@ -48,7 +48,7 @@ namespace Chartboost.Mediation.Android.Utilities
                 LogController.Log("Failed to parse bid info price, defaulting to 0.", LogLevel.Error);
             return new BidInfo(auctionId, partnerId, priceAsDouble, lineItemName, lineItemId);
         }
-        
+
         public static AndroidJavaObject ToInitializationOptions(this IEnumerable<string> options)
         {
             using var hashSet = new AndroidJavaObject(SharedAndroidConstants.ClassHashSet);
@@ -60,27 +60,28 @@ namespace Chartboost.Mediation.Android.Utilities
             }
             return new AndroidJavaObject(AndroidConstants.ClassChartboostMediationPreInitializationConfiguration, hashSet);
         }
-        
+
         public static string ImpressionDataToJsonString(this AndroidJavaObject impressionData)
         {
             var placementName = impressionData.Get<string>(AndroidConstants.PropertyPlacementId);
             var ilrdJson = impressionData.Get<AndroidJavaObject>(AndroidConstants.PropertyIlrdInfo).Call<string>(SharedAndroidConstants.FunctionToString);
             return $"{{\"placementName\" : \"{placementName}\", \"ilrd\" : {ilrdJson}}}";
         }
-        
+
         public static AdapterInfo[] ToAdapterInfo(this AndroidJavaObject nativeAdapterInfo)
         {
             using var iterator = nativeAdapterInfo.Call<AndroidJavaObject>(SharedAndroidConstants.FunctionIterator);
             var count = nativeAdapterInfo.Call<int>(SharedAndroidConstants.FunctionSize);
-            
+
             if (count == 0)
                 return Array.Empty<AdapterInfo>();
-            
+
             var ret = new AdapterInfo[count];
-            
+
             var index = 0;
-            
-            do {
+
+            do
+            {
                 using var entry = iterator.Call<AndroidJavaObject>(SharedAndroidConstants.FunctionNext);
                 var adapterVersion = entry.Call<string>(AndroidConstants.FunctionGetAdapterVersion);
                 var partnerVersion = entry.Call<string>(AndroidConstants.FunctionGetPartnerVersion);
@@ -92,7 +93,7 @@ namespace Chartboost.Mediation.Android.Utilities
             } while (iterator.Call<bool>(SharedAndroidConstants.FunctionHasNext));
             return ret;
         }
-        
+
         public static AndroidJavaObject ToKeywords(this IReadOnlyDictionary<string, string> source)
         {
             var keywords = new AndroidJavaObject(AndroidConstants.ClassKeywords);
@@ -104,10 +105,10 @@ namespace Chartboost.Mediation.Android.Utilities
                 var key = kvp.Key;
                 var value = kvp.Value;
                 var isSet = keywords.Call<bool>(SharedAndroidConstants.FunctionSet, key, value);
-                if (!isSet) 
+                if (!isSet)
                     LogController.Log($"Failed to set keyword for Key: {key} and Value: {value}", LogLevel.Warning);
             }
-            
+
             return keywords;
         }
 
@@ -117,21 +118,21 @@ namespace Chartboost.Mediation.Android.Utilities
             var map = new AndroidJavaObject("java.util.HashMap");
             foreach (var kvp in source)
                 map.Call<AndroidJavaObject>("put", kvp.Key, kvp.Value);
-            
+
             return map;
         }
-        
+
         public static BannerSize ToBannerSize(this AndroidJavaObject source)
         {
             if (source == null)
                 return new BannerSize();
-            
+
             var name = source.Get<string>(AndroidConstants.PropertyName);
             var width = source.Get<int>(AndroidConstants.PropertyWidth);
             var height = source.Get<int>(AndroidConstants.PropertyHeight);
             var size = name switch
             {
-                AndroidConstants.BannerSizeStandard => BannerSize.Standard, 
+                AndroidConstants.BannerSizeStandard => BannerSize.Standard,
                 AndroidConstants.BannerSizeMedium => BannerSize.MediumRect,
                 AndroidConstants.BannerSizeLeaderboard => BannerSize.Leaderboard,
                 AndroidConstants.BannerSizeAdaptive => BannerSize.Adaptive(width, height),
@@ -141,20 +142,19 @@ namespace Chartboost.Mediation.Android.Utilities
             // if we get adaptive size of size 0X0 then it is undefined/unknown
             if (size is { SizeType: BannerSizeType.Adaptive, Width: 0, Height: 0 })
                 size.SizeType = BannerSizeType.Unknown;
-            
+
             return size;
         }
-        
+
         public static ContainerSize ToContainerSize(this AndroidJavaObject source)
         {
             if (source == null)
                 return new ContainerSize();
-            
+
             var width = source.Call<int>(AndroidConstants.FunctionGetWidth);
             var height = source.Call<int>(AndroidConstants.FunctionGetHeight);
-            
+
             return ContainerSize.FixedSize(width, height);
         }
-
     }
 }

@@ -15,41 +15,13 @@
 }
 
 #pragma mark Notifications
-- (void)subscribeNotificationObservers {
-    [[CBMUnityObserver sharedObserver] addPartnerInitializationDataObserver];
-    [[CBMUnityObserver sharedObserver] addImpressionLevelRevenueDataObserver];
-}
-
-
-- (void)addPartnerInitializationDataObserver {
-
-    if (_partnerInitializationDataObserver != nil)
-        return;
-
-    _partnerInitializationDataObserver = [[NSNotificationCenter defaultCenter] addObserverForName:NSNotification.chartboostMediationDidReceivePartnerAdapterInitResults object:nil queue:nil usingBlock:^(NSNotification* _Nonnull notification) {
+- (void)subscribePartnerAdapterInitializationResults {
+    [[NSNotificationCenter defaultCenter] addObserverForName:NSNotification.chartboostMediationDidReceivePartnerAdapterInitResults object:nil queue:nil usingBlock:^(NSNotification* _Nonnull notification) {
             NSDictionary *results = (NSDictionary *)notification.object;
             const char* jsonToUnity = toJSON(results);
 
             if (self->_didReceivePartnerInitializationData != nil)
                 self->_didReceivePartnerInitializationData(jsonToUnity);
-    }];
-}
-
-- (void)addImpressionLevelRevenueDataObserver {
-    if (_impressionLevelRevenueDataObserver != nil)
-        return;
-
-    _impressionLevelRevenueDataObserver = [[NSNotificationCenter defaultCenter] addObserverForName:NSNotification.chartboostMediationDidReceiveILRD object:nil queue:nil usingBlock:^(NSNotification* _Nonnull notification) {
-        if (self->_didReceiveImpressionLevelRevenueData == nil)
-            return;
-
-        CBMImpressionData *ilrd = notification.object;
-        NSString *placement = ilrd.placement;
-        NSDictionary *json = ilrd.jsonData;
-        const NSString *placementNameKey = @"placementName";
-        const NSString *ilrdKey = @"ilrd";
-        NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys: placement, placementNameKey, json ? json : [NSNull null], ilrdKey, nil];
-        self->_didReceiveImpressionLevelRevenueData(toJSON(data));
     }];
 }
 
@@ -144,3 +116,10 @@
     [self serializeBannerEvent:bannerView bannerEvent:BannerAdRecordImpression];
 }
 @end
+
+extern "C" {
+    void _CBMSetPartnerAdapterInitializationResultsCallback(CBMExternDataEvent didReceivePartnerInitializationData){
+        [[CBMUnityObserver sharedObserver] setDidReceivePartnerInitializationData:didReceivePartnerInitializationData];
+        [[CBMUnityObserver sharedObserver] subscribePartnerAdapterInitializationResults];
+    }
+}

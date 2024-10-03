@@ -36,7 +36,7 @@ namespace Chartboost.Mediation.iOS.Ad.Banner
             => AdEventHandler.ProcessBannerEvent(adHashCode, (BannerAdEvents)eventType);
 
         [MonoPInvokeCallback(typeof(ExternBannerAdDragEvent))]
-        internal static void BannerAdDragEvent(long adHashCode, float x, float y) 
-            => AdEventHandler.ProcessBannerEvent(adHashCode,BannerAdEvents.Drag, x, y);
+        internal static void BannerAdDragEvent(long adHashCode, int eventType, float x, float y)
+            => AdEventHandler.ProcessBannerEvent(adHashCode, (BannerAdEvents)eventType, x, y);
     }
 }

@@ -57,8 +57,16 @@ namespace Chartboost.Mediation.Android.Ad.Banner
                 AdEventHandler.ProcessBannerEvent(ad.NativeHashCode(), BannerAdEvents.RecordImpression);
 
             [Preserve]
+            private void onAdDragBegin(AndroidJavaObject ad, float x, float y) =>
+                AdEventHandler.ProcessBannerEvent(ad.NativeHashCode(), BannerAdEvents.BeginDrag, x, y);
+            
+            [Preserve]
             private void onAdDrag(AndroidJavaObject ad, float x, float y) =>
                 AdEventHandler.ProcessBannerEvent(ad.NativeHashCode(), BannerAdEvents.Drag, x, y);
+            
+            [Preserve]
+            private void onAdDragEnd(AndroidJavaObject ad, float x, float y) =>
+                AdEventHandler.ProcessBannerEvent(ad.NativeHashCode(), BannerAdEvents.EndDrag, x, y);
         }
     }
 }

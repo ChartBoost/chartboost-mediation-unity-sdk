@@ -1,3 +1,4 @@
+@file:Suppress("PackageDirectoryMismatch")
 package com.chartboost.mediation.unity.bridge
 
 import android.util.DisplayMetrics
@@ -18,6 +19,8 @@ import com.chartboost.core.ChartboostCore
 import com.chartboost.core.ChartboostCoreLogLevel
 import com.chartboost.mediation.unity.banner.BannerAdWrapper
 import com.chartboost.mediation.unity.banner.ChartboostMediationBannerAdListener
+import com.chartboost.mediation.unity.logging.LogLevel
+import com.chartboost.mediation.unity.logging.UnityLoggingBridge
 import com.chartboost.mediation.unity.utils.AdStore
 import com.unity3d.player.UnityPlayer
 import kotlinx.coroutines.CoroutineScope
@@ -25,6 +28,7 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlin.math.log
 
+@Suppress("unused")
 class BridgeCBM {
 
     companion object {
@@ -60,11 +64,13 @@ class BridgeCBM {
         fun getFullscreenAdQueue(placementName: String, fullscreenAdQueueListener: ChartboostMediationFullscreenAdQueueListener) : ChartboostMediationFullscreenAdQueue {
             val queue = ChartboostMediationFullscreenAdQueueManager.queue(UnityPlayer.currentActivity, placementName)
             queue.adQueueListener = fullscreenAdQueueListener
+            UnityLoggingBridge.log(TAG, "Created FullscreenAdQueue with Listener", LogLevel.VERBOSE)
             return queue
         }
 
         @JvmStatic
         fun setPreinitializationConfiguration(configuration: ChartboostMediationPreinitializationConfiguration?): ChartboostMediationAdException? {
+            UnityLoggingBridge.log(TAG, "Setting ChartboostMediationPreinitializationConfiguration", LogLevel.VERBOSE)
             return ChartboostMediationSdk.setPreinitializationConfiguration(configuration)
         }
 
@@ -76,6 +82,7 @@ class BridgeCBM {
         @JvmStatic
         fun getLogLevel() : Int {
             ChartboostMediationSdk.logLevel.let {
+                UnityLoggingBridge.log(TAG, "LogLevel is $it", LogLevel.VERBOSE)
                 return it.value
             }
         }
@@ -83,7 +90,8 @@ class BridgeCBM {
         @JvmStatic
         fun setLogLevel(value: Int) {
             val logLevel = LogController.LogLevel.fromInt(value)
-            ChartboostMediationSdk.logLevel = logLevel;
+            ChartboostMediationSdk.logLevel = logLevel
+            UnityLoggingBridge.log(TAG, "LogLevel set to $logLevel", LogLevel.VERBOSE)
         }
     }
 }

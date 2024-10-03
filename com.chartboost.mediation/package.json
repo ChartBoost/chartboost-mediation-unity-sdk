@@ -1,6 +1,6 @@
 {
   "name": "com.chartboost.mediation",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "displayName": "Chartboost Mediation",
   "description": "The Chartboost Mediation Unity SDK. Better monetization powered by bidding",
   "unity": "2022.3",
@@ -8,10 +8,10 @@
   "changelogUrl": "https://developers.chartboost.com/docs/mediation-unity-changelog",
   "licensesUrl": "https://answers.chartboost.com/child_article/legal",
   "dependencies": {
-    "com.chartboost.unity.threading": "1.0.1",
-    "com.chartboost.unity.utilities": "1.0.1",
-    "com.chartboost.unity.logging": "1.0.0",
-    "com.chartboost.core": "1.0.0"
+    "com.chartboost.unity.threading": "1.0.2",
+    "com.chartboost.unity.utilities": "1.0.2",
+    "com.chartboost.unity.logging": "1.1.0",
+    "com.chartboost.core": "1.0.2"
   },
   "keywords": [],
   "author": {

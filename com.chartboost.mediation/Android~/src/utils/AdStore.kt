@@ -2,6 +2,8 @@ package com.chartboost.mediation.unity.utils
 
 import com.chartboost.chartboostmediationsdk.ad.ChartboostMediationFullscreenAd
 import com.chartboost.mediation.unity.banner.BannerAdWrapper
+import com.chartboost.mediation.unity.logging.LogLevel
+import com.chartboost.mediation.unity.logging.UnityLoggingBridge
 
 class AdStore {
     companion object {
@@ -13,7 +15,8 @@ class AdStore {
         fun trackFullscreenAd(fullscreenAd: ChartboostMediationFullscreenAd)
         {
             val hashCode = fullscreenAd.hashCode()
-            fullscreenAdStore[hashCode] = fullscreenAd;
+            fullscreenAdStore[hashCode] = fullscreenAd
+            UnityLoggingBridge.log(TAG, "Tracking FullscreenAd with Id: $hashCode", LogLevel.VERBOSE)
         }
 
         @JvmStatic
@@ -22,6 +25,7 @@ class AdStore {
             val fullscreenAd = fullscreenAdStore[hashCode]
             fullscreenAd?.invalidate()
             fullscreenAdStore.remove(hashCode)
+            UnityLoggingBridge.log(TAG, "Releasing FullscreenAd with Id: $hashCode", LogLevel.VERBOSE)
         }
 
         @JvmStatic
@@ -29,6 +33,7 @@ class AdStore {
         {
             val hashCode = bannerAd.hashCode()
             bannerAdStore[hashCode] = bannerAd;
+            UnityLoggingBridge.log(TAG, "Tracking BannerAd Ad with Id: $hashCode", LogLevel.VERBOSE)
         }
 
         @JvmStatic
@@ -37,6 +42,7 @@ class AdStore {
             val bannerAd = bannerAdStore[hashCode]
             bannerAd?.destroy();
             bannerAdStore.remove(hashCode)
+            UnityLoggingBridge.log(TAG, "Releasing BannerAd with Id: $hashCode", LogLevel.VERBOSE)
         }
 
         @JvmStatic

@@ -27,7 +27,9 @@ namespace Chartboost.Mediation.Demo.AdControllers
             _banner.WillAppear += OnWillAppear;
             _banner.DidRecordImpression += OnDidRecordImpression;
             _banner.DidClick += OnDidClick;
+            _banner.DidBeginDrag += OnDidBeginDrag;
             _banner.DidDrag += OnDidDrag;
+            _banner.DidEndDrag += OnDidEndDrag;
             _banner.Keywords = DefaultKeywords;
 
             // Bottom-center
@@ -48,7 +50,6 @@ namespace Chartboost.Mediation.Demo.AdControllers
 
             Debug.Log("Banner Loaded!");
         }
-
 
         public override void Show()
         {
@@ -75,9 +76,19 @@ namespace Chartboost.Mediation.Demo.AdControllers
             Debug.Log("Banner Clicked!");
         }
 
+        private void OnDidEndDrag(IBannerAd bannerAd, float x, float y)
+        {
+            Debug.Log("Banner Drag Begin!");
+        }
+
         private void OnDidDrag(IBannerAd bannerAd, float x, float y)
         {
             Debug.Log("Banner Dragged!");
+        }
+
+        private void OnDidBeginDrag(IBannerAd bannerAd, float x, float y)
+        {
+            Debug.Log("Banner Drag End!");
         }
     }
 }

@@ -6,18 +6,6 @@ static CBMFullscreenAdQueue * GetFullScreenAdQueue(const void * uniqueId){
     return (__bridge CBMFullscreenAdQueue*)uniqueId;
 }
 
-template <typename TObj>
-TObj toObjectFromJson(const char* jsonString) {
-    NSData* jsonData = [[NSString stringWithUTF8String:jsonString] dataUsingEncoding:NSUTF8StringEncoding];
-    NSError* error = nil;
-    TObj arr = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
-
-    if (error != nil)
-        return nil;
-
-    return arr;
-}
-
 #pragma mark Extern Methods
 extern "C" {
     void _CBMFullscreenAdQueueSetCallbacks(CBMExternFullscreenAdQueueUpdateEvent fullscreenAdQueueUpdateEvent, CBMExternFullscreenAdQueueRemoveExpiredAdEvent fullscreenAdQueueRemoveExpiredAdEvent){
@@ -42,7 +30,7 @@ extern "C" {
     void _CBMFullscreenAdQueueSetKeywords(const void * uniqueId, const char * keywordsJson)
     {
         CBMFullscreenAdQueue * fullScreenAdQueue = GetFullScreenAdQueue(uniqueId);
-        NSMutableDictionary *formattedKeywords = toObjectFromJson<NSMutableDictionary *>(keywordsJson);
+        NSMutableDictionary *formattedKeywords = toObjectFromJson(keywordsJson);
         [fullScreenAdQueue setKeywords:formattedKeywords];
     }
 

@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>Chartboost.CSharp.Mediation.Unity</id>
-    <version>5.0.0</version>
+    <version>5.1.0</version>
     <title>Chartboost Mediation</title>
     <icon>icon.png</icon>
     <description>The Chartboost Mediation Unity SDK. Better monetization powered by bidding</description>
@@ -15,9 +15,10 @@
     <tags>Chartboost, Ads, Mediation, Unity, cs</tags>
     <repository type="git" url="https://github.com/ChartBoost/chartboost-mediation-unity-sdk.git"/>
     <dependencies>
-      <dependency id="Chartboost.CSharp.Threading.Unity" version="1.0.1" />
-      <dependency id="Chartboost.CSharp.Utilities.Unity" version="1.0.1" />
-      <dependency id="Chartboost.CSharp.Logging.Unity" version="1.0.0" />
+      <dependency id="Chartboost.CSharp.Threading.Unity" version="1.0.2" />
+      <dependency id="Chartboost.CSharp.Utilities.Unity" version="1.0.2" />
+      <dependency id="Chartboost.CSharp.Logging.Unity" version="1.1.0" />
+      <dependency id="Chartboost.CSharp.Core.Unity" version="1.0.2" />
     </dependencies>
   </metadata>
 </package>

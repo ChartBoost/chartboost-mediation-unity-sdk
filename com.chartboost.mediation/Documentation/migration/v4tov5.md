@@ -172,15 +172,125 @@ Mediation 4.X                                | Mediation 5.X
 <span style="color:red">No Equivalent</span> | `ChartboostCore.PublisherMetadata.SetFramework(frameworkName:, frameworkVersion:)`
 `ChartboostMediation.SetSubjectToCoppa`      | `ChartboostCore.PublisherMetadata.SetIsUserUnderage(isUserUnderage:)`
 
-### Adaptive Banners
+### Adaptive and Fixed Banners
 
-TODO
+The changes to adaptive banner ads APIs revolved around naming convention parity and architectural alignment with the banner ads APIs.
+
+```csharp
+// Get a bannerAd
+IBannerAd bannerAd = ChartboostMediation.GetBannerAd();
+
+// Place it at the center of screen
+bannerAd.Position = new Vector2(
+    DensityConverters.PixelsToNative(Screen.width/2f),
+    DensityConverters.PixelsToNative(Screen.height/2f)
+);
+
+// Set pivot
+bannerAd.Pivot = new Vector2(0.5f, 0.5f);
+
+// Set banner ad callbacks
+bannerAd.WillAppear += ad => Debug.Log($"BannerAd: {ad.LoadId} will appear.");
+bannerAd.DidClick += ad => Debug.Log($"BannerAd: {ad.LoadId} was clicked.");
+bannerAd.DidDrag += (ad,x,y) => Debug.Log($"BannerAd: {ad.LoadId} was dragged x:{x}/y:{y}.");
+bannerAd.DidRecordImpression += ad => Debug.Log($"BannerAd: {ad.LoadId} was clicked.");
+
+
+// create a load request with size and your placementName
+var loadRequest = new BannerAdLoadRequest(
+    "BANNER_PLACEMENT_NAME",
+    BannerSize.Adaptive6X1(width)    // This can be any other size or the old non-adaptive size like `BannerSize.Standard`
+);
+
+// Check if IBannerAd failed to load
+var error = adShowResult.Error;
+
+// Failed to load
+if (error.HasValue)
+{
+    // Report load failure
+    Debug.LogError($"`IBannerAd` Load failed with error: {JsonTools.SerializeObject(error.Value, Formatting.Indented)}");
+    return;
+}
+
+// Load succeeded
+
+// Report metrics and show success
+var loadId = loadResult.LoadId;
+var metricsJson = JsonTools.SerializeObject(loadResult.Metrics, Formatting.Indented);
+var winningBidInfo = JsonTools.SerializeObject(loadResult.WinningBidInfo, Formatting.Indented);
+Debug.Log($"`IBannerAd` loaded successfully with:\n" +
+          $"LoadId: {loadId}\n" +
+          $"Metrics: {metricsJson}\n" +
+          $"Winning Bid Info: {winningBidInfo}");
+
+```
+
+### Banner Ads for Unity GameObject
+
+```csharp
+// Determine the maximum size to load using width and height
+BannerSize size = BannerSize.Adaptive(100, 100);
+BannerAdLoadRequest loadRequest = new BannerAdLoadRequest("BANNER_PLACEMENT_NAME", size);
+
+// Get reference to `UnityBannerAd` from scene
+public UnityBannerAd unityBannerAd;
+
+// Or create one at runtime
+var unityBannerAd = ChartboostMediation.GetUnityBannerAd("PLACEMENT_NAME", FindObjectOfType<Canvas>().transform);
+
+// Place this at the top-right corner of screen
+unityBannerAd.transform.position = new Vector2(Screen.width, Screen.height);
+unityBannerAd.GetComponent<RectTransform>().pivot = new Vector2(1, 1);
+
+// Set callbacks
+unityBannerAd.WillAppear += ad => Debug.Log($"UnityBannerAd: {ad.LoadId} will appear.");
+unityBannerAd.DidClick += ad => Debug.Log($"UnityBannerAd: {ad.LoadId} was clicked.");
+unityBannerAd.DidDrag += (ad,x,y) => Debug.Log($"UnityBannerAd: {ad.LoadId} was dragged x:{x}/y:{y}.");
+unityBannerAd.DidRecordImpression += ad => Debug.Log($"UnityBannerAd: {ad.LoadId} was clicked.");
+
+// Load with this gameobject's rect size as request size for banner
+var loadResult = await unityBannerAd.Load();
+
+// Or use a custom load request
+
+// Create load request
+var loadRequest = new BannerAdLoadRequest(
+    "PLACEMENT_NAME",
+    BannerSize.Adaptive6X1(100)    // This can be any other size or the old non-adaptive size like `BannerSize.Standard`
+);
+var loadResult = await unityBannerAd.Load(loadRequest);
+if(!loadResult.Error.HasValue)
+{
+    // loaded successfully
+}
+
+// Check if UnityBannerAd failed to load
+var error = adShowResult.Error;
+
+// Failed to load
+if (error.HasValue)
+{
+    // Report load failure
+    Debug.LogError($"`UnityBannerAd` Load failed with error: {JsonTools.SerializeObject(error.Value, Formatting.Indented)}");
+    return;
+}
+
+// Load succeeded
+
+// Report metrics and show success
+var loadId = loadResult.LoadId;
+var metricsJson = JsonTools.SerializeObject(loadResult.Metrics, Formatting.Indented);
+var winningBidInfo = JsonTools.SerializeObject(loadResult.WinningBidInfo, Formatting.Indented);
+Debug.Log($"`UnityBannerAd` loaded successfully with:\n" +
+          $"LoadId: {loadId}\n" +
+          $"Metrics: {metricsJson}\n" +
+          $"Winning Bid Info: {winningBidInfo}");
+```
 
 ### Resizing Adaptive Banners
 
-TODO
-
-### Fixed Banner Ads
+Resizing adaptive banners have been removed and replaced with `bannerAd.ContainerSize = ContainerSize.WrapContent();`.
 
 ### Fullscreen Ads
 

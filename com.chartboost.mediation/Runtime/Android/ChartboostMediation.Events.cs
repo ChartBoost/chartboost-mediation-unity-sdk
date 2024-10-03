@@ -7,16 +7,6 @@ namespace Chartboost.Mediation.Android
 {
     internal partial class ChartboostMediation 
     {
-        internal class ImpressionLevelRevenueDataObserver : AndroidJavaProxy
-        {
-            internal ImpressionLevelRevenueDataObserver() : base(AndroidConstants.ClassChartboostMediationIlrdObserver) { }
-
-            // ReSharper disable once InconsistentNaming
-            [Preserve]
-            private void onImpression(AndroidJavaObject impressionData)
-                => MainThreadDispatcher.Post(_ => Chartboost.Mediation.ChartboostMediation.OnDidReceiveImpressionLevelRevenueData(impressionData.ImpressionDataToJsonString()));
-        }
-        
         internal class PartnerAdapterInitializationResultsObserver : AndroidJavaProxy
         {
             public PartnerAdapterInitializationResultsObserver() : base(AndroidConstants.ClassPartnerAdapterInitializationResultsObserver) { }

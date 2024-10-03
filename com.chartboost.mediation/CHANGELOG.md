@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file using the standards as defined at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0).
 
+### Version 5.1.0 *(2024-10-03)*
+
+Improvements:
+- Added internal logic to cache and retrieve `ILRD` events when application context is lost.
+- Added internal logging logic to report debug information from native wrappers.
+- Added the following events to `BannderAd` and `UnityBannerAd` API:
+  - `DidBeginDrag` : Triggered when a BannerAd container begins dragging on the screen.
+  - `DidEndDrag` : Triggered when a BannerAd container finishes dragging on the screen.
+  
 ### Version 5.0.0 *(2024-08-08)*
 Improvements:
 - Completed rebranding all APIs to Chartboost Mediation.

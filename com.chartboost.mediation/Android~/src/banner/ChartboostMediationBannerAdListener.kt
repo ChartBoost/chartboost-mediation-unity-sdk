@@ -1,6 +1,5 @@
+@file:Suppress("PackageDirectoryMismatch")
 package com.chartboost.mediation.unity.banner
-
-import com.chartboost.chartboostmediationsdk.ad.ChartboostMediationBannerAdView
 
 interface ChartboostMediationBannerAdListener {
     fun onAdViewAdded(ad: BannerAdWrapper)
@@ -9,5 +8,9 @@ interface ChartboostMediationBannerAdListener {
 
     fun onAdImpressionRecorded(ad: BannerAdWrapper)
 
+    fun onAdDragBegin(ad: BannerAdWrapper, x: Float, y: Float)
+
     fun onAdDrag(ad: BannerAdWrapper, x: Float, y: Float)
+
+    fun onAdDragEnd(ad: BannerAdWrapper, x: Float, y: Float)
 }

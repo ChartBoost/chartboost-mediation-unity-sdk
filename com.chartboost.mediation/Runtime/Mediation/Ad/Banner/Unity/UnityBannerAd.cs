@@ -34,9 +34,19 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
         public event UnityBannerAdEvent DidRecordImpression;
         
         /// <summary>
+        ///  Called when this GameObject has begun dragging on screen.
+        /// </summary>
+        public event UnityBannerAdDragEvent DidBeginDrag;
+        
+        /// <summary>
         ///  Called when this GameObject is dragged on screen.
         /// </summary>
         public event UnityBannerAdDragEvent DidDrag;
+        
+        /// <summary>
+        ///  Called when this GameObject has finished dragging on screen.
+        /// </summary>
+        public event UnityBannerAdDragEvent DidEndDrag;
         
         [SerializeField] 
         private string placementName;
@@ -51,6 +61,7 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
         private IBannerAd _bannerAd;
         private LayoutParams _lastLayoutParams = new();
         private RectTransform _rectTransform;
+        private bool _isDragging;
         
         /// <summary>
         /// The placement name for the ad.
@@ -92,20 +103,8 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
         
         private void Update()
         {
-            if(!Draggable)
+            if(!_isDragging)
                 SyncWithNativeContainer();
-            
-            // if(!Draggable && UnityBannerTransform.anchoredPosition != _lastPosition)
-            // {
-            //     UpdateNativeContainerPosition();
-            //     _lastPosition = UnityBannerTransform.anchoredPosition;
-            // }
-            //
-            // if (UnityBannerTransform.sizeDelta != _lastSize)
-            // {
-            //     UpdateNativeContainerSize();
-            //     _lastSize = UnityBannerTransform.sizeDelta;
-            // }
         }
         
         private void OnDisable() => BannerAd.Visible = false;
@@ -233,8 +232,20 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
 
         private void OnClick(IBannerAd bannerView) => DidClick?.Invoke(this);
 
+        private void OnDragBegin(IBannerAd bannerAdd, float x, float y)
+        {
+            _isDragging = true;
+            DidBeginDrag?.Invoke(this, x, y);
+        }
+
         private void OnDrag(IBannerAd bannerView, float x, float y)
         {
+            if (!_isDragging)
+            {
+                LogController.Log("The DidDrag event was triggered, but no preceding DidDragBegin event was detected.", LogLevel.Debug);
+                return;
+            }
+            
             y = Screen.height - y;
             
             // x,y obtained from native is for top left corner (x = 0,y = 1)
@@ -247,6 +258,12 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
             
             transform.position = new Vector3(x, y, 0);
             DidDrag?.Invoke(this, x, y);
+        }
+        
+        private void OnDragEnd(IBannerAd bannerAd, float x, float y)
+        {
+            _isDragging = false;
+            DidEndDrag?.Invoke(this, x, y);
         }
         #endregion
 
@@ -261,7 +278,9 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
                 _bannerAd.WillAppear += OnWillAppear;
                 _bannerAd.DidClick += OnClick;
                 _bannerAd.DidRecordImpression += OnRecordImpression;
+                _bannerAd.DidBeginDrag += OnDragBegin;
                 _bannerAd.DidDrag += OnDrag;
+                _bannerAd.DidEndDrag += OnDragEnd;
 
                 _bannerAd.Visible = gameObject.activeSelf;
                 _bannerAd.Draggable = Draggable;
@@ -270,7 +289,7 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
                 return _bannerAd;
             }
         }
-        
+
         private async void SyncWithNativeContainer()
         {
             var layoutParams = UnityBannerTransform.LayoutParams();
@@ -286,8 +305,7 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
 
                 // Size
                 var size = await GetTransformSize();
-                if (BannerAd != null)
-                    BannerAd.ContainerSize = ContainerSize.FixedSize((int)size.x, (int)size.y);
+                BannerAd.ContainerSize = ContainerSize.FixedSize((int)size.x, (int)size.y);
             }
             _lastLayoutParams = layoutParams;
         }

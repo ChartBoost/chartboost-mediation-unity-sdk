@@ -127,8 +127,14 @@ namespace Chartboost.Mediation.Utilities.Events
                     case BannerAdEvents.RecordImpression:
                         ad.OnRecordImpression();
                         break;
+                    case BannerAdEvents.BeginDrag:
+                        ad.OnDragBegin(x, y);
+                        break;
                     case BannerAdEvents.Drag:
                         ad.OnDrag(x, y);
+                        break;
+                    case BannerAdEvents.EndDrag:
+                        ad.OnDragEnd(x, y);
                         break;
                     default:
                         return;

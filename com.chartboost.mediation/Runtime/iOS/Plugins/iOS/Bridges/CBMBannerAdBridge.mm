@@ -7,7 +7,7 @@
 
 #pragma mark Banner Utility Methods
 
-NSString * errorFormat = @"CM_%ld";
+NSString* const errorFormat = @"CM_%ld";
 
 static CBMBannerSize* GetBannerSize(int sizeType, float width, float height){
     CBMBannerSize *size;
@@ -19,18 +19,6 @@ static CBMBannerSize* GetBannerSize(int sizeType, float width, float height){
         default: size =  [CBMBannerSize adaptiveWithWidth:0 maxHeight:0]; break;
     }
     return size;
-}
-
-template <typename TObj>
-TObj toObjectFromJson(const char* jsonString) {
-    NSData* jsonData = [[NSString stringWithUTF8String:jsonString] dataUsingEncoding:NSUTF8StringEncoding];
-    NSError* error = nil;
-    TObj arr = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
-
-    if (error != nil)
-        return nil;
-
-    return arr;
 }
 
 #pragma mark Extern Methods
@@ -63,7 +51,7 @@ extern "C" {
     void _CBMBannerAdSetKeywords(const void* uniqueId, const char * keywordsJson){
         CBMBannerAdWrapper *bannerAdWrapper = (__bridge CBMBannerAdWrapper*)uniqueId;
         if (keywordsJson != NULL) {
-            NSMutableDictionary *keywords = toObjectFromJson<NSMutableDictionary *>(keywordsJson);
+            NSMutableDictionary *keywords = toObjectFromJson(keywordsJson);
             [bannerAdWrapper setKeywords:keywords];
         }
         else {
@@ -79,7 +67,7 @@ extern "C" {
     void _CBMBannerAdSetPartnerSettings(const void* uniqueId, const char * partnerSettingsJson){
         CBMBannerAdWrapper *bannerAdWrapper = (__bridge CBMBannerAdWrapper*)uniqueId;
         if (partnerSettingsJson != NULL) {
-            NSMutableDictionary *partnerSettings = toObjectFromJson<NSMutableDictionary *>(partnerSettingsJson);
+            NSMutableDictionary *partnerSettings = toObjectFromJson(partnerSettingsJson);
             [bannerAdWrapper setPartnerSettings:partnerSettings];
         }
         else {
@@ -146,7 +134,7 @@ extern "C" {
 
     const char * _CBMBannerAdGetBannerSize(const void* uniqueId){
         CBMBannerAdWrapper *bannerAdWrapper = (__bridge CBMBannerAdWrapper*)uniqueId;
-        return toJSON(bannerSizeToDictionary([bannerAdWrapper bannerSize]));
+        return toJSON(bannerSizeToDictionary([[bannerAdWrapper bannerView] size]));
     }
 
     const char * _CBMBannerAdGetContainerSize(const void* uniqueId){

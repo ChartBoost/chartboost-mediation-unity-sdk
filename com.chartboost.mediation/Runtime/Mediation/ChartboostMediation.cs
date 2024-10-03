@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Chartboost.Core;
+using Chartboost.Core.Initialization;
 using Chartboost.Json;
 using Chartboost.Logging;
 using Chartboost.Mediation.Ad.Banner;
 using Chartboost.Mediation.Ad.Banner.Enums;
 using Chartboost.Mediation.Ad.Banner.Unity;
+using Chartboost.Mediation.Ad.Fullscreen;
 using Chartboost.Mediation.Ad.Fullscreen.Queue;
 using Chartboost.Mediation.Data;
 using Chartboost.Mediation.Default;
@@ -35,7 +38,7 @@ namespace Chartboost.Mediation
         /// <summary>
         /// The Chartboost Mediation SDK version. The value is a semantic versioning compliant string.
         /// </summary>
-        public const string SDKVersion = "5.0.0";
+        public const string SDKVersion = "5.1.0";
 
         /// <summary>
         /// The native Chartboost Mediation SDK version.
@@ -155,7 +158,7 @@ namespace Chartboost.Mediation
                     return;
                 }
 
-                data.TryGetValue("placementName", out var placementName);
+                data.TryGetValue("placement", out var placementName);
                 DidReceiveImpressionLevelRevenueData?.Invoke(placementName as string, new Hashtable(data));
             });
         }

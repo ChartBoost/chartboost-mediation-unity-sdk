@@ -13,8 +13,6 @@ To use this new ad format, Publishers will need to create a new Adaptive Banner 
 
 Another API `UnityBannerAd` is also provided which allows usage of Unity Gameobjects to load a banner ad within it.
 
-For full details about the ad format always refer to [Chartboost Documentation](https://docs.chartboost.com/en/mediation/integrate/unity/load-ads/#banner-ad-objects).
-
 # `BannerAdLoadRequest`
 
 `BannerAdLoadRequest` objects contains publisher provided configurations for `IBannerAd` objects. It is used when calling `IBannerAd.Load`, as seen in the examples below.
@@ -56,6 +54,28 @@ var loadRequest = new BannerAdLoadRequest(
 );
 
 ...
+```
+
+# Keywords
+
+Keywords are set after obtaining the IBannerAd object when calling ChartboostMediation.GetBannerAd. To remove keywords, pass a new set without those keywords. The list will be overridden. This is to facilitate the wrapping process between Unity and native platforms.
+
+> **Warning** \
+> Keywords has restrictions for setting keys and values. The maximum characters allowed for keys is 64 characters. The maximum characters for values is 256 characters.
+
+```csharp
+// Keywords to pass for banner ad
+var keywords = new Dictionary<string, string>
+{
+    { "key", "value" },
+    { "key_2", "value_2" }
+};
+
+// Get banner ad
+IBannerAd bannerAd = ChartboostMediation.GetBannerAd();
+
+// Set keywords
+bannerAd.Keywords = keywords;
 ```
 
 ## Loading in async Context

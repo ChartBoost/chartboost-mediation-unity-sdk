@@ -21,7 +21,9 @@ namespace Chartboost.Mediation.Demo.AdControllers
             _unityBanner.DidRecordImpression += OnDidRecordImpressionBanner;
             _unityBanner.WillAppear += OnWillAppearBanner;
             _unityBanner.DidClick += OnDidClickBanner;
+            _unityBanner.DidBeginDrag += OnDidBeginDragBanner;
             _unityBanner.DidDrag += OnDidDragBanner;
+            _unityBanner.DidEndDrag += OnDidEndDragBanner;
             _unityBanner.Keywords = DefaultKeywords;
 
             LoadingOverlay.Instance.ToggleLoadingOverlay(true);
@@ -64,9 +66,19 @@ namespace Chartboost.Mediation.Demo.AdControllers
             Debug.Log("Unity Banner Clicked");
         }
 
+        private void OnDidBeginDragBanner(UnityBannerAd unityBannerAd, float x, float y)
+        {
+            Debug.Log("Unity Banner Drag Begin");
+        }
+        
         private void OnDidDragBanner(UnityBannerAd unityBannerAd, float x, float y)
         {
             Debug.Log("Unity Banner Drag");
+        }
+        
+        private void OnDidEndDragBanner(UnityBannerAd unityBannerAd, float x, float y)
+        {
+            Debug.Log("Unity Banner Drag End");
         }
         #endregion
     }

@@ -5,7 +5,8 @@
         "Chartboost.Mediation",
         "Chartboost.Threading",
         "Chartboost.Utilities.IOS",
-        "Chartboost.Logging"
+        "Chartboost.Logging",
+        "Chartboost.Core"
     ],
     "includePlatforms": [
         "Editor",
