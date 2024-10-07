@@ -1,5 +1,6 @@
 using Chartboost.Mediation;
 using UnityEditor;
+using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -32,21 +33,21 @@ namespace Chartboost.Editor {
                 mediationIcon
             };
 
-            PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel22;
+            PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel23;
             PlayerSettings.Android.targetSdkVersion = (AndroidSdkVersions)34;
             PlayerSettings.iOS.targetOSVersionString = "11.0";
-
-            PlayerSettings.SetIconsForTargetGroup(BuildTargetGroup.Android, icons);
-            PlayerSettings.SetIconsForTargetGroup(BuildTargetGroup.iOS, icons);
-            PlayerSettings.SetIconsForTargetGroup(BuildTargetGroup.Unknown, icons);
-
-            PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android, ApplicationBundleIdentifier);
-            PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.iOS, ApplicationBundleIdentifier);
-            PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Standalone, ApplicationBundleIdentifier);
-
-            PlayerSettings.SetAdditionalCompilerArgumentsForGroup(BuildTargetGroup.Android, CompilerFlags);
-            PlayerSettings.SetAdditionalCompilerArgumentsForGroup(BuildTargetGroup.iOS, CompilerFlags);
-            PlayerSettings.SetAdditionalCompilerArgumentsForGroup(BuildTargetGroup.Standalone, CompilerFlags);
+            
+            PlayerSettings.SetIcons(NamedBuildTarget.Android, icons, IconKind.Application);
+            PlayerSettings.SetIcons(NamedBuildTarget.iOS, icons, IconKind.Application);
+            PlayerSettings.SetIcons(NamedBuildTarget.Unknown, icons, IconKind.Application);
+            
+            PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Android, ApplicationBundleIdentifier);
+            PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.iOS, ApplicationBundleIdentifier);
+            PlayerSettings.SetApplicationIdentifier(NamedBuildTarget.Standalone, ApplicationBundleIdentifier);
+            
+            PlayerSettings.SetAdditionalCompilerArguments(NamedBuildTarget.Android, CompilerFlags);
+            PlayerSettings.SetAdditionalCompilerArguments(NamedBuildTarget.iOS, CompilerFlags);
+            PlayerSettings.SetAdditionalCompilerArguments(NamedBuildTarget.Standalone, CompilerFlags);
 
             // Addresses an issue with 2022 LTS where development builds using Vulkan API will crash.
             PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.Android, false);
