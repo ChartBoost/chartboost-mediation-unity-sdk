@@ -1,6 +1,7 @@
 using Chartboost.Mediation.Ad.Banner;
 using Chartboost.Mediation.Demo.Loading;
 using Chartboost.Mediation.Requests;
+using Chartboost.Mediation.Utilities;
 using UnityEngine;
 
 namespace Chartboost.Mediation.Demo.AdControllers
@@ -33,8 +34,8 @@ namespace Chartboost.Mediation.Demo.AdControllers
             _banner.Keywords = DefaultKeywords;
 
             // Bottom-center
-            _banner.Position = new Vector2(Screen.width / 2f, 0);
-            _banner.Pivot = new Vector2(0.5f, 0);
+            _banner.Position = new Vector2( DensityConverters.PixelsToNative(Screen.width / 2f), DensityConverters.PixelsToNative(Screen.height));
+            _banner.Pivot = new Vector2(0.5f, 1);
 
             var adLoadRequest = new BannerAdLoadRequest(PlacementIdentifier, BannerSize.Standard);
             

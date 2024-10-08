@@ -2,6 +2,8 @@ using Chartboost.Mediation.Ad.Banner;
 using Chartboost.Mediation.Ad.Banner.Unity;
 using Chartboost.Mediation.Demo.Loading;
 using Chartboost.Mediation.Demo.Pages;
+using Chartboost.Mediation.Requests;
+using Chartboost.Mediation.Utilities;
 using UnityEngine;
 
 namespace Chartboost.Mediation.Demo.AdControllers
@@ -26,8 +28,14 @@ namespace Chartboost.Mediation.Demo.AdControllers
             _unityBanner.DidEndDrag += OnDidEndDragBanner;
             _unityBanner.Keywords = DefaultKeywords;
 
+            // Bottom-center
+            _unityBanner.transform.position = new Vector3(Screen.width / 2f, 0, 0);
+            _unityBanner.GetComponent<RectTransform>().pivot = new Vector2(0.5f, 0);
+
+            var adLoadRequest = new BannerAdLoadRequest(PlacementIdentifier, BannerSize.Standard);
+
             LoadingOverlay.Instance.ToggleLoadingOverlay(true);
-            var adLoadResult = await _unityBanner.Load();
+            var adLoadResult = await _unityBanner.Load(adLoadRequest);
             LoadingOverlay.Instance.ToggleLoadingOverlay(false);
             
             if (adLoadResult.Error.HasValue)
@@ -59,6 +67,14 @@ namespace Chartboost.Mediation.Demo.AdControllers
         private void OnWillAppearBanner(UnityBannerAd unityBannerAd)
         {
             Debug.Log("Unity Banner Loaded");
+            
+            // Update size
+            var canvasScale = _unityBanner.GetComponentInParent<Canvas>().transform.localScale.x;
+            var width = DensityConverters.NativeToPixels(_unityBanner.BannerSize?.Width ?? 0)/canvasScale;
+            var height = DensityConverters.NativeToPixels(_unityBanner.BannerSize?.Height ?? 0)/canvasScale;
+            var rectTransform = _unityBanner.GetComponent<RectTransform>();
+            rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
+            rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
         }
 
         private void OnDidClickBanner(UnityBannerAd unityBannerAd)
