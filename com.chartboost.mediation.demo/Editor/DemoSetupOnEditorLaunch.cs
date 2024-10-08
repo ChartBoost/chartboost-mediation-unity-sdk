@@ -35,7 +35,7 @@ namespace Chartboost.Editor {
 
             PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel23;
             PlayerSettings.Android.targetSdkVersion = (AndroidSdkVersions)34;
-            PlayerSettings.iOS.targetOSVersionString = "11.0";
+            PlayerSettings.iOS.targetOSVersionString = "13.0";
             
             PlayerSettings.SetIcons(NamedBuildTarget.Android, icons, IconKind.Application);
             PlayerSettings.SetIcons(NamedBuildTarget.iOS, icons, IconKind.Application);
