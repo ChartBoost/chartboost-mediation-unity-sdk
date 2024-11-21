@@ -3,7 +3,9 @@ package com.chartboost.mediation.unity.banner
 
 import android.app.Activity
 import android.graphics.Color
+import android.graphics.Point
 import android.graphics.PointF
+import android.os.Build
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.Size
@@ -12,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.RelativeLayout
+import androidx.annotation.RequiresApi
 import com.chartboost.chartboostmediationsdk.ad.ChartboostMediationBannerAdLoadListener
 import com.chartboost.chartboostmediationsdk.ad.ChartboostMediationBannerAdLoadRequest
 import com.chartboost.chartboostmediationsdk.ad.ChartboostMediationBannerAdView
@@ -261,6 +264,57 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
                 bannerAdListener?.onAdImpressionRecorded(this@BannerAdWrapper)
             }
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun setContainerBackgroundColor(colorArray: FloatArray)
+    {
+        if (colorArray.size == 4) {
+            val r = colorArray[0]
+            val g = colorArray[1]
+            val b = colorArray[2]
+            val a = colorArray[3]
+
+            UnityLoggingBridge.log(TAG, "Setting container background color to - R: $r, G: $g, B: $b, A: $a", LogLevel.DEBUG)
+            runTaskOnUiThread { ad.setBackgroundColor(Color.argb(a, r, g, b)) }
+        }
+        else {
+            UnityLoggingBridge.log(TAG, "Invalid Color Array Length", LogLevel.DEBUG)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun setAdBackgroundColor(colorArray: FloatArray) {
+        if (colorArray.size == 4) {
+            val r = colorArray[0]
+            val g = colorArray[1]
+            val b = colorArray[2]
+            val a = colorArray[3]
+
+            UnityLoggingBridge.log(TAG, "Setting ad background color to - R: $r, G: $g, B: $b, A: $a", LogLevel.DEBUG)
+            if(partnerAd == null){
+                partnerAd = View(activity)
+                ad.addView(partnerAd)
+            }
+            runTaskOnUiThread { partnerAd?.setBackgroundColor(Color.argb(a, r, g, b)) }
+        }
+        else {
+            UnityLoggingBridge.log(TAG, "Invalid Color Array Length", LogLevel.DEBUG)
+        }
+    }
+
+    fun setAdRelativePosition(x: Float, y: Float){
+        runTaskOnUiThread {
+            partnerAd?.let {
+                it.x = x * displayDensity
+                it.y = y * displayDensity
+            }
+        }
+    }
+
+    fun getAdRelativePosition(): PointF {
+        partnerAd?.let { return PointF(it.x, it.y) }
+        return PointF(0F,0F)
     }
 
     private fun createBannerLayout() {

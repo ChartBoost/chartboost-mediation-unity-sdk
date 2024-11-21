@@ -25,7 +25,7 @@ namespace Chartboost.Tests.Runtime
         
         [Test, Order(2)]
         public void PartnerId() => Assert.AreEqual(TestPartnerId, _testBidInfo.PartnerId);
-        
+
         [Test, Order(3)]
         public void Price() => Assert.AreEqual(TestPrice, _testBidInfo.Price);
         

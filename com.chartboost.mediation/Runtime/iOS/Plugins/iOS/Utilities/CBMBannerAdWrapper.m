@@ -50,6 +50,35 @@ NSString* const CBMBannerAdWrapperTAG = @"CBMBannerAdWrapper";
     return [_bannerView partnerSettings];
 }
 
+- (void)setAdBackgroundColor:(UIColor *)adBackgroundColor {
+    toMain(^{
+        if (self->_bannerView.subviews.count > 0) {
+            UIView *partnerAd = self->_bannerView.subviews[0];
+            [partnerAd setBackgroundColor:adBackgroundColor];
+        }
+    });
+}
+
+- (void)setAdRelativePosition:(CGPoint)adRelativePosition {
+    toMain(^{
+        if (self->_bannerView.subviews.count > 0) {
+            UIView *partnerAd = self->_bannerView.subviews[0];
+            
+            CGRect frame = partnerAd.frame;
+            frame.origin = adRelativePosition;
+            partnerAd.frame = frame;
+        }
+    });
+}
+
+- (CGPoint)adRelativePosition {
+    if (self->_bannerView.subviews.count > 0) {
+        UIView *partnerAd = self->_bannerView.subviews[0];
+        return partnerAd.frame.origin;
+    }
+    return CGPointMake(0, 0);
+}
+
 #pragma mark Container
 
 - (void)setContainerSize:(CGSize)size{
@@ -133,6 +162,12 @@ NSString* const CBMBannerAdWrapperTAG = @"CBMBannerAdWrapper";
 - (void)destroy {
     toMain(^{
         [self->_bannerView removeFromSuperview];
+    });
+}
+
+- (void)setContainerBackgroundColor:(UIColor *)containerBackgroundColor {
+    toMain(^{
+        [self-> _bannerView setBackgroundColor:containerBackgroundColor];
     });
 }
 

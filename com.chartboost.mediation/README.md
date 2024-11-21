@@ -24,7 +24,7 @@ In order to add the Chartboost Core Unity SDK to your project using the npm pack
 
 ```json
 "dependencies": {
-    "com.chartboost.mediation": "5.0.0",
+    "com.chartboost.mediation": "5.2.0",
     ...
 },
 "scopedRegistries": [
@@ -67,9 +67,10 @@ You should be able to see the `Chartboost.CSharp.Mediation.Unity` package. Choos
 4. [Fullscreen Ad Queue](Documentation/integration/fullscreenadqueue.md)
 5. [Banner Ad](Documentation/integration/bannerad.md)
 6. [Unity Banner Ad](Documentation/integration/unitybannerad.md)
-7. [Error Codes](Documentation/integration/error-codes.md)
-8. [Unit Testing](Documentation/integration/unit-testing.md)
-9. [FAQ](Documentation/faq.md)
+7. [Banner Visual Element](Documentation/integration/bannervisualelement.md)
+8. [Error Codes](Documentation/integration/error-codes.md)
+9. [Unit Testing](Documentation/integration/unit-testing.md)
+10. [FAQ](Documentation/faq.md)
 
 # Migration Guides
 

@@ -168,6 +168,27 @@ namespace Chartboost.Mediation.iOS.Ad.Banner
             _CBMBannerAdDestroy(UniqueId);
         }
 
+        /// <inheritdoc />
+        internal override Vector2 AdRelativePosition
+        {
+            get => _CBMBannerAdGetAdRelativePosition(UniqueId).ToVector2();
+            set => _CBMBannerAdSetAdRelativePosition(UniqueId, value.x, value.y);
+        }
+        
+        /// <inheritdoc />
+        internal override void SetContainerBackgroundColor(Color color)
+        {
+            base.SetContainerBackgroundColor(color);
+            _CBMBannerAdSetContainerBackgroundColor(UniqueId, color.r, color.g, color.b, color.a);
+        }
+
+        /// <inheritdoc />
+        internal override void SetAdBackgroundColor(Color color)
+        {
+            base.SetAdBackgroundColor(color);
+            _CBMBannerAdSetAdBackgroundColor(UniqueId, color.r, color.g, color.b, color.a);
+        }
+
         [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMBannerAdSetCallbacks(ExternBannerAdEvent bannerAdEvents);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern IntPtr _CBMGetBannerAd(ExternBannerAdDragEvent dragListener);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern string _CBMBannerAdGetKeywords(IntPtr uniqueId);
@@ -195,5 +216,9 @@ namespace Chartboost.Mediation.iOS.Ad.Banner
         [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMBannerAdReset(IntPtr uniqueId);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMBannerAdDestroy(IntPtr uniqueId);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMBannerAdSetContainerSize(IntPtr uniqueId, float width, float height);
+        [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMBannerAdSetAdRelativePosition(IntPtr uniqueId, float x, float y);
+        [DllImport(SharedIOSConstants.DLLImport)] private static extern string _CBMBannerAdGetAdRelativePosition(IntPtr uniqueId);
+        [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMBannerAdSetContainerBackgroundColor(IntPtr uniqueId, float r, float g, float b, float a);
+        [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMBannerAdSetAdBackgroundColor(IntPtr uniqueId, float r, float g, float b, float a);
     }
 }

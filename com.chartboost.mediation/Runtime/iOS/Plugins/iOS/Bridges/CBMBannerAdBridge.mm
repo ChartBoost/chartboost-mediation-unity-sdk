@@ -234,5 +234,34 @@ extern "C" {
         [bannerAdWrapper destroy];
         [[CBMAdStore sharedStore] releaseAd:(__bridge void*)[bannerAdWrapper bannerView]];
     }
+    
+    void _CBMBannerAdSetAdRelativePosition(const void* uniqueId, float x, float y)
+    {
+        CBMBannerAdWrapper *bannerAdWrapper = (__bridge CBMBannerAdWrapper*)uniqueId;
+        [bannerAdWrapper setAdRelativePosition:CGPointMake(x, y)];
+    }
+
+    const char* _CBMBannerAdGetAdRelativePosition(const void* uniqueId)
+    {
+        CBMBannerAdWrapper *bannerAdWrapper = (__bridge CBMBannerAdWrapper*)uniqueId;
+        CGPoint position = [bannerAdWrapper adRelativePosition];
+        const NSString * xKey = @"x";
+        const NSString * yKey = @"y";
+        NSString * xValue =  [NSString stringWithFormat:@"%f", position.x];
+        NSString * yValue = [NSString stringWithFormat:@"%f", position.y];
+        return toJSON([NSDictionary dictionaryWithObjectsAndKeys:xValue, xKey, yValue, yKey, nil]);
+    }
+
+    void _CBMBannerAdSetContainerBackgroundColor(const void* uniqueId, float r, float g, float b, float a)
+    {
+        CBMBannerAdWrapper *bannerAdWrapper = (__bridge CBMBannerAdWrapper*)uniqueId;
+        [bannerAdWrapper setContainerBackgroundColor:[UIColor colorWithRed:r green:g blue:b alpha:a]];
+    }
+
+    void _CBMBannerAdSetAdBackgroundColor(const void* uniqueId, float r, float g, float b, float a)
+    {
+        CBMBannerAdWrapper *bannerAdWrapper = (__bridge CBMBannerAdWrapper*)uniqueId;
+        [bannerAdWrapper setAdBackgroundColor:[UIColor colorWithRed:r green:g blue:b alpha:a]];
+    }
 }
 
