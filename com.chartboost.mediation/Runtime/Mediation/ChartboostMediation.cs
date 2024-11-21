@@ -7,6 +7,7 @@ using Chartboost.Json;
 using Chartboost.Logging;
 using Chartboost.Mediation.Ad.Banner;
 using Chartboost.Mediation.Ad.Banner.Enums;
+using Chartboost.Mediation.Ad.Banner.UIToolkit;
 using Chartboost.Mediation.Ad.Banner.Unity;
 using Chartboost.Mediation.Ad.Fullscreen;
 using Chartboost.Mediation.Ad.Fullscreen.Queue;
@@ -38,7 +39,7 @@ namespace Chartboost.Mediation
         /// <summary>
         /// The Chartboost Mediation SDK version. The value is a semantic versioning compliant string.
         /// </summary>
-        public const string SDKVersion = "5.1.0";
+        public const string SDKVersion = "5.2.0";
 
         /// <summary>
         /// The native Chartboost Mediation SDK version.
@@ -130,6 +131,18 @@ namespace Chartboost.Mediation
             var unityBannerAd = UnityBannerAd.InstantiateUnityBannerAd(parent, size);
             unityBannerAd.PlacementName = placementName;
             return unityBannerAd; 
+        }
+
+        /// <summary>
+        /// Returns a new <see cref="BannerVisualElement"/> <see cref="UnityEngine.UIElements.VisualElement"/> that can be used to load and display banner ads.
+        /// </summary>
+        /// <param name="placementName">The placement name for this <see cref="IBannerAd"/> ad.</param>
+        /// <returns></returns>
+        public static BannerVisualElement GetBannerVisualElement(string placementName)
+        {
+            var bannerVisualElement = new BannerVisualElement();
+            bannerVisualElement.PlacementName = placementName;
+            return bannerVisualElement;
         }
         
         /// <summary>

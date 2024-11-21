@@ -166,7 +166,13 @@ namespace Chartboost.Mediation.Ad.Banner
             LogController.Log($"{BannerAd}: {_request?.PlacementName}/{UniqueId} Drag End at X:{x} Y:{y}", LogLevel.Debug);
             DidEndDrag?.Invoke(this, x, y);
         }
+        
+        internal virtual void SetContainerBackgroundColor(Color color) => LogController.Log($"Setting native view's container background color to {color}", LogLevel.Debug);
 
+        internal virtual void SetAdBackgroundColor(Color color) => LogController.Log($"Setting native view's ad background color to {color}", LogLevel.Debug);
+
+        internal virtual Vector2 AdRelativePosition { get; set; }
+        
         ~BannerAdBase()
         {
             if(!IsDisposed)

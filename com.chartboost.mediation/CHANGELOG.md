@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file using the standards as defined at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0).
 
+### Version 5.2.0 *(2024-11-14)*
+
+Improvements:
+- Added a new `BannerVisualElement` API which allows creating and loading of banner ads using Unity UI Toolkit.
+
 ### Version 5.1.0 *(2024-10-03)*
 
 Improvements:

@@ -46,6 +46,7 @@ namespace Chartboost.Mediation.Android.Utilities
 
             if (!double.TryParse(price, out var priceAsDouble))
                 LogController.Log("Failed to parse bid info price, defaulting to 0.", LogLevel.Error);
+            
             return new BidInfo(auctionId, partnerId, priceAsDouble, lineItemName, lineItemId);
         }
 

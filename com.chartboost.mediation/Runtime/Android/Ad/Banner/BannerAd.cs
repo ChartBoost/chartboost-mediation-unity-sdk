@@ -159,5 +159,28 @@ namespace Chartboost.Mediation.Android.Ad.Banner
             // Release unmanaged resources
             AndroidAdStore.ReleaseBannerAd(UniqueId);
         }
+
+        /// <inheritdoc />
+        internal override void SetContainerBackgroundColor(Color color)
+        {
+            base.SetContainerBackgroundColor(color);
+            var colorArray = new[] { color.r, color.g, color.b, color.a };
+            _nativeBannerAd.Call("setContainerBackgroundColor", colorArray);
+        }
+
+        /// <inheritdoc />
+        internal override void SetAdBackgroundColor(Color color)
+        {
+            base.SetAdBackgroundColor(color);
+            var colorArray = new[] { color.r, color.g, color.b, color.a };
+            _nativeBannerAd.Call("setAdBackgroundColor", colorArray);
+        }
+
+        /// <inheritdoc />
+        internal override Vector2 AdRelativePosition
+        {
+            get => _nativeBannerAd.Call<AndroidJavaObject>("getAdRelativePosition").PointFToVector2();
+            set => _nativeBannerAd.Call("setAdRelativePosition", value.x, value.y);
+        }
     }
 }

@@ -38,7 +38,7 @@ namespace Chartboost.Mediation.Utilities
         private static Canvas GetCanvasWithHighestSortingOrder()
         {
             Canvas canvas = null;
-            foreach (var can in Object.FindObjectsOfType<Canvas>().OrderByDescending(x => x.sortingOrder))
+            foreach (var can in Object.FindObjectsByType<Canvas>(FindObjectsSortMode.InstanceID).OrderByDescending(x => x.sortingOrder))
             {
                 // Make sure the canvas is not within another canvas
                 canvas = can;
