@@ -1,8 +1,8 @@
 <dependencies>
   <packages>
     <package>com.chartboost:chartboost-core-sdk:1.0.+</package>
-    <package>com.chartboost:chartboost-mediation-adapter-chartboost:5.9.7.+</package>
-    <package>com.chartboost:chartboost-mediation-sdk:5.1+</package>
+    <package>com.chartboost:chartboost-mediation-adapter-chartboost:5.9.8.+</package>
+    <package>com.chartboost:chartboost-mediation-sdk:5.2+</package>
     <package>org.jetbrains.kotlin:kotlin-reflect:1.8.10</package>
   </packages>
   <files />

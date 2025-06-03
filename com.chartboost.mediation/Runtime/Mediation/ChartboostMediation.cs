@@ -39,7 +39,7 @@ namespace Chartboost.Mediation
         /// <summary>
         /// The Chartboost Mediation SDK version. The value is a semantic versioning compliant string.
         /// </summary>
-        public const string SDKVersion = "5.2.0";
+        public const string SDKVersion = "5.3.0";
 
         /// <summary>
         /// The native Chartboost Mediation SDK version.
