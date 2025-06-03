@@ -19,13 +19,13 @@ dependencyResolutionManagement {
 // Android Resolver Repos Start
         def unityProjectPath = $/file:///**DIR_UNITYPROJECT**/$.replace("\\", "/")
         maven {
-            url "https://cboost.jfrog.io/artifactory/chartboost-core/" // Assets/Packages/Chartboost.CSharp.Core.Unity.1.0.3/Editor/ChartboostCoreDependencies.xml:9
+            url "https://cboost.jfrog.io/artifactory/chartboost-core/" // Assets/Packages/Chartboost.CSharp.Core.Unity.1.0.2/Editor/ChartboostCoreDependencies.xml:9
         }
         maven {
-            url "https://cboost.jfrog.io/artifactory/chartboost-mediation/" // Assets/Packages/Chartboost.CSharp.Mediation.Unity.5.2.0/Editor/ChartboostMediationDependencies.xml:7
+            url "https://cboost.jfrog.io/artifactory/chartboost-mediation/" // Assets/Packages/Chartboost.CSharp.Mediation.Unity.5.3.0/Editor/ChartboostMediationDependencies.xml:7
         }
         maven {
-            url "https://cboost.jfrog.io/artifactory/chartboost-ads/" // Assets/Packages/Chartboost.CSharp.Mediation.Unity.Adapter.Chartboost.5.0.2/Editor/ChartboostAdapterDependencies.xml:9
+            url "https://cboost.jfrog.io/artifactory/chartboost-ads/" // Assets/Packages/Chartboost.CSharp.Mediation.Unity.Adapter.Chartboost.5.0.4/Editor/ChartboostAdapterDependencies.xml:9
         }
         mavenLocal()
 // Android Resolver Repos End
