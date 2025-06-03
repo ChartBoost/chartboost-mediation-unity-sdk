@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file using the standards as defined at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0).
 
+### Version 5.3.0 *(2025-05-27)
+
+- Support for the following 'Chartboost Mediation' dependencies. Notice dependencies are optimistic and any patches and hot-fixes will be automatically picked up:
+  * Android: `com.chartboost:chartboost-mediation-sdk:5.3+`
+  * iOS: `ChartboostMediationSDK ~> 5.3.0`
+
 ### Version 5.2.0 *(2024-11-14)*
 
 Improvements:

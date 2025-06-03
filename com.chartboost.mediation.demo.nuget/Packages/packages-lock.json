@@ -14,7 +14,7 @@
       "hash": "c8205ffcd945cd176f4493a8ab25db093efef779"
     },
     "com.google.external-dependency-manager": {
-      "version": "1.2.181",
+      "version": "1.2.185",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -37,7 +37,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.rider": {
-      "version": "3.0.28",
+      "version": "3.0.34",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -80,7 +80,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.textmeshpro": {
-      "version": "3.0.6",
+      "version": "3.0.7",
       "depth": 0,
       "source": "registry",
       "dependencies": {

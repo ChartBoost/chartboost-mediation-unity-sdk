@@ -5,8 +5,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 // Android Resolver Dependencies Start
     implementation 'com.chartboost:chartboost-core-sdk:1.0.+' // Assets/Packages/Chartboost.CSharp.Core.Unity.1.0.2/Editor/ChartboostCoreDependencies.xml:5
-    implementation 'com.chartboost:chartboost-mediation-adapter-chartboost:5.9.7.+' // Assets/Packages/Chartboost.CSharp.Mediation.Unity.Adapter.Chartboost.5.0.0/Editor/ChartboostAdapterDependencies.xml:5
-    implementation 'com.chartboost:chartboost-mediation-sdk:5.1+' // Assets/Packages/Chartboost.CSharp.Mediation.Unity.5.1.0/Editor/ChartboostMediationDependencies.xml:10
+    implementation 'com.chartboost:chartboost-mediation-adapter-chartboost:5.9.8.+' // Assets/Packages/Chartboost.CSharp.Mediation.Unity.Adapter.Chartboost.5.0.4/Editor/ChartboostAdapterDependencies.xml:5
+    implementation 'com.chartboost:chartboost-mediation-sdk:5.3+' // Assets/Packages/Chartboost.CSharp.Mediation.Unity.5.3.0/Editor/ChartboostMediationDependencies.xml:10
     implementation 'org.jetbrains.kotlin:kotlin-reflect:1.8.10' // Assets/Packages/Chartboost.CSharp.Core.Unity.1.0.2/Editor/ChartboostCoreDependencies.xml:6
 // Android Resolver Dependencies End
 **DEPS**}
@@ -23,8 +23,8 @@ android {
 }
 // Android Resolver Exclusions End
 android {
+    namespace "com.unity3d.player"
     ndkPath "**NDKPATH**"
-
     compileSdkVersion **APIVERSION**
     buildToolsVersion '**BUILDTOOLS**'
 

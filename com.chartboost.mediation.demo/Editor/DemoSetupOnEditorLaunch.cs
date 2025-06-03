@@ -33,8 +33,8 @@ namespace Chartboost.Editor {
                 mediationIcon
             };
 
-            PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel23;
-            PlayerSettings.Android.targetSdkVersion = (AndroidSdkVersions)34;
+            PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel22;
+            PlayerSettings.Android.targetSdkVersion = (AndroidSdkVersions)35;
             PlayerSettings.iOS.targetOSVersionString = "13.0";
             
             PlayerSettings.SetIcons(NamedBuildTarget.Android, icons, IconKind.Application);
