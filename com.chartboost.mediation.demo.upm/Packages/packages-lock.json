@@ -5,9 +5,9 @@
       "depth": 0,
       "source": "registry",
       "dependencies": {
+        "com.chartboost.unity.logging": "1.1.0",
         "com.chartboost.unity.threading": "1.0.2",
-        "com.chartboost.unity.utilities": "1.0.2",
-        "com.chartboost.unity.logging": "1.1.0"
+        "com.chartboost.unity.utilities": "1.0.2"
       },
       "url": "https://registry.npmjs.org"
     },
@@ -35,9 +35,9 @@
       "source": "registry",
       "dependencies": {
         "com.chartboost.mediation": "5.0.0",
+        "com.chartboost.unity.logging": "1.0.0",
         "com.chartboost.unity.threading": "1.0.1",
-        "com.chartboost.unity.utilities": "1.0.1",
-        "com.chartboost.unity.logging": "1.0.0"
+        "com.chartboost.unity.utilities": "1.0.1"
       },
       "url": "https://registry.npmjs.org"
     },
@@ -66,8 +66,8 @@
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "3.2.1",
-        "com.chartboost.unity.logging": "1.1.0"
+        "com.chartboost.unity.logging": "1.1.0",
+        "com.unity.nuget.newtonsoft-json": "3.2.1"
       },
       "url": "https://registry.npmjs.org"
     },
@@ -86,7 +86,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.rider": {
-      "version": "3.0.34",
+      "version": "3.0.36",
       "depth": 0,
       "source": "registry",
       "dependencies": {
