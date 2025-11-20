@@ -56,8 +56,6 @@ namespace Chartboost.Mediation.Utilities.Events
                         ad.OnClose(error);
                         AdCache.ReleaseAd(uniqueId);
                         break;
-                    default:
-                        return;
                 }
             });
         }
@@ -90,8 +88,6 @@ namespace Chartboost.Mediation.Utilities.Events
                     case FullscreenAdQueueEvents.RemoveExpiredAd:
                         queue.OnDidRemoveExpiredAd(numberOfAdsReady);
                         break;
-                    default:
-                        return;
                 }
             });
         }
@@ -136,8 +132,6 @@ namespace Chartboost.Mediation.Utilities.Events
                     case BannerAdEvents.EndDrag:
                         ad.OnDragEnd(x, y);
                         break;
-                    default:
-                        return;
                 }
             });
         }

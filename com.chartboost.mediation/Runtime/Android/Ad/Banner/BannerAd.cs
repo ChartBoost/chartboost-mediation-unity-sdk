@@ -76,12 +76,12 @@ namespace Chartboost.Mediation.Android.Ad.Banner
         public override BannerAdLoadRequest Request => _request;
         
         /// <inheritdoc />
-        public override BidInfo WinningBidInfo
+        public override BidInfo? WinningBidInfo
         {
             get
             {
                 var nativeWinningBidInfo = _nativeBannerAd?.Call<AndroidJavaObject>(AndroidConstants.FunctionGetWinningBidInfo);
-                return nativeWinningBidInfo?.MapToWinningBidInfo() ?? new BidInfo();
+                return nativeWinningBidInfo?.MapToWinningBidInfo();
             }
         }
         
@@ -151,13 +151,14 @@ namespace Chartboost.Mediation.Android.Ad.Banner
             if(IsDisposed) 
                 return;
             IsDisposed = true;
-
+            
             // Release managed resources
             if (disposing)
                 _nativeBannerAd?.Dispose();
             
             // Release unmanaged resources
             AndroidAdStore.ReleaseBannerAd(UniqueId);
+            AdCache.ReleaseAd(UniqueId);
         }
 
         /// <inheritdoc />
@@ -165,7 +166,7 @@ namespace Chartboost.Mediation.Android.Ad.Banner
         {
             base.SetContainerBackgroundColor(color);
             var colorArray = new[] { color.r, color.g, color.b, color.a };
-            _nativeBannerAd.Call("setContainerBackgroundColor", colorArray);
+            _nativeBannerAd.Call(AndroidConstants.FunctionSetContainerBackgroundColor, colorArray);
         }
 
         /// <inheritdoc />
@@ -173,14 +174,14 @@ namespace Chartboost.Mediation.Android.Ad.Banner
         {
             base.SetAdBackgroundColor(color);
             var colorArray = new[] { color.r, color.g, color.b, color.a };
-            _nativeBannerAd.Call("setAdBackgroundColor", colorArray);
+            _nativeBannerAd.Call(AndroidConstants.FunctionSetAdBackgroundColor, colorArray);
         }
 
         /// <inheritdoc />
         internal override Vector2 AdRelativePosition
         {
-            get => _nativeBannerAd.Call<AndroidJavaObject>("getAdRelativePosition").PointFToVector2();
-            set => _nativeBannerAd.Call("setAdRelativePosition", value.x, value.y);
+            get => _nativeBannerAd.Call<AndroidJavaObject>(AndroidConstants.FunctionGetAdRelativePosition).PointFToVector2();
+            set => _nativeBannerAd.Call(AndroidConstants.FunctionSetAdRelativePosition, value.x, value.y);
         }
     }
 }

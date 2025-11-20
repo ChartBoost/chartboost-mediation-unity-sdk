@@ -74,7 +74,7 @@ namespace Chartboost.Mediation.Ad.Banner
         /// <summary>
         /// The winning bid info for the ad. Note that this will change with auto-refresh and will be notified in <see cref="WillAppear"/>
         /// </summary>
-        BidInfo WinningBidInfo { get; }
+        BidInfo? WinningBidInfo { get; }
         
         /// <summary>
         /// The identifier for this load call. Note that this will change with auto-refresh and will be notified in <see cref="WillAppear"/>

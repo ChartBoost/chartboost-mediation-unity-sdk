@@ -105,9 +105,9 @@ namespace Chartboost.Mediation.Android.Ad.Fullscreen
         {
             if (IsDisposed)
                 return;
-
+            
             IsDisposed = true;
-
+            
             // Dispose managed resources
             if (disposing)
                 _nativeFullscreenAd?.Dispose();

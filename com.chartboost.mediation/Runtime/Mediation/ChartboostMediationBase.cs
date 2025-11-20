@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Chartboost.Core;
 using Chartboost.Core.Initialization;
@@ -15,6 +16,7 @@ namespace Chartboost.Mediation
 {
     internal abstract class ChartboostMediationBase 
     {
+        [ExcludeFromCodeCoverage]
         static ChartboostMediationBase()
         {
             ChartboostCore.ModuleInitializationCompleted += OnMediationInitialized;

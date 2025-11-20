@@ -37,10 +37,24 @@ namespace Chartboost.Mediation.iOS
         {
             if (Application.isEditor)
                 return;
-            
+
             Chartboost.Mediation.ChartboostMediation.Instance = new ChartboostMediation();
             _CBMSetPartnerAdapterInitializationResultsCallback(ExternDidReceivePartnerInitializationData);
             DensityConverters.ScaleFactor = _CBMGetUIScaleFactor();
+
+            // Register cleanup callback for application shutdown
+            Application.quitting += OnApplicationQuitting;
+        }
+
+        /// <summary>
+        /// Cleanup resources when the application is quitting.
+        /// </summary>
+        private static void OnApplicationQuitting()
+        {
+            if (Application.isEditor)
+                return;
+
+            _CBMCleanup();
         }
 
         public override string CoreModuleId => _CBMCoreModuleId();
@@ -130,5 +144,6 @@ namespace Chartboost.Mediation.iOS
         [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMSetDiscardOverSizedAds(bool shouldDiscard);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern string _CBMGetAdaptersInfo();
         [DllImport(SharedIOSConstants.DLLImport)] private static extern string _CMBSetPreInitializationConfiguration(string[] skippedPartnerIds, int skippedPartnerIdsSize);
+        [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMCleanup();
     }
 }

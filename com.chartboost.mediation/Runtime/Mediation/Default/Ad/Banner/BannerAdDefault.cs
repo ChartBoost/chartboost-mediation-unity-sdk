@@ -39,7 +39,7 @@ namespace Chartboost.Mediation.Default.Ad.Banner
         public override BannerAdLoadRequest Request => _request;
         
         /// <inheritdoc cref="IBannerAd.WinningBidInfo"/>
-        public override BidInfo WinningBidInfo =>  new();
+        public override BidInfo? WinningBidInfo =>  null;
         
         /// <inheritdoc cref="IBannerAd.LoadId"/>
         public override string LoadId => null;

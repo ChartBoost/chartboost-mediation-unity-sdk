@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Chartboost;
 using Chartboost.Logging;
 using Chartboost.Mediation.Ad.Banner.Enums;
 using Chartboost.Mediation.Data;
@@ -18,34 +19,40 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
     [RequireComponent(typeof(RectTransform))]
     public partial class UnityBannerAd : MonoBehaviour, IAd
     {
-        /// <summary>
-        /// Called when ad is loaded within this GameObject. This will be called for each refresh when auto-refresh is enabled.
-        /// </summary>
+        /// <inheritdoc cref="IBannerAd.WillAppear"/>
+        /// <remarks>
+        /// Event type is <see cref="UnityBannerAdEvent"/> for Unity UI compatibility.
+        /// </remarks>
         public event UnityBannerAdEvent WillAppear;
-        
-        /// <summary>
-        /// Called when the ad executes its click-through. This may happen multiple times for the same ad.
-        /// </summary>
+
+        /// <inheritdoc cref="IBannerAd.DidClick"/>
+        /// <remarks>
+        /// Event type is <see cref="UnityBannerAdEvent"/> for Unity UI compatibility.
+        /// </remarks>
         public event UnityBannerAdEvent DidClick;
-        
-        /// <summary>
-        /// Called when the ad impression occurs.
-        /// </summary>
+
+        /// <inheritdoc cref="IBannerAd.DidRecordImpression"/>
+        /// <remarks>
+        /// Event type is <see cref="UnityBannerAdEvent"/> for Unity UI compatibility.
+        /// </remarks>
         public event UnityBannerAdEvent DidRecordImpression;
-        
-        /// <summary>
-        ///  Called when this GameObject has begun dragging on screen.
-        /// </summary>
+
+        /// <inheritdoc cref="IBannerAd.DidBeginDrag"/>
+        /// <remarks>
+        /// Event type is <see cref="UnityBannerAdDragEvent"/> for Unity UI compatibility.
+        /// </remarks>
         public event UnityBannerAdDragEvent DidBeginDrag;
-        
-        /// <summary>
-        ///  Called when this GameObject is dragged on screen.
-        /// </summary>
+
+        /// <inheritdoc cref="IBannerAd.DidDrag"/>
+        /// <remarks>
+        /// Event type is <see cref="UnityBannerAdDragEvent"/> for Unity UI compatibility.
+        /// </remarks>
         public event UnityBannerAdDragEvent DidDrag;
-        
-        /// <summary>
-        ///  Called when this GameObject has finished dragging on screen.
-        /// </summary>
+
+        /// <inheritdoc cref="IBannerAd.DidEndDrag"/>
+        /// <remarks>
+        /// Event type is <see cref="UnityBannerAdDragEvent"/> for Unity UI compatibility.
+        /// </remarks>
         public event UnityBannerAdDragEvent DidEndDrag;
         
         [SerializeField] 
@@ -62,6 +69,8 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
         private LayoutParams _lastLayoutParams = new();
         private RectTransform _rectTransform;
         private bool _isDragging;
+        private Task _syncTask;
+        private bool _syncInProgress;
         
         /// <summary>
         /// The placement name for the ad.
@@ -72,16 +81,15 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
             internal set => placementName = value;
         }
         
-        /// <summary>
-        /// The ability of this gameobject to drag
-        /// </summary>
+        /// <inheritdoc cref="IBannerAd.Draggable"/>
         public bool Draggable
         {
-            get => BannerAd.Draggable;
+            get => draggable;
             set
             {
-                BannerAd.Draggable = value;
                 draggable = value;
+                if (_bannerAd != null)
+                    _bannerAd.Draggable = value;
             }
         }
 
@@ -99,24 +107,50 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
 
         #region Unity LifeCycle
 
-        private void OnEnable() => BannerAd.Visible = true;
-        
+        private void OnEnable()
+        {
+            if (_bannerAd != null)
+                _bannerAd.Visible = true;
+        }
+
         private void Update()
         {
-            if(!_isDragging)
-                SyncWithNativeContainer();
-        }
-        
-        private void OnDisable() => BannerAd.Visible = false;
+            if(!_isDragging && !_syncInProgress)
+            {
+                _syncInProgress = true;
+                // Fire-and-forget pattern: start the async task without awaiting
+                // We track the task to avoid overlapping calls with _syncInProgress flag
+                // ContinueWithOnMainThread ensures execution on Unity main thread and handles exceptions
+                _syncTask = SyncWithNativeContainerAsync().ContinueWithOnMainThread(task =>
+                {
+                    _syncInProgress = false;
 
-        public void OnDestroy() => BannerAd?.Dispose();
+                    if (task.IsFaulted && task.Exception != null)
+                    {
+                        LogController.LogException(task.Exception.InnerException ?? task.Exception);
+                    }
+                });
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (_bannerAd != null)
+                _bannerAd.Visible = false;
+        }
+
+        public void OnDestroy()
+        {
+            UnsubscribeFromBannerEvents();
+            BannerAd?.Dispose();
+        }
         #endregion
 
         #region Public API
         
         /// <summary>
-        /// Loads an ad inside this gameobject.
-        /// Uses the size of this gameobject (width and height in pixels) to construct the
+        /// Loads an ad inside this GameObject.
+        /// Uses the size of this GameObject (width and height in pixels) to construct the
         /// <see cref="Banner.BannerSize"/> in load request 
         /// </summary>
         /// <returns></returns>
@@ -136,45 +170,40 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
         public IReadOnlyDictionary<string, string> Keywords
         {
             get => BannerAd?.Keywords;
-            set => BannerAd.Keywords = value;
+            set
+            {
+                if (BannerAd != null)
+                    BannerAd.Keywords = value;
+            }
         }
 
         /// <inheritdoc cref="IBannerAd.PartnerSettings"/>
         public IReadOnlyDictionary<string, string> PartnerSettings
         {
             get => BannerAd?.PartnerSettings;
-            set => BannerAd.PartnerSettings = value;
+            set
+            {
+                if (BannerAd != null)
+                    BannerAd.PartnerSettings = value;
+            }
         }
 
-        /// <summary>
-        /// The publisher supplied request that was used to load the ad.
-        /// </summary>
+        /// <inheritdoc cref="IBannerAd.Request"/>
         public BannerAdLoadRequest Request => BannerAd?.Request;
 
-        /// <summary>
-        /// The winning bid info for the ad. Note that this will change with auto-refresh and will be notified in <see cref="WillAppear"/>
-        /// </summary>
-        public BidInfo? WinningBidInfo => BannerAd.WinningBidInfo;
+        /// <inheritdoc cref="IBannerAd.WinningBidInfo"/>
+        public BidInfo? WinningBidInfo => BannerAd?.WinningBidInfo;
 
-        /// <summary>
-        /// The identifier for this load call. Note that this will change with auto-refresh and will be notified in <see cref="WillAppear"/>
-        /// </summary>
+        /// <inheritdoc cref="IBannerAd.LoadId"/>
         public string LoadId => BannerAd?.LoadId;
-        
-        /// <summary>
-        /// The load metrics for the most recent successful load operation, or Null if a banner is not loaded.
-        /// If auto-refresh is enabled, this value will change over time. The <see cref="WillAppear"/> event will be called after this value changes.
-        /// </summary>
+
+        /// <inheritdoc cref="IBannerAd.LoadMetrics"/>
         public Metrics? LoadMetrics => BannerAd?.LoadMetrics;
 
-        /// <summary>
-        /// The size of the loaded ad. Note that this will change with auto-refresh and will be notified in <see cref="WillAppear"/>
-        /// </summary>
-        public BannerSize? BannerSize => BannerAd.BannerSize;
+        /// <inheritdoc cref="IBannerAd.BannerSize"/>
+        public BannerSize? BannerSize => BannerAd?.BannerSize;
 
-        /// <summary>
-        /// The horizontal alignment of the ad within this gameobject.
-        /// </summary>
+        /// <inheritdoc cref="IBannerAd.HorizontalAlignment"/>
         public BannerHorizontalAlignment HorizontalAlignment
         {
             get => horizontalAlignment;
@@ -185,10 +214,8 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
                 horizontalAlignment = value;
             }
         }
-        
-        /// <summary>
-        /// The vertical alignment of the ad within this gameobject.
-        /// </summary>
+
+        /// <inheritdoc cref="IBannerAd.VerticalAlignment"/>
         public BannerVerticalAlignment VerticalAlignment
         {
             get => verticalAlignment;
@@ -200,28 +227,29 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
             }
         }
         
-        /// <summary>
-        /// Loads an ad inside this gameobject.
-        /// </summary>
-        /// <param name="loadRequest"></param>
-        /// <returns></returns>
+        /// <inheritdoc cref="IBannerAd.Load"/>
         public async Task<BannerAdLoadResult> Load(BannerAdLoadRequest loadRequest)
         {
             placementName = loadRequest.PlacementName;
             return await BannerAd.Load(loadRequest);
         }
         
-        /// <summary>
-        /// Clears the loaded ad
-        /// </summary>
+        /// <inheritdoc cref="IBannerAd.Reset"/>
         public void Reset() => BannerAd?.Reset();
         
         #endregion
 
         /// <summary>
-        /// Returns json representation of current state of the object
+        /// Returns JSON representation of the object
         /// </summary>
-        public override string ToString() => JsonConvert.SerializeObject(BannerAd);
+        public override string ToString()
+        {
+            var settings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+            return JsonConvert.SerializeObject(BannerAd, settings);
+        }
         
         #endregion
 
@@ -248,8 +276,8 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
             
             y = Screen.height - y;
             
-            // x,y obtained from native is for top left corner (x = 0,y = 1)
-            // RectTransform pivot may or may not be top-left (it's usually at center)
+            // x,y obtained from native is for the top left corner (x = 0,y = 1)
+            // RectTransform pivot may or may not be top-left (it's usually at the center)
             var pivot = UnityBannerTransform.pivot;
             var widthInPixels = UnityBannerTransform.LayoutParams().width;
             var heightInPixels = UnityBannerTransform.LayoutParams().height;
@@ -283,38 +311,45 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
                 _bannerAd.DidEndDrag += OnDragEnd;
 
                 _bannerAd.Visible = gameObject.activeSelf;
-                _bannerAd.Draggable = Draggable;
+                _bannerAd.Draggable = draggable;
                 _bannerAd.HorizontalAlignment = horizontalAlignment;
                 _bannerAd.VerticalAlignment = verticalAlignment;
                 return _bannerAd;
             }
         }
 
-        private async void SyncWithNativeContainer()
+        private async Task SyncWithNativeContainerAsync()
         {
-            var layoutParams = UnityBannerTransform.LayoutParams();
-            if (layoutParams.IsEqual(_lastLayoutParams))
-                return;
-
-            if (BannerAd != null)
+            try
             {
-                // Position
-                var x = DensityConverters.PixelsToNative(layoutParams.x);
-                var y = DensityConverters.PixelsToNative(Screen.height - layoutParams.y);
-                BannerAd.Position = new Vector2(x, y);
+                var layoutParams = UnityBannerTransform.LayoutParams();
+                if (layoutParams.IsEqual(_lastLayoutParams))
+                    return;
 
-                // Size
-                var size = await GetTransformSize();
-                BannerAd.ContainerSize = ContainerSize.FixedSize((int)size.x, (int)size.y);
+                if (BannerAd != null)
+                {
+                    // Position
+                    var x = DensityConverters.PixelsToNative(layoutParams.x);
+                    var y = DensityConverters.PixelsToNative(Screen.height - layoutParams.y);
+                    BannerAd.Position = new Vector2(x, y);
+
+                    // Size
+                    var size = await GetTransformSize();
+                    BannerAd.ContainerSize = ContainerSize.FixedSize((int)size.x, (int)size.y);
+                }
+                _lastLayoutParams = layoutParams;
             }
-            _lastLayoutParams = layoutParams;
+            catch (System.Exception ex)
+            {
+                LogController.Log($"Error syncing banner with native container: {ex.Message}", LogLevel.Error);
+            }
         }
         
         private async Task<Vector2> GetTransformSize()
         {
             var layoutParams = UnityBannerTransform.LayoutParams();
             
-            // Note : if rectTransform is part of a layoutgroup then we need to wait until the layout is created
+            // Note: if rectTransform is part of a layout group, then we need to wait until the layout is created
             // https://forum.unity.com/threads/solved-cant-get-the-rect-width-rect-height-of-an-element-when-using-layouts.377953/
             if (UnityBannerTransform.GetComponentInParent<LayoutGroup>())
             {
@@ -327,6 +362,22 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
             var width = DensityConverters.PixelsToNative(layoutParams.width);
             var height = DensityConverters.PixelsToNative(layoutParams.height);
             return new Vector2(width, height);
+        }
+
+        /// <summary>
+        /// Unsubscribes from all banner ad events to prevent memory leaks.
+        /// </summary>
+        private void UnsubscribeFromBannerEvents()
+        {
+            if (_bannerAd == null)
+                return;
+
+            _bannerAd.WillAppear -= OnWillAppear;
+            _bannerAd.DidClick -= OnClick;
+            _bannerAd.DidRecordImpression -= OnRecordImpression;
+            _bannerAd.DidBeginDrag -= OnDragBegin;
+            _bannerAd.DidDrag -= OnDrag;
+            _bannerAd.DidEndDrag -= OnDragEnd;
         }
     }
 }

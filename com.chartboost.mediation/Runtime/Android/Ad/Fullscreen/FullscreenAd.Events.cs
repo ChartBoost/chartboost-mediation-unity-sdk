@@ -75,8 +75,8 @@ namespace Chartboost.Mediation.Android.Ad.Fullscreen
                 var mediationError = error?.Call<AndroidJavaObject>(AndroidConstants.FunctionGetChartboostMediationError);
                 if (mediationError != null)
                 {
-                    code = error.Call<string>(AndroidConstants.FunctionGetCode);
-                    message = error.Call<string>(SharedAndroidConstants.FunctionToString);
+                    code = mediationError.Call<string>(AndroidConstants.FunctionGetCode);
+                    message = mediationError.Call<string>(SharedAndroidConstants.FunctionToString);
                 }
                 
                 AdEventHandler.ProcessFullscreenEvent(ad.NativeHashCode(), FullscreenAdEvents.Close, code, message);

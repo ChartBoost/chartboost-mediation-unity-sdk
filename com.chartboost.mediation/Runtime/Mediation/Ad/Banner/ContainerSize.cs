@@ -1,18 +1,23 @@
+using System;
+using Newtonsoft.Json;
+
 namespace Chartboost.Mediation.Ad.Banner
 {
     /// <summary>
     /// Represents a container size with options for fixed, wrapped, or content-based sizing.
     /// </summary>
-    public struct ContainerSize
+    public readonly struct ContainerSize : IEquatable<ContainerSize>
     {
         /// <summary>
         /// Gets the width of the container.
         /// </summary>
+        [JsonProperty("width")]
         public int Width { get; }
 
         /// <summary>
         /// Gets the height of the container.
         /// </summary>
+        [JsonProperty("height")]
         public int Height { get; }
 
         /// <summary>
@@ -20,6 +25,7 @@ namespace Chartboost.Mediation.Ad.Banner
         /// </summary>
         /// <param name="width">The width of the container. Use -1 for wrap content horizontally.</param>
         /// <param name="height">The height of the container. Use -1 for wrap content vertically.</param>
+        [JsonConstructor]
         public ContainerSize(int width, int height)
         {
             Width = width;
@@ -55,5 +61,34 @@ namespace Chartboost.Mediation.Ad.Banner
         /// <param name="height">The fixed height of the container.</param>
         /// <returns>A new ContainerSize instance.</returns>
         public static ContainerSize FixedSize(int width, int height) => new(width, height);
+
+        /// <summary>
+        /// Determines whether the specified <see cref="ContainerSize"/> is equal to the current instance.
+        /// </summary>
+        /// <param name="other">The <see cref="ContainerSize"/> to compare with the current instance.</param>
+        /// <returns>true if the specified <see cref="ContainerSize"/> is equal to the current instance; otherwise, false.</returns>
+        public bool Equals(ContainerSize other)
+        {
+            return Width == other.Width && Height == other.Height;
+        }
+
+        /// <summary>
+        /// Determines whether the specified object is equal to the current instance.
+        /// </summary>
+        /// <param name="obj">The object to compare with the current instance.</param>
+        /// <returns>true if the specified object is a <see cref="ContainerSize"/> and is equal to the current instance; otherwise, false.</returns>
+        public override bool Equals(object obj)
+        {
+            return obj is ContainerSize other && Equals(other);
+        }
+
+        /// <summary>
+        /// Returns the hash code for this instance.
+        /// </summary>
+        /// <returns>A 32-bit signed integer hash code.</returns>
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Width, Height);
+        }
     }
 }

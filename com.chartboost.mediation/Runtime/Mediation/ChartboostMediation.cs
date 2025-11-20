@@ -25,8 +25,8 @@ namespace Chartboost.Mediation
     /// </summary>
     public sealed class ChartboostMediation
     {
-        internal static ChartboostMediationBase Instance = new ChartboostMediationDefault();
-        
+        internal static ChartboostMediationBase Instance { get; set; } = new ChartboostMediationDefault();
+
         /// The module ID of the <see cref="ChartboostCore"/> module that represents <see cref="ChartboostMediation"/>.
         /// <para>
         /// <see cref="ChartboostCore.Initialize"/> initializes <see cref="ChartboostMediation"/> by default. In order to skip
@@ -39,7 +39,7 @@ namespace Chartboost.Mediation
         /// <summary>
         /// The Chartboost Mediation SDK version. The value is a semantic versioning compliant string.
         /// </summary>
-        public const string SDKVersion = "5.3.0";
+        public const string SDKVersion = "5.4.0";
 
         /// <summary>
         /// The native Chartboost Mediation SDK version.

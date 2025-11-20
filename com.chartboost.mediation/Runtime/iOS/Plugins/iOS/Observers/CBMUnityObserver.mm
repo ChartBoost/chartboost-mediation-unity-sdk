@@ -26,7 +26,7 @@
 }
 
 #pragma mark ChartboostMediationFullscreenAdDelegate
-- (void)serializeFullscreenAdEvent: (CBMFullscreenAd *)ad  fullscreenEvent:(fullscreenAdEvents)fullscreenAdEvent error:(CBMError *)error
+- (void)serializeFullscreenAdEvent: (CBMFullscreenAd *)ad  fullscreenEvent:(CBMFullscreenAdEventType)fullscreenAdEvent error:(CBMError *)error
 {
     if (_didReceiveFullscreenAdEvent == nil)
         return;
@@ -41,28 +41,28 @@
         message = toCStringOrNull([error localizedDescription]);
     }
 
-    _didReceiveFullscreenAdEvent((long)ad, (int)fullscreenAdEvent, code, message);
+    _didReceiveFullscreenAdEvent((long)ad, fullscreenAdEvent, code, message);
 }
 
 - (void)didRecordImpressionWithAd:(CBMFullscreenAd *)ad{
-    [self serializeFullscreenAdEvent:ad fullscreenEvent:FullscreenAdRecordImpression error:nil];
+    [self serializeFullscreenAdEvent:ad fullscreenEvent:CBMFullscreenAdEventRecordImpression error:nil];
 }
 
 - (void)didClickWithAd:(CBMFullscreenAd *)ad{
-    [self serializeFullscreenAdEvent:ad fullscreenEvent:FullscreenAdClick error:nil];
+    [self serializeFullscreenAdEvent:ad fullscreenEvent:CBMFullscreenAdEventClick error:nil];
 }
 
 - (void)didRewardWithAd:(CBMFullscreenAd *)ad {
-    [self serializeFullscreenAdEvent:ad fullscreenEvent:FullscreenAdReward error:nil];
+    [self serializeFullscreenAdEvent:ad fullscreenEvent:CBMFullscreenAdEventReward error:nil];
 }
 
 - (void)didCloseWithAd:(CBMFullscreenAd *)ad error:(CBMError * _Nullable)error {
     UnityPause(false);
-    [self serializeFullscreenAdEvent:ad fullscreenEvent:FullscreenAdClose error:error];
+    [self serializeFullscreenAdEvent:ad fullscreenEvent:CBMFullscreenAdEventClose error:error];
 }
 
 - (void)didExpireWithAd:(CBMFullscreenAd *)ad {
-    [self serializeFullscreenAdEvent:ad fullscreenEvent:FullscreenAdExpire error:nil];
+    [self serializeFullscreenAdEvent:ad fullscreenEvent:CBMFullscreenAdEventExpire error:nil];
 }
 
 #pragma mark ChartboostMediationFullscreenAdQueueDelegate
@@ -94,26 +94,25 @@
 }
 
 #pragma mark ChartboostMediationBannerViewDelegate
-- (void)serializeBannerEvent: (CBMBannerAdView*) ad bannerEvent:(bannerAdEvents)bannerAdEvent {
+- (void)serializeBannerEvent: (CBMBannerAdView*) ad bannerEvent:(CBMBannerAdEventType)bannerAdEvent {
     if (_didReceiveBannerAdEvent == nil)
         return;
 
-    NSNumber *key = [NSNumber numberWithLong:(long)ad];
-    CBMBannerAdWrapper *wrapper = [[[CBMAdStore sharedStore] adStore] objectForKey:key];
-    _didReceiveBannerAdEvent((long)wrapper, (int)bannerAdEvent);
+    CBMBannerAdWrapper *wrapper = [[CBMAdStore sharedStore] getBannerAd:(__bridge void*)ad];
+    _didReceiveBannerAdEvent((long)wrapper, bannerAdEvent);
     [wrapper updateFrame];
 }
 
 - (void)willAppearWithBannerView:(CBMBannerAdView *)bannerView {
-    [self serializeBannerEvent:bannerView bannerEvent:BannerAdAppear];
+    [self serializeBannerEvent:bannerView bannerEvent:CBMBannerAdEventAppear];
 }
 
 - (void)didClickWithBannerView:(CBMBannerAdView *)bannerView {
-    [self serializeBannerEvent:bannerView bannerEvent:BannerAdClick];
+    [self serializeBannerEvent:bannerView bannerEvent:CBMBannerAdEventClick];
 }
 
 - (void)didRecordImpressionWithBannerView:(CBMBannerAdView *)bannerView {
-    [self serializeBannerEvent:bannerView bannerEvent:BannerAdRecordImpression];
+    [self serializeBannerEvent:bannerView bannerEvent:CBMBannerAdEventRecordImpression];
 }
 @end
 

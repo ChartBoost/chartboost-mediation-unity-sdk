@@ -1,7 +1,31 @@
 # Changelog
 All notable changes to this project will be documented in this file using the standards as defined at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0).
 
-### Version 5.3.0 *(2025-05-27)
+### Version 5.4.0 *(2025-11-20)*
+
+Support for the following native SDK dependencies:
+  * Android: `com.chartboost:chartboost-mediation-sdk:5.4.+`
+  * iOS: `ChartboostMediationSDK ~> 5.4.0`
+
+### Fixed
+- Memory leak in `UnityBannerAd` where event subscriptions were never cleaned up
+- Memory leak in `BannerVisualElement` where event subscriptions were never cleaned up
+- Native memory leak in Android `FullscreenAdQueue` missing proper disposal
+- Memory leak in iOS `FullscreenAdQueue` missing IDisposable implementation
+- Cache memory leak in iOS `BannerAd` missing `AdCache.ReleaseAd()` call
+- Cache memory leak in Android `BannerAd` missing `AdCache.ReleaseAd()` call
+- Race condition in `UnityBannerAd` allowing multiple concurrent async sync tasks
+- `AdLoadRequest` finalizer causing GC thread deadlocks (finalizer removed)
+- Null reference exception in `AndroidExtensions.MapToWinningBidInfo()`
+- Null reference exception in Android `FullscreenAd.Events` using wrong error variable
+- Android observers being prematurely garbage collected
+- Thread-safety issues in `AdCache` (converted to `ConcurrentDictionary`)
+
+### Changed
+- Updated `com.chartboost.core` dependency from 1.0.2 to 1.1.0
+- Updated `com.chartboost.unity.utilities` dependency from 1.0.2 to 1.0.4
+
+### Version 5.3.0 *(2025-05-27)*
 
 - Support for the following 'Chartboost Mediation' dependencies. Notice dependencies are optimistic and any patches and hot-fixes will be automatically picked up:
   * Android: `com.chartboost:chartboost-mediation-sdk:5.3+`

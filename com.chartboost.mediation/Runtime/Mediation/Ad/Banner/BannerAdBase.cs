@@ -60,7 +60,7 @@ namespace Chartboost.Mediation.Ad.Banner
         public abstract BannerAdLoadRequest Request { get; }
         
         /// <inheritdoc cref="IBannerAd.WinningBidInfo"/>
-        public abstract BidInfo WinningBidInfo { get; }
+        public abstract BidInfo? WinningBidInfo { get; }
         
         /// <inheritdoc cref="IBannerAd.LoadId"/>
         public abstract string LoadId { get; }
@@ -173,11 +173,6 @@ namespace Chartboost.Mediation.Ad.Banner
 
         internal virtual Vector2 AdRelativePosition { get; set; }
         
-        ~BannerAdBase()
-        {
-            if(!IsDisposed)
-                LogController.Log($"Banner Ad with UniqueId: {UniqueId}, got GC. Make sure to properly dispose of ads utilizing Invalidate for the best integration experience.", LogLevel.Error);
-            Dispose(false);
-        }
+        ~BannerAdBase() => Dispose(false);
     }
 }

@@ -14,8 +14,9 @@ namespace Chartboost.Mediation.iOS.Ad.Fullscreen.Queue
     /// <summary>
     /// iOS's implementation of <see cref="FullscreenAdQueueBase"/>.
     /// </summary>
-    internal partial class FullscreenAdQueue : FullscreenAdQueueBase
+    internal partial class FullscreenAdQueue : FullscreenAdQueueBase, IDisposable
     {
+        private bool _isDisposed;
         /// <summary>
         /// Register callbacks to native observer.
         /// </summary>
@@ -95,6 +96,33 @@ namespace Chartboost.Mediation.iOS.Ad.Fullscreen.Queue
             base.Stop();
             _CBMFullscreenAdQueueStop(UniqueId);
         }
+
+        /// <summary>
+        /// Disposes the queue and releases it from cache.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Protected implementation of Dispose pattern.
+        /// </summary>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_isDisposed)
+                return;
+
+            // Release from cache
+            AdCache.ReleaseAd(UniqueId);
+            _isDisposed = true;
+        }
+
+        /// <summary>
+        /// Finalizer to ensure cleanup if Dispose is not called.
+        /// </summary>
+        ~FullscreenAdQueue() => Dispose(false);
 
         [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMFullscreenAdQueueSetCallbacks(ExternFullscreenAdQueueUpdateEvent updateEvent, ExternFullscreenAdQueueRemoveExpiredAdEvent removeExpiredAdEvent);
         [DllImport(SharedIOSConstants.DLLImport)] internal static extern IntPtr _CBMFullscreenAdQueueGetQueue(string placementName);

@@ -62,6 +62,7 @@ namespace Chartboost.Mediation.Ad.Fullscreen
         protected FullscreenAdBase(IntPtr uniqueId)
         {
             UniqueId = uniqueId;
+            LogController.Log($"Creating FullscreenAd with UniqueId:{UniqueId}", LogLevel.Debug);
             AdCache.TrackAd(uniqueId, this);
         }
 
@@ -134,12 +135,6 @@ namespace Chartboost.Mediation.Ad.Fullscreen
             DidReward?.Invoke(this);
         }
 
-        ~FullscreenAdBase()
-        {
-            // only report error if the ad is being disposed by gc and it has not been manually invalidated.
-            if(!IsDisposed)
-                LogController.Log($"Fullscreen Ad with UniqueId: {UniqueId}, got GC. Make sure to properly dispose of ads utilizing Invalidate for the best integration experience.", LogLevel.Error);
-            Dispose(false);
-        }
+        ~FullscreenAdBase() => Dispose(false);
     }
 }

@@ -20,13 +20,13 @@ namespace Chartboost.Mediation.Utilities
         private const string JsonExtensionsTag = "[JsonExtensions]";
         
         public static ChartboostMediationError? ToChartboostMediationError(this string mediationErrorJson)
-            => JsonTools.DeserializeNullableObject<ChartboostMediationError>(mediationErrorJson);
+            => JsonTools.DeserializeNullableStruct<ChartboostMediationError>(mediationErrorJson);
         
-        public static BidInfo ToBidInfo(this string bidInfoJson)
-            => JsonTools.DeserializeObject<BidInfo>(bidInfoJson);
+        public static BidInfo? ToBidInfo(this string bidInfoJson) 
+            => JsonTools.DeserializeNullableStruct<BidInfo>(bidInfoJson);
 
         public static Metrics? ToMetrics(this string metricsJson)
-            => JsonTools.DeserializeNullableObject<Metrics>(metricsJson);
+            => JsonTools.DeserializeNullableStruct<Metrics>(metricsJson);
         
         public static FullscreenAdLoadRequest ToFullscreenAdLoadRequest(this string fullscreenAdLoadRequestJson) 
             => JsonTools.DeserializeObject<FullscreenAdLoadRequest>(fullscreenAdLoadRequestJson);
@@ -34,8 +34,16 @@ namespace Chartboost.Mediation.Utilities
         public static AdapterInfo[] ToAdaptersInfo(this string adaptersInfoJson) 
             => JsonTools.DeserializeObject<AdapterInfo[]>(adaptersInfoJson);
         
-        public static BannerAdLoadRequest ToBannerAdLoadRequest(this string fullscreenAdLoadRequestJson) 
-            => JsonTools.DeserializeObject<BannerAdLoadRequest>(fullscreenAdLoadRequestJson);
+        public static BannerAdLoadRequest ToBannerAdLoadRequest(this string fullscreenAdLoadRequestJson)
+        {
+            var request = JsonTools.DeserializeNullableObject<BannerAdLoadRequest>(fullscreenAdLoadRequestJson);
+
+            // Return null if the request has no meaningful data (null or empty PlacementName)
+            if (request != null && string.IsNullOrEmpty(request.PlacementName))
+                return null;
+
+            return request;
+        }
 
         public static Dictionary<string, string> ToDictionary(this string collectionJson) 
             => JsonTools.DeserializeObject<Dictionary<string, string>>(collectionJson);
@@ -44,7 +52,10 @@ namespace Chartboost.Mediation.Utilities
             => JsonTools.DeserializeObject<List<string>>(collectionJson);
 
         public static BannerSize? ToBannerSize(this string bannerSizeJson)
-            => JsonTools.DeserializeNullableObject<BannerSize>(bannerSizeJson);
+        {
+            var bannerSize = JsonTools.DeserializeNullableStruct<BannerSize>(bannerSizeJson);
+            return bannerSize is { Width: 0, Height: 0 } ? null : bannerSize;
+        }
         
         public static ContainerSize ToContainerSize(this string containerSizeJson)
             => JsonTools.DeserializeObject<ContainerSize>(containerSizeJson);

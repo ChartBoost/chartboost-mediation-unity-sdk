@@ -27,6 +27,9 @@ namespace Chartboost.Mediation.Android
     /// </summary>
     internal partial class ChartboostMediation : ChartboostMediationBase
     {
+        private static AndroidJavaObject _ilrdObserver;
+        private static PartnerAdapterInitializationResultsObserver _initResultsObserver;
+
         [Preserve]
         // ReSharper disable once InconsistentNaming
         internal static readonly UnityILRDConsumer UnityILRDConsumerInstance = new();
@@ -39,15 +42,43 @@ namespace Chartboost.Mediation.Android
         {
             if (Application.isEditor)
                 return;
-            
+
             Chartboost.Mediation.ChartboostMediation.Instance = new ChartboostMediation();
-            
+
             using var unityBridge = AndroidConstants.GetUnityBridge();
             DensityConverters.ScaleFactor = unityBridge.CallStatic<float>(AndroidConstants.FunctionGetUIScaleFactor);
-            
+
             using var nativeSDK =  AndroidConstants.GetNativeSDK();
-            nativeSDK.CallStatic(AndroidConstants.FunctionSubscribeIlrd, new AndroidJavaObject(AndroidConstants.UnityILRDObserver));
-            nativeSDK.CallStatic(AndroidConstants.FunctionSubscribePartnerAdapterInitializationResults, new PartnerAdapterInitializationResultsObserver());
+            _ilrdObserver = new AndroidJavaObject(AndroidConstants.UnityILRDObserver);
+            _initResultsObserver = new PartnerAdapterInitializationResultsObserver();
+            nativeSDK.CallStatic(AndroidConstants.FunctionSubscribeIlrd, _ilrdObserver);
+            nativeSDK.CallStatic(AndroidConstants.FunctionSubscribePartnerAdapterInitializationResults, _initResultsObserver);
+
+            // Register cleanup callback for application shutdown
+            Application.quitting += OnApplicationQuitting;
+        }
+
+        /// <summary>
+        /// Cleanup resources when the application is quitting.
+        /// </summary>
+        private static void OnApplicationQuitting()
+        {
+            if (Application.isEditor)
+                return;
+
+            try
+            {
+                using var unityBridge = AndroidConstants.GetUnityBridge();
+                unityBridge.CallStatic(AndroidConstants.FunctionCleanup);
+
+                _ilrdObserver?.Dispose();
+                _ilrdObserver = null;
+                _initResultsObserver = null;
+            }
+            catch (Exception exception)
+            {
+                LogController.LogException(exception);
+            }
         }
 
         /// <inheritdoc/>
@@ -75,7 +106,7 @@ namespace Chartboost.Mediation.Android
             get
             {
                 using var native = AndroidConstants.GetNativeSDK();
-                return native.CallStatic<bool>(SharedAndroidConstants.FunctionGetTestMode);
+                return native.CallStatic<int>(SharedAndroidConstants.FunctionGetTestMode) != 0;
             }
             set
             {

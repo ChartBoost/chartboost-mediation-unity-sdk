@@ -65,13 +65,18 @@ namespace Chartboost.Mediation.Android.Utilities
         public const string FunctionDestroy = "destroy";
         public const string FunctionSetContainerPosition = "setContainerPosition";
         public const string FunctionSetContainerSize = "setContainerSize";
+        public const string FunctionSetContainerBackgroundColor = "setContainerBackgroundColor";
+        public const string FunctionSetAdBackgroundColor = "setAdBackgroundColor";
+        public const string FunctionGetAdRelativePosition = "getAdRelativePosition";
+        public const string FunctionSetAdRelativePosition = "setAdRelativePosition";
         public const string FunctionGetUIScaleFactor = "getUIScaleFactor";
+        public const string FunctionCleanup = "cleanup";
         public const string FunctionGetFullscreenAdQueue = "getFullscreenAdQueue";
         public const string FunctionHasNextAd = "hasNextAd";
         public const string FunctionGetNextAd = "getNextAd";
         public const string FunctionStop = "stop";
         public const string FunctionSetListener = "setListener";
-
+        
         public const string PropertyCoreModuleId = "CORE_MODULE_ID";
         public const string PropertyPartnerId = "partner_id";
         public const string PropertyAuctionId = "auction_id";
