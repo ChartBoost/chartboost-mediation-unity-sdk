@@ -12,10 +12,11 @@ namespace Chartboost.Mediation.Android.Ad.Fullscreen.Queue
     /// <summary>
     /// Android's implementation of <see cref="FullscreenAdQueueBase"/>.
     /// </summary>
-    internal partial class FullscreenAdQueue : FullscreenAdQueueBase
+    internal partial class FullscreenAdQueue : FullscreenAdQueueBase, IDisposable
     {
         private readonly AndroidJavaObject _nativeFullscreenAdQueue;
         internal static readonly FullscreenAdQueueListener FullscreenAdQueueListenerInstance = new();
+        private bool _isDisposed;
 
         internal FullscreenAdQueue(AndroidJavaObject nativeQueue) : base(new IntPtr(nativeQueue.NativeHashCode())) => _nativeFullscreenAdQueue = nativeQueue;
 
@@ -88,5 +89,38 @@ namespace Chartboost.Mediation.Android.Ad.Fullscreen.Queue
             base.Stop();
             _nativeFullscreenAdQueue.Call(AndroidConstants.FunctionStop);
         }
+
+        /// <summary>
+        /// Disposes the AndroidJavaObject and releases the ad from cache.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Protected implementation of Dispose pattern.
+        /// </summary>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_isDisposed)
+                return;
+
+            if (disposing)
+            {
+                // Dispose managed resources
+                _nativeFullscreenAdQueue?.Dispose();
+            }
+
+            // Release from cache
+            Chartboost.Mediation.Utilities.AdCache.ReleaseAd(UniqueId);
+            _isDisposed = true;
+        }
+
+        /// <summary>
+        /// Finalizer to ensure cleanup if Dispose is not called.
+        /// </summary>
+        ~FullscreenAdQueue() => Dispose(false);
     }
 }

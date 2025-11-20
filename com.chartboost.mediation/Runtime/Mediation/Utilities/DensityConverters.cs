@@ -19,8 +19,8 @@ namespace Chartboost.Mediation.Utilities
         public static Vector2 NativeToPixels(Vector2 native) 
             => new(NativeToPixels(native.x), NativeToPixels(native.y));
 
-        public static Vector2 PixelsToNative(Vector2 pixels) 
-            => new(PixelsToNative(pixels.x), NativeToPixels(pixels.y));
+        public static Vector2 PixelsToNative(Vector2 pixels)
+            => new(PixelsToNative(pixels.x), PixelsToNative(pixels.y));
         
         public static float UIDocToNative(float uiDoc) 
             => PixelsToNative(uiDoc * UIDocScaleFactor);
@@ -36,13 +36,19 @@ namespace Chartboost.Mediation.Utilities
         
         private const float EditorUIScaleFactor = 2.5f;
 
-        internal static float? ScaleFactor = EditorUIScaleFactor;
-        
+        private static float? _scaleFactor = EditorUIScaleFactor;
+
+        internal static float? ScaleFactor
+        {
+            get => _scaleFactor;
+            set => _scaleFactor = value;
+        }
+
         private static float PlatformScaleFactor
         {
             get
             {
-                return ScaleFactor ??= EditorUIScaleFactor;
+                return _scaleFactor ??= EditorUIScaleFactor;
             }
         }
 
@@ -53,11 +59,18 @@ namespace Chartboost.Mediation.Utilities
                 if (_uiDocScaleFactor != 0)
                     return _uiDocScaleFactor;
 
-                var uiDoc = Object.FindObjectOfType<UIDocument>().rootVisualElement;
-                if (uiDoc == null)
+                var uiDocument = Object.FindObjectOfType<UIDocument>();
+                if (uiDocument == null)
                     return 1;
-                
+
+                var uiDoc = uiDocument.rootVisualElement;
+                if (uiDoc == null || uiDoc.panel == null)
+                    return 1;
+
                 var uiWidth = uiDoc.panel.visualTree.worldBound.width;
+                if (uiWidth <= 0 || Screen.width <= 0 || float.IsNaN(uiWidth) || float.IsInfinity(uiWidth))
+                    return 1;
+
                 _uiDocScaleFactor = Screen.width / uiWidth;
                 return _uiDocScaleFactor;
             }

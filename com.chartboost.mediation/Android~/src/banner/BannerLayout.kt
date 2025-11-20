@@ -1,7 +1,9 @@
 @file:Suppress("PackageDirectoryMismatch")
 package com.chartboost.mediation.unity.banner
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Build
 import android.util.DisplayMetrics
 import android.view.DisplayCutout
@@ -13,44 +15,107 @@ import com.unity3d.player.UnityPlayer
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class BannerLayout
-    (
-    context: Context,
-    private var bannerView: ChartboostMediationBannerAdView,
-    private var dragListener: IBannerDragListener
-) : RelativeLayout(context) {
+/**
+ * Custom layout container for Chartboost Mediation banner ads in Unity applications.
+ *
+ * Provides drag-and-drop functionality for banner ads while respecting device safe areas
+ * (notches, display cutouts). Handles touch events to enable smooth dragging within
+ * valid screen boundaries.
+ *
+ * @param context The Android context, typically from UnityPlayer.currentActivity
+ * @param bannerView The Chartboost banner ad view to be contained
+ * @param dragListener Listener to receive drag event callbacks
+ */
+@SuppressLint("ViewConstructor")
+class BannerLayout(context: Context?, private var bannerView: ChartboostMediationBannerAdView?, private var dragListener: IBannerDragListener?) : RelativeLayout(context) {
 
+    companion object {
+        /**
+         * Minimum distance in pixels that the user must drag before the drag gesture is recognized.
+         * This helps distinguish between taps and drags.
+         */
+        private const val DRAG_THRESHOLD_PIXELS = 10
+    }
+
+    @Volatile
     var canDrag: Boolean = false
-    private var safeAreaTop:Int = 0
-    private var safeAreaLeft:Int = 0 
-    private var safeAreaRight:Int = 0
-    private var safeAreaBottom:Int = 0
+        set(value) {
+            field = value
+            if (!value && isDragging) {
+                // Cancel any ongoing drag when dragging is disabled
+                isDragging = false
+                dragListener?.onDragEnd(bannerView?.x ?: 0f, bannerView?.y ?: 0f)
+            }
+        }
+    private var safeAreaTop: Int = 0
+    private var safeAreaLeft: Int = 0
+    private var safeAreaRight: Int = 0
+    private var safeAreaBottom: Int = 0
     private var screenWidth = 0
     private var screenHeight = 0
 
     private var isDragging = false
-    private val dragThresholdDistance = 10 // in pixels
 
-    private var startX: Int = 0
-    private var startY: Int = 0
-    private var lastX: Int = 0
-    private var lastY: Int = 0
+    private var dragStartX: Int = 0
+    private var dragStartY: Int = 0
+    private var dragLastX: Int = 0
+    private var dragLastY: Int = 0
 
     init {
         // making it clickable here allows onInterceptTouchEvent to intercept touch events on bannerView
-        bannerView.isClickable = true
+        bannerView?.isClickable = true
+
+        updateScreenDimensions()
+    }
+
+    /**
+     * Updates screen dimensions based on current window metrics.
+     * Handles both modern (API 30+) and legacy approaches.
+     */
+    private fun updateScreenDimensions() {
+        val activity = UnityPlayer.currentActivity
+        if (activity == null) {
+            // Activity not available, use default values
+            screenWidth = 0
+            screenHeight = 0
+            return
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val bounds = UnityPlayer.currentActivity.windowManager.currentWindowMetrics.bounds
+            // Use WindowMetrics API for Android R (API 30) and above
+            val bounds = activity.windowManager.currentWindowMetrics.bounds
             screenWidth = bounds.width()
             screenHeight = bounds.height()
+        } else {
+            // Use deprecated Display API for older versions
+            val outMetrics = DisplayMetrics()
+            @Suppress("DEPRECATION")
+            val display = activity.windowManager.defaultDisplay
+            @Suppress("DEPRECATION")
+            display.getRealMetrics(outMetrics)
+            screenWidth = outMetrics.widthPixels
+            screenHeight = outMetrics.heightPixels
         }
-        else {
-            val metrics = DisplayMetrics()
-            UnityPlayer.currentActivity.windowManager.defaultDisplay.getRealMetrics(metrics)
-            screenWidth = metrics.widthPixels
-            screenHeight = metrics.heightPixels
-        }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        updateScreenDimensions()
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        cleanup()
+    }
+
+    /**
+     * Cleans up references to prevent memory leaks.
+     * Should be called when the banner is no longer needed.
+     */
+    fun cleanup() {
+        bannerView = null
+        dragListener = null
+        removeAllViews()
     }
 
     override fun onApplyWindowInsets(insets: WindowInsets?): WindowInsets {
@@ -58,80 +123,86 @@ class BannerLayout
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val displayCutout: DisplayCutout? = insets?.displayCutout
             if (displayCutout != null) {
-                // Get safe area insets
-                safeAreaTop = displayCutout.safeInsetTop
-                safeAreaLeft = displayCutout.safeInsetLeft
-                safeAreaRight = displayCutout.safeInsetRight
-                safeAreaBottom = displayCutout.safeInsetBottom
+                // Get safe area insets and validate them to prevent negative values
+                safeAreaTop = displayCutout.safeInsetTop.coerceAtLeast(0)
+                safeAreaLeft = displayCutout.safeInsetLeft.coerceAtLeast(0)
+                safeAreaRight = displayCutout.safeInsetRight.coerceAtLeast(0)
+                safeAreaBottom = displayCutout.safeInsetBottom.coerceAtLeast(0)
             }
         }
         return super.onApplyWindowInsets(insets)
     }
 
     override fun onInterceptTouchEvent(event: MotionEvent?): Boolean {
+        // Early return if event is null or dragging is disabled
+        event ?: return super.onInterceptTouchEvent(event)
 
         if (!canDrag)
             return super.onInterceptTouchEvent(event)
 
-        if (event?.action == MotionEvent.ACTION_DOWN) {
-            startX = event.rawX.toInt()
-            startY = event.rawY.toInt()
+        // Get local references to prevent null pointer issues
+        val currentBanner = bannerView
+        val currentDragListener = dragListener
 
-            lastX = startX
-            lastY = startY
+        // If banner or listener is null, cannot handle drag
+        if (currentBanner == null || currentDragListener == null)
+            return super.onInterceptTouchEvent(event)
 
-            isDragging = false
-        }
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                dragStartX = event.rawX.toInt()
+                dragStartY = event.rawY.toInt()
 
-        if (event?.action == MotionEvent.ACTION_MOVE) {
+                dragLastX = dragStartX
+                dragLastY = dragStartY
 
-            val dx = (event.rawX - lastX).toInt()
-            val dy = (event.rawY - lastY).toInt()
-
-            lastX = event.rawX.toInt()
-            lastY = event.rawY.toInt()
-
-            if(!isDragging && hasDragged())
-            {
-                isDragging = true
-                dragListener.onDragBegin(bannerView.x, bannerView.y)
-            }
-
-            if (isDragging) {
-                val newX = bannerView.x + dx
-                val newY = bannerView.y + dy
-                val safeLeft = safeAreaLeft
-                val safeRight = screenWidth - safeAreaRight
-                val safeTop = safeAreaTop
-                val safeBottom = screenHeight - safeAreaBottom
-
-                // do not move any part of the banner out of the safe area
-                if((newX >= safeLeft && newX + bannerView.width <= safeRight) &&
-                    (newY >= safeTop && newY + bannerView.height <= safeBottom)) {
-                    bannerView.x = newX
-                    bannerView.y = newY
-                    dragListener.onDrag(bannerView.x, bannerView.y)
-                }
-            }
-        }
-
-        if (event?.action == MotionEvent.ACTION_UP) {
-            val wasDragging = isDragging
-            if (isDragging) {
-                dragListener.onDragEnd(bannerView.x, bannerView.y)
                 isDragging = false
             }
-            return wasDragging // Return true if the event was a drag, indicating the touch was intercepted
+
+            MotionEvent.ACTION_MOVE -> {
+                val dx = (event.rawX - dragLastX).toInt()
+                val dy = (event.rawY - dragLastY).toInt()
+
+                dragLastX = event.rawX.toInt()
+                dragLastY = event.rawY.toInt()
+
+                if (!isDragging && hasDragged()) {
+                    isDragging = true
+                    currentDragListener.onDragBegin(currentBanner.x, currentBanner.y)
+                }
+
+                if (isDragging) {
+                    val newX = currentBanner.x + dx
+                    val newY = currentBanner.y + dy
+
+                    // do not move any part of the banner out of the safe area
+                    if ((newX >= safeAreaLeft && newX + currentBanner.width <= screenWidth - safeAreaRight) &&
+                        (newY >= safeAreaTop && newY + currentBanner.height <= screenHeight - safeAreaBottom)) {
+                        currentBanner.x = newX
+                        currentBanner.y = newY
+                        currentDragListener.onDrag(currentBanner.x, currentBanner.y)
+                    }
+                }
+            }
+
+            MotionEvent.ACTION_UP -> {
+                val wasDragging = isDragging
+                if (isDragging) {
+                    currentDragListener.onDragEnd(currentBanner.x, currentBanner.y)
+                    isDragging = false
+                }
+                return wasDragging // Return true if the event was a drag, indicating the touch was intercepted
+            }
         }
 
         return super.onInterceptTouchEvent(event)
     }
 
     private fun hasDragged(): Boolean {
-        val distance = sqrt(
-            (lastX - startX).toDouble().pow(2.0) + (lastY - startY).toDouble().pow(2.0)
-        ).toFloat()
+        val dx = (dragLastX - dragStartX).toDouble()
+        val dy = (dragLastY - dragStartY).toDouble()
+        val distance = sqrt(dx.pow(2.0) + dy.pow(2.0)).toFloat()
 
-        return distance > dragThresholdDistance
+        return distance.isFinite() && distance > DRAG_THRESHOLD_PIXELS
     }
 }

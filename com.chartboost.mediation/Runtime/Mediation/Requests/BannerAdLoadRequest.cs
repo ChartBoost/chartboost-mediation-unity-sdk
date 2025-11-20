@@ -1,4 +1,5 @@
 using Chartboost.Mediation.Ad.Banner;
+using Newtonsoft.Json;
 
 namespace Chartboost.Mediation.Requests
 {
@@ -10,8 +11,9 @@ namespace Chartboost.Mediation.Requests
         public BannerAdLoadRequest(string placementName, BannerSize size) : base(placementName) => Size = size;
 
         /// <summary>
-        /// The <see cref="BannerSize"/> size for the request 
+        /// The <see cref="BannerSize"/> size for the request
         /// </summary>
+        [JsonProperty("size")]
         public BannerSize Size { get; set; }
     }
 }

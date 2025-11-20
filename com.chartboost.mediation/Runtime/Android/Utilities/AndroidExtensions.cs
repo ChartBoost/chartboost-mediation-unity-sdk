@@ -36,8 +36,14 @@ namespace Chartboost.Mediation.Android.Utilities
         }
 #nullable disable
 
-        public static BidInfo MapToWinningBidInfo(this AndroidJavaObject map)
+        public static BidInfo? MapToWinningBidInfo(this AndroidJavaObject map)
         {
+            if (map == null)
+            {
+                LogController.Log("MapToWinningBidInfo received null map, returning null.", LogLevel.Warning);
+                return null;
+            }
+
             var partnerId = map.Call<string>(SharedAndroidConstants.FunctionGet, AndroidConstants.PropertyPartnerId);
             var auctionId = map.Call<string>(SharedAndroidConstants.FunctionGet, AndroidConstants.PropertyAuctionId);
             var lineItemId = map.Call<string>(SharedAndroidConstants.FunctionGet, AndroidConstants.PropertyLineItemId);
@@ -46,7 +52,7 @@ namespace Chartboost.Mediation.Android.Utilities
 
             if (!double.TryParse(price, out var priceAsDouble))
                 LogController.Log("Failed to parse bid info price, defaulting to 0.", LogLevel.Error);
-            
+
             return new BidInfo(auctionId, partnerId, priceAsDouble, lineItemName, lineItemId);
         }
 
@@ -123,14 +129,18 @@ namespace Chartboost.Mediation.Android.Utilities
             return map;
         }
 
-        public static BannerSize ToBannerSize(this AndroidJavaObject source)
+        public static BannerSize? ToBannerSize(this AndroidJavaObject source)
         {
             if (source == null)
-                return new BannerSize();
+                return null;
 
             var name = source.Get<string>(AndroidConstants.PropertyName);
             var width = source.Get<int>(AndroidConstants.PropertyWidth);
             var height = source.Get<int>(AndroidConstants.PropertyHeight);
+
+            if (width == 0 && height == 0)
+                return null;
+            
             var size = name switch
             {
                 AndroidConstants.BannerSizeStandard => BannerSize.Standard,

@@ -19,13 +19,14 @@ namespace Chartboost.Mediation.Error
             Message = message;
             Code = null;
         }
-        
+
         /// <summary>
         /// Constructor for native errors.
         /// </summary>
         /// <param name="code">error code.</param>
         /// <param name="message">error message.</param>
-        public ChartboostMediationError(string code, string message)
+        [JsonConstructor]
+        public ChartboostMediationError(string? code, string message)
         {
             Code = code;
             Message = message;
@@ -36,7 +37,7 @@ namespace Chartboost.Mediation.Error
         /// </summary>
         [JsonProperty("code")]
         public string? Code { get; }
-        
+
         /// <summary>
         /// A human-readable, description of this error.
         /// </summary>

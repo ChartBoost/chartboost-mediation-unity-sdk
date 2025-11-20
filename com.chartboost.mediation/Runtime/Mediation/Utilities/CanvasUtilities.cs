@@ -41,9 +41,12 @@ namespace Chartboost.Mediation.Utilities
             foreach (var can in Object.FindObjectsByType<Canvas>(FindObjectsSortMode.InstanceID).OrderByDescending(x => x.sortingOrder))
             {
                 // Make sure the canvas is not within another canvas
-                canvas = can;
-                if (!can.GetComponentInParent<Canvas>())
+                var parentCanvas = can.transform.parent?.GetComponentInParent<Canvas>();
+                if (parentCanvas == null)
+                {
+                    canvas = can;
                     break;
+                }
             }
 
             return canvas;
@@ -51,18 +54,13 @@ namespace Chartboost.Mediation.Utilities
         
         private static Canvas GetRootLevelCanvasWithHighestSortingOrder()
         {
-            Canvas canvas = null;
             var canvases = (from go in SceneManager.GetActiveScene().GetRootGameObjects()
                     where go.GetComponent<Canvas>()
                     select go.GetComponent<Canvas>())
-                .OrderByDescending(x => x.sortingOrder);
+                .OrderByDescending(x => x.sortingOrder)
+                .ToList();
 
-            // ReSharper disable once PossibleMultipleEnumeration
-            if (canvases.Any())
-                // ReSharper disable once PossibleMultipleEnumeration
-                canvas = canvases.First();
-            
-            return canvas;
+            return canvases.Count > 0 ? canvases[0] : null;
         }
     }
 }

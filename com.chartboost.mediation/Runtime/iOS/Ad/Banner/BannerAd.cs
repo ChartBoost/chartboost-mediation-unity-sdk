@@ -70,12 +70,10 @@ namespace Chartboost.Mediation.iOS.Ad.Banner
         }
         
         /// <inheritdoc />
-        public override BidInfo WinningBidInfo => _CBMBannerAdGetBidInfo(UniqueId).ToBidInfo();
+        public override BidInfo? WinningBidInfo => _CBMBannerAdGetBidInfo(UniqueId).ToBidInfo();
 
         /// <inheritdoc />
-        public override string LoadId =>
-            // TODO: why metrics is a list ?
-            LoadMetrics?.metrics != null ? LoadMetrics?.metrics.FirstOrDefault().loadId : string.Empty;
+        public override string LoadId => _CBMBannerAdGetLoadId(UniqueId) ?? string.Empty;
 
         /// <inheritdoc />
         public override Metrics? LoadMetrics => _CBMBannerAdGetLoadMetrics(UniqueId).ToMetrics();
@@ -154,18 +152,19 @@ namespace Chartboost.Mediation.iOS.Ad.Banner
         /// <inheritdoc />
         protected override void Dispose(bool disposing)
         {
-            if(IsDisposed) 
+            if(IsDisposed)
                 return;
             IsDisposed = true;
-            
+
             // Release managed resources
-            if(disposing) 
-            { 
+            if(disposing)
+            {
                 // no managed resources to release
             }
-                
+
             // Release unmanaged resources
             _CBMBannerAdDestroy(UniqueId);
+            AdCache.ReleaseAd(UniqueId);
         }
 
         /// <inheritdoc />
@@ -201,6 +200,7 @@ namespace Chartboost.Mediation.iOS.Ad.Banner
         [DllImport(SharedIOSConstants.DLLImport)] private static extern string _CBMBannerAdGetPivot(IntPtr uniqueId);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern string _CBMBannerAdGetRequest(IntPtr uniqueId);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern string _CBMBannerAdGetBidInfo(IntPtr uniqueId);
+        [DllImport(SharedIOSConstants.DLLImport)] private static extern string _CBMBannerAdGetLoadId(IntPtr uniqueId);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern string _CBMBannerAdGetLoadMetrics(IntPtr uniqueId);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern string _CBMBannerAdGetBannerSize(IntPtr uniqueId);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern string _CBMBannerAdGetContainerSize(IntPtr uniqueId);

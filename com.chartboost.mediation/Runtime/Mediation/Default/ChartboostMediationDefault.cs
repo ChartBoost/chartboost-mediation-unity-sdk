@@ -45,12 +45,12 @@ namespace Chartboost.Mediation.Default
         /// <inheritdoc cref="ChartboostMediationBase.GetFullscreenAdQueue"/>
         public override IFullscreenAdQueue GetFullscreenAdQueue(string placementName)
         {
-            var nativeQueue = IntPtr.Zero;
-            var queue = (FullscreenAdQueueDefault)AdCache.GetAd(nativeQueue.ToInt64());
+            var uniqueId = new IntPtr(placementName?.GetHashCode() ?? 0);
+            var queue = AdCache.GetAd(uniqueId.ToInt64()) as FullscreenAdQueueDefault;
             if (queue != null)
                 return queue;
 
-            queue = new FullscreenAdQueueDefault(nativeQueue);
+            queue = new FullscreenAdQueueDefault(uniqueId);
             return queue;
         }
         

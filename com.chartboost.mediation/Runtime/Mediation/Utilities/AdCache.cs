@@ -1,6 +1,6 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Xml;
 using Chartboost.Logging;
 using Chartboost.Mediation.Ad;
 using Chartboost.Mediation.Requests;
@@ -11,13 +11,15 @@ namespace Chartboost.Mediation.Utilities
     {
         /// <summary>
         /// Weak reference cache to <see cref="IAd"/> ads.
+        /// Thread-safe dictionary to handle concurrent access from native callbacks and Unity main thread.
         /// </summary>
-        private static readonly Dictionary<long, WeakReference<IAd>> Ads = new();
-        
+        private static readonly ConcurrentDictionary<long, WeakReference<IAd>> Ads = new();
+
         /// <summary>
         /// Publisher supplied <see cref="AdLoadRequests"/> requests.
+        /// Thread-safe dictionary to handle concurrent access from native callbacks and Unity main thread.
         /// </summary>
-        private static readonly Dictionary<long, AdLoadRequest> AdLoadRequests = new();
+        private static readonly ConcurrentDictionary<long, AdLoadRequest> AdLoadRequests = new();
 
         /// <summary>
         /// Keeps track of a <see cref="IAd"/> with a weak reference so it can be disposed by GC.
@@ -61,14 +63,7 @@ namespace Chartboost.Mediation.Utilities
         /// <param name="uniqueId">Associated unique identifier.</param>
         public static void ReleaseAd(long uniqueId)
         {
-            if (!Ads.ContainsKey(uniqueId))
-            {
-                LogController.Log($"Attempted to release: {uniqueId} but no reference was found", LogLevel.Warning);
-                return;
-            }
-
-            LogController.Log($"Releasing IAd reference for {uniqueId}", LogLevel.Verbose);
-            Ads.Remove(uniqueId);
+            Ads.TryRemove(uniqueId, out _);
         }
 
         /// <inheritdoc cref="ReleaseAd(long)"/>
@@ -99,7 +94,7 @@ namespace Chartboost.Mediation.Utilities
         {
             if (!AdLoadRequests.TryGetValue(uniqueId, out var adLoadRequest))
             {
-                LogController.Log($"Failed to get WeakReference<AdLoadRequest> for: {uniqueId}, reference was most likely disposed, returning null.", LogLevel.Warning);
+                LogController.Log($"Failed to get AdLoadRequest for: {uniqueId}, request was not found in cache, returning null.", LogLevel.Warning);
                 return null;
             }
 
@@ -113,11 +108,7 @@ namespace Chartboost.Mediation.Utilities
         /// <param name="uniqueId">Associated hashCode.</param>
         public static void ReleaseAdLoadRequest(long uniqueId)
         {
-            if (!AdLoadRequests.ContainsKey(uniqueId))
-                return;
-
-            LogController.Log($"Releasing AdLoadRequest for {uniqueId}", LogLevel.Verbose);
-            AdLoadRequests.Remove(uniqueId);
+            AdLoadRequests.TryRemove(uniqueId, out _);
         }
         
         public static string CacheInfo() => $"CacheManager : \n" + $"Fullscreen Cache: {Ads.Count}, FullscreenAdLoadRequest: {AdLoadRequests.Count}";

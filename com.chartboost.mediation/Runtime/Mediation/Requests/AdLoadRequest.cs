@@ -1,5 +1,6 @@
 using Chartboost.Mediation.Ad;
 using Chartboost.Mediation.Utilities;
+using Newtonsoft.Json;
 
 namespace Chartboost.Mediation.Requests
 {
@@ -17,11 +18,9 @@ namespace Chartboost.Mediation.Requests
         /// <summary>
         /// The placement name for the ad.
         /// </summary>
+        [JsonProperty("placement")]
         public string PlacementName { get; }
 
         internal long AssociatedProxy { get; set; }
-        
-        ~AdLoadRequest()
-            => AdCache.ReleaseAdLoadRequest(AssociatedProxy);
     }
 }
