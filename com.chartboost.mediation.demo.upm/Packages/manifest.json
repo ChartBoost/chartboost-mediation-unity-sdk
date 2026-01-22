@@ -1,9 +1,9 @@
 {
   "dependencies": {
     "com.chartboost.core": "1.1.0",
-    "com.chartboost.mediation": "5.4.0",
+    "com.chartboost.mediation": "5.4.1",
     "com.chartboost.mediation.demo": "file:../../com.chartboost.mediation.demo",
-    "com.chartboost.mediation.unity.adapter.chartboost": "5.0.6",
+    "com.chartboost.mediation.unity.adapter.chartboost": "5.1.0",
     "com.chartboost.unity.logging": "1.1.0",
     "com.chartboost.unity.threading": "1.0.2",
     "com.chartboost.unity.utilities": "1.0.4",

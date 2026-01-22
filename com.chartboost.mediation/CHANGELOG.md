@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file using the standards as defined at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0).
 
+### Version 5.4.1 *(2025-01-22)*
+
+### Fixed
+- Added `UNITY_6000_0_OR_NEWER` Scripting Define to `GradlePostGenerate` for proper compilation in Unity 6 Editors.
+
 ### Version 5.4.0 *(2025-11-20)*
 
 Support for the following native SDK dependencies:

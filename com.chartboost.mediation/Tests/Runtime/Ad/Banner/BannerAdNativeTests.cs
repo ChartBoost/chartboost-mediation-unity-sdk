@@ -309,12 +309,8 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
 
                 Assert.IsNotNull(loadTask.Result, TestConstants.AssertionMessages.LoadResultShouldNotBeNull);
 
-                if (loadTask.Result.Error.HasValue)
-                {
-                    Debug.LogError($"Load failed with error: {loadTask.Result.Error.Value.Code} - {loadTask.Result.Error.Value.Message}");
-                }
-
-                Assert.IsFalse(loadTask.Result.Error.HasValue, TestConstants.AssertionMessages.LoadShouldSucceed);
+                // Use AdLoadResultAssert to handle ad inventory errors as Inconclusive
+                AdLoadResultAssert.AssertSuccess(loadTask.Result, TestConstants.AssertionMessages.LoadShouldSucceed);
 
                 // Wait to allow banner to be displayed and events to fire
                 yield return new WaitForSeconds(TestConstants.Timing.WaitForBannerDisplay);
