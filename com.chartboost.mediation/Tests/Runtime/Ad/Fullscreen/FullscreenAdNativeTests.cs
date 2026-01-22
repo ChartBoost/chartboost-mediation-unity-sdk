@@ -91,12 +91,8 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
 
             Assert.IsNotNull(loadTask.Result, TestConstants.AssertionMessages.LoadResultShouldNotBeNull);
 
-            if (loadTask.Result.Error.HasValue)
-            {
-                Debug.LogError($"Load failed with error: {loadTask.Result.Error.Value.Code} - {loadTask.Result.Error.Value.Message}");
-            }
-
-            Assert.IsFalse(loadTask.Result.Error.HasValue, TestConstants.AssertionMessages.FullscreenAdLoadShouldSucceed);
+            // Use AdLoadResultAssert to handle ad inventory errors as Inconclusive
+            AdLoadResultAssert.AssertSuccess(loadTask.Result, TestConstants.AssertionMessages.FullscreenAdLoadShouldSucceed);
 
             // Store the loaded ad for further tests
             _sharedFullscreenAd = loadTask.Result.Ad;

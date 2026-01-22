@@ -1,6 +1,7 @@
 {
   "name": "com.chartboost.mediation",
-  "version": "5.4.0",
+  "version": "5.4.1",
+  "license": "MIT",
   "displayName": "Chartboost Mediation",
   "description": "The Chartboost Mediation Unity SDK. Better monetization powered by bidding",
   "unity": "2022.3",
@@ -13,7 +14,14 @@
     "com.chartboost.unity.logging": "1.1.0",
     "com.chartboost.core": "1.1.0"
   },
-  "keywords": [],
+  "keywords": [
+    "Chartboost",
+    "Mediation",
+    "Unity",
+    "Ads",
+    "Monetization"
+  ],
+  "homepage": "https://chartboost.com",
   "author": {
     "name": "Chartboost",
     "email": "sales@chartboost.com",
@@ -21,7 +29,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ChartBoost/chartboost-mediation-unity-sdk.git"
+    "url": "git+https://github.com/ChartBoost/chartboost-mediation-unity-sdk.git"
   },
   "bugs": {
     "url": "https://github.com/ChartBoost/chartboost-mediation-unity-sdk/issues",
