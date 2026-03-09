@@ -1,0 +1,13 @@
+# Default repository-local gitleaks configuration.
+# This file is used automatically when a repo has no .gitleaks.toml.
+# Copy it to your repo root as .gitleaks.toml and add your exclusions.
+# See: https://github.com/loopme/secrets/blob/main/docs/adding-exclusions.md
+
+# Use all built-in gitleaks default rules
+[extend]
+  useDefault = true
+
+[allowlist]
+  description = "global allowlist"
+  regexes = []
+  paths = []
