@@ -1,6 +1,31 @@
 # Changelog
 All notable changes to this project will be documented in this file using the standards as defined at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0).
 
+### Version 5.4.2 *(2026-07-13)*
+
+Support for the following native SDK dependencies:
+  * Android: `com.chartboost:chartboost-mediation-sdk:5.4.+`
+  * iOS: `ChartboostMediationSDK ~> 5.4.0`
+
+### Added
+- `BannerVisualElement.ContainerPositionOverride` for frame-exact native banner positioning when an external system manages the element's screen position (e.g., draggable overlays).
+
+### Fixed
+- iOS `CBMBannerAdWrapper` race condition where `Visible` could return stale state during rapid toggles between async dispatches.
+- iOS `CBMBannerAdWrapper` Fixed Size mode partner ad ignoring horizontal and vertical alignment.
+- iOS empty `CBMBannerAdView` intercepting touches after a load failure (interaction is now disabled until ad content loads).
+- Android `BannerAdWrapper` partner ad alignment in Fixed Size mode and centering for banners wider than the screen.
+- Android `BannerAdWrapper` redundant position updates and lingering async work after destruction.
+- Android `BannerAdWrapper` `ClassCastException` in `onMeasure` when a Unity banner is reloaded into a reparented container.
+- Android `BannerLayout` drag callbacks flooding the main thread at 120 Hz (now throttled to ~60 Hz to match iOS).
+- `BannerVisualElement` native banner being destroyed during reparenting (disposal is now deferred until detachment is confirmed).
+- `BannerVisualElement.Dispose()` lazy getter resurrecting a native banner mid-disposal.
+- `UnityBannerAd` redundant native sync calls when position and size are unchanged.
+- `BannerExtensions` corner rounding now uses `Mathf.RoundToInt` for accurate pixel positioning.
+
+### Changed
+- iOS banner now attaches to the application window with elevated z-position so it renders above overlays.
+
 ### Version 5.4.1 *(2025-01-22)*
 
 ### Fixed

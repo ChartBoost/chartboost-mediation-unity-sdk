@@ -188,7 +188,11 @@ namespace Chartboost.Mediation.iOS.Ad.Banner
             _CBMBannerAdSetAdBackgroundColor(UniqueId, color.r, color.g, color.b, color.a);
         }
 
+        /// <inheritdoc />
+        internal override void SetHostView(IntPtr hostView) => _CBMBannerAdSetHostView(UniqueId, hostView);
+
         [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMBannerAdSetCallbacks(ExternBannerAdEvent bannerAdEvents);
+        [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMBannerAdSetHostView(IntPtr uniqueId, IntPtr hostView);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern IntPtr _CBMGetBannerAd(ExternBannerAdDragEvent dragListener);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern string _CBMBannerAdGetKeywords(IntPtr uniqueId);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMBannerAdSetKeywords(IntPtr uniqueId, string keywordsJson);

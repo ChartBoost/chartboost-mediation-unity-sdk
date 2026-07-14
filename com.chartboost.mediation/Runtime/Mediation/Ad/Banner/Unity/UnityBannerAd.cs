@@ -66,10 +66,22 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
         private BannerVerticalAlignment verticalAlignment = BannerVerticalAlignment.Center;
         
         private IBannerAd _bannerAd;
+
+        // Native banner backing this Unity variant, for automation slot hosting (HB-11391).
+        internal IBannerAd NativeBannerAd => _bannerAd;
+
+        // When hosted in the automation slot, drive the native container from these slot bounds
+        // instead of this GameObject's RectTransform (parity with BannerVisualElement). The
+        // RectTransform-driven sync settles slowly, which left the hosted banner blank for
+        // seconds; the override applies the slot size/position immediately (HB-11391).
+        public Vector2? ContainerPositionOverride { get; set; }
+        public Vector2? ContainerSizeOverride { get; set; }
+        private Vector2? _lastAppliedOverrideSize;
+        private Vector2? _lastAppliedOverridePosition;
+
         private LayoutParams _lastLayoutParams = new();
         private RectTransform _rectTransform;
         private bool _isDragging;
-        private Task _syncTask;
         private bool _syncInProgress;
         
         /// <summary>
@@ -121,7 +133,7 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
                 // Fire-and-forget pattern: start the async task without awaiting
                 // We track the task to avoid overlapping calls with _syncInProgress flag
                 // ContinueWithOnMainThread ensures execution on Unity main thread and handles exceptions
-                _syncTask = SyncWithNativeContainerAsync().ContinueWithOnMainThread(task =>
+                SyncWithNativeContainerAsync().ContinueWithOnMainThread(task =>
                 {
                     _syncInProgress = false;
 
@@ -322,20 +334,51 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
         {
             try
             {
+                // Hosted in the automation slot: drive the native container from the slot override
+                // instead of the RectTransform, applied only when it changes (HB-11391).
+                if (ContainerSizeOverride.HasValue || ContainerPositionOverride.HasValue)
+                {
+                    if (BannerAd != null)
+                    {
+                        if (ContainerSizeOverride.HasValue && ContainerSizeOverride != _lastAppliedOverrideSize)
+                        {
+                            BannerAd.ContainerSize = ContainerSize.FixedSize(
+                                (int)ContainerSizeOverride.Value.x, (int)ContainerSizeOverride.Value.y);
+                            _lastAppliedOverrideSize = ContainerSizeOverride;
+                        }
+
+                        if (ContainerPositionOverride.HasValue && ContainerPositionOverride != _lastAppliedOverridePosition)
+                        {
+                            BannerAd.Position = ContainerPositionOverride.Value;
+                            _lastAppliedOverridePosition = ContainerPositionOverride;
+                        }
+                    }
+                    return;
+                }
+
                 var layoutParams = UnityBannerTransform.LayoutParams();
                 if (layoutParams.IsEqual(_lastLayoutParams))
                     return;
 
                 if (BannerAd != null)
                 {
-                    // Position
-                    var x = DensityConverters.PixelsToNative(layoutParams.x);
-                    var y = DensityConverters.PixelsToNative(Screen.height - layoutParams.y);
-                    BannerAd.Position = new Vector2(x, y);
+                    var positionChanged = System.Math.Abs(layoutParams.x - _lastLayoutParams.x) >= 0.01f
+                                       || System.Math.Abs(layoutParams.y - _lastLayoutParams.y) >= 0.01f;
+                    var sizeChanged = System.Math.Abs(layoutParams.width - _lastLayoutParams.width) >= 0.01f
+                                   || System.Math.Abs(layoutParams.height - _lastLayoutParams.height) >= 0.01f;
 
-                    // Size
-                    var size = await GetTransformSize();
-                    BannerAd.ContainerSize = ContainerSize.FixedSize((int)size.x, (int)size.y);
+                    if (positionChanged)
+                    {
+                        var x = DensityConverters.PixelsToNative(layoutParams.x);
+                        var y = DensityConverters.PixelsToNative(Screen.height - layoutParams.y);
+                        BannerAd.Position = new Vector2(x, y);
+                    }
+
+                    if (sizeChanged)
+                    {
+                        var size = await GetTransformSize();
+                        BannerAd.ContainerSize = ContainerSize.FixedSize((int)size.x, (int)size.y);
+                    }
                 }
                 _lastLayoutParams = layoutParams;
             }

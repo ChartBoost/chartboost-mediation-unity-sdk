@@ -217,6 +217,28 @@ extern "C" {
     }
 
     /**
+     * Hosts the banner in the given view. Pass a null hostView to restore the
+     * default Unity root view. Generic embedding hook — the host is an opaque
+     * UIView pointer, so this carries no dependency on any particular caller.
+     *
+     * @param uniqueId Bridge pointer to CBMBannerAdWrapper instance
+     * @param hostView Bridge pointer to the host UIView, or NULL for the Unity root
+     */
+    void _CBMBannerAdSetHostView(const void * uniqueId, const void * hostView)
+    {
+        if (!uniqueId) {
+            [[CBLUnityLoggingBridge sharedLogger] logWithTag:CBMBannerAdBridgeTAG
+                                                          log:@"_CBMBannerAdSetHostView: uniqueId is nil"
+                                                     logLevel:CBLLogLevelError];
+            return;
+        }
+
+        CBMBannerAdWrapper *bannerAdWrapper = (__bridge CBMBannerAdWrapper*)uniqueId;
+        UIView *host = (__bridge UIView*)hostView;
+        [bannerAdWrapper setHostView:host];
+    }
+
+    /**
      * Gets the position of the banner container in screen coordinates.
      *
      * @param uniqueId Bridge pointer to CBMBannerAdWrapper instance

@@ -1057,18 +1057,19 @@ namespace Chartboost.Tests.Runtime.Ad.Banner.UIToolkit
             // Verify BannerAd is not disposed yet
             Assert.IsFalse(testBannerAd.IsDisposedPublic);
 
-            // Access OnDetachFromPanel via reflection
-            var onDetachMethod = typeof(BannerVisualElement).GetMethod(TestConstants.Reflection.OnDetachFromPanelMethod, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-
-            // Create a mock DetachFromPanelEvent (pass null since the method doesn't use the event parameter)
-            onDetachMethod?.Invoke(_bannerVisualElement, new object[] { null });
+            // Calling Dispose() on BannerVisualElement disposes the inner banner ad.
+            // In production, OnDetachFromPanel defers disposal via the panel scheduler
+            // which then calls Dispose(). In the test environment, we call Dispose()
+            // directly to verify the disposal chain works correctly.
+            _bannerVisualElement.Dispose();
 
             yield return null;
 
             // Verify BannerAd.Dispose() was called
             Assert.IsTrue(testBannerAd.IsDisposedPublic);
 
-            // Cleanup
+            // Cleanup — null out so TearDown doesn't double-dispose
+            _bannerVisualElement = null;
             AdCache.ReleaseAd(TestConstants.UniqueIds.Id9999);
         }
 
@@ -1078,15 +1079,14 @@ namespace Chartboost.Tests.Runtime.Ad.Banner.UIToolkit
             // Don't inject BannerAd - it should be null
             yield return null;
 
-            // Access OnDetachFromPanel via reflection
-            var onDetachMethod = typeof(BannerVisualElement).GetMethod(TestConstants.Reflection.OnDetachFromPanelMethod, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-
-            // This should not throw even with null BannerAd
-            onDetachMethod?.Invoke(_bannerVisualElement, new object[] { null });
+            // Dispose should not throw even with null BannerAd.
+            // In production this is triggered by OnDetachFromPanel's deferred callback.
+            Assert.DoesNotThrow(() => _bannerVisualElement.Dispose());
 
             yield return null;
 
-            // Test passes if no exception was thrown
+            // Null out so TearDown doesn't double-dispose
+            _bannerVisualElement = null;
         }
 
         #endregion

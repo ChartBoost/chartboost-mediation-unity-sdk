@@ -33,7 +33,7 @@ namespace Chartboost.Tests.Runtime
             public const string PartnerAdapter = "4.5.6";
             public const string NativeSDK = "1.2.3";
             public const string Module = "1.0.0";
-            public const string ExpectedSDK = "5.4.1";
+            public const string ExpectedSDK = "5.4.2";
         }
 
         /// <summary>

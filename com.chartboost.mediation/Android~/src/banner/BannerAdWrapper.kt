@@ -28,6 +28,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.roundToInt
 
 class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
@@ -45,9 +46,19 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
     private var _containerSize: Size = Size(0, 0)
     private var _isVisible: Boolean = true
 
+    // Track if Match Ad mode was set - Unity sends -1,-1 first, then actual size
+    // We need to remember the initial mode to handle clipping correctly
+    @Volatile
+    private var _isMatchAdMode: Boolean = false
+
+    @Volatile
     private var partnerAd: View? = null
     private var bannerLayout: BannerLayout? = null
     private var bannerAdListener: ChartboostMediationBannerAdListener? = null
+
+    // Automation-only host for the banner layout; null = default Unity activity.
+    @Volatile
+    private var _hostView: View? = null
 
     // Coroutine scope tied to wrapper lifecycle
     private val scope = CoroutineScope(Main + SupervisorJob())
@@ -57,6 +68,14 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
 
     // Store ViewTreeObserver listener reference for proper cleanup
     private var layoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
+
+    // Track destruction state to prevent async operations after cleanup
+    @Volatile
+    private var _isDestroyed: Boolean = false
+
+    // Debouncing flag to prevent redundant position updates
+    // Uses AtomicBoolean for proper atomic compare-and-set to avoid race conditions
+    private val _hasPendingPositionUpdate = AtomicBoolean(false)
 
     /**
      * Gets the current Unity activity. Does not retain a reference to avoid memory leaks.
@@ -137,13 +156,255 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
     /**
      * Sets the banner position in native coordinates.
      * Position represents the absolute screen coordinates where the banner should be placed.
+     * For banners wider than the screen, the position is adjusted to center the banner.
      */
     @Suppress("unused")
     fun setPosition(x: Float, y: Float){
         _position = PointF(x,y)
+        schedulePositionUpdate()
+    }
+
+    // Hosts the banner view directly in the given container (automation slot), mirroring the
+    // native canary. Pass null to return it to the wrapper's own positioning layout.
+    @Suppress("unused")
+    fun setHostView(hostView: View?) {
+        _hostView = hostView
         runTaskOnUiThread {
-            ad.translationX = x * displayDensity
-            ad.translationY = y * displayDensity
+            val host = hostView as? ViewGroup
+            if (host != null) {
+                attachAdToHost(host)
+            } else {
+                (ad.parent as? ViewGroup)?.removeView(ad)
+                ad.layoutParams = RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT
+                )
+                bannerLayout?.addView(ad)
+                schedulePositionUpdate()
+            }
+        }
+    }
+
+    // Adds the banner into the container, letting the container generate compatible LayoutParams.
+    // The ad carries the wrapper's RelativeLayout params, which a FrameLayout host cannot cast.
+    private fun attachAdToHost(host: ViewGroup) {
+        (ad.parent as? ViewGroup)?.removeView(ad)
+        host.addView(ad, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        // The slot centers the ad via gravity, so clear any translation left over from positioning
+        // before it was hosted (e.g. the Unity variant's default off-screen RectTransform sync),
+        // otherwise the ad stays sized correctly but pushed off-screen.
+        ad.translationX = 0f
+        ad.translationY = 0f
+        (ad.layoutParams as? FrameLayout.LayoutParams)?.let {
+            it.gravity = Gravity.CENTER
+            ad.layoutParams = it
+        }
+    }
+
+    // Match params to the ad's actual parent, not the _hostView flag: setHostView() flips _hostView
+    // before it re-parents the ad, so keying off the flag can put FrameLayout params on the
+    // RelativeLayout wrapper and crash onMeasure with a ClassCastException.
+    private fun buildAdLayoutParams(width: Int, height: Int): ViewGroup.LayoutParams =
+        when (ad.parent) {
+            is FrameLayout -> FrameLayout.LayoutParams(width, height).apply { gravity = Gravity.CENTER }
+            is RelativeLayout -> RelativeLayout.LayoutParams(width, height)
+            // Detached: fall back to the intended host type; the add/attach reconciles it.
+            else -> if (_hostView != null)
+                FrameLayout.LayoutParams(width, height).apply { gravity = Gravity.CENTER }
+            else
+                RelativeLayout.LayoutParams(width, height)
+        }
+
+    /**
+     * Schedules a position update with debouncing to prevent redundant calls.
+     * Multiple rapid calls will result in only one actual position update.
+     * Uses atomic compare-and-set to ensure thread-safe scheduling.
+     */
+    private fun schedulePositionUpdate() {
+        if (_isDestroyed) return
+
+        // Atomic compare-and-set: only schedule if not already pending
+        if (!_hasPendingPositionUpdate.compareAndSet(false, true)) return
+
+        runTaskOnUiThread {
+            ad.post {
+                if (!_isDestroyed) {
+                    _hasPendingPositionUpdate.set(false)
+                    applyPosition()
+                }
+            }
+        }
+    }
+
+    /**
+     * Applies the current position to the ad view.
+     * For Match Ad mode with wide banners, Unity already sends the centered position,
+     * so we just apply it directly to the partnerAd.
+     * For Fixed Size mode, centers the partnerAd within the container.
+     */
+    private fun applyPosition() {
+        // When hosted in a container (automation slot), the container owns layout (native-canary parity).
+        if (_hostView != null) return
+        val isWideBanner = calculateCenteringOffset() != null
+        val isContainerConstrained = isContainerConstrainedByScreen()
+        val partner = partnerAd
+
+        when {
+            _isMatchAdMode && isWideBanner && partner != null -> {
+                // Match Ad + wide banner: Unity sends the centered position, apply it to partnerAd
+                (partner.layoutParams as? FrameLayout.LayoutParams)?.let { layoutParams ->
+                    layoutParams.gravity = Gravity.TOP or Gravity.LEFT
+                    partner.layoutParams = layoutParams
+                }
+                ad.translationX = 0f
+                ad.translationY = _position.y * displayDensity
+                partner.translationX = _position.x * displayDensity
+                partner.translationY = 0f
+            }
+            _isMatchAdMode && isWideBanner -> {
+                // Match Ad + wide banner but partnerAd not ready - use centering offset temporarily
+                val centeringOffset = calculateCenteringOffset() ?: 0
+                ad.translationX = centeringOffset.toFloat()
+                ad.translationY = _position.y * displayDensity
+            }
+            _isMatchAdMode -> {
+                // Match Ad mode with normal-sized banner - use gravity for centering
+                partner?.let {
+                    (it.layoutParams as? FrameLayout.LayoutParams)?.let { layoutParams ->
+                        layoutParams.gravity = horizontalGravity or verticalGravity
+                        it.layoutParams = layoutParams
+                    }
+                    it.translationX = 0f
+                    it.translationY = 0f
+                }
+                ad.translationX = _position.x * displayDensity
+                ad.translationY = _position.y * displayDensity
+            }
+            else -> {
+                // Fixed Size mode - translation-based positioning with alignment.
+                val posX = if (isContainerConstrained) 0f else _position.x * displayDensity
+                ad.translationX = posX
+                ad.translationY = _position.y * displayDensity
+                positionPartnerAdInContainer()
+            }
+        }
+    }
+
+    /**
+     * Checks if the container is being constrained by the screen width.
+     * This happens when Unity requests a container larger than the screen.
+     * @return true if the container width is being constrained
+     */
+    private fun isContainerConstrainedByScreen(): Boolean {
+        val activity = getActivity() ?: return false
+        val screenWidth = activity.resources.displayMetrics.widthPixels
+
+        // Get the requested container width in pixels
+        val requestedWidth = if (_containerSize.width == FIT_CONTENT) {
+            // For wrap content, use the banner's creative size
+            (ad.getCreativeSizeDips().width * displayDensity).toInt()
+        } else {
+            (_containerSize.width * displayDensity).toInt()
+        }
+
+        // Container is constrained if requested width exceeds screen width
+        return requestedWidth > screenWidth
+    }
+
+    /**
+     * Positions the partnerAd within the container for Fixed Size mode.
+     * Uses translation-based positioning that respects alignment settings.
+     * Works for both cases: banner larger than container (shows aligned portion)
+     * and banner smaller than container (aligns within space).
+     */
+    private fun positionPartnerAdInContainer() {
+        val partner = partnerAd ?: return
+
+        // Reset gravity to TOP|LEFT since we use translation for positioning
+        (partner.layoutParams as? FrameLayout.LayoutParams)?.let { layoutParams ->
+            if (layoutParams.gravity != (Gravity.TOP or Gravity.LEFT)) {
+                layoutParams.gravity = Gravity.TOP or Gravity.LEFT
+                partner.layoutParams = layoutParams
+            }
+        }
+
+        val partnerWidth = partner.width
+        val partnerHeight = partner.height
+        val containerWidth = ad.width
+        val containerHeight = ad.height
+
+        // Skip positioning if dimensions aren't ready yet - will be applied on next position update
+        if (partnerWidth <= 0 || containerWidth <= 0) {
+            UnityLoggingBridge.log(TAG, "Partner dimensions not ready, skipping positioning", LogLevel.DEBUG)
+            return
+        }
+
+        // Calculate horizontal offset based on alignment setting
+        // For LEFT: offset = 0 (show left portion if larger, align left if smaller)
+        // For CENTER: offset = (container - partner) / 2 (center the content)
+        // For RIGHT: offset = container - partner (show right portion if larger, align right if smaller)
+        val offsetX = when (horizontalGravity) {
+            Gravity.LEFT -> 0f
+            Gravity.RIGHT -> (containerWidth - partnerWidth).toFloat()
+            else -> (containerWidth - partnerWidth) / 2f // CENTER or default
+        }
+
+        // Calculate vertical offset based on alignment setting
+        val offsetY = when (verticalGravity) {
+            Gravity.TOP -> 0f
+            Gravity.BOTTOM -> (containerHeight - partnerHeight).toFloat()
+            else -> (containerHeight - partnerHeight) / 2f // CENTER or default
+        }
+
+        UnityLoggingBridge.log(TAG, "Positioning partner: offsetX=$offsetX, offsetY=$offsetY (hAlign=$horizontalGravity, vAlign=$verticalGravity)", LogLevel.DEBUG)
+
+        // Use translationX/Y for reliable positioning independent of layout state
+        partner.translationX = offsetX
+        partner.translationY = offsetY
+    }
+
+    /**
+     * Calculates the horizontal offset needed to center a wide banner.
+     * Returns the offset in pixels, or null if no centering is needed.
+     */
+    private fun calculateCenteringOffset(): Int? {
+        val creativeSizeDips = ad.getCreativeSizeDips()
+        val bannerWidthPx = (creativeSizeDips.width * displayDensity).toInt()
+
+        if (bannerWidthPx <= 0) return null
+
+        val activity = getActivity() ?: return null
+        val screenWidth = activity.resources.displayMetrics.widthPixels
+
+        return if (bannerWidthPx > screenWidth) {
+            (screenWidth - bannerWidthPx) / 2
+        } else {
+            null
+        }
+    }
+
+    /**
+     * Waits for the ad creative size to be available, then schedules position update.
+     * Uses recursive posting to ensure we don't apply centering logic before dimensions are known.
+     * Checks destruction state to prevent execution after cleanup.
+     */
+    private fun waitForLayoutAndSchedulePositionUpdate(attempts: Int = 0) {
+        if (_isDestroyed) return
+
+        if (attempts >= 10) {
+            schedulePositionUpdate()
+            return
+        }
+
+        ad.post {
+            if (_isDestroyed) return@post
+
+            val creativeSizeDips = ad.getCreativeSizeDips()
+            if (creativeSizeDips.width > 0) {
+                schedulePositionUpdate()
+            } else {
+                waitForLayoutAndSchedulePositionUpdate(attempts + 1)
+            }
         }
     }
 
@@ -190,16 +451,13 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
             HORIZONTAL_RIGHT -> Gravity.RIGHT
             else -> Gravity.CENTER_HORIZONTAL
         }
-        UnityLoggingBridge.log(TAG, "Setting horizontal alignment as ${this.horizontalGravity}", LogLevel.DEBUG)
-        runTaskOnUiThread {
-            partnerAd?.let {
-                val layoutParams = it.layoutParams as FrameLayout.LayoutParams
 
-                // apply both since we don't want to overwrite previously set verticalAlignment by
-                // only setting horizontalAlignment
-                layoutParams.gravity = this.horizontalGravity or this.verticalGravity
-                partnerAd?.layoutParams = layoutParams
-            }
+        // For Fixed Size mode, use translation-based positioning
+        // For Match Ad mode, apply gravity via updateGravity()
+        if (_isMatchAdMode) {
+            updateGravity()
+        } else {
+            schedulePositionUpdate()
         }
     }
 
@@ -229,16 +487,13 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
             VERTICAL_BOTTOM -> Gravity.BOTTOM
             else -> Gravity.CENTER_VERTICAL
         }
-        UnityLoggingBridge.log(TAG, "Setting vertical alignment as ${this.verticalGravity}", LogLevel.DEBUG)
-        runTaskOnUiThread {
-            partnerAd?.let {
-                val layoutParams = it.layoutParams as FrameLayout.LayoutParams
 
-                // apply both since we don't want to overwrite previously set horizontalAlignment by
-                // only setting verticalAlignment
-                layoutParams.gravity = this.horizontalGravity or this.verticalGravity
-                partnerAd?.layoutParams = layoutParams
-            }
+        // For Fixed Size mode, use translation-based positioning
+        // For Match Ad mode, apply gravity via updateGravity()
+        if (_isMatchAdMode) {
+            updateGravity()
+        } else {
+            schedulePositionUpdate()
         }
     }
 
@@ -289,14 +544,17 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
     fun setContainerSize(width: Int, height: Int){
         // Store the container size immediately on calling thread
         _containerSize = Size(width, height)
-        UnityLoggingBridge.log(TAG, "Setting container size to ${width}x${height}", LogLevel.DEBUG)
+
+        // Update match ad mode based on whether this is wrap content
+        val isWrapContent = width == FIT_CONTENT || height == FIT_CONTENT
+        _isMatchAdMode = isWrapContent
 
         // Only UI manipulation on UI thread
         runTaskOnUiThread {
 
             // Fit Both
             if(width == FIT_CONTENT && height == FIT_CONTENT){
-                ad.layoutParams = RelativeLayout.LayoutParams(
+                ad.layoutParams = buildAdLayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
                 )
@@ -304,7 +562,7 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
             // Fit Horizontal
 
             else if(width == FIT_CONTENT){
-                ad.layoutParams = RelativeLayout.LayoutParams(
+                ad.layoutParams = buildAdLayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     (height * displayDensity).toInt()
                 )
@@ -312,7 +570,7 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
 
             // Fit Vertical
             else if(height == FIT_CONTENT){
-                ad.layoutParams = RelativeLayout.LayoutParams(
+                ad.layoutParams = buildAdLayoutParams(
                     (width * displayDensity).toInt(),
                     ViewGroup.LayoutParams.WRAP_CONTENT
                 )
@@ -320,19 +578,55 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
 
             // Fixed size
             else{
-                ad.layoutParams = RelativeLayout.LayoutParams(
+                ad.layoutParams = buildAdLayoutParams(
                     (width * displayDensity).toInt(),
                     (height * displayDensity).toInt()
                 )
             }
+
+            updateClipSettings(_isMatchAdMode)
+
+            // Request layout to ensure dimensions are updated
+            ad.requestLayout()
         }
+
+        // Schedule position update after container size change
+        // The debouncing mechanism ensures only one update happens even if called multiple times
+        schedulePositionUpdate()
+    }
+
+    /**
+     * Updates clip settings on the banner layout and ad view.
+     * @param allowOverflow If true, disables clipping to allow banners to extend beyond bounds.
+     *                      If false, enables clipping to constrain content within bounds.
+     */
+    private fun updateClipSettings(allowOverflow: Boolean) {
+        bannerLayout?.let { layout ->
+            layout.clipChildren = !allowOverflow
+            layout.clipToPadding = !allowOverflow
+        }
+        ad.clipChildren = !allowOverflow
+        ad.clipToPadding = !allowOverflow
     }
 
     /**
      * Gets the current container size.
+     * Returns the actual calculated size, using banner dimensions for wrap content mode.
      */
     @Suppress("unused")
-    fun getContainerSize(): Size = _containerSize
+    fun getContainerSize(): Size {
+        val width = if (_containerSize.width == FIT_CONTENT) {
+            ad.getCreativeSizeDips().width.toInt()
+        } else {
+            _containerSize.width
+        }
+        val height = if (_containerSize.height == FIT_CONTENT) {
+            ad.getCreativeSizeDips().height.toInt()
+        } else {
+            _containerSize.height
+        }
+        return Size(width, height)
+    }
 
     //endregion
 
@@ -420,6 +714,7 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
      */
     @Suppress("unused")
     fun reset() {
+        _isMatchAdMode = false  // Reset mode for next load
         runTaskOnUiThread { ad.clearAd() }
     }
 
@@ -429,6 +724,9 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
      */
     @Suppress("unused")
     fun destroy() {
+        // Mark as destroyed to prevent async operations from executing
+        _isDestroyed = true
+
         // Cancel all ongoing coroutines to prevent memory leaks
         scope.cancel()
 
@@ -450,6 +748,8 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
                 bannerAdListener?.onAdViewAdded(this@BannerAdWrapper)
                 partnerAd = child
                 updateGravity()
+                // Schedule position update after layout to handle centering with actual dimensions
+                waitForLayoutAndSchedulePositionUpdate()
             }
 
             override fun onAdClicked(placement: String) {
@@ -581,21 +881,21 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
             // Create the banner layout on the given position.
             // Check if there is an already existing banner layout. If so, remove it. Otherwise,
             // create a new one.
-
             layout?.let {
                 it.removeAllViews()
                 val bannerParent = it.parent as ViewGroup
                 bannerParent.removeView(it)
             }
 
-            // Listen to drag events on BannerLayout
             layout = BannerLayout(getActivity(), ad, dragListener)
             layout.setBackgroundColor(Color.TRANSPARENT)
 
-            // Apply the stored draggable state
             layout.canDrag = _canDrag
 
-            // Attach the banner layout to the activity.
+            bannerLayout = layout
+
+            updateClipSettings(_isMatchAdMode)
+
             try {
 
                 // Default is wrap content
@@ -604,13 +904,11 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
                     ViewGroup.LayoutParams.WRAP_CONTENT
                 )
 
-                // Update layout based on pivot
                 layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
                     updateMargins()
                 }
                 ad.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
 
-                // Attach the banner to the banner layout.
                 layout.addView(ad)
                 getActivity()?.addContentView(
                     layout,
@@ -619,6 +917,8 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
                         ViewGroup.LayoutParams.MATCH_PARENT
                     )
                 )
+                // If hosted (automation), move the banner into the host so it survives ad refresh.
+                (_hostView as? ViewGroup)?.let { host -> attachAdToHost(host) }
 
                 // This immediately sets the visibility of this banner. If this doesn't happen
                 // here, it is impossible to set the visibility later.
@@ -646,6 +946,8 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
             bannerAdListener?.onAdDrag(this@BannerAdWrapper, x, y)
         }
         override fun onDragEnd(x: Float, y: Float) {
+            // Persist the dragged position so it survives ad refreshes (onAdViewAdded -> applyPosition)
+            _position = PointF(x / displayDensity, y / displayDensity)
             bannerAdListener?.onAdDragEnd(this@BannerAdWrapper, x, y)
         }
     }
@@ -654,6 +956,7 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
      * Updates the banner margins based on the pivot point.
      * Android doesn't have a native pivot concept, so we use negative margins to achieve
      * the same positioning effect. Only applies to BannerAd API; UnityBannerAd uses (0,0) pivot.
+     * Note: Centering for wide banners is handled separately via applyPosition().
      */
     private fun updateMargins() {
         runTaskOnUiThread {
@@ -663,27 +966,29 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
             // Note: We only do this for BannerAd API. For UnityBannerAd the pivot is
             // always assumed to be at (0,0) since positioning and resizing is handled by the GameObject
 
-            val layoutParams = ad.layoutParams as RelativeLayout.LayoutParams
+            // Pivot margins only apply while the wrapper's RelativeLayout owns the ad. When hosted
+            // in the automation slot (FrameLayout), the container owns layout — skip.
+            val layoutParams = ad.layoutParams as? RelativeLayout.LayoutParams ?: return@runTaskOnUiThread
             layoutParams.leftMargin = (ad.width * -(_pivot.x)).toInt()
             layoutParams.topMargin = (ad.height * -(_pivot.y)).toInt()
-
             ad.layoutParams = layoutParams
         }
     }
 
     /**
      * Updates the gravity of the partner ad view within its container.
-     * Applies both horizontal and vertical gravity using bitwise OR.
+     * Only applies for Match Ad mode - Fixed Size mode uses translation-based positioning.
      */
     private fun updateGravity(){
+        // Only apply gravity for Match Ad mode
+        // Fixed Size mode uses translation-based positioning in positionPartnerAdInContainer()
+        if (!_isMatchAdMode) return
+
         runTaskOnUiThread {
-            // FrameLayout cannot set gravity for its children, each child has to
-            // set its own gravity.
-            partnerAd?.let {
-                val layoutParams = it.layoutParams as FrameLayout.LayoutParams
-                layoutParams.gravity = horizontalGravity or verticalGravity
-                it.layoutParams = layoutParams
-            }
+            val partner = partnerAd ?: return@runTaskOnUiThread
+            val layoutParams = partner.layoutParams as? FrameLayout.LayoutParams ?: return@runTaskOnUiThread
+            layoutParams.gravity = horizontalGravity or verticalGravity
+            partner.layoutParams = layoutParams
         }
     }
 
@@ -813,5 +1118,4 @@ class BannerAdWrapper(private val ad: ChartboostMediationBannerAdView) {
         this._pivot = PointF(0F, 0F)
         createBannerLayout()
     }
-
 }

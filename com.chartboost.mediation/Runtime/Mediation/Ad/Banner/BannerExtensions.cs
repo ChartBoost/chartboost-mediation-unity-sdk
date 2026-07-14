@@ -45,8 +45,8 @@ namespace Chartboost.Mediation.Ad.Banner
             {
                 x = corners[1].x,  
                 y = corners[1].y,
-                width = (int)(corners[2].x - corners[0].x),
-                height = (int)(corners[1].y - corners[0].y),
+                width = Mathf.RoundToInt(corners[2].x - corners[0].x),
+                height = Mathf.RoundToInt(corners[1].y - corners[0].y),
                 bottomLeft = corners[0],
                 topLeft = corners[1],
                 topRight = corners[2],

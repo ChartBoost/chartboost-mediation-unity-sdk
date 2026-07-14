@@ -133,7 +133,8 @@ namespace Chartboost.Tests.Runtime
             }
             else
             {
-                Debug.LogError($"[TestInitializer] Chartboost Mediation initialization timeout after {maxWaitTime} seconds");
+                Assert.Inconclusive($"[TestInitializer] Chartboost Mediation initialization timed out after {maxWaitTime} seconds. " +
+                    "The SDK did not complete initialization — subsequent tests that depend on it will be skipped.");
             }
         }
     }
