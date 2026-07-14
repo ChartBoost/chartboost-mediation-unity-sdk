@@ -96,6 +96,17 @@
   viewController:(UIViewController *_Nonnull)viewController
       completion:(void (^_Nonnull)(CBMBannerAdLoadResult * _Nonnull))completion;
 
+#pragma mark Hosting
+
+/**
+ * Reparents the banner into the given host view. Pass nil to restore the default
+ * Unity root view. The banner's screen-space position is resolved relative to the
+ * host, so it renders correctly regardless of where it is embedded.
+ *
+ * @param hostView The view to host the banner in, or nil for the Unity root view
+ */
+- (void)setHostView:(UIView * _Nullable)hostView;
+
 #pragma mark Lifecycle
 
 /**

@@ -17,6 +17,7 @@ namespace Chartboost.Mediation.Android.Utilities
         public const string FunctionSetCustomData = "setCustomData";
         public const string FunctionGetPosition = "getPosition";
         public const string FunctionSetPosition = "setPosition";
+        public const string FunctionSetHostView = "setHostView";
         public const string FunctionGetPivot = "getPivot";
         public const string FunctionSetPivot = "setPivot";
         public const string FunctionGetAd = "getAd";

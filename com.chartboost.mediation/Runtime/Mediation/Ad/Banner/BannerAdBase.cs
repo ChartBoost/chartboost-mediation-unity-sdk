@@ -171,6 +171,18 @@ namespace Chartboost.Mediation.Ad.Banner
 
         internal virtual void SetAdBackgroundColor(Color color) => LogController.Log($"Setting native view's ad background color to {color}", LogLevel.Debug);
 
+        /// <summary>
+        /// Hosts the banner's native view inside the given host (iOS <c>UIView*</c> as an <see cref="IntPtr"/>).
+        /// Pass <see cref="IntPtr.Zero"/> to restore the default host. No-op on platforms using a different handle.
+        /// </summary>
+        internal virtual void SetHostView(IntPtr hostView) => LogController.Log($"{BannerAd} SetHostView(IntPtr) no-op on this platform", LogLevel.Debug);
+
+        /// <summary>
+        /// Hosts the banner's native view inside the given Android <c>View</c>. Pass null to restore the default host.
+        /// No-op on platforms using a different handle.
+        /// </summary>
+        internal virtual void SetHostView(AndroidJavaObject hostView) => LogController.Log($"{BannerAd} SetHostView(AndroidJavaObject) no-op on this platform", LogLevel.Debug);
+
         internal virtual Vector2 AdRelativePosition { get; set; }
         
         ~BannerAdBase() => Dispose(false);

@@ -35,6 +35,15 @@ class BannerLayout(context: Context?, private var bannerView: ChartboostMediatio
          * This helps distinguish between taps and drags.
          */
         private const val DRAG_THRESHOLD_PIXELS = 10
+
+        /**
+         * Minimum interval in nanoseconds between drag event callbacks to Unity.
+         * Android sends raw touch events at 120+ events/sec, but Unity processes events once per
+         * frame (~60fps). Throttling to ~16ms matches iOS's UIPanGestureRecognizer rate and
+         * prevents the MainThreadDispatcher queue from backing up with stale events.
+         * The native banner view still moves immediately for smooth visual feedback.
+         */
+        private const val DRAG_CALLBACK_INTERVAL_NS = 16_000_000L // ~16ms ≈ 60fps
     }
 
     @Volatile
@@ -55,6 +64,7 @@ class BannerLayout(context: Context?, private var bannerView: ChartboostMediatio
     private var screenHeight = 0
 
     private var isDragging = false
+    private var lastDragCallbackTimeNs: Long = 0
 
     private var dragStartX: Int = 0
     private var dragStartY: Int = 0
@@ -64,6 +74,10 @@ class BannerLayout(context: Context?, private var bannerView: ChartboostMediatio
     init {
         // making it clickable here allows onInterceptTouchEvent to intercept touch events on bannerView
         bannerView?.isClickable = true
+
+        // Allow banners to extend beyond layout bounds (e.g., leaderboards wider than screen)
+        clipChildren = false
+        clipToPadding = false
 
         updateScreenDimensions()
     }
@@ -168,6 +182,7 @@ class BannerLayout(context: Context?, private var bannerView: ChartboostMediatio
 
                 if (!isDragging && hasDragged()) {
                     isDragging = true
+                    lastDragCallbackTimeNs = System.nanoTime()
                     currentDragListener.onDragBegin(currentBanner.x, currentBanner.y)
                 }
 
@@ -175,12 +190,43 @@ class BannerLayout(context: Context?, private var bannerView: ChartboostMediatio
                     val newX = currentBanner.x + dx
                     val newY = currentBanner.y + dy
 
-                    // do not move any part of the banner out of the safe area
-                    if ((newX >= safeAreaLeft && newX + currentBanner.width <= screenWidth - safeAreaRight) &&
-                        (newY >= safeAreaTop && newY + currentBanner.height <= screenHeight - safeAreaBottom)) {
+                    val bannerWidth = currentBanner.width.toFloat()
+                    val bannerHeight = currentBanner.height.toFloat()
+                    val safeWidth = (screenWidth - safeAreaLeft - safeAreaRight).toFloat()
+
+                    val leftBound: Float
+                    val rightBound: Float
+
+                    if (bannerWidth > safeWidth) {
+                        // Banner is wider than screen: allow dragging beyond borders but
+                        // require at least 60% of the banner to remain visible horizontally.
+                        val minVisibleH = minOf(bannerWidth * 0.6f, safeWidth)
+                        leftBound = safeAreaLeft - (bannerWidth - minVisibleH)
+                        rightBound = screenWidth - safeAreaRight - minVisibleH
+                    } else {
+                        // Banner fits within screen: keep fully within safe area.
+                        leftBound = safeAreaLeft.toFloat()
+                        rightBound = (screenWidth - safeAreaRight - bannerWidth)
+                    }
+
+                    // Vertical bounds: always keep fully within safe area
+                    val topBound = safeAreaTop.toFloat()
+                    val bottomBound = (screenHeight - safeAreaBottom - bannerHeight)
+
+                    if (newX >= leftBound && newX <= rightBound &&
+                        newY >= topBound && newY <= bottomBound) {
+                        // Always update native view position immediately for smooth visual feedback
                         currentBanner.x = newX
                         currentBanner.y = newY
-                        currentDragListener.onDrag(currentBanner.x, currentBanner.y)
+
+                        // Throttle drag callbacks to Unity to ~60fps to match iOS behavior.
+                        // Android sends raw touch events at 120+ Hz which floods the
+                        // MainThreadDispatcher queue, causing the layout container to lag behind.
+                        val now = System.nanoTime()
+                        if (now - lastDragCallbackTimeNs >= DRAG_CALLBACK_INTERVAL_NS) {
+                            lastDragCallbackTimeNs = now
+                            currentDragListener.onDrag(currentBanner.x, currentBanner.y)
+                        }
                     }
                 }
             }

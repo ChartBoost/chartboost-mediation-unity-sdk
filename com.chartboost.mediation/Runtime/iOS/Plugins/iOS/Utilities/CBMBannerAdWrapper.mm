@@ -9,6 +9,8 @@ NSString* const CBMBannerAdWrapperTAG = @"CBMBannerAdWrapper";
     CGSize  _internalSize;
     CGSize  _size;
     BOOL _dragging;
+    BOOL _isMatchAdMode;
+    BOOL _pendingVisible;
     UIPanGestureRecognizer* _panGestureRecognizer;
 }
 
@@ -35,6 +37,8 @@ NSString* const CBMBannerAdWrapperTAG = @"CBMBannerAdWrapper";
     _internalPivot = CGPointMake(0, 0);
     _internalSize = _bannerView.frame.size;
     _internalPosition = _bannerView.frame.origin;
+    _isMatchAdMode = NO;
+    _pendingVisible = !bannerView.isHidden;
 
     // Add it to UnityViewController with null check
     UIViewController *unityVC = GetAppController().rootViewController;
@@ -50,6 +54,11 @@ NSString* const CBMBannerAdWrapperTAG = @"CBMBannerAdWrapper";
         [bannerView removeFromSuperview];
         [unityVC.view addSubview:bannerView];
 
+        // Disable user interaction until ad content loads (willAppear).
+        // Without this, the empty banner view's gesture recognizer intercepts
+        // touches after a load failure, causing input offset issues.
+        bannerView.userInteractionEnabled = NO;
+
         // Add PanGestureRecognizer for drag
         UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
         self->_panGestureRecognizer = panGesture;
@@ -57,6 +66,25 @@ NSString* const CBMBannerAdWrapperTAG = @"CBMBannerAdWrapper";
         [self->_bannerView layoutIfNeeded];
     });
     return self;
+}
+
+#pragma mark - Hosting
+
+- (void)setHostView:(UIView *)hostView {
+    toMain(^{
+        if (!self->_bannerView) {
+            return;
+        }
+
+        UIView *target = hostView ?: GetAppController().rootViewController.view;
+        if (!target || self->_bannerView.superview == target) {
+            return;
+        }
+
+        [self->_bannerView removeFromSuperview];
+        [target addSubview:self->_bannerView];
+        [self updateFrame];
+    });
 }
 
 - (void)dealloc {
@@ -194,8 +222,19 @@ NSString* const CBMBannerAdWrapperTAG = @"CBMBannerAdWrapper";
                                                  logLevel:CBLLogLevelVerbose];
     }
 
+    // Capture values for main thread block
+    BOOL isWrapContent = (size.width == -1 || size.height == -1);
+
     _size = size;
+
+    // Update _isMatchAdMode on main thread to ensure thread-safe access
+    // This flag is read by alignment setters which also run on main thread
+    toMain(^{
+        self->_isMatchAdMode = isWrapContent;
+    });
+
     [self updateFrame];
+    [self updateClipSettings];
 }
 
 - (CGSize)containerSize{
@@ -223,6 +262,11 @@ NSString* const CBMBannerAdWrapperTAG = @"CBMBannerAdWrapper";
 - (void)setHorizontalAlignment:(CBMBannerHorizontalAlignment)horizontalAlignment{
     toMain(^{
         [self->_bannerView setHorizontalAlignment:horizontalAlignment];
+
+        // For Fixed Size mode, reposition the partner ad to reflect the new alignment
+        if (!self->_isMatchAdMode) {
+            [self positionPartnerAdInContainer];
+        }
     });
 }
 
@@ -233,6 +277,11 @@ NSString* const CBMBannerAdWrapperTAG = @"CBMBannerAdWrapper";
 - (void)setVerticalAlignment:(CBMBannerVerticalAlignment)verticalAlignment{
     toMain(^{
         [self->_bannerView setVerticalAlignment:verticalAlignment];
+
+        // For Fixed Size mode, reposition the partner ad to reflect the new alignment
+        if (!self->_isMatchAdMode) {
+            [self positionPartnerAdInContainer];
+        }
     });
 }
 
@@ -241,6 +290,12 @@ NSString* const CBMBannerAdWrapperTAG = @"CBMBannerAdWrapper";
 }
 
 - (void)setVisible:(BOOL)visible{
+    // Track intended state synchronously so the getter always returns the
+    // most recently requested value. The UIKit update is dispatched async
+    // to the main thread, but callers on the Unity thread see the new state
+    // immediately — preventing the race condition where rapid toggles cause
+    // stale reads between async dispatches.
+    _pendingVisible = visible;
     toMain(^{
         if (self->_bannerView) {
             [self->_bannerView setHidden:!visible];
@@ -249,10 +304,7 @@ NSString* const CBMBannerAdWrapperTAG = @"CBMBannerAdWrapper";
 }
 
 - (BOOL)visible{
-    if (!_bannerView) {
-        return NO;
-    }
-    return ![_bannerView isHidden];
+    return _pendingVisible;
 }
 
 #pragma mark - Ad Loading
@@ -288,7 +340,11 @@ NSString* const CBMBannerAdWrapperTAG = @"CBMBannerAdWrapper";
 
 - (void)reset {
     toMain(^{
+        self->_isMatchAdMode = NO;  // Reset mode for next load (set on main thread for thread safety)
         if (self->_bannerView) {
+            // Disable user interaction when ad content is cleared.
+            // Will be re-enabled in willAppear when new content loads.
+            self->_bannerView.userInteractionEnabled = NO;
             [self->_bannerView reset];
         }
     });
@@ -335,6 +391,67 @@ NSString* const CBMBannerAdWrapperTAG = @"CBMBannerAdWrapper";
 
 #pragma mark - Private Utilities
 
+- (void)updateClipSettings {
+    toMain(^{
+        if (!self->_bannerView) {
+            return;
+        }
+
+        self->_bannerView.clipsToBounds = !self->_isMatchAdMode;
+    });
+}
+
+- (void)positionPartnerAdInContainer {
+    if (!_bannerView || _bannerView.subviews.count == 0) {
+        return;
+    }
+
+    UIView *partnerAd = _bannerView.subviews[0];
+    CGFloat containerWidth = _bannerView.frame.size.width;
+    CGFloat containerHeight = _bannerView.frame.size.height;
+    CGFloat partnerWidth = partnerAd.frame.size.width;
+    CGFloat partnerHeight = partnerAd.frame.size.height;
+
+    if (partnerWidth <= 0 || containerWidth <= 0) {
+        return;
+    }
+
+    // Calculate horizontal offset based on alignment
+    CGFloat offsetX;
+    switch (_bannerView.horizontalAlignment) {
+        case CBMBannerHorizontalAlignmentLeft:
+            offsetX = 0;
+            break;
+        case CBMBannerHorizontalAlignmentRight:
+            offsetX = containerWidth - partnerWidth;
+            break;
+        case CBMBannerHorizontalAlignmentCenter:
+        default:
+            offsetX = (containerWidth - partnerWidth) / 2.0;
+            break;
+    }
+
+    // Calculate vertical offset based on alignment
+    CGFloat offsetY;
+    switch (_bannerView.verticalAlignment) {
+        case CBMBannerVerticalAlignmentTop:
+            offsetY = 0;
+            break;
+        case CBMBannerVerticalAlignmentBottom:
+            offsetY = containerHeight - partnerHeight;
+            break;
+        case CBMBannerVerticalAlignmentCenter:
+        default:
+            offsetY = (containerHeight - partnerHeight) / 2.0;
+            break;
+    }
+
+    CGRect newFrame = partnerAd.frame;
+    newFrame.origin.x = offsetX;
+    newFrame.origin.y = offsetY;
+    partnerAd.frame = newFrame;
+}
+
 - (void)updateFrame {
     if (!_bannerView) {
         [[CBLUnityLoggingBridge sharedLogger] logWithTag:CBMBannerAdWrapperTAG
@@ -358,7 +475,20 @@ NSString* const CBMBannerAdWrapperTAG = @"CBMBannerAdWrapper";
         CGFloat newY = self->_internalPosition.y - (self->_internalSize.height * self->_internalPivot.y);
 
         CGRect newFrame = CGRectMake(newX, newY, self->_internalSize.width, self->_internalSize.height);
+
+        // Resolve the screen-space position into the host view: no-op for the full-screen
+        // root, slot-relative when hosted in the automation slot.
+        UIView *host = self->_bannerView.superview;
+        if (host) {
+            CGPoint hostOrigin = [host convertPoint:CGPointZero toView:nil];
+            newFrame.origin.x -= hostOrigin.x;
+            newFrame.origin.y -= hostOrigin.y;
+        }
         self->_bannerView.frame = newFrame;
+
+        if (!self->_isMatchAdMode) {
+            [self positionPartnerAdInContainer];
+        }
     });
 }
 
@@ -403,10 +533,13 @@ NSString* const CBMBannerAdWrapperTAG = @"CBMBannerAdWrapper";
             float newX = center.x + translation.x;
             float newY = center.y + translation.y;
 
-            float left = newX - gr.view.frame.size.width / 2;
-            float right = newX + gr.view.frame.size.width / 2;
-            float top = newY - gr.view.frame.size.height / 2;
-            float bottom = newY + gr.view.frame.size.height / 2;
+            float bannerWidth = gr.view.frame.size.width;
+            float bannerHeight = gr.view.frame.size.height;
+
+            float left = newX - bannerWidth / 2;
+            float right = newX + bannerWidth / 2;
+            float top = newY - bannerHeight / 2;
+            float bottom = newY + bannerHeight / 2;
 
             // Get safe area insets (iOS 11+)
             UIEdgeInsets safeAreaInsets = UIEdgeInsetsZero;
@@ -416,11 +549,25 @@ NSString* const CBMBannerAdWrapperTAG = @"CBMBannerAdWrapper";
 
             CGRect safeFrame = UIEdgeInsetsInsetRect(gr.view.superview.bounds, safeAreaInsets);
 
-            // Check if banner would be outside safe area
-            if (left < safeFrame.origin.x || right > safeFrame.origin.x + safeFrame.size.width ||
-                top < safeFrame.origin.y || bottom > safeFrame.origin.y + safeFrame.size.height) {
+            BOOL outsideBounds;
+
+            if (bannerWidth > safeFrame.size.width) {
+                // Banner is wider than screen: allow dragging beyond borders but require
+                // at least 60% of the banner to remain visible horizontally.
+                float minVisibleH = fminf(bannerWidth * 0.6f, safeFrame.size.width);
+                float leftBound = safeFrame.origin.x - (bannerWidth - minVisibleH);
+                float rightBound = safeFrame.origin.x + safeFrame.size.width - minVisibleH;
+                outsideBounds = left < leftBound || left > rightBound ||
+                                top < safeFrame.origin.y || bottom > safeFrame.origin.y + safeFrame.size.height;
+            } else {
+                // Banner fits within screen: keep fully within safe area.
+                outsideBounds = left < safeFrame.origin.x || right > safeFrame.origin.x + safeFrame.size.width ||
+                                top < safeFrame.origin.y || bottom > safeFrame.origin.y + safeFrame.size.height;
+            }
+
+            if (outsideBounds) {
                 [[CBLUnityLoggingBridge sharedLogger] logWithTag:CBMBannerAdWrapperTAG
-                                                              log:@"handlePan: position outside safe area"
+                                                              log:@"handlePan: position outside allowed bounds"
                                                          logLevel:CBLLogLevelVerbose];
                 return;
             }
@@ -444,6 +591,13 @@ NSString* const CBMBannerAdWrapperTAG = @"CBMBannerAdWrapper";
             _dragging = NO;
             float x = gr.view.frame.origin.x * scale;
             float y = gr.view.frame.origin.y * scale;
+
+            // Persist the dragged position so it survives ad refreshes (updateFrame)
+            // _internalPosition includes pivot offset, so add it back from the frame origin
+            _internalPosition = CGPointMake(
+                gr.view.frame.origin.x + (_internalSize.width * _internalPivot.x),
+                gr.view.frame.origin.y + (_internalSize.height * _internalPivot.y)
+            );
 
             if (_dragListener) {
                 _dragListener((intptr_t)(__bridge void*)self, CBMBannerAdEventDragEnd, x, y);

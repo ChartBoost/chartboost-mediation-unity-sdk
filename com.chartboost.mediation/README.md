@@ -24,7 +24,7 @@ In order to add the Chartboost Core Unity SDK to your project using the npm pack
 
 ```json
 "dependencies": {
-    "com.chartboost.mediation": "5.4.1",
+    "com.chartboost.mediation": "5.4.2",
     ...
 },
 "scopedRegistries": [

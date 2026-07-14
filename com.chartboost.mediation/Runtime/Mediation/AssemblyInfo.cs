@@ -8,6 +8,7 @@ using UnityEngine.Scripting;
 [assembly: InternalsVisibleTo(AssemblyInfo.ChartboostMediationIOSAssembly)]
 [assembly: InternalsVisibleTo(AssemblyInfo.ChartboostMediationEditorTestsAssembly)]
 [assembly: InternalsVisibleTo(AssemblyInfo.ChartboostMediationRuntimeTestsAssembly)]
+[assembly: InternalsVisibleTo(AssemblyInfo.CanaryAutomationBannerHostAssembly)]
 
 namespace Chartboost.Mediation
 {
@@ -18,5 +19,6 @@ namespace Chartboost.Mediation
         public const string ChartboostMediationIOSAssembly = "Chartboost.Mediation.iOS";
         public const string ChartboostMediationEditorTestsAssembly = "Chartboost.Mediation.Test.Editor";
         public const string ChartboostMediationRuntimeTestsAssembly = "Chartboost.Mediation.Tests.Runtime";
-    }
+        public const string CanaryAutomationBannerHostAssembly = "Chartboost.Canary.AutomationBannerHost";
+        }
 }

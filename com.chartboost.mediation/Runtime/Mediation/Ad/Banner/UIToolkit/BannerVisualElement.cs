@@ -55,12 +55,35 @@ namespace Chartboost.Mediation.Ad.Banner.UIToolkit
         public event BannerVisualElementAdDragEvent DidEndDrag;
         
         private IBannerAd _bannerAd;
+
+        // Native banner backing this UIToolkit variant, for automation slot hosting (HB-11391).
+        internal IBannerAd NativeBannerAd => _bannerAd;
+
         private readonly VisualElement _ad;
 
         private bool _draggable;
         private bool _isDragging;
         private BannerHorizontalAlignment _horizontalAlignment = BannerHorizontalAlignment.Center;
         private BannerVerticalAlignment _verticalAlignment = BannerVerticalAlignment.Center;
+        private IVisualElementScheduledItem _deferredDispose;
+
+        /// <summary>
+        /// When set, overrides the container position used for native banner sync.
+        /// <see cref="SyncWithNativeContainer"/> uses this value instead of <c>worldBound</c>,
+        /// providing frame-exact positioning when an external system (e.g., a draggable overlay)
+        /// manages this element's screen position. Set to <c>null</c> to resume
+        /// <c>worldBound</c>-based positioning.
+        /// </summary>
+        public Vector2? ContainerPositionOverride { get; set; }
+
+        /// <summary>
+        /// When set, overrides the container size used for native banner sync.
+        /// <see cref="SyncWithNativeContainer"/> uses this value instead of <c>worldBound</c>,
+        /// so a host (e.g. the automation slot) can size the native container to the slot rather
+        /// than this element's creative-sized <c>worldBound</c>. Set to <c>null</c> to resume
+        /// <c>worldBound</c>-based sizing.
+        /// </summary>
+        public Vector2? ContainerSizeOverride { get; set; }
 
         public BannerVisualElement()
         {
@@ -74,8 +97,11 @@ namespace Chartboost.Mediation.Ad.Banner.UIToolkit
             // similar to update lop in MonoBehaviour
             schedule.Execute(SyncWithNativeContainer).Every((long)Time.smoothDeltaTime * 1000);
 
-            // Dispose native ad when this is no longer part of the scene
+            // Dispose native ad when this is no longer part of the scene.
+            // Disposal is deferred to allow reparenting (Remove + Add) without
+            // destroying the native banner. See OnDetachFromPanel / OnAttachToPanel.
             RegisterCallback<DetachFromPanelEvent>(OnDetachFromPanel);
+            RegisterCallback<AttachToPanelEvent>(OnAttachToPanel);
         }
 
         # region API
@@ -176,8 +202,13 @@ namespace Chartboost.Mediation.Ad.Banner.UIToolkit
         /// <inheritdoc cref="IBannerAd.Dispose"/>
         public void Dispose()
         {
+            _deferredDispose?.Pause();
+            _deferredDispose = null;
             UnsubscribeFromBannerEvents();
-            BannerAd?.Dispose();
+            // Use _bannerAd directly (not the BannerAd property) to avoid the lazy getter
+            // creating a new native banner during disposal.
+            _bannerAd?.Dispose();
+            _bannerAd = null;
         }
 
         /// <summary>
@@ -299,6 +330,9 @@ namespace Chartboost.Mediation.Ad.Banner.UIToolkit
         {
             get
             {
+                if (ContainerPositionOverride.HasValue)
+                    return ContainerPositionOverride.Value;
+
                 // worldBound gives the VisualElement's top-left position in panel coordinates
                 // Convert from panel coordinates to native coordinates using UIDocToNative
                 // This accounts for panel scaling via UIDocScaleFactor
@@ -312,6 +346,9 @@ namespace Chartboost.Mediation.Ad.Banner.UIToolkit
         {
             get
             {
+                if (ContainerSizeOverride.HasValue)
+                    return ContainerSize.FixedSize((int)ContainerSizeOverride.Value.x, (int)ContainerSizeOverride.Value.y);
+
                 // worldBound width/height are in panel coordinates
                 // Convert to native dimensions
                 var width = DensityConverters.UIDocToNative(worldBound.width);
@@ -320,6 +357,9 @@ namespace Chartboost.Mediation.Ad.Banner.UIToolkit
                 return ContainerSize.FixedSize((int)width, (int)height);
             }
         }
+
+        // True when a host (automation slot) is driving container bounds; the slot owns layout.
+        private bool IsHosted => ContainerPositionOverride.HasValue || ContainerSizeOverride.HasValue;
 
         private Vector2 AdRelativePosition
         {
@@ -380,24 +420,52 @@ namespace Chartboost.Mediation.Ad.Banner.UIToolkit
 
         private void SyncWithNativeContainer()
         {
-            if (BannerAd != null)
-            {
-                if (!ContainerSize.Equals(BannerAd.ContainerSize))
-                    BannerAd.ContainerSize = ContainerSize;
+            // Use _bannerAd directly (not the BannerAd property) to avoid the lazy getter
+            // creating a new native banner after Dispose() has nulled the field.
+            if (_bannerAd == null) 
+                return;
+            
+            if (!ContainerSize.Equals(_bannerAd.ContainerSize))
+                _bannerAd.ContainerSize = ContainerSize;
 
-                if (ContainerPosition != BannerAd.Position && !_isDragging)
-                    BannerAd.Position = ContainerPosition;
+            if (ContainerPosition != _bannerAd.Position && !_isDragging)
+                _bannerAd.Position = ContainerPosition;
 
-                if (ContainerVisible != BannerAd.Visible)
-                    BannerAd.Visible = ContainerVisible;
+            if (ContainerVisible != _bannerAd.Visible)
+                _bannerAd.Visible = ContainerVisible;
 
-                // AdRelativePosition is an internal function
-                if (AdRelativePosition != ((BannerAdBase)BannerAd).AdRelativePosition)
-                    ((BannerAdBase)BannerAd).AdRelativePosition = AdRelativePosition;
-            }
+            // AdRelativePosition pins the creative absolutely within the container. When hosted in
+            // the native slot, let the native Center alignment position it (mirrors med, which never
+            // sets this); pushing a value here would override centering and pin it top-left.
+            if (!IsHosted && AdRelativePosition != ((BannerAdBase)_bannerAd).AdRelativePosition)
+                ((BannerAdBase)_bannerAd).AdRelativePosition = AdRelativePosition;
         }
 
-        private void OnDetachFromPanel(DetachFromPanelEvent evt) => Dispose();
+        private void OnDetachFromPanel(DetachFromPanelEvent evt)
+        {
+            // Defer disposal to allow reparenting. When an element is moved between parents
+            // (e.g., during drag detach/reattach), DetachFromPanelEvent fires during the Remove
+            // step. If the element is re-attached before the deferred callback executes,
+            // OnAttachToPanel cancels the disposal.
+            // Schedule on the origin panel's visual tree since this element is no longer in a panel.
+            _deferredDispose = evt.originPanel?.visualTree?.schedule?.Execute(() =>
+            {
+                _deferredDispose = null;
+                if (panel == null)
+                    Dispose();
+            });
+
+            // If the origin panel's scheduler is unavailable (panel was destroyed), dispose immediately.
+            if (_deferredDispose == null && panel == null)
+                Dispose();
+        }
+
+        private void OnAttachToPanel(AttachToPanelEvent evt)
+        {
+            // Element was re-attached (reparented, not removed) — cancel pending disposal.
+            _deferredDispose?.Pause();
+            _deferredDispose = null;
+        }
 
         /// <summary>
         /// Unsubscribes from all banner ad events to prevent memory leaks.

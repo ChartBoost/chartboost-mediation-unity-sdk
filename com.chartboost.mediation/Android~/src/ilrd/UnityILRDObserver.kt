@@ -164,7 +164,7 @@ class UnityILRDObserver : ChartboostMediationIlrdObserver {
                             ilrdCache.putAll(cachedData)
 
                             if (consumeILRDOnRetrieval) {
-                                cachedData.forEach { entry ->
+                                for (entry in cachedData) {
                                     requestUnityILRDConsumption(entry.value)
                                 }
                             }

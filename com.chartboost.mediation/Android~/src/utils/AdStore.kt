@@ -194,10 +194,10 @@ object AdStore {
             val fullscreenCount = fullscreenAdStore.size
             val bannerCount = bannerAdStore.size
 
-            fullscreenAdStore.values.forEach { it.invalidate() }
+            for (ad in fullscreenAdStore.values) { ad.invalidate() }
             fullscreenAdStore.clear()
 
-            bannerAdStore.values.forEach { it.destroy() }
+            for (ad in bannerAdStore.values) { ad.destroy() }
             bannerAdStore.clear()
 
             UnityLoggingBridge.log(

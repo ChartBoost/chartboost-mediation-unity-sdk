@@ -178,6 +178,10 @@ namespace Chartboost.Mediation.Android.Ad.Banner
         }
 
         /// <inheritdoc />
+        internal override void SetHostView(AndroidJavaObject hostView)
+            => _nativeBannerAd.Call(AndroidConstants.FunctionSetHostView, hostView);
+
+        /// <inheritdoc />
         internal override Vector2 AdRelativePosition
         {
             get => _nativeBannerAd.Call<AndroidJavaObject>(AndroidConstants.FunctionGetAdRelativePosition).PointFToVector2();

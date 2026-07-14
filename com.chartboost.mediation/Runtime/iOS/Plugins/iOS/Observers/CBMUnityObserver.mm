@@ -104,6 +104,9 @@
 }
 
 - (void)willAppearWithBannerView:(CBMBannerAdView *)bannerView {
+    // Enable user interaction now that ad content is loaded.
+    // It was disabled during init to prevent the empty view from intercepting touches.
+    bannerView.userInteractionEnabled = YES;
     [self serializeBannerEvent:bannerView bannerEvent:CBMBannerAdEventAppear];
 }
 
