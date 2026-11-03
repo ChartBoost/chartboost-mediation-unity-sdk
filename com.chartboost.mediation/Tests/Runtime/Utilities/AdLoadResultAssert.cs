@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Chartboost.Mediation.Error;
 using Chartboost.Mediation.Requests;
+using Chartboost.Testing;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -47,73 +48,27 @@ namespace Chartboost.Tests.Runtime.Utilities
             HandleLoadError(error, message ?? "Fullscreen ad load failed");
         }
 
+
+
+
         /// <summary>
-        /// Asserts that the banner ad load result succeeded.
-        /// If the load failed due to ad inventory issues, the test is marked as Inconclusive.
+        /// Asserts that a load succeeded (banners, queue updates); ad inventory errors are Inconclusive.
         /// </summary>
-        /// <param name="result">The banner ad load result to validate.</param>
-        /// <param name="message">Optional assertion message.</param>
-        public static void AssertSuccess(BannerAdLoadResult result, string message = null)
+        public static void AssertSuccess(IAdLoadResult result, string message = "Ad load failed")
         {
-            Assert.IsNotNull(result, message ?? "Load result should not be null");
-
-            if (!result.Error.HasValue)
-            {
-                // Load succeeded
-                return;
-            }
-
-            // Load failed - check if it's an ad inventory error
-            var error = result.Error.Value;
-            HandleLoadError(error, message ?? "Banner ad load failed");
+            Assert.IsNotNull(result, message);
+            if (result.Error.HasValue)
+                HandleLoadError(result.Error.Value, message);
         }
 
-        /// <summary>
-        /// Checks if an error code indicates an ad inventory issue.
-        /// </summary>
-        /// <param name="errorCode">The error code to check.</param>
-        /// <returns>True if the error indicates ad inventory issues, false otherwise.</returns>
-        public static bool IsAdInventoryError(string errorCode)
-        {
-            return !string.IsNullOrEmpty(errorCode) && InconclusiveErrorCodes.Contains(errorCode);
-        }
+        /// <summary>Marks a test that needs the fixture's loaded ad Inconclusive when the load got none.</summary>
+        public static void RequireLoaded(bool loaded) => Assume.That(loaded, TestConstants.AssertionMessages.RequiresLoadedAd);
 
-        /// <summary>
-        /// Checks if an error indicates an ad inventory issue.
-        /// </summary>
-        /// <param name="error">The error to check.</param>
-        /// <returns>True if the error indicates ad inventory issues, false otherwise.</returns>
-        public static bool IsAdInventoryError(ChartboostMediationError error)
-        {
-            return IsAdInventoryError(error.Code);
-        }
-
-        /// <summary>
-        /// Handles a load error by either marking the test as Inconclusive (for ad inventory errors)
-        /// or failing the test (for other errors).
-        /// </summary>
-        /// <param name="error">The error that occurred.</param>
-        /// <param name="baseMessage">Base message for the assertion.</param>
+        /// <summary>Inconclusive for an ad inventory error, a failed test for any other error.</summary>
         private static void HandleLoadError(ChartboostMediationError error, string baseMessage)
         {
-            var errorCode = error.Code ?? "unknown";
-            var errorMessage = error.Message ?? "No message";
-
-            Debug.LogWarning($"[AdLoadResultAssert] Load error: {errorCode} - {errorMessage}");
-
-            if (IsAdInventoryError(errorCode))
-            {
-                // Ad inventory error - mark as Inconclusive
-                var inconclusiveMessage = $"[Ad Inventory - {errorCode}] {baseMessage}: {errorMessage}. " +
-                                          "This error indicates a lack of ad inventory, not a code issue.";
-                Debug.Log($"[AdLoadResultAssert] Marking test as Inconclusive: {inconclusiveMessage}");
-                Assert.Inconclusive(inconclusiveMessage);
-            }
-            else
-            {
-                // Other error - fail the test
-                Assert.Fail($"{baseMessage}: {errorCode} - {errorMessage}");
-            }
+            Debug.LogWarning($"[AdLoadResultAssert] Load error: {error.Code ?? "unknown"} - {error.Message ?? "No message"}");
+            AdInventoryAssert.FailOrInconclusive(error.Code, error.Message ?? "No message", InconclusiveErrorCodes, baseMessage);
         }
     }
 }

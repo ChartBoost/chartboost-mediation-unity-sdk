@@ -7,7 +7,10 @@
         "Chartboost.Threading",
         "Chartboost.Logging",
         "Chartboost.Mediation",
-        "Chartboost.Core"
+        "Chartboost.Utilities",
+        "Chartboost.Utilities.Testing",
+        "Chartboost.Core",
+        "UnityEngine.UI"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

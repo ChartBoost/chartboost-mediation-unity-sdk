@@ -56,7 +56,8 @@ namespace Chartboost.Mediation.Utilities
             var bannerSize = JsonTools.DeserializeNullableStruct<BannerSize>(bannerSizeJson);
             return bannerSize is { Width: 0, Height: 0 } ? null : bannerSize;
         }
-        
+
+        [Obsolete("Unused since the shared banner container; will be removed in 6.0.0.")]
         public static ContainerSize ToContainerSize(this string containerSizeJson)
             => JsonTools.DeserializeObject<ContainerSize>(containerSizeJson);
         

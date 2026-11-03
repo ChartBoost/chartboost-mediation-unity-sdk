@@ -179,7 +179,7 @@ namespace Chartboost.Mediation.Ad.Banner
             => new(BannerSizeType.Adaptive, width, width);
         #endregion
         
-        private static BannerSize GetFixedTypeAd(BannerSizeType fixedBannerSizeType)
+        internal static BannerSize GetFixedTypeAd(BannerSizeType fixedBannerSizeType)
         {
             if (fixedBannerSizeType == BannerSizeType.Adaptive)
                 throw new Exception("Cannot create fixed size banner for size type Adaptive");

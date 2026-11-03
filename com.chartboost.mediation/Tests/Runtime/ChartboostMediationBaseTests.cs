@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using System.Reflection;
 using Chartboost.Core.Error;
 using Chartboost.Core.Initialization;
 using Chartboost.Logging;
@@ -19,8 +18,6 @@ namespace Chartboost.Tests.Runtime
     public class ChartboostMediationBaseTests
     {
         private const string WrongModuleId = "wrong_module_id";
-        private const string PropertyNameIsInitialized = "IsInitialized";
-        private const string MethodNameOnMediationInitialized = "OnMediationInitialized";
         private const int TestErrorCode = 100;
         private const int TestInitializationDurationSeconds = 1;
         private const int ExpectedEmptyArrayLength = 0;
@@ -36,15 +33,13 @@ namespace Chartboost.Tests.Runtime
 
             _actualCoreModuleId = ChartboostMediation.CoreModuleId;
 
-            var isInitializedProperty = typeof(ChartboostMediationBase).GetProperty(PropertyNameIsInitialized, BindingFlags.NonPublic | BindingFlags.Static);
-            _originalIsInitialized = (bool)(isInitializedProperty?.GetValue(null) ?? false);
+            _originalIsInitialized = ChartboostMediationBase.IsInitialized;
         }
 
         [TearDown]
         public void TearDown()
         {
-            var isInitializedProperty = typeof(ChartboostMediationBase).GetProperty(PropertyNameIsInitialized, BindingFlags.NonPublic | BindingFlags.Static);
-            isInitializedProperty?.SetValue(null, _originalIsInitialized);
+            ChartboostMediationBase.IsInitialized = _originalIsInitialized;
         }
 
         [Test]
@@ -131,8 +126,7 @@ namespace Chartboost.Tests.Runtime
         public void CanFetchAdReturnsFalseWhenNotInitialized()
         {
             // Set IsInitialized to false
-            var isInitializedProperty = typeof(ChartboostMediationBase).GetProperty(PropertyNameIsInitialized, BindingFlags.NonPublic | BindingFlags.Static);
-            isInitializedProperty?.SetValue(null, false);
+            ChartboostMediationBase.IsInitialized = false;
 
             LogAssert.Expect(LogType.Log, new System.Text.RegularExpressions.Regex(TestConstants.LogPatterns.NotInitialized));
 
@@ -145,8 +139,7 @@ namespace Chartboost.Tests.Runtime
         public void CanFetchAdReturnsFalseWhenPlacementIsNull()
         {
             // Set IsInitialized to true
-            var isInitializedProperty = typeof(ChartboostMediationBase).GetProperty(PropertyNameIsInitialized, BindingFlags.NonPublic | BindingFlags.Static);
-            isInitializedProperty?.SetValue(null, true);
+            ChartboostMediationBase.IsInitialized = true;
 
             LogAssert.Expect(LogType.Error, new System.Text.RegularExpressions.Regex(TestConstants.LogPatterns.NullPlacement));
 
@@ -159,8 +152,7 @@ namespace Chartboost.Tests.Runtime
         public void CanFetchAdReturnsFalseWhenPlacementIsEmpty()
         {
             // Set IsInitialized to true
-            var isInitializedProperty = typeof(ChartboostMediationBase).GetProperty(PropertyNameIsInitialized, BindingFlags.NonPublic | BindingFlags.Static);
-            isInitializedProperty?.SetValue(null, true);
+            ChartboostMediationBase.IsInitialized = true;
 
             LogAssert.Expect(LogType.Error, new System.Text.RegularExpressions.Regex(TestConstants.LogPatterns.NullPlacement));
 
@@ -173,8 +165,7 @@ namespace Chartboost.Tests.Runtime
         public void CanFetchAdReturnsTrueWhenInitializedAndPlacementValid()
         {
             // Set IsInitialized to true
-            var isInitializedProperty = typeof(ChartboostMediationBase).GetProperty(PropertyNameIsInitialized, BindingFlags.NonPublic | BindingFlags.Static);
-            isInitializedProperty?.SetValue(null, true);
+            ChartboostMediationBase.IsInitialized = true;
 
             var result = TestChartboostMediationBase.TestCanFetchAd(TestConstants.Placements.Standard);
 
@@ -185,8 +176,7 @@ namespace Chartboost.Tests.Runtime
         public void OnMediationInitializedSetsIsInitializedWhenSuccessful()
         {
             // Set IsInitialized to false initially
-            var isInitializedProperty = typeof(ChartboostMediationBase).GetProperty(PropertyNameIsInitialized, BindingFlags.NonPublic | BindingFlags.Static);
-            isInitializedProperty?.SetValue(null, false);
+            ChartboostMediationBase.IsInitialized = false;
 
             // Create a successful initialization result using the actual CoreModuleId
             var startTime = DateTime.UtcNow;
@@ -194,19 +184,16 @@ namespace Chartboost.Tests.Runtime
             var result = new ModuleInitializationResult(startTime, endTime, _actualCoreModuleId, TestConstants.Versions.Module, null);
 
             // Invoke the handler directly
-            var handlerMethod = typeof(ChartboostMediationBase).GetMethod(MethodNameOnMediationInitialized, BindingFlags.NonPublic | BindingFlags.Static);
-            handlerMethod?.Invoke(null, new object[] { result });
+            ChartboostMediationBase.OnMediationInitialized(result);
 
-            var isInitialized = (bool)(isInitializedProperty?.GetValue(null) ?? false);
-            Assert.IsTrue(isInitialized);
+            Assert.IsTrue(ChartboostMediationBase.IsInitialized);
         }
 
         [Test]
         public void OnMediationInitializedDoesNotSetIsInitializedWhenWrongModuleId()
         {
             // Set IsInitialized to false initially
-            var isInitializedProperty = typeof(ChartboostMediationBase).GetProperty(PropertyNameIsInitialized, BindingFlags.NonPublic | BindingFlags.Static);
-            isInitializedProperty?.SetValue(null, false);
+            ChartboostMediationBase.IsInitialized = false;
 
             // Create a result with the wrong module ID
             var startTime = DateTime.UtcNow;
@@ -214,19 +201,16 @@ namespace Chartboost.Tests.Runtime
             var result = new ModuleInitializationResult(startTime, endTime, WrongModuleId, TestConstants.Versions.Module, null);
 
             // Invoke the handler directly
-            var handlerMethod = typeof(ChartboostMediationBase).GetMethod(MethodNameOnMediationInitialized, BindingFlags.NonPublic | BindingFlags.Static);
-            handlerMethod?.Invoke(null, new object[] { result });
+            ChartboostMediationBase.OnMediationInitialized(result);
 
-            var isInitialized = (bool)(isInitializedProperty?.GetValue(null) ?? false);
-            Assert.IsFalse(isInitialized);
+            Assert.IsFalse(ChartboostMediationBase.IsInitialized);
         }
 
         [Test]
         public void OnMediationInitializedLogsErrorWhenInitializationFails()
         {
             // Set IsInitialized to false initially
-            var isInitializedProperty = typeof(ChartboostMediationBase).GetProperty(PropertyNameIsInitialized, BindingFlags.NonPublic | BindingFlags.Static);
-            isInitializedProperty?.SetValue(null, false);
+            ChartboostMediationBase.IsInitialized = false;
 
             // Create a failed initialization result with ChartboostCoreError using actual CoreModuleId
             var error = new ChartboostCoreError(TestErrorCode, TestConstants.Errors.Message);
@@ -237,11 +221,9 @@ namespace Chartboost.Tests.Runtime
             LogAssert.Expect(LogType.Error, new System.Text.RegularExpressions.Regex(TestConstants.LogPatterns.InitializationFailed));
 
             // Invoke the handler directly
-            var handlerMethod = typeof(ChartboostMediationBase).GetMethod(MethodNameOnMediationInitialized, BindingFlags.NonPublic | BindingFlags.Static);
-            handlerMethod?.Invoke(null, new object[] { result });
+            ChartboostMediationBase.OnMediationInitialized(result);
 
-            var isInitialized = (bool)(isInitializedProperty?.GetValue(null) ?? false);
-            Assert.IsFalse(isInitialized);
+            Assert.IsFalse(ChartboostMediationBase.IsInitialized);
         }
 
         // Test helper class

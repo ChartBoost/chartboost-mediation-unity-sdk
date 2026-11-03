@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Chartboost.Caching;
 using Chartboost.Logging;
 using Chartboost.Mediation.Data;
 using Chartboost.Mediation.Error;
@@ -51,7 +52,7 @@ namespace Chartboost.Mediation.Ad.Fullscreen
         {
             UniqueId = new IntPtr(uniqueId);
             LogController.Log($"Creating FullscreenAd with UniqueId:{UniqueId}", LogLevel.Debug);
-            AdCache.TrackAd(uniqueId, this);
+            AdCache<IAd>.TrackAd(uniqueId, this);
         }
 
         /// <summary>
@@ -63,7 +64,7 @@ namespace Chartboost.Mediation.Ad.Fullscreen
         {
             UniqueId = uniqueId;
             LogController.Log($"Creating FullscreenAd with UniqueId:{UniqueId}", LogLevel.Debug);
-            AdCache.TrackAd(uniqueId, this);
+            AdCache<IAd>.TrackAd(uniqueId, this);
         }
 
         /// <inheritdoc cref="IFullscreenAd.Request"/>

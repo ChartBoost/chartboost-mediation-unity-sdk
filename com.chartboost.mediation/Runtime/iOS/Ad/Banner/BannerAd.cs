@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using IOSBannerContainers = Chartboost.Banners.IOSBannerContainers;
+using Chartboost.Caching;
 using Chartboost.Constants;
+using Chartboost.Mediation.Ad;
 using Chartboost.Mediation.Ad.Banner;
 using Chartboost.Mediation.Ad.Banner.Enums;
 using Chartboost.Mediation.Data;
@@ -18,7 +21,7 @@ namespace Chartboost.Mediation.iOS.Ad.Banner
     /// <summary>
     /// iOS's implementation of <see cref="BannerAdBase"/>.
     /// </summary>
-    internal partial class BannerAd : BannerAdBase
+    internal partial class BannerAd : NativeBannerAdBase
     {
         /// <summary>
         /// Register callbacks to native observer.
@@ -32,17 +35,25 @@ namespace Chartboost.Mediation.iOS.Ad.Banner
             _CBMBannerAdSetCallbacks(BannerAdEvent);
         }
 
-        internal BannerAd() : base(_CBMGetBannerAd(BannerAdDragEvent)) { }
+        internal BannerAd() : base(_CBMGetBannerAd())
+        {
+            var container = _CBMBannerAdCreateContainer(UniqueId);
+            if (container != IntPtr.Zero)
+                Container = IOSBannerContainers.Wrap(container);
+        }
         
+        // The store frees the native wrapper on destroy, so calls after Dispose pass null (a logged no-op) instead of a freed pointer.
+        private IntPtr NativeId => IsDisposed ? IntPtr.Zero : UniqueId;
+
         /// <inheritdoc />
         public override IReadOnlyDictionary<string, string> Keywords
         {
             get
             {
-                var keywordsJson = _CBMBannerAdGetKeywords(UniqueId);
+                var keywordsJson = _CBMBannerAdGetKeywords(NativeId);
                 return string.IsNullOrEmpty(keywordsJson) ? new Dictionary<string, string>() : keywordsJson.ToDictionary();
             }
-            set => _CBMBannerAdSetKeywords(UniqueId, value == null? null : JsonConvert.SerializeObject(value));
+            set => _CBMBannerAdSetKeywords(NativeId, value == null? null : JsonConvert.SerializeObject(value));
         }
 
         /// <inheritdoc />
@@ -50,10 +61,10 @@ namespace Chartboost.Mediation.iOS.Ad.Banner
         {
             get
             {
-                var partnerSettingsJson = _CBMBannerAdGetPartnerSettings(UniqueId);
+                var partnerSettingsJson = _CBMBannerAdGetPartnerSettings(NativeId);
                 return string.IsNullOrEmpty(partnerSettingsJson) ? new Dictionary<string, string>() : partnerSettingsJson.ToDictionary();
             }
-            set => _CBMBannerAdSetPartnerSettings(UniqueId, value == null? null : JsonConvert.SerializeObject(value));
+            set => _CBMBannerAdSetPartnerSettings(NativeId, value == null? null : JsonConvert.SerializeObject(value));
         }
 
         /// <inheritdoc />
@@ -64,70 +75,38 @@ namespace Chartboost.Mediation.iOS.Ad.Banner
                 if (_request != null)
                     return _request;
 
-                _request = _CBMBannerAdGetRequest(UniqueId).ToBannerAdLoadRequest();
+                _request = _CBMBannerAdGetRequest(NativeId).ToBannerAdLoadRequest();
                 return _request;
             }
         }
         
         /// <inheritdoc />
-        public override BidInfo? WinningBidInfo => _CBMBannerAdGetBidInfo(UniqueId).ToBidInfo();
+        public override BidInfo? WinningBidInfo => _CBMBannerAdGetBidInfo(NativeId).ToBidInfo();
 
         /// <inheritdoc />
-        public override string LoadId => _CBMBannerAdGetLoadId(UniqueId) ?? string.Empty;
+        public override string LoadId => _CBMBannerAdGetLoadId(NativeId) ?? string.Empty;
 
         /// <inheritdoc />
-        public override Metrics? LoadMetrics => _CBMBannerAdGetLoadMetrics(UniqueId).ToMetrics();
+        public override Metrics? LoadMetrics => _CBMBannerAdGetLoadMetrics(NativeId).ToMetrics();
 
         /// <inheritdoc />
-        public override BannerSize? BannerSize => _CBMBannerAdGetBannerSize(UniqueId).ToBannerSize();
+        public override BannerSize? BannerSize => _CBMBannerAdGetBannerSize(NativeId).ToBannerSize();
         
         /// <inheritdoc />
-        public override ContainerSize ContainerSize
-        {
-            get => _CBMBannerAdGetContainerSize(UniqueId).ToContainerSize();
-            set => _CBMBannerAdSetContainerSize(UniqueId, value.Width, value.Height);
-        }
-        
-        /// <inheritdoc />
-        public override Vector2 Position
-        {
-            get => _CBMBannerAdGetPosition(UniqueId).ToVector2();
-            set => _CBMBannerAdSetPosition(UniqueId, value.x, value.y);
-        }
-        
-        /// <inheritdoc />
-        public override Vector2 Pivot
-        {
-            get => _CBMBannerAdGetPivot(UniqueId).ToVector2();
-            set => _CBMBannerAdSetPivot(UniqueId, value.x, value.y);
-        }
-        
-        /// <inheritdoc />
-        public override bool Visible
-        {
-            get => _CBMBannerAdGetVisibility(UniqueId);
-            set => _CBMBannerAdSetVisibility(UniqueId, value);
-        }
-        
-        /// <inheritdoc />
-        public override bool Draggable
-        {
-            get => _CBMBannerAdGetDraggability(UniqueId);
-            set => _CBMBannerAdSetDraggability(UniqueId, value);
-        }
+        protected override void SetContentSize(ContainerSize size) => _CBMBannerAdSetContainerSize(NativeId, size.Width, size.Height);
 
         /// <inheritdoc />
         public override BannerHorizontalAlignment HorizontalAlignment 
         {
-            get =>  (BannerHorizontalAlignment)_CBMBannerAdGetHorizontalAlignment(UniqueId);
-            set => _CBMBannerAdSetHorizontalAlignment(UniqueId, (int)value);
+            get =>  (BannerHorizontalAlignment)_CBMBannerAdGetHorizontalAlignment(NativeId);
+            set => _CBMBannerAdSetHorizontalAlignment(NativeId, (int)value);
         }
         
         /// <inheritdoc />
         public override BannerVerticalAlignment VerticalAlignment 
         {
-            get =>  (BannerVerticalAlignment)_CBMBannerAdGetVerticalAlignment(UniqueId);
-            set => _CBMBannerAdSetVerticalAlignment(UniqueId, (int)value);
+            get =>  (BannerVerticalAlignment)_CBMBannerAdGetVerticalAlignment(NativeId);
+            set => _CBMBannerAdSetVerticalAlignment(NativeId, (int)value);
         }
         
         /// <inheritdoc />
@@ -136,9 +115,9 @@ namespace Chartboost.Mediation.iOS.Ad.Banner
             await base.Load(request);
             _request = request;
             var (proxy, hashCode) = AwaitableProxies.SetupProxy<BannerAdLoadResult>();
-            AdCache.TrackAdLoadRequest(hashCode, request);
+            AdLoadRequestCache.TrackAdLoadRequest(hashCode, request);
 
-            _CBMBannerAdLoadAd(UniqueId, request.PlacementName, (int)request.Size.SizeType, request.Size.Width, request.Size.Height, hashCode, BannerAdLoadResultCallbackProxy);
+            _CBMBannerAdLoadAd(NativeId, request.PlacementName, (int)request.Size.SizeType, request.Size.Width, request.Size.Height, hashCode, BannerAdLoadResultCallbackProxy);
             return await proxy;
         }
 
@@ -146,77 +125,54 @@ namespace Chartboost.Mediation.iOS.Ad.Banner
         public override void Reset()
         {
             base.Reset();
-            _CBMBannerAdReset(UniqueId);
+            _CBMBannerAdReset(NativeId);
         }
 
         /// <inheritdoc />
-        protected override void Dispose(bool disposing)
+        protected override void DestroyNative(bool disposing)
         {
-            if(IsDisposed)
-                return;
-            IsDisposed = true;
-
-            // Release managed resources
-            if(disposing)
-            {
-                // no managed resources to release
-            }
-
-            // Release unmanaged resources
             _CBMBannerAdDestroy(UniqueId);
-            AdCache.ReleaseAd(UniqueId);
+            AdCache<IAd>.ReleaseAd(UniqueId);
         }
 
         /// <inheritdoc />
         internal override Vector2 AdRelativePosition
         {
-            get => _CBMBannerAdGetAdRelativePosition(UniqueId).ToVector2();
-            set => _CBMBannerAdSetAdRelativePosition(UniqueId, value.x, value.y);
+            get => _CBMBannerAdGetAdRelativePosition(NativeId).ToVector2();
+            set => _CBMBannerAdSetAdRelativePosition(NativeId, value.x, value.y);
         }
         
         /// <inheritdoc />
         internal override void SetContainerBackgroundColor(Color color)
         {
             base.SetContainerBackgroundColor(color);
-            _CBMBannerAdSetContainerBackgroundColor(UniqueId, color.r, color.g, color.b, color.a);
+            _CBMBannerAdSetContainerBackgroundColor(NativeId, color.r, color.g, color.b, color.a);
         }
 
         /// <inheritdoc />
         internal override void SetAdBackgroundColor(Color color)
         {
             base.SetAdBackgroundColor(color);
-            _CBMBannerAdSetAdBackgroundColor(UniqueId, color.r, color.g, color.b, color.a);
+            _CBMBannerAdSetAdBackgroundColor(NativeId, color.r, color.g, color.b, color.a);
         }
 
-        /// <inheritdoc />
-        internal override void SetHostView(IntPtr hostView) => _CBMBannerAdSetHostView(UniqueId, hostView);
-
         [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMBannerAdSetCallbacks(ExternBannerAdEvent bannerAdEvents);
-        [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMBannerAdSetHostView(IntPtr uniqueId, IntPtr hostView);
-        [DllImport(SharedIOSConstants.DLLImport)] private static extern IntPtr _CBMGetBannerAd(ExternBannerAdDragEvent dragListener);
+        [DllImport(SharedIOSConstants.DLLImport)] private static extern IntPtr _CBMGetBannerAd();
+        [DllImport(SharedIOSConstants.DLLImport)] private static extern IntPtr _CBMBannerAdCreateContainer(IntPtr uniqueId);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern string _CBMBannerAdGetKeywords(IntPtr uniqueId);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMBannerAdSetKeywords(IntPtr uniqueId, string keywordsJson);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern string _CBMBannerAdGetPartnerSettings(IntPtr uniqueId);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMBannerAdSetPartnerSettings(IntPtr uniqueId, string partnerSettingsJson);
-        [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMBannerAdSetPosition(IntPtr uniqueId, float x, float y);
-        [DllImport(SharedIOSConstants.DLLImport)] private static extern string _CBMBannerAdGetPosition(IntPtr uniqueId);
-        [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMBannerAdSetPivot(IntPtr uniqueId, float x, float y);
-        [DllImport(SharedIOSConstants.DLLImport)] private static extern string _CBMBannerAdGetPivot(IntPtr uniqueId);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern string _CBMBannerAdGetRequest(IntPtr uniqueId);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern string _CBMBannerAdGetBidInfo(IntPtr uniqueId);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern string _CBMBannerAdGetLoadId(IntPtr uniqueId);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern string _CBMBannerAdGetLoadMetrics(IntPtr uniqueId);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern string _CBMBannerAdGetBannerSize(IntPtr uniqueId);
-        [DllImport(SharedIOSConstants.DLLImport)] private static extern string _CBMBannerAdGetContainerSize(IntPtr uniqueId);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern int _CBMBannerAdGetHorizontalAlignment(IntPtr uniqueId);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMBannerAdSetHorizontalAlignment(IntPtr uniqueId, int horizontalAlignment );
         [DllImport(SharedIOSConstants.DLLImport)] private static extern int _CBMBannerAdGetVerticalAlignment(IntPtr uniqueId);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMBannerAdSetVerticalAlignment(IntPtr uniqueId, int verticalAlignment );
         [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMBannerAdLoadAd(IntPtr uniqueId, string placementName, int sizeType, float width, float height, int hashCode, ExternBannerAdLoadResultEvent callback);
-        [DllImport(SharedIOSConstants.DLLImport)] private static extern bool _CBMBannerAdGetDraggability(IntPtr uniqueId);
-        [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMBannerAdSetDraggability(IntPtr uniqueId, bool canDrag );
-        [DllImport(SharedIOSConstants.DLLImport)] private static extern bool _CBMBannerAdGetVisibility(IntPtr uniqueId);
-        [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMBannerAdSetVisibility(IntPtr uniqueId, bool visible);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMBannerAdReset(IntPtr uniqueId);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMBannerAdDestroy(IntPtr uniqueId);
         [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMBannerAdSetContainerSize(IntPtr uniqueId, float width, float height);

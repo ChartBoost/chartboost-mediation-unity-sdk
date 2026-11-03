@@ -190,7 +190,7 @@ typedef void (*CBMExternFullscreenAdQueueRemoveExpiredAdEvent)(
  * Event types for banner ad lifecycle and interaction callbacks.
  *
  * These values are passed to banner ad callbacks to indicate which type of
- * event occurred (lifecycle events or drag gesture events).
+ * event occurred.
  */
 typedef NS_ENUM(NSInteger, CBMBannerAdEventType) {
     /// Banner appeared in the view hierarchy and became visible
@@ -200,16 +200,7 @@ typedef NS_ENUM(NSInteger, CBMBannerAdEventType) {
     CBMBannerAdEventClick = 1,
 
     /// Banner impression was recorded by the mediation system
-    CBMBannerAdEventRecordImpression = 2,
-
-    /// User began dragging the banner (drag gesture started)
-    CBMBannerAdEventDragBegin = 3,
-
-    /// Banner is being dragged (continuous position updates)
-    CBMBannerAdEventDrag = 4,
-
-    /// User finished dragging the banner (drag gesture ended)
-    CBMBannerAdEventDragEnd = 5
+    CBMBannerAdEventRecordImpression = 2
 };
 
 #pragma mark - Banner Ad Delegates
@@ -246,7 +237,7 @@ typedef void (*CBMExternBannerAdLoadResultEvent)(
  * Callback invoked for banner ad lifecycle events.
  *
  * This callback handles various banner events like appear, click, impression recording,
- * and drag state changes. The eventType parameter determines which event occurred.
+ * and impressions. The eventType parameter determines which event occurred.
  *
  * @param hashCode Unity-side identifier for the banner ad wrapper
  * @param eventType Type of event that occurred (see CBMBannerAdEventType)
@@ -256,26 +247,6 @@ typedef void (*CBMExternBannerAdLoadResultEvent)(
 typedef void (*CBMExternBannerAdEvent)(
     intptr_t hashCode,
     CBMBannerAdEventType eventType
-);
-
-/**
- * Callback invoked for banner ad drag gesture events.
- *
- * This callback provides continuous position updates during banner drag operations,
- * allowing Unity to synchronize banner position state with native UI gestures.
- *
- * @param hashCode Unity-side identifier for the banner ad wrapper
- * @param eventType Type of drag event (CBMBannerAdEventDragBegin, CBMBannerAdEventDrag, or CBMBannerAdEventDragEnd)
- * @param x Current X position of the banner in screen coordinates
- * @param y Current Y position of the banner in screen coordinates
- *
- * @see CBMBannerAdEventType for drag event types (DragBegin, Drag, DragEnd)
- */
-typedef void (*CBMExternBannerAdDragEvent)(
-    intptr_t hashCode,
-    CBMBannerAdEventType eventType,
-    float x,
-    float y
 );
 
 NS_ASSUME_NONNULL_END

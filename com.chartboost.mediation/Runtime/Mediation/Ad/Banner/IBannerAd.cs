@@ -58,6 +58,11 @@ namespace Chartboost.Mediation.Ad.Banner
         /// <summary>
         /// Gets or sets the size of the container.
         /// </summary>
+        /// <remarks>
+        /// Left unset, the container wraps the creative and clips it to its bounds. Set to
+        /// <see cref="ContainerSize.WrapContent"/>, it wraps the creative and lets a larger one draw past it.
+        /// Either way, a wrapping axis reads back as the loaded creative's size.
+        /// </remarks>
         ContainerSize ContainerSize { get; set; }
         
         /// <summary>

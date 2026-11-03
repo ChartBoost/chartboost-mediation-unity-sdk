@@ -70,6 +70,23 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
         // Native banner backing this Unity variant, for automation slot hosting (HB-11391).
         internal IBannerAd NativeBannerAd => _bannerAd;
 
+        // Wires events only; skips the lazy getter's initial state and doesn't unsubscribe a prior banner.
+        internal void AttachNativeBannerAd(IBannerAd bannerAd)
+        {
+            _bannerAd = bannerAd;
+            Subscribe(bannerAd);
+        }
+
+        private void Subscribe(IBannerAd bannerAd)
+        {
+            bannerAd.WillAppear += OnWillAppear;
+            bannerAd.DidClick += OnClick;
+            bannerAd.DidRecordImpression += OnRecordImpression;
+            bannerAd.DidBeginDrag += OnDragBegin;
+            bannerAd.DidDrag += OnDrag;
+            bannerAd.DidEndDrag += OnDragEnd;
+        }
+
         // When hosted in the automation slot, drive the native container from these slot bounds
         // instead of this GameObject's RectTransform (parity with BannerVisualElement). The
         // RectTransform-driven sync settles slowly, which left the hosted banner blank for
@@ -83,6 +100,8 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
         private RectTransform _rectTransform;
         private bool _isDragging;
         private bool _syncInProgress;
+        // Lets tests tell a sync waiting on layout from one that never started.
+        internal bool SyncInProgress => _syncInProgress;
         
         /// <summary>
         /// The placement name for the ad.
@@ -172,6 +191,9 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
                 return new BannerAdLoadResult(new ChartboostMediationError(Errors.ErrorNotReady));
 
             var transformSize = await GetTransformSize();
+            // Destroyed while waiting for the layout: there's no banner left to load.
+            if (this == null)
+                return new BannerAdLoadResult(new ChartboostMediationError(Errors.ErrorNotReady));
             var size = Banner.BannerSize.Adaptive(transformSize.x, transformSize.y);
             var loadRequest = new BannerAdLoadRequest(placementName, size);
             return await BannerAd.Load(loadRequest);
@@ -315,12 +337,7 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
                     return _bannerAd;
 
                 _bannerAd = ChartboostMediation.GetBannerAd();
-                _bannerAd.WillAppear += OnWillAppear;
-                _bannerAd.DidClick += OnClick;
-                _bannerAd.DidRecordImpression += OnRecordImpression;
-                _bannerAd.DidBeginDrag += OnDragBegin;
-                _bannerAd.DidDrag += OnDrag;
-                _bannerAd.DidEndDrag += OnDragEnd;
+                Subscribe(_bannerAd);
 
                 _bannerAd.Visible = gameObject.activeSelf;
                 _bannerAd.Draggable = draggable;
@@ -342,8 +359,7 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
                     {
                         if (ContainerSizeOverride.HasValue && ContainerSizeOverride != _lastAppliedOverrideSize)
                         {
-                            BannerAd.ContainerSize = ContainerSize.FixedSize(
-                                (int)ContainerSizeOverride.Value.x, (int)ContainerSizeOverride.Value.y);
+                            BannerAd.ContainerSize = ContainerSize.FixedSize(ContainerSizeOverride.Value);
                             _lastAppliedOverrideSize = ContainerSizeOverride;
                         }
 
@@ -377,7 +393,10 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
                     if (sizeChanged)
                     {
                         var size = await GetTransformSize();
-                        BannerAd.ContainerSize = ContainerSize.FixedSize((int)size.x, (int)size.y);
+                        // Destroyed while waiting for the layout: nothing left to size.
+                        if (this == null)
+                            return;
+                        BannerAd.ContainerSize = ContainerSize.FixedSize(size);
                     }
                 }
                 _lastLayoutParams = layoutParams;
@@ -399,6 +418,8 @@ namespace Chartboost.Mediation.Ad.Banner.Unity
                 // Wait a couple of frames
                 await Task.Yield();
                 await Task.Yield();
+                if (this == null)
+                    return Vector2.zero;
                 layoutParams = UnityBannerTransform.LayoutParams();
             }
             

@@ -1,5 +1,4 @@
 using AOT;
-using Chartboost.Mediation.Error;
 using Chartboost.Mediation.Requests;
 using Chartboost.Mediation.Utilities;
 using Chartboost.Mediation.Utilities.Events;
@@ -13,11 +12,8 @@ namespace Chartboost.Mediation.iOS.Ad.Fullscreen.Queue
         {
             IAdLoadResult loadResult;
 
-            if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(message))
-            {
-                var error = new ChartboostMediationError(code, message);
+            if (NativeResults.ToError(code, message) is { } error)
                 loadResult = new FullscreenAdLoadResult(error);
-            }
             else
                 loadResult = new FullscreenAdLoadResult(null!, loadId, metricsJson.ToMetrics(), null);
 

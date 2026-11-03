@@ -20,7 +20,7 @@ namespace Chartboost.Mediation.Android.Ad.Banner
                     var error = result.ToChartboostMediationError();
                     if (error.HasValue)
                     {
-                        AdCache.ReleaseAdLoadRequest(hashCode());
+                        AdLoadRequestCache.ReleaseAdLoadRequest(hashCode());
                         _complete(new BannerAdLoadResult(error.Value));
                         return;
                     }
@@ -55,18 +55,6 @@ namespace Chartboost.Mediation.Android.Ad.Banner
             [Preserve]
             private void onAdImpressionRecorded(AndroidJavaObject ad) =>
                 AdEventHandler.ProcessBannerEvent(ad.NativeHashCode(), BannerAdEvents.RecordImpression);
-
-            [Preserve]
-            private void onAdDragBegin(AndroidJavaObject ad, float x, float y) =>
-                AdEventHandler.ProcessBannerEvent(ad.NativeHashCode(), BannerAdEvents.BeginDrag, x, y);
-            
-            [Preserve]
-            private void onAdDrag(AndroidJavaObject ad, float x, float y) =>
-                AdEventHandler.ProcessBannerEvent(ad.NativeHashCode(), BannerAdEvents.Drag, x, y);
-            
-            [Preserve]
-            private void onAdDragEnd(AndroidJavaObject ad, float x, float y) =>
-                AdEventHandler.ProcessBannerEvent(ad.NativeHashCode(), BannerAdEvents.EndDrag, x, y);
         }
     }
 }

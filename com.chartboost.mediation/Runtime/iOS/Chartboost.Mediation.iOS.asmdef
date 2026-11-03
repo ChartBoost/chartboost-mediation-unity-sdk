@@ -4,6 +4,7 @@
     "references": [
         "Chartboost.Mediation",
         "Chartboost.Threading",
+        "Chartboost.Utilities",
         "Chartboost.Utilities.IOS",
         "Chartboost.Logging",
         "Chartboost.Core"

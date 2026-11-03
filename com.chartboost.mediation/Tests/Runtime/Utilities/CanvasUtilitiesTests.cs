@@ -1,4 +1,3 @@
-using System.Reflection;
 using Chartboost.Mediation.Utilities;
 using NUnit.Framework;
 using UnityEngine;
@@ -9,9 +8,6 @@ namespace Chartboost.Tests.Runtime.Utilities
 {
     public class CanvasUtilitiesTests
     {
-        private const string GetCanvasWithHighestSortingOrderMethodName = "GetCanvasWithHighestSortingOrder";
-        private const string GetRootLevelCanvasWithHighestSortingOrderMethodName = "GetRootLevelCanvasWithHighestSortingOrder";
-
         [TearDown]
         public void TearDown()
         {
@@ -88,10 +84,7 @@ namespace Chartboost.Tests.Runtime.Utilities
             var canvas3 = new GameObject(TestConstants.Canvas.TestName + TestConstants.Canvas.Suffix3).AddComponent<Canvas>();
             canvas3.sortingOrder = TestConstants.Canvas.SortingOrderMedium;
 
-            var canvasUtilitiesType = typeof(CanvasUtilities);
-            var method = canvasUtilitiesType.GetMethod(GetCanvasWithHighestSortingOrderMethodName, BindingFlags.NonPublic | BindingFlags.Static);
-
-            var result = method.Invoke(null, null) as Canvas;
+            var result = CanvasUtilities.GetCanvasWithHighestSortingOrder();
 
             Assert.IsNotNull(result);
             // All canvases are root-level (no parent), so it breaks on the first one with the highest sorting order
@@ -102,10 +95,7 @@ namespace Chartboost.Tests.Runtime.Utilities
         [Test]
         public void GetCanvasWithHighestSortingOrderReturnsNullWhenNoCanvasExists()
         {
-            var canvasUtilitiesType = typeof(CanvasUtilities);
-            var method = canvasUtilitiesType.GetMethod(GetCanvasWithHighestSortingOrderMethodName, BindingFlags.NonPublic | BindingFlags.Static);
-
-            var result = method.Invoke(null, null) as Canvas;
+            var result = CanvasUtilities.GetCanvasWithHighestSortingOrder();
 
             Assert.IsNull(result);
         }
@@ -120,10 +110,7 @@ namespace Chartboost.Tests.Runtime.Utilities
             nestedCanvas.transform.SetParent(parentCanvas.transform);
             nestedCanvas.sortingOrder = TestConstants.Canvas.SortingOrderHigh;
 
-            var canvasUtilitiesType = typeof(CanvasUtilities);
-            var method = canvasUtilitiesType.GetMethod(GetCanvasWithHighestSortingOrderMethodName, BindingFlags.NonPublic | BindingFlags.Static);
-
-            var result = method.Invoke(null, null) as Canvas;
+            var result = CanvasUtilities.GetCanvasWithHighestSortingOrder();
 
             Assert.IsNotNull(result);
             Assert.AreEqual(parentCanvas, result);
@@ -144,10 +131,7 @@ namespace Chartboost.Tests.Runtime.Utilities
             var rootCanvas = new GameObject(TestConstants.Canvas.RootName).AddComponent<Canvas>();
             rootCanvas.sortingOrder = TestConstants.Canvas.SortingOrderMedium;
 
-            var canvasUtilitiesType = typeof(CanvasUtilities);
-            var method = canvasUtilitiesType.GetMethod(GetCanvasWithHighestSortingOrderMethodName, BindingFlags.NonPublic | BindingFlags.Static);
-
-            var result = method.Invoke(null, null) as Canvas;
+            var result = CanvasUtilities.GetCanvasWithHighestSortingOrder();
 
             // The method iterates in descending order: nestedCanvas(100), rootCanvas(10), parentCanvas(0)
             // nestedCanvas has a parent, so continues; rootCanvas has no parent, so breaks
@@ -171,10 +155,7 @@ namespace Chartboost.Tests.Runtime.Utilities
             nestedCanvas2.transform.SetParent(parentCanvas1.transform);
             nestedCanvas2.sortingOrder = TestConstants.Canvas.SortingOrderMedium;
 
-            var canvasUtilitiesType = typeof(CanvasUtilities);
-            var method = canvasUtilitiesType.GetMethod(GetCanvasWithHighestSortingOrderMethodName, BindingFlags.NonPublic | BindingFlags.Static);
-
-            var result = method.Invoke(null, null) as Canvas;
+            var result = CanvasUtilities.GetCanvasWithHighestSortingOrder();
 
             // Iterates: nestedCanvas1(100) - has parent, continue
             //           nestedCanvas2(10) - has parent, continue
@@ -196,10 +177,7 @@ namespace Chartboost.Tests.Runtime.Utilities
             var rootCanvas3 = new GameObject(TestConstants.Canvas.RootName + TestConstants.Canvas.Suffix3).AddComponent<Canvas>();
             rootCanvas3.sortingOrder = TestConstants.Canvas.SortingOrderMedium;
 
-            var canvasUtilitiesType = typeof(CanvasUtilities);
-            var method = canvasUtilitiesType.GetMethod(GetRootLevelCanvasWithHighestSortingOrderMethodName, BindingFlags.NonPublic | BindingFlags.Static);
-
-            var result = method.Invoke(null, null) as Canvas;
+            var result = CanvasUtilities.GetRootLevelCanvasWithHighestSortingOrder();
 
             Assert.IsNotNull(result);
             Assert.AreEqual(rootCanvas2, result);
@@ -213,10 +191,7 @@ namespace Chartboost.Tests.Runtime.Utilities
             var childCanvas = new GameObject(TestConstants.Canvas.ChildName).AddComponent<Canvas>();
             childCanvas.transform.SetParent(parentObject.transform);
 
-            var canvasUtilitiesType = typeof(CanvasUtilities);
-            var method = canvasUtilitiesType.GetMethod(GetRootLevelCanvasWithHighestSortingOrderMethodName, BindingFlags.NonPublic | BindingFlags.Static);
-
-            var result = method.Invoke(null, null) as Canvas;
+            var result = CanvasUtilities.GetRootLevelCanvasWithHighestSortingOrder();
 
             Assert.IsNull(result);
         }
@@ -232,10 +207,7 @@ namespace Chartboost.Tests.Runtime.Utilities
             childCanvas.transform.SetParent(parentObject.transform);
             childCanvas.sortingOrder = TestConstants.Canvas.SortingOrderHigh;
 
-            var canvasUtilitiesType = typeof(CanvasUtilities);
-            var method = canvasUtilitiesType.GetMethod(GetRootLevelCanvasWithHighestSortingOrderMethodName, BindingFlags.NonPublic | BindingFlags.Static);
-
-            var result = method.Invoke(null, null) as Canvas;
+            var result = CanvasUtilities.GetRootLevelCanvasWithHighestSortingOrder();
 
             Assert.IsNotNull(result);
             Assert.AreEqual(rootCanvas, result);

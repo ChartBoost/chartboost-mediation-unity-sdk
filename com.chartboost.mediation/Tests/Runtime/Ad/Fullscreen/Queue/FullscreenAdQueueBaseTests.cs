@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Chartboost.Caching;
 using Chartboost.Logging;
+using Chartboost.Mediation.Ad;
 using Chartboost.Mediation.Ad.Fullscreen.Queue;
 using Chartboost.Mediation.Data;
 using Chartboost.Mediation.Requests;
@@ -33,7 +35,7 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen.Queue
         public void TearDown()
         {
             LogController.LoggingLevel = _initialLogLevel;
-            AdCache.ReleaseAd(_testUniqueId.ToInt64());
+            AdCache<IAd>.ReleaseAd(_testUniqueId.ToInt64());
         }
 
         [Test]
@@ -50,13 +52,13 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen.Queue
 
             try
             {
-                var cachedQueue = AdCache.GetAd(uniqueId.ToInt64());
+                var cachedQueue = AdCache<IAd>.GetAd(uniqueId.ToInt64());
                 Assert.IsNotNull(cachedQueue);
                 Assert.AreSame(queue, cachedQueue);
             }
             finally
             {
-                AdCache.ReleaseAd(uniqueId.ToInt64());
+                AdCache<IAd>.ReleaseAd(uniqueId.ToInt64());
             }
         }
 
@@ -138,7 +140,7 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen.Queue
             finally
             {
                 mockAd.Dispose();
-                AdCache.ReleaseAd(99999);
+                AdCache<IAd>.ReleaseAd(99999);
             }
         }
 

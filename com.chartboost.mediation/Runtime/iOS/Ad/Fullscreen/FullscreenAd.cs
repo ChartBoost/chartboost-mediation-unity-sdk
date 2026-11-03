@@ -1,7 +1,9 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Chartboost.Caching;
 using Chartboost.Constants;
+using Chartboost.Mediation.Ad;
 using Chartboost.Mediation.Ad.Fullscreen;
 using Chartboost.Mediation.Data;
 using Chartboost.Mediation.Requests;
@@ -101,7 +103,7 @@ namespace Chartboost.Mediation.iOS.Ad.Fullscreen
                 
             // Release unmanaged resources
             _CBMFullscreenAdInvalidate(UniqueId);
-            AdCache.ReleaseAd(UniqueId);
+            AdCache<IAd>.ReleaseAd(UniqueId);
         }
 
         [DllImport(SharedIOSConstants.DLLImport)] private static extern void _CBMFullscreenAdSetCallbacks(ExternFullscreenAdEvent fullscreenAdEvents);

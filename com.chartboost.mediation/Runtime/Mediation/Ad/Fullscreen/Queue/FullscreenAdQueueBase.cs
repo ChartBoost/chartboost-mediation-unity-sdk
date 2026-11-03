@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Chartboost.Caching;
 using Chartboost.Logging;
 using Chartboost.Mediation.Requests;
 using Chartboost.Mediation.Utilities;
@@ -14,7 +15,7 @@ namespace Chartboost.Mediation.Ad.Fullscreen.Queue
         protected FullscreenAdQueueBase(IntPtr uniqueId)
         {
             UniqueId = uniqueId;
-            AdCache.TrackAd(UniqueId.ToInt64(), this);
+            AdCache<IAd>.TrackAd(UniqueId.ToInt64(), this);
         }
         
         public abstract Dictionary<string, string> Keywords { get; set; }

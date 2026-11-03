@@ -22,7 +22,7 @@ namespace Chartboost.Mediation
             ChartboostCore.ModuleInitializationCompleted += OnMediationInitialized;
         }
 
-        private static void OnMediationInitialized(ModuleInitializationResult result)
+        internal static void OnMediationInitialized(ModuleInitializationResult result)
         {
             if (result.ModuleId != ChartboostMediation.CoreModuleId)
                 return;
@@ -79,7 +79,7 @@ namespace Chartboost.Mediation
         /// <summary>
         /// Keeps track of initialization attempts.
         /// </summary>
-        protected static bool IsInitialized { get; set; }
+        internal static bool IsInitialized { get; set; }
         
         /// <summary>
         /// Reusable method to check if we meet conditions to request <see cref="IAd"/> loads.

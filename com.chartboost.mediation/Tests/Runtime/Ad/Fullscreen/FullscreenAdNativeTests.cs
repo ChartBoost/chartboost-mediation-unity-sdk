@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Chartboost.Mediation;
+using Chartboost.Testing;
 using Chartboost.Mediation.Ad.Fullscreen;
 using Chartboost.Mediation.Requests;
 using Chartboost.Tests.Runtime.Utilities;
@@ -19,28 +20,17 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
     /// Note: Show() is NOT tested as we lack instrumentation to close the ad after showing.
     /// </summary>
     [TestFixture]
-    public class FullscreenAdNativeTests
+    public class FullscreenAdNativeTests : NativeTestFixture
     {
         private static IFullscreenAd _sharedFullscreenAd;
-        private const int TotalTests = 15;
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
             ChartboostMediation.TestMode = true;
 
-            // Skip setup if not on a native platform
-            if (!IsNativePlatform())
-            {
-                Assert.Ignore(TestConstants.AssertionMessages.SkippingNonNativePlatform);
-                return;
-            }
-
             // Initialize SDK for native platform tests
             TestInitializer.Initialize();
-
-            // Show test progress display on device
-            TestProgressTracker.Show();
         }
 
         [OneTimeTearDown]
@@ -48,18 +38,13 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
         {
             ChartboostMediation.TestMode = false;
 
-            if (!IsNativePlatform())
+            if (!DevicePlatform.IsNative)
                 return;
-
-            // Clear test progress display content when this test fixture completes
-            TestProgressTracker.Clear();
 
             // Cleanup shared fullscreen ad instance
             _sharedFullscreenAd?.Dispose();
             _sharedFullscreenAd = null;
         }
-
-        private static bool IsNativePlatform() => TestPlatformUtilities.IsNativePlatform();
 
         #region Sequential Integration Tests - Fullscreen Ad Lifecycle (Load → Property Verification → Disposal)
 
@@ -69,7 +54,6 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
         [Test, Order(1)]
         public void TestMode_WhenSetInSetup_ShouldBeTrue()
         {
-            TestProgressTracker.NotifyTestStart(nameof(FullscreenAdNativeTests), 1, TotalTests);
             Assert.IsTrue(ChartboostMediation.TestMode, TestConstants.AssertionMessages.TestModeShouldBeEnabled);
         }
 
@@ -80,14 +64,12 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
         [UnityTest, Order(2)]
         public IEnumerator Load_WhenCalledWithInterstitialRequest_ShouldSucceed()
         {
-            TestProgressTracker.NotifyTestStart(nameof(FullscreenAdNativeTests), 2, TotalTests);
-
             // Wait for SDK initialization on native platforms
             yield return TestInitializer.WaitForInitialization();
 
             var adLoadRequest = new FullscreenAdLoadRequest(TestConstants.Placements.Interstitial, new Dictionary<string, string>());
             var loadTask = ChartboostMediation.LoadFullscreenAd(adLoadRequest);
-            yield return new WaitUntil(() => loadTask.IsCompleted);
+            yield return TestWait.Until(() => loadTask.IsCompleted, "the load", TestConstants.Timeouts.NativeAdLoad);
 
             Assert.IsNotNull(loadTask.Result, TestConstants.AssertionMessages.LoadResultShouldNotBeNull);
 
@@ -100,23 +82,12 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
         }
 
         /// <summary>
-        /// Verify the shared fullscreen ad was created in the load test.
-        /// </summary>
-        [Test, Order(3)]
-        public void SharedFullscreenAd_AfterLoad_ShouldExist()
-        {
-            TestProgressTracker.NotifyTestStart(nameof(FullscreenAdNativeTests), 3, TotalTests);
-            Assert.IsNotNull(_sharedFullscreenAd, TestConstants.AssertionMessages.SharedFullscreenAdShouldExist);
-        }
-
-        /// <summary>
         /// Test that Request property is available after a successful load.
         /// </summary>
-        [Test, Order(4)]
+        [Test, Order(3)]
         public void Request_AfterSuccessfulLoad_ShouldNotBeNull()
         {
-            TestProgressTracker.NotifyTestStart(nameof(FullscreenAdNativeTests), 4, TotalTests);
-            Assert.IsNotNull(_sharedFullscreenAd, TestConstants.AssertionMessages.SharedFullscreenAdMustExist);
+            AdLoadResultAssert.RequireLoaded(_sharedFullscreenAd != null);
 
             var request = _sharedFullscreenAd.Request;
             Assert.IsNotNull(request, TestConstants.AssertionMessages.RequestAvailableAfterLoad);
@@ -126,11 +97,10 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
         /// <summary>
         /// Test that LoadId is available after a successful load.
         /// </summary>
-        [Test, Order(5)]
+        [Test, Order(4)]
         public void LoadId_AfterSuccessfulLoad_ShouldNotBeNullOrEmpty()
         {
-            TestProgressTracker.NotifyTestStart(nameof(FullscreenAdNativeTests), 5, TotalTests);
-            Assert.IsNotNull(_sharedFullscreenAd, TestConstants.AssertionMessages.SharedFullscreenAdMustExist);
+            AdLoadResultAssert.RequireLoaded(_sharedFullscreenAd != null);
 
             var loadId = _sharedFullscreenAd.LoadId;
             Assert.IsFalse(string.IsNullOrEmpty(loadId), TestConstants.AssertionMessages.LoadIdShouldNotBeEmpty);
@@ -139,11 +109,10 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
         /// <summary>
         /// Test that WinningBidInfo is available after a successful load.
         /// </summary>
-        [Test, Order(6)]
+        [Test, Order(5)]
         public void WinningBidInfo_AfterSuccessfulLoad_ShouldNotBeNull()
         {
-            TestProgressTracker.NotifyTestStart(nameof(FullscreenAdNativeTests), 6, TotalTests);
-            Assert.IsNotNull(_sharedFullscreenAd, TestConstants.AssertionMessages.SharedFullscreenAdMustExist);
+            AdLoadResultAssert.RequireLoaded(_sharedFullscreenAd != null);
 
             var bidInfo = _sharedFullscreenAd.WinningBidInfo;
             Assert.IsNotNull(bidInfo, TestConstants.AssertionMessages.WinningBidInfoAvailableAfterLoad);
@@ -152,11 +121,10 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
         /// <summary>
         /// Test that CustomData property can be set and retrieved.
         /// </summary>
-        [Test, Order(7)]
+        [Test, Order(6)]
         public void CustomData_WhenSetAndRetrieved_ShouldMatch()
         {
-            TestProgressTracker.NotifyTestStart(nameof(FullscreenAdNativeTests), 7, TotalTests);
-            Assert.IsNotNull(_sharedFullscreenAd, TestConstants.AssertionMessages.SharedFullscreenAdMustExist);
+            AdLoadResultAssert.RequireLoaded(_sharedFullscreenAd != null);
 
             _sharedFullscreenAd.CustomData = TestConstants.TestData.CustomData;
 
@@ -167,11 +135,10 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
         /// <summary>
         /// Test that CustomData can be set to null.
         /// </summary>
-        [Test, Order(8)]
+        [Test, Order(7)]
         public void CustomData_WhenSetToNull_ShouldBeNullOrEmpty()
         {
-            TestProgressTracker.NotifyTestStart(nameof(FullscreenAdNativeTests), 8, TotalTests);
-            Assert.IsNotNull(_sharedFullscreenAd, TestConstants.AssertionMessages.SharedFullscreenAdMustExist);
+            AdLoadResultAssert.RequireLoaded(_sharedFullscreenAd != null);
 
             _sharedFullscreenAd.CustomData = null;
 
@@ -183,11 +150,10 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
         /// Test that DidClick event can be subscribed and unsubscribed without errors.
         /// Note: We cannot trigger the event as it requires user interaction.
         /// </summary>
-        [Test, Order(9)]
+        [Test, Order(8)]
         public void DidClick_WhenSubscribedAndUnsubscribed_ShouldNotThrow()
         {
-            TestProgressTracker.NotifyTestStart(nameof(FullscreenAdNativeTests), 9, TotalTests);
-            Assert.IsNotNull(_sharedFullscreenAd, TestConstants.AssertionMessages.SharedFullscreenAdMustExist);
+            AdLoadResultAssert.RequireLoaded(_sharedFullscreenAd != null);
 
             FullscreenAdEvent testHandler = _ => Debug.Log(TestConstants.DebugLogPrefixes.FullscreenClickEvent);
 
@@ -202,11 +168,10 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
         /// Test that DidClose event can be subscribed and unsubscribed without errors.
         /// Note: We cannot trigger the event as it requires showing and closing the ad.
         /// </summary>
-        [Test, Order(10)]
+        [Test, Order(9)]
         public void DidClose_WhenSubscribedAndUnsubscribed_ShouldNotThrow()
         {
-            TestProgressTracker.NotifyTestStart(nameof(FullscreenAdNativeTests), 10, TotalTests);
-            Assert.IsNotNull(_sharedFullscreenAd, TestConstants.AssertionMessages.SharedFullscreenAdMustExist);
+            AdLoadResultAssert.RequireLoaded(_sharedFullscreenAd != null);
 
             FullscreenAdEventWithError testHandler = (_, _) => Debug.Log(TestConstants.DebugLogPrefixes.FullscreenCloseEvent);
 
@@ -221,11 +186,10 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
         /// Test that DidExpire event can be subscribed and unsubscribed without errors.
         /// Note: We cannot trigger the event as it requires the ad to expire.
         /// </summary>
-        [Test, Order(11)]
+        [Test, Order(10)]
         public void DidExpire_WhenSubscribedAndUnsubscribed_ShouldNotThrow()
         {
-            TestProgressTracker.NotifyTestStart(nameof(FullscreenAdNativeTests), 11, TotalTests);
-            Assert.IsNotNull(_sharedFullscreenAd, TestConstants.AssertionMessages.SharedFullscreenAdMustExist);
+            AdLoadResultAssert.RequireLoaded(_sharedFullscreenAd != null);
 
             FullscreenAdEvent testHandler = _ => Debug.Log(TestConstants.DebugLogPrefixes.FullscreenExpireEvent);
 
@@ -240,11 +204,10 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
         /// Test that DidRecordImpression event can be subscribed and unsubscribed without errors.
         /// Note: We cannot trigger the event as it requires showing the ad.
         /// </summary>
-        [Test, Order(12)]
+        [Test, Order(11)]
         public void DidRecordImpression_WhenSubscribedAndUnsubscribed_ShouldNotThrow()
         {
-            TestProgressTracker.NotifyTestStart(nameof(FullscreenAdNativeTests), 12, TotalTests);
-            Assert.IsNotNull(_sharedFullscreenAd, TestConstants.AssertionMessages.SharedFullscreenAdMustExist);
+            AdLoadResultAssert.RequireLoaded(_sharedFullscreenAd != null);
 
             FullscreenAdEvent testHandler = _ => Debug.Log(TestConstants.DebugLogPrefixes.FullscreenImpressionEvent);
 
@@ -259,11 +222,10 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
         /// Test that DidReward event can be subscribed and unsubscribed without errors.
         /// Note: This event is for rewarded ads. We cannot trigger it without showing the ad.
         /// </summary>
-        [Test, Order(13)]
+        [Test, Order(12)]
         public void DidReward_WhenSubscribedAndUnsubscribed_ShouldNotThrow()
         {
-            TestProgressTracker.NotifyTestStart(nameof(FullscreenAdNativeTests), 13, TotalTests);
-            Assert.IsNotNull(_sharedFullscreenAd, TestConstants.AssertionMessages.SharedFullscreenAdMustExist);
+            AdLoadResultAssert.RequireLoaded(_sharedFullscreenAd != null);
 
             FullscreenAdEvent testHandler = _ => Debug.Log(TestConstants.DebugLogPrefixes.FullscreenRewardEvent);
 
@@ -277,11 +239,10 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
         /// <summary>
         /// Test that Dispose can be called without throwing exceptions.
         /// </summary>
-        [Test, Order(14)]
+        [Test, Order(13)]
         public void Dispose_WhenCalled_ShouldNotThrow()
         {
-            TestProgressTracker.NotifyTestStart(nameof(FullscreenAdNativeTests), 14, TotalTests);
-            Assert.IsNotNull(_sharedFullscreenAd, TestConstants.AssertionMessages.SharedFullscreenAdMustExist);
+            AdLoadResultAssert.RequireLoaded(_sharedFullscreenAd != null);
 
             // Dispose the ad
             Assert.DoesNotThrow(() => _sharedFullscreenAd.Dispose(), TestConstants.AssertionMessages.DisposeShouldNotThrow);

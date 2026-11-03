@@ -1,0 +1,26 @@
+{
+    "name": "Chartboost.Mediation.Tests.Runtime.Android",
+    "rootNamespace": "Chartboost.Tests.Runtime.Android",
+    "references": [
+        "UnityEngine.TestRunner",
+        "Chartboost.Mediation",
+        "Chartboost.Mediation.Android",
+        "Chartboost.Logging"
+    ],
+    "includePlatforms": [
+        "Android",
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

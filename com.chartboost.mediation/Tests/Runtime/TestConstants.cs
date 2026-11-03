@@ -6,6 +6,18 @@ namespace Chartboost.Tests.Runtime
     public static class TestConstants
     {
         /// <summary>
+        /// Upper bounds for waits, in seconds.
+        /// </summary>
+        public static class Timeouts
+        {
+            public const float EditorTask = 5f;
+            public const float NativeAdLoad = 60f;
+            // Callbacks and property round-trips after a load; waits end as soon as they arrive.
+            public const float NativeEvent = 10f;
+            public const float NativeProperty = 3f;
+        }
+
+        /// <summary>
         /// Standard placement names used across tests.
         /// </summary>
         public static class Placements
@@ -33,7 +45,6 @@ namespace Chartboost.Tests.Runtime
             public const string PartnerAdapter = "4.5.6";
             public const string NativeSDK = "1.2.3";
             public const string Module = "1.0.0";
-            public const string ExpectedSDK = "5.4.2";
         }
 
         /// <summary>
@@ -99,9 +110,6 @@ namespace Chartboost.Tests.Runtime
             public const float TestContainerWidth = 100f;
             public const float TestContainerHeight = 50f;
 
-            // Test positions for sync validation
-            public const float TestPositionX1 = 50f;
-            public const float TestPositionY1 = 75f;
             public const float TestPositionX2 = 999f;
             public const float TestPositionY2 = 888f;
 
@@ -118,7 +126,6 @@ namespace Chartboost.Tests.Runtime
             public const float TestCoordY = 75f;
 
             // Screen center calculation divisor
-            public const float ScreenCenterDivisor = 2f;
         }
 
         /// <summary>
@@ -155,31 +162,10 @@ namespace Chartboost.Tests.Runtime
 
             // Specific test IDs
             public const long Id77777 = 0x7FFFFFF000000020L;  // 9223372034707292192
-            public const long Id33333 = 0x7FFFFFF000000022L;  // 9223372034707292194
             public const long Id22222 = 0x7FFFFFF000000023L;  // 9223372034707292195
             public const long Id11111 = 0x7FFFFFF000000024L;  // 9223372034707292196
-            public const long Id10101 = 0x7FFFFFF000000025L;  // 9223372034707292197
-            public const long Id20202 = 0x7FFFFFF000000026L;  // 9223372034707292198
-            public const long Id30303 = 0x7FFFFFF000000027L;  // 9223372034707292199
-            public const long Id9999 = 0x7FFFFFF000000028L;  // 9223372034707292200
-            public const long Id23456 = 0x7FFFFFF000000029L;  // 9223372034707292201
-            public const long Id34567 = 0x7FFFFFF00000002AL;  // 9223372034707292202
-            public const long Id45678 = 0x7FFFFFF00000002BL;  // 9223372034707292203
-            public const long Id56789 = 0x7FFFFFF00000002CL;  // 9223372034707292204
-            public const long Id78901 = 0x7FFFFFF00000002DL;  // 9223372034707292205
-            public const long Id89012 = 0x7FFFFFF00000002EL;  // 9223372034707292206
-            public const long Id90123 = 0x7FFFFFF00000002FL;  // 9223372034707292207
             public const long Id50001 = 0x7FFFFFF000000030L;  // 9223372034707292208
-            public const long Id50002 = 0x7FFFFFF000000031L;  // 9223372034707292209
-            public const long Id50003 = 0x7FFFFFF000000032L;  // 9223372034707292210
-            public const long Id50004 = 0x7FFFFFF000000033L;  // 9223372034707292211
-            public const long Id50005 = 0x7FFFFFF000000034L;  // 9223372034707292212
-            public const long Id50006 = 0x7FFFFFF000000035L;  // 9223372034707292213
-            public const long Id50007 = 0x7FFFFFF000000036L;  // 9223372034707292214
-            public const long Id50008 = 0x7FFFFFF000000037L;  // 9223372034707292215
-            public const long Id50009 = 0x7FFFFFF000000038L;  // 9223372034707292216
-            public const long Id50010 = 0x7FFFFFF000000039L;  // 9223372034707292217
-            public const long Id50011 = 0x7FFFFFF00000003AL;  // 9223372034707292218
+            public const long NativeBanner = 0x7FFFFFF000000040L;  // 9223372034707292224
         }
 
         /// <summary>
@@ -210,7 +196,6 @@ namespace Chartboost.Tests.Runtime
             public const string LineItemId = "line_789";
             public const string LineItemIdGeneric = "line_item";
             public const string LineItemName = "Line Item";
-            public const string LineItemNameTest = "Test Line Item";
         }
 
         /// <summary>
@@ -258,37 +243,6 @@ namespace Chartboost.Tests.Runtime
             public const float Assertion = 0.01f;
             public const float Within = 0.009f;
             public const float Outside = 0.011f;
-        }
-
-        /// <summary>
-        /// Reflection member names (methods, properties, fields) used in tests.
-        /// </summary>
-        public static class Reflection
-        {
-            public const string BannerAdField = "_bannerAd";
-
-            // Properties
-            public const string BannerAdProperty = "BannerAd";
-
-            // Methods
-            public const string OnWillAppearMethod = "OnWillAppear";
-            public const string OnClickMethod = "OnClick";
-            public const string OnDragMethod = "OnDrag";
-            public const string OnDragBeginMethod = "OnDragBegin";
-            public const string OnDragEndMethod = "OnDragEnd";
-            public const string OnRecordImpressionMethod = "OnRecordImpression";
-            public const string OnDetachFromPanelMethod = "OnDetachFromPanel";
-
-            // Error messages for reflection failures
-            public const string BannerAdFieldNotFound = "_bannerAd field not found via reflection";
-            public const string BannerAdPropertyNotFound = "BannerAd property not found via reflection";
-            public const string OnWillAppearMethodNotFound = "OnWillAppear method not found";
-            public const string OnClickMethodNotFound = "OnClick method not found";
-            public const string OnRecordImpressionMethodNotFound = "OnRecordImpression method not found";
-            public const string OnDragBeginMethodNotFound = "OnDragBegin method not found";
-            public const string OnDragMethodNotFound = "OnDrag method not found";
-            public const string OnDragEndMethodNotFound = "OnDragEnd method not found";
-            public const string OnDetachFromPanelMethodNotFound = "OnDetachFromPanel method not found";
         }
 
         /// <summary>
@@ -346,18 +300,9 @@ namespace Chartboost.Tests.Runtime
         {
             public const string OpenBrace = "{";
             public const string CloseBrace = "}";
-            public const string Null = "null";
             public const string EmptyObject = "{}";
-            public const string EmptyArray = "[]";
 
-            // Banner property names
-            public const string KeywordsProperty = "Keywords";
-            public const string PartnerSettingsProperty = "PartnerSettings";
             public const string DraggableProperty = "Draggable";
-
-            // Boolean values
-            public const string TrueValue = "true";
-            public const string FalseValue = "false";
         }
 
         /// <summary>
@@ -374,12 +319,6 @@ namespace Chartboost.Tests.Runtime
         /// </summary>
         public static class Counts
         {
-            public const int Zero = 0;
-            public const int One = 1;
-            public const int Two = 2;
-            public const int Three = 3;
-            public const string ZeroString = "0";
-            public const string TwoString = "2";
             public const int ExpectedDragEventCount = 3;
         }
 
@@ -420,7 +359,8 @@ namespace Chartboost.Tests.Runtime
             public const string HasNextAd = ".*checking for next ad.*";
 
             // Error/Warning patterns
-            public const string FailedWeakReference = ".*Failed to get (WeakReference<IAd>|AdLoadRequest) for.*";
+            public const string FailedWeakReference = ".*Failed to get WeakReference<IAd> for.*";
+            public const string FailedAdLoadRequest = ".*Failed to get AdLoadRequest for.*";
             // ReSharper disable once InconsistentNaming
             public const string ILRD = ".*ILRD.*";
             public const string UnexpectedCharacter = ".*Unexpected character.*";
@@ -441,15 +381,12 @@ namespace Chartboost.Tests.Runtime
         }
 
         /// <summary>
-        /// AdCache utility testing constants.
+        /// <c>AdLoadRequestCache</c> testing constants.
         /// </summary>
-        public static class AdCache
+        public static class AdLoadRequestCache
         {
-            public const string AdsFieldName = "Ads";
-            public const string AdLoadRequestsFieldName = "AdLoadRequests";
-            public const string ExpectedCacheInfoPrefix = "CacheManager : \n";
-            public const string ExpectedFullscreenCacheText = "Fullscreen Cache: ";
-            public const string ExpectedAdLoadRequestText = "FullscreenAdLoadRequest: ";
+            public const string CacheInfoLabel = "AdLoadRequestCache: ";
+            public const string CacheInfoSuffix = " tracked";
         }
 
         /// <summary>
@@ -463,7 +400,7 @@ namespace Chartboost.Tests.Runtime
             public const float DefaultScaleFactor = 2.5f;
             public const float CustomScaleFactor = 3.0f;
             public const float TestUIDocScaleFactor = 2.0f;
-            public const string UIDocScaleFactorFieldName = "_uiDocScaleFactor";
+            public const float RotatedUIDocScaleFactor = 1.25f;
         }
 
         /// <summary>
@@ -487,7 +424,6 @@ namespace Chartboost.Tests.Runtime
         /// </summary>
         public static class ChartboostMediation
         {
-            public const string InstancePropertyName = "Instance";
             public const string ExpectedCoreModuleId = "chartboost_mediation";
             public const string ExpectedDefaultInstanceName = "ChartboostMediationDefault";
             // ReSharper disable UnusedMember.Global
@@ -512,15 +448,7 @@ namespace Chartboost.Tests.Runtime
             public const string JsonValue = "json_value";
             public const string PartnerKey = "partner";
             public const string PartnerValue = "setting";
-            public const string PartnerKeyAlt = "partner_key";
-            public const string PartnerValueAlt = "partner_value";
             public const string AdElementName = "Ad";
-            public const string ReflectionAdRelativePositionProperty = "AdRelativePosition";
-            public const string ReflectionSyncWithNativeContainerMethod = "SyncWithNativeContainer";
-            public const string ReflectionIsDraggingField = "_isDragging";
-            public const string ExpectedPassKeywordsEmptyDictionary = "Keywords returned an empty dictionary on native platform (platform-specific behavior)";
-            public const string ExpectedPassPartnerSettingsAndroidException = "PartnerSettings access threw AndroidJavaException on Android (platform-specific limitation)";
-            public const string ExpectedPassPartnerSettingsEmptyDictionary = "PartnerSettings returned an empty dictionary on native platform (platform-specific behavior)";
         }
 
         /// <summary>
@@ -547,28 +475,6 @@ namespace Chartboost.Tests.Runtime
         {
             // UIDocument names
             public const string SharedTestUIDocumentName = "SharedTestUIDocument";
-
-            // PanelSettings configuration
-            public const float ReferenceDpi = 96f;
-            public const float FallbackDpi = 96f;
-
-            // Banner dimensions
-            public const float BannerWidth = 320f;
-            public const float BannerHeight = 50f;
-
-            // Positioning
-            public const float InitialPositionLeft = 0f;
-            public const float InitialPositionTop = 0f;
-            public const float PositionZero = 0f;
-        }
-
-        /// <summary>
-        /// Timing constants for async operations and waits.
-        /// </summary>
-        public static class Timing
-        {
-            public const float WaitForBannerDisplay = 1.5f;
-            public const float StandardWaitTime = 1.0f;
         }
 
         /// <summary>
@@ -578,6 +484,7 @@ namespace Chartboost.Tests.Runtime
         {
             // Common assertions
             public const string SharedBannerAdMustExist = "Shared banner ad must be created first";
+            public const string RequiresLoadedAd = "Needs the ad loaded by the load test, which got no ad";
             public const string SharedBannerAdCreated = "Shared banner ad should be created in OneTimeSetUp";
             public const string SharedBannerAdGameObjectExists = "Shared banner ad GameObject should exist";
             public const string SharedBannerVisualElementMustExist = "Shared banner visual element must be created first";
@@ -634,24 +541,17 @@ namespace Chartboost.Tests.Runtime
             public const string ResetShouldNotThrow = "Reset should not throw any exceptions";
 
             // Platform-specific
-            public const string SkippingNonNativePlatform = "Skipping native platform tests - not running on Android or iOS";
 
             // Test mode assertions
             public const string TestModeShouldBeEnabled = "TestMode should be enabled for native tests";
 
             // Fullscreen ad shared instance assertions
-            public const string SharedFullscreenAdMustExist = "Shared fullscreen ad must exist";
-            public const string SharedFullscreenAdShouldExist = "Shared fullscreen ad should exist after load";
             public const string LoadedFullscreenAdShouldNotBeNull = "Loaded fullscreen ad should not be null";
             public const string FullscreenAdLoadShouldSucceed = "Fullscreen ad load should succeed without errors";
-            public const string RewardedAdLoadShouldSucceed = "Rewarded ad load should succeed without errors";
-            public const string LoadedRewardedAdShouldNotBeNull = "Loaded rewarded ad should not be null";
 
             // Fullscreen ad property assertions
             public const string RequestContainsCorrectPlacement = "Request should contain correct placement name";
             public const string LoadIdShouldNotBeEmpty = "LoadId should be available and not empty after load";
-            public const string RewardedAdLoadIdShouldNotBeEmpty = "Rewarded ad LoadId should not be empty";
-            public const string RewardedAdRequestShouldNotBeNull = "Rewarded ad Request should not be null";
 
             // CustomData assertions
             public const string CustomDataShouldMatch = "CustomData should match the value that was set";
@@ -666,11 +566,6 @@ namespace Chartboost.Tests.Runtime
 
             // Fullscreen ad disposal assertions
             public const string DisposeShouldNotThrow = "Dispose should not throw exceptions";
-
-            // Test environment expected passes
-            public const string BannerAdNullExpected = "BannerAd is null in test environment, which is expected";
-            public const string DetachFromPanelHandledSuccessfully = "DetachFromPanel handled successfully";
-            public const string DetachFromPanelHandledNull = "DetachFromPanel handled null BannerAd gracefully";
         }
 
         /// <summary>
@@ -688,42 +583,6 @@ namespace Chartboost.Tests.Runtime
             public const string FullscreenExpireEvent = "[FullscreenAdNativeTests] DidExpire event triggered";
             public const string FullscreenImpressionEvent = "[FullscreenAdNativeTests] DidRecordImpression event triggered";
             public const string FullscreenRewardEvent = "[FullscreenAdNativeTests] DidReward event triggered";
-        }
-
-        /// <summary>
-        /// Banner alignment values for positioning tests.
-        /// Note: Unity UI and UI Toolkit use different coordinate systems for vertical alignment.
-        /// </summary>
-        public static class BannerAlignment
-        {
-            /// <summary>
-            /// Horizontal alignment values (consistent across Unity UI and UI Toolkit)
-            /// </summary>
-            public const float Left = 0f;
-            public const float HorizontalCenter = 0.5f;
-            public const float Right = 1f;
-
-            /// <summary>
-            /// UI Toolkit vertical alignment values (top=0, bottom=1)
-            /// </summary>
-            // ReSharper disable once MemberHidesStaticFromOuterClass
-            public static class UIToolkit
-            {
-                public const float Top = 0f;
-                public const float VerticalCenter = 0.5f;
-                public const float Bottom = 1f;
-            }
-
-            /// <summary>
-            /// Unity UI vertical alignment values (bottom=0, top=1)
-            /// Unity UI uses inverted Y-axis for anchors compared to UIToolkit
-            /// </summary>
-            public static class UnityUI
-            {
-                public const float Bottom = 0f;
-                public const float VerticalCenter = 0.5f;
-                public const float Top = 1f;
-            }
         }
     }
 }

@@ -35,7 +35,7 @@ namespace Chartboost.Mediation.Utilities
             return canvas;
         }
 
-        private static Canvas GetCanvasWithHighestSortingOrder()
+        internal static Canvas GetCanvasWithHighestSortingOrder()
         {
             Canvas canvas = null;
             foreach (var can in Object.FindObjectsByType<Canvas>(FindObjectsSortMode.InstanceID).OrderByDescending(x => x.sortingOrder))
@@ -52,7 +52,7 @@ namespace Chartboost.Mediation.Utilities
             return canvas;
         }
         
-        private static Canvas GetRootLevelCanvasWithHighestSortingOrder()
+        internal static Canvas GetRootLevelCanvasWithHighestSortingOrder()
         {
             var canvases = (from go in SceneManager.GetActiveScene().GetRootGameObjects()
                     where go.GetComponent<Canvas>()

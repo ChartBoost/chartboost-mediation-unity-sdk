@@ -23,13 +23,13 @@ namespace Chartboost.Mediation.Android.Ad.Fullscreen
                     var error = result.ToChartboostMediationError();
                     if (error.HasValue)
                     {
-                        AdCache.ReleaseAdLoadRequest(hashCode());
+                        AdLoadRequestCache.ReleaseAdLoadRequest(hashCode());
                         _complete(new FullscreenAdLoadResult(error.Value));
                         return;
                     }
 
                     var nativeAd = result.Call<AndroidJavaObject>(AndroidConstants.FunctionGetAd);
-                    var unityAdReference = new FullscreenAd(nativeAd, (FullscreenAdLoadRequest)AdCache.GetAdLoadRequest(hashCode()));
+                    var unityAdReference = new FullscreenAd(nativeAd, (FullscreenAdLoadRequest)AdLoadRequestCache.TakeAdLoadRequest(hashCode()));
                     var loadId = result.Call<string>(AndroidConstants.FunctionGetLoadId);
                     var metrics = result.Call<AndroidJavaObject>(AndroidConstants.FunctionGetMetrics).JsonObjectToMetrics();
                     var winningBidInfo = result.Call<AndroidJavaObject>(AndroidConstants.FunctionGetWinningBidInfo).MapToWinningBidInfo();

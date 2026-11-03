@@ -29,11 +29,6 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
         public bool IsDisposedPublic => IsDisposed;
 
         /// <summary>
-        /// Controls the result returned by Show().
-        /// </summary>
-        public AdShowResult? ShowResult { get; set; }
-
-        /// <summary>
         /// Tracks whether DidRecordImpression event was triggered.
         /// </summary>
         public bool RecordImpressionCalled { get; private set; }
@@ -89,20 +84,20 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
             };
         }
 
-        public override FullscreenAdLoadRequest Request => _request;
+        public override FullscreenAdLoadRequest Request => null;
 
         public override string CustomData { get; set; }
 
-        public override string LoadId => _loadId;
+        public override string LoadId => null;
 
-        public override BidInfo WinningBidInfo => _bidInfo ?? new BidInfo();
+        public override BidInfo WinningBidInfo => new();
 
         public override Task<AdShowResult> Show()
         {
             if (IsDisposed)
                 return Task.FromResult(InvalidAdShowResult);
 
-            return Task.FromResult(ShowResult ?? new AdShowResult(new ChartboostMediationError(Errors.ShowFailureUnknown)));
+            return Task.FromResult(new AdShowResult(new ChartboostMediationError(Errors.ShowFailureUnknown)));
         }
 
         protected override void Dispose(bool disposing)
@@ -118,11 +113,6 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
         public void TestOnRecordImpression() => OnRecordImpression();
         public void TestOnExpire() => OnExpire();
         public void TestOnReward() => OnReward();
-
-        // Helper methods to set backing fields for testing
-        public void SetRequest(FullscreenAdLoadRequest request) => _request = request;
-        public void SetLoadId(string loadId) => _loadId = loadId;
-        public void SetBidInfo(BidInfo bidInfo) => _bidInfo = bidInfo;
 
     }
 }

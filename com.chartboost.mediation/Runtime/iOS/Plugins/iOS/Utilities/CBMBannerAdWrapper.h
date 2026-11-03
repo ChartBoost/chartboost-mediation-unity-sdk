@@ -7,17 +7,15 @@
 /**
  * Wrapper class for Chartboost Mediation banner ads in Unity iOS.
  *
- * This class bridges Unity C# banner ad functionality to the native iOS SDK,
- * managing banner view lifecycle, positioning, dragging, and configuration.
+ * This class bridges Unity C# banner ad functionality to the native iOS SDK. The banner view lives in
+ * a shared CBUBannerContainer that owns placement, visibility, drag and hosting; this wrapper owns the
+ * ad and how the partner creative sits inside the banner view.
  * Instances are created and managed from the Unity C# layer via P/Invoke.
  */
-@interface CBMBannerAdWrapper : NSObject<UIGestureRecognizerDelegate>
+@interface CBMBannerAdWrapper : NSObject
 
 /// The underlying Chartboost Mediation banner ad view
 @property (nonatomic, strong, nonnull) CBMBannerAdView* bannerView;
-
-/// Callback for drag events, invoked during banner drag gestures (C function pointer)
-@property (nonatomic, nonnull) CBMExternBannerAdDragEvent dragListener;
 
 /// Keywords for ad targeting
 @property (nonatomic, copy, nullable) NSDictionary<NSString *, NSString *> *keywords;
@@ -27,20 +25,8 @@
 
 #pragma mark Container Properties
 
-/// Controls banner visibility (hidden state)
-@property (nonatomic) BOOL visible;
-
-/// Enables or disables drag gestures on the banner
-@property (nonatomic) BOOL draggable;
-
-/// Position of the banner in screen coordinates
-@property (nonatomic) CGPoint position;
-
-/// Pivot point for positioning calculations (0-1 range)
-@property (nonatomic) CGPoint pivot;
-
-/// Size of the banner container (-1 for wrap content)
-@property (nonatomic) CGSize containerSize;
+/// Sizes the banner view inside its container (-1 on an axis wraps the creative and lets it overflow)
+- (void)setContainerSize:(CGSize)size;
 
 /// Horizontal alignment of the ad within the container
 @property (nonatomic) CBMBannerHorizontalAlignment horizontalAlignment;
@@ -74,14 +60,12 @@
 #pragma mark Initialization
 
 /**
- * Initializes a banner ad wrapper with the provided banner view and drag listener.
+ * Initializes a banner ad wrapper with the provided banner view.
  *
  * @param bannerView The native banner ad view to wrap
- * @param dragListener Callback for drag gesture events
  * @return Initialized banner wrapper instance
  */
-- (instancetype _Nonnull)initWithBannerView:(CBMBannerAdView* _Nonnull)bannerView
-                               dragListener:(CBMExternBannerAdDragEvent _Nonnull)dragListener;
+- (instancetype _Nonnull)initWithBannerView:(CBMBannerAdView* _Nonnull)bannerView;
 
 #pragma mark Ad Loading
 
@@ -95,17 +79,6 @@
 - (void)loadWith:(CBMBannerAdLoadRequest *_Nonnull)request
   viewController:(UIViewController *_Nonnull)viewController
       completion:(void (^_Nonnull)(CBMBannerAdLoadResult * _Nonnull))completion;
-
-#pragma mark Hosting
-
-/**
- * Reparents the banner into the given host view. Pass nil to restore the default
- * Unity root view. The banner's screen-space position is resolved relative to the
- * host, so it renders correctly regardless of where it is embedded.
- *
- * @param hostView The view to host the banner in, or nil for the Unity root view
- */
-- (void)setHostView:(UIView * _Nullable)hostView;
 
 #pragma mark Lifecycle
 
@@ -123,8 +96,11 @@
 #pragma mark Private
 
 /**
- * Updates the banner frame based on position, pivot, and size.
+ * Gives the container the loaded creative's size and aligns the creative inside the banner view.
  */
-- (void)updateFrame;
+- (void)updateLayout;
+
+/// A new creative is about to show: it starts from the alignment until AdRelativePosition pins it again.
+- (void)creativeWillAppear;
 
 @end
