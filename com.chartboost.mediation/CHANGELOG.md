@@ -1,6 +1,43 @@
 # Changelog
 All notable changes to this project will be documented in this file using the standards as defined at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0).
 
+### Version 5.4.3 *(2026-11-02)*
+
+Support for the following native SDK dependencies:
+  * Android: `com.chartboost:chartboost-mediation-sdk:5.4.+`
+  * iOS: `ChartboostMediationSDK ~> 5.4.0`
+
+### Changed
+- Banners are hosted in the shared banner container from `com.chartboost.unity.utilities` `2.1.0`: the container places, sizes, shows, drags and hosts the banner the same way on Android and iOS. The public banner API is unchanged.
+- Android: a Match Ad banner wider than the screen is no longer capped to the screen width, and a fixed-size container wider than the screen keeps its `Position` instead of moving to the left edge (parity with iOS).
+- An unset `ContainerSize` wraps the creative and clips it to the container, while `ContainerSize.WrapContent()` wraps it and lets a larger creative draw past the container. On iOS an unset container used to not clip.
+- Android: an unset `ContainerSize` reads back the loaded creative's size instead of 0x0, as on iOS.
+- Moved the internal weak-reference ad cache to `com.chartboost.unity.utilities` as `Chartboost.Caching.AdCache<T>` (requires Utilities `2.1.0`); the internal request cache is now `Chartboost.Mediation.Utilities.AdLoadRequestCache`. No change to publisher-facing APIs.
+- Backed the internal Android/iOS native ad stores by the shared `com.chartboost.unity.utilities` `AdStore`/`CBAdStore` primitive; Mediation retains its typed API, logging, and per-type release semantics (fullscreen `invalidate()` vs banner `destroy()`). No change to publisher-facing APIs.
+- Consolidated Android dictionary-to-`HashMap` conversion onto the shared `DictionaryToMap` utility, removing the duplicate `ToKeyValuePair` extension.
+- `ChartboostMediationSDK` now resolves from the default CocoaPods CDN: `ChartboostMediationDependencies.xml` no longer declares the `https://github.com/CocoaPods/Specs` git source, so `pod install` no longer clones or updates the multi-GB git Specs repo.
+- Package tests now use the shared test-only `Chartboost.Utilities.Testing` assembly (Utilities `2.1.0`): to run them, list `com.chartboost.unity.utilities` in your project's `testables` too. No change to publisher-facing APIs.
+
+### Fixed
+- `DensityConverters` UI Toolkit conversions (and so `BannerVisualElement` sizing) now follow screen rotation; the UI scale was cached once and stayed wrong after the device rotated.
+- `BannerVisualElement` no longer offsets the creative inside its container (its ad element was sized in native units instead of panel units), and on Android it no longer flickers while rotating.
+- `BannerVisualElement` rounds its container size instead of truncating it, so the container is no longer 1 dp smaller than the creative.
+- `BannerVisualElement` converts sizes and positions with its own panel's scale instead of the first `UIDocument` found, so it's right when a scene has several full-screen documents.
+- Android: reading `BannerAd.BannerSize` no longer leaks a Java object.
+- Android: the UI scale factor read before the Unity activity is available is the system density, not 160.
+- `UnityBannerAd` rounds its container size instead of truncating it, so the container is no longer 1 dp smaller than the creative.
+- iOS: destroying a banner releases it from the internal ad store; each destroyed banner used to leak its native view.
+- Android: a failed load no longer logs `Failed to parse bid info price`; that error is now only logged for a price that can't be read.
+- `BannerVisualElement.Load()` no longer throws `NullReferenceException` on an element created in code; like `UnityBannerAd.Load()`, it returns a not-ready error when `PlacementName` is empty.
+- iOS: a load or show callback with an error code but an empty message is now reported as an error instead of a success.
+- Android: the winning bid price is parsed independently of the device locale, so it is no longer 0 on locales that use a decimal comma.
+- Android: loading a banner with a NaN size no longer crashes the app; it returns an error instead. `BannerVisualElement.Load()` on an element that isn't laid out yet returns a not-laid-out error.
+- Android: a banner size the SDK doesn't recognize is reported as `BannerSizeType.Unknown` (with a warning) instead of throwing `ArgumentOutOfRangeException` from `BannerAd.BannerSize`.
+- Destroying a `UnityBannerAd` inside a `LayoutGroup` while it syncs or loads no longer logs an error; a pending `Load()` returns a not-ready error.
+
+### Deprecated
+- `JsonExtensions.ToContainerSize` and `AndroidExtensions.ToContainerSize`: unused since banners moved to the shared container. Removed in 6.0.0.
+
 ### Version 5.4.2 *(2026-07-13)*
 
 Support for the following native SDK dependencies:

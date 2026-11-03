@@ -2,7 +2,7 @@ using Chartboost.Editor;
 using Chartboost.Mediation;
 using NUnit.Framework;
 
-namespace Chartboost.Tests.Editor
+namespace Chartboost.Mediation.Tests.Editor
 {
     public class VersionValidator
     {

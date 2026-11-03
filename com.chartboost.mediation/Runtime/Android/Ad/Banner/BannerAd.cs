@@ -1,12 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AndroidBannerContainers = Chartboost.Banners.AndroidBannerContainers;
+using Chartboost.Caching;
 using Chartboost.Constants;
 using Chartboost.Logging;
+using Chartboost.Mediation.Ad;
 using Chartboost.Mediation.Ad.Banner;
 using Chartboost.Mediation.Ad.Banner.Enums;
 using Chartboost.Mediation.Android.Utilities;
 using Chartboost.Mediation.Data;
+using Chartboost.Mediation.Error;
 using Chartboost.Mediation.Requests;
 using Chartboost.Mediation.Utilities;
 using UnityEngine;
@@ -16,11 +20,17 @@ namespace Chartboost.Mediation.Android.Ad.Banner
     /// <summary>
     /// Android's implementation of <see cref="IBannerAd"/>.
     /// </summary>
-    internal partial class BannerAd : BannerAdBase
+    internal partial class BannerAd : NativeBannerAdBase
     {
         private readonly AndroidJavaObject _nativeBannerAd;
         internal static readonly BannerAdListener BannerAdListenerInstance = new();
-        internal BannerAd(AndroidJavaObject bannerAd) : base(new IntPtr(bannerAd.NativeHashCode())) => _nativeBannerAd = bannerAd;
+
+        internal BannerAd(AndroidJavaObject bannerAd) : base(new IntPtr(bannerAd.NativeHashCode()))
+        {
+            _nativeBannerAd = bannerAd;
+            // Wrap owns the container reference.
+            Container = AndroidBannerContainers.Wrap(bannerAd.Call<AndroidJavaObject>(AndroidConstants.FunctionCreateContainer));
+        }
         
         /// <inheritdoc />
         public override IReadOnlyDictionary<string, string> Keywords 
@@ -45,34 +55,6 @@ namespace Chartboost.Mediation.Android.Ad.Banner
         }
 
         /// <inheritdoc />
-        public override Vector2 Position
-        {
-            get => _nativeBannerAd.Call<AndroidJavaObject>(AndroidConstants.FunctionGetPosition).PointFToVector2();
-            set => _nativeBannerAd.Call(AndroidConstants.FunctionSetPosition, value.x, value.y);
-        }
-        
-        /// <inheritdoc />
-        public override Vector2 Pivot
-        {
-            get => _nativeBannerAd.Call<AndroidJavaObject>(AndroidConstants.FunctionGetPivot).PointFToVector2();
-            set => _nativeBannerAd.Call(AndroidConstants.FunctionSetPivot, value.x, value.y);
-        }
-
-        /// <inheritdoc />
-        public override bool Visible
-        {
-            get => _nativeBannerAd.Call<bool>(AndroidConstants.FunctionGetVisibility);
-            set => _nativeBannerAd.Call(AndroidConstants.FunctionSetVisibility, value);
-        }
-        
-        /// <inheritdoc />
-        public override bool Draggable
-        {
-            get => _nativeBannerAd.Call<bool>(AndroidConstants.FunctionGetDraggability);
-            set => _nativeBannerAd.Call(AndroidConstants.FunctionSetDraggability, value);
-        }
-
-        /// <inheritdoc />
         public override BannerAdLoadRequest Request => _request;
         
         /// <inheritdoc />
@@ -92,15 +74,18 @@ namespace Chartboost.Mediation.Android.Ad.Banner
         public override Metrics? LoadMetrics => _nativeBannerAd.Call<AndroidJavaObject>(AndroidConstants.FunctionGetMetrics)?.JsonObjectToMetrics();
 
         /// <inheritdoc />
-        public override BannerSize? BannerSize 
-            => _nativeBannerAd.Call<AndroidJavaObject>(AndroidConstants.FunctionGetBannerSize)?.ToBannerSize();
+        public override BannerSize? BannerSize
+        {
+            get
+            {
+                using var size = _nativeBannerAd.Call<AndroidJavaObject>(AndroidConstants.FunctionGetBannerSize);
+                return size?.ToBannerSize();
+            }
+        }
 
         /// <inheritdoc />
-        public override ContainerSize ContainerSize
-        {
-            get => _nativeBannerAd.Call<AndroidJavaObject>(AndroidConstants.FunctionGetContainerSize).ToContainerSize();
-            set => _nativeBannerAd.Call(AndroidConstants.FunctionSetContainerSize,value.Width, value.Height);
-        }
+        protected override void SetContentSize(ContainerSize size)
+            => _nativeBannerAd.Call(AndroidConstants.FunctionSetContainerSize, size.Width, size.Height);
 
         /// <inheritdoc />
         public override BannerHorizontalAlignment HorizontalAlignment
@@ -122,10 +107,14 @@ namespace Chartboost.Mediation.Android.Ad.Banner
             await base.Load(request);
             _request = request;
 
+            // The native wrapper throws on NaN, which kills the app.
+            if (float.IsNaN(request.Size.Width) || float.IsNaN(request.Size.Height))
+                return new BannerAdLoadResult(new ChartboostMediationError(Errors.InvalidBannerSize));
+
             var loadResultAwaitableProxy = new BannerAdLoadListener();
             try
             {
-                AdCache.TrackAdLoadRequest(loadResultAwaitableProxy.hashCode(), request);
+                AdLoadRequestCache.TrackAdLoadRequest(loadResultAwaitableProxy.hashCode(), request);
                 _nativeBannerAd.Call(AndroidConstants.FunctionLoad, request.PlacementName,
                     (int)request.Size.SizeType, request.Size.Width, request.Size.Height, loadResultAwaitableProxy);
             }
@@ -146,19 +135,15 @@ namespace Chartboost.Mediation.Android.Ad.Banner
         }
 
         /// <inheritdoc />
-        protected override void Dispose(bool disposing)
+        protected override void DestroyNative(bool disposing)
         {
-            if(IsDisposed) 
-                return;
-            IsDisposed = true;
-            
             // Release managed resources
             if (disposing)
                 _nativeBannerAd?.Dispose();
             
             // Release unmanaged resources
             AndroidAdStore.ReleaseBannerAd(UniqueId);
-            AdCache.ReleaseAd(UniqueId);
+            AdCache<IAd>.ReleaseAd(UniqueId);
         }
 
         /// <inheritdoc />
@@ -176,10 +161,6 @@ namespace Chartboost.Mediation.Android.Ad.Banner
             var colorArray = new[] { color.r, color.g, color.b, color.a };
             _nativeBannerAd.Call(AndroidConstants.FunctionSetAdBackgroundColor, colorArray);
         }
-
-        /// <inheritdoc />
-        internal override void SetHostView(AndroidJavaObject hostView)
-            => _nativeBannerAd.Call(AndroidConstants.FunctionSetHostView, hostView);
 
         /// <inheritdoc />
         internal override Vector2 AdRelativePosition

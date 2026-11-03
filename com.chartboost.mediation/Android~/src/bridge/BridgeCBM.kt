@@ -2,7 +2,6 @@
 package com.chartboost.mediation.unity.bridge
 
 import android.app.Activity
-import android.util.DisplayMetrics
 import com.chartboost.chartboostmediationsdk.ChartboostMediationPreinitializationConfiguration
 import com.chartboost.chartboostmediationsdk.ChartboostMediationSdk
 import com.chartboost.chartboostmediationsdk.ad.ChartboostMediationBannerAdView
@@ -21,6 +20,7 @@ import com.chartboost.mediation.unity.banner.ChartboostMediationBannerAdListener
 import com.chartboost.mediation.unity.logging.LogLevel
 import com.chartboost.mediation.unity.logging.UnityLoggingBridge
 import com.chartboost.mediation.unity.utils.AdStore
+import com.chartboost.unity.utilities.view.UnityViewUtils
 import com.unity3d.player.UnityPlayer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
@@ -51,22 +51,7 @@ class BridgeCBM {
          *
          * @return The current Unity activity, or null if not available
          */
-        private fun getActivity(): Activity? = UnityPlayer.currentActivity
-
-        /**
-         * Gets the current display density of the device.
-         *
-         * @return The density value, or DENSITY_DEFAULT if activity is unavailable
-         */
-        private val displayDensity: Float
-            get() {
-                val activity = getActivity()
-                if (activity == null) {
-                    UnityLoggingBridge.log(TAG, "Activity not available, using default density", LogLevel.DEBUG)
-                    return DisplayMetrics.DENSITY_DEFAULT.toFloat()
-                }
-                return activity.resources?.displayMetrics?.density ?: DisplayMetrics.DENSITY_DEFAULT.toFloat()
-            }
+        private fun getActivity(): Activity? = UnityViewUtils.currentActivity()
 
         //endregion
 
@@ -251,11 +236,11 @@ class BridgeCBM {
          *
          * This value is used to convert between density-independent pixels (dp) and actual pixels.
          *
-         * @return The display density, or DENSITY_DEFAULT if activity is unavailable
+         * @return The display density: the activity's, else the system's
          */
         @JvmStatic
         @Suppress("unused") // Called from C# JNI layer
-        fun getUIScaleFactor(): Float = displayDensity
+        fun getUIScaleFactor(): Float = UnityViewUtils.displayDensity()
 
         //endregion
 

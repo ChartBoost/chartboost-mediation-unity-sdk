@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Chartboost.Mediation;
+using Chartboost.Testing;
 using Chartboost.Mediation.Ad.Banner;
 using Chartboost.Mediation.Ad.Banner.Enums;
 using Chartboost.Mediation.Requests;
@@ -20,28 +21,19 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
     /// These tests use the actual Chartboost Mediation SDK and run in order.
     /// </summary>
     [TestFixture]
-    public class BannerAdNativeTests
+    public class BannerAdNativeTests : NativeTestFixture
     {
         private static IBannerAd _sharedBannerAd;
-        private const int TotalTests = 28;
+        private static bool _loaded;
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
             ChartboostMediation.TestMode = true;
-
-            // Skip setup if not on a native platform
-            if (!IsNativePlatform())
-            {
-                Assert.Ignore(TestConstants.AssertionMessages.SkippingNonNativePlatform);
-                return;
-            }
+            _loaded = false;
 
             // Initialize SDK for native platform tests
             TestInitializer.Initialize();
-
-            // Show test progress display on device
-            TestProgressTracker.Show();
 
             // Create the shared IBannerAd instance using ChartboostMediation factory method
             // This will return a platform-specific implementation (iOS.BannerAd or Android.BannerAd)
@@ -50,8 +42,8 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
             // Position the banner at a screen center before loading (following BannerAdController pattern)
             // Position: center of screen in native coordinates (pixels converted to native)
             // Pivot: (0.5, 0.5) means the pivot is at the center of the banner
-            _sharedBannerAd.Position = new Vector2(DensityConverters.PixelsToNative(Screen.width / TestConstants.Dimensions.ScreenCenterDivisor), DensityConverters.PixelsToNative(Screen.height / TestConstants.Dimensions.ScreenCenterDivisor));
-            _sharedBannerAd.Pivot = new Vector2(TestConstants.Pivots.Center, TestConstants.Pivots.Center);
+            _sharedBannerAd.Position = ScreenAnchor.Center.NativePosition;
+            _sharedBannerAd.Pivot = ScreenAnchor.Center.Pivot;
         }
 
         [OneTimeTearDown]
@@ -59,18 +51,13 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
         {
             ChartboostMediation.TestMode = false;
 
-            if (!IsNativePlatform())
+            if (!DevicePlatform.IsNative)
                 return;
-
-            // Clear test progress display content when this test fixture completes
-            TestProgressTracker.Clear();
 
             // Cleanup shared banner ad instance
             _sharedBannerAd?.Dispose();
             _sharedBannerAd = null;
         }
-
-        private static bool IsNativePlatform() => TestPlatformUtilities.IsNativePlatform();
 
         #region Sequential Integration Tests - Banner Lifecycle (Creation → Configuration → Load → Verification → Reset)
 
@@ -80,7 +67,6 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
         [Test, Order(1)]
         public void TestMode_WhenSetInSetup_ShouldBeTrue()
         {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 1, TotalTests);
             Assert.IsTrue(ChartboostMediation.TestMode, TestConstants.AssertionMessages.TestModeShouldBeEnabled);
         }
 
@@ -90,7 +76,6 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
         [Test, Order(2)]
         public void SharedBannerAd_WhenCreatedInSetup_ShouldExist()
         {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 2, TotalTests);
             Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdCreated);
         }
 
@@ -100,7 +85,6 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
         [Test, Order(3)]
         public void Draggable_WhenSetBeforeLoad_ShouldBeRetrievable()
         {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 3, TotalTests);
             Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdMustExist);
 
             _sharedBannerAd.Draggable = true;
@@ -116,7 +100,6 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
         [Test, Order(4)]
         public void HorizontalAlignment_WhenSetToAllValues_ShouldBeRetrievable()
         {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 4, TotalTests);
             Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdMustExist);
 
             _sharedBannerAd.HorizontalAlignment = BannerHorizontalAlignment.Left;
@@ -138,7 +121,6 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
         [Test, Order(5)]
         public void VerticalAlignment_WhenSetToAllValues_ShouldBeRetrievable()
         {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 5, TotalTests);
             Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdMustExist);
 
             _sharedBannerAd.VerticalAlignment = BannerVerticalAlignment.Top;
@@ -160,7 +142,6 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
         [Test, Order(6)]
         public void Keywords_WhenSetBeforeLoad_ShouldBeRetrievable()
         {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 6, TotalTests);
             Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdMustExist);
 
             var keywords = new Dictionary<string, string> { { TestConstants.Keywords.Key, TestConstants.Keywords.Value } };
@@ -178,7 +159,6 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
         [Test, Order(7)]
         public void PartnerSettings_WhenSetBeforeLoad_ShouldBeRetrievable()
         {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 7, TotalTests);
             Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdMustExist);
 
             var settings = new Dictionary<string, string> { { TestConstants.Keywords.Key, TestConstants.Keywords.Value } };
@@ -196,7 +176,6 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
         [Test, Order(8)]
         public void Position_WhenSetBeforeLoad_ShouldBeRetrievable()
         {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 8, TotalTests);
             Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdMustExist);
 
             var testPosition = new Vector2(TestConstants.Dimensions.TestCoordX, TestConstants.Dimensions.TestCoordY);
@@ -207,7 +186,7 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
             Assert.AreEqual(testPosition.y, retrieved.y, TestConstants.Tolerance.Assertion);
 
             // Reset to the screen center for the load test
-            _sharedBannerAd.Position = new Vector2(DensityConverters.PixelsToNative(Screen.width / TestConstants.Dimensions.ScreenCenterDivisor), DensityConverters.PixelsToNative(Screen.height / TestConstants.Dimensions.ScreenCenterDivisor));
+            _sharedBannerAd.Position = ScreenAnchor.Center.NativePosition;
         }
 
         /// <summary>
@@ -216,7 +195,6 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
         [Test, Order(9)]
         public void Pivot_WhenSetBeforeLoad_ShouldBeRetrievable()
         {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 9, TotalTests);
             Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdMustExist);
 
             var testPivot = new Vector2(TestConstants.Pivots.Center, TestConstants.Pivots.Center);
@@ -233,7 +211,6 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
         [Test, Order(10)]
         public void Visible_WhenSetBeforeLoad_ShouldBeRetrievable()
         {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 10, TotalTests);
             Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdMustExist);
 
             _sharedBannerAd.Visible = true;
@@ -252,7 +229,6 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
         [Test, Order(11)]
         public void ContainerSize_WhenSetBeforeLoad_ShouldBeRetrievable()
         {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 11, TotalTests);
             Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdMustExist);
 
             var testSize = new ContainerSize((int)TestConstants.Dimensions.StandardWidth, (int)TestConstants.Dimensions.StandardHeight);
@@ -270,8 +246,6 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
         [UnityTest, Order(12)]
         public IEnumerator Load_WhenCalledWithValidRequest_ShouldSucceedAndTriggerEvents()
         {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 12, TotalTests);
-
             // Wait for SDK initialization on native platforms
             yield return TestInitializer.WaitForInitialization();
 
@@ -305,15 +279,15 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
             {
                 var adLoadRequest = new BannerAdLoadRequest(TestConstants.Placements.Banner, BannerSize.Standard);
                 var loadTask = _sharedBannerAd.Load(adLoadRequest);
-                yield return new WaitUntil(() => loadTask.IsCompleted);
+                yield return TestWait.Until(() => loadTask.IsCompleted, "the load", TestConstants.Timeouts.NativeAdLoad);
 
                 Assert.IsNotNull(loadTask.Result, TestConstants.AssertionMessages.LoadResultShouldNotBeNull);
 
                 // Use AdLoadResultAssert to handle ad inventory errors as Inconclusive
                 AdLoadResultAssert.AssertSuccess(loadTask.Result, TestConstants.AssertionMessages.LoadShouldSucceed);
+                _loaded = true;
 
-                // Wait to allow banner to be displayed and events to fire
-                yield return new WaitForSeconds(TestConstants.Timing.WaitForBannerDisplay);
+                yield return TestWait.Until(() => willAppearCalled && didRecordImpressionCalled, TestConstants.Timeouts.NativeEvent);
 
                 // Verify WillAppear was triggered
                 Assert.IsTrue(willAppearCalled, TestConstants.AssertionMessages.WillAppearShouldTrigger);
@@ -340,8 +314,8 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
         [Test, Order(13)]
         public void Request_AfterSuccessfulLoad_ShouldNotBeNull()
         {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 13, TotalTests);
             Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdMustExist);
+            AdLoadResultAssert.RequireLoaded(_loaded);
 
             var request = _sharedBannerAd.Request;
             Assert.IsNotNull(request, TestConstants.AssertionMessages.RequestAvailableAfterLoad);
@@ -353,8 +327,8 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
         [Test, Order(14)]
         public void LoadId_AfterSuccessfulLoad_ShouldNotBeNullOrEmpty()
         {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 14, TotalTests);
             Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdMustExist);
+            AdLoadResultAssert.RequireLoaded(_loaded);
 
             var loadId = _sharedBannerAd.LoadId;
             Assert.IsFalse(string.IsNullOrEmpty(loadId), TestConstants.AssertionMessages.LoadIdAvailableAfterLoad);
@@ -366,8 +340,8 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
         [Test, Order(15)]
         public void LoadMetrics_AfterSuccessfulLoad_ShouldNotBeNull()
         {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 15, TotalTests);
             Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdMustExist);
+            AdLoadResultAssert.RequireLoaded(_loaded);
 
             var metrics = _sharedBannerAd.LoadMetrics;
             Assert.IsNotNull(metrics, TestConstants.AssertionMessages.LoadMetricsAvailableAfterLoad);
@@ -379,8 +353,8 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
         [Test, Order(16)]
         public void BannerSize_AfterSuccessfulLoad_ShouldNotBeNull()
         {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 16, TotalTests);
             Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdMustExist);
+            AdLoadResultAssert.RequireLoaded(_loaded);
             var bannerSize = _sharedBannerAd.BannerSize;
             Assert.IsNotNull(bannerSize, TestConstants.AssertionMessages.BannerSizeAvailableAfterLoad);
         }
@@ -391,8 +365,8 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
         [Test, Order(17)]
         public void WinningBidInfo_AfterSuccessfulLoad_ShouldNotBeNull()
         {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 17, TotalTests);
             Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdMustExist);
+            AdLoadResultAssert.RequireLoaded(_loaded);
 
             var bidInfo = _sharedBannerAd.WinningBidInfo;
             Assert.IsNotNull(bidInfo, TestConstants.AssertionMessages.WinningBidInfoAvailableAfterLoad);
@@ -403,195 +377,81 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
         // See UnityBannerAdNativeTests.cs and BannerVisualElementNativeTests.cs for ToString tests
 
         /// <summary>
-        /// Test that the banner can be repositioned to the top-left corner of the screen.
+        /// The loaded banner can be moved to each screen anchor, its pivot aligned to that anchor.
         /// </summary>
-        [UnityTest, Order(19)]
-        public IEnumerator Position_WhenSetToTopLeft_ShouldRelocateBanner()
+        [UnityTest, Order(18)]
+        public IEnumerator Position_WhenSetToAnchor_ShouldRelocateBanner([ValueSource(typeof(ScreenAnchor), nameof(ScreenAnchor.All))] ScreenAnchor anchor)
         {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 19, TotalTests);
             Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdMustExist);
+            AdLoadResultAssert.RequireLoaded(_loaded);
 
-            // Set pivot to top-left (0, 0) so banner's top-left corner aligns with position
-            _sharedBannerAd.Pivot = new Vector2(TestConstants.Pivots.Min, TestConstants.Pivots.Min);
-            // Position at top-left corner (0, 0)
-            _sharedBannerAd.Position = new Vector2(TestConstants.Pivots.Min, TestConstants.Pivots.Min);
-
-            yield return new WaitForSeconds(TestConstants.Timing.WaitForBannerDisplay);
+            var target = anchor.NativePosition;
+            _sharedBannerAd.Pivot = anchor.Pivot;
+            _sharedBannerAd.Position = target;
+            yield return TestWait.Until(() => Vector2.Distance(_sharedBannerAd.Position, target) <= TestConstants.Tolerance.Assertion, TestConstants.Timeouts.NativeProperty);
 
             var position = _sharedBannerAd.Position;
-            Assert.AreEqual(TestConstants.Pivots.Min, position.x, TestConstants.Tolerance.Assertion, TestConstants.AssertionMessages.PositionXMatches);
-            Assert.AreEqual(TestConstants.Pivots.Min, position.y, TestConstants.Tolerance.Assertion, TestConstants.AssertionMessages.PositionYMatches);
-        }
+            Assert.AreEqual(target.x, position.x, TestConstants.Tolerance.Assertion, TestConstants.AssertionMessages.PositionXMatches);
+            Assert.AreEqual(target.y, position.y, TestConstants.Tolerance.Assertion, TestConstants.AssertionMessages.PositionYMatches);
 
-        /// <summary>
-        /// Test that the banner can be repositioned to the top-right corner of the screen.
-        /// </summary>
-        [UnityTest, Order(20)]
-        public IEnumerator Position_WhenSetToTopRight_ShouldRelocateBanner()
-        {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 20, TotalTests);
-            Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdMustExist);
-
-            // Set pivot to top-right (1, 0) so banner's top-right corner aligns with position
-            _sharedBannerAd.Pivot = new Vector2(TestConstants.Pivots.Max, TestConstants.Pivots.Min);
-            // Position at top-right corner (screen.width, 0)
-            var topRightPosition = new Vector2(DensityConverters.PixelsToNative(Screen.width), TestConstants.Pivots.Min);
-            _sharedBannerAd.Position = topRightPosition;
-
-            yield return new WaitForSeconds(TestConstants.Timing.WaitForBannerDisplay);
-
-            var position = _sharedBannerAd.Position;
-            Assert.AreEqual(topRightPosition.x, position.x, TestConstants.Tolerance.Assertion, TestConstants.AssertionMessages.PositionXMatches);
-            Assert.AreEqual(topRightPosition.y, position.y, TestConstants.Tolerance.Assertion, TestConstants.AssertionMessages.PositionYMatches);
-        }
-
-        /// <summary>
-        /// Test that the banner can be repositioned to the bottom-left corner of the screen.
-        /// </summary>
-        [UnityTest, Order(21)]
-        public IEnumerator Position_WhenSetToBottomLeft_ShouldRelocateBanner()
-        {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 21, TotalTests);
-            Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdMustExist);
-
-            // Set pivot to bottom-left (0, 1) so banner's bottom-left corner aligns with position
-            _sharedBannerAd.Pivot = new Vector2(TestConstants.Pivots.Min, TestConstants.Pivots.Max);
-            // Position at bottom-left corner (0, screen.height)
-            var bottomLeftPosition = new Vector2(TestConstants.Pivots.Min, DensityConverters.PixelsToNative(Screen.height));
-            _sharedBannerAd.Position = bottomLeftPosition;
-
-            yield return new WaitForSeconds(TestConstants.Timing.WaitForBannerDisplay);
-
-            var position = _sharedBannerAd.Position;
-            Assert.AreEqual(bottomLeftPosition.x, position.x, TestConstants.Tolerance.Assertion, TestConstants.AssertionMessages.PositionXMatches);
-            Assert.AreEqual(bottomLeftPosition.y, position.y, TestConstants.Tolerance.Assertion, TestConstants.AssertionMessages.PositionYMatches);
-        }
-
-        /// <summary>
-        /// Test that the banner can be repositioned to the bottom-right corner of the screen.
-        /// </summary>
-        [UnityTest, Order(22)]
-        public IEnumerator Position_WhenSetToBottomRight_ShouldRelocateBanner()
-        {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 22, TotalTests);
-            Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdMustExist);
-
-            // Set pivot to bottom-right (1, 1) so banner's bottom-right corner aligns with position
-            _sharedBannerAd.Pivot = new Vector2(TestConstants.Pivots.Max, TestConstants.Pivots.Max);
-            // Position at bottom-right corner (screen.width, screen.height)
-            var bottomRightPosition = new Vector2(DensityConverters.PixelsToNative(Screen.width), DensityConverters.PixelsToNative(Screen.height));
-            _sharedBannerAd.Position = bottomRightPosition;
-
-            yield return new WaitForSeconds(TestConstants.Timing.WaitForBannerDisplay);
-
-            var position = _sharedBannerAd.Position;
-            Assert.AreEqual(bottomRightPosition.x, position.x, TestConstants.Tolerance.Assertion, TestConstants.AssertionMessages.PositionXMatches);
-            Assert.AreEqual(bottomRightPosition.y, position.y, TestConstants.Tolerance.Assertion, TestConstants.AssertionMessages.PositionYMatches);
-        }
-
-        /// <summary>
-        /// Test that the banner can be repositioned to the top-center of the screen.
-        /// </summary>
-        [UnityTest, Order(23)]
-        public IEnumerator Position_WhenSetToTopCenter_ShouldRelocateBanner()
-        {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 23, TotalTests);
-            Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdMustExist);
-
-            // Set pivot to top-center (0.5, 0) so banner's top-center aligns with position
-            var topCenterPivot = new Vector2(TestConstants.Pivots.Center, TestConstants.Pivots.Min);
-            _sharedBannerAd.Pivot = topCenterPivot;
-            // Position at top-center (screen.width/2, 0)
-            var topCenterPosition = new Vector2(DensityConverters.PixelsToNative(Screen.width / TestConstants.Dimensions.ScreenCenterDivisor), TestConstants.Pivots.Min);
-            _sharedBannerAd.Position = topCenterPosition;
-
-            yield return new WaitForSeconds(TestConstants.Timing.WaitForBannerDisplay);
-
-            var position = _sharedBannerAd.Position;
-            Assert.AreEqual(topCenterPosition.x, position.x, TestConstants.Tolerance.Assertion, TestConstants.AssertionMessages.PositionXMatches);
-            Assert.AreEqual(topCenterPosition.y, position.y, TestConstants.Tolerance.Assertion, TestConstants.AssertionMessages.PositionYMatches);
-        }
-
-        /// <summary>
-        /// Test that the banner can be repositioned to the bottom-center of the screen.
-        /// This matches BannerAdController's default positioning.
-        /// </summary>
-        [UnityTest, Order(24)]
-        public IEnumerator Position_WhenSetToBottomCenter_ShouldRelocateBanner()
-        {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 24, TotalTests);
-            Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdMustExist);
-
-            // Set pivot to bottom-center (0.5, 1) so banner's bottom-center aligns with position
-            _sharedBannerAd.Pivot = new Vector2(TestConstants.Pivots.Center, TestConstants.Pivots.Max);
-            // Position at bottom-center (screen.width/2, screen.height)
-            var bottomCenterPosition = new Vector2(DensityConverters.PixelsToNative(Screen.width / TestConstants.Dimensions.ScreenCenterDivisor), DensityConverters.PixelsToNative(Screen.height));
-            _sharedBannerAd.Position = bottomCenterPosition;
-
-            yield return new WaitForSeconds(TestConstants.Timing.WaitForBannerDisplay);
-
-            var position = _sharedBannerAd.Position;
-            Assert.AreEqual(bottomCenterPosition.x, position.x, TestConstants.Tolerance.Assertion, TestConstants.AssertionMessages.PositionXMatches);
-            Assert.AreEqual(bottomCenterPosition.y, position.y, TestConstants.Tolerance.Assertion, TestConstants.AssertionMessages.PositionYMatches);
-
-            // Reset to center position and pivot for subsequent tests
-            _sharedBannerAd.Pivot = new Vector2(TestConstants.Pivots.Center, TestConstants.Pivots.Center);
-            _sharedBannerAd.Position = new Vector2(DensityConverters.PixelsToNative(Screen.width / TestConstants.Dimensions.ScreenCenterDivisor), DensityConverters.PixelsToNative(Screen.height / TestConstants.Dimensions.ScreenCenterDivisor));
+            // Back to the screen center for the next case and the tests after this one.
+            _sharedBannerAd.Pivot = ScreenAnchor.Center.Pivot;
+            _sharedBannerAd.Position = ScreenAnchor.Center.NativePosition;
         }
 
         /// <summary>
         /// Test that the Visible property can toggle banner visibility.
         /// </summary>
-        [UnityTest, Order(25)]
+        [UnityTest, Order(19)]
         public IEnumerator Visible_WhenToggled_ShouldChangeVisibility()
         {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 25, TotalTests);
             Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdMustExist);
+            AdLoadResultAssert.RequireLoaded(_loaded);
 
             // Make banner invisible
             _sharedBannerAd.Visible = false;
-            yield return new WaitForSeconds(TestConstants.Timing.WaitForBannerDisplay);
+            yield return TestWait.Until(() => !_sharedBannerAd.Visible, TestConstants.Timeouts.NativeProperty);
             Assert.IsFalse(_sharedBannerAd.Visible);
 
             // Make banner visible again
             _sharedBannerAd.Visible = true;
-            yield return new WaitForSeconds(TestConstants.Timing.WaitForBannerDisplay);
+            yield return TestWait.Until(() => _sharedBannerAd.Visible, TestConstants.Timeouts.NativeProperty);
             Assert.IsTrue(_sharedBannerAd.Visible);
         }
 
         /// <summary>
         /// Test that the HorizontalAlignment property can be changed after loading.
         /// </summary>
-        [UnityTest, Order(26)]
+        [UnityTest, Order(20)]
         public IEnumerator HorizontalAlignment_WhenChangedAfterLoad_ShouldBeRetrievable()
         {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 26, TotalTests);
             Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdMustExist);
+            AdLoadResultAssert.RequireLoaded(_loaded);
 
             _sharedBannerAd.HorizontalAlignment = BannerHorizontalAlignment.Right;
-            yield return new WaitForSeconds(TestConstants.Timing.WaitForBannerDisplay);
+            yield return TestWait.Until(() => _sharedBannerAd.HorizontalAlignment == BannerHorizontalAlignment.Right, TestConstants.Timeouts.NativeProperty);
             Assert.AreEqual(BannerHorizontalAlignment.Right, _sharedBannerAd.HorizontalAlignment);
 
             _sharedBannerAd.HorizontalAlignment = BannerHorizontalAlignment.Center;
-            yield return new WaitForSeconds(TestConstants.Timing.WaitForBannerDisplay);
+            yield return TestWait.Until(() => _sharedBannerAd.HorizontalAlignment == BannerHorizontalAlignment.Center, TestConstants.Timeouts.NativeProperty);
             Assert.AreEqual(BannerHorizontalAlignment.Center, _sharedBannerAd.HorizontalAlignment);
         }
 
         /// <summary>
         /// Test that the VerticalAlignment property can be changed after loading.
         /// </summary>
-        [UnityTest, Order(27)]
+        [UnityTest, Order(21)]
         public IEnumerator VerticalAlignment_WhenChangedAfterLoad_ShouldBeRetrievable()
         {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 27, TotalTests);
             Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdMustExist);
+            AdLoadResultAssert.RequireLoaded(_loaded);
 
             _sharedBannerAd.VerticalAlignment = BannerVerticalAlignment.Bottom;
-            yield return new WaitForSeconds(TestConstants.Timing.WaitForBannerDisplay);
+            yield return TestWait.Until(() => _sharedBannerAd.VerticalAlignment == BannerVerticalAlignment.Bottom, TestConstants.Timeouts.NativeProperty);
             Assert.AreEqual(BannerVerticalAlignment.Bottom, _sharedBannerAd.VerticalAlignment);
 
             _sharedBannerAd.VerticalAlignment = BannerVerticalAlignment.Top;
-            yield return new WaitForSeconds(TestConstants.Timing.WaitForBannerDisplay);
+            yield return TestWait.Until(() => _sharedBannerAd.VerticalAlignment == BannerVerticalAlignment.Top, TestConstants.Timeouts.NativeProperty);
             Assert.AreEqual(BannerVerticalAlignment.Top, _sharedBannerAd.VerticalAlignment);
 
             // Reset to center alignment for subsequent tests
@@ -601,11 +461,11 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
         /// <summary>
         /// Test that the Reset method works and clears the loaded ad without throwing exceptions.
         /// </summary>
-        [Test, Order(28)]
+        [Test, Order(22)]
         public void Reset_WhenCalled_ShouldClearLoadedAdWithoutThrowing()
         {
-            TestProgressTracker.NotifyTestStart(nameof(BannerAdNativeTests), 28, TotalTests);
             Assert.IsNotNull(_sharedBannerAd, TestConstants.AssertionMessages.SharedBannerAdMustExist);
+            AdLoadResultAssert.RequireLoaded(_loaded);
 
             // Reset the banner ad to clear the loaded ad
             Assert.DoesNotThrow(() => _sharedBannerAd.Reset(), TestConstants.AssertionMessages.ResetShouldNotThrow);

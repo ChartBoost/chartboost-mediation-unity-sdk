@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using Chartboost.Caching;
+using Chartboost.Mediation.Ad;
 using Chartboost.Mediation.Utilities;
 using Chartboost.Mediation.Utilities.Events;
 using Chartboost.Tests.Runtime.Ad.Banner;
@@ -25,13 +27,13 @@ namespace Chartboost.Tests.Runtime.Utilities.Events
             _testBannerAd = new TestBannerAd((IntPtr)TestConstants.UniqueIds.Primary);
             _testAdQueue = new TestFullscreenAdQueue((IntPtr)TestConstants.UniqueIds.Primary);
 
-            AdCache.TrackAd(TestConstants.UniqueIds.Primary, _testFullscreenAd);
+            AdCache<IAd>.TrackAd(TestConstants.UniqueIds.Primary, _testFullscreenAd);
         }
 
         [TearDown]
         public void TearDown()
         {
-            AdCache.ReleaseAd(TestConstants.UniqueIds.Primary);
+            AdCache<IAd>.ReleaseAd(TestConstants.UniqueIds.Primary);
         }
 
         [UnityTest]
@@ -75,7 +77,7 @@ namespace Chartboost.Tests.Runtime.Utilities.Events
 
             // Ad should be released from the cache
             LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex(TestConstants.LogPatterns.FailedWeakReference));
-            var ad = AdCache.GetAd(TestConstants.UniqueIds.Primary);
+            var ad = AdCache<IAd>.GetAd(TestConstants.UniqueIds.Primary);
             Assert.IsNull(ad);
         }
 
@@ -90,7 +92,7 @@ namespace Chartboost.Tests.Runtime.Utilities.Events
 
             // Ad should be released from the cache
             LogAssert.Expect(LogType.Warning, new System.Text.RegularExpressions.Regex(TestConstants.LogPatterns.FailedWeakReference));
-            var ad = AdCache.GetAd(TestConstants.UniqueIds.Primary);
+            var ad = AdCache<IAd>.GetAd(TestConstants.UniqueIds.Primary);
             Assert.IsNull(ad);
         }
 
@@ -142,8 +144,8 @@ namespace Chartboost.Tests.Runtime.Utilities.Events
         [UnityTest]
         public IEnumerator ProcessBannerEventLoadCallsOnWillAppear()
         {
-            AdCache.ReleaseAd(TestConstants.UniqueIds.Primary);
-            AdCache.TrackAd(TestConstants.UniqueIds.Primary, _testBannerAd);
+            AdCache<IAd>.ReleaseAd(TestConstants.UniqueIds.Primary);
+            AdCache<IAd>.TrackAd(TestConstants.UniqueIds.Primary, _testBannerAd);
 
             AdEventHandler.ProcessBannerEvent(TestConstants.UniqueIds.Primary, BannerAdEvents.Load);
 
@@ -155,8 +157,8 @@ namespace Chartboost.Tests.Runtime.Utilities.Events
         [UnityTest]
         public IEnumerator ProcessBannerEventClickCallsOnClick()
         {
-            AdCache.ReleaseAd(TestConstants.UniqueIds.Primary);
-            AdCache.TrackAd(TestConstants.UniqueIds.Primary, _testBannerAd);
+            AdCache<IAd>.ReleaseAd(TestConstants.UniqueIds.Primary);
+            AdCache<IAd>.TrackAd(TestConstants.UniqueIds.Primary, _testBannerAd);
 
             AdEventHandler.ProcessBannerEvent(TestConstants.UniqueIds.Primary, BannerAdEvents.Click);
 
@@ -168,8 +170,8 @@ namespace Chartboost.Tests.Runtime.Utilities.Events
         [UnityTest]
         public IEnumerator ProcessBannerEventRecordImpressionCallsOnRecordImpression()
         {
-            AdCache.ReleaseAd(TestConstants.UniqueIds.Primary);
-            AdCache.TrackAd(TestConstants.UniqueIds.Primary, _testBannerAd);
+            AdCache<IAd>.ReleaseAd(TestConstants.UniqueIds.Primary);
+            AdCache<IAd>.TrackAd(TestConstants.UniqueIds.Primary, _testBannerAd);
 
             AdEventHandler.ProcessBannerEvent(TestConstants.UniqueIds.Primary, BannerAdEvents.RecordImpression);
 
@@ -178,65 +180,6 @@ namespace Chartboost.Tests.Runtime.Utilities.Events
             Assert.IsTrue(_testBannerAd.RecordImpressionCalled);
         }
 
-        [UnityTest]
-        public IEnumerator ProcessBannerEventBeginDragCallsOnDragBeginWithPosition()
-        {
-            AdCache.ReleaseAd(TestConstants.UniqueIds.Primary);
-            AdCache.TrackAd(TestConstants.UniqueIds.Primary, _testBannerAd);
-
-            AdEventHandler.ProcessBannerEvent(TestConstants.UniqueIds.Primary, BannerAdEvents.BeginDrag, TestConstants.Dimensions.XPositionPrecise, TestConstants.Dimensions.YPositionPrecise);
-
-            yield return null;
-
-            Assert.IsTrue(_testBannerAd.DragBeginCalled);
-            Assert.AreEqual(TestConstants.Dimensions.XPositionPrecise, _testBannerAd.DragBeginX);
-            Assert.AreEqual(TestConstants.Dimensions.YPositionPrecise, _testBannerAd.DragBeginY);
-        }
-
-        [UnityTest]
-        public IEnumerator ProcessBannerEventDragCallsOnDragWithPosition()
-        {
-            AdCache.ReleaseAd(TestConstants.UniqueIds.Primary);
-            AdCache.TrackAd(TestConstants.UniqueIds.Primary, _testBannerAd);
-
-            AdEventHandler.ProcessBannerEvent(TestConstants.UniqueIds.Primary, BannerAdEvents.Drag, TestConstants.Dimensions.XPositionPrecise, TestConstants.Dimensions.YPositionPrecise);
-
-            yield return null;
-
-            Assert.IsTrue(_testBannerAd.DragCalled);
-            Assert.AreEqual(TestConstants.Dimensions.XPositionPrecise, _testBannerAd.DragX);
-            Assert.AreEqual(TestConstants.Dimensions.YPositionPrecise, _testBannerAd.DragY);
-        }
-
-        [UnityTest]
-        public IEnumerator ProcessBannerEventEndDragCallsOnDragEndWithPosition()
-        {
-            AdCache.ReleaseAd(TestConstants.UniqueIds.Primary);
-            AdCache.TrackAd(TestConstants.UniqueIds.Primary, _testBannerAd);
-
-            AdEventHandler.ProcessBannerEvent(TestConstants.UniqueIds.Primary, BannerAdEvents.EndDrag, TestConstants.Dimensions.XPositionPrecise, TestConstants.Dimensions.YPositionPrecise);
-
-            yield return null;
-
-            Assert.IsTrue(_testBannerAd.DragEndCalled);
-            Assert.AreEqual(TestConstants.Dimensions.XPositionPrecise, _testBannerAd.DragEndX);
-            Assert.AreEqual(TestConstants.Dimensions.YPositionPrecise, _testBannerAd.DragEndY);
-        }
-
-        [UnityTest]
-        public IEnumerator ProcessBannerEventWithDefaultPositionUsesZero()
-        {
-            AdCache.ReleaseAd(TestConstants.UniqueIds.Primary);
-            AdCache.TrackAd(TestConstants.UniqueIds.Primary, _testBannerAd);
-
-            AdEventHandler.ProcessBannerEvent(TestConstants.UniqueIds.Primary, BannerAdEvents.BeginDrag);
-
-            yield return null;
-
-            Assert.IsTrue(_testBannerAd.DragBeginCalled);
-            Assert.AreEqual(TestConstants.Dimensions.Zero, _testBannerAd.DragBeginX);
-            Assert.AreEqual(TestConstants.Dimensions.Zero, _testBannerAd.DragBeginY);
-        }
 
         [UnityTest]
         public IEnumerator ProcessBannerEventWithNonExistentAdLogsError()
@@ -251,8 +194,8 @@ namespace Chartboost.Tests.Runtime.Utilities.Events
         [UnityTest]
         public IEnumerator ProcessFullscreenAdQueueEventUpdateCallsOnDidUpdate()
         {
-            AdCache.ReleaseAd(TestConstants.UniqueIds.Primary);
-            AdCache.TrackAd(TestConstants.UniqueIds.Primary, _testAdQueue);
+            AdCache<IAd>.ReleaseAd(TestConstants.UniqueIds.Primary);
+            AdCache<IAd>.TrackAd(TestConstants.UniqueIds.Primary, _testAdQueue);
 
             var testLoadResult = new TestAdLoadResult();
             AdEventHandler.ProcessFullscreenAdQueueEvent(TestConstants.UniqueIds.Primary, FullscreenAdQueueEvents.Update, testLoadResult, TestConstants.Queue.Capacity);
@@ -267,8 +210,8 @@ namespace Chartboost.Tests.Runtime.Utilities.Events
         [UnityTest]
         public IEnumerator ProcessFullscreenAdQueueEventRemoveExpiredAdCallsOnDidRemoveExpiredAd()
         {
-            AdCache.ReleaseAd(TestConstants.UniqueIds.Primary);
-            AdCache.TrackAd(TestConstants.UniqueIds.Primary, _testAdQueue);
+            AdCache<IAd>.ReleaseAd(TestConstants.UniqueIds.Primary);
+            AdCache<IAd>.TrackAd(TestConstants.UniqueIds.Primary, _testAdQueue);
 
             AdEventHandler.ProcessFullscreenAdQueueEvent(TestConstants.UniqueIds.Primary, FullscreenAdQueueEvents.RemoveExpiredAd, null, TestConstants.Queue.Capacity);
 

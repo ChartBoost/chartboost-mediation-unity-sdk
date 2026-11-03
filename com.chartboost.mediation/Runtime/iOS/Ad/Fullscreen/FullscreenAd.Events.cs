@@ -1,6 +1,5 @@
 using System;
 using AOT;
-using Chartboost.Mediation.Error;
 using Chartboost.Mediation.Requests;
 using Chartboost.Mediation.Utilities;
 using Chartboost.Mediation.Utilities.Events;
@@ -15,16 +14,15 @@ namespace Chartboost.Mediation.iOS.Ad.Fullscreen
             MainThreadDispatcher.Post(o =>
             {
                 FullscreenAdLoadResult adLoadResult;
-                if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(message))
+                if (NativeResults.ToError(code, message) is { } error)
                 {
-                    var error = new ChartboostMediationError(code, message);
                     adLoadResult = new FullscreenAdLoadResult(error);
-                    AdCache.ReleaseAdLoadRequest(hashCode);
+                    AdLoadRequestCache.ReleaseAdLoadRequest(hashCode);
                     AwaitableProxies.ResolveCallbackProxy(hashCode, adLoadResult);
                     return;
                 }
 
-                var iosAd = new FullscreenAd(adHashCode, (FullscreenAdLoadRequest)AdCache.GetAdLoadRequest(hashCode));
+                var iosAd = new FullscreenAd(adHashCode, (FullscreenAdLoadRequest)AdLoadRequestCache.TakeAdLoadRequest(hashCode));
                 adLoadResult = new FullscreenAdLoadResult(iosAd, loadId, metricsJson.ToMetrics(), bidInfoJson.ToBidInfo());
                 AwaitableProxies.ResolveCallbackProxy(hashCode, adLoadResult);
             });
@@ -36,9 +34,8 @@ namespace Chartboost.Mediation.iOS.Ad.Fullscreen
             MainThreadDispatcher.Post(o =>
             {
                 AdShowResult adShowResult;
-                if (!string.IsNullOrEmpty(code) && !string.IsNullOrEmpty(message))
+                if (NativeResults.ToError(code, message) is { } error)
                 {
-                    var error = new ChartboostMediationError(code, message);
                     adShowResult = new AdShowResult(error);
                     AwaitableProxies.ResolveCallbackProxy(hashCode, adShowResult);
                     return;

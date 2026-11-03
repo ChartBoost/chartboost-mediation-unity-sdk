@@ -25,11 +25,6 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
         public bool DisposingValue { get; private set; }
 
         /// <summary>
-        /// Exposes the protected IsDisposed property for testing.
-        /// </summary>
-        public bool IsDisposedPublic => IsDisposed;
-
-        /// <summary>
         /// Tracks whether WillAppear event was triggered.
         /// </summary>
         public bool WillAppearCalled { get; private set; }
@@ -141,6 +136,15 @@ namespace Chartboost.Tests.Runtime.Ad.Banner
         public override BannerHorizontalAlignment HorizontalAlignment { get; set; }
 
         public override BannerVerticalAlignment VerticalAlignment { get; set; }
+
+        // Tracks whether Reset() reached this banner.
+        public bool ResetCalled { get; private set; }
+
+        public override void Reset()
+        {
+            ResetCalled = true;
+            base.Reset();
+        }
 
         protected override void Dispose(bool disposing)
         {

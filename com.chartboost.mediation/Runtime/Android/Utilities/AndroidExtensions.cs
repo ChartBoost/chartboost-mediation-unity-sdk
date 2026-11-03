@@ -6,6 +6,7 @@ using Chartboost.Mediation.Ad.Banner;
 using Chartboost.Mediation.Ad.Banner.Enums;
 using Chartboost.Mediation.Data;
 using Chartboost.Mediation.Error;
+using Chartboost.Mediation.Utilities;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -50,10 +51,17 @@ namespace Chartboost.Mediation.Android.Utilities
             var lineItemName = map.Call<string>(SharedAndroidConstants.FunctionGet, AndroidConstants.PropertyLineItemName);
             var price = map.Call<string>(SharedAndroidConstants.FunctionGet, AndroidConstants.PropertyPrice);
 
-            if (!double.TryParse(price, out var priceAsDouble))
-                LogController.Log("Failed to parse bid info price, defaulting to 0.", LogLevel.Error);
+            return new BidInfo(auctionId, partnerId, ParseBidPrice(price), lineItemName, lineItemId);
+        }
 
-            return new BidInfo(auctionId, partnerId, priceAsDouble, lineItemName, lineItemId);
+        // A failed load has no winning bid and so no price; only an unreadable price is worth an error.
+        internal static double ParseBidPrice(string price)
+        {
+            if (string.IsNullOrEmpty(price))
+                return 0;
+            if (!NativeResults.TryParsePrice(price, out var value))
+                LogController.Log($"Failed to parse bid info price '{price}', defaulting to 0.", LogLevel.Error);
+            return value;
         }
 
         public static AndroidJavaObject ToInitializationOptions(this IEnumerable<string> options)
@@ -119,44 +127,43 @@ namespace Chartboost.Mediation.Android.Utilities
             return keywords;
         }
 
-
-        public static AndroidJavaObject ToKeyValuePair(this IReadOnlyDictionary<string, string> source)
-        {
-            var map = new AndroidJavaObject("java.util.HashMap");
-            foreach (var kvp in source)
-                map.Call<AndroidJavaObject>("put", kvp.Key, kvp.Value);
-
-            return map;
-        }
-
         public static BannerSize? ToBannerSize(this AndroidJavaObject source)
         {
             if (source == null)
                 return null;
 
-            var name = source.Get<string>(AndroidConstants.PropertyName);
-            var width = source.Get<int>(AndroidConstants.PropertyWidth);
-            var height = source.Get<int>(AndroidConstants.PropertyHeight);
+            return ToBannerSize(source.Get<string>(AndroidConstants.PropertyName),
+                source.Get<int>(AndroidConstants.PropertyWidth), source.Get<int>(AndroidConstants.PropertyHeight));
+        }
 
+        /// <summary>
+        /// Maps a native banner size; a name this SDK doesn't know (a newer native) reports Unknown rather than throwing.
+        /// </summary>
+        internal static BannerSize? ToBannerSize(string name, int width, int height)
+        {
             if (width == 0 && height == 0)
                 return null;
-            
-            var size = name switch
+
+            return name switch
             {
                 AndroidConstants.BannerSizeStandard => BannerSize.Standard,
                 AndroidConstants.BannerSizeMedium => BannerSize.MediumRect,
                 AndroidConstants.BannerSizeLeaderboard => BannerSize.Leaderboard,
                 AndroidConstants.BannerSizeAdaptive => BannerSize.Adaptive(width, height),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => UnknownSize(name, width, height)
             };
+        }
 
-            // if we get adaptive size of size 0X0 then it is undefined/unknown
-            if (size is { SizeType: BannerSizeType.Adaptive, Width: 0, Height: 0 })
-                size.SizeType = BannerSizeType.Unknown;
-
+        private static BannerSize UnknownSize(string name, int width, int height)
+        {
+            LogController.Log($"Unknown native banner size '{name}' ({width}x{height}); reporting it as Unknown.", LogLevel.Warning);
+            // Adaptive fills in the aspect ratio and banner type; then mark it Unknown.
+            var size = BannerSize.Adaptive(width, height);
+            size.SizeType = BannerSizeType.Unknown;
             return size;
         }
 
+        [Obsolete("Unused since the shared banner container; will be removed in 6.0.0.")]
         public static ContainerSize ToContainerSize(this AndroidJavaObject source)
         {
             if (source == null)

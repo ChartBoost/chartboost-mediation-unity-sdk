@@ -17,8 +17,9 @@ namespace Chartboost.Mediation
         public const string ChartboostMediationEditorAssembly = "Chartboost.Mediation.Editor";
         public const string ChartboostMediationAndroidAssembly = "Chartboost.Mediation.Android";
         public const string ChartboostMediationIOSAssembly = "Chartboost.Mediation.iOS";
-        public const string ChartboostMediationEditorTestsAssembly = "Chartboost.Mediation.Test.Editor";
+        public const string ChartboostMediationEditorTestsAssembly = "Chartboost.Mediation.Tests.Editor";
         public const string ChartboostMediationRuntimeTestsAssembly = "Chartboost.Mediation.Tests.Runtime";
+        public const string ChartboostMediationAndroidRuntimeTestsAssembly = "Chartboost.Mediation.Tests.Runtime.Android";
         public const string CanaryAutomationBannerHostAssembly = "Chartboost.Canary.AutomationBannerHost";
         }
 }

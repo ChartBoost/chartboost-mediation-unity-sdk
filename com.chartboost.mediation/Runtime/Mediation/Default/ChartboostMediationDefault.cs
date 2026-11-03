@@ -1,5 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using Chartboost.Caching;
+using Chartboost.Mediation.Ad;
 using Chartboost.Mediation.Ad.Banner;
 using Chartboost.Mediation.Ad.Fullscreen.Queue;
 using Chartboost.Mediation.Data;
@@ -46,7 +48,7 @@ namespace Chartboost.Mediation.Default
         public override IFullscreenAdQueue GetFullscreenAdQueue(string placementName)
         {
             var uniqueId = new IntPtr(placementName?.GetHashCode() ?? 0);
-            var queue = AdCache.GetAd(uniqueId.ToInt64()) as FullscreenAdQueueDefault;
+            var queue = AdCache<IAd>.GetAd(uniqueId.ToInt64()) as FullscreenAdQueueDefault;
             if (queue != null)
                 return queue;
 

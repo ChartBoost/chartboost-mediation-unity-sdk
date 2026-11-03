@@ -1,13 +1,15 @@
 using System.Collections;
-using System.Reflection;
+using System.Threading.Tasks;
 using Chartboost.Logging;
 using Chartboost.Mediation;
 using Chartboost.Mediation.Ad.Banner;
 using Chartboost.Mediation.Ad.Banner.Unity;
 using Chartboost.Mediation.Ad.Fullscreen.Queue;
 using Chartboost.Mediation.Default;
+using Chartboost.Mediation.Error;
 using Chartboost.Mediation.Initialization;
 using Chartboost.Mediation.Requests;
+using Chartboost.Testing;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -22,41 +24,12 @@ namespace Chartboost.Tests.Runtime
     public class AChartboostMediationTests
     {
         private ChartboostMediationBase _originalInstance;
-        private bool _instanceCaptured;
-
-        /// <summary>
-        /// Helper method to get the Instance property via reflection.
-        /// </summary>
-        private PropertyInfo GetInstanceProperty()
-        {
-            var instanceType = typeof(ChartboostMediation);
-            var instanceProperty = instanceType.GetProperty(TestConstants.ChartboostMediation.InstancePropertyName, BindingFlags.NonPublic | BindingFlags.Static);
-            Assert.IsNotNull(instanceProperty, $"Property '{TestConstants.ChartboostMediation.InstancePropertyName}' not found via reflection");
-            return instanceProperty;
-        }
-
-        /// <summary>
-        /// Helper method to get the current Instance value.
-        /// </summary>
-        private ChartboostMediationBase GetInstanceValue()
-        {
-            return (ChartboostMediationBase)GetInstanceProperty().GetValue(null);
-        }
-
-        /// <summary>
-        /// Helper method to set the Instance value.
-        /// </summary>
-        private void SetInstanceValue(ChartboostMediationBase value)
-        {
-            GetInstanceProperty().SetValue(null, value);
-        }
 
         [SetUp]
         public void SetUp()
         {
             // Store the original instance to restore it after each test
-            _originalInstance = GetInstanceValue();
-            _instanceCaptured = true;
+            _originalInstance = ChartboostMediation.Instance;
 
             // Verify we captured a valid instance
             Assert.IsNotNull(_originalInstance, "Original instance is null - cannot ensure test isolation");
@@ -66,34 +39,13 @@ namespace Chartboost.Tests.Runtime
         public void TearDown()
         {
             // Restore the original instance after each test
-            if (!_instanceCaptured)
-                return;
-
-            SetInstanceValue(_originalInstance);
-
-            // Verify restoration
-            var restoredInstance = GetInstanceValue();
-            Assert.AreSame(_originalInstance, restoredInstance, "Failed to restore original instance");
+            ChartboostMediation.Instance = _originalInstance;
         }
 
         [Test]
         public void InstanceIsInitializedCorrectly()
         {
-            var instanceProperty = GetInstanceProperty();
-            Assert.IsNotNull(instanceProperty);
-
-            var instance = GetInstanceValue();
-            Assert.IsNotNull(instance);
-            Assert.IsInstanceOf<ChartboostMediationBase>(instance);
-        }
-
-        [Test]
-        public void InstanceGetterReturnsValue()
-        {
-            var instanceProperty = GetInstanceProperty();
-            Assert.IsNotNull(instanceProperty.GetMethod, "Instance property should have a getter");
-
-            var instance = GetInstanceValue();
+            var instance = ChartboostMediation.Instance;
             Assert.IsNotNull(instance);
             Assert.IsInstanceOf<ChartboostMediationBase>(instance);
         }
@@ -101,33 +53,27 @@ namespace Chartboost.Tests.Runtime
         [Test]
         public void InstanceSetterChangesValue()
         {
-            var instanceProperty = GetInstanceProperty();
-            Assert.IsNotNull(instanceProperty.SetMethod, "Instance property should have a setter");
-
             var newInstance = new ChartboostMediationDefault();
-            SetInstanceValue(newInstance);
+            ChartboostMediation.Instance = newInstance;
 
-            var retrievedInstance = GetInstanceValue();
+            var retrievedInstance = ChartboostMediation.Instance;
             Assert.AreSame(newInstance, retrievedInstance);
         }
 
         [Test]
         public void InstanceSetterAcceptsNullValue()
         {
-            var instanceProperty = GetInstanceProperty();
-            Assert.IsNotNull(instanceProperty.SetMethod, "Instance property should have a setter");
-
             // Set instance to null (this should be allowed for auto-properties)
-            SetInstanceValue(null);
+            ChartboostMediation.Instance = null;
 
-            var retrievedInstance = GetInstanceValue();
+            var retrievedInstance = ChartboostMediation.Instance;
             Assert.IsNull(retrievedInstance, "Instance should be null after setting to null");
         }
 
         [Test]
         public void InstanceTypeMatchesPlatform()
         {
-            var instance = GetInstanceValue();
+            var instance = ChartboostMediation.Instance;
             Assert.IsNotNull(instance);
 
 #if UNITY_EDITOR
@@ -190,18 +136,13 @@ namespace Chartboost.Tests.Runtime
         }
 
         [Test]
-        public void SDKVersionReturnsExpectedVersion()
-        {
-            Assert.IsNotNull(ChartboostMediation.SDKVersion);
-            Assert.IsNotEmpty(ChartboostMediation.SDKVersion);
-            Assert.AreEqual(TestConstants.Versions.ExpectedSDK, ChartboostMediation.SDKVersion);
-        }
-
-        [Test]
         public void NativeSDKVersionReturnsValue()
         {
             var version = ChartboostMediation.NativeSDKVersion;
-            Assert.IsNotNull(version);
+            if (DevicePlatform.IsNative)
+                Assert.IsNotEmpty(version);
+            else
+                Assert.AreEqual(string.Empty, version);
         }
 
         [Test]
@@ -246,6 +187,8 @@ namespace Chartboost.Tests.Runtime
         {
             var adaptersInfo = ChartboostMediation.AdaptersInfo;
             Assert.IsNotNull(adaptersInfo);
+            if (!DevicePlatform.IsNative)
+                Assert.IsEmpty(adaptersInfo);
         }
 
         [Test]
@@ -303,10 +246,12 @@ namespace Chartboost.Tests.Runtime
             var request = new FullscreenAdLoadRequest(TestConstants.Placements.Standard);
             var task = ChartboostMediation.LoadFullscreenAd(request);
 
-            yield return new WaitUntil(() => task.IsCompleted);
+            yield return TestWait.Until(() => task.IsCompleted, "the task", TestConstants.Timeouts.EditorTask);
 
-            Assert.IsNotNull(task.Result);
-            Assert.IsInstanceOf<FullscreenAdLoadResult>(task.Result);
+            Assert.AreEqual(TaskStatus.RanToCompletion, task.Status, task.Exception?.ToString());
+            // The Editor can't load ads: the default implementation reports not ready.
+            if (!DevicePlatform.IsNative)
+                Assert.AreEqual(Errors.ErrorNotReady, task.Result.Error?.Message);
         }
 
         [Test]

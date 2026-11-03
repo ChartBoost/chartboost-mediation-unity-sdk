@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Chartboost.Caching;
 using Chartboost.Constants;
 using Chartboost.Logging;
+using Chartboost.Mediation.Ad;
 using Chartboost.Mediation.Ad.Fullscreen;
 using Chartboost.Mediation.Ad.Fullscreen.Queue;
 using Chartboost.Mediation.Utilities;
@@ -115,7 +117,7 @@ namespace Chartboost.Mediation.iOS.Ad.Fullscreen.Queue
                 return;
 
             // Release from cache
-            AdCache.ReleaseAd(UniqueId);
+            AdCache<IAd>.ReleaseAd(UniqueId);
             _isDisposed = true;
         }
 

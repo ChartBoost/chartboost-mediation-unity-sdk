@@ -99,14 +99,21 @@
         return;
 
     CBMBannerAdWrapper *wrapper = [[CBMAdStore sharedStore] getBannerAd:(__bridge void*)ad];
+    // A nil wrapper means the C# side will drop this event on its cache miss — log it so the drop is diagnosable.
+    if (wrapper == nil) {
+        [[CBLUnityLoggingBridge sharedLogger] logWithTag:@"CBMUnityObserver"
+                                                     log:[NSString stringWithFormat:@"Banner event %ld has no tracked wrapper for view %p", (long)bannerAdEvent, ad]
+                                                logLevel:CBLLogLevelWarning];
+    }
     _didReceiveBannerAdEvent((long)wrapper, bannerAdEvent);
-    [wrapper updateFrame];
+    [wrapper updateLayout];
 }
 
 - (void)willAppearWithBannerView:(CBMBannerAdView *)bannerView {
     // Enable user interaction now that ad content is loaded.
     // It was disabled during init to prevent the empty view from intercepting touches.
     bannerView.userInteractionEnabled = YES;
+    [[[CBMAdStore sharedStore] getBannerAd:(__bridge void*)bannerView] creativeWillAppear];
     [self serializeBannerEvent:bannerView bannerEvent:CBMBannerAdEventAppear];
 }
 

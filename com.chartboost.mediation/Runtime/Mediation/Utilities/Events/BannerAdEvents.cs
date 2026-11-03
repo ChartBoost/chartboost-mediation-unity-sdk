@@ -9,9 +9,6 @@ namespace Chartboost.Mediation.Utilities.Events
     {
         Load = 0,
         Click = 1,
-        RecordImpression = 2,
-        BeginDrag = 3,
-        Drag = 4,
-        EndDrag = 5
+        RecordImpression = 2
     }
 }

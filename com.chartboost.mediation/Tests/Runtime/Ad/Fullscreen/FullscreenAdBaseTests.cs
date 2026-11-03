@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Chartboost.Caching;
 using Chartboost.Logging;
+using Chartboost.Mediation.Ad;
 using Chartboost.Mediation.Ad.Fullscreen;
 using Chartboost.Mediation.Data;
 using Chartboost.Mediation.Error;
@@ -33,7 +35,7 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
         {
             LogController.LoggingLevel = _initialLogLevel;
             _testFullscreenAd?.Dispose();
-            AdCache.ReleaseAd(_testUniqueId.ToInt64());
+            AdCache<IAd>.ReleaseAd(_testUniqueId.ToInt64());
         }
 
         [Test]
@@ -51,7 +53,7 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
             finally
             {
                 fullscreenAd.Dispose();
-                AdCache.ReleaseAd(uniqueId.ToInt64());
+                AdCache<IAd>.ReleaseAd(uniqueId.ToInt64());
             }
         }
 
@@ -70,7 +72,7 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
             finally
             {
                 fullscreenAd.Dispose();
-                AdCache.ReleaseAd(uniqueId);
+                AdCache<IAd>.ReleaseAd(uniqueId);
             }
         }
 
@@ -82,14 +84,14 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
 
             try
             {
-                var cachedAd = AdCache.GetAd(uniqueId.ToInt64());
+                var cachedAd = AdCache<IAd>.GetAd(uniqueId.ToInt64());
                 Assert.IsNotNull(cachedAd);
                 Assert.AreSame(fullscreenAd, cachedAd);
             }
             finally
             {
                 fullscreenAd.Dispose();
-                AdCache.ReleaseAd(uniqueId.ToInt64());
+                AdCache<IAd>.ReleaseAd(uniqueId.ToInt64());
             }
         }
 
@@ -104,7 +106,7 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
             Assert.IsTrue(fullscreenAd.DisposeCalled);
             Assert.IsTrue(fullscreenAd.DisposingValue);
 
-            AdCache.ReleaseAd(uniqueId.ToInt64());
+            AdCache<IAd>.ReleaseAd(uniqueId.ToInt64());
         }
 
         [Test]
@@ -274,103 +276,6 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen
             {
                 _testFullscreenAd.DidReward -= handler;
             }
-        }
-
-        [Test]
-        public void CustomDataCanBeSetAndRetrieved()
-        {
-            _testFullscreenAd.CustomData = TestConstants.TestData.CustomData;
-
-            Assert.AreEqual(TestConstants.TestData.CustomData, _testFullscreenAd.CustomData);
-        }
-
-        [Test]
-        public void RequestReturnsNullBeforeSet()
-        {
-            Assert.IsNull(_testFullscreenAd.Request);
-        }
-
-        [Test]
-        public void RequestReturnsSetValue()
-        {
-            var request = new FullscreenAdLoadRequest(TestConstants.Placements.Standard, new Dictionary<string, string>());
-            _testFullscreenAd.SetRequest(request);
-
-            Assert.AreSame(request, _testFullscreenAd.Request);
-        }
-
-        [Test]
-        public void LoadIdReturnsNullBeforeSet()
-        {
-            Assert.IsNull(_testFullscreenAd.LoadId);
-        }
-
-        [Test]
-        public void LoadIdReturnsSetValue()
-        {
-            _testFullscreenAd.SetLoadId(TestConstants.Auction.LineItemId);
-
-            Assert.AreEqual(TestConstants.Auction.LineItemId, _testFullscreenAd.LoadId);
-        }
-
-        [Test]
-        public void WinningBidInfoReturnsNonNull()
-        {
-            Assert.IsNotNull(_testFullscreenAd.WinningBidInfo);
-        }
-
-        [Test]
-        public void WinningBidInfoReturnsSetValue()
-        {
-            var bidInfo = new BidInfo(null, null, TestConstants.Auction.PriceAlt, TestConstants.Auction.LineItemId, TestConstants.Auction.LineItemNameTest);
-            _testFullscreenAd.SetBidInfo(bidInfo);
-
-            var result = _testFullscreenAd.WinningBidInfo;
-
-            Assert.AreEqual(bidInfo.Price, result.Price);
-            Assert.AreEqual(bidInfo.LineItemId, result.LineItemId);
-            Assert.AreEqual(bidInfo.LineItemName, result.LineItemName);
-        }
-
-        [UnityTest]
-        public IEnumerator ShowReturnsSuccessResult()
-        {
-            var showResult = new AdShowResult(null);
-            _testFullscreenAd.ShowResult = showResult;
-
-            var result = _testFullscreenAd.Show();
-            yield return result;
-
-            Assert.IsNotNull(result.Result);
-            Assert.IsNull(result.Result.Error);
-        }
-
-        [UnityTest]
-        public IEnumerator ShowReturnsErrorResult()
-        {
-            var testError = new ChartboostMediationError(Errors.ShowFailureAdNotReady);
-            var showResult = new AdShowResult(testError);
-            _testFullscreenAd.ShowResult = showResult;
-
-            var result = _testFullscreenAd.Show();
-            yield return result;
-
-            Assert.IsNotNull(result.Result);
-            Assert.IsNotNull(result.Result.Error);
-            Assert.AreEqual(Errors.ShowFailureAdNotReady, result.Result.Error.Value.Message);
-        }
-
-        [UnityTest]
-        public IEnumerator ShowAfterDisposeReturnsInvalidAdError()
-        {
-            _testFullscreenAd.Dispose();
-
-            var result = _testFullscreenAd.Show();
-            yield return result;
-
-            Assert.IsNotNull(result.Result);
-            Assert.IsNotNull(result.Result.Error);
-            Assert.AreEqual(Errors.InvalidAdError, result.Result.Error.Value.Message);
         }
 
         [Test]

@@ -3,6 +3,7 @@
     "rootNamespace": "Chartboost.Mediation.Android",
     "references": [
         "Chartboost.Mediation",
+        "Chartboost.Utilities",
         "Chartboost.Utilities.Android",
         "Chartboost.Threading",
         "Chartboost.Logging",

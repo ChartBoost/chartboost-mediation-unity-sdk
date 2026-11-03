@@ -62,6 +62,9 @@ namespace Chartboost.Mediation.Ad.Banner
         /// <returns>A new ContainerSize instance.</returns>
         public static ContainerSize FixedSize(int width, int height) => new(width, height);
 
+        // Rounded, not truncated: native sizes round-trip through pixels and UI units as floats.
+        internal static ContainerSize FixedSize(UnityEngine.Vector2 size) => new(UnityEngine.Mathf.RoundToInt(size.x), UnityEngine.Mathf.RoundToInt(size.y));
+
         /// <summary>
         /// Determines whether the specified <see cref="ContainerSize"/> is equal to the current instance.
         /// </summary>

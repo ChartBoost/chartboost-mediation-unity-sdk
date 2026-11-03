@@ -2,6 +2,7 @@ using System.Collections;
 using Chartboost.Core;
 using Chartboost.Core.Initialization;
 using Chartboost.Mediation;
+using Chartboost.Testing;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -14,10 +15,12 @@ namespace Chartboost.Tests.Runtime
     /// </summary>
     public static class TestInitializer
     {
+        // Duplicated rather than shared with the demo's DefaultEnvironment.cs (same values): a test
+        // assembly in com.chartboost.mediation must not take a dependency on the demo package.
 #if UNITY_ANDROID
-        private const string TestAppId = "5ce82fbffde3570afb4647bc";
+        private const string TestAppId = "6a57fc2c6d9d07ab4117a9b9";
 #elif UNITY_IOS
-        private const string TestAppId = "59c2b75ed7d75f0da04c452f";
+        private const string TestAppId = "6a57fc8c6ec91335d726aebd";
 #else
         private const string TestAppId = "test_app_id";
 #endif
@@ -29,7 +32,7 @@ namespace Chartboost.Tests.Runtime
         /// <summary>
         /// Returns true if we should initialize the SDK (on Android/iOS devices, not in Editor).
         /// </summary>
-        private static bool ShouldInitializeSDK => (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer) && !Application.isEditor;
+        private static bool ShouldInitializeSDK => DevicePlatform.IsNative;
 
         /// <summary>
         /// Initializes the Chartboost Mediation SDK if on a native platform and not already initialized.
@@ -116,16 +119,9 @@ namespace Chartboost.Tests.Runtime
                 yield break;
             }
 
-            var maxWaitTime = 15f; // 15 seconds max wait
-            var startTime = Time.realtimeSinceStartup;
-
+            const float maxWaitTime = 15f;
             Debug.Log("[TestInitializer] Waiting for Chartboost Mediation initialization...");
-
-            // Wait until Mediation is initialized or timeout
-            while (!_isMediationInitialized && Time.realtimeSinceStartup - startTime < maxWaitTime)
-            {
-                yield return new WaitForSeconds(0.5f);
-            }
+            yield return TestWait.Until(() => _isMediationInitialized, maxWaitTime);
 
             if (_isMediationInitialized)
             {

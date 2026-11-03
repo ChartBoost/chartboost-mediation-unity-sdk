@@ -12,11 +12,7 @@
     </androidPackages>
     <iosPods>
         <!-- Chartboost Mediation iOS SDK -->
-        <iosPod name="ChartboostMediationSDK" version="~> 5.4.0">
-            <sources>
-                <source>https://github.com/CocoaPods/Specs</source>
-            </sources>
-        </iosPod>
+        <iosPod name="ChartboostMediationSDK" version="~> 5.4.0" />
     </iosPods>
 </dependencies>
 

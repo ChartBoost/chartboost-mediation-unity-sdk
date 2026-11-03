@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Chartboost.Logging;
 using Chartboost.Mediation.Ad.Banner.Enums;
 using Chartboost.Mediation.Data;
+using Chartboost.Mediation.Error;
 using Chartboost.Mediation.Requests;
 using Chartboost.Mediation.Utilities;
 using Newtonsoft.Json;
@@ -59,7 +60,26 @@ namespace Chartboost.Mediation.Ad.Banner.UIToolkit
         // Native banner backing this UIToolkit variant, for automation slot hosting (HB-11391).
         internal IBannerAd NativeBannerAd => _bannerAd;
 
+        // Wires events only; skips the lazy getter's initial state and doesn't unsubscribe a prior banner.
+        internal void AttachNativeBannerAd(IBannerAd bannerAd)
+        {
+            _bannerAd = bannerAd;
+            Subscribe(bannerAd);
+        }
+
+        private void Subscribe(IBannerAd bannerAd)
+        {
+            bannerAd.WillAppear += OnWillAppear;
+            bannerAd.DidClick += OnClick;
+            bannerAd.DidRecordImpression += OnRecordImpression;
+            bannerAd.DidBeginDrag += OnDragBegin;
+            bannerAd.DidDrag += OnDrag;
+            bannerAd.DidEndDrag += OnDragEnd;
+        }
+
         private readonly VisualElement _ad;
+        // Cached on WillAppear so the per-frame sync doesn't query the native size.
+        private BannerSize? _creativeSize;
 
         private bool _draggable;
         private bool _isDragging;
@@ -184,16 +204,25 @@ namespace Chartboost.Mediation.Ad.Banner.UIToolkit
         /// <returns></returns>
         public async Task<BannerAdLoadResult> Load()
         {
-            var size = Banner.BannerSize.Adaptive(DensityConverters.UIDocToNative(worldBound.width), DensityConverters.UIDocToNative(worldBound.height));
+            // Same check as UnityBannerAd.Load().
+            if (string.IsNullOrEmpty(PlacementName))
+                return new BannerAdLoadResult(new ChartboostMediationError(Errors.ErrorNotReady));
+
+            // Before layout worldBound is NaN, which crashes the Android native banner.
+            var bounds = worldBound;
+            if (float.IsNaN(bounds.width) || float.IsNaN(bounds.height))
+                return new BannerAdLoadResult(new ChartboostMediationError(Errors.BannerNotLaidOut));
+
+            var size = Banner.BannerSize.Adaptive(DensityConverters.UIDocToNative(bounds.width, panel), DensityConverters.UIDocToNative(bounds.height, panel));
             var loadRequest = new BannerAdLoadRequest(PlacementName, size);
-            return await _bannerAd.Load(loadRequest);
+            return await BannerAd.Load(loadRequest);
         }
         
         /// <inheritdoc cref="IBannerAd.Load"/>
         public async Task<BannerAdLoadResult> Load(BannerAdLoadRequest loadRequest)
         {
             PlacementName = loadRequest.PlacementName;
-            return await _bannerAd.Load(loadRequest);
+            return await BannerAd.Load(loadRequest);
         }
 
         /// <inheritdoc cref="IBannerAd.Reset"/>
@@ -209,6 +238,7 @@ namespace Chartboost.Mediation.Ad.Banner.UIToolkit
             // creating a new native banner during disposal.
             _bannerAd?.Dispose();
             _bannerAd = null;
+            _creativeSize = null;
         }
 
         /// <summary>
@@ -307,12 +337,7 @@ namespace Chartboost.Mediation.Ad.Banner.UIToolkit
                 if (Application.isPlaying)
                 {
                     _bannerAd = ChartboostMediation.GetBannerAd();
-                    _bannerAd.WillAppear += OnWillAppear;
-                    _bannerAd.DidClick += OnClick;
-                    _bannerAd.DidRecordImpression += OnRecordImpression;
-                    _bannerAd.DidBeginDrag += OnDragBegin;
-                    _bannerAd.DidDrag += OnDrag;
-                    _bannerAd.DidEndDrag += OnDragEnd;
+                    Subscribe(_bannerAd);
 
                     // Initialize
                     _bannerAd.Visible = style.display.value == DisplayStyle.Flex;
@@ -333,11 +358,9 @@ namespace Chartboost.Mediation.Ad.Banner.UIToolkit
                 if (ContainerPositionOverride.HasValue)
                     return ContainerPositionOverride.Value;
 
-                // worldBound gives the VisualElement's top-left position in panel coordinates
-                // Convert from panel coordinates to native coordinates using UIDocToNative
-                // This accounts for panel scaling via UIDocScaleFactor
-                var x = DensityConverters.UIDocToNative(worldBound.x);
-                var y = DensityConverters.UIDocToNative(worldBound.y);
+                // worldBound is in this element's panel units; convert with that panel's scale.
+                var x = DensityConverters.UIDocToNative(worldBound.x, panel);
+                var y = DensityConverters.UIDocToNative(worldBound.y, panel);
                 return new Vector2(x, y);
             }
         }
@@ -347,27 +370,27 @@ namespace Chartboost.Mediation.Ad.Banner.UIToolkit
             get
             {
                 if (ContainerSizeOverride.HasValue)
-                    return ContainerSize.FixedSize((int)ContainerSizeOverride.Value.x, (int)ContainerSizeOverride.Value.y);
+                    return ContainerSize.FixedSize(ContainerSizeOverride.Value);
 
                 // worldBound width/height are in panel coordinates
                 // Convert to native dimensions
-                var width = DensityConverters.UIDocToNative(worldBound.width);
-                var height = DensityConverters.UIDocToNative(worldBound.height);
+                var width = DensityConverters.UIDocToNative(worldBound.width, panel);
+                var height = DensityConverters.UIDocToNative(worldBound.height, panel);
 
-                return ContainerSize.FixedSize((int)width, (int)height);
+                return ContainerSize.FixedSize(new Vector2(width, height));
             }
         }
 
         // True when a host (automation slot) is driving container bounds; the slot owns layout.
         private bool IsHosted => ContainerPositionOverride.HasValue || ContainerSizeOverride.HasValue;
 
-        private Vector2 AdRelativePosition
+        internal Vector2 AdRelativePosition
         {
             get
             {
                 // _ad.layout gives position relative to parent (the BannerVisualElement) in panel coordinates
-                var x = DensityConverters.UIDocToNative(_ad.layout.x);
-                var y = DensityConverters.UIDocToNative(_ad.layout.y);
+                var x = DensityConverters.UIDocToNative(_ad.layout.x, panel);
+                var y = DensityConverters.UIDocToNative(_ad.layout.y, panel);
                 return new Vector2(x, y);
             }
         }
@@ -376,13 +399,22 @@ namespace Chartboost.Mediation.Ad.Banner.UIToolkit
 
         private void OnWillAppear(IBannerAd bannerAd)
         {
-            var width = bannerAd.BannerSize?.Width ?? 0;
-            var height = bannerAd.BannerSize?.Height ?? 0;
-
-            _ad.style.width = width;
-            _ad.style.height = height;
-
+            _creativeSize = bannerAd.BannerSize;
+            SyncAdSize();
             WillAppear?.Invoke(this);
+        }
+
+        // The creative's size is native units; its placeholder is laid out in panel units, which change on rotation.
+        private void SyncAdSize()
+        {
+            if (_creativeSize == null)
+                return;
+            var width = DensityConverters.NativeToUIDoc(_creativeSize.Value.Width, panel);
+            var height = DensityConverters.NativeToUIDoc(_creativeSize.Value.Height, panel);
+            if (!Mathf.Approximately(_ad.style.width.value.value, width))
+                _ad.style.width = width;
+            if (!Mathf.Approximately(_ad.style.height.value.value, height))
+                _ad.style.height = height;
         }
 
         private void OnRecordImpression(IBannerAd bannerView) => DidRecordImpression?.Invoke(this);
@@ -404,7 +436,7 @@ namespace Chartboost.Mediation.Ad.Banner.UIToolkit
             }
 
             style.position = Position.Absolute;
-            var localPosition = parent.WorldToLocal(new Vector2(DensityConverters.PixelsToUIDoc(x), DensityConverters.PixelsToUIDoc(y)));
+            var localPosition = parent.WorldToLocal(new Vector2(DensityConverters.PixelsToUIDoc(x, panel), DensityConverters.PixelsToUIDoc(y, panel)));
 
             style.left = localPosition.x;
             style.top = localPosition.y;
@@ -418,7 +450,7 @@ namespace Chartboost.Mediation.Ad.Banner.UIToolkit
             DidEndDrag?.Invoke(this, x, y);
         }
 
-        private void SyncWithNativeContainer()
+        internal void SyncWithNativeContainer()
         {
             // Use _bannerAd directly (not the BannerAd property) to avoid the lazy getter
             // creating a new native banner after Dispose() has nulled the field.
@@ -433,6 +465,8 @@ namespace Chartboost.Mediation.Ad.Banner.UIToolkit
 
             if (ContainerVisible != _bannerAd.Visible)
                 _bannerAd.Visible = ContainerVisible;
+
+            SyncAdSize();
 
             // AdRelativePosition pins the creative absolutely within the container. When hosted in
             // the native slot, let the native Center alignment position it (mirrors med, which never

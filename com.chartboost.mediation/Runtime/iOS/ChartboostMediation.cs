@@ -1,8 +1,10 @@
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Chartboost.Caching;
 using Chartboost.Constants;
 using Chartboost.Logging;
+using Chartboost.Mediation.Ad;
 using Chartboost.Mediation.Ad.Banner;
 using Chartboost.Mediation.Ad.Fullscreen.Queue;
 using Chartboost.Mediation.Data;
@@ -107,7 +109,7 @@ namespace Chartboost.Mediation.iOS
             }
 
             var (proxy, hashCode) = AwaitableProxies.SetupProxy<FullscreenAdLoadResult>();
-            AdCache.TrackAdLoadRequest(hashCode, request);
+            AdLoadRequestCache.TrackAdLoadRequest(hashCode, request);
             var keywordsJson = string.Empty;
             if (request.Keywords.Count > 0)
                 keywordsJson = JsonConvert.SerializeObject(request.Keywords);
@@ -122,7 +124,7 @@ namespace Chartboost.Mediation.iOS
             // Queues are a "singleton per placement", meaning that if a publisher attempts to
             // create multiple queues with the same placement ID the same object will be returned each time.
             var nativeQueue =  FullscreenAdQueue._CBMFullscreenAdQueueGetQueue(placementName);
-            var queue = (FullscreenAdQueue)AdCache.GetAd(nativeQueue.ToInt64());
+            var queue = (FullscreenAdQueue)AdCache<IAd>.GetAd(nativeQueue.ToInt64());
             if (queue != null)
                 return queue;
             

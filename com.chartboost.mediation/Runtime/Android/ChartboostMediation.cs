@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Chartboost.Caching;
 using Chartboost.Constants;
 using Chartboost.Logging;
+using Chartboost.Mediation.Ad;
 using Chartboost.Mediation.Ad.Banner;
 using Chartboost.Mediation.Ad.Fullscreen.Queue;
 using Chartboost.Mediation.Android.Ad.Banner;
@@ -181,8 +183,11 @@ namespace Chartboost.Mediation.Android
             var adLoadListenerAwaitableProxy = new FullscreenAd.FullscreenAdLoadListener();
             try
             {
-                AdCache.TrackAdLoadRequest(adLoadListenerAwaitableProxy.hashCode(), request);
-                using var nativeAdRequest = new AndroidJavaObject(AndroidConstants.ClassFullscreenAdLoadRequest, request.PlacementName, request.Keywords.ToKeywords(), new Dictionary<string, string>().ToKeyValuePair());
+                AdLoadRequestCache.TrackAdLoadRequest(adLoadListenerAwaitableProxy.hashCode(), request);
+                IReadOnlyDictionary<string, string> partnerSettings = new Dictionary<string, string>();
+                using var keywords = request.Keywords.ToKeywords();
+                using var partnerSettingsMap = partnerSettings.DictionaryToMap();
+                using var nativeAdRequest = new AndroidJavaObject(AndroidConstants.ClassFullscreenAdLoadRequest, request.PlacementName, keywords, partnerSettingsMap);
                 using var bridge = AndroidConstants.GetUnityBridge();
                 bridge.CallStatic(AndroidConstants.FunctionLoadFullscreenAd, nativeAdRequest, adLoadListenerAwaitableProxy, FullscreenAd.FullscreenAdListenerInstance);
             }
@@ -200,7 +205,7 @@ namespace Chartboost.Mediation.Android
             // create multiple queues with the same placement ID the same object will be returned each time.
             using var unityBridge = AndroidConstants.GetUnityBridge();
             var nativeQueue = unityBridge.CallStatic<AndroidJavaObject>(AndroidConstants.FunctionGetFullscreenAdQueue, placementName, FullscreenAdQueue.FullscreenAdQueueListenerInstance);
-            var queue = (FullscreenAdQueue)AdCache.GetAd(nativeQueue.NativeHashCode());
+            var queue = (FullscreenAdQueue)AdCache<IAd>.GetAd(nativeQueue.NativeHashCode());
             
             if (queue != null)
                 return queue;

@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Chartboost.Caching;
 using Chartboost.Constants;
 using Chartboost.Logging;
+using Chartboost.Mediation.Ad;
 using Chartboost.Mediation.Ad.Fullscreen;
 using Chartboost.Mediation.Ad.Fullscreen.Queue;
 using Chartboost.Mediation.Android.Utilities;
@@ -114,7 +116,7 @@ namespace Chartboost.Mediation.Android.Ad.Fullscreen.Queue
             }
 
             // Release from cache
-            Chartboost.Mediation.Utilities.AdCache.ReleaseAd(UniqueId);
+            AdCache<IAd>.ReleaseAd(UniqueId);
             _isDisposed = true;
         }
 

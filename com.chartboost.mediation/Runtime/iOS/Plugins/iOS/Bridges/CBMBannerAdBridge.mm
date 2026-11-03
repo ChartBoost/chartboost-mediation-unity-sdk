@@ -1,6 +1,7 @@
 #import "CBMAdStore.h"
 #import "CBMUnityObserver.h"
 #import "CBMBannerAdWrapper.h"
+#import "CBUBannerContainer.h"         // shared banner host from com.chartboost.unity.utilities
 #import "CBMUnityUtilities.h"
 #import "UnityAppController.h"
 
@@ -58,21 +59,12 @@ extern "C" {
     /**
      * Creates a new banner ad wrapper instance.
      *
-     * @param dragListener Function pointer to handle drag events
      * @return Bridge pointer to CBMBannerAdWrapper instance, or NULL on failure
      */
-    const void* _CBMGetBannerAd(CBMExternBannerAdDragEvent dragListener) {
+    const void* _CBMGetBannerAd(void) {
         [[CBLUnityLoggingBridge sharedLogger] logWithTag:CBMBannerAdBridgeTAG
                                                       log:@"_CBMGetBannerAd: Creating new banner ad wrapper"
                                                  logLevel:CBLLogLevelVerbose];
-
-        // Validate drag listener
-        if (!dragListener) {
-            [[CBLUnityLoggingBridge sharedLogger] logWithTag:CBMBannerAdBridgeTAG
-                                                          log:@"_CBMGetBannerAd: dragListener is nil"
-                                                     logLevel:CBLLogLevelError];
-            return NULL;
-        }
 
         // Create BannerView
         CBMBannerAdView* bannerView = [[CBMBannerAdView alloc] init];
@@ -87,7 +79,7 @@ extern "C" {
         [bannerView setDelegate:[CBMUnityObserver sharedObserver]];
 
         // Create wrapper
-        CBMBannerAdWrapper* wrapper = [[CBMBannerAdWrapper alloc] initWithBannerView:bannerView dragListener:dragListener];
+        CBMBannerAdWrapper* wrapper = [[CBMBannerAdWrapper alloc] initWithBannerView:bannerView];
         if (!wrapper) {
             [[CBLUnityLoggingBridge sharedLogger] logWithTag:CBMBannerAdBridgeTAG
                                                           log:@"_CBMGetBannerAd: Failed to create CBMBannerAdWrapper"
@@ -104,6 +96,20 @@ extern "C" {
                                                  logLevel:CBLLogLevelVerbose];
 
         return (__bridge void*)wrapper;
+    }
+
+    /**
+     * Wraps the banner view in a shared CBUBannerContainer, which the C# side drives.
+     *
+     * @return The container with a +1 retain the C# side releases on dispose, or NULL
+     */
+    void* _CBMBannerAdCreateContainer(const void* uniqueId) {
+        CBMBannerAdWrapper* wrapper = (__bridge CBMBannerAdWrapper*)uniqueId;
+        if (!wrapper.bannerView) {
+            return NULL;
+        }
+        CBUBannerContainer* container = [[CBUBannerContainer alloc] initWithContent:wrapper.bannerView fillsContent:YES];
+        return (__bridge_retained void*)container;
     }
 
 #pragma mark - Keywords and Partner Settings
@@ -193,118 +199,6 @@ extern "C" {
         }
     }
     
-#pragma mark - Container Positioning
-
-    /**
-     * Sets the position of the banner container in screen coordinates.
-     *
-     * @param uniqueId Bridge pointer to CBMBannerAdWrapper instance
-     * @param x X coordinate in screen space
-     * @param y Y coordinate in screen space
-     */
-    void _CBMBannerAdSetPosition(const void * uniqueId, float x, float y)
-    {
-        if (!uniqueId) {
-            [[CBLUnityLoggingBridge sharedLogger] logWithTag:CBMBannerAdBridgeTAG
-                                                          log:@"_CBMBannerAdSetPosition: uniqueId is nil"
-                                                     logLevel:CBLLogLevelError];
-            return;
-        }
-
-        CBMBannerAdWrapper *bannerAdWrapper = (__bridge CBMBannerAdWrapper*)uniqueId;
-        CGPoint pos = CGPointMake(x, y);
-        [bannerAdWrapper setPosition:pos];
-    }
-
-    /**
-     * Hosts the banner in the given view. Pass a null hostView to restore the
-     * default Unity root view. Generic embedding hook — the host is an opaque
-     * UIView pointer, so this carries no dependency on any particular caller.
-     *
-     * @param uniqueId Bridge pointer to CBMBannerAdWrapper instance
-     * @param hostView Bridge pointer to the host UIView, or NULL for the Unity root
-     */
-    void _CBMBannerAdSetHostView(const void * uniqueId, const void * hostView)
-    {
-        if (!uniqueId) {
-            [[CBLUnityLoggingBridge sharedLogger] logWithTag:CBMBannerAdBridgeTAG
-                                                          log:@"_CBMBannerAdSetHostView: uniqueId is nil"
-                                                     logLevel:CBLLogLevelError];
-            return;
-        }
-
-        CBMBannerAdWrapper *bannerAdWrapper = (__bridge CBMBannerAdWrapper*)uniqueId;
-        UIView *host = (__bridge UIView*)hostView;
-        [bannerAdWrapper setHostView:host];
-    }
-
-    /**
-     * Gets the position of the banner container in screen coordinates.
-     *
-     * @param uniqueId Bridge pointer to CBMBannerAdWrapper instance
-     * @return JSON string with x and y coordinates, or NULL on error
-     */
-    const char * _CBMBannerAdGetPosition(const void * uniqueId)
-    {
-        if (!uniqueId) {
-            [[CBLUnityLoggingBridge sharedLogger] logWithTag:CBMBannerAdBridgeTAG
-                                                          log:@"_CBMBannerAdGetPosition: uniqueId is nil"
-                                                     logLevel:CBLLogLevelError];
-            return NULL;
-        }
-
-        CBMBannerAdWrapper *bannerAdWrapper = (__bridge CBMBannerAdWrapper*)uniqueId;
-        CGPoint position = [bannerAdWrapper position];
-        const NSString * xKey = @"x";
-        const NSString * yKey = @"y";
-        NSString * xValue =  [NSString stringWithFormat:@"%f", position.x];
-        NSString * yValue = [NSString stringWithFormat:@"%f", position.y];
-        return toJSON([NSDictionary dictionaryWithObjectsAndKeys:xValue, xKey, yValue, yKey, nil]);
-    }
-
-    /**
-     * Sets the pivot point for banner positioning calculations.
-     *
-     * @param uniqueId Bridge pointer to CBMBannerAdWrapper instance
-     * @param x Pivot X coordinate (0-1 range, 0=left, 0.5=center, 1=right)
-     * @param y Pivot Y coordinate (0-1 range, 0=top, 0.5=center, 1=bottom)
-     */
-    void _CBMBannerAdSetPivot(const void * uniqueId, float x, float y)
-    {
-        if (!uniqueId) {
-            [[CBLUnityLoggingBridge sharedLogger] logWithTag:CBMBannerAdBridgeTAG
-                                                          log:@"_CBMBannerAdSetPivot: uniqueId is nil"
-                                                     logLevel:CBLLogLevelError];
-            return;
-        }
-
-        CBMBannerAdWrapper *bannerAdWrapper = (__bridge CBMBannerAdWrapper*)uniqueId;
-        bannerAdWrapper.pivot = CGPointMake(x, y);
-    }
-
-    /**
-     * Gets the pivot point for banner positioning calculations.
-     *
-     * @param uniqueId Bridge pointer to CBMBannerAdWrapper instance
-     * @return JSON string with x and y pivot coordinates (0-1 range), or NULL on error
-     */
-    const char * _CBMBannerAdGetPivot(const void * uniqueId)
-    {
-        if (!uniqueId) {
-            [[CBLUnityLoggingBridge sharedLogger] logWithTag:CBMBannerAdBridgeTAG
-                                                          log:@"_CBMBannerAdGetPivot: uniqueId is nil"
-                                                     logLevel:CBLLogLevelError];
-            return NULL;
-        }
-
-        CBMBannerAdWrapper *bannerAdWrapper = (__bridge CBMBannerAdWrapper*)uniqueId;
-        const NSString * xKey = @"x";
-        const NSString * yKey = @"y";
-        NSString * xValue =  [NSString stringWithFormat:@"%f", bannerAdWrapper.pivot.x];
-        NSString * yValue = [NSString stringWithFormat:@"%f", bannerAdWrapper.pivot.y];
-        return toJSON([NSDictionary dictionaryWithObjectsAndKeys:xValue, xKey, yValue, yKey, nil]);
-    }
-
 #pragma mark - Banner Properties
 
     /**
@@ -406,32 +300,6 @@ extern "C" {
     }
 
     /**
-     * Gets the size of the banner container.
-     *
-     * @param uniqueId Bridge pointer to CBMBannerAdWrapper instance
-     * @return JSON string with container width and height, or NULL on error
-     */
-    const char * _CBMBannerAdGetContainerSize(const void* uniqueId){
-        if (!uniqueId) {
-            [[CBLUnityLoggingBridge sharedLogger] logWithTag:CBMBannerAdBridgeTAG
-                                                          log:@"_CBMBannerAdGetContainerSize: uniqueId is nil"
-                                                     logLevel:CBLLogLevelError];
-            return NULL;
-        }
-
-        CBMBannerAdWrapper *bannerAdWrapper = (__bridge CBMBannerAdWrapper*)uniqueId;
-        CGSize containerSize = [bannerAdWrapper containerSize];
-
-        const NSString * widthKey = @"width";
-        const NSString * heightKey = @"height";
-
-        NSString * widthValue = [NSString stringWithFormat:@"%d", (int)containerSize.width];
-        NSString * heightValue = [NSString stringWithFormat:@"%d", (int)containerSize.height];
-
-        return toJSON([NSDictionary dictionaryWithObjectsAndKeys:widthValue,widthKey,heightValue,heightKey,nil]);
-    }
-
-    /**
      * Sets the size of the banner container.
      *
      * @param uniqueId Bridge pointer to CBMBannerAdWrapper instance
@@ -522,78 +390,6 @@ extern "C" {
 
         CBMBannerAdWrapper *bannerAdWrapper = (__bridge CBMBannerAdWrapper*)uniqueId;
         [bannerAdWrapper setVerticalAlignment:(CBMBannerVerticalAlignment)verticalAlignment];
-    }
-
-    /**
-     * Gets whether the banner is draggable.
-     *
-     * @param uniqueId Bridge pointer to CBMBannerAdWrapper instance
-     * @return YES if draggable, NO otherwise
-     */
-    BOOL _CBMBannerAdGetDraggability(const void* uniqueId) {
-        if (!uniqueId) {
-            [[CBLUnityLoggingBridge sharedLogger] logWithTag:CBMBannerAdBridgeTAG
-                                                          log:@"_CBMBannerAdGetDraggability: uniqueId is nil"
-                                                     logLevel:CBLLogLevelError];
-            return NO;
-        }
-
-        CBMBannerAdWrapper *bannerAdWrapper = (__bridge CBMBannerAdWrapper*)uniqueId;
-        return [bannerAdWrapper draggable];
-    }
-
-    /**
-     * Sets whether the banner is draggable.
-     *
-     * @param uniqueId Bridge pointer to CBMBannerAdWrapper instance
-     * @param canDrag YES to enable dragging, NO to disable
-     */
-    void _CBMBannerAdSetDraggability(const void* uniqueId, BOOL canDrag){
-        if (!uniqueId) {
-            [[CBLUnityLoggingBridge sharedLogger] logWithTag:CBMBannerAdBridgeTAG
-                                                          log:@"_CBMBannerAdSetDraggability: uniqueId is nil"
-                                                     logLevel:CBLLogLevelError];
-            return;
-        }
-
-        CBMBannerAdWrapper *bannerAdWrapper = (__bridge CBMBannerAdWrapper*)uniqueId;
-        [bannerAdWrapper setDraggable:canDrag];
-    }
-
-    /**
-     * Gets whether the banner is visible.
-     *
-     * @param uniqueId Bridge pointer to CBMBannerAdWrapper instance
-     * @return YES if visible, NO otherwise
-     */
-    BOOL _CBMBannerAdGetVisibility(const void* uniqueId){
-        if (!uniqueId) {
-            [[CBLUnityLoggingBridge sharedLogger] logWithTag:CBMBannerAdBridgeTAG
-                                                          log:@"_CBMBannerAdGetVisibility: uniqueId is nil"
-                                                     logLevel:CBLLogLevelError];
-            return NO;
-        }
-
-        CBMBannerAdWrapper *bannerAdWrapper = (__bridge CBMBannerAdWrapper*)uniqueId;
-        return [bannerAdWrapper visible];
-    }
-
-    /**
-     * Sets whether the banner is visible.
-     *
-     * @param uniqueId Bridge pointer to CBMBannerAdWrapper instance
-     * @param visible YES to show banner, NO to hide
-     */
-    void _CBMBannerAdSetVisibility(const void* uniqueId, BOOL visible){
-        if (!uniqueId) {
-            [[CBLUnityLoggingBridge sharedLogger] logWithTag:CBMBannerAdBridgeTAG
-                                                          log:@"_CBMBannerAdSetVisibility: uniqueId is nil"
-                                                     logLevel:CBLLogLevelError];
-            return;
-        }
-
-        CBMBannerAdWrapper *bannerAdWrapper = (__bridge CBMBannerAdWrapper*)uniqueId;
-        [bannerAdWrapper setVisible:visible];
     }
 
 #pragma mark - Ad Loading
@@ -745,8 +541,10 @@ extern "C" {
                                                  logLevel:CBLLogLevelVerbose];
 
         CBMBannerAdWrapper *bannerAdWrapper = (__bridge CBMBannerAdWrapper*)uniqueId;
+        // The store is keyed by the banner view, which destroy clears (inline on main), so read the key first.
+        void *storeKey = (__bridge void*)[bannerAdWrapper bannerView];
         [bannerAdWrapper destroy];
-        [[CBMAdStore sharedStore] releaseBannerAd:(__bridge void*)[bannerAdWrapper bannerView]];
+        [[CBMAdStore sharedStore] releaseBannerAd:storeKey];
     }
     
 #pragma mark - Partner Ad Positioning

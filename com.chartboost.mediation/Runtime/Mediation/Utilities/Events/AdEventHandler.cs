@@ -1,9 +1,9 @@
+using Chartboost.Caching;
 using Chartboost.Logging;
 using Chartboost.Mediation.Ad;
 using Chartboost.Mediation.Ad.Banner;
 using Chartboost.Mediation.Ad.Fullscreen;
 using Chartboost.Mediation.Ad.Fullscreen.Queue;
-using Chartboost.Mediation.Error;
 using Chartboost.Mediation.Requests;
 
 namespace Chartboost.Mediation.Utilities.Events
@@ -24,7 +24,7 @@ namespace Chartboost.Mediation.Utilities.Events
         {
             MainThreadDispatcher.Post(o =>
             {
-                var ad = (FullscreenAdBase)AdCache.GetAd(uniqueId);
+                var ad = (FullscreenAdBase)AdCache<IAd>.GetAd(uniqueId);
 
                 // Ad event was fired but no reference for it exists. Developer did not set strong reference to it, so it was garbage collected.
                 if (ad == null)
@@ -33,9 +33,7 @@ namespace Chartboost.Mediation.Utilities.Events
                     return;
                 }
 
-                ChartboostMediationError? error = null;
-                if (!string.IsNullOrEmpty(code) || !string.IsNullOrEmpty(message))
-                    error = new ChartboostMediationError(code, message);
+                var error = NativeResults.ToError(code, message);
 
                 switch (eventType)
                 {
@@ -50,11 +48,11 @@ namespace Chartboost.Mediation.Utilities.Events
                         break;
                     case FullscreenAdEvents.Expire:
                         ad.OnExpire();
-                        AdCache.ReleaseAd(uniqueId);
+                        AdCache<IAd>.ReleaseAd(uniqueId);
                         break;
                     case FullscreenAdEvents.Close:
                         ad.OnClose(error);
-                        AdCache.ReleaseAd(uniqueId);
+                        AdCache<IAd>.ReleaseAd(uniqueId);
                         break;
                 }
             });
@@ -71,7 +69,7 @@ namespace Chartboost.Mediation.Utilities.Events
         {
             MainThreadDispatcher.Post(_ =>
             {
-                var queue = (FullscreenAdQueueBase)AdCache.GetAd(uniqueId);
+                var queue = (FullscreenAdQueueBase)AdCache<IAd>.GetAd(uniqueId);
 
                 // Queue event was fired but no reference for it exists. Developer did not set strong reference to it so it was gc.
                 if (queue == null)
@@ -97,13 +95,11 @@ namespace Chartboost.Mediation.Utilities.Events
         /// </summary>
         /// <param name="uniqueId">Unique identifier for <see cref="IBannerAd"/>.</param>
         /// <param name="eventType"><see cref="BannerAdEvents"/> event to be dispatched.</param>
-        /// <param name="x">X position of <see cref="BannerAdEvents.Drag"/> event.</param>
-        /// <param name="y">Y position of <see cref="BannerAdEvents.Drag"/> event.</param>
-        public static void ProcessBannerEvent(long uniqueId, BannerAdEvents eventType, float x = default, float y = default)
+        public static void ProcessBannerEvent(long uniqueId, BannerAdEvents eventType)
         {
             MainThreadDispatcher.Post(o =>
             {
-                var ad = (BannerAdBase)AdCache.GetAd(uniqueId);
+                var ad = (BannerAdBase)AdCache<IAd>.GetAd(uniqueId);
 
                 // Ad event was fired but no reference for it exists. Developer did not set strong reference to it so it was gc.
                 if (ad == null) 
@@ -122,15 +118,6 @@ namespace Chartboost.Mediation.Utilities.Events
                         break;
                     case BannerAdEvents.RecordImpression:
                         ad.OnRecordImpression();
-                        break;
-                    case BannerAdEvents.BeginDrag:
-                        ad.OnDragBegin(x, y);
-                        break;
-                    case BannerAdEvents.Drag:
-                        ad.OnDrag(x, y);
-                        break;
-                    case BannerAdEvents.EndDrag:
-                        ad.OnDragEnd(x, y);
                         break;
                 }
             });

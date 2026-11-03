@@ -5,7 +5,7 @@ import com.chartboost.chartboostmediationsdk.ad.ChartboostMediationFullscreenAd
 import com.chartboost.mediation.unity.banner.BannerAdWrapper
 import com.chartboost.mediation.unity.logging.LogLevel
 import com.chartboost.mediation.unity.logging.UnityLoggingBridge
-import java.util.concurrent.ConcurrentHashMap
+import com.chartboost.unity.utilities.utils.AdStore as AdRetainingStore
 
 /**
  * Centralized storage for managing ad instances across the Unity-Android bridge.
@@ -13,9 +13,13 @@ import java.util.concurrent.ConcurrentHashMap
  * This object maintains references to both fullscreen and banner ads to prevent premature
  * garbage collection and enable lifecycle management from the Unity C# layer.
  *
- * Thread Safety: All operations are thread-safe using ConcurrentHashMap.
+ * Thread Safety: All operations are thread-safe (backed by [AdRetainingStore]).
  * Memory Management: Callers must explicitly call release methods to prevent memory leaks.
  * Use [clearAll] during application shutdown to release all tracked ads.
+ *
+ * Storage is delegated to the shared, generic [AdRetainingStore] (com.chartboost.unity.utilities);
+ * this object adds Mediation's typed API, logging, and ad-type-specific release semantics
+ * (fullscreen `invalidate()` vs banner `destroy()`).
  *
  * @see ChartboostMediationFullscreenAd
  * @see BannerAdWrapper
@@ -27,21 +31,21 @@ object AdStore {
     private val TAG = AdStore::class.java.simpleName
 
     /**
+     * Maximum number of ads allowed in each store to prevent memory leaks.
+     */
+    private const val MAX_STORE_SIZE = 100
+
+    /**
      * Thread-safe storage for fullscreen ad instances keyed by their hash codes.
      * Stores references to prevent garbage collection while ads are in use.
      */
-    private val fullscreenAdStore: ConcurrentHashMap<Int, ChartboostMediationFullscreenAd> = ConcurrentHashMap()
+    private val fullscreenAdStore = AdRetainingStore<ChartboostMediationFullscreenAd>()
 
     /**
      * Thread-safe storage for banner ad wrapper instances keyed by their hash codes.
      * Stores references to prevent garbage collection while ads are in use.
      */
-    private val bannerAdStore: ConcurrentHashMap<Int, BannerAdWrapper> = ConcurrentHashMap()
-
-    /**
-     * Maximum number of ads allowed in each store to prevent memory leaks.
-     */
-    private const val MAX_STORE_SIZE = 100
+    private val bannerAdStore = AdRetainingStore<BannerAdWrapper>()
 
     /**
      * Tracks a fullscreen ad instance in the store.
@@ -63,7 +67,7 @@ object AdStore {
         }
 
         val hashCode = fullscreenAd.hashCode()
-        fullscreenAdStore[hashCode] = fullscreenAd
+        fullscreenAdStore.track(hashCode, fullscreenAd)
         UnityLoggingBridge.log(
             TAG,
             "Tracking FullscreenAd with Id: $hashCode (Total fullscreen ads: ${fullscreenAdStore.size})",
@@ -115,7 +119,7 @@ object AdStore {
      */
     @JvmStatic
     fun getFullscreenAd(hashCode: Int): ChartboostMediationFullscreenAd? {
-        return fullscreenAdStore[hashCode]
+        return fullscreenAdStore.get(hashCode)
     }
 
     /**
@@ -138,7 +142,7 @@ object AdStore {
         }
 
         val hashCode = bannerAd.hashCode()
-        bannerAdStore[hashCode] = bannerAd
+        bannerAdStore.track(hashCode, bannerAd)
         UnityLoggingBridge.log(
             TAG,
             "Tracking BannerAd with Id: $hashCode (Total banner ads: ${bannerAdStore.size})",
@@ -194,10 +198,10 @@ object AdStore {
             val fullscreenCount = fullscreenAdStore.size
             val bannerCount = bannerAdStore.size
 
-            for (ad in fullscreenAdStore.values) { ad.invalidate() }
+            for (ad in fullscreenAdStore.values()) { ad.invalidate() }
             fullscreenAdStore.clear()
 
-            for (ad in bannerAdStore.values) { ad.destroy() }
+            for (ad in bannerAdStore.values()) { ad.destroy() }
             bannerAdStore.clear()
 
             UnityLoggingBridge.log(

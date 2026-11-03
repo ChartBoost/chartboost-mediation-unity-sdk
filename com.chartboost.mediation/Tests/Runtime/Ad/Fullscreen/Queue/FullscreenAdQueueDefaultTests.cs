@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Chartboost.Caching;
 using Chartboost.Logging;
+using Chartboost.Mediation.Ad;
 using Chartboost.Mediation.Default.Ad.Fullscreen.Queue;
 using Chartboost.Mediation.Utilities;
 using NUnit.Framework;
@@ -29,7 +31,7 @@ namespace Chartboost.Tests.Runtime.Ad.Fullscreen.Queue
         public void TearDown()
         {
             LogController.LoggingLevel = _initialLogLevel;
-            AdCache.ReleaseAd(_testUniqueId.ToInt64());
+            AdCache<IAd>.ReleaseAd(_testUniqueId.ToInt64());
         }
 
         [Test]

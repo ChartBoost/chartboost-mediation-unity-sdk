@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Chartboost.Mediation.Ad.Banner;
 using Chartboost.Mediation.Ad.Banner.Enums;
@@ -19,8 +20,38 @@ namespace Chartboost.Tests.Runtime.Utilities
         private const string EmptyJson = "";
         private const string NullJson = null;
         private const string WhitespaceJson = "   ";
-        private const float TestX = 10.5f;
-        private const float TestY = 20.3f;
+        private const string StandardSizeJson = "\"size\":{\"sizeType\":0,\"width\":320,\"height\":50}";
+
+        private static IEnumerable<TestCaseData> NullOrEmptyJsonCases()
+        {
+            yield return Case(nameof(JsonExtensions.ToChartboostMediationError), json => json.ToChartboostMediationError(), EmptyJson, null);
+            yield return Case(nameof(JsonExtensions.ToChartboostMediationError), json => json.ToChartboostMediationError(), NullJson, null);
+            yield return Case(nameof(JsonExtensions.ToBidInfo), json => json.ToBidInfo(), EmptyJson, null);
+            yield return Case(nameof(JsonExtensions.ToMetrics), json => json.ToMetrics(), EmptyJson, null);
+            yield return Case(nameof(JsonExtensions.ToMetrics), json => json.ToMetrics(), NullJson, null);
+            yield return Case(nameof(JsonExtensions.ToFullscreenAdLoadRequest), json => json.ToFullscreenAdLoadRequest(), EmptyJson, null);
+            yield return Case(nameof(JsonExtensions.ToAdaptersInfo), json => json.ToAdaptersInfo(), EmptyJson, null);
+            yield return Case(nameof(JsonExtensions.ToBannerAdLoadRequest), json => json.ToBannerAdLoadRequest(), EmptyJson, null);
+            yield return Case(nameof(JsonExtensions.ToBannerAdLoadRequest), json => json.ToBannerAdLoadRequest(), NullJson, null);
+            yield return Case(nameof(JsonExtensions.ToDictionary), json => json.ToDictionary(), EmptyJson, null);
+            yield return Case(nameof(JsonExtensions.ToList), json => json.ToList(), EmptyJson, null);
+            yield return Case(nameof(JsonExtensions.ToBannerSize), json => json.ToBannerSize(), EmptyJson, null);
+            yield return Case(nameof(JsonExtensions.ToBannerSize), json => json.ToBannerSize(), NullJson, null);
+            yield return Case(nameof(JsonExtensions.ToVector2), json => json.ToVector2(), EmptyJson, Vector2.zero);
+            yield return Case(nameof(JsonExtensions.ToVector2), json => json.ToVector2(), NullJson, Vector2.zero);
+            yield return Case(nameof(JsonExtensions.ToVector2), json => json.ToVector2(), WhitespaceJson, Vector2.zero);
+
+            static TestCaseData Case(string method, Func<string, object> deserialize, string json, object expected)
+                => new TestCaseData(deserialize, json, expected).SetName($"{method}ReturnsDefaultFor{(json == null ? "Null" : json.Length == 0 ? "Empty" : "Whitespace")}Json");
+        }
+
+        [TestCaseSource(nameof(NullOrEmptyJsonCases))]
+        public void ReturnsDefaultAndWarnsForNullOrEmptyJson(Func<string, object> deserialize, string json, object expected)
+        {
+            LogAssert.Expect(LogType.Warning, new Regex(TestConstants.LogPatterns.CannotBeNullOrEmpty));
+
+            Assert.AreEqual(expected, deserialize(json));
+        }
 
         [Test]
         public void ToChartboostMediationErrorDeserializesValidJson()
@@ -35,37 +66,15 @@ namespace Chartboost.Tests.Runtime.Utilities
         }
 
         [Test]
-        public void ToChartboostMediationErrorReturnsNullForEmptyJson()
-        {
-            LogAssert.Expect(LogType.Warning, new Regex(TestConstants.LogPatterns.CannotBeNullOrEmpty));
-
-            var error = EmptyJson.ToChartboostMediationError();
-
-            Assert.IsNull(error);
-        }
-
-        [Test]
-        public void ToChartboostMediationErrorReturnsNullForNullJson()
-        {
-            LogAssert.Expect(LogType.Warning, new Regex(TestConstants.LogPatterns.CannotBeNullOrEmpty));
-
-            var error = NullJson.ToChartboostMediationError();
-
-            Assert.IsNull(error);
-        }
-
-        [Test]
         public void ToBidInfoDeserializesValidJson()
         {
             const string testAuctionId = "auction123";
             const string testPartnerId = "partner";
             const double testPrice = 1.5;
-            const string testLineItemId = "item";
-            const string testLineItemName = "name";
-            var json = $"{{\"auction_id\":\"{testAuctionId}\",\"partner_id\":\"{testPartnerId}\",\"price\":{testPrice},\"line_item_id\":\"{testLineItemId}\",\"line_item_name\":\"{testLineItemName}\"}}";
+            const string json = "{\"auction_id\":\"" + testAuctionId + "\",\"partner_id\":\"" + testPartnerId + "\",\"price\":1.5,\"line_item_id\":\"item\",\"line_item_name\":\"name\"}";
 
             var bidInfo = json.ToBidInfo();
-            
+
             if (!bidInfo.HasValue)
                 Assert.Fail("BidInfo was null");
 
@@ -75,45 +84,15 @@ namespace Chartboost.Tests.Runtime.Utilities
         }
 
         [Test]
-        public void ToBidInfoReturnsNullForEmptyJson()
-        {
-            LogAssert.Expect(LogType.Warning, new Regex(TestConstants.LogPatterns.CannotBeNullOrEmpty));
-
-            var bidInfo = EmptyJson.ToBidInfo();
-
-            Assert.AreEqual(null, bidInfo);
-        }
-
-        [Test]
         public void ToMetricsDeserializesValidJson()
         {
             const string testAuctionId = "auction_123";
-            var json = "{\"auction_id\":\"" + testAuctionId + "\",\"result\":\"success\",\"metrics\":[]}";
+            const string json = "{\"auction_id\":\"" + testAuctionId + "\",\"result\":\"success\",\"metrics\":[]}";
 
             var metrics = json.ToMetrics();
 
             Assert.IsNotNull(metrics);
             Assert.AreEqual(testAuctionId, metrics.Value.auctionId);
-        }
-
-        [Test]
-        public void ToMetricsReturnsNullForEmptyJson()
-        {
-            LogAssert.Expect(LogType.Warning, new Regex(TestConstants.LogPatterns.CannotBeNullOrEmpty));
-
-            var metrics = EmptyJson.ToMetrics();
-
-            Assert.IsNull(metrics);
-        }
-
-        [Test]
-        public void ToMetricsReturnsNullForNullJson()
-        {
-            LogAssert.Expect(LogType.Warning, new Regex(TestConstants.LogPatterns.CannotBeNullOrEmpty));
-
-            var metrics = NullJson.ToMetrics();
-
-            Assert.IsNull(metrics);
         }
 
         [Test]
@@ -125,16 +104,6 @@ namespace Chartboost.Tests.Runtime.Utilities
 
             Assert.IsNotNull(request);
             Assert.AreEqual(TestConstants.Placements.Standard, request.PlacementName);
-        }
-
-        [Test]
-        public void ToFullscreenAdLoadRequestReturnsNullForEmptyJson()
-        {
-            LogAssert.Expect(LogType.Warning, new Regex(TestConstants.LogPatterns.CannotBeNullOrEmpty));
-
-            var request = EmptyJson.ToFullscreenAdLoadRequest();
-
-            Assert.IsNull(request);
         }
 
         [Test]
@@ -150,19 +119,9 @@ namespace Chartboost.Tests.Runtime.Utilities
         }
 
         [Test]
-        public void ToAdaptersInfoReturnsNullForEmptyJson()
-        {
-            LogAssert.Expect(LogType.Warning, new Regex(TestConstants.LogPatterns.CannotBeNullOrEmpty));
-
-            var adaptersInfo = EmptyJson.ToAdaptersInfo();
-
-            Assert.IsNull(adaptersInfo);
-        }
-
-        [Test]
         public void ToBannerAdLoadRequestDeserializesValidJson()
         {
-            var json = $"{{\"placement\":\"{TestConstants.Placements.Standard}\",\"size\":{{\"sizeType\":0,\"width\":{(int)TestConstants.Dimensions.StandardWidth},\"height\":{(int)TestConstants.Dimensions.StandardHeight}}}}}";
+            var json = $"{{\"placement\":\"{TestConstants.Placements.Standard}\",{StandardSizeJson}}}";
 
             var request = json.ToBannerAdLoadRequest();
 
@@ -170,54 +129,14 @@ namespace Chartboost.Tests.Runtime.Utilities
             Assert.AreEqual(TestConstants.Placements.Standard, request.PlacementName);
         }
 
-        [Test]
-        public void ToBannerAdLoadRequestReturnsNullForEmptyJson()
+        [TestCase("\"placement\":\"\",", TestName = "ToBannerAdLoadRequestReturnsNullWhenPlacementNameIsEmpty")]
+        [TestCase("\"placement\":null,", TestName = "ToBannerAdLoadRequestReturnsNullWhenPlacementNameIsNull")]
+        [TestCase("", TestName = "ToBannerAdLoadRequestReturnsNullWhenPlacementNameIsMissing")]
+        public void ToBannerAdLoadRequestReturnsNullWithoutPlacementName(string placementField)
         {
-            LogAssert.Expect(LogType.Warning, new Regex(TestConstants.LogPatterns.CannotBeNullOrEmpty));
+            var json = $"{{{placementField}{StandardSizeJson}}}";
 
-            var request = EmptyJson.ToBannerAdLoadRequest();
-
-            Assert.IsNull(request);
-        }
-
-        [Test]
-        public void ToBannerAdLoadRequestReturnsNullForNullJson()
-        {
-            LogAssert.Expect(LogType.Warning, new Regex(TestConstants.LogPatterns.CannotBeNullOrEmpty));
-
-            var request = NullJson.ToBannerAdLoadRequest();
-
-            Assert.IsNull(request);
-        }
-
-        [Test]
-        public void ToBannerAdLoadRequestReturnsNullWhenPlacementNameIsEmpty()
-        {
-            var json = $"{{\"placement\":\"\",\"size\":{{\"sizeType\":0,\"width\":{(int)TestConstants.Dimensions.StandardWidth},\"height\":{(int)TestConstants.Dimensions.StandardHeight}}}}}";
-
-            var request = json.ToBannerAdLoadRequest();
-
-            Assert.IsNull(request);
-        }
-
-        [Test]
-        public void ToBannerAdLoadRequestReturnsNullWhenPlacementNameIsNull()
-        {
-            var json = $"{{\"placement\":null,\"size\":{{\"sizeType\":0,\"width\":{(int)TestConstants.Dimensions.StandardWidth},\"height\":{(int)TestConstants.Dimensions.StandardHeight}}}}}";
-
-            var request = json.ToBannerAdLoadRequest();
-
-            Assert.IsNull(request);
-        }
-
-        [Test]
-        public void ToBannerAdLoadRequestReturnsNullWhenPlacementNameIsMissing()
-        {
-            var json = $"{{\"size\":{{\"sizeType\":0,\"width\":{(int)TestConstants.Dimensions.StandardWidth},\"height\":{(int)TestConstants.Dimensions.StandardHeight}}}}}";
-
-            var request = json.ToBannerAdLoadRequest();
-
-            Assert.IsNull(request);
+            Assert.IsNull(json.ToBannerAdLoadRequest());
         }
 
         [Test]
@@ -231,16 +150,6 @@ namespace Chartboost.Tests.Runtime.Utilities
             Assert.AreEqual(2, dictionary.Count);
             Assert.AreEqual(TestConstants.Keywords.Value1, dictionary[TestConstants.Keywords.Key1]);
             Assert.AreEqual(TestConstants.Keywords.Value2, dictionary[TestConstants.Keywords.Key2]);
-        }
-
-        [Test]
-        public void ToDictionaryReturnsNullForEmptyJson()
-        {
-            LogAssert.Expect(LogType.Warning, new Regex(TestConstants.LogPatterns.CannotBeNullOrEmpty));
-
-            var dictionary = EmptyJson.ToDictionary();
-
-            Assert.IsNull(dictionary);
         }
 
         [Test]
@@ -260,28 +169,13 @@ namespace Chartboost.Tests.Runtime.Utilities
             var list = json.ToList();
 
             Assert.IsNotNull(list);
-            Assert.AreEqual(3, list.Count);
-            Assert.AreEqual(TestListItem1, list[0]);
-            Assert.AreEqual(TestListItem2, list[1]);
-            Assert.AreEqual(TestListItem3, list[2]);
-        }
-
-        [Test]
-        public void ToListReturnsNullForEmptyJson()
-        {
-            LogAssert.Expect(LogType.Warning, new Regex(TestConstants.LogPatterns.CannotBeNullOrEmpty));
-
-            var list = EmptyJson.ToList();
-
-            Assert.IsNull(list);
+            CollectionAssert.AreEqual(new[] { TestListItem1, TestListItem2, TestListItem3 }, list);
         }
 
         [Test]
         public void ToListDeserializesEmptyArray()
         {
-            const string emptyArrayJson = "[]";
-
-            var list = emptyArrayJson.ToList();
+            var list = "[]".ToList();
 
             Assert.IsNotNull(list);
             Assert.AreEqual(0, list.Count);
@@ -290,94 +184,10 @@ namespace Chartboost.Tests.Runtime.Utilities
         [Test]
         public void ToBannerSizeDeserializesValidJson()
         {
-            var json = $"{{\"sizeType\":0,\"width\":{(int)TestConstants.Dimensions.StandardWidth},\"height\":{(int)TestConstants.Dimensions.StandardHeight}}}";
-
-            var bannerSize = json.ToBannerSize();
+            var bannerSize = "{\"sizeType\":0,\"width\":320,\"height\":50}".ToBannerSize();
 
             Assert.IsNotNull(bannerSize);
             Assert.AreEqual(BannerSizeType.Standard, bannerSize.Value.SizeType);
-        }
-
-        [Test]
-        public void ToBannerSizeReturnsNullForEmptyJson()
-        {
-            LogAssert.Expect(LogType.Warning, new Regex(TestConstants.LogPatterns.CannotBeNullOrEmpty));
-
-            var bannerSize = EmptyJson.ToBannerSize();
-
-            Assert.IsNull(bannerSize);
-        }
-
-        [Test]
-        public void ToBannerSizeReturnsNullForNullJson()
-        {
-            LogAssert.Expect(LogType.Warning, new Regex(TestConstants.LogPatterns.CannotBeNullOrEmpty));
-
-            var bannerSize = NullJson.ToBannerSize();
-
-            Assert.IsNull(bannerSize);
-        }
-
-        [Test]
-        public void ToContainerSizeDeserializesValidJson()
-        {
-            const string json = "{\"width\":320,\"height\":50}";
-
-            var containerSize = json.ToContainerSize();
-
-            Assert.AreEqual(320, containerSize.Width);
-            Assert.AreEqual(50, containerSize.Height);
-        }
-
-        [Test]
-        public void ToContainerSizeReturnsDefaultForEmptyJson()
-        {
-            LogAssert.Expect(LogType.Warning, new Regex(TestConstants.LogPatterns.CannotBeNullOrEmpty));
-
-            var containerSize = EmptyJson.ToContainerSize();
-
-            Assert.AreEqual(default(ContainerSize), containerSize);
-        }
-
-        [Test]
-        public void ToVector2DeserializesValidJson()
-        {
-            var json = $"{{\"x\":{TestX},\"y\":{TestY}}}";
-
-            var vector = json.ToVector2();
-
-            Assert.AreEqual(TestX, vector.x);
-            Assert.AreEqual(TestY, vector.y);
-        }
-
-        [Test]
-        public void ToVector2ReturnsZeroForEmptyJson()
-        {
-            LogAssert.Expect(LogType.Warning, new Regex(TestConstants.LogPatterns.CannotBeNullOrEmpty));
-
-            var vector = EmptyJson.ToVector2();
-
-            Assert.AreEqual(Vector2.zero, vector);
-        }
-
-        [Test]
-        public void ToVector2ReturnsZeroForNullJson()
-        {
-            LogAssert.Expect(LogType.Warning, new Regex(TestConstants.LogPatterns.CannotBeNullOrEmpty));
-
-            var vector = NullJson.ToVector2();
-
-            Assert.AreEqual(Vector2.zero, vector);
-        }
-
-        [Test]
-        public void ToVector2ReturnsZeroForWhitespaceJson()
-        {
-            LogAssert.Expect(LogType.Warning, new Regex(TestConstants.LogPatterns.CannotBeNullOrEmpty));
-
-            var vector = WhitespaceJson.ToVector2();
-
-            Assert.AreEqual(Vector2.zero, vector);
         }
 
         [Test]
@@ -386,72 +196,20 @@ namespace Chartboost.Tests.Runtime.Utilities
             Assert.Throws<ArgumentException>(() => TestConstants.ChartboostMediation.InvalidJsonString.ToVector2());
         }
 
-        [Test]
-        public void ToVector2HandlesMissingXValue()
+        // Literal JSON keeps parsing culture-independent; missing axes default to 0
+        [TestCase("{\"x\":10.5,\"y\":20.3}", 10.5f, 20.3f, 0f, TestName = "ToVector2DeserializesValidJson")]
+        [TestCase("{\"y\":20.3}", 0f, 20.3f, 0f, TestName = "ToVector2HandlesMissingXValue")]
+        [TestCase("{\"x\":10.5}", 10.5f, 0f, 0f, TestName = "ToVector2HandlesMissingYValue")]
+        [TestCase(TestConstants.Json.EmptyObject, 0f, 0f, 0f, TestName = "ToVector2HandlesMissingBothValues")]
+        [TestCase("{\"x\":-15.5,\"y\":-25.3}", -15.5f, -25.3f, 0f, TestName = "ToVector2HandlesNegativeValues")]
+        [TestCase("{\"x\":0,\"y\":0}", 0f, 0f, 0f, TestName = "ToVector2HandlesZeroValues")]
+        [TestCase("{\"x\":999999.9,\"y\":888888.8}", 999999.9f, 888888.8f, 0.1f, TestName = "ToVector2HandlesLargeValues")]
+        public void ToVector2ParsesAxes(string json, float expectedX, float expectedY, float tolerance)
         {
-            var json = $"{{\"y\":{TestY}}}";
-
             var vector = json.ToVector2();
 
-            Assert.AreEqual(TestConstants.Dimensions.Zero, vector.x);
-            Assert.AreEqual(TestY, vector.y);
-        }
-
-        [Test]
-        public void ToVector2HandlesMissingYValue()
-        {
-            var json = $"{{\"x\":{TestX}}}";
-
-            var vector = json.ToVector2();
-
-            Assert.AreEqual(TestX, vector.x);
-            Assert.AreEqual(TestConstants.Dimensions.Zero, vector.y);
-        }
-
-        [Test]
-        public void ToVector2HandlesMissingBothValues()
-        {
-            var vector = TestConstants.Json.EmptyObject.ToVector2();
-
-            Assert.AreEqual(TestConstants.Dimensions.Zero, vector.x);
-            Assert.AreEqual(TestConstants.Dimensions.Zero, vector.y);
-        }
-
-        [Test]
-        public void ToVector2HandlesNegativeValues()
-        {
-            const float negativeX = -15.5f;
-            const float negativeY = -25.3f;
-            var json = $"{{\"x\":{negativeX},\"y\":{negativeY}}}";
-
-            var vector = json.ToVector2();
-
-            Assert.AreEqual(negativeX, vector.x);
-            Assert.AreEqual(negativeY, vector.y);
-        }
-
-        [Test]
-        public void ToVector2HandlesZeroValues()
-        {
-            var json = $"{{\"x\":{TestConstants.Dimensions.Zero},\"y\":{TestConstants.Dimensions.Zero}}}";
-
-            var vector = json.ToVector2();
-
-            Assert.AreEqual(TestConstants.Dimensions.Zero, vector.x);
-            Assert.AreEqual(TestConstants.Dimensions.Zero, vector.y);
-        }
-
-        [Test]
-        public void ToVector2HandlesLargeValues()
-        {
-            const float largeX = 999999.9f;
-            const float largeY = 888888.8f;
-            var json = $"{{\"x\":{largeX},\"y\":{largeY}}}";
-
-            var vector = json.ToVector2();
-
-            Assert.AreEqual(largeX, vector.x, 0.1f);
-            Assert.AreEqual(largeY, vector.y, 0.1f);
+            Assert.AreEqual(expectedX, vector.x, tolerance);
+            Assert.AreEqual(expectedY, vector.y, tolerance);
         }
     }
 }

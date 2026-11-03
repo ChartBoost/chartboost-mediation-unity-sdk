@@ -1,7 +1,9 @@
 using System;
 using System.Threading.Tasks;
+using Chartboost.Caching;
 using Chartboost.Constants;
 using Chartboost.Logging;
+using Chartboost.Mediation.Ad;
 using Chartboost.Mediation.Ad.Fullscreen;
 using Chartboost.Mediation.Android.Utilities;
 using Chartboost.Mediation.Data;
@@ -114,7 +116,7 @@ namespace Chartboost.Mediation.Android.Ad.Fullscreen
             
             // Dispose unmanaged resources
             AndroidAdStore.ReleaseFullscreenAd(UniqueId);
-            AdCache.ReleaseAd(UniqueId);
+            AdCache<IAd>.ReleaseAd(UniqueId);
         }
     }
 }
